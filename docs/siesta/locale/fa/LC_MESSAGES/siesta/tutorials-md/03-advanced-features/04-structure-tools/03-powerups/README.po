@@ -1,0 +1,290 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:1
+#: 8bb88861150a4772bcc6976c7cf2c77d
+msgid "Powerups Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:3
+#: 6ee34ee850924f8ebf76fa35930d9c3d
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:5
+#: d2f5692c469e4534aceedd7b9afcd8d7
+msgid ""
+"**Powerups** are functions that modify jobs and workflows **after "
+"creation** to customize parameters, add functionality, or build high-"
+"throughput screening workflows. They provide flexible post-creation "
+"modifications without changing maker definitions."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:7
+#: 490ef64726cd43bfb864e5afb1d92f11
+msgid "**Why use powerups?**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:8
+#: e22d8c951fc24cbf8c07dd077e9fd7ec
+msgid "✅ **Flexible**: Modify jobs after creation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:9
+#: 2fd084bab6d44eb28766d15f1a530abc
+msgid "✅ **Reusable**: Apply same changes to multiple jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:10
+#: 65c845d1611c4ccc84fd561912df6a88
+msgid "✅ **Clean**: Separate workflow logic from parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:11
+#: 1a44f216df254bb281e5b17bf20cdeae
+msgid "✅ **Powerful**: Enable high-throughput screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:12
+#: 9ff08470c2c745f880fd09a2c0d7a9ee
+msgid "✅ **Chainable**: Combine multiple powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:16
+#: 322717e990e94e20970fcfcda008b95c
+msgid "Core Powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:18
+#: 8fe165d5946b43718070a850476c6dbb
+msgid "1. `update_user_siesta_settings()`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:20
+#: ae9383aaee504e78b9398bc4ccb6e650
+msgid "Update SIESTA parameters for jobs or workflows."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:44
+#: 9ad9aa651dad4e34a77f32626647320a
+msgid "2. `add_metadata()`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:46
+#: e1e6f9cafed34b88b717854d50c86311
+msgid "Attach custom metadata to jobs for tracking and organization."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:62
+#: eb95e8f806b14485b8a6fa891accbd0f
+msgid "3. `use_fake_siesta()`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:64
+#: 233c7cdf80ce4559bbf861e1bfcc17f1
+msgid "Replace SIESTA with fake calculator for testing workflow logic."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:79
+#: a25c12a3ca914ba6980b3660a4cdd948
+msgid "Basic Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:81
+#: 943ae9d7e1764e34bc427649863b0df6
+msgid "Update Parameters After Creation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:107
+#: e2a8026785114be0bf106787ac0b24f1
+msgid "Chain Multiple Powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:127
+#: 9c87a6476be14241bc82cae82b081c0e
+msgid "Flow Customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:129
+#: 463409f6638f4d839397303ba410757a
+msgid "Apply Settings to Entire Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:153
+#: cce92d9aa1684d2682b12dea7f1cf325
+msgid "Add Metadata to Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:170
+#: 711e82ca73d34f03ba492d014bde4be4
+msgid "High-Throughput Screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:172
+#: 997a7c70595341b1a92fe676c985a206
+msgid "Basis Set Screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:199
+#: 28470c29b9174161bc1001dc32f55536
+msgid "Multi-Structure Screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:237
+#: df5e31ee2a554aff8d467dccaff11120
+msgid "Parameter Grid Search"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:273
+#: f89bf379155f4d9e9d271a895cf03a4d
+msgid "Advanced Patterns"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:275
+#: 9f371de991724436bc6c795816b5db76
+msgid "Conditional Parameter Updates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:317
+#: 3538dbe4b9be49fd9e8b16c045f09253
+msgid "Workflow Templates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:352
+#: df5aa31fbb2c46cf895e94700bc43a9a
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:354
+#: f8e2e531842543c5a4cdd8e5c24a6d12
+msgid "1. Use Powerups for Customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:367
+#: f88ce8afe6854eefab1e5972abf4acdf
+msgid "2. Separate Logic from Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:378
+#: 8054d849d40c4621a97535f8c8687cbe
+msgid "3. Add Metadata for Tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:393
+#: 57bbd63e230c4536af00613842758d1a
+msgid "4. Test with Fake SIESTA First"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:408
+#: f867e372fbd04feda638b2d6df945980
+msgid "Integration with Other Features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:410
+#: 06d8048593ab4bd4b08529ed6980de79
+msgid "With Dry-Run Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:425
+#: cc09900cadce4fd899313a0ccf11b3dd
+msgid "With Tier System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:436
+#: 6cc8270a4cf2474b8cc5e6c1feb960af
+msgid "With Database Storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:458
+#: 62794445f3dc43ab92ee7fe22fe2cb4c
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:460
+#: 77e9f37531ea4854a1d6901c6b7f4f15
+msgid "Key Takeaways"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:462
+#: c8a52ab50e174797a663467add7944ae
+msgid ""
+"✅ **Powerups modify jobs AFTER creation** (post-processing) ✅ "
+"**update_user_siesta_settings()** updates any SIESTA parameter ✅ **Works "
+"on jobs or workflows** (applies to all child jobs) ✅ **add_metadata()** "
+"attaches custom tracking information ✅ **Chainable** - combine multiple "
+"powerups ✅ **Perfect for screening** - loop + powerup pattern"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:469
+#: 33dfce0bfa9d4fd6ace19d27b669ccb4
+msgid "Essential Powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:482
+#: 964aa38c06304c149a23cf6f82d8ec28
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:501
+#: dec76eebbfd840f8a3afbedfb897c6fc
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:503
+#: 4fe1d05ab15841269d393f2cc4cbef18
+msgid "**Try the tutorial**: `python tutorial.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:504
+#: d119594dd7fe40e0a65e7987eecbf388
+msgid "**Test example types**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:505
+#: 70f5655ed627477087b3b4955532b96a
+msgid "`'basic'`: Parameter updates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:506
+#: 3bc0406f4da84fbb9b4153fb97f1545a
+msgid "`'flow'`: Workflow customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:507
+#: 28101878f14d48e095a110f0e0fed120
+msgid "`'screening'`: High-throughput screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:508
+#: 20f48341f5b84c24bc4e462883812639
+msgid "**Build your own screening workflows**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:509
+#: 9f43a4b57eae4fbba594f69ddad55435
+msgid "**Combine with database storage** for data management"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/03-powerups/README.md:513
+#: 7351b5fbb03c4665a1e26ecb97f299dc
+msgid "**Make powerups part of your workflow customization strategy!** ⚡"
+msgstr ""
+

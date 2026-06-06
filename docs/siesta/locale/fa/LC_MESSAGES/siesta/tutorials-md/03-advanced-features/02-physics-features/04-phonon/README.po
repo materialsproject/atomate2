@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:1
+#: 2039b195b60d4ecaa4fc0a06b156ce02
+msgid "Phonon Input Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:3
+#: c951067f773a4e7193b8a4f2b2836f84
+msgid ""
+"Direct SIESTA FDF format for phonon-related parameters. These control "
+"force constants calculation used in phonon workflows."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:5
+#: ffadab611d1145ab945007005af17758
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:7
+#: 78e6c9da06a643bea7084622c31355dc
+msgid ""
+"Phonon calculations in SIESTA use molecular dynamics (MD) mode for force "
+"constants:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:9
+#: 1a825004527a4e24b0d9bc4e27f80abc
+msgid "**MD.TypeOfRun = FC**: Force constants calculation mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:10
+#: 2ae96a1305ad4f1abf5376ac6031b5d8
+msgid "**MD.FCDispl**: Atomic displacement magnitude"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:11
+#: 40f9303b28cc4d8d89bdacc3a10e7ba6
+msgid "**MD.FCfirst**: First atom to displace"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:12
+#: ef4b3ca073e14a70a5451dd8129ae640
+msgid "**MD.FClast**: Last atom to displace"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:14
+#: 882866d5d99741e9b54001b0e31c8f74
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:29
+#: 8d7f6caca3624dad87021e2f50d50d9b
+msgid "Key Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 580bb1f3e9b447c698e2c1105ba0f514
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: d9d3810a66e64901bfde16c1af662ce1
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 4834786073dc4c0798a105eea9fbc2ca
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 7d557e7b81ea4a45b576a7e862117fca
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 217c317bc99f4fddbd9db0aa661b5b99
+msgid "MD.TypeOfRun"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 03eabb047986406389cd422747a1da69 b35ddb46aed64cf68f0da6b20c9ae339
+msgid "str"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 7e748d9edf754a7fb0fead59c352251e
+msgid "\"CG\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: bfe0f8cc8518494bb69bda6f24fc0caf
+msgid "Type of MD run (use \"FC\" for phonons)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 2563f1a2a7034affb6c75d7487c1a066
+msgid "MD.FCDispl"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 6f2aa1e1e89c445a86fbffea8e94ead4
+msgid "\"0.04 Bohr\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 812d536619dd4b0885820a92d8e2cbe1
+msgid "Displacement for force constants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 64635cada9704966b608c1a0c61a4684
+msgid "MD.FCfirst"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 05f499e851ac4e569d3fbd72405b2f9b c1d4f0e25caa46fb9c85668df80ce169
+msgid "int"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 52256cedb4cc4542af21817281a6991b
+msgid "1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 8d4a659db28748edb098d685c819ab4c
+msgid "First atom index to displace"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: 41848352d1014adab067738e232d7ced
+msgid "MD.FClast"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: fb0bce159fe74afda06121aaa742ae14
+msgid "N"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md
+#: d7495bfce5534ba1b5c2699fb2db4248
+msgid "Last atom index to displace"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:38
+#: 180d66b107f745949a4a7519e986ba5d
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:40
+#: 50f2ef9e8f1c406c8f34e001cd55bf65
+msgid "Small displacement (high-precision phonons)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:45
+#: eb23f2ba3e0c4c3a8cb345f29e3e6da2
+msgid "Large displacement (faster convergence)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:50
+#: 49fa17addecc4f4489e8d47cfbf36dd4
+msgid "Displace only certain atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:56
+#: 989ab646b62943a0a87c1395262e3ace
+msgid "Notes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:58
+#: 7db3e43e354d4c50b5df043f1bc218a8
+msgid ""
+"For full phonon workflows, use `PhonopyMaker` from "
+"`atomate2.siesta.jobs.phonopy`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:59
+#: a8915f0c10494bf19278539258aed7d0
+msgid "These parameters are automatically set by phonon workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:60
+#: 0104dc33f13e41b68c6f96e0bf7b0704
+msgid "Manual control useful for testing or custom phonon calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:62
+#: cd6ff3b5a0014e10a547f62a52fb07ac
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:64
+#: 3c1c892ba8cf4739b591069abd634ade
+msgid "**Phonon workflows**: `tutorials/05-vibrational-properties/01-phonons/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:65
+#: 15d6b0ce5a1a4aedb43e95000cb56c81
+msgid "**SIESTA Manual**: Section on Force Constants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/04-phonon/README.md:66
+#: 408683040faa414a9155705528fffa0e
+msgid "**Dataclass**: `src/atomate2/siesta/dataclass/phonon_calculations.py`"
+msgstr ""
+

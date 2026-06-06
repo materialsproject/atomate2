@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,989 +20,1271 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/defaults.rst:3 2594798661df4a50a0d586f3aaed2437
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:3
+#: 8effb9e1a0be42a982cfb43ab731f295
 msgid "Default Values Reference"
 msgstr "مرجع مقادیر پیش‌فرض"
 
-#: ../../source/defaults.rst:5 4fad27c17e3847e490d017085f683858
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:5
+#: 035b1401aba64323a199ab4bed40ebd9
 msgid ""
 "This page documents all default values used by atomate2siesta. "
 "Understanding these defaults helps you make informed decisions about when"
 " to use them and when to customize."
-msgstr "این صفحه تمامی مقادیر پیش‌فرض استفاده شده توسط atomate2siesta را مستند می‌کند. درک این مقادیر پیش‌فرض به شما کمک می‌کند تا تصمیمات آگاهانه‌ای درباره زمان استفاده از آنها و زمان سفارشی‌سازی بگیرید."
+msgstr ""
+"این صفحه تمامی مقادیر پیش‌فرض استفاده شده توسط atomate2siesta را مستند "
+"می‌کند. درک این مقادیر پیش‌فرض به شما کمک می‌کند تا تصمیمات آگاهانه‌ای "
+"درباره زمان استفاده از آنها و زمان سفارشی‌سازی بگیرید."
 
-#: ../../source/defaults.rst:9 b7b5867ad91d4ceb9fac30c47109842e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:9
+#: 098b940f1bfe40cc89557e60ab91b3ef
 msgid "Quick Navigation"
 msgstr "راهبری سریع"
 
-#: ../../source/defaults.rst:12 6ade4326f07346738df86850cdbf7294
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:12
+#: b0c50c203bcb42a5a167c5336dae551c
 msgid "Overview"
 msgstr "مرور کلی"
 
-#: ../../source/defaults.rst:14 d4bcec2d28b24a8482b79d7a5572732e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:14
+#: 92b1e0f3b1d7423ca584fe206620f661
 msgid ""
 "atomate2siesta uses carefully chosen defaults that work well for most "
 "materials calculations. All defaults can be overridden using "
 "``user_params`` or tier presets."
-msgstr "atomate2siesta از مقادیر پیش‌فرض با دقت انتخاب شده استفاده می‌کند که برای اکثر محاسبات مواد به خوبی کار می‌کنند. همه مقادیر پیش‌فرض می‌توانند با استفاده از ``user_params`` یا پیش‌تنظیم‌های سطحی بازنویسی شوند."
+msgstr ""
+"atomate2siesta از مقادیر پیش‌فرض با دقت انتخاب شده استفاده می‌کند که برای"
+" اکثر محاسبات مواد به خوبی کار می‌کنند. همه مقادیر پیش‌فرض می‌توانند با "
+"استفاده از ``user_params`` یا پیش‌تنظیم‌های سطحی بازنویسی شوند."
 
-#: ../../source/defaults.rst:18 ace82bb720db42fe94085a67f50acfde
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:18
+#: 7b64cf2c054a4b3f8a7e981a1872e5ad
 msgid ""
 "**Default XC Functional**: atomate2siesta uses **PBE** as the default "
 "exchange-correlation functional. PBE (Perdew-Burke-Ernzerhof) is the most"
 " widely used GGA functional in materials science."
-msgstr "**تابعک XC پیش‌فرض**: atomate2siesta از **PBE** به عنوان تابعک تبادل-همبستگی پیش‌فرض استفاده می‌کند. PBE (Perdew-Burke-Ernzerhof) پرکاربردترین تابعک GGA در علم مواد است."
+msgstr ""
+"**تابعک XC پیش‌فرض**: atomate2siesta از **PBE** به عنوان تابعک "
+"تبادل-همبستگی پیش‌فرض استفاده می‌کند. PBE (Perdew-Burke-Ernzerhof) "
+"پرکاربردترین تابعک GGA در علم مواد است."
 
-#: ../../source/defaults.rst:21 bd11a96b562e43b38dfa7b2b1e15dcd3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:21
+#: 6297d736ccae42d68f4265c89b1d0ea6
 msgid "Exchange-Correlation Functional"
 msgstr "تابعک تبادل-همبستگی"
 
-#: ../../source/defaults.rst:23 b5aed13672c24ec39a2cb99db4f4612d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:23
+#: e1942e41e01148c8beca4a5f26e36f1e
 msgid ""
 "**Location**: "
 "``src/atomate2/siesta/dataclass/exchange_correlation_functionals.py:75``"
-msgstr "**مکان**: ``src/atomate2/siesta/dataclass/exchange_correlation_functionals.py:75``"
+msgstr ""
+"**مکان**: "
+"``src/atomate2/siesta/dataclass/exchange_correlation_functionals.py:75``"
 
-#: ../../source/defaults.rst:29 ../../source/defaults.rst:91
-#: ../../source/defaults.rst:141 ../../source/defaults.rst:170
-#: ../../source/defaults.rst:206 ../../source/defaults.rst:232
-#: ../../source/defaults.rst:266 ../../source/defaults.rst:297
-#: ../../source/defaults.rst:322 ../../source/defaults.rst:344
-#: 1628bf67ddcb42fcb7832db8ce7fa22e 1db262aad5ea45c397a58ec9c2e295e6
-#: 24796c13303a4f7ba9d592ef66dbee38 4e3fbd5b57ba47a5b4c84c90f1dbad65
-#: 5f22938f7ca24a6ca51dad797fcc0567 611c88e638b74e8491a62b4b56bb5e60
-#: 785e1e3de18f4abdb8a550762d6cdcd0 a0178d05bf334ea8aff393b64fcbac45
-#: c441ad5c910641d891e7601d95876b38 f3a2a2496caa40fe8a79fe3596867284
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:29
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:91
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:141
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:170
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:206
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:232
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:266
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:297
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:322
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:344
+#: 09559f87cea949cca783e2f000e64e26 0a9df143f4694a51b0a2dc19a62f4b1b
+#: 168f40475bdb43a8a837f29e6b5b41f6 1c8904c751884cb9adf3be3abbb0c31c
+#: 37dab2dcc3c04fc6abe0f96981afba94 47393f24e07c4a06bc366c965bad72c8
+#: 9fdae86dd9854b83abdfe7841c783bc5 ce2b14aa1263418bb4bd707a05c67eca
+#: ebcd744bcb534ffdbde610ed93f0eb4a fc7b9389deb54388af7e49b9ae0001e1
 msgid "Parameter"
 msgstr "پارامتر"
 
-#: ../../source/defaults.rst:30 ../../source/defaults.rst:92
-#: ../../source/defaults.rst:142 ../../source/defaults.rst:171
-#: ../../source/defaults.rst:207 ../../source/defaults.rst:233
-#: ../../source/defaults.rst:267 ../../source/defaults.rst:298
-#: ../../source/defaults.rst:323 ../../source/defaults.rst:345
-#: 18976bcd3bfe4c63898d0bb925e13e64 1d0a263ccbdf4e60a765a3516b567f5e
-#: 3d84f019b1664100a1d1f20d05468c2f 46c22835078046918ce50a2acfb03ace
-#: 9582a4cfe52849ccaedd08a4fcd964e9 ae48ca5b0642465e8877d161cdef21ad
-#: cccf8116dc484747a7255d3f76f3726f cf4aafb9b9334fcfab086cb8f7b489dd
-#: d8031e3014874483ae766ea4f696f058 e1a4dac142414cafa6bf46785dd7dfe3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:92
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:142
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:171
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:207
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:233
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:267
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:298
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:323
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:345
+#: 07b09746e8a1442aae841e777fc89c75 25d9fa5310484461b68a9610aadf92ab
+#: 331bef9abc234862a0848e4f95f6e26d 5af8af8023b04180b341e9a6fc2dfc45
+#: 84419731e5cc4ca4a2e59361098141f7 a1fa4a44f40e428c9def0d63ba2a7653
+#: a2800d881c3641619bd2dfacda931afa c9dba161a4ca47509bb14ce39f325d5c
+#: ebd4f534f8614f3b8caf89eaa73399fa f2451c598ffd4b789d2b401c05cf9608
 msgid "Default Value"
 msgstr "مقدار پیش‌فرض"
 
-#: ../../source/defaults.rst:31 ../../source/defaults.rst:93
-#: ../../source/defaults.rst:143 ../../source/defaults.rst:172
-#: ../../source/defaults.rst:208 ../../source/defaults.rst:234
-#: ../../source/defaults.rst:268 ../../source/defaults.rst:299
-#: ../../source/defaults.rst:324 ../../source/defaults.rst:346
-#: 0495d2d44b7840bd9e9ad7aa9b34ebaa 073a8536e265400d9792c3359a062c9f
-#: 29ed660ba36e40dd88f95123969fb58c 41ee934433754f17b429ac9704715dc2
-#: 5c720493da55423da8c60951d1abdefe 7ed8e23e208d4b72842157dc09d7db1d
-#: bfff55aef5f646ddb79633ec86eafc13 cb7dfb637d9b423aaea1fbffbf3ca365
-#: e27e99f210994a84bc01f055744a7bf3 e6738baea486451599343e29ab94278b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:143
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:172
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:208
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:234
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:268
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:299
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:324
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:346
+#: 04a650b00f4f4d8a8aa9892a01d83e4a 24a08b905d4d4df3a46d0be7c41f44fd
+#: 33b89240a86e43ad8e1a5aa7abda13f9 39812e5fc863425caa4bd9569e5a649c
+#: 3a03cb054c224e949b59746a0e6a2b5d 50859bf01fa946d28a8f67a7ffbbff7c
+#: 704a867614e74d13bdce6d2d888f41fe 80a6aff1b43c41af93b752bd62c84edc
+#: ad7e4c9f41f548e5828c5b92e5de7c89 c99a594fa040418989356c80901a7a86
 msgid "Description"
 msgstr "توضیحات"
 
-#: ../../source/defaults.rst:32 ac75dfa1336f4705ab8c741ae7a9c5e2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:32
+#: 2066a4b29e054884a1dc0587a1f83a30
 msgid "``xc_functional``"
 msgstr "``xc_functional``"
 
-#: ../../source/defaults.rst:33 3e876d1d2cd34655a7bc0966c924dbe8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:33
+#: e5ee7a7bd75647df87aa87f08ff7aa33
 msgid "``GGA``"
 msgstr "``GGA``"
 
-#: ../../source/defaults.rst:34 8c365d14a6a04e12b1857ceb8bf8ffc0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:34
+#: e505e12c98f044448c905e7c0f48896d
 msgid "Generalized Gradient Approximation"
 msgstr "تقریب گرادیان تعمیم‌یافته"
 
-#: ../../source/defaults.rst:35 967e5d42ca4242b487c0164b1ac83749
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:35
+#: 0a3ba94811f54fed95f51d911d810242
 msgid "``xc_authors``"
 msgstr "``xc_authors``"
 
-#: ../../source/defaults.rst:36 ../../source/defaults.rst:510
-#: 0493340bce4540f0bf7465adff6ad631 d8b555143e234392b27e474875a37cc5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:36
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:510
+#: 2ca06cfea6e448939d94c0cf2055fed2 c6f746fba054446fa18a0bd83295347a
 msgid "**PBE**"
 msgstr "**PBE**"
 
-#: ../../source/defaults.rst:37 9bac24538e874aab967cc3322c73031d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:37
+#: 1d02614baaa0448baa52326b8332ad32
 msgid "Perdew-Burke-Ernzerhof functional"
 msgstr "تابعک Perdew-Burke-Ernzerhof"
 
-#: ../../source/defaults.rst:38 11b5d3fa8d0d4dbc8fc2871c82e5ce31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:38
+#: 9969ade9927e4b2486b03cb02ed73a6a
 msgid "``xc_use_bsc_cell_xc``"
 msgstr "``xc_use_bsc_cell_xc``"
 
-#: ../../source/defaults.rst:39 38cb56b8affa4b80bafea753140082c5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:39
+#: f2937076643045e5853c37f8359ee63c
 msgid "``False``"
 msgstr "``False``"
 
-#: ../../source/defaults.rst:40 56a7615e4d3f4721b2d410c26e232dcc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:40
+#: 6ac7bc2401cb4ce38d58821133055b52
 msgid "BSC cell XC correction (for vdW functionals)"
 msgstr "اصلاح BSC cell XC (برای تابعک‌های vdW)"
 
-#: ../../source/defaults.rst:43 96c98e34992641a8b174a13790db6bc5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:43
+#: 6b1a506966d44d7c886506393b6eaba8
 msgid "Why PBE?"
 msgstr "چرا PBE؟"
 
-#: ../../source/defaults.rst:45 aa1efa740cfe4b9d9aad41573e8a6df7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:45
+#: f28ef0e99e9c4e4ab04584af1cdb13bb
 msgid "PBE was chosen as the default because:"
 msgstr "PBE به عنوان پیش‌فرض انتخاب شد زیرا:"
 
-#: ../../source/defaults.rst:47 0e1090dd34fa4e4aa1b3732289588c99
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:47
+#: b0bced4b1787484d9f1fdd1371a3c4ee
 msgid "**Most widely used**: Standard in materials science community"
 msgstr "**پرکاربردترین**: استاندارد در جامعه علم مواد"
 
-#: ../../source/defaults.rst:48 d56d8d9a4b624348870e3338451bc3ca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:48
+#: c95111221ea149a1be0e02e3fdc00915
 msgid "**Excellent benchmarking**: Extensive validation across all material types"
 msgstr "**معیارسنجی عالی**: اعتبارسنجی گسترده در همه انواع مواد"
 
-#: ../../source/defaults.rst:49 b1ea60d4ec764d4f8708531f93914322
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:49
+#: 54d9e5a6249346e6a3157238b7bc1177
 msgid ""
 "**General purpose**: Works well for molecules, surfaces, and bulk "
 "materials"
 msgstr "**کاربرد عمومی**: برای مولکول‌ها، سطوح و مواد حجمی به خوبی کار می‌کند"
 
-#: ../../source/defaults.rst:50 d737237638f54493bb68f9a41f19a9d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:50
+#: 0655600904054cb893ea6240db251618
 msgid "**Broad compatibility**: Most pseudopotential libraries available in PBE"
 msgstr "**سازگاری گسترده**: بیشتر کتابخانه‌های شبه‌پتانسیل در PBE موجود هستند"
 
-#: ../../source/defaults.rst:52 ddc7f20f0df14e00810a59a4bfb1c89d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:52
+#: 18eeef75ae0649ac9f43936107ac5f59
 msgid "**When to use PBEsol instead**:"
 msgstr "**چه زمانی از PBEsol استفاده کنیم**:"
 
-#: ../../source/defaults.rst:54 c9c4acc5b14b4eacb4253737ff6b0b52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:54
+#: eba736d994c945d5877b8db41409b232
 msgid "Better lattice constants needed (PBEsol optimized for solids)"
 msgstr "نیاز به ثابت‌های شبکه بهتر (PBEsol برای جامدات بهینه‌سازی شده است)"
 
-#: ../../source/defaults.rst:55 2bd56e2731ce46138ea8cbab15927702
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:55
+#: 2591e19dabf04f7b9a0713831bcb7dab
 msgid "Bulk materials where structural accuracy is critical"
 msgstr "مواد حجمی که دقت ساختاری حیاتی است"
 
-#: ../../source/defaults.rst:56 85be40bba2fd44dab5d3b7033bf390fb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:56
+#: 1174b1d44e2a44ac86c5b1aea164b294
 msgid "Comparison with PBEsol literature"
 msgstr "مقایسه با مقالات PBEsol"
 
-#: ../../source/defaults.rst:58 e23c86d83bb449328f51f9067d85120b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:58
+#: ee810d359e214201b8e9990e6827b64a
 msgid "**When to use other functionals**:"
 msgstr "**چه زمانی از تابعک‌های دیگر استفاده کنیم**:"
 
-#: ../../source/defaults.rst:60 e7f64112ac304c2e8894d59c281056ad
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:60
+#: 46debc9d9fc94076965792f5111213b0
 msgid "**revPBE**: Better for surfaces and adsorption energies"
 msgstr "**revPBE**: بهتر برای سطوح و انرژی‌های جذب"
 
-#: ../../source/defaults.rst:61 66cbe5d9e8eb45d1946a8baf9634c28a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:61
+#: 1ba13c5cb33941fea9da7ebfb46b5af6
 msgid "**RPBE**: Improved molecular adsorption"
 msgstr "**RPBE**: جذب مولکولی بهبودیافته"
 
-#: ../../source/defaults.rst:62 97a7e49402064eeaa46ff7537dbbee05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:62
+#: 98917ddf0a014bd3ad458c338d800638
 msgid "**BLYP**: Alternative GGA with different properties"
 msgstr "**BLYP**: GGA جایگزین با ویژگی‌های متفاوت"
 
-#: ../../source/defaults.rst:64 c808014e703e4ff4ac3f7055849703d3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:64
+#: 4d3882e1c04f4702b4e2690a8d4fbc84
 msgid "**How to change**:"
 msgstr "**نحوه تغییر**:"
 
-#: ../../source/defaults.rst:83 2093e0fadab742e385fe8a6e9e9bbe52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:83
+#: 52808ac06ca84070ba18dc4e2387ec9c
 msgid "Pseudopotentials"
 msgstr "شبه‌پتانسیل‌ها"
 
-#: ../../source/defaults.rst:85 f8a56587f1cd4938870d8455706748bc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:85
+#: ba6a4067a02840248da392749ec3742d
 msgid "**Location**: ``src/atomate2/siesta/dataclass/pseudopotentials.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/pseudopotentials.py``"
 
-#: ../../source/defaults.rst:94 49f9f957efa44d82ab096c6daeab1a6d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:94
+#: 321e905c9b1244439114bdc0d3112a8c
 msgid "``pseudo_family``"
 msgstr "``pseudo_family``"
 
-#: ../../source/defaults.rst:95 b35c7864772c44329955672ce0c9d47a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:95
+#: 3b1b0f326687413fbcd72b1eb8389476
 msgid "``ONCVPSP``"
 msgstr "``ONCVPSP``"
 
-#: ../../source/defaults.rst:96 69782878d9f84aafa899b5b68bda0ae3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:96
+#: b5dce18558ff4b75bafb5062947dc8be
 msgid "Optimized Norm-Conserving Vanderbilt pseudopotentials"
 msgstr "شبه‌پتانسیل‌های Vanderbilt بهینه‌شده با نرم حفظ‌شده"
 
-#: ../../source/defaults.rst:97 068bebf3c9d641e1ba707620cb8ca82d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:97
+#: ad1df007de72460194dcb7edc10b53a9
 msgid "``pseudo_version``"
 msgstr "``pseudo_version``"
 
-#: ../../source/defaults.rst:98 774ea950cad443b0b9763b7be938fc68
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:98
+#: c30df2617c1b4a5d9aa6771c9313773f
 msgid "``0.4``"
 msgstr "``۰.۴``"
 
-#: ../../source/defaults.rst:99 8a2d1b34a32847d592212922b705bcdf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:99
+#: 12e65bc7b0204250b9cbb5de662ec06a
 msgid "PseudoDojo version 0.4"
 msgstr "PseudoDojo نسخه ۰.۴"
 
-#: ../../source/defaults.rst:100 0c6f2bae5cfb40aca5757a81bee88745
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:100
+#: 7bf1dbbfd7574b6aa11dc5757a7cd8dc
 msgid "``pseudo_quality``"
 msgstr "``pseudo_quality``"
 
-#: ../../source/defaults.rst:101 1e77dd747977483ea1f3657966fd85f7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:101
+#: 0c3e1cd5ead94419a5872603b8926543
 msgid "``Standard``"
 msgstr "``Standard``"
 
-#: ../../source/defaults.rst:102 8ee7670b82db4191bb78abf4969d36e9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:102
+#: bc39b40144424d29b6c5bc2ae64e9e67
 msgid "Standard accuracy (Stringent also available)"
 msgstr "دقت استاندارد (Stringent نیز موجود است)"
 
-#: ../../source/defaults.rst:103 85fcb9b1bfde4bf3a5d82b14a4d2d81a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:103
+#: a19f7705b281404eb09b173dd20770d1
 msgid "``pseudo_relativistic``"
 msgstr "``pseudo_relativistic``"
 
-#: ../../source/defaults.rst:104 95bcd48e8ff848d4a84f4aa5076bed46
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:104
+#: 96ff023eb6bb45a784dedabf5a40c316
 msgid "``FR``"
 msgstr "``FR``"
 
-#: ../../source/defaults.rst:105 608c48440168452c9596cf3a6e107674
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:105
+#: 48070df5899349458fde0e18b66ce0fe
 msgid "Fully Relativistic (SR = Scalar Relativistic)"
 msgstr "کاملاً نسبیتی (SR = نسبیتی اسکالر)"
 
-#: ../../source/defaults.rst:106 5c3008bb82c34e11b758527bc334cd9f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:106
+#: bc6af6c54bc043b6a7db2bb8dbc0c9c5
 msgid "``xc_authors`` (inferred)"
 msgstr "``xc_authors`` (استنتاج شده)"
 
-#: ../../source/defaults.rst:107 441fa1e3ae70418dbd6e1e51e4c7226e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:107
+#: 970df166eb294c6e9d0a59b71a907651
 msgid "``PBE``"
 msgstr "``PBE``"
 
-#: ../../source/defaults.rst:108 5324f09519ea40f28a6c483f665215f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:108
+#: 36defa9a3f2849b6825ed44f1e5e32ba
 msgid "Must match XC functional"
 msgstr "باید با تابعک XC مطابقت داشته باشد"
 
-#: ../../source/defaults.rst:110 687294b04ff24b2cbfcfdf955739292e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:110
+#: d8d6cea3878e430392726e0980b41383
 msgid "**Automatic Path Construction**:"
 msgstr "**ساخت خودکار مسیر**:"
 
-#: ../../source/defaults.rst:112 4071637c9895494dadf0f3c9ea8a0aa6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:112
+#: de34c3f36a4048a3abfb2314a5c9ba4f
 msgid ""
 "Given ``pseudo_base_path = ~/.siesta/pseudos`` and ``xc_authors = PBE``, "
 "the full path is automatically constructed as:"
-msgstr "با توجه به ``pseudo_base_path = ~/.siesta/pseudos`` و ``xc_authors = PBE``، مسیر کامل به صورت خودکار ساخته می‌شود به شکل:"
+msgstr ""
+"با توجه به ``pseudo_base_path = ~/.siesta/pseudos`` و ``xc_authors = "
+"PBE``، مسیر کامل به صورت خودکار ساخته می‌شود به شکل:"
 
-#: ../../source/defaults.rst:118 28f84d90f0ff425a88f15d142b9684d2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:118
+#: 1e50544b10cf49d19a457c6c53a6b346
 msgid "**Available Pseudopotentials**:"
 msgstr "**شبه‌پتانسیل‌های موجود**:"
 
-#: ../../source/defaults.rst:133 f252cc7eb5574bd191c214fe328fa9fd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:133
+#: 8ff4463f4ceb4c4a8071bfedfe2eb716
 msgid "Basis Sets and Projectors"
 msgstr "مجموعه‌های پایه و تصویرگرها"
 
-#: ../../source/defaults.rst:135 9df80a9b227046ee8babf7bd4f94037e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:135
+#: b98d08a527bf4a17b79bcc8216520850
 msgid ""
 "**Location**: "
 "``src/atomate2/siesta/dataclass/basis_sets_and_projectors.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/basis_sets_and_projectors.py``"
 
-#: ../../source/defaults.rst:144 74b6a35ced1a4b7dbc731ae4cc588ec7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:144
+#: a51fbd5b778946119f33c772ed29e475
 msgid "``pao_basis_size``"
 msgstr "``pao_basis_size``"
 
-#: ../../source/defaults.rst:145 90de9e40a48b48d78e86f0f928382c70
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:145
+#: 1905e0cc3a794791bd3957befd7d21c4
 msgid "``DZP``"
 msgstr "``DZP``"
 
-#: ../../source/defaults.rst:146 ecbf7369effa465588ad5659bbeb71a5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:146
+#: de1a26a15d5c4ad29a071c0d6eab4e5a
 msgid "Double-Zeta Polarized (standard quality)"
 msgstr "دوبل-زتا قطبیده (کیفیت استاندارد)"
 
-#: ../../source/defaults.rst:147 3de7ee5ba3dc42f2ad849d1c73b6e9dd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:147
+#: 8f4f7a45b8f942c0824ab97205c96a39
 msgid "``pao_energy_shift``"
 msgstr "``pao_energy_shift``"
 
-#: ../../source/defaults.rst:148 3cf1ef90b9a7440597c9556fb6737507
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:148
+#: 4f30a2eb9039429794d631ae836954a7
 msgid "``100 meV``"
 msgstr "``۱۰۰ meV``"
 
-#: ../../source/defaults.rst:149 c7eee3fc3fe3465fbc0b9e929f80aa03
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:149
+#: c9382d1c734744cc93a72a5683470734
 msgid "Energy shift for basis confinement"
 msgstr "جابجایی انرژی برای محصورسازی پایه"
 
-#: ../../source/defaults.rst:150 660ab44d782f4bbeaa1b8f07f63ae1fe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:150
+#: 7997c7104d6a42318b06e44db44f6b6f
 msgid "``pao_basis_split_norm``"
 msgstr "``pao_basis_split_norm``"
 
-#: ../../source/defaults.rst:151 3ec56582859a4f3ea8ef816abbabf18e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:151
+#: 56cf9dec7614473ba7a228680f88b838
 msgid "``0.15``"
 msgstr "``۰.۱۵``"
 
-#: ../../source/defaults.rst:152 1e2ce25fca6e46bf94b103bf9674523a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:152
+#: d5c919d2f532470a909cbd099561fb02
 msgid "Split norm for multiple-zeta orbitals"
 msgstr "نرم تقسیم برای اوربیتال‌های چندزتا"
 
-#: ../../source/defaults.rst:154 58fa64070e5b43fcbbb36c642f7294b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:154
+#: c50127538e664fdf87260a1fd1581737
 msgid "**Basis Size Options**:"
 msgstr "**گزینه‌های اندازه پایه**:"
 
-#: ../../source/defaults.rst:156 ebb64ddca2a3426a8bc69ebd05ac8185
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:156
+#: cd6ada2c3d394a9494e86e9a81b208e4
 msgid "``SZ``: Single-Zeta (minimal, testing only)"
 msgstr "``SZ``: تک-زتا (حداقل، فقط برای آزمایش)"
 
-#: ../../source/defaults.rst:157 05dbc2d8ca814358b9a0d9b06d375e11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:157
+#: e4155cd241bf4ed8a9882320f2c6e9ff
 msgid "``DZ``: Double-Zeta (minimum for production)"
 msgstr "``DZ``: دوبل-زتا (حداقل برای تولید)"
 
-#: ../../source/defaults.rst:158 32f0dfe650ce4e88ba2099be1d78cd94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:158
+#: 9d462552185d4e2896bd93ee652dc419
 msgid "**``DZP``**: Double-Zeta Polarized (recommended default)"
 msgstr "**``DZP``**: دوبل-زتا قطبیده (پیش‌فرض توصیه‌شده)"
 
-#: ../../source/defaults.rst:159 2391aa8437ea4ce4ac284841df7f9f43
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:159
+#: 013cfe3bcf464c109cbe18c7bdc4cce9
 msgid "``TZP``: Triple-Zeta Polarized (high accuracy, expensive)"
 msgstr "``TZP``: تریپل-زتا قطبیده (دقت بالا، پرهزینه)"
 
-#: ../../source/defaults.rst:162 6ea0e5ab3f014b7fa53e7369819da87a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:162
+#: 8972f250c20d4c88a761fd98672ec90b
 msgid "K-Point Sampling"
 msgstr "نمونه‌برداری نقاط k"
 
-#: ../../source/defaults.rst:164 db559b243cfd43359765d3a4d9e86005
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:164
+#: db8b9fba2bce4aa481ee91561e91af4d
 msgid "**Location**: ``src/atomate2/siesta/dataclass/kpoint_sampling.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/kpoint_sampling.py``"
 
-#: ../../source/defaults.rst:173 931bab8330194c7799a8fe0a6a8c8ea1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:173
+#: a03c6c8f6cb645b6bc8b7324d3c7097e
 msgid "``kpts``"
 msgstr "``kpts``"
 
-#: ../../source/defaults.rst:174 1cc4af4d941c4d5da096ee5a044ecc4c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:174
+#: fad619703f0c41958239fdfffc8433c0
 msgid "**Automatic**"
 msgstr "**خودکار**"
 
-#: ../../source/defaults.rst:175 23c83f70231947e99fb63022215077ef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:175
+#: 6a26883c33ae4792811ba21ba4af8006
 msgid "Gamma-centered Monkhorst-Pack grid"
 msgstr "شبکه Monkhorst-Pack متمرکز بر گاما"
 
-#: ../../source/defaults.rst:176 fcf7a69356da461e98685e19631cfcee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:176
+#: 81a19e2e909449368eec47f15647a984
 msgid "K-point density"
 msgstr "چگالی نقاط k"
 
-#: ../../source/defaults.rst:177 4882860d2c8a4888b0ab5133830b3264
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:177
+#: 562bdc8d83144db08b139734a32790a6
 msgid "~0.04 Å⁻¹"
 msgstr "~۰.۰۴ Å⁻¹"
 
-#: ../../source/defaults.rst:178 419cc5cb8b654e53b563bdd92ed60ab6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:178
+#: f22dc2f93d594da9a700cea25b1b2599
 msgid "Determined by structure size"
 msgstr "بر اساس اندازه ساختار تعیین می‌شود"
 
-#: ../../source/defaults.rst:180 170341dd87f54c128d0435a80e0abde7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:180
+#: 2719e249b23a489abba65cf6b67621e0
 msgid "**Automatic K-point Generation**:"
 msgstr "**تولید خودکار نقاط k**:"
 
-#: ../../source/defaults.rst:182 da770c9d40a040a099d2867676dfa303
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:182
+#: 2d0994c56d104fa68268d36e2a8d3195
 msgid ""
 "atomate2siesta automatically determines k-points based on reciprocal "
 "lattice vectors unless explicitly specified."
-msgstr "atomate2siesta به صورت خودکار نقاط k را بر اساس بردارهای شبکه متقابل تعیین می‌کند مگر اینکه صراحتاً مشخص شود."
+msgstr ""
+"atomate2siesta به صورت خودکار نقاط k را بر اساس بردارهای شبکه متقابل "
+"تعیین می‌کند مگر اینکه صراحتاً مشخص شود."
 
-#: ../../source/defaults.rst:184 47704b91578a43268d04761c457fc855
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:184
+#: aa3c195c662142109609f8ddcb328de1
 msgid "**Common Manual Settings**:"
 msgstr "**تنظیمات دستی متداول**:"
 
-#: ../../source/defaults.rst:198 120e736444da40c186f172f12ddf4b5c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:198
+#: 1c71d7d55b9e44a88951c6b8990cc062
 msgid "Real-Space Grid"
 msgstr "شبکه فضای حقیقی"
 
-#: ../../source/defaults.rst:200 91af6a4792634d98b8f44bebf7cbd952
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:200
+#: 99f91335f8b14e0aaf30b844b8058623
 msgid ""
 "**Location**: "
 "``src/atomate2/siesta/dataclass/real_space_grid_parameters.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/real_space_grid_parameters.py``"
 
-#: ../../source/defaults.rst:209 668c5f6017614d57819a8b37ed950a23
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:209
+#: e7c70ddb7e3a43a3846dcf3464dbdf4f
 msgid "``mesh_cutoff``"
 msgstr "``mesh_cutoff``"
 
-#: ../../source/defaults.rst:210 f9f35523ffdc4f5ca59b5cc0d3177cf3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:210
+#: 1c52f44b790d493a8d39a658f7a023d1
 msgid "``200 Ry``"
 msgstr "``۲۰۰ Ry``"
 
-#: ../../source/defaults.rst:211 6f1f1e1fe03740c392b409f053926e5e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:211
+#: c200f3d385db47fd889fb81c7392f253
 msgid "Real-space grid fineness"
 msgstr "ظرافت شبکه فضای حقیقی"
 
-#: ../../source/defaults.rst:212 8cc0cdb50cbd4d769f2e2b70034624be
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:212
+#: ac7903d3188647ab8e624b7d4407d9be
 msgid "``grid_cell_sampling``"
 msgstr "``grid_cell_sampling``"
 
-#: ../../source/defaults.rst:213 cb0c9e574bd241bb8c032ae38c4b8dc0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:213
+#: c80239f855a54bb5aefd0898ca8b2679
 msgid "Not set"
 msgstr "تنظیم نشده"
 
-#: ../../source/defaults.rst:214 5217b29cb3994c469442a9eb826fe321
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:214
+#: a4130b682c0c4153a4da44391287fb0f
 msgid "Alternative to mesh_cutoff"
 msgstr "جایگزین برای mesh_cutoff"
 
-#: ../../source/defaults.rst:216 8f6c54778d7645a4b350078274bbf412
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:216
+#: 531d7eee28ce4d628f7d6fea45d04070
 msgid "**Recommended Values**:"
 msgstr "**مقادیر توصیه‌شده**:"
 
-#: ../../source/defaults.rst:218 97e9198abd3648e39380d9507453cd7c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:218
+#: d73c9592ee6c4fa58b00d8b7c8bac393
 msgid "Quick/testing: 150-200 Ry"
 msgstr "سریع/آزمایش: ۱۵۰-۲۰۰ Ry"
 
-#: ../../source/defaults.rst:219 ce53fed3ffdd4c818ff770b69ba7cc71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:219
+#: 5e3d242200e74a24903177385e0de802
 msgid "Production: 250-300 Ry"
 msgstr "تولید: ۲۵۰-۳۰۰ Ry"
 
-#: ../../source/defaults.rst:220 f956e20c13d346ed8c5f034680eff5fa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:220
+#: 945d61052c524224b92621281cb8ba91
 msgid "High accuracy: 350-400 Ry"
 msgstr "دقت بالا: ۳۵۰-۴۰۰ Ry"
 
-#: ../../source/defaults.rst:221 3f8f4494f4a247399c9b3dfe6e9bd8ad
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:221
+#: bef52b2fd1be41d293cbc2cc8b375511
 msgid "Molecules: 300+ Ry"
 msgstr "مولکول‌ها: ۳۰۰+ Ry"
 
-#: ../../source/defaults.rst:224 3211eeb2886e4d759a9995fe26a97a70
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:224
+#: ebd2170ffcb34e2a9e972b8d62318218
 msgid "SCF Convergence"
 msgstr "همگرایی SCF"
 
-#: ../../source/defaults.rst:226 8044768f73674dca8a431493deb68323
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:226
+#: adba84de233f41c0b41e0e2ecf223b7d
 msgid "**Location**: ``src/atomate2/siesta/dataclass/scf_loop_parameters.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/scf_loop_parameters.py``"
 
-#: ../../source/defaults.rst:235 2ede98d7dfeb4215892a364f232ca906
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:235
+#: e6db40dfc3f64d9b89a315146ea698a3
 msgid "``scf_max_iterations``"
 msgstr "``scf_max_iterations``"
 
-#: ../../source/defaults.rst:236 3592ee6c60cc475c85a7900f0f131a27
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:236
+#: a88deafa91894ebbb0a542bd529f926b
 msgid "``50``"
 msgstr "``۵۰``"
 
-#: ../../source/defaults.rst:237 d181343025b6492190c0f48345d4dd5f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:237
+#: cf3df5e9463843a6858eaeb97de24fb1
 msgid "Maximum SCF cycles"
 msgstr "حداکثر چرخه‌های SCF"
 
-#: ../../source/defaults.rst:238 7cb5e954ec6e4d6f9673bdb70f5506d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:238
+#: 1150dd675f604a84b081e47545013368
 msgid "``scf_dm_tolerance``"
 msgstr "``scf_dm_tolerance``"
 
-#: ../../source/defaults.rst:239 f5ecd2e485544d74be4c522bfeb61f08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:239
+#: de27a35cb4f64184902fbdee5a60edf2
 msgid "``1.0e-4``"
 msgstr "``۱.۰e-۴``"
 
-#: ../../source/defaults.rst:240 dad968bcd4714c8084e8bd22fe1e624e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:240
+#: ebee6dc04f284f87aeb4475521eb18bc
 msgid "Density matrix convergence criterion"
 msgstr "معیار همگرایی ماتریس چگالی"
 
-#: ../../source/defaults.rst:241 57b91eefb4024817bb2a8b7ac93d3baf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:241
+#: c407c83d0b164733aa37a91be47c0936
 msgid "``scf_mixer_weight``"
 msgstr "``scf_mixer_weight``"
 
-#: ../../source/defaults.rst:242 09762ad2a61d41ba85f99eae69a42349
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:242
+#: 56985d7711d5426fbf0644cad2e73f80
 msgid "``0.1``"
 msgstr "``۰.۱``"
 
-#: ../../source/defaults.rst:243 29b9f4f66f8048e0a5539e66166852ea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:243
+#: 9224e736e21741c7a75ef36c1953dc95
 msgid "Mixing weight for density matrix"
 msgstr "وزن اختلاط برای ماتریس چگالی"
 
-#: ../../source/defaults.rst:244 8a6249e5becf4eaf9d82983034fefcc8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:244
+#: 66c468bb383448f0aa4419505ff9b0b2
 msgid "``scf_mixer_history``"
 msgstr "``scf_mixer_history``"
 
-#: ../../source/defaults.rst:245 e4a4bad469d845eb96bd5fca11b5bc28
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:245
+#: 609844e7cd4d410f8d7dd8e07c07bbcc
 msgid "``5``"
 msgstr "``۵``"
 
-#: ../../source/defaults.rst:246 e28f3fd8e1e04f5987e97df4e8bae775
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:246
+#: 59c65185b175402489c772aa20c13a4b
 msgid "Number of previous iterations to mix"
 msgstr "تعداد تکرارهای قبلی برای اختلاط"
 
-#: ../../source/defaults.rst:248 0c8e7a042ced4faa9e8e939a715c105c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:248
+#: 3c6353b024844cf9b39476320b3779ce
 msgid "**Convergence Difficulties**:"
 msgstr "**مشکلات همگرایی**:"
 
-#: ../../source/defaults.rst:250 55687e45575f4c7282351c7659ffb43a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:250
+#: 847311e476dc4258bf7e11a9367ff1f5
 msgid "If SCF doesn't converge, custodian will automatically try:"
 msgstr "اگر SCF همگرا نشود، custodian به صورت خودکار تلاش می‌کند:"
 
-#: ../../source/defaults.rst:252 18a5d0e36ee74cc2b44478dac9d56465
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:252
+#: 662bf0ae01ba4be99348a02fc91c6e5d
 msgid "Reduce mixing weight (0.1 → 0.05 → 0.01)"
 msgstr "کاهش وزن اختلاط (۰.۱ ← ۰.۰۵ ← ۰.۰۱)"
 
-#: ../../source/defaults.rst:253 8d06de6fc4d648849225136248318bb0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:253
+#: d8cbba624b2340eaaeb5851b3d75e15a
 msgid "Increase history (5 → 10)"
 msgstr "افزایش تاریخچه (۵ ← ۱۰)"
 
-#: ../../source/defaults.rst:254 a110813619a84aaca73b68724c5a6668
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:254
+#: f14da51fad9d4b818c649f608421903d
 msgid "Change mixing method"
 msgstr "تغییر روش اختلاط"
 
-#: ../../source/defaults.rst:255 e762dd7ef4d64effbd61c1dbe88cafda
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:255
+#: 7d741fa2fda04606b82b0e4b54e9bbc6
 msgid "Reduce temperature for Fermi distribution"
 msgstr "کاهش دما برای توزیع فرمی"
 
-#: ../../source/defaults.rst:258 498e2368f0d94d998587be20d3735cfa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:258
+#: 22936ac1ecae4c139897ed260da77b5a
 msgid "Spin Settings"
 msgstr "تنظیمات اسپین"
 
-#: ../../source/defaults.rst:260 da416fa403c546b3a2f77036ff087f98
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:260
+#: a51970f96000445eb1aa105f50d7804e
 msgid "**Location**: ``src/atomate2/siesta/dataclass/spin_settings.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/spin_settings.py``"
 
-#: ../../source/defaults.rst:269 8ad0fb826d3c42a7b910331d6363e437
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:269
+#: defbb8c0a4f24e4590074c16d3ce8805
 msgid "``spin``"
 msgstr "``spin``"
 
-#: ../../source/defaults.rst:270 6cf2908500f14c10b1ea2b94f3c161de
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:270
+#: 960f63aba34046539d94200e1da5338e
 msgid "``non-polarized``"
 msgstr "``non-polarized``"
 
-#: ../../source/defaults.rst:271 07ae621691ef40c3ac84f6048a584951
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:271
+#: e89d162a69cb45e9ae18b35852fce979
 msgid "Non-magnetic calculation"
 msgstr "محاسبه غیرمغناطیسی"
 
-#: ../../source/defaults.rst:272 71adf69181c7475ba9372b8420935fa3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:272
+#: a38b0f225ede4199a5e982e292aa1807
 msgid "Auto-override"
 msgstr "بازنویسی خودکار"
 
-#: ../../source/defaults.rst:273 5468dffd216b4395862a309a60058f09
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:273
+#: a3acf0c539cf4ca58bdb0466aea1d80a
 msgid "**Yes**"
 msgstr "**بله**"
 
-#: ../../source/defaults.rst:274 d0dbb05041264d17883176885c9b6eee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:274
+#: 25039a0e102b4c30a0c6f0eaef4d4dd2
 msgid "Changes to ``polarized`` if magnetic moments detected"
 msgstr "در صورت تشخیص ممان‌های مغناطیسی به ``polarized`` تغییر می‌کند"
 
-#: ../../source/defaults.rst:276 3f20730ff1be46fa8984dce182ff9e84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:276
+#: 314b3ca84f9c454793d5279a2b450034
 msgid "**Automatic Magnetic Moment Detection**:"
 msgstr "**تشخیص خودکار ممان مغناطیسی**:"
 
-#: ../../source/defaults.rst:278 c896c03ef72f4a879c46ddcc556d0738
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:278
+#: 028f3950dd5a43cdae266e57dd42682d
 msgid "When magnetic moments are present in structure:"
 msgstr "وقتی ممان‌های مغناطیسی در ساختار وجود دارند:"
 
-#: ../../source/defaults.rst:289 06e9ede270db4211ab4d1078a0f70129
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:289
+#: fb6dc5271008494b873247464909374d
 msgid "Structural Relaxation"
 msgstr "آرام‌سازی ساختاری"
 
-#: ../../source/defaults.rst:291 8891745240944355beeffdcf32176e9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:291
+#: f66e36f7369a464b9686a7331b89e360
 msgid "**Location**: ``src/atomate2/siesta/dataclass/general_constraints.py``"
 msgstr "**مکان**: ``src/atomate2/siesta/dataclass/general_constraints.py``"
 
-#: ../../source/defaults.rst:300 8604b6b087d04bf0a2bb2f2b5f368448
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:300
+#: 6af6030bbb4844a7a4da64656382ceed
 msgid "``md_max_force_tol``"
 msgstr "``md_max_force_tol``"
 
-#: ../../source/defaults.rst:301 81cc06060c0c4065b2e61a4d324c5e73
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:301
+#: 2e47fbe3a7d84f7bb57a286d38c702cb
 msgid "``0.04 eV/Å``"
 msgstr "``۰.۰۴ eV/Å``"
 
-#: ../../source/defaults.rst:302 8e8ca4d735fc41fead3d4fa6148fb854
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:302
+#: 92a19d0fc5b54f958da402071b8742be
 msgid "Force convergence criterion"
 msgstr "معیار همگرایی نیرو"
 
-#: ../../source/defaults.rst:303 233d7ada471b47a28910f7b11045f18d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:303
+#: 6836c28d591e4ce1814dbd5bf8e06106
 msgid "``md_max_stress_tol``"
 msgstr "``md_max_stress_tol``"
 
-#: ../../source/defaults.rst:304 c60cc2676a854bc598a9015b42f94914
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:304
+#: d9db20f0958f407ca36e65d862f672d5
 msgid "``1.0 GPa``"
 msgstr "``۱.۰ GPa``"
 
-#: ../../source/defaults.rst:305 647f8b27589f433cbe2dbbf9b5f3defd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:305
+#: 9fcb377e552744519486df4771eda4fb
 msgid "Stress convergence (variable cell)"
 msgstr "همگرایی تنش (سلول متغیر)"
 
-#: ../../source/defaults.rst:306 9f4be1e4384d43a28ae112d55c666f2d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:306
+#: ac5bf66493c44086a72ef92c68aa6388
 msgid "``md_max_cg_displ``"
 msgstr "``md_max_cg_displ``"
 
-#: ../../source/defaults.rst:307 a2fa7a22b993450996971b34a6d6c125
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:307
+#: aac192a018ef48e6b5e130cfe74dd009
 msgid "``0.2 Bohr``"
 msgstr "``۰.۲ Bohr``"
 
-#: ../../source/defaults.rst:308 c5fb893e5b6649db9e7a9c6a6ace73d9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:308
+#: 1a4ef550de804106a8693af24ccb3aff
 msgid "Maximum displacement per step"
 msgstr "حداکثر جابجایی در هر گام"
 
-#: ../../source/defaults.rst:309 5a1a1b4766c247bc9d108091e387fe10
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:309
+#: b398f278721d40da875068bb3d166032
 msgid "``md_num_cg_steps``"
 msgstr "``md_num_cg_steps``"
 
-#: ../../source/defaults.rst:310 4aaba26f5a6b459cb24464be084aaab2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:310
+#: f3343d1b94ce4e1d844de78d02458a24
 msgid "``100``"
 msgstr "``۱۰۰``"
 
-#: ../../source/defaults.rst:311 46065bf6739640659a6621c6ec68f258
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:311
+#: e36353e2ae4446198cd4a6a65df8a111
 msgid "Maximum geometry steps"
 msgstr "حداکثر گام‌های هندسی"
 
-#: ../../source/defaults.rst:314 1cab3449f4a4429480a8fe65ee9f5de1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:314
+#: 62922f523b5949e7af67d573202a3be0
 msgid "Electronic Structure Options"
 msgstr "گزینه‌های ساختار الکترونی"
 
-#: ../../source/defaults.rst:316 083b523c1c46456cbf0905a270c5b2bf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:316
+#: 7353a8419ca946e1ac433e31434f4209
 msgid ""
 "**Location**: "
 "``src/atomate2/siesta/dataclass/electronic_structure_calculation_options.py``"
-msgstr "**مکان**: ``src/atomate2/siesta/dataclass/electronic_structure_calculation_options.py``"
+msgstr ""
+"**مکان**: "
+"``src/atomate2/siesta/dataclass/electronic_structure_calculation_options.py``"
 
-#: ../../source/defaults.rst:325 a1de214a60084735b7b716b14eeab1a0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:325
+#: 08ebd5f10a28441da385377552652216
 msgid "``electronic_temperature``"
 msgstr "``electronic_temperature``"
 
-#: ../../source/defaults.rst:326 1acd1435491f4fb4802a302d5e412229
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:326
+#: cfcba70ea4f3473c8f64ce748a3880ab
 msgid "``25 meV``"
 msgstr "``۲۵ meV``"
 
-#: ../../source/defaults.rst:327 1b20dbd1c601455c9d7e6a396a7341d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:327
+#: 24151ee8e4f946a1b1abdcd79b40b3b5
 msgid "Electronic smearing (Fermi-Dirac)"
 msgstr "پهن‌شدگی الکترونی (فرمی-دیراک)"
 
-#: ../../source/defaults.rst:328 0a495328d41d4dba8924a50d1e96cab4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:328
+#: 5aea37448b02481a97c7ce65bb55d0b0
 msgid "``occupation_function``"
 msgstr "``occupation_function``"
 
-#: ../../source/defaults.rst:329 ba87c8e4f8104103a8bdd775818b3946
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:329
+#: ae1500ffaf41471082acc8f2b0a4a0da
 msgid "``FD``"
 msgstr "``FD``"
 
-#: ../../source/defaults.rst:330 46362f74cd534bf4883f755c48507da5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:330
+#: 69eca71ae2a343f584784e69e760ffd0
 msgid "Fermi-Dirac distribution"
 msgstr "توزیع فرمی-دیراک"
 
-#: ../../source/defaults.rst:331 2353756c6e7045ddb87522bb28f0eca1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:331
+#: b08d2ad2c5a84b2ea1d0540c9c856c70
 msgid "``save_density_matrix``"
 msgstr "``save_density_matrix``"
 
-#: ../../source/defaults.rst:332 5e0cd493756e46f6adfef720e027c63e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:332
+#: a1a576b49d54425a8dfac6aef38e54c4
 msgid "``True``"
 msgstr "``True``"
 
-#: ../../source/defaults.rst:333 7c439bdabb5e4be3baa65860b666d562
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:333
+#: 1c107c8d71104c749ce98cfffedfbf3a
 msgid "Save DM for restart"
 msgstr "ذخیره DM برای راه‌اندازی مجدد"
 
-#: ../../source/defaults.rst:336 26de124d3ec442a185669239365a1d4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:336
+#: 897ee7db4ee14e05a0e855150b162b8f
 msgid "Solver and Performance"
 msgstr "حل‌کننده و عملکرد"
 
-#: ../../source/defaults.rst:338 58e3483b9c1c440dbe59220ae967d4fd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:338
+#: b2f1ad7227414febb9afd32fada4f0cf
 msgid ""
 "**Location**: "
 "``src/atomate2/siesta/dataclass/solvers_and_performance_options.py``"
-msgstr "**مکان**: ``src/atomate2/siesta/dataclass/solvers_and_performance_options.py``"
+msgstr ""
+"**مکان**: "
+"``src/atomate2/siesta/dataclass/solvers_and_performance_options.py``"
 
-#: ../../source/defaults.rst:347 fa47138bc9bf4ca79ab079d95df7fa11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:347
+#: dd68679ed8f34af79eea4c13e5437866
 msgid "``diagonalization_algorithm``"
 msgstr "``diagonalization_algorithm``"
 
-#: ../../source/defaults.rst:348 c6c007a0370d402084f07e2b63814b62
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:348
+#: dff0e86a3ab44b858e84f8904cef98a3
 msgid "System-dependent"
 msgstr "وابسته به سیستم"
 
-#: ../../source/defaults.rst:349 d8d1716365344100ab5afc8ffbc02130
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:349
+#: fd5ea199905d45e083b177ca935605d9
 msgid "Automatic selection"
 msgstr "انتخاب خودکار"
 
-#: ../../source/defaults.rst:350 f5cb9d522fa34ee8bdcd5225363d2bc4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:350
+#: 50d7444bd44d48b4aba5750d1d3b4150
 msgid "``number_of_eigenvalues``"
 msgstr "``number_of_eigenvalues``"
 
-#: ../../source/defaults.rst:351 ../../source/defaults.rst:516
-#: 99451b0a8e8644398d12ebbadb06e2da df3a93b074a44b1fb7e91e4652391ce7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:351
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:516
+#: 5c661946d13844c9b7ebc2e01fe0f7d9 c6ab34678e1a41e9a43b58afa52e4301
 msgid "Automatic"
 msgstr "خودکار"
 
-#: ../../source/defaults.rst:352 4bab790f4dcb41f69973cddbb9c75fc9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:352
+#: e6042b82d2ff4e1e9bf01c9f47711c1a
 msgid "Based on number of electrons"
 msgstr "بر اساس تعداد الکترون‌ها"
 
-#: ../../source/defaults.rst:355 62cfa3a69647489282b1215c6fe5484a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:355
+#: 11542e78f78a4416963ff1a46a35be89
 msgid "Configuration File"
 msgstr "فایل پیکربندی"
 
-#: ../../source/defaults.rst:357 a0691ccd645d4707b26b9dbbb3b286da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:357
+#: d6228bc81e7f40eabedd6d74fbd4b39b
 msgid "**Default Location**: ``~/.atomate2.yaml``"
 msgstr "**مکان پیش‌فرض**: ``~/.atomate2.yaml``"
 
-#: ../../source/defaults.rst:359 03f7fd894fac454b9e15aaa0dd182c68
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:359
+#: 2d33f485ade8400189d5b4a9e4305896
 msgid "**Default Contents** (if file doesn't exist):"
 msgstr "**محتویات پیش‌فرض** (اگر فایل وجود نداشته باشد):"
 
-#: ../../source/defaults.rst:373 913ff00c7ace4f569061b05f5bf2c9b3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:373
+#: f0b93e46a5cc48d98d744841cda318c3
 msgid "**Configuration Precedence**:"
 msgstr "**اولویت پیکربندی**:"
 
-#: ../../source/defaults.rst:375 604311725fe8436f928379d435cfd48f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:375
+#: 433b22a2c284489fb5493214a5661ecd
 msgid "**Highest**: User params in code (``user_params`` argument)"
 msgstr "**بالاترین**: پارامترهای کاربر در کد (آرگومان ``user_params``)"
 
-#: ../../source/defaults.rst:376 bd8cfab6bcb74e4b98eff4e18bfe4f6e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:376
+#: 898d1b8ca908466f9108b29d0d1a6f8a
 msgid "**Medium**: Environment variables (``SIESTA_PP_PATH``, etc.)"
 msgstr "**متوسط**: متغیرهای محیطی (``SIESTA_PP_PATH`` و غیره)"
 
-#: ../../source/defaults.rst:377 2b99c276cb714ac3882457d5218e34b0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:377
+#: 18e19f21ef0c4eb0a04b10a16adbc132
 msgid "**Lowest**: Configuration file (``~/.atomate2.yaml``)"
 msgstr "**پایین‌ترین**: فایل پیکربندی (``~/.atomate2.yaml``)"
 
-#: ../../source/defaults.rst:378 1e6b5105e00c44328ac1d739dec2325a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:378
+#: 2463f2b9e92a428f846ff4688cce9ba8
 msgid "**Fallback**: Dataclass defaults (documented on this page)"
 msgstr "**بازگشتی**: مقادیر پیش‌فرض کلاس داده (مستندشده در این صفحه)"
 
-#: ../../source/defaults.rst:381 88a3e13c1ca645f28e338b132a42707f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:381
+#: 1be12292c3b24f1ea9963ad462951831
 msgid "Tier System Defaults"
 msgstr "مقادیر پیش‌فرض سیستم سطحی"
 
-#: ../../source/defaults.rst:383 0650a09950634d0e9f95309f96fed2a5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:383
+#: 698efcbfcfcc4ed6bf4e2155ea028e76
 msgid ""
 "The tier system provides 18 material-specific presets organized in 7 "
 "categories. Each preset overrides certain defaults for specific use "
 "cases."
-msgstr "سیستم سطحی ۱۸ پیش‌تنظیم ویژه‌ماده ارائه می‌دهد که در ۷ دسته سازمان‌دهی شده‌اند. هر پیش‌تنظیم برخی مقادیر پیش‌فرض را برای موارد استفاده خاص بازنویسی می‌کند."
+msgstr ""
+"سیستم سطحی ۱۸ پیش‌تنظیم ویژه‌ماده ارائه می‌دهد که در ۷ دسته سازمان‌دهی "
+"شده‌اند. هر پیش‌تنظیم برخی مقادیر پیش‌فرض را برای موارد استفاده خاص "
+"بازنویسی می‌کند."
 
-#: ../../source/defaults.rst:385 bedd24a0c56e4d56b0f065e1a3481857
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:385
+#: b7ac889f84ab4138b6f56eefdd51ee74
 msgid ""
 "**Default Tier**: No tier applied unless specified with "
 "``apply_tier_preset()``"
-msgstr "**سطح پیش‌فرض**: هیچ سطحی اعمال نمی‌شود مگر اینکه با ``apply_tier_preset()`` مشخص شود"
+msgstr ""
+"**سطح پیش‌فرض**: هیچ سطحی اعمال نمی‌شود مگر اینکه با "
+"``apply_tier_preset()`` مشخص شود"
 
-#: ../../source/defaults.rst:387 a47bc099fd5d41b28935a2266a7e9229
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:387
+#: 72dbea33fecf4924bf9bd9e4991bac83
 msgid "**Common Presets**:"
 msgstr "**پیش‌تنظیم‌های متداول**:"
 
-#: ../../source/defaults.rst:393 f924627da2824c29b0ea0db030e3ab3c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:393
+#: 30483414ba2d4c408c819090561ed2a1
 msgid "Preset"
 msgstr "پیش‌تنظیم"
 
-#: ../../source/defaults.rst:394 f385aa49c1a44e578fc703101609f94f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:394
+#: 03c1e993e4e843fb870eebaf84122dbd
 msgid "What it changes"
 msgstr "چه چیزی را تغییر می‌دهد"
 
-#: ../../source/defaults.rst:395 cc404f5ce87041a7ac3b785689ce16ae
-msgid "``standard_relax``"
-msgstr "``standard_relax``"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:395
+#: 77579ae3841f45e0a2aa957d9f0090bb
+#, fuzzy
+msgid "``relax_standard``"
+msgstr "``Standard``"
 
-#: ../../source/defaults.rst:396 44d783b8d1244204b7051f9817d1335d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:396
+#: de228002e4684210896d03cd61ddf24f
 msgid "Balanced accuracy for relaxation (DZP, moderate k-points)"
 msgstr "دقت متعادل برای آرام‌سازی (DZP، نقاط k متوسط)"
 
-#: ../../source/defaults.rst:397 46109db197664d89b27c38ce0db9f05d
-msgid "``accurate_bands``"
-msgstr "``accurate_bands``"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:397
+#: 0b96803fc78a4d81bdd051cdece1845c
+#, fuzzy
+msgid "``band_structure``"
+msgstr "``True``"
 
-#: ../../source/defaults.rst:398 862972cb12574e6ca0f9bda3438459e5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:398
+#: 22794c2d702947a992607af63706df98
 msgid "High-quality band structures (dense k-path, tight convergence)"
 msgstr "ساختارهای نواری با کیفیت بالا (مسیر k متراکم، همگرایی محکم)"
 
-#: ../../source/defaults.rst:399 e0fd8024640d430d8977af942bb32966
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:399
+#: a90019d02fee4cefa3325691495a6b94
 msgid "``quick_test``"
 msgstr "``quick_test``"
 
-#: ../../source/defaults.rst:400 a0df481842ab4e0a8ade872c4c877237
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:400
+#: f48e4ebf717949d5958babb9e56e28bb
 msgid "Fast calculations for testing (SZ basis, coarse grids)"
 msgstr "محاسبات سریع برای آزمایش (پایه SZ، شبکه‌های درشت)"
 
-#: ../../source/defaults.rst:401 788e76436ec24694a1fe3073cae4aa4c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:401
+#: 4067bacdbcc84184b41cbb5762695fe2
 msgid "``high_accuracy``"
 msgstr "``high_accuracy``"
 
-#: ../../source/defaults.rst:402 ac6864558ef74e688930f4524c275ded
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:402
+#: d861ebf27749450da3e4d6f502578534
 msgid "Maximum accuracy (TZP, dense grids, tight tolerances)"
 msgstr "حداکثر دقت (TZP، شبکه‌های متراکم، تلورانس‌های محکم)"
 
-#: ../../source/defaults.rst:404 d5a11ef21dac49baab78e57ba7988196
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:404
+#: ffec4cf85376435bb1b46cd8cb8fa55c
 msgid "See :doc:`tier-system` for complete preset documentation."
 msgstr "برای مستندات کامل پیش‌تنظیم، :doc:`tier-system` را ببینید."
 
-#: ../../source/defaults.rst:407 bed5ff23082b443ea5c687fb08322275
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:407
+#: 749d3c512e964963b56380a733ac9dbc
 msgid "Dry-Run Mode"
 msgstr "حالت اجرای خشک"
 
-#: ../../source/defaults.rst:409 2cb345c7b8314aa189d8cca21cd72406
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:409
+#: bef3d6121ae047e88b803c9f523968d6
 msgid "**Default**: ``dry_run=False`` (runs actual SIESTA calculation)"
 msgstr "**پیش‌فرض**: ``dry_run=False`` (محاسبه واقعی SIESTA را اجرا می‌کند)"
 
-#: ../../source/defaults.rst:411 ../../source/defaults.rst:429
-#: 7b881ed7dda24d27a7dd0769de81922f ca5af618b6ab47319f3ea1b9ed34b788
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:411
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:429
+#: 817b9a689c7e4229b8f07b017fe4fd50 b53b98a7cf3c4747a345caaa43804cf4
 msgid "**Override**:"
 msgstr "**بازنویسی**:"
 
-#: ../../source/defaults.rst:418 e263d7809d9640a093f94b4fc2108797
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:418
+#: efcc25f1effd4a84b02b0c264cf4117c
 msgid "**When to use dry-run**:"
 msgstr "**چه زمانی از اجرای خشک استفاده کنیم**:"
 
-#: ../../source/defaults.rst:420 d7f5011208e04a76bd7e156f4c2e1f05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:420
+#: 2033b6b25388429e9759bbe0c1851b1f
 msgid "Testing workflows before production runs"
 msgstr "آزمایش گردش‌کارها قبل از اجراهای تولید"
 
-#: ../../source/defaults.rst:421 57a3fd85be2048c2841f2f078add5edd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:421
+#: e0cb23176ad74090a5d3abceb4e364a2
 msgid "Debugging input generation"
 msgstr "اشکال‌زدایی تولید ورودی"
 
-#: ../../source/defaults.rst:422 9ab0b9cef9cc4aa4b8d4b7c61aff9cc6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:422
+#: 882ed126967e4af5863c7121430b391e
 msgid "Previewing calculations (99.9% time savings)"
 msgstr "پیش‌نمایش محاسبات (صرفه‌جویی زمانی ۹۹.۹٪)"
 
-#: ../../source/defaults.rst:425 53e5af3ceced402d8ab1f1293dda8bd5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:425
+#: 8b1baeef799a4d0492ce631f1b9da03f
 msgid "Custodian Settings"
 msgstr "تنظیمات Custodian"
 
-#: ../../source/defaults.rst:427 6c0382fcda394b38bd0b743840a8bec6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:427
+#: 34cba8373d0b4f21867b64b7ac25c527
 msgid "**Default**: ``use_custodian=False`` (direct SIESTA execution)"
 msgstr "**پیش‌فرض**: ``use_custodian=False`` (اجرای مستقیم SIESTA)"
 
-#: ../../source/defaults.rst:438 68e61393a6cc4003980a6d9b88894d8b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:438
+#: cc9441a304fd419fb27874cc55d39323
 msgid "**Default Error Handlers** (when custodian enabled):"
 msgstr "**مدیریت‌کننده‌های خطای پیش‌فرض** (وقتی custodian فعال است):"
 
-#: ../../source/defaults.rst:440 76ef360726674a95a213d76ec7d72ebd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:440
+#: 8240511c0f5c4918924ec86ea5fce837
 msgid "SCF convergence handler (5-level rescue strategy)"
 msgstr "مدیریت‌کننده همگرایی SCF (استراتژی نجات ۵ سطحی)"
 
-#: ../../source/defaults.rst:441 0bbbdbe0c5b64c60b2e0c7605bbbd8cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:441
+#: 9750a18d73e84267ae1663036c6dbc5a
 msgid "Time limit handler"
 msgstr "مدیریت‌کننده محدودیت زمان"
 
-#: ../../source/defaults.rst:442 674e30d4b21b4704b922641ccf524f55
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:442
+#: 59abc0c625184460a96ab8fa5cda6935
 msgid "Memory limit handler"
 msgstr "مدیریت‌کننده محدودیت حافظه"
 
-#: ../../source/defaults.rst:443 05f8ba90c44b4699844f972a9eba8151
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:443
+#: 4d65350e5ecb4c6d8630bf4f8f2dbc86
 msgid "Geometry convergence handler"
 msgstr "مدیریت‌کننده همگرایی هندسی"
 
-#: ../../source/defaults.rst:445 50f9f4e2d78d4f3aabebbefb3b6d9bb9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:445
+#: 38bea54fe33441e8bedbbaefb557e13a
 msgid "See :doc:`custodian` for detailed error handling documentation."
 msgstr "برای مستندات دقیق مدیریت خطا، :doc:`custodian` را ببینید."
 
-#: ../../source/defaults.rst:448 a4420f5daa0a4f3895a726a5a8294e3e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:448
+#: 0b1faa389d604fc88311f863b3f032e3
 msgid "How to Override Defaults"
 msgstr "نحوه بازنویسی مقادیر پیش‌فرض"
 
-#: ../../source/defaults.rst:451 806c48f8941d4273a7648aa9e0bdc1ff
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:451
+#: 7a977dd29f4c425ebd358fbef936bb0a
 msgid "Method 1: User Params (Most Common)"
 msgstr "روش ۱: پارامترهای کاربر (متداول‌ترین)"
 
-#: ../../source/defaults.rst:466 f217454de5864474a30af80e2c89e7d2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:466
+#: ddbb0a2227094007a3c1ab822d60594a
 msgid "Method 2: Tier Presets"
 msgstr "روش ۲: پیش‌تنظیم‌های سطحی"
 
-#: ../../source/defaults.rst:477 c1180e364c314a53871c9ce542418187
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:477
+#: cdaba02f0b994ee2819002ea2f588611
 msgid "Method 3: Powerups (After Job Creation)"
 msgstr "روش ۳: Powerups (پس از ایجاد شغل)"
 
-#: ../../source/defaults.rst:490 294a1dbff7fd473291f6cfc7428faa70
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:490
+#: a3d72e5dffc044a5acc3e400e22cbbd6
 msgid "Method 4: Environment Variables"
 msgstr "روش ۴: متغیرهای محیطی"
 
-#: ../../source/defaults.rst:498 4667b452d9ed4e21b3f06b000c2e88c9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:498
+#: 7012e6b8ae4549af9c75a1b1aca1123f
 msgid "Summary Table"
 msgstr "جدول خلاصه"
 
-#: ../../source/defaults.rst:500 c94ba93a473f4ac18e2b362d9992e3a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:500
+#: c87256d2eb02419cb2d49687d1c3aca3
 msgid "**Most Important Defaults to Remember**:"
 msgstr "**مهم‌ترین مقادیر پیش‌فرض که باید به خاطر بسپارید**:"
 
-#: ../../source/defaults.rst:506 5b1f747e1fb645fe8827dd1cc2b3e33c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:506
+#: 695b810d15ef4bf19afa85dc48c7cba7
 msgid "Setting"
 msgstr "تنظیم"
 
-#: ../../source/defaults.rst:507 7c96044bc1b648afbcc5c0763a099c7a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:507
+#: 17ff59f115c74d6caa04ee089cdef66f
 msgid "Default"
 msgstr "پیش‌فرض"
 
-#: ../../source/defaults.rst:508 a86fb8a4e2104e47b2ddc786ab03b328
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:508
+#: bbefd428ebb048289af4fbb2a4a0c64f
 msgid "Why This Value?"
 msgstr "چرا این مقدار؟"
 
-#: ../../source/defaults.rst:509 df1bbb6699bb42f881c3ef734cd134be
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:509
+#: 4f3c2a4653ac4383bff6b1d2ea12f061
 msgid "**XC Functional**"
 msgstr "**تابعک XC**"
 
-#: ../../source/defaults.rst:511 b1431e08003245728bac207eb9aa3abe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:511
+#: 1703dbc625894350826b19f95d00d8b1
 msgid "Most widely used in materials science"
 msgstr "پرکاربردترین در علم مواد"
 
-#: ../../source/defaults.rst:512 4f1ea9cf0a564a82a7813ad3c2063063
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:512
+#: 4fb63b64c70b43f099a300ee71647680
 msgid "Basis"
 msgstr "پایه"
 
-#: ../../source/defaults.rst:513 c37ff15b2dce4b4396366b06cf904fe5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:513
+#: eab3d0e3c62244d48d4646f592c3930d
 msgid "DZP"
 msgstr "DZP"
 
-#: ../../source/defaults.rst:514 23f8eaaa0e1c449798c55894f12a049c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:514
+#: fe34d56f848f4acdb3eea4a3581fda9a
 msgid "Good accuracy/cost balance"
 msgstr "تعادل خوب دقت/هزینه"
 
-#: ../../source/defaults.rst:515 037f7c08fb21443fa925269f030f7b15
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:515
+#: ff54a03ebf5c40c08d034b91cd942bfd
 msgid "K-points"
 msgstr "نقاط k"
 
-#: ../../source/defaults.rst:517 9f15b283a6c14caf917abb3f7c6bd60f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:517
+#: efbbf0ab16134ff990ed3dd4161617ab
 msgid "Structure-dependent"
 msgstr "وابسته به ساختار"
 
-#: ../../source/defaults.rst:518 9afac9ef947646288c77d02ac5f4f885
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:518
+#: 6207a3967c3641ed9279dcdc0ed3f08e
 msgid "Mesh Cutoff"
 msgstr "برش شبکه"
 
-#: ../../source/defaults.rst:519 e359cc14e32e4861a6c98d6aa8083d39
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:519
+#: 0ad91686984b41d6bfb961cdb58f938f
 msgid "200 Ry"
 msgstr "۲۰۰ Ry"
 
-#: ../../source/defaults.rst:520 b8e9dee5f5b04693a1ef23d69868599f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:520
+#: 0bb587929a1d46df8d44fd206bd695cc
 msgid "Fast convergence for testing"
 msgstr "همگرایی سریع برای آزمایش"
 
-#: ../../source/defaults.rst:521 4c34753bcbb14718848d571452acf172
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:521
+#: 1b78ca9f5d9f4e3399f18f00234b4523
 msgid "Pseudos"
 msgstr "شبه‌پتانسیل‌ها"
 
-#: ../../source/defaults.rst:522 0cb0bfd4fe21406b9619984dfbc2cfaf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:522
+#: 43951f243c2f45e0b594c757413c04c5
 msgid "ONCVPSP-PBE-FR-0.4"
 msgstr "ONCVPSP-PBE-FR-۰.۴"
 
-#: ../../source/defaults.rst:523 f934faf375f44284993d20ef92543a83
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:523
+#: 665a23a73faf44a998d8fa33a65f0ff6
 msgid "Matches XC functional"
 msgstr "با تابعک XC مطابقت دارد"
 
-#: ../../source/defaults.rst:524 ffda46ae494b4b4eaab3418eb0a7b99f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:524
+#: 94a4a07b32834981b90257e1230f1a4e
 msgid "SCF Tolerance"
 msgstr "تلورانس SCF"
 
-#: ../../source/defaults.rst:525 c0175f24d7fa4aa5ab2d950eb7f456e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:525
+#: 765ced14d6f344dc8fa07789301e2ec3
 msgid "1e-4"
 msgstr "۱e-۴"
 
-#: ../../source/defaults.rst:526 26838067942f4a6b94b98181eb7f5006
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:526
+#: 637c457321dd4bc08e83393893d28ef1
 msgid "Production quality"
 msgstr "کیفیت تولید"
 
-#: ../../source/defaults.rst:527 9397ca2139444842963171e1b6d1fec2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:527
+#: e787f3424dff463e882f1f6d057866f3
 msgid "Force Tolerance"
 msgstr "تلورانس نیرو"
 
-#: ../../source/defaults.rst:528 a93f212e87d04a82b48c10b9bd1dce89
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:528
+#: 1544995efde74128aaa460a8572bb964
 msgid "0.04 eV/Å"
 msgstr "۰.۰۴ eV/Å"
 
-#: ../../source/defaults.rst:529 2ceebb1dd1f64d61bc29a85990688e94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:529
+#: 5184734b9e5e4beebf9e9e363b5416c3
 msgid "Standard for relaxation"
 msgstr "استاندارد برای آرام‌سازی"
 
-#: ../../source/defaults.rst:532 81fed40b64444c729c9064e3365a2b48
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:532
+#: 70af0f37a8194f55bee3559559adb467
 msgid "See Also"
 msgstr "همچنین ببینید"
 
-#: ../../source/defaults.rst:534 ac43918e076e4dc09d30dbe716d4bd8b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:534
+#: 3f6aeac04dac4f92a558ab0cfbcbd391
 msgid ":doc:`usage` - Basic usage patterns"
 msgstr ":doc:`usage` - الگوهای استفاده پایه"
 
-#: ../../source/defaults.rst:535 958c059e1aa145b7b53b5346c1592291
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:535
+#: d8e35164592349dbb7ecaacb1569ece3
 msgid ":doc:`tier-system` - Material-specific presets"
 msgstr ":doc:`tier-system` - پیش‌تنظیم‌های ویژه‌ماده"
 
-#: ../../source/defaults.rst:536 0a93707851c74bd092f455c1cfdc9419
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:536
+#: d77f51b08be44fdb9d49ba16b5ce96f8
 msgid ":doc:`installation` - Configuration setup"
 msgstr ":doc:`installation` - راه‌اندازی پیکربندی"
 
-#: ../../source/defaults.rst:537 9e9ab9dbc6dc4af49f5c543a135ca81e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:537
+#: 8a70b0440db24a91b8e2e892bc318042
 msgid ":doc:`troubleshooting` - Common issues with defaults"
 msgstr ":doc:`troubleshooting` - مشکلات رایج با مقادیر پیش‌فرض"
 
-#: ../../source/defaults.rst:538 b8c9e918d0b244b3985fa893fa907651
-msgid ""
-"`PARAMETER_REFERENCE.md <https://github.com/arsalan-"
-"akhtar/atomate2siesta/blob/main/docs/cheatsheets/PARAMETER_REFERENCE.md>`_"
-" - Complete SIESTA parameter guide"
-msgstr "`PARAMETER_REFERENCE.md <https://github.com/materialsproject/atomate2/blob/main/docs/cheatsheets/PARAMETER_REFERENCE.md>`_ - راهنمای کامل پارامترهای SIESTA"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/defaults.rst:538
+#: 6a33573d53a7487c96e7e8c443a45935
+msgid ":doc:`fdf-parameters` - Complete SIESTA parameter guide"
+msgstr ""
+
+#~ msgid "``standard_relax``"
+#~ msgstr "``standard_relax``"
+
+#~ msgid "``accurate_bands``"
+#~ msgstr "``accurate_bands``"
+
+#~ msgid ""
+#~ "`PARAMETER_REFERENCE.md <https://github.com/arsalan-"
+#~ "akhtar/atomate2siesta/blob/main/docs/cheatsheets/PARAMETER_REFERENCE.md>`_"
+#~ " - Complete SIESTA parameter guide"
+#~ msgstr ""
+#~ "`PARAMETER_REFERENCE.md "
+#~ "<https://github.com/materialsproject/atomate2/blob/main/docs/cheatsheets/PARAMETER_REFERENCE.md>`_"
+#~ " - راهنمای کامل پارامترهای SIESTA"
+

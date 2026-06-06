@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,11 +20,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-auto/00-structures.rst:4
-msgid "Tutorials in this category"
-msgstr ""
-
-#: ../../source/tutorials-auto/00-structures.rst:2
-#: 05798dfc70ba4b30bdb28fd77c12ce15
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/00-structures.rst:2
+#: 5c193fa2ffc246fbb8e80d75b41dbe4d
 msgid "00 Structures"
 msgstr ""
+
+#~ msgid "Tutorials in this category"
+#~ msgstr ""
+

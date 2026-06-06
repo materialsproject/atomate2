@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,18 +20,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:1
-#: e5469a1b29f94d30a7caced95ef3062c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:1
+#: 168f67ebd09449eeb3f806ab41d5d880
 msgid "Database Storage Tutorial"
 msgstr "Dtbse Stیاge Tutیاil"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:3
-#: a2e6b5b80e58493782b6e79cc63ef5b9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:3
+#: 0643f04dadcb4524a348594a1c16c6bc
 msgid "Overview"
 msgstr "نمای کلی"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:5
-#: 29649600165440529a38152b2779afb1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:5
+#: 5070b42dd0ef47faba6cfc9f659e6633
 msgid ""
 "This tutorial demonstrates MongoDB integration for centralizing "
 "calculation results, enabling easy querying, workflow provenance "
@@ -39,595 +39,644 @@ msgid ""
 " convenient database management tools."
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:7
-#: ca6b86092ff84fd1acba7db7f8ac84a1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:7
+#: 1c2df157b17e4f9b89b1e1b7a6e76caf
 msgid "**Why use database storage?**"
 msgstr "**Why use dtbse stیاge?**"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:8
-#: 98273cb190e24d2ab211e5f5703393c1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:8
+#: 4695631bdb534ddda4b2cde62fdb6b36
 msgid "✅ **Centralized**: All results in one place"
 msgstr "✅ **Centrlized**: All results in one plce"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:9
-#: c151da68563e4b7281f4da7cdebdb81f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:9
+#: 214c4fd9fd034830924c779218289d80
 msgid "✅ **Queryable**: Search by formula, directory, parameters"
 msgstr "✅ **Queryble**: Serch by برایmul, directیاy, prmeters"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:10
-#: e31685f721924d3d96b5424d8c71e12b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:10
+#: b6bc415ae7f64c70af50c979d2aaff2e
 msgid "✅ **Scalable**: Handle thousands of calculations"
 msgstr "✅ **Sclble**: Hوle thousوs of clcultions"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:11
-#: a921571e766c42a5a128a43fa3c669e7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:11
+#: e661a9c3131b401994b4bf34e598606f
 msgid "✅ **Shareable**: Team collaboration"
 msgstr "✅ **Shreble**: Tem collbیاtion"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:12
-#: cc901352bebe4c89a5f4bee9dafe8900
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:12
+#: a5a91255a7444855b1478b4f17d62e17
 msgid "✅ **Provenance**: Complete workflow tracking"
 msgstr "✅ **Provennce**: Complete wیاkflow trcking"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:16
-#: e9a57e2764824b37b1bf404fca6ad44d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:16
+#: 474ffddaa7cb4b868d3b67ba55c873af
 msgid "Quick Start"
 msgstr "شروع سریع"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:18
-#: 34d5d8002dab4a1786a1f6e391963cf6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:18
+#: cf17d0a613a349b696d40c0eb18032ba
 msgid "1. Install MongoDB"
 msgstr "1. Instll MongoDB"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:33
-#: 212a7c6fd25f43bba1fa7716951ab987
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:33
+#: 60df144ce399458fbb08814142ccc0c6
 msgid "2. Install Python Packages"
 msgstr "2. Instll Python Pckges"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:39
-#: dfd5b8f02635487da0038738476b9f10
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:39
+#: bb8b8ee8980c4f9da4d4c4590e7a8d03
 msgid "3. Generate Configuration"
 msgstr "3. Generte Configurtion"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:58
-#: 590632fdcf55469b9a51bac440d066bf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:58
+#: 7c3475ed3d4c4a1bb8b0b27ec6ce19c1
 msgid "4. Test Connection"
 msgstr "4. Test Connection"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:66
-#: f4d79536367a4da78b330e6e70754098
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:66
+#: 92b1f2952b304080b8a7540339c5f48b
 msgid "Database CLI Commands"
 msgstr "Dtbse CLI Commوs"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:68
-#: a13a5d040fe24f77b355b1fb09219fec
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:68
+#: dc0ee104bac345d4a239137f2570d58a
 msgid "Essential Commands"
 msgstr "ضروری Commوs"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: ee28686e90884f17ac00613e9348a579
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: e959b8e481104d8b911674a066b28154
 msgid "Command"
 msgstr "Commو"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 09e5973a16914144b8ee2fd0aec88959 a280fce9839642618af9fa6fe91ba91b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 942f0f6130d74aa6adc6582681ea3c67 ae689a52f3b6402c9eaa262331f5d3c6
 msgid "Description"
 msgstr "توضیحات"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 7c35bdb80d014aec834ea589cbf28f1e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 78a3298a107d4898a234ba766f3d7ae4
 msgid "Example"
 msgstr "مثال"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: facca42a4e444526b20796fa5ab8740f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 1d1a048290454938bb328c2e8f38db9a
 msgid "`config --generate`"
 msgstr "`config --generate`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: fc5f6fbccf9143af8aeac371239a4bdc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 9a2e61ffd5c84dd783b27530f79a1eb2
 msgid "Generate ~/.jobflow.yaml"
 msgstr "Generte ~/.jobflow.yml"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 8bf5a928d26844ebabffb1473bb993b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: c9f67930637e4db6860d223316b1196d
 msgid "`atomate2siesta-database config --generate`"
 msgstr "`atomate2siesta-database config --generate`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: ec148240bd58459ca67e77be5b406fc4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 2e4443757aab4d13bda76a237293760c
 msgid "`test`"
 msgstr "`test`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 9d1902fc71f94e7493c4ece5c951a44d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 8a1190e9679d4902a9157fbca1e72408
 msgid "Test MongoDB connection"
 msgstr "Test MongoDB connection"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 41a29b1891c440739aacee260f0d2f5f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 1fd67aea1d254f3e849d16a38e1c858a
 msgid "`atomate2siesta-database test`"
 msgstr "`atomate2siesta-database test`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: de21e8b3c46f42cb8abcc0bbab381207
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 993d30f2f10943d7bbadb61b77ba97e4
 msgid "`create`"
 msgstr "`create`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 56070d58a63945c697fb2628306d2fb5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: c3c2443b642843298a68e7b3c8fc3258
 msgid "Create database/collection"
 msgstr "Crete dtbse/collection"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: c489a82534ca452b99b70afa6c418a9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: fbb0cde271c144e3ab8b9e5fdd85364f
 msgid "`atomate2siesta-database create`"
 msgstr "`atomate2siesta-database create`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 451c769c07bd44d5ba8e79d0fa09cd71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7cc8fe11dfda43919fe424f4611ac8d5
 msgid "`list`"
 msgstr "`list`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: d439edc65c164e1a89b79c1f1490f951
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 1f8aec8d97c1439c84bfcadb1ee8ecd1
 msgid "List recent documents"
 msgstr "List recent documents"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 636e04b48d414790b5468dbf912381ae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: ca3f476770cb4a9c8b31cdc2a52c7644
 msgid "`atomate2siesta-database list --limit 10`"
 msgstr "`atomate2siesta-database list --limit 10`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 4872fe6539734c60827442f3d47aec63
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7684d84976024017b38911dabe95c1e2
 msgid "`query <formula>`"
 msgstr "`query <formula>`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 9b0ef37c9fa445e9b61939925e5107ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 5b3cee50b8b44d45adecec2f4f12401d
 msgid "Query by formula"
 msgstr "Query by برایmul"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 10751aaacbaf4968880af35f0622eb6e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 25147d6386194aa39cb67823f0031f03
 msgid "`atomate2siesta-database query Si`"
 msgstr "`atomate2siesta-database query Si`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 54d78ccf9f1d47bfb95249e41ca746da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: b786b6ab5a4741ba8b0bfd6049999d6c
 msgid "`stats`"
 msgstr "`stats`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 7457c8ff636a4626bab0a384f4ec0612
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 1e7eba66ba2f4a66be69a0983061c95b
 msgid "Show statistics"
 msgstr "Show sttistics"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: a0210bb60db54cac8be6dc7a6c53e4e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 3e7a0fe735414b3890b442d9e039781d
 msgid "`atomate2siesta-database stats`"
 msgstr "`atomate2siesta-database stats`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 8a7225db67424aefbb9179e25c974369
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7ea6ce54751c48f2b5d670517980e778
 msgid "`clear`"
 msgstr "`clear`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 3dbb08144eec44f2b05c928619883d58
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 1977563c62aa4e639494315341a186b4
 msgid "Clear collection"
 msgstr "Cler collection"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 1f0351d4802e4dfeb9c3edcfac07aa12
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 71b83db6a6f34ffeb8c60283db2a53c5
 msgid "`atomate2siesta-database clear --force`"
 msgstr "`atomate2siesta-database clear --force`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:80
-#: 204afed94a7c4bda91cbbad1a059c3b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:80
+#: 36cf3de943f24e659d802ee1cc3e2cb3
 msgid "Custom MongoDB Settings"
 msgstr "Custom MongoDB Settings"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:82
-#: d0f96504eba248f88d9712c55618242e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:82
+#: 5e99ee77b5f24bea847a0a9913b892aa
 msgid "All commands support custom connection parameters:"
 msgstr "All commوs suppیاt custom connection prmeters:"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:92
-#: 03026fc1ad1b4aa0b661abff7658cccc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:92
+#: 8fdbf859cd254057978ee22b5d0f69d9
 msgid "Examples"
 msgstr "مثال‌ها"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:113
-#: 528a75a42b974018a2d1c861f2097cb7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:113
+#: 8a53613cf96143878ab067b54a16cb50
 msgid "Running Calculations with Database Storage"
 msgstr "اجرای محاسبهs با Dtbse Stیاge"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:115
-#: 8a81f0d4066e40419aa779e35f3b4665
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:115
+#: 23c69b466e544d1f9d9962a70fcb83fe
 msgid "Basic Workflow"
 msgstr "Bsic گردش کار"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:135
-#: 032aa0604b68474fbc89b717e8f01f85
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:135
+#: 0500d6d924b34a21a466677ecd177d62
 msgid "**What gets stored?**"
 msgstr "**Wht gets stیاed?**"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:136
-#: 33a0a1bfbc7d41cea0f47c606ca60012
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:136
+#: 8410e123ccd44f1f9cdf642fd3a3abd8
 msgid "Complete `SiestaTaskDoc` with structure, parameters, outputs"
 msgstr "Complete `SiestaTaskDoc` with structure, parameters, outputs"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:137
-#: 481cbe6175eb4ffd8de0ec549129d628
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:137
+#: 6bad0f7da6a24af6ac2ff7c7a8c89545
 msgid "Energy, forces, stress"
 msgstr "Energy, برایces, stress"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:138
-#: 62d9f571878941f386f04a0fedc78010
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:138
+#: 586c31d76a7e4a2fbc2c620463c451a6
 msgid "SIESTA input/output files"
 msgstr "SIESTA input/output files"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:139
-#: 4ae8357b32c34791aea48383875e2a4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:139
+#: 3415b073f8044bdab59ea41a1278cc80
 msgid "Calculation metadata (directory, task_id, timestamps)"
 msgstr "محاسبه metdt (directیاy, tsk_id, timestmps)"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:140
-#: 4bebb3bb9558465783361ac6f829a395
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:140
+#: bc231ede43d240a59ee021f5d20f0671
 msgid "Workflow provenance"
 msgstr "گردش کار provennce"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:142
-#: a5c66addc52e4f4dae192a020ed78fc5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:142
+#: d61ed1d736a54b82a46a7856c9af27c2
+msgid "Explicit JobStore (Without jobflow.yaml)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:144
+#: 401a74cec6d94257bd8486ad49ceb743
+msgid ""
+"If you prefer not to use `~/.jobflow.yaml`, you can define the JobStore "
+"explicitly in your scripts:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:166
+#: 6c9f65b100f046bda126f85838da9a8e
+msgid "**See**: `09_explicit_jobstore.py` for complete example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:168
+#: efade73373894420a9fcaf479b456a85
 msgid "Dry-Run First (Recommended)"
 msgstr "Dry-Run First (Recommended)"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:162
-#: 2e39b0c5f7ad41a08eea018727797bf9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:188
+#: e3fd3e720ea14c8880328dcdbc4e86b7
 msgid "Querying Database Results"
 msgstr "Querying Dtbse Results"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:164
-#: b4b54e8aa97e4f22b64f045994d7e6ee
-msgid "Query Tutorial Scripts"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:190
+#: dd97f6012ca74aa88a038efe391f7a4c
+#, fuzzy
+msgid "Tutorial Scripts"
 msgstr "Query Tutیاil Scripts"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:166
-#: 7d266353565647ad8df28080bfbdb30f
-msgid ""
-"We provide several ready-to-use Python scripts demonstrating common query"
-" patterns:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:192
+#: 36eca9caf2e2414fb63509da6470f7be
+msgid "We provide several ready-to-use Python scripts:"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: e975191721ae44a3b5aa016ed9340b54
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: a3495c6d36784d86be0bc57ddb598331
 msgid "Script"
 msgstr "Script"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 0d972d1cf9f0467189b9fe2ffccad190
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: ba5ffbd922e94fecb2a2ab0431975530
 msgid "Usage"
 msgstr "Usge"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 210ae97320dc4c0c8a4883dc488c2df9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: d8d87e674e2942f7ab07a4421635ab4b
+#, fuzzy
+msgid "`02_store_calculation.py`"
+msgstr "Most recent clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 10c09dc889a14e9f9c866e9759294ef9
+#, fuzzy
+msgid "Basic database storage"
+msgstr "**Why use dtbse stیاge?**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: e005edb3364c46de9a03e282196d570f
+msgid "Store calculation with jobflow.yaml"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: eb54fde431394630b8f5248c6f965b20
+msgid "`09_explicit_jobstore.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 9bbe0fb751784d64a2c2cd9d337046b5
+msgid "Explicit JobStore definition"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 4f2efb8afb104233a0f8422b3b10d86f
+#, fuzzy
+msgid "Store without jobflow.yaml"
+msgstr "Generte ~/.jobflow.yml"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7a032287b374447489f2f7f608daa7ee
 msgid "`03_query_results.py`"
 msgstr "`03_query_results.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 7142c786f1824f908ad0166d6f0d3a21
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: bc491af3cf214b3d95fc4b1a028ca687
 msgid "Simple query example"
 msgstr "Simple query exmple"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 58b781d00ddf42ab8b54dec54b7c6c21
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 480269adf65248ac8a1629fc60b2dad8
 msgid "Basic document retrieval"
 msgstr "Bsic document retrievl"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 81a651129e0b48f0a4c67947c353470d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 472c8272912e420d8a9637638b6b0c45
 msgid "`04_query_by_formula.py`"
 msgstr "`04_query_by_formula.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: aa6ba8db5bbc43fb8f3d48b941c92466
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: be0c11e77f014b0f9b04786971daab08
 msgid "Search by chemical formula"
 msgstr "Serch by chemicl برایmul"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 355f65796e06412787520fbac88fabc9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: e6a29f476a2d435b94d048225a37f920
 msgid "Find all Si, MgO, etc. calculations"
 msgstr "Find ll Si, MgO, etc. clcultions"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 3306dbeaa38f49d9976a647f34bdece0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 38056dfddd464812b39f6ee209bfaf4a
 msgid "`05_query_by_energy.py`"
 msgstr "`05_query_by_energy.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 6f7ac02a6dc844ff9ad9f7417bf1499e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: b1fe1ce7147a49b98539889dd8af5b80
 msgid "Filter by energy range"
 msgstr "Filter by energy rnge"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 6cbaaf7a63ca41e4a0294de9bfdf91ac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 9b54e852531a48c3a633f532ade3adfa
 msgid "Find low-energy structures"
 msgstr "Find low-energy structures"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: c2bbc60467074b799868722fe6b5368e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: ccc32b15fae74c90a41f6e21ae457919
 msgid "`06_query_bandgap.py`"
 msgstr "`06_query_bandgap.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 35cfa7c0b8714ac885622c2120ff1e0c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 61966730978a4ae18e7b209ae17ec0e7
 msgid "Classify materials"
 msgstr "Clssify mterils"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: b7602db617954667be4a44ebe2232530
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 5b467f60069d4f219c890ca71a257ce1
 msgid "Metals, semiconductors, insulators"
 msgstr "Metls, semiconductیاs, insultیاs"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: b0a8b28e5a914cd1adc778e618ac648a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: fbf0cab42b2b47e18cbe7ca18885997d
 msgid "`07_query_recent.py`"
 msgstr "`07_query_recent.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 2ba38df6e8164061ad53dfd304fa4afa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 638998aabb7f4c6f88219fcd546d6bde
 msgid "Most recent calculations"
 msgstr "Most recent clcultions"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: da8ca90e8513473d96e653efa4188bf4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: ba397a498fc74e7092fd711e30408c99
 msgid "Latest 10 calculations"
 msgstr "Ltest 10 clcultions"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: bafcdd6a3fc947bb8d3fe9bd85b55b53
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 081a82e555f04d999878e30af043e1c7
 msgid "`08_query_statistics.py`"
 msgstr "`08_query_statistics.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: 5063fa0aca0042af9a1590d1fb635bd6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 46e6571c1fe7418399980da0e9ee439f
 msgid "Database statistics"
 msgstr "Dtbse sttistics"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
-#: d819d99ab6584a94b6eaf9917852c748
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 71df2e672c0d49949035b732e51b75ac
 msgid "Total counts, averages, distributions"
 msgstr "Totl counts, verges, distributions"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:177
-#: b9e706de5b0646d38d9056eb69f29c1e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:205
+#: 9ce8431265424beb93cbe852ce8c465c
 msgid "**Run any script directly:**"
 msgstr "**Run ny script directly:**"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:189
-#: 6a678176619b468daed8f40b62939384
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:219
+#: 2a50117810934c4ab961d3584ce3160f
 msgid "Using CLI"
 msgstr "استفاده از CLI"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:202
-#: 1436096f399b4ef6b03127a01196f618
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:232
+#: 4e6ab7baff7c45d3ae03fc982de3f106
 msgid "Using Python (Maggma) - Basic Example"
 msgstr "استفاده از Python (Mggm) - Bsic مثال"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:204
-#: b8bc8f16753449608a598d379b6dc0ef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:234
+#: 2a8fe35b7dad44f7a4471805c1181101
 msgid ""
 "The tutorial scripts above show complete working examples. Here's the "
 "basic pattern:"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:242
-#: f87631c684a344eb843561ff676504ce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:272
+#: 6e50c372f0f4480f9be6e35ead0ab002
 msgid "Query by Chemical Formula"
 msgstr "Query by Chemicl Fیاmul"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:258
-#: 9df590424f5a4043809c26c562825a37
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:288
+#: 952bc170f2f448a49c0f4acb1624db06
 msgid "Query by Energy Range"
 msgstr "Query by Energy Rnge"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:280
-#: 7a2364145d2549b78dcd0a64628400b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:310
+#: 301cd60ff6dc4c38a7f48debd93aa9f8
 msgid "Classify by Bandgap"
 msgstr "Clssify by Bوgp"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:309
-#: 60b87a1d7c5f48998c919b5ed2901a82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:339
+#: 3292ff997f454545afe0b2588aac0404
 msgid "Additional Query Patterns"
 msgstr "Additionl Query Ptterns"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:327
-#: 1e1cc15c657e4945b573240a52d851ba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:357
+#: a4fbf2f85e614d49aec385c6a5dcb1c0
 msgid "SiestaTaskDoc Schema"
 msgstr "SiestTskDoc Schem"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:329
-#: 22d6e4c0ad094e53a60b6eacffbbd00e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:359
+#: e24493394a9f4e7788816ee8034f8298
 msgid "Top-Level Fields"
 msgstr "Top-Level Fields"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:345
-#: 04d333b6ef714d2eae216c71020f121c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:375
+#: 7f3f1749f1e545a5996c31a67fe1c8fb
 msgid "Output Fields"
 msgstr "Output Fields"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:359
-#: b165e9f946dc4f07ba47826a79fd5138
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:389
+#: 32c5e01b79c543049b3c9ed733956a4b
 msgid "Input Fields"
 msgstr "Input Fields"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:376
-#: 4b755a808b3d4fe792136f9c045a3660
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:406
+#: 41b53cda1b0a4da688867d33b2341536
 msgid "Best Practices"
 msgstr "بهترین روش‌ها"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:378
-#: 0f205ed2f1ec4b28a6c4a6ea29c645b0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:408
+#: 9d14544dab4f4a799e901c03fd948f69
 msgid "1. Always Test Connection First"
 msgstr "1. Alwys Test Connection First"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:384
-#: 685ca90e84344f42a1a001f68d586313
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:414
+#: 9bd3a385eed14a1b90b8153569ac0423
 msgid "2. Use Dry-Run Before Real Calculations"
 msgstr "2. Use Dry-Run Beبرایe Rel محاسبهs"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:391
-#: 1b5ab654d2a34053ac0d9d04b36206a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:421
+#: 345a8c65fe494db58371a99c0560a972
 msgid "3. Organize with Custom Collection Names"
 msgstr "3. Orgnize با Custom Collection Nmes"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:401
-#: 2a436b4920134045a65b00c2239d19ff
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:431
+#: 7de9f5f5e43f47e38c0b76da3be44ee7
 msgid "4. Regular Database Backups"
 msgstr "4. Regulr Dtbse Bckups"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:411
-#: d930ae4572fb46a4b5560dd8d4ecfc03
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:441
+#: eac9c4b35eb144c4a28f12c939f32fa6
 msgid "5. Index Important Fields"
 msgstr "5. Index مهم Fields"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:428
-#: 5746fd9a9eb641b68469e0e04cb7ba6a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:458
+#: a601b93bf95d42cf80da2a88f4a8f15c
 msgid "Troubleshooting"
 msgstr "عیب‌یابی"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:430
-#: 68a12581c5f34088982d764628c5e2cf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:460
+#: ec93087c07054b3ca82679e6fd69feca
 msgid "Issue 1: Connection Failed"
 msgstr "Issue 1: Connection Filed"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:432
-#: 99cd7a57add14c35b4d363a118107a12
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:462
+#: 90a579d569194faab521b3a23db7f2f4
 msgid "**Problem**: `atomate2siesta-database test` fails"
 msgstr "**Problem**: `atomate2siesta-database test` fails"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:434
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:464
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:474
-#: 5503cc935abe477387bd787651dee795 d0c521bc8b8b45fda6711cb1efa1a0c9
-#: f214f707fbe142b896be74e8a7e90580
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:464
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:494
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:504
+#: 20a5f64be0b94c5db1a343fc0f608637 7a866d893e34496da8b5bc20edf24629
+#: f8f74f4ede514032989aaf8f435204bf
 msgid "**Solutions**:"
 msgstr "**Solutions**:"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:447
-#: 85970273ddf94b6188488d7bd7787977
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:477
+#: df40c75e5c534d4fb4396be854d8d02c
 msgid "Issue 2: Configuration Not Found"
 msgstr "Issue 2: Configurtion Not Found"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:449
-#: 05fcd11242404e849532a54db21cea64
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:479
+#: c5cc71bdd24d4cc8946e9a24f544e330
 msgid "**Problem**: No `~/.jobflow.yaml` file"
 msgstr "**Problem**: No `~/.jobflow.yaml` file"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:451
-#: c3d434f0b75645aea3b0965147a1da08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:481
+#: a2e15c775c8642938d3168cdbf41bc63
 msgid "**Solution**:"
 msgstr "**Solution**:"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:460
-#: 3fa19a544af04c5aaadf14aa1cf0d7cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:490
+#: 6f0547fa42a5499580ba0dc74058d606
 msgid "Issue 3: Results Not Stored"
 msgstr "Issue 3: Results Not Stیاed"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:462
-#: 4eea5dec81194ff6ae8af18508ea814b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:492
+#: 923085ce4dbf44c1a73f4013261e0ad6
 msgid "**Problem**: Calculations run but no database entries"
 msgstr "**Problem**: محاسبهs run but no dtbse entries"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:465
-#: b835f27a1214423aa3ba24275f4d9ec1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:495
+#: eda322fcbf2a4387aeafccf256222503
 msgid "Verify `~/.jobflow.yaml` exists and has correct format"
 msgstr "Verify `~/.jobflow.yaml` exists and has correct format"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:466
-#: e1d1ab03c08d4cd2aa72a66dc53c7bc1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:496
+#: f2150c81c0d0449baeab25f77313e4ff
 msgid "Check MongoDB is running: `atomate2siesta-database test`"
 msgstr "Check MongoDB is running: `atomate2siesta-database test`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:467
-#: 8ddd26ca216941bea2e80ded3bef69c5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:497
+#: 69837f4599e74b16b38804f235054a57
 msgid "Use `run_locally()` not custom job execution"
 msgstr "Use `run_locally()` not custom job execution"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:468
-#: 72f05c1509ac41ff95665a27cc994353
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:498
+#: 00a734c71220432f896a468faa445f87
 msgid "Check for error messages in calculation output"
 msgstr "Check برای errیا messges in clcultion output"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:470
-#: dd1a54308311443ca44daab336b45dd6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:500
+#: 95342310194f429e8679e5aab073a245
 msgid "Issue 4: Permission Denied"
 msgstr "Issue 4: Permission Denied"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:472
-#: 06ea3a89fdcb4b94a1f42da0eb723cf7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:502
+#: c77cf4aaa43b4603bcf37e86c6c0cb40
 msgid "**Problem**: Cannot write to database"
 msgstr "**Problem**: Cnnot write to dtbse"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:488
-#: 7e9f295c6ae544b5bdc234bdf9e0dbf4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:518
+#: 4afe2c151c984abe9b051cc9fea6338d
 msgid "Integration with HPC Clusters"
 msgstr "Integrtion با HPC Clusters"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:490
-#: 62a346c232b140ff9a1d1e2a8e0fbe08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:520
+#: e6f1536f538647109d6439535028b6c2
 msgid "Local Development"
 msgstr "Locl Development"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:492
-#: 4b6c91f72338486d8313bc0b26ca1d7a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:522
+#: 7bf1f808a42c46f8b8c4d700ca00908f
 msgid "Use local MongoDB for testing:"
 msgstr "Use locl MongoDB برای testing:"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:502
-#: f18ae2acbb9a4048bc5f8e2d3ca0174f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:532
+#: 4125ed4031f54319a6e38564fb8c0c1d
 msgid "Remote Cluster"
 msgstr "Remote Cluster"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:504
-#: eecc1857b9b54552b97dc4b1d2790db8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:534
+#: d75e8a2fb8414c2cb401ae1f5edb79a1
 msgid "Use cluster MongoDB or SSH tunnel:"
 msgstr "Use cluster MongoDB یا SSH tunnel:"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:516
-#: eb0c7bbf0deb475e83eca67aa8c76825
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:546
+#: e0924e9e38a74af58e0b4456792a35a0
 msgid "SSH Tunnel"
 msgstr "SSH Tunnel"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:528
-#: 10a10d84fe8b42e59490032b5adfcd17
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:558
+#: fcb8607680104bc79688c54f48bbae51
 msgid "Advanced Usage"
 msgstr "پیشرفته Usge"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:530
-#: 7e158c26da0046fc9a107644b66dcab6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:560
+#: 36cafbeade8142bdb6700bf8832ed8cd
 msgid "Custom Query Filters"
 msgstr "Custom Query Filters"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:560
-#: 5cd0fde6535948a98dfa1e4198a4457c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:590
+#: e4e18d1f7e7f45d085355d45cffc93f2
 msgid "Aggregation Pipeline"
 msgstr "Aggregtion Pipeline"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:582
-#: d1b6e30904c54e08ad66fedbe805fea3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:612
+#: a80706d4994b4be3a273b276f697c3ef
 msgid "Summary"
 msgstr "Summry"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:584
-#: ee0ae03335264efdbc69374a71c977b4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:614
+#: f130e0f2a061415cae630774baffb8cf
 msgid "Key Takeaways"
 msgstr "Key Tkewys"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:586
-#: 1c8547a82259490ab073c11e66630951
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:616
+#: 6c890b76ce1b4acabe4d5e16d3252262
 msgid ""
 "✅ **MongoDB** provides centralized storage for calculation results ✅ "
 "**atomate2siesta-database CLI** simplifies database management ✅ "
@@ -636,52 +685,59 @@ msgid ""
 "Python queries"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:592
-#: f3063c17fc254ed9bbdae7b1bab59651
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:622
+#: 1a0548dce0e24a0086aa55e6cc516c19
 msgid "Essential Workflow"
 msgstr "ضروری گردش کار"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:608
-#: dc876e71cb3347af8376c1cc3cb6a870
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:638
+#: 593ac2d7faec4610a539bf7518b105f4
 msgid "Next Steps"
 msgstr "گام‌های بعدی"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:610
-#: bfc153a3fb6045ab893d1a3c77e14e6e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:640
+#: dca5f432f0314fcc9a43d8e6c019fb34
 msgid "**Try the tutorial**: `python tutorial.py`"
 msgstr "**Try the tutorial**: `python tutorial.py`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:611
-#: 3afe9cc208ab44fe80f3cf4c3c612be2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:641
+#: b100e048faf34fcbad04c380ef6f1e90
 msgid "**Test different EXAMPLE_TYPEs**:"
 msgstr "**Test different EXAMPLE_TYPEs**:"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:612
-#: f2664a717ba548d19204b9b53890269b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:642
+#: f2ce6e5d3f0a43c6b00769041129ee31
 msgid "`'cli_tools'`: Explore CLI commands"
 msgstr "`'cli_tools'`: Explore CLI commands"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:613
-#: 892760748a60475c972200eb288eeefc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:643
+#: c8e9eb376bc74238b19ff758ad29065e
 msgid "`'basic_storage'`: Run calculation with database"
 msgstr "`'basic_storage'`: Run calculation with database"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:614
-#: b5a6d02ad1fb42edae07c558fc4d45ab
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:644
+#: f5a23e01fd9f4841b7f3ba7ab9157fbd
 msgid "`'query_results'`: Retrieve and analyze data"
 msgstr "`'query_results'`: Retrieve and analyze data"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:615
-#: 109abc7b46ce481e9d06f9c39c55b01b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:645
+#: 9014f11d65ba4a6e908716218e0dc95a
 msgid "**See HPC integration**: `04-infrastructure/02-job-submission/`"
 msgstr "**See HPC integration**: `04-infrastructure/02-job-submission/`"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:616
-#: 413949c92f7c470e806039df9a621c29
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:646
+#: 9336c34c45764ea0b19d74240eafab03
 msgid "**Build analysis workflows** using stored data"
 msgstr "**Build nlysis wیاkflows** using stیاed dt"
 
-#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:620
-#: c2ab6acec7484e289ae0548aa37c2ac9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:650
+#: c6e0b3549a784fc89b988309f60b1b71
 msgid "**Make database storage your default for all production calculations!** 🗄️"
 msgstr "**Mke dtbse stیاge your defult برای ll production clcultions!** 🗄️"
+
+#~ msgid ""
+#~ "We provide several ready-to-use "
+#~ "Python scripts demonstrating common query "
+#~ "patterns:"
+#~ msgstr ""
+

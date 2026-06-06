@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,11 +20,211 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-auto/03-advanced-features.rst:4
-msgid "Tutorials in this category"
-msgstr ""
-
-#: ../../source/tutorials-auto/03-advanced-features.rst:2
-#: 4971e075320549f282fef2be5889adc8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:2
+#: c740e7d703034ebeb744b2320d2a2c5d
 msgid "03 Advanced Features"
 msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:5
+#: 611eedc5012242388335b25f989bb930
+msgid "Parameter Systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:8
+#: ca0ebca696f94a95bec3622b82eccb41
+msgid "01: tier-system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:16
+#: d0779be86c24468e89d45913418d73f4
+msgid "02: presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:24
+#: 66d41b41568b4597b8456c91a594c2d5
+msgid "03: basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:32
+#: 01de6c4170b4404d85558283c17ce670
+msgid "04: fdf-blocks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:40
+#: ecd392978f2e4dd0b85e590ec56383b9
+msgid "Physics Features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:43
+#: 8118a135d71d4ff6b3c8fdc4ede18fd1
+msgid "01: dos"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:51
+#: b8de96b066c84b5cbd3df0ace1a8f1bd
+msgid "02: optical"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:59
+#: 8de37fdafb784c91952daa4a174086c4
+msgid "03: magnetic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:67
+#: fe6e12ec4a034c0b8a8c9384ffe74994
+msgid "04: phonon"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:75
+#: 02b3a9d49bba4ab28483f2a9529c39bd
+msgid "05: charge"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:83
+#: 3446927046a34520b484cd41aac3a9e7
+msgid "Infrastructure (Database, HPC, Error Handling)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:91
+#: 0ad5cb7dc1524a28ae186e3e9c6eef0c
+msgid "01: database-storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:99
+#: bc1dcae4dba646508f1e871a806358dd
+msgid "02: jobflow-remote"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:107
+#: 4bfa8a525bf248488957f06bc6d722b8
+msgid "03: error-handling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:115
+#: 7e5e863130364db980898274f5810a12
+msgid "04: restart-recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:123
+#: 893db34a3bda42008158155f8f6a4bda
+msgid "05: dry-run-preview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:131
+#: cfe12f6105c6411982c7845bc0d567f1
+msgid "Structure Tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:134
+#: 4af0dbf92d3e4efe817ebc35fa28f20c
+msgid "01: conversion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:142
+#: 5652e1867f6d4b2680c7f6b825c2a15a
+msgid "02: manipulation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:150
+#: df3ba82755174e73a3ae9dd6319d9783
+msgid "03: powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:158
+#: 6528ea0c047549129db1120259ac1007
+msgid "Output Viz"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:161
+#: 2f67eea832f44118acedd5151bab1ca8
+msgid "01: grid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:169
+#: da4f9beb280145f0b0c4b32ce80d7c4e
+msgid "02: denchar"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:177
+#: a2ceb71352524f0c8f7ef9e7b257f7e1
+msgid "03: netcdf"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:185
+#: 698224aebfbd4daca9631b18a504a3b1
+msgid "Performance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:188
+#: f2fdcea020494c8c99c6d20b547af94b
+msgid "01: parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:196
+#: 0e526fecea2c4fb386c78b664ea54b3a
+msgid "02: efficiency"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:204
+#: a585552921ca414cbe973f9a30b8cafb
+msgid "Advanced Siesta"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:207
+#: a3735c450d4e4e62b7bb2edbacd6e8a9
+msgid "01: hamiltonian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:215
+#: 644b55ff86aa4cab83542c3b5592ee01
+msgid "Recipe Book"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:223
+#: 69b51d498ebf4bd4b285ac59eca78c7a
+msgid "01_basic_usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:231
+#: ebc67a534db4430e801e0c716c021266
+msgid "03_electronic_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:239
+#: 9c67383d082d461f9a1d32195ceaec7a
+msgid "04_mechanical_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:247
+#: 0c6311d8f71f4a60a000c2d0a7e4261b
+msgid "05_thermal_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:255
+#: 59511a9ad90a4cc2970878c84e6ebf32
+msgid "06_catalysis_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:263
+#: ed96517f8af9406fb1895c262a5de88a
+msgid "07_convergence_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:271
+#: f72dc6bce40b4a4797766a7ba77752f7
+msgid "08_combined_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:279
+#: ebe8de8829094a8290477cbbf5c8917a
+msgid "09_defect_recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/03-advanced-features.rst:287
+#: 0d1a41a171814d05aa22f27e97a11387
+msgid "10_customizing_recipes"
+msgstr ""
+
+#~ msgid "Tutorials in this category"
+#~ msgstr ""
+

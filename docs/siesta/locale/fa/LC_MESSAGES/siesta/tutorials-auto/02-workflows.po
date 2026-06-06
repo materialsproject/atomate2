@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,11 +20,136 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-auto/02-workflows.rst:4
-msgid "Tutorials in this category"
-msgstr ""
-
-#: ../../source/tutorials-auto/02-workflows.rst:2
-#: 3384d7d201c248fc82328cf248fe802f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:2
+#: 84996facd81c43e08a05581f4499fd2a
 msgid "02 Workflows"
 msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:5
+#: 2508f3a525ed4865970b4f2e62b23022
+msgid "Convergence Studies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:13
+#: 292d669a08234e468c53f838c0d5b848
+msgid "Basis Parameters Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:21
+#: 4f8dc00cbd0940c687ed77dea3fd7448
+msgid "Kpoints Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:29
+#: 3dc32b534d284759a54afc26c36d2093
+msgid "Mesh Cutoff Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:37
+#: 4baff0a2cee342f5ba4a9b070c57b4a3
+msgid "Mesh Kpoint Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:45
+#: 7c846534018043d18317b8dfdfa3ba25
+msgid "Equation of State (EOS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:53
+#: 1b3b36ebf4bb43f8bee188de8aca99fc
+msgid "01: Siesta Eos"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:61
+#: 8ee66b1cebd34d4288d6fe78436c0d60
+msgid "02: EOSBasis Convergencee"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:69
+#: d37de82b8e2f4d60945b353271e211ec
+msgid "03: EOSFull Basis Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:77
+#: 22c875f4d69f4000b0990dc6811c2015
+msgid "Surfaces and Adsorption"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:85
+#: 2f87cc1f29fc484e8ae9fc481bdb3374
+msgid "01: Multi Surface Energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:93
+#: 51cd61f1702d4a27936a07d588efe234
+msgid "02: Adsorption Scan"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:101
+#: ce35c3f34bea4890abf03a860a255caa
+msgid "Mechanical Properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:109
+#: b8d1618420524ee78f03174d8997b767
+msgid "01: Elastic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:117
+#: 8580c03ede444c74b7a2148c5acc5e8f
+msgid "Barriers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:125
+#: 84b08991b53d4645967f83da322873c9
+msgid "01: Neb Direct"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:133
+#: d9b74ded342a45fabcf72c679d887f0d
+msgid "02: Ase Neb"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:141
+#: a7f81bb802c44925b32b9676863bcfd9
+msgid "Vibrational Properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:149
+#: 2e83d7e5440c497a907078e189a1ac04
+msgid "01: Siesta Phonon"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:157
+#: 1e0d9add94ae4ba4903fd3c84dfb9604
+msgid "02: Siesta Gruneisen"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:165
+#: 12052ef23903428fa46dd38984c87dfc
+msgid "03: Siesta Qha"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:173
+#: 69db7a40d658473aa625990c0da230c6
+msgid "Band Structure Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:181
+#: 40eab2c1511e485689c1cfa8c9ca0412
+msgid "01: Band Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:189
+#: a4231dad3d4a4f31b2c53cae0c246980
+msgid "Defect Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/02-workflows.rst:197
+#: b415a2ab189247ae8f37ae3fb15e0007
+msgid "01: Defect"
+msgstr ""
+
+#~ msgid "Tutorials in this category"
+#~ msgstr ""
+

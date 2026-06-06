@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,1185 +20,2301 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/cli-cluster-setup.rst:3 1a4ca2897eaf430cb7403293914054c7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:3
+#: d4345432d8de4f4cba45b0d0fbc3dee6
 msgid "Remote Cluster Setup CLI"
 msgstr "رابط خط فرمان راه‌اندازی خوشه از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:5 27e5e47239c5499ab053f54c0f011361
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:5
+#: 0c61cdf083d4424a82b1a171a537a74f
 msgid ""
 "The ``atomate2siesta-cluster`` command-line tool helps you set up remote "
 "HPC clusters for atomate2siesta calculations by automating the process of"
 " creating conda environments and installing necessary packages via SSH."
-msgstr "ابزار خط فرمان ``atomate2siesta-cluster`` به شما کمک می‌کند خوشه‌های HPC از راه دور را برای محاسبات atomate2siesta راه‌اندازی کنید با خودکارسازی فرآیند ایجاد محیط‌های conda و نصب بسته‌های لازم از طریق SSH."
+msgstr ""
+"ابزار خط فرمان ``atomate2siesta-cluster`` به شما کمک می‌کند خوشه‌های HPC "
+"از راه دور را برای محاسبات atomate2siesta راه‌اندازی کنید با خودکارسازی "
+"فرآیند ایجاد محیط‌های conda و نصب بسته‌های لازم از طریق SSH."
 
-#: ../../source/cli-cluster-setup.rst:8 d68d6146bc6848ab88d3339e92a50368
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:8
+#: 07cedba44a864d1f8e7b6675efb117d0
 msgid "Overview"
 msgstr "مرور کلی"
 
-#: ../../source/cli-cluster-setup.rst:10 f223fca2fd14464383f13d6919c49796
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:10
+#: d8dfce4f2b1b407fa1c7d925f07192b4
 msgid "This tool provides a streamlined way to:"
 msgstr "این ابزار روشی ساده برای موارد زیر فراهم می‌کند:"
 
-#: ../../source/cli-cluster-setup.rst:12 09addfca2b304f5ebe2254cafe045a2d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:12
+#: 56fa6495d48a4b76b8b28b799cb93ca1
 msgid "SSH to remote HPC clusters"
 msgstr "اتصال SSH به خوشه‌های HPC از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:13 6db41cd47fda48759295729c5a856023
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:13
+#: ba50afe3e5bb43a9bfa1d2f7efc259e7
 msgid "Create conda environments in ``$HOME``"
 msgstr "ایجاد محیط‌های conda در ``$HOME``"
 
-#: ../../source/cli-cluster-setup.rst:14 7aa534af2a6e49afbecc9cf8c989bfda
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:14
+#: 9d996414e82944d490dfd56357fba948
 msgid "Install jobflow-remote and atomate2siesta from GitHub"
 msgstr "نصب jobflow-remote و atomate2siesta از GitHub"
 
-#: ../../source/cli-cluster-setup.rst:15 9e6d8fa3309149b5ac7dfd1e54aa26b9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:15
+#: e0d53cc89d7142bfb9b479d0e8f507a3
 msgid "Optionally install SIESTA from conda-forge"
 msgstr "نصب اختیاری SIESTA از conda-forge"
 
-#: ../../source/cli-cluster-setup.rst:16 f487a2fa10014847b1d2d8dce66863d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:16
+#: 03c0ea83c0f342e28307e513af852ee0
 msgid "Generate ``.atomate2.yaml`` configuration file"
 msgstr "تولید فایل پیکربندی ``.atomate2.yaml``"
 
-#: ../../source/cli-cluster-setup.rst:17 64a2baef8ffb42348bd0c7726611a64e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:17
+#: a7753d9a383040d78a33527eb6299b5d
 msgid "Verify installations and check environment status"
 msgstr "تأیید نصب‌ها و بررسی وضعیت محیط"
 
-#: ../../source/cli-cluster-setup.rst:20 f49d3fd2c95e43389c4c4325b70d0e8e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:20
+#: 474ab4ef81684a79af308b1224166117
 msgid "Commands"
 msgstr "دستورات"
 
-#: ../../source/cli-cluster-setup.rst:23 2c889e6f35a64c5a8717d243eff68d87
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:22
+#: df690f32a9b54fd2a2ffb20838ff9ab0
+msgid "The ``atomate2siesta-cluster`` tool provides the following commands:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:24
+#: f354258a471d4223bf27c0cc810e79eb
+#, fuzzy
+msgid "**setup** - Set up conda environment on remote cluster"
+msgstr "راه‌اندازی محیط conda بر روی خوشه از راه دور با نصب atomate2siesta."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:25
+#: 4d91211da9eb4374ab3ee63ff636e267
+#, fuzzy
+msgid "**status** - Check status of remote environment"
+msgstr "بررسی وضعیت محیط خوشه از راه دور."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:26
+#: e2c61d317b87411c82cafcbb84de416f
+msgid "**ssh-setup** - Manage SSH keys and config (add, status, test)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:27
+#: 7e30c45354db41ffb084c3a15d73b24e
+msgid ""
+"**squid** - Manage Squid HTTP proxy (install, start, stop, status, "
+"restart)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:28
+#: 409f4458cfdf4b338e24945d70e89b49
+#, fuzzy
+msgid "**build-offline** - Build offline environment for air-gapped clusters"
+msgstr ""
+"ساخت بسته محیط conda آفلاین برای خوشه‌های جدا از اینترنت (مانند "
+"MareNostrum 5)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:29
+#: d643cecdb61e471ba41cbffe200de4ef
+msgid "**info** - Show comprehensive usage information"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:34
+#: 3da789a30d4b429aa34bff1a10c25f6e
 msgid "setup"
 msgstr "setup"
 
-#: ../../source/cli-cluster-setup.rst:25 f0b22d6d64ce429dbd4ae9e0b8535a02
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:36
+#: a4f6867c6d074e668dbabc5d7a61a83b
 msgid ""
 "Set up a conda environment on a remote cluster with atomate2siesta "
 "installed."
 msgstr "راه‌اندازی محیط conda بر روی خوشه از راه دور با نصب atomate2siesta."
 
-#: ../../source/cli-cluster-setup.rst:27 ../../source/cli-cluster-setup.rst:123
-#: ../../source/cli-cluster-setup.rst:161
-#: ../../source/cli-cluster-setup.rst:176 2aac5c3ea8c5433398b8588aec51c4e0
-#: 56350afcc2a549cfb5867c2b11d53565 c92b9431faf6471482f5e1c262a3dbe9
-#: f8cc6abbc18548e381efa14d4ffa9b91
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:38
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:134
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:199
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:223
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:303
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:378
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:445
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:554
+#: 0bf664ff6d9841bfbd2c06520e5c658f 19b9d30c8a7c412c8a5d04e48b6fd9cd
+#: 4765c6c64709447b81ebb6952d31109d 500ae1009b134c079d301062502a4e5d
+#: 7c228dc087e9497c9734a99019617c1a cde9617774cd4346b17416ef8373bcae
+#: dd98d94ed1c648c9803d4018a7e68fef edd8541d1e2045a784f9fd03e85ac7b1
 msgid "**Usage:**"
 msgstr "**نحوه استفاده:**"
 
-#: ../../source/cli-cluster-setup.rst:33 ../../source/cli-cluster-setup.rst:129
-#: ../../source/cli-cluster-setup.rst:182 42e277bf7af4403d899a5b5545fe659e
-#: 6f53c85882b8458bbe5cd707ac183414 bdfecf255d0e4364bd2425e54c288f0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:44
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:140
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:229
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:309
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:384
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:451
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:560
+#: 1c24139640e449ec9d9597f112b7d83d 27e5b6ae196b45fbabd045984e820568
+#: 3a3c1b4d12874ca3960b2b4c2756b7c1 451e5c3b6a514b7ab142e539515a1e13
+#: 5c7139762c0245879d9223f0d7fd4373 ea3124bcc9ff4610a067d1a077ac4bc8
+#: edaff3bad84a4ef79c2d5774e431fd6c
 msgid "**Options:**"
 msgstr "**گزینه‌ها:**"
 
-#: ../../source/cli-cluster-setup.rst:35 82f4a82911ab4702875de3d0fc5f0ef0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:46
+#: 6baf5888784443dd876e293bc4306cfb
 msgid ""
 "``--host TEXT`` (required): Remote cluster hostname, IP address, or SSH "
 "config alias"
-msgstr "``--host TEXT`` (الزامی): نام میزبان خوشه از راه دور، آدرس IP، یا نام مستعار پیکربندی SSH"
+msgstr ""
+"``--host TEXT`` (الزامی): نام میزبان خوشه از راه دور، آدرس IP، یا نام "
+"مستعار پیکربندی SSH"
 
-#: ../../source/cli-cluster-setup.rst:36 108c4f4799604e40a153a7dc41fc1134
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:47
+#: a2c89c42b7f34547b330448f027f344b
 msgid ""
 "``--user TEXT``: Username for SSH connection (not needed if using SSH "
 "config)"
-msgstr "``--user TEXT``: نام کاربری برای اتصال SSH (در صورت استفاده از پیکربندی SSH نیازی نیست)"
+msgstr ""
+"``--user TEXT``: نام کاربری برای اتصال SSH (در صورت استفاده از پیکربندی "
+"SSH نیازی نیست)"
 
-#: ../../source/cli-cluster-setup.rst:37 ../../source/cli-cluster-setup.rst:133
-#: bf7cf0de89a34fd88a99405658a92dc4 e92a1b0685d141558cd791416ba2618a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:48
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:144
+#: 92ad9f5f302b472794ee3123fb4ba48d e80a77bdb8f84ef996e1c7d18bc2505d
 msgid "``-i, --identity-file TEXT``: Path to SSH private key file"
 msgstr "``-i, --identity-file TEXT``: مسیر فایل کلید خصوصی SSH"
 
-#: ../../source/cli-cluster-setup.rst:38 ../../source/cli-cluster-setup.rst:134
-#: 119103cec19a428cbf9113a15a3a24c7 26a51a2c10c54aeaac0be0fd251527c9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:145
+#: 4e568d0b20c94017949cbc1bb77ad01d b42755275f834369923c04aa6797cb15
 msgid "``--password``: Prompt for password authentication"
 msgstr "``--password``: درخواست رمز عبور برای احراز هویت"
 
-#: ../../source/cli-cluster-setup.rst:39 df67cc802a7d4fdf8891ee13e8d5bffb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:50
+#: 7fa77d5413bb4887bfdd9caf0b9b68df
 msgid "``--ssh-config``: Use SSH config alias (no user@ prefix needed)"
-msgstr "``--ssh-config``: استفاده از نام مستعار پیکربندی SSH (نیازی به پیشوند user@ نیست)"
+msgstr ""
+"``--ssh-config``: استفاده از نام مستعار پیکربندی SSH (نیازی به پیشوند "
+"user@ نیست)"
 
-#: ../../source/cli-cluster-setup.rst:40 ../../source/cli-cluster-setup.rst:185
-#: 5343686ad0e84c91bf5285032f4ae383 8bdc38c45c1645eb903ac41cfda4757e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:563
+#: 4ab512d4b5fd4314aa13d746508075f2 f6b4897de5f244de973fcdeaa45546d6
 msgid ""
 "``--env-name TEXT``: Name for conda environment (default: ``jobflow-"
 "remote``)"
 msgstr "``--env-name TEXT``: نام محیط conda (پیش‌فرض: ``jobflow-remote``)"
 
-#: ../../source/cli-cluster-setup.rst:41 ../../source/cli-cluster-setup.rst:186
-#: 1df12ddc0ae84a3ba0a04d42d66d8c48 8595acfc88744a9c9f1d3923f8af046e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:564
+#: 88204e680d0646e193bc060d2376882b ebb989a18cf04a7bb95f377589c8f059
 msgid "``--python-version TEXT``: Python version (default: ``3.11``)"
 msgstr "``--python-version TEXT``: نسخه Python (پیش‌فرض: ``۳.۱۱``)"
 
-#: ../../source/cli-cluster-setup.rst:42 7fde72411b5a41baada710a66cf6bbeb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:53
+#: 0b5a818d72fa4669bda7a29e77a62a18
 msgid "``--git-ssh``: Use SSH URL for Git clone (requires SSH key on cluster)"
-msgstr "``--git-ssh``: استفاده از URL SSH برای Git clone (نیاز به کلید SSH بر روی خوشه)"
+msgstr ""
+"``--git-ssh``: استفاده از URL SSH برای Git clone (نیاز به کلید SSH بر روی"
+" خوشه)"
 
-#: ../../source/cli-cluster-setup.rst:43 74ef5e35a36e461fa065d80edcf0cedd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:54
+#: 0aae0fd2e35d4f74b909d4f638063946
 msgid ""
 "``--git-token TEXT``: GitHub personal access token for private repo "
 "(HTTPS only)"
 msgstr "``--git-token TEXT``: توکن دسترسی شخصی GitHub برای مخزن خصوصی (فقط HTTPS)"
 
-#: ../../source/cli-cluster-setup.rst:44 3dfc04e9d78449a6bbc8b0c9b424d1f0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:55
+#: 53614c9867ed44119d8b4a5b92ec368d
 msgid ""
 "``--install-siesta``: Install SIESTA from conda-forge "
 "(``siesta=*=*mpich*``)"
 msgstr "``--install-siesta``: نصب SIESTA از conda-forge (``siesta=*=*mpich*``)"
 
-#: ../../source/cli-cluster-setup.rst:45 f5edbb153c1349f1b41cd7ff34faf637
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:56
+#: a70a7cb9fe1945a59ed252327d1e860e
 msgid ""
 "``--proxy TEXT``: HTTP/HTTPS proxy URL (e.g., "
 "``http://proxy.cluster.edu:8080``)"
-msgstr "``--proxy TEXT``: آدرس پروکسی HTTP/HTTPS (مثال: ``http://proxy.cluster.edu:8080``)"
+msgstr ""
+"``--proxy TEXT``: آدرس پروکسی HTTP/HTTPS (مثال: "
+"``http://proxy.cluster.edu:8080``)"
 
-#: ../../source/cli-cluster-setup.rst:46 e6a9c0a81d8e4e76815e599701c5102a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:57
+#: 8a594739e65148e3888843c657b52bbf
 msgid "``--auto-proxy``: Try to auto-detect proxy settings from remote cluster"
 msgstr "``--auto-proxy``: تلاش برای تشخیص خودکار تنظیمات پروکسی از خوشه از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:47 6f2fcbd2633d47cd8736ba720eed771a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:58
+#: 6c7a4103d33640d88658bcc47c382cad
 msgid ""
 "``--ssh-tunnel``: Create SSH tunnel for internet access (uses local "
 "machine as proxy)"
-msgstr "``--ssh-tunnel``: ایجاد تونل SSH برای دسترسی به اینترنت (از دستگاه محلی به عنوان پروکسی استفاده می‌کند)"
+msgstr ""
+"``--ssh-tunnel``: ایجاد تونل SSH برای دسترسی به اینترنت (از دستگاه محلی "
+"به عنوان پروکسی استفاده می‌کند)"
 
-#: ../../source/cli-cluster-setup.rst:48 a96021ddfcfc4b5696500c1d279d619d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:59
+#: 7ca0d76be38b493eb5cfaca9e35b7638
 msgid "``--tunnel-port INT``: Local port for SSH tunnel (default: 3129)"
 msgstr "``--tunnel-port INT``: پورت محلی برای تونل SSH (پیش‌فرض: ۳۱۲۹)"
 
-#: ../../source/cli-cluster-setup.rst:49 75524269815b47d59c912c236d63b083
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:60
+#: 1c412c19309e41b79e486f44e406bd9b
 msgid "``-v, --verbose``: Show detailed command output (stdout/stderr)"
 msgstr "``-v, --verbose``: نمایش خروجی دقیق دستور (stdout/stderr)"
 
-#: ../../source/cli-cluster-setup.rst:51 ../../source/cli-cluster-setup.rst:137
-#: ../../source/cli-cluster-setup.rst:198 1c24b855ffe8462abd05b5ab662eb330
-#: 3b4862be437445c79f9df33a27dec44e 842f23cc7f4e48e3b8880dbf0ea41328
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:62
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:148
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:240
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:313
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:389
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:456
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:576
+#: 0b3a69d40d294b1991dd8aa208b86d5c 1e9bbcb07ab145db9dc0c990e818dbd1
+#: 3dcba48bf4d94a4f834747c3cef4c979 75075b53f474457a81761eba0cda95d1
+#: 8a4c14afa43a4d63ab9cbcf73d70705c 911c62c909d349e2a3d9d987daae18e7
+#: cf91cad82c1b4d1e94348ae2459d72e1
 msgid "**Examples:**"
 msgstr "**مثال‌ها:**"
 
-#: ../../source/cli-cluster-setup.rst:91 ../../source/cli-cluster-setup.rst:211
-#: 357fb6e1acd74d838ff89e1ca919b3d0 f344277f6dfa4da09f802598106c3562
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:102
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:267
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:399
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:589
+#: 2b2d79d8c27942e69ddde8101a96b704 830d56c6045d4357a310646ab6e3ce5b
+#: 8800357082944a848921d7d89d0b6747 ed3de57c423747649c11001683f4d23b
 msgid "**What it does:**"
 msgstr "**کارهایی که انجام می‌دهد:**"
 
-#: ../../source/cli-cluster-setup.rst:93 687791f9b0dd4f90ae37e412f33785ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:104
+#: 75ae2347d45648e7bde8ae1110a9c9d9
 msgid "Tests SSH connection to the remote host"
 msgstr "آزمایش اتصال SSH به میزبان از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:94 1d69c6d065234f93a76da4ace6f6d956
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:105
+#: d1334078f0db450e81f719f69b059fa4
 msgid "Checks for conda/miniconda installation"
 msgstr "بررسی نصب conda/miniconda"
 
-#: ../../source/cli-cluster-setup.rst:95 18602022fac844f9a26daa34df3f2483
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:106
+#: 6249096c274e4f9c879ce3b0c8587f55
 msgid "Creates a new conda environment (or removes existing one if requested)"
 msgstr "ایجاد محیط جدید conda (یا حذف محیط موجود در صورت درخواست)"
 
-#: ../../source/cli-cluster-setup.rst:96 ../../source/cli-cluster-setup.rst:215
-#: 24a452aaa19841afbfbd57cefed5f97a e181ae90a47140338758cd3c4ac881a4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:107
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:593
+#: 2be5a5af355a407da34fc373855454bc 66e9e1918d5a4f9e95d32889e85f5123
 msgid "Installs jobflow-remote from PyPI"
 msgstr "نصب jobflow-remote از PyPI"
 
-#: ../../source/cli-cluster-setup.rst:97 642b4ec6d7ed482793c07d1b2fb8fc94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:108
+#: 71583560a22445fe9bbb4d290c57c01a
 msgid "Installs atomate2siesta from GitHub (main branch)"
 msgstr "نصب atomate2siesta از GitHub (شاخه اصلی)"
 
-#: ../../source/cli-cluster-setup.rst:98 ../../source/cli-cluster-setup.rst:217
-#: be632299459e47beb80742edbd8e0880 d4e339625f784d939522d9b363aad062
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:109
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:595
+#: 0c38a76b41a441c7b99fbecb0ec113c5 0d1e11e2004c433397fe810cf715e2f2
 msgid "Optionally installs SIESTA from conda-forge"
 msgstr "نصب اختیاری SIESTA از conda-forge"
 
-#: ../../source/cli-cluster-setup.rst:99 269639b4ae8542568f5895b6d1027153
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:110
+#: f8489f906e8c4550bd3b9b5b10692e15
 msgid "Verifies installations (checks package versions)"
 msgstr "تأیید نصب‌ها (بررسی نسخه‌های بسته)"
 
-#: ../../source/cli-cluster-setup.rst:100 3efb76d1beac474baec587c7d0239d87
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:111
+#: f3c8e8e200fe4f5c8884b8dfd82bb29a
 msgid ""
-"Creates ``~/.atomate2.yaml`` configuration file with default SIESTA"
-" settings"
+"Creates ``~/.atomate2.yaml`` configuration file with default SIESTA "
+"settings"
 msgstr "ایجاد فایل پیکربندی ``~/.atomate2.yaml`` با تنظیمات پیش‌فرض SIESTA"
 
-#: ../../source/cli-cluster-setup.rst:102 9c200bd07ab441bfbbe7803279cd4d66
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:113
+#: 9d06946a31aa41bd98704a635643a189
 msgid "**Configuration File:**"
 msgstr "**فایل پیکربندی:**"
 
-#: ../../source/cli-cluster-setup.rst:104 18d73686afaa4dac82f19170ef51d663
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:115
+#: 8dec584bdb9b48c6b2f1d2a8b211a941
 msgid ""
-"The setup command automatically creates ``~/.atomate2.yaml`` on the"
-" remote cluster with these default settings:"
-msgstr "دستور راه‌اندازی به طور خودکار فایل ``~/.atomate2.yaml`` را بر روی خوشه از راه دور با این تنظیمات پیش‌فرض ایجاد می‌کند:"
+"The setup command automatically creates ``~/.atomate2.yaml`` on the "
+"remote cluster with these default settings:"
+msgstr ""
+"دستور راه‌اندازی به طور خودکار فایل ``~/.atomate2.yaml`` را بر روی خوشه "
+"از راه دور با این تنظیمات پیش‌فرض ایجاد می‌کند:"
 
-#: ../../source/cli-cluster-setup.rst:114 0bf0b2bec7c84510a14cd77f878e8f08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:125
+#: 12ed67cbeda14e6a9f77f73812656619
 msgid ""
 "All paths use ``$HOME`` for portability across different user accounts. "
 "You can edit this file later to customize paths for your cluster setup."
-msgstr "تمام مسیرها از ``$HOME`` برای قابلیت انتقال در حساب‌های کاربری مختلف استفاده می‌کنند. می‌توانید این فایل را بعداً برای سفارشی‌سازی مسیرها برای راه‌اندازی خوشه خود ویرایش کنید."
+msgstr ""
+"تمام مسیرها از ``$HOME`` برای قابلیت انتقال در حساب‌های کاربری مختلف "
+"استفاده می‌کنند. می‌توانید این فایل را بعداً برای سفارشی‌سازی مسیرها برای"
+" راه‌اندازی خوشه خود ویرایش کنید."
 
-#: ../../source/cli-cluster-setup.rst:119 3b12d0932a864c22bb1a5bf1ed7c31e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:130
+#: 93726a863d034538b9892976ed1bb43e
 msgid "status"
 msgstr "status"
 
-#: ../../source/cli-cluster-setup.rst:121 c44c487f3a8041d8ad670a9737331534
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:132
+#: d5921d65d96e463f9a2bfbd8cf2d7260
 msgid "Check the status of a remote cluster environment."
 msgstr "بررسی وضعیت محیط خوشه از راه دور."
 
-#: ../../source/cli-cluster-setup.rst:131 bb955c994b9448fbafb8673484bf878d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:142
+#: f0fb363017e94e42b4035665795cfcb4
 msgid "``--host TEXT`` (required): Remote cluster hostname or IP address"
 msgstr "``--host TEXT`` (الزامی): نام میزبان یا آدرس IP خوشه از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:132 d9a74bcf4b234466a4f31bff6b3ef87a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:143
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:233
+#: 006a8d3efe2442c9b1f46e9741826b5f 025de03c2ded4c078fc574364f293024
 msgid "``--user TEXT``: Username for SSH connection (defaults to current user)"
 msgstr "``--user TEXT``: نام کاربری برای اتصال SSH (پیش‌فرض: کاربر فعلی)"
 
-#: ../../source/cli-cluster-setup.rst:135 a65419dd983d4940baec9936b8d89e06
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:146
+#: 36e1b3ccf6eb4632965d39b9aed00dfb
 msgid ""
 "``--env-name TEXT``: Name of environment to check (default: "
 "``atomate2siesta``)"
-msgstr "``--env-name TEXT``: نام محیطی که باید بررسی شود (پیش‌فرض: ``atomate2siesta``)"
+msgstr ""
+"``--env-name TEXT``: نام محیطی که باید بررسی شود (پیش‌فرض: "
+"``atomate2siesta``)"
 
-#: ../../source/cli-cluster-setup.rst:147 313d97ef6dd64667a771e052e060a169
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:158
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:323
+#: 00d91d3b4afe4919832196e2c5787856 7d1d8cd41e1640978588038bb495f605
 msgid "**What it shows:**"
 msgstr "**چه چیزی نمایش می‌دهد:**"
 
-#: ../../source/cli-cluster-setup.rst:149 4d37583b98174d0d8c0c4997f6841f7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:160
+#: a0fdb045a9524042a26947091ec06be1
 msgid "SSH connection status"
 msgstr "وضعیت اتصال SSH"
 
-#: ../../source/cli-cluster-setup.rst:150 ec534088c6654e4c862cab068e9b512f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:161
+#: adf5d8cb7e164abdad9d6d49215f282a
 msgid "Conda version"
 msgstr "نسخه Conda"
 
-#: ../../source/cli-cluster-setup.rst:151 33831be7c325470caaff98e16faa7d93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:162
+#: c531c112502f4bc5b07bc7d65d6cf452
 msgid "Environment existence"
 msgstr "وجود محیط"
 
-#: ../../source/cli-cluster-setup.rst:152 cd32c1b982b948ba9ad946eba5f5bc18
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:163
+#: 75728a206c524ec48a1bd16446d014b0
 msgid "Installed packages (atomate2siesta, jobflow-remote, pymatgen, sisl)"
 msgstr "بسته‌های نصب شده (atomate2siesta، jobflow-remote، pymatgen، sisl)"
 
-#: ../../source/cli-cluster-setup.rst:157 3a6292f0626a46d7ae980b4a4c3f8a99
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:164
+#: 193ce880a9e5496a8b7559e3a85531c2
+#, fuzzy
+msgid "**Internet connectivity** (NEW!):"
+msgstr "بررسی اتصال اینترنت در خوشه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:166
+#: a2693611468946beb0e0e9d614eafdeb
+msgid "Direct internet access status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:167
+#: ea0f95fff14d4e91940eafc7dbfee075
+#, fuzzy
+msgid "Proxy configuration (environment variables)"
+msgstr "پیکربندی پروکسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:168
+#: a983aa51d07b49b4b28ee47df3f270f5
+#, fuzzy
+msgid "Proxy configuration (.condarc file)"
+msgstr "پیکربندی پروکسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:169
+#: 1194dc0b8ef6432caa982d22d86c2f49
+#, fuzzy
+msgid "Recommendations for air-gapped clusters"
+msgstr "تونل SSH برای خوشه‌های جدا از اینترنت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:171
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:341
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:406
+#: 7a6fc752b88540e58124204185e704ed c438b7ca31ef4af083b496c4c8a1e9a1
+#: cf3353401a554db68fba2a31147f7a3e
+#, fuzzy
+msgid "**Example Output:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:195
+#: cb96244e9f114237a008e171b3a40ee5
 msgid "info"
 msgstr "info"
 
-#: ../../source/cli-cluster-setup.rst:159 c53a2e7bf36d43cd892faeea0594e222
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:197
+#: 07505be8102344ef9cd2c1d99fb119ac
 msgid ""
 "Show comprehensive information about the cluster setup tool, including "
 "usage examples, authentication methods, and workflow guidance."
-msgstr "نمایش اطلاعات جامع درباره ابزار راه‌اندازی خوشه، شامل مثال‌های استفاده، روش‌های احراز هویت و راهنمای گردش کار."
+msgstr ""
+"نمایش اطلاعات جامع درباره ابزار راه‌اندازی خوشه، شامل مثال‌های استفاده، "
+"روش‌های احراز هویت و راهنمای گردش کار."
 
-#: ../../source/cli-cluster-setup.rst:170 57d2a77bd484428daab4da096bd9a73e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:208
+#: 416da6010cff4c849027c8ddbd744fef
+#, fuzzy
+msgid "ssh-setup"
+msgstr "setup"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:210
+#: f07d64ea27d243fea161c0e6ca19b776
+msgid ""
+"Manage SSH keys and configuration for cluster access. This command group "
+"provides three subcommands to help you set up and verify SSH connections."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:212
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:437
+#: ade61bfae4ed4a0c93b7b8cdd45469a6 b0161bd6392642aeafd97c00bdf52254
+#, fuzzy
+msgid "**Subcommands:**"
+msgstr "دستورات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:214
+#: 60be0a00e83441c9a13b39a14c15d9ef
+msgid "``add`` - Add new SSH config entry with optional key generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:215
+#: ae932e2de7fc4164b1162b4491cc2381
+msgid "``status`` - Show SSH keys, config entries, and connection status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:216
+#: 47e1bde3ea29475f9fa39c3948bc20f4
+#, fuzzy
+msgid "``test`` - Test SSH connections to configured hosts"
+msgstr "آزمایش اتصال SSH به میزبان از راه دور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:219
+#: fd81d080899b416b85bfecef954e2c61
+msgid "ssh-setup add"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:221
+#: 03dbbb5b468a4b67b2809b51fedd0ca8
+msgid ""
+"Add a new SSH config entry for cluster access, with optional key "
+"generation and passwordless login setup."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:231
+#: 4d05acb4d4d64e27b70ad26f71f2766b
+msgid "``--alias TEXT`` (required): SSH config alias name (e.g., 'mycluster')"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:232
+#: 92fb0085b5f04af4a5055b1f2ece6f10
+#, fuzzy
+msgid "``--hostname TEXT`` (required): Remote cluster hostname or IP address"
+msgstr "``--host TEXT`` (الزامی): نام میزبان یا آدرس IP خوشه از راه دور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:234
+#: 58042574fa784831a7243eb1ac297cec
+#, fuzzy
+msgid "``--port INTEGER``: SSH port (default: 22)"
+msgstr "``--tunnel-port INT``: پورت محلی برای تونل SSH (پیش‌فرض: ۳۱۲۹)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:235
+#: 1f64e33b3940449dbd9722b9bbed50df
+#, fuzzy
+msgid "``--key-file TEXT``: Path to SSH private key (default: ~/.ssh/id_rsa)"
+msgstr "``-i, --identity-file TEXT``: مسیر فایل کلید خصوصی SSH"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:236
+#: ec48e0292ae140149373c7e6419e4f70
+msgid "``--generate-key``: Generate new SSH key pair if it doesn't exist"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:237
+#: efe4a406e7754fc0a670f030e70c96b8
+msgid ""
+"``--copy-id``: Copy public key to remote server (enables passwordless "
+"login)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:238
+#: 59a23d1dccbd4275a8a4c86b2f317fbd
+msgid "``--overwrite``: Overwrite existing SSH config entry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:269
+#: e8b0a380939341279dbc67dd4e036903
+msgid ""
+"Creates ``~/.ssh`` directory if it doesn't exist (with proper "
+"permissions: 700)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:270
+#: 41bbb578c82e4245838f42020c82eb87
+msgid ""
+"Generates SSH key pair if requested or if key doesn't exist (4096-bit "
+"RSA, no passphrase)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:271
+#: b26c686f8159435ca85e19927cb634e9
+msgid "Creates or updates ``~/.ssh/config`` entry with:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:273
+#: c51387c1e25b48b684765ea436e5dac3
+msgid "HostName, User, Port, IdentityFile"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:274
+#: 0c87e3ecba694d7f8130803c521a21a1
+msgid "ForwardAgent yes (for SSH agent forwarding)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:275
+#: 722e70e3bf57447faf89b3c20af521df
+msgid "ServerAliveInterval 60 (keep connection alive)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:276
+#: 3f21528fe1074d5583a330f6ff73a17c
+msgid "ServerAliveCountMax 3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:278
+#: a5140b5fa3ba4a4da5e5dfb235ea8197
+msgid "Optionally copies public key to remote server using ``ssh-copy-id``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:279
+#: a3d605a44b6a4871be046fe6650ad34d
+#, fuzzy
+msgid "Tests the connection to verify setup"
+msgstr "وضعیت اتصال SSH"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:281
+#: 10671a80f00841a8ba19e7b1354d86b2
+msgid "**Safety Features:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:283
+#: c06125c5462d42dd9d5fbc4c478571ca
+msgid "Won't overwrite existing SSH keys without explicit confirmation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:284
+#: 19266c23f1f2436f9c5f438cd183f811
+msgid "Prompts before generating new keys"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:285
+#: f6dceb8bde6f4259bfebfe0cd52a02e0
+msgid "Won't overwrite existing config entries unless ``--overwrite`` is used"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:286
+#: 024e4d03328e42049dea171442f09688
+msgid ""
+"Sets correct file permissions automatically (600 for private keys, 644 "
+"for public keys)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:288
+#: 619c6c2fed214fc0aaa532e4cc39878e
+msgid "**After setup:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:299
+#: 0c6688d93a58495c8f7d178d9de942c9
+#, fuzzy
+msgid "ssh-setup status"
+msgstr "وضعیت اتصال SSH"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:301
+#: 799ee848805d40b3859f4858040c1f2f
+#, fuzzy
+msgid ""
+"Show comprehensive information about your SSH configuration, including "
+"keys, SSH agent status, and configured hosts."
+msgstr ""
+"نمایش اطلاعات جامع درباره ابزار راه‌اندازی خوشه، شامل مثال‌های استفاده، "
+"روش‌های احراز هویت و راهنمای گردش کار."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:311
+#: f208b74bf3b6404cb106539d5f9aca80
+#, fuzzy
+msgid ""
+"``-v, --verbose``: Show detailed information (SSH agent socket, identity "
+"files)"
+msgstr "``-v, --verbose``: نمایش خروجی دقیق دستور (stdout/stderr)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:325
+#: 9e4ecb7e042a4da9b53d9384dd0847f4
+msgid "**SSH Keys**: Lists all SSH keys in ``~/.ssh/`` with:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:327
+#: e7cc77d736c0413dac0c15939c34c7e8
+msgid "Key type (RSA, ED25519, ECDSA, DSA)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:328
+#: a183b865b2c7488b820ef2526d4bcf25
+msgid "Key size (bits)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:329
+#: a14d28b1c9fb418297fc38609417c6cd
+msgid "Whether public key exists"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:331
+#: 5216bc6fb4ce4b23b87d49ee145217d5
+msgid "**SSH Agent**: Shows if SSH agent is running and which keys are loaded"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:333
+#: 98abb63021f242cc9f30110f8bdaddd7
+msgid ""
+"**SSH Config Entries**: Displays all configured hosts from "
+"``~/.ssh/config`` including:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:335
+#: 594ac802576f4b26a4fda80171d0a958
+msgid "Alias name"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:336
+#: 8e7d33dbf3cf42ecb97841c47336f213
+msgid "Hostname"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:337
+#: cf1bf5d03f63425493411daa569bc8ec
+msgid "Username"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:338
+#: 838c8d02c7de45ef864113a9ee889ddf
+msgid "Port"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:339
+#: 02789e894e59404385d8e68eb8463806
+msgid "IdentityFile (in verbose mode)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:374
+#: b76fa85c51fd484eb7cee676bf40a5c3
+msgid "ssh-setup test"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:376
+#: c740c81f39e24f19b8b1e8f1ae24eaaf
+msgid ""
+"Test SSH connections to configured hosts to verify connectivity and "
+"measure response times."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:386
+#: 7728d0ceaa7f43d2a337a65d918f6ee1
+msgid "``ALIAS``: SSH config alias to test (optional if using ``--all``)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:387
+#: 0c0990472a384b2fb6d55c943c9dd45c
+msgid "``-a, --all``: Test all configured hosts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:401
+#: e05c79dbd5af43349813f6cf890f317e
+msgid "Reads ``~/.ssh/config`` to find configured hosts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:402
+#: 4f4b5e2e30f940909d0dada8a70f64fd
+#, fuzzy
+msgid "Attempts SSH connection with 10-second timeout"
+msgstr "آزمایش اتصال SSH به میزبان از راه دور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:403
+#: 0615b2f0abbc4b8d92bf19883c3c2301
+msgid "Measures connection response time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:404
+#: 96d737eee471453ca6756ac608a27893
+msgid "Reports success/failure status for each host"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:421
+#: d5118510fc114c6aae98e69174623b32
+#, fuzzy
+msgid "**Troubleshooting:**"
+msgstr "عیب‌یابی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:423
+#: ef797467d4be44aa8c6b935f0cd0015a
+#, fuzzy
+msgid "If a connection test fails, check:"
+msgstr "شکست اتصال SSH"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:425
+#: 7c8b47258c4a4673af8e782d6ed9ee97
+msgid "Hostname is correct and reachable"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:426
+#: af2a6222d0ef429880f1617f660cf81c
+msgid "Network connectivity (firewall, VPN)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:427
+#: fb5487036cd34a519c659ac95a3ef871
+msgid "SSH key permissions (should be 600)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:428
+#: ce63994ca1fe4481926aef99e50429d1
+msgid "Public key is installed on remote server (use ``--copy-id`` to fix)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:433
+#: b93fd4034f224b43bbd98d0d2a808d25
+msgid "squid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:435
+#: e52c511c850245d69365bf59229ce61f
+msgid ""
+"Manage Squid HTTP proxy for air-gapped clusters. This command group "
+"provides installation and management of Squid proxy server, which enables"
+" package installation on clusters that block direct internet access."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:439
+#: cb76ea41720e46548d6f0400c2baeaf3
+msgid ""
+"``install`` - Auto-install squid (supports macOS, Ubuntu/Debian, "
+"CentOS/RHEL, Fedora)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:440
+#: f268348de86f45dba3420421f563d786
+msgid "``start`` - Start squid proxy on specified port"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:441
+#: 8180402f7a174bf6a61565c911b74b24
+msgid "``stop`` - Stop squid proxy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:442
+#: 4c3c92920cce4d378bfcafd13d389b8d
+msgid "``status`` - Show squid status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:443
+#: 751dc939b1264574a992c40c2b8be9cd
+msgid "``restart`` - Restart squid proxy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:453
+#: 88166aee29ec4c44800bc5f47fedf9a4
+#, fuzzy
+msgid "``--port INTEGER``: Port for squid proxy (default: 3129)"
+msgstr "``--tunnel-port INT``: پورت محلی برای تونل SSH (پیش‌فرض: ۳۱۲۹)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:454
+#: bd4002ff63944164aa9aa79153c4be95
+msgid ""
+"``--remove``: Remove old squid.conf before starting (use with 'start' "
+"action)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:481
+#: a8948abe9d5e430d91f6d0fc030fd5d9
+#, fuzzy
+msgid "**Automatic Installation:**"
+msgstr "**نصب بر روی MN5:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:483
+#: 8ccdf7540ac34ca99e81996528f4b4f8
+msgid ""
+"The ``install`` command automatically detects your operating system and "
+"uses the appropriate package manager:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:489
+#: 78426d2a872f4b1083dfe5dd97540e00
+msgid "Operating System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:490
+#: 9be76d5b7f134e739003632b885716a0
+msgid "Package Manager"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:491
+#: c0dcf25df661459b8f7bb77f368e074c
+#, fuzzy
+msgid "Command Used"
+msgstr "دستورات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:492
+#: dca68f6cddfd4801ac87a66bea4e09ec
+msgid "**macOS**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:493
+#: f3d217932d7b4567b1e8198bc1f0dc26
+#, fuzzy
+msgid "Homebrew"
+msgstr "مرور کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:494
+#: 4e013d60b7b647aeb05a7fe30c33d9a8
+msgid "``brew install squid``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:495
+#: 9538fa130c0543c4b3b60f9eee07b845
+msgid "**Ubuntu/Debian**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:496
+#: b1fd782b14824ebb8427cd06088df70a
+msgid "apt-get"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:497
+#: d922fec516094d668eb44c7bd2d6f733
+msgid "``apt-get update && apt-get install -y squid``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:498
+#: 8e80680b574846ac934f527f3e6df282
+msgid "**CentOS/RHEL 7**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:499
+#: 159cce8d432440c19b312b50f50893fd
+msgid "yum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:500
+#: 6e880d08a79f4973be73dc358e7965e8
+msgid "``yum install -y squid``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:501
+#: cc54691010054f51a5a46b0c941ef9e5
+msgid "**RHEL 8+/Fedora**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:502
+#: c9811c2bf3bd4fbf819bc125d6d8ba8c
+msgid "dnf"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:503
+#: f07f9157655e42e6966ffc9e630aef64
+msgid "``dnf install -y squid``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:504
+#: 27c78a2aa93247c79a0ee470cec9721e
+msgid "**Other Linux**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:505
+#: 09bef0bd97464a68ab01ccfaea86733b
+msgid "Manual"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:506
+#: 5ae6d1c7652343b19a55a909a69966b7
+msgid "Shows instructions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:508
+#: 89244b4e14e048249bd44ef4ae21e5bc
+#, fuzzy
+msgid "**How Squid Works:**"
+msgstr "**نحوه کار:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:510
+#: 17d670047c724b78a6ba2feec2e67f08
+msgid "Squid provides an HTTP/HTTPS proxy that conda and pip can use:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:518
+#: 749f4d4868e14be48c1b668e02ef0152
+#, fuzzy
+msgid "**Use with Cluster Setup:**"
+msgstr "رابط خط فرمان راه‌اندازی خوشه از راه دور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:520
+#: d0c0bdd9366f4fa389a0d47faf00e34b
+msgid "Once squid is installed and running:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:531
+#: 4e0bdf0b420948f3b6fbf2b7cb638425
+#, fuzzy
+msgid "**When to Use Squid:**"
+msgstr "**چه زمانی استفاده شود:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:533
+#: b07367bcfcb7419dae933bdefcab1f61
+#, fuzzy
+msgid "Air-gapped clusters that block outgoing connections"
+msgstr ""
+"**توصیه می‌شود برای MareNostrum 5** و سایر خوشه‌هایی که تمام اتصالات "
+"خروجی را مسدود می‌کنند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:534
+#: f4790bb103364ab2bd0b9ef75bf76bb3
+msgid "Alternative to SSH tunnel (``-D`` flag)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:535
+#: 8c3c949dc00d49d99debee2c1cff5d3e
+msgid "When you need persistent local proxy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:536
+#: 9944fc9c1ad944a08febddc7af71aee0
+msgid "For multiple simultaneous cluster setups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:538
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:855
+#: 453c3ec3fc9147dd96eec770aa626a74 cd255675138a4caab99bb2964fc025d6
+msgid "**Advantages:**"
+msgstr "**مزایا:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:540
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:857
+#: be1071d6c14c44bba419f3b7e9050489 f0c7abeb0a67447d8c00ca0d4d85dba5
+msgid "✅ Works on completely air-gapped clusters"
+msgstr "✅ بر روی خوشه‌های کاملاً جدا از اینترنت کار می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:541
+#: f207c04e0de5432d905b764a55dcfe56
+msgid "✅ Persistent (survives terminal closures)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:542
+#: 27b01d9bb1354d2a8fa314a1104122e8
+msgid "✅ Can serve multiple connections simultaneously"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:543
+#: 001d00cfafa0437c9d9a406a6a4f8ef4
+msgid "✅ Professional caching capabilities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:548
+#: 24568d2db7304db9884e9e8df03fddcb
 msgid "build-offline"
 msgstr "build-offline"
 
-#: ../../source/cli-cluster-setup.rst:172 e9e780a7ddf54416a21c0a3c8c7c5367
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:550
+#: 002f8946143d4e58a8ee7dece085952c
 msgid ""
 "Build an offline conda environment package for air-gapped clusters (like "
 "MareNostrum 5)."
-msgstr "ساخت بسته محیط conda آفلاین برای خوشه‌های جدا از اینترنت (مانند MareNostrum 5)."
+msgstr ""
+"ساخت بسته محیط conda آفلاین برای خوشه‌های جدا از اینترنت (مانند "
+"MareNostrum 5)."
 
-#: ../../source/cli-cluster-setup.rst:174 64aeb69fed4440e7ae9188084e4638c7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:552
+#: d344dfcc210844b694efe60f83d35daa
 msgid ""
 "**IMPORTANT**: Use this command when the target cluster blocks ALL "
 "outgoing internet connections, including proxy access."
-msgstr "**مهم**: از این دستور زمانی استفاده کنید که خوشه هدف تمام اتصالات خروجی به اینترنت، از جمله دسترسی پروکسی را مسدود می‌کند."
+msgstr ""
+"**مهم**: از این دستور زمانی استفاده کنید که خوشه هدف تمام اتصالات خروجی "
+"به اینترنت، از جمله دسترسی پروکسی را مسدود می‌کند."
 
-#: ../../source/cli-cluster-setup.rst:184 bf11dfd391ce4914a3fc4cfc731c45d4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:562
+#: c06c1b7bf9bb441b96a55200c8ebe19f
 msgid ""
 "``--output, -o TEXT``: Output filename for packed environment (default: "
 "``jobflow-remote.tar.gz``)"
-msgstr "``--output, -o TEXT``: نام فایل خروجی برای محیط بسته‌بندی شده (پیش‌فرض: ``jobflow-remote.tar.gz``)"
+msgstr ""
+"``--output, -o TEXT``: نام فایل خروجی برای محیط بسته‌بندی شده (پیش‌فرض: "
+"``jobflow-remote.tar.gz``)"
 
-#: ../../source/cli-cluster-setup.rst:187 3bc411535bb143b885b64a2f99bab059
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:565
+#: d369097330a249c9a49cd7d1f74c0610
 msgid ""
 "``--git-ssh``: Use SSH URL for Git clone (requires GitHub SSH key "
 "configured locally)"
-msgstr "``--git-ssh``: استفاده از URL SSH برای Git clone (نیاز به پیکربندی کلید SSH GitHub به صورت محلی)"
+msgstr ""
+"``--git-ssh``: استفاده از URL SSH برای Git clone (نیاز به پیکربندی کلید "
+"SSH GitHub به صورت محلی)"
 
-#: ../../source/cli-cluster-setup.rst:188 5e628c94fa0643cea535521b813b2822
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:566
+#: c9082d5c2d2b4d29838bbee737a6155c
 msgid "``--git-token TEXT``: GitHub personal access token for private repo"
 msgstr "``--git-token TEXT``: توکن دسترسی شخصی GitHub برای مخزن خصوصی"
 
-#: ../../source/cli-cluster-setup.rst:189 435264b7e24f4e90a240e8f6ba848a24
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:567
+#: e48ca821ff714651bb5cc568892a32a0
 msgid "``--install-siesta``: Include SIESTA in the packed environment"
 msgstr "``--install-siesta``: شامل کردن SIESTA در محیط بسته‌بندی شده"
 
-#: ../../source/cli-cluster-setup.rst:191 0678c437d5394538927c08615c25a486
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:569
+#: 5b80b8cc4f084d6eae583be4359a06ec
 msgid "**Requirements:**"
 msgstr "**پیش‌نیازها:**"
 
-#: ../../source/cli-cluster-setup.rst:193 9282023e53d74b6c88e957d767888c04
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:571
+#: 51103a6d305e4f15a28f964fd969a0eb
 msgid "Linux x86_64 architecture (must match target cluster)"
 msgstr "معماری Linux x86_64 (باید با خوشه هدف مطابقت داشته باشد)"
 
-#: ../../source/cli-cluster-setup.rst:194 4c6f150b81c540e495480943cc9bc430
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:572
+#: e0e798115bc1498ba2ef81c572bf413e
 msgid "conda or miniconda installed locally"
 msgstr "نصب conda یا miniconda به صورت محلی"
 
-#: ../../source/cli-cluster-setup.rst:195 595155070bf3493fb43d76fa14532d38
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:573
+#: 1b1566b729b24881a1410976bc0fa315
 msgid "conda-pack package (will be installed automatically if missing)"
 msgstr "بسته conda-pack (در صورت عدم وجود به طور خودکار نصب می‌شود)"
 
-#: ../../source/cli-cluster-setup.rst:196 920ccb5a7cc643beb71dc4197b282b7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:574
+#: 16a074011e584c9eacc8de68a025e2a2
 msgid "GitHub access for atomate2siesta"
 msgstr "دسترسی GitHub برای atomate2siesta"
 
-#: ../../source/cli-cluster-setup.rst:213 22facd85d09d45088bc6e058cf8bbf06
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:591
+#: 9b924b828c89400ba181439fbd984f6a
 msgid "Checks system compatibility (Linux x86_64 recommended)"
 msgstr "بررسی سازگاری سیستم (Linux x86_64 توصیه می‌شود)"
 
-#: ../../source/cli-cluster-setup.rst:214 128d620e97294b19b9545d126404ae52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:592
+#: 32e42d32d3dc4a85989995a9d5e49900
 msgid "Creates local conda environment with specified Python version"
 msgstr "ایجاد محیط محلی conda با نسخه مشخص شده Python"
 
-#: ../../source/cli-cluster-setup.rst:216 d2a61d389e5b4a5caaedf11e422843a5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:594
+#: 796261900631455ab3ed79fabfbf99a3
 msgid "Installs atomate2siesta from GitHub"
 msgstr "نصب atomate2siesta از GitHub"
 
-#: ../../source/cli-cluster-setup.rst:218 25a8db42ef904cf1b26944e4db6e655c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:596
+#: a64df6cb7f3442c3b06d73d19195adb6
 msgid "Packs entire environment using conda-pack (~500 MB - 1.5 GB)"
-msgstr "بسته‌بندی کامل محیط با استفاده از conda-pack (حدود ۵۰۰ مگابایت - ۱.۵ گیگابایت)"
+msgstr ""
+"بسته‌بندی کامل محیط با استفاده از conda-pack (حدود ۵۰۰ مگابایت - ۱.۵ "
+"گیگابایت)"
 
-#: ../../source/cli-cluster-setup.rst:219 f03af64f89f44f9dbf8265379506ddb4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:597
+#: 4dd97cb0246e4cd4bb0ca4c51fecdaa5
 msgid "Displays transfer and installation instructions"
 msgstr "نمایش دستورالعمل‌های انتقال و نصب"
 
-#: ../../source/cli-cluster-setup.rst:221 71ad879f755f4c209d23d7db25fc9f0c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:599
+#: a663ad1ef0044914968c5d33e3d8d260
 msgid "**Transfer to Cluster:**"
 msgstr "**انتقال به خوشه:**"
 
-#: ../../source/cli-cluster-setup.rst:223 ad98a19316fa4280ba524cb21825b5d1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:601
+#: fb33d221cd3a48df83061ffe6fa96056
 msgid "After building, transfer the packed environment to the cluster:"
 msgstr "پس از ساخت، محیط بسته‌بندی شده را به خوشه منتقل کنید:"
 
-#: ../../source/cli-cluster-setup.rst:233 a5111289345b45e8862405887262c869
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:611
+#: c0f01019957e4aaa8d58093a8a1e407d
 msgid "**Install on Cluster:**"
 msgstr "**نصب بر روی خوشه:**"
 
-#: ../../source/cli-cluster-setup.rst:235 97fb39a9aec24eb99e8067631d40f002
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:613
+#: 04a210562a8e4faf973d180964c29607
 msgid "SSH to the cluster and unpack:"
 msgstr "اتصال SSH به خوشه و باز کردن بسته:"
 
-#: ../../source/cli-cluster-setup.rst:248 1913aa73656a4052853b4b6b7f7292a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:626
+#: b69bbaf49ff049a6a3662331affefb66
 msgid "**When to Use:**"
 msgstr "**چه زمانی استفاده شود:**"
 
-#: ../../source/cli-cluster-setup.rst:250 b7452fe9336647d0b55adaaa94a9e312
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:628
+#: 097889d60f044cebbd9454e52f953054
 msgid "✅ **MareNostrum 5** (blocks all outgoing connections)"
 msgstr "✅ **MareNostrum 5** (تمام اتصالات خروجی را مسدود می‌کند)"
 
-#: ../../source/cli-cluster-setup.rst:251 3c9332bfa39a4e92840f95bf7675bad6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:629
+#: 34f4cb1ba0204059a3119ac70b1df83c
 msgid "✅ Air-gapped clusters (no internet access)"
 msgstr "✅ خوشه‌های جدا از اینترنت (بدون دسترسی به اینترنت)"
 
-#: ../../source/cli-cluster-setup.rst:252 f2863e68b4cf46898d0a457e1c9745ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:630
+#: ed2ecdf62b2442788af317f030162df1
 msgid "✅ When proxy configuration is unavailable or doesn't work"
 msgstr "✅ زمانی که پیکربندی پروکسی در دسترس نیست یا کار نمی‌کند"
 
-#: ../../source/cli-cluster-setup.rst:253 1e3b26b098644996886f24accb689b27
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:631
+#: dfaffde60c93416cb668641da0cd84dc
 msgid "✅ For reproducible environments across multiple clusters"
 msgstr "✅ برای محیط‌های قابل بازتولید در خوشه‌های متعدد"
 
-#: ../../source/cli-cluster-setup.rst:256 34df172eaa7b4f649dbaafd4b3af9da2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:634
+#: 0ea6d7a3f97047f0bc96168a3b81af03
 msgid "Authentication Methods"
 msgstr "روش‌های احراز هویت"
 
-#: ../../source/cli-cluster-setup.rst:259 863f6ce7c3ea42c3b535311f9b6fcd97
-msgid "SSH Key Authentication (Recommended)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:637
+#: 8e38d2900b9b428ea3a9e07abfae1901
+#, fuzzy
+msgid "SSH Configuration (Easiest - Recommended)"
 msgstr "احراز هویت با کلید SSH (توصیه شده)"
 
-#: ../../source/cli-cluster-setup.rst:261 36863a0c018c4064b35f8a11ec227258
-msgid "Use your SSH private key for secure, password-less authentication:"
-msgstr "از کلید خصوصی SSH خود برای احراز هویت امن و بدون رمز عبور استفاده کنید:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:639
+#: bd343489fe97405dbd86249dbb4157cb
+msgid ""
+"The **easiest way** to set up SSH access is using the ``ssh-setup`` "
+"command group:"
+msgstr ""
 
-#: ../../source/cli-cluster-setup.rst:268 5fcce033a41847608ab52f07223879c0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:655
+#: 83f4ca68020f44158238fbd27a6f82bf
+#, fuzzy
+msgid "**Benefits:**"
+msgstr "**چه زمانی استفاده شود:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:657
+#: 79e092cd3dfa46e5a32ffed0e48da900
+msgid "✅ Automatically generates SSH keys if needed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:658
+#: fb19e86b0c51497a826da479b1e6a5c3
+msgid "✅ Creates ``~/.ssh/config`` entries"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:659
+#: ecfaa1e9e2eb4b44939a4ced0acacb9b
+msgid "✅ Sets up passwordless login"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:660
+#: f9b1c113e82540abbec394fbcf91e0fc
+#, fuzzy
+msgid "✅ Tests connection"
+msgstr "شکست اتصال SSH"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:661
+#: c416e197749f4a708da67599dc7d527d
+msgid "✅ No need to remember hostnames, usernames, or key files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:663
+#: 12a1bd8b009d41eca459cd653ee37fa8
+#, fuzzy
+msgid "See the ``ssh-setup`` command section above for full documentation."
+msgstr ""
+"برای جزئیات کامل بخش \"تونل SSH برای خوشه‌های جدا از اینترنت\" در بالا را"
+" ببینید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:666
+#: f44ffa7d1a454b799cb0b7c9011116c4
+#, fuzzy
+msgid "SSH Key Authentication (Manual)"
+msgstr "احراز هویت با کلید SSH (توصیه شده)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:668
+#: 302f190169a64d748914131013d73fec
+msgid "Alternatively, use your SSH private key directly:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:675
+#: 54f79b1076374f75ba16f7053740691e
 msgid "Password Authentication"
 msgstr "احراز هویت با رمز عبور"
 
-#: ../../source/cli-cluster-setup.rst:270 8105b97af97a43c08efb50404caf47ca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:677
+#: 6b398676d26948af9d835f6f1a2a324e
 msgid "Prompt for password (requires ``sshpass`` to be installed locally):"
 msgstr "درخواست رمز عبور (نیاز به نصب ``sshpass`` به صورت محلی):"
 
-#: ../../source/cli-cluster-setup.rst:277 5db61dc26ab145eda1360d0ffda58d4e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:684
+#: b10f04d2615a437186fcc3e88968601b
 msgid "SSH Agent"
 msgstr "SSH Agent"
 
-#: ../../source/cli-cluster-setup.rst:279 68a17c2f304e422bad9103d851262330
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:686
+#: 7ab7ebabd48e4450ba47fd4e48eb9b22
 msgid ""
 "If you have SSH keys configured and loaded in ssh-agent, you can omit "
 "authentication flags:"
-msgstr "اگر کلیدهای SSH پیکربندی شده و در ssh-agent بارگذاری شده‌اند، می‌توانید پرچم‌های احراز هویت را حذف کنید:"
+msgstr ""
+"اگر کلیدهای SSH پیکربندی شده و در ssh-agent بارگذاری شده‌اند، می‌توانید "
+"پرچم‌های احراز هویت را حذف کنید:"
 
-#: ../../source/cli-cluster-setup.rst:286 563846db11b44f6992099679145c99aa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:693
+#: 10cf8e3c89ab420b8bd4f6f730f0e242
 msgid "Prerequisites"
 msgstr "پیش‌نیازها"
 
-#: ../../source/cli-cluster-setup.rst:289 84dea8bd6d904802a8e66e6659746138
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:696
+#: c7332f0ceb36441984e73adb080b3334
 msgid "Local Machine"
 msgstr "دستگاه محلی"
 
-#: ../../source/cli-cluster-setup.rst:291 28f2e37f9466401a88005bef7e247f1e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:698
+#: 8ebcc60da0e14c95a182e9a9f0124347
 msgid "SSH access to the remote cluster"
 msgstr "دسترسی SSH به خوشه از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:292 a19e84702f954a21a55fdabbe4cbece1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:699
+#: 582930061abd4dcab039fc56896798f9
 msgid ""
 "``sshpass`` (if using password authentication): ``brew install sshpass`` "
 "(macOS) or ``apt-get install sshpass`` (Linux)"
-msgstr "``sshpass`` (در صورت استفاده از احراز هویت رمز عبور): ``brew install sshpass`` (macOS) یا ``apt-get install sshpass`` (Linux)"
+msgstr ""
+"``sshpass`` (در صورت استفاده از احراز هویت رمز عبور): ``brew install "
+"sshpass`` (macOS) یا ``apt-get install sshpass`` (Linux)"
 
-#: ../../source/cli-cluster-setup.rst:295 ee73bfded30a45a2bd0dd4d14304c09c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:702
+#: 5de89d8171064c84972fd50394bd0a07
 msgid "Remote Cluster"
 msgstr "خوشه از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:297 e267f634d84f49e0adf6a3a07a220079
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:704
+#: e2c715889c064ac7a7096422f7767cfe
 msgid "Conda or Miniconda installed and in PATH"
 msgstr "نصب Conda یا Miniconda و در PATH"
 
-#: ../../source/cli-cluster-setup.rst:298 71005fe71bad4cb7819e691e5eb01aba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:705
+#: 11dd7e5fac1f493197f579e0d449837c
 msgid ""
 "Internet access for package installation (may require proxy configuration"
 " on secure clusters)"
-msgstr "دسترسی به اینترنت برای نصب بسته (ممکن است در خوشه‌های امن نیاز به پیکربندی پروکسی داشته باشد)"
+msgstr ""
+"دسترسی به اینترنت برای نصب بسته (ممکن است در خوشه‌های امن نیاز به "
+"پیکربندی پروکسی داشته باشد)"
 
-#: ../../source/cli-cluster-setup.rst:299 d120ff65ab8345e2a45626ee56fb0f3f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:706
+#: cea75889e9294248be662f97780d787b
 msgid "Sufficient disk space in ``$HOME`` for conda environment"
 msgstr "فضای کافی دیسک در ``$HOME`` برای محیط conda"
 
-#: ../../source/cli-cluster-setup.rst:302 2ccbd83f1906444b9fb0fee391076b0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:709
+#: e288efd0cee64716b0c07a3ef991fdba
 msgid "Installing Conda on Remote Cluster"
 msgstr "نصب Conda بر روی خوشه از راه دور"
 
-#: ../../source/cli-cluster-setup.rst:304 4b481fa027c14221be2edbefd9a0a4b4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:711
+#: bd9d723e04584ee5a415a7b6c93d3127
 msgid "If conda is not installed on the remote cluster, SSH to it and run:"
-msgstr "اگر conda بر روی خوشه از راه دور نصب نشده است، از طریق SSH به آن متصل شوید و اجرا کنید:"
+msgstr ""
+"اگر conda بر روی خوشه از راه دور نصب نشده است، از طریق SSH به آن متصل "
+"شوید و اجرا کنید:"
 
-#: ../../source/cli-cluster-setup.rst:313 11cf5c24f83a45179d0eda26673fe6bd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:720
+#: a0748195acb042c6aa1ad2559123b412
 msgid "Log out and log back in for the changes to take effect."
 msgstr "برای اعمال تغییرات، خروج و ورود مجدد کنید."
 
-#: ../../source/cli-cluster-setup.rst:316 6b3c6b9341294d4789e05bf8046ae9fb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:723
+#: 966eb6244c3b4b599fe653c540ef7ae7
 msgid "Proxy Configuration"
 msgstr "پیکربندی پروکسی"
 
-#: ../../source/cli-cluster-setup.rst:318 27c9f33bb75442e0a61b2162c4b86b8d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:725
+#: 7f2f0538cb8a4bdd833941e62989d251
 msgid ""
 "Many HPC clusters block direct internet access from login nodes for "
 "security reasons and require HTTP/HTTPS proxy servers for internet "
 "connectivity. This is especially common on supercomputing centers like "
 "BSC's MN5."
-msgstr "بسیاری از خوشه‌های HPC دسترسی مستقیم به اینترنت از گره‌های ورود را به دلایل امنیتی مسدود می‌کنند و به سرورهای پروکسی HTTP/HTTPS برای اتصال به اینترنت نیاز دارند. این امر به ویژه در مراکز ابررایانه‌ای مانند MN5 BSC رایج است."
+msgstr ""
+"بسیاری از خوشه‌های HPC دسترسی مستقیم به اینترنت از گره‌های ورود را به "
+"دلایل امنیتی مسدود می‌کنند و به سرورهای پروکسی HTTP/HTTPS برای اتصال به "
+"اینترنت نیاز دارند. این امر به ویژه در مراکز ابررایانه‌ای مانند MN5 BSC "
+"رایج است."
 
-#: ../../source/cli-cluster-setup.rst:320 8f976545ef4a41ac9f6040aafb353e17
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:727
+#: 4e93efc354e44c77b4c88b54dca40836
 msgid "**When to Use Proxy Options**"
 msgstr "**چه زمانی از گزینه‌های پروکسی استفاده شود**"
 
-#: ../../source/cli-cluster-setup.rst:322 9d93ebb01269470091ec49ad51f3216b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:729
+#: b170c6f4a65c45c081f120f47351cada
 msgid "You need proxy configuration if:"
 msgstr "شما به پیکربندی پروکسی نیاز دارید اگر:"
 
-#: ../../source/cli-cluster-setup.rst:324 fdf60316d39b485eb912b1e083bccc57
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:731
+#: d70647101f8549e3a3b34acc9fe24273
 msgid "Your cluster blocks direct internet access from login nodes"
 msgstr "خوشه شما دسترسی مستقیم به اینترنت از گره‌های ورود را مسدود می‌کند"
 
-#: ../../source/cli-cluster-setup.rst:325 fc29b623f7564accaf9935fbf0ec6303
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:732
+#: 73fd90c584e14f588ca389aeaa75f685
 msgid "You see errors like ``CondaHTTPError: HTTP 000 CONNECTION FAILED``"
 msgstr "خطاهایی مانند ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` می‌بینید"
 
-#: ../../source/cli-cluster-setup.rst:326 62e474f28ce94865a472411915a8dba8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:733
+#: 969df2c727224bfdb332851bfa0ac876
 msgid ""
 "Package installation fails with ``Connection refused`` or ``Connection "
 "reset by peer``"
-msgstr "نصب بسته با ``Connection refused`` یا ``Connection reset by peer`` شکست می‌خورد"
+msgstr ""
+"نصب بسته با ``Connection refused`` یا ``Connection reset by peer`` شکست "
+"می‌خورد"
 
-#: ../../source/cli-cluster-setup.rst:327 7efc37bd04144f9bb2bee7cac5c61e7c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:734
+#: f1f9bc3e4e7041289a2edabf6d35c6e9
 msgid "Your cluster documentation mentions proxy servers for internet access"
 msgstr "مستندات خوشه شما به سرورهای پروکسی برای دسترسی به اینترنت اشاره می‌کند"
 
-#: ../../source/cli-cluster-setup.rst:329 ba4488299df04eb59b09cfba5ccbe6d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:736
+#: c8fd274cc2d944bd977a1d070b20480f
 msgid "**Using Proxy Options**"
 msgstr "**استفاده از گزینه‌های پروکسی**"
 
-#: ../../source/cli-cluster-setup.rst:331 a2deec45eb1d4aa28c91beeb28273326
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:738
+#: c693af983f484b269239a8afd3003588
 msgid "Option 1: Specify proxy URL directly (recommended if you know the proxy):"
-msgstr "گزینه ۱: مشخص کردن مستقیم آدرس پروکسی (توصیه می‌شود اگر پروکسی را می‌دانید):"
+msgstr ""
+"گزینه ۱: مشخص کردن مستقیم آدرس پروکسی (توصیه می‌شود اگر پروکسی را "
+"می‌دانید):"
 
-#: ../../source/cli-cluster-setup.rst:337 ed17b043247f48e5a53dcb5ba8c922f7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:744
+#: 8c0b0816f4d94633bfb997038ae684e7
 msgid "Option 2: Auto-detect proxy from remote environment:"
 msgstr "گزینه ۲: تشخیص خودکار پروکسی از محیط از راه دور:"
 
-#: ../../source/cli-cluster-setup.rst:343 a65c5aa7a0fe4691a3955068fe093b99
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:750
+#: ce1a270672b5431b85daba3646de5d0e
 msgid "**How Proxy Configuration Works**"
 msgstr "**نحوه کار پیکربندی پروکسی**"
 
-#: ../../source/cli-cluster-setup.rst:345 1445594929f341c58b122c92e3753ee8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:752
+#: fe5741325bdb4b65962c9afdce5cb82f
 msgid "The setup command configures proxy for conda and pip by:"
 msgstr "دستور راه‌اندازی پروکسی را برای conda و pip با موارد زیر پیکربندی می‌کند:"
 
-#: ../../source/cli-cluster-setup.rst:347 40fa0b0e3ce24738969465f44016af35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:754
+#: 8e207f7c07f74adf9fc214dd791e57fe
 msgid "Creating ``~/.condarc`` with proxy settings:"
 msgstr "ایجاد ``~/.condarc`` با تنظیمات پروکسی:"
 
-#: ../../source/cli-cluster-setup.rst:355 4de9a80b98334e0c8909b98d7584fe6f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:762
+#: 0891e886af4c429da885e30d677f24c2
 msgid "Creating ``~/.config/pip/pip.conf`` with proxy settings:"
 msgstr "ایجاد ``~/.config/pip/pip.conf`` با تنظیمات پروکسی:"
 
-#: ../../source/cli-cluster-setup.rst:362 e4463a49745d4312b8a36c7b497d1845
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:769
+#: 37544bb8412c4ff49f2dee651254807e
 msgid "Setting environment variables for all conda/pip commands"
 msgstr "تنظیم متغیرهای محیطی برای تمام دستورات conda/pip"
 
-#: ../../source/cli-cluster-setup.rst:364 5c691eaf7a544748896bef6b8f162bb9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:771
+#: c7161e4d93494e2e8790c53cecfbb00f
 msgid "**Common Proxy URLs**"
 msgstr "**آدرس‌های پروکسی رایج**"
 
-#: ../../source/cli-cluster-setup.rst:366
-#: ../../source/cli-cluster-setup.rst:655 acba790e91f9428c9ff3e3863da621ae
-#: ed0410f8b9424f58943b89baf3d244a6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:773
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1104
+#: 52f01f1909ea45c0980a995b66d10ff7 e7ffabfa7e1c45d6bb733e9bc1caf3ad
 msgid "BSC MN5: ``http://proxy.bsc.es:8080``"
 msgstr "BSC MN5: ``http://proxy.bsc.es:8080``"
 
-#: ../../source/cli-cluster-setup.rst:367 691108e5811245edaf8019f53223a937
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:774
+#: 6c583d80a2cb4a54842f9fdc3648d8ec
 msgid "Ask your cluster administrator for the correct proxy URL"
 msgstr "از مدیر خوشه خود آدرس صحیح پروکسی را بپرسید"
 
-#: ../../source/cli-cluster-setup.rst:369 64f790da56d34cee86cd1f051e9c62c6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:776
+#: c17ae74646244c2e9da2eca99fd59d78
 msgid ""
 "**Note:** If proxy auto-detection finds existing proxy settings in your "
 "remote environment, it will use those automatically."
-msgstr "**توجه:** اگر تشخیص خودکار پروکسی تنظیمات پروکسی موجود را در محیط از راه دور شما پیدا کند، به طور خودکار از آنها استفاده می‌کند."
+msgstr ""
+"**توجه:** اگر تشخیص خودکار پروکسی تنظیمات پروکسی موجود را در محیط از راه "
+"دور شما پیدا کند، به طور خودکار از آنها استفاده می‌کند."
 
-#: ../../source/cli-cluster-setup.rst:372 5a58e3ef402345a59e42823a2287e82b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:779
+#: 2a8dedb64f9c449e8b157e76664a5fc9
 msgid "SSH Tunnel for Air-Gapped Clusters"
 msgstr "تونل SSH برای خوشه‌های جدا از اینترنت"
 
-#: ../../source/cli-cluster-setup.rst:374 2a64eea2610c4a5e9fe61d9ae674a11d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:781
+#: 0ab3952d8dc242bf900bb17294073e8a
 msgid ""
 "**RECOMMENDED for MareNostrum 5** and other clusters that block ALL "
 "outgoing connections."
-msgstr "**توصیه می‌شود برای MareNostrum 5** و سایر خوشه‌هایی که تمام اتصالات خروجی را مسدود می‌کنند."
+msgstr ""
+"**توصیه می‌شود برای MareNostrum 5** و سایر خوشه‌هایی که تمام اتصالات "
+"خروجی را مسدود می‌کنند."
 
-#: ../../source/cli-cluster-setup.rst:376 c470202aca124d8cb3c6e3f33cfd47ae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:783
+#: a2a7cc6b2e644a0f9d899b70e26d9c7a
 msgid ""
 "**Problem:** Traditional proxy configuration requires outgoing "
 "connections to the proxy server. MN5 blocks ALL outgoing connections, so "
 "proxy won't work."
-msgstr "**مشکل:** پیکربندی سنتی پروکسی نیاز به اتصالات خروجی به سرور پروکسی دارد. MN5 تمام اتصالات خروجی را مسدود می‌کند، بنابراین پروکسی کار نمی‌کند."
+msgstr ""
+"**مشکل:** پیکربندی سنتی پروکسی نیاز به اتصالات خروجی به سرور پروکسی دارد."
+" MN5 تمام اتصالات خروجی را مسدود می‌کند، بنابراین پروکسی کار نمی‌کند."
 
-#: ../../source/cli-cluster-setup.rst:378 4ddb9a1910d14d788eec1796626cf84b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:785
+#: 743d1d7dee7649daa72c32a115ff8e80
 msgid ""
 "**Solution:** SSH tunnel with SOCKS proxy - route internet through your "
 "local machine!"
-msgstr "**راه‌حل:** تونل SSH با پروکسی SOCKS - مسیریابی اینترنت از طریق دستگاه محلی شما!"
+msgstr ""
+"**راه‌حل:** تونل SSH با پروکسی SOCKS - مسیریابی اینترنت از طریق دستگاه "
+"محلی شما!"
 
-#: ../../source/cli-cluster-setup.rst:380 6e9f841ef8eb4e68b5898ff143772452
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:787
+#: 6e1fd2d9f4af4fbdbd1f6defa7c6ed3d
 msgid "**How it works:**"
 msgstr "**نحوه کار:**"
 
-#: ../../source/cli-cluster-setup.rst:386 cf9b1f239b774a6e871e7a8b9a801925
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:793
+#: b1c15254c67c4d4a8fc397abdfbdc915
 msgid "**Automated Approach** (recommended):"
 msgstr "**رویکرد خودکار** (توصیه می‌شود):"
 
-#: ../../source/cli-cluster-setup.rst:393
-#: ../../source/cli-cluster-setup.rst:482 15da60fa9afd4e00afe0bc21bfbeca55
-#: edb9380057db4bedab27d9ab26ca89b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:800
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:919
+#: 85062b0ca25e44d2a559c01b12bb2c7a dc40e1ea576444f89e4cdb43ba941b5f
 msgid "This automatically:"
 msgstr "این به طور خودکار:"
 
-#: ../../source/cli-cluster-setup.rst:395 faa21deaae05418bb2fc8cdea9e68cdf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:802
+#: 14f5cbf320f84aa6b0053f8f6630bd4b
 msgid "Creates SSH tunnel with dynamic port forwarding (port 3129)"
 msgstr "ایجاد تونل SSH با انتقال پورت پویا (پورت ۳۱۲۹)"
 
-#: ../../source/cli-cluster-setup.rst:396 9b6164a3909949adbb3a0483ee4ee9d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:803
+#: 8add4d38363945539aabddb46bb551d4
 msgid "Configures MN5 to use ``http://127.0.0.1:3129`` as proxy"
 msgstr "پیکربندی MN5 برای استفاده از ``http://127.0.0.1:3129`` به عنوان پروکسی"
 
-#: ../../source/cli-cluster-setup.rst:397 b2a000966b544fd49b89aa57a48b2061
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:804
+#: c074dacfcdbe4c35a132b15ce33975cf
 msgid "Installs all packages through the tunnel"
 msgstr "نصب تمام بسته‌ها از طریق تونل"
 
-#: ../../source/cli-cluster-setup.rst:398 6167c2413237487db020764cefc61d5d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:805
+#: 45e0fa92ecb948dea8c7c08a1314d9f3
 msgid "Cleans up tunnel when done"
 msgstr "پاکسازی تونل پس از اتمام"
 
-#: ../../source/cli-cluster-setup.rst:400 7ec26622de424d09a30892cdd024fc14
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:807
+#: 249678204e94429ca18e553c044e2770
 msgid "**Manual Approach** (for more control):"
 msgstr "**رویکرد دستی** (برای کنترل بیشتر):"
 
-#: ../../source/cli-cluster-setup.rst:402 3e0f68b7187c468c8874a19f28efed84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:809
+#: afa6e015eb2b47df8bab8b33a5055364
 msgid "Step 1 - Create tunnel on your local machine:"
 msgstr "مرحله ۱ - ایجاد تونل بر روی دستگاه محلی شما:"
 
-#: ../../source/cli-cluster-setup.rst:414 1c08612f013f4601afcfd0e6f4f03795
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:821
+#: 6800604b0c2249bb9a6107944279a80a
 msgid "Step 2 - Configure proxy on MN5:"
 msgstr "مرحله ۲ - پیکربندی پروکسی بر روی MN5:"
 
-#: ../../source/cli-cluster-setup.rst:427 18d440ee53844f7b9190274e7ddd8c31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:834
+#: 8e51fe85cf1d4833aeecbd5683b22a80
 msgid "Step 3 - Make it permanent (optional):"
 msgstr "مرحله ۳ - دائمی کردن آن (اختیاری):"
 
-#: ../../source/cli-cluster-setup.rst:435 2158110ccd4a4341a031d37adea34163
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:842
+#: 1d84137986b8499982327a5f147bd944
 msgid "**Managing the tunnel:**"
 msgstr "**مدیریت تونل:**"
 
-#: ../../source/cli-cluster-setup.rst:448 81f32bdbbf7b4b0280b5518717cd7f7e
-msgid "**Advantages:**"
-msgstr "**مزایا:**"
-
-#: ../../source/cli-cluster-setup.rst:450 53f9aac9e36b47cd8d673d9888c2a35d
-msgid "✅ Works on completely air-gapped clusters"
-msgstr "✅ بر روی خوشه‌های کاملاً جدا از اینترنت کار می‌کند"
-
-#: ../../source/cli-cluster-setup.rst:451 4ae8f6e91dda4de9a40dd5d2687af87b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:858
+#: 03c19395b9d04aa58ceb3247b1c189e2
 msgid "✅ No additional software needed (uses built-in SSH)"
 msgstr "✅ نیازی به نرم‌افزار اضافی نیست (از SSH داخلی استفاده می‌کند)"
 
-#: ../../source/cli-cluster-setup.rst:452 a6a44aac740b4c5ca6a54486bcb67f55
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:859
+#: f1800a1a84694cea8225c3160f07a0ad
 msgid "✅ Secure (all traffic encrypted through SSH)"
 msgstr "✅ امن (تمام ترافیک از طریق SSH رمزگذاری شده است)"
 
-#: ../../source/cli-cluster-setup.rst:453 399fab28022c46d194d5bd6db52f206f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:860
+#: eb5c3d085d2f451db54142f5b01eed56
 msgid "✅ Flexible (can install/update packages anytime)"
 msgstr "✅ انعطاف‌پذیر (می‌توانید هر زمان بسته‌ها را نصب/به‌روزرسانی کنید)"
 
-#: ../../source/cli-cluster-setup.rst:455 73422975c04c4a678e1cba98db94eb4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:862
+#: b773de3a9d934946a1224e72121b4435
 msgid "**Compared to SquidMan:**"
 msgstr "**در مقایسه با SquidMan:**"
 
-#: ../../source/cli-cluster-setup.rst:457 855d2540068b427fac0399714e15086e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:864
+#: b15483a4422444318dc8ff6386b5c389
 msgid ""
 "SquidMan is a macOS GUI application that creates a local proxy. However, "
 "SSH's built-in dynamic port forwarding (``-D`` flag) provides the same "
 "functionality without additional software:"
-msgstr "SquidMan یک برنامه رابط گرافیکی macOS است که یک پروکسی محلی ایجاد می‌کند. با این حال، انتقال پورت پویای داخلی SSH (پرچم ``-D``) همان قابلیت را بدون نرم‌افزار اضافی فراهم می‌کند:"
+msgstr ""
+"SquidMan یک برنامه رابط گرافیکی macOS است که یک پروکسی محلی ایجاد می‌کند."
+" با این حال، انتقال پورت پویای داخلی SSH (پرچم ``-D``) همان قابلیت را "
+"بدون نرم‌افزار اضافی فراهم می‌کند:"
 
-#: ../../source/cli-cluster-setup.rst:459 5fdf6c5fda134387910e17173ea36e4b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:866
+#: c717440f998d44ad8354ad327b072ec3
 msgid "**SSH Tunnel**: ``ssh -D 3129 -N -f mn5`` (built-in, cross-platform)"
 msgstr "**تونل SSH**: ``ssh -D 3129 -N -f mn5`` (داخلی، چند پلتفرمی)"
 
-#: ../../source/cli-cluster-setup.rst:460 a9529fc6247c4b14bfd4eaf1b7a85fb1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:867
+#: 52ac0df75d644b24af0840cdb09d9d61
 msgid "**SquidMan**: GUI app + SSH (macOS only, extra software)"
 msgstr "**SquidMan**: برنامه رابط گرافیکی + SSH (فقط macOS، نرم‌افزار اضافی)"
 
-#: ../../source/cli-cluster-setup.rst:462 5306a5256e5647c68a82441b40893256
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:869
+#: 152f515d570940b39dc651d0caa4b0aa
 msgid "Both work identically - SSH tunnel is simpler!"
 msgstr "هر دو به طور یکسان کار می‌کنند - تونل SSH ساده‌تر است!"
 
-#: ../../source/cli-cluster-setup.rst:465 98bc583dcd204885b7d222073c706edd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:872
+#: 81ec42ad9d2644e8aab75d235ba99e6b
 msgid "Complete Workflow"
 msgstr "گردش کار کامل"
 
-#: ../../source/cli-cluster-setup.rst:467 3831f416bb0b444e9366ed0fc0399e34
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:874
+#: af2d5617c8bf4285846b2a00fcd6e22e
 msgid ""
 "Here's a complete workflow for setting up a remote cluster for "
 "atomate2siesta calculations:"
-msgstr "در اینجا گردش کار کاملی برای راه‌اندازی خوشه از راه دور برای محاسبات atomate2siesta آمده است:"
+msgstr ""
+"در اینجا گردش کار کاملی برای راه‌اندازی خوشه از راه دور برای محاسبات "
+"atomate2siesta آمده است:"
 
-#: ../../source/cli-cluster-setup.rst:470 4406ac1fc1a845e88680fec64f0069ac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:877
+#: e67dbe10378742b6b95fdef510c14d57
+msgid "0. Set Up SSH Access (New - Recommended!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:879
+#: 064db08114bb41c6b05636a41f07fe20
+msgid "**First time?** Set up SSH configuration for easy access:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:897
+#: a58af2a0ea5d4239936e872e6f68d759
+msgid ""
+"This creates a convenient alias so you can use ``--host mycluster --ssh-"
+"config`` instead of typing the full hostname, username, and key file path"
+" every time."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:900
+#: 3018f5196855420796179501a8512f88
 msgid "1. Set Up Cluster Environment"
 msgstr "۱. راه‌اندازی محیط خوشه"
 
-#: ../../source/cli-cluster-setup.rst:484 1dea73cdbb544742b248c9101694fac6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:921
+#: 913ed4962b8e422e95cf2d73cbecf0de
 msgid "Creates conda environment with jobflow-remote and atomate2siesta"
 msgstr "ایجاد محیط conda با jobflow-remote و atomate2siesta"
 
-#: ../../source/cli-cluster-setup.rst:485 8a9ab85e3a6440468c1c49d11d369fa6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:922
+#: cceb56dc78c0473fbc002bcc185895db
 msgid "Installs SIESTA from conda-forge (if ``--install-siesta`` is used)"
 msgstr "نصب SIESTA از conda-forge (اگر ``--install-siesta`` استفاده شود)"
 
-#: ../../source/cli-cluster-setup.rst:486 311edc7d388a43ebb49dba20e8e5079b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:923
+#: 14236f703e5b4a2e96bac41aecc46829
 msgid "Generates ``~/.atomate2.yaml`` configuration file"
 msgstr "تولید فایل پیکربندی ``~/.atomate2.yaml``"
 
-#: ../../source/cli-cluster-setup.rst:489 b16c9fc02051423da5c7e0fe8ab5eb05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:926
+#: 486173e25e7d44088ebc92364bb02a6d
 msgid "2. SSH to Cluster and Activate Environment"
 msgstr "۲. اتصال SSH به خوشه و فعال‌سازی محیط"
 
-#: ../../source/cli-cluster-setup.rst:497 eba5de1b42134fc3b134ba91c6cf4d42
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:934
+#: 0c2ce8940f0345669e332cd90b3ac5da
 msgid "3. Configure Jobflow-Remote on Cluster"
 msgstr "۳. پیکربندی Jobflow-Remote بر روی خوشه"
 
-#: ../../source/cli-cluster-setup.rst:511 244912b6bad94f938ccbf612fe268749
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:948
+#: 23854ff2cc3d45b89183eb979fc7b0a6
 msgid "4. Verify and Customize Configuration (Optional)"
 msgstr "۴. تأیید و سفارشی‌سازی پیکربندی (اختیاری)"
 
-#: ../../source/cli-cluster-setup.rst:513 299fccb05ece48e0b0953aead3f9420d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:950
+#: 2462b863b1ae4858985568882b1087bc
 msgid ""
-"The ``~/.atomate2.yaml`` file has been automatically created. You "
-"may need to edit it to match your cluster setup:"
-msgstr "فایل ``~/.atomate2.yaml`` به طور خودکار ایجاد شده است. ممکن است نیاز داشته باشید آن را برای تطبیق با راه‌اندازی خوشه خود ویرایش کنید:"
+"The ``~/.atomate2.yaml`` file has been automatically created. You may "
+"need to edit it to match your cluster setup:"
+msgstr ""
+"فایل ``~/.atomate2.yaml`` به طور خودکار ایجاد شده است. ممکن است نیاز "
+"داشته باشید آن را برای تطبیق با راه‌اندازی خوشه خود ویرایش کنید:"
 
-#: ../../source/cli-cluster-setup.rst:519 ec1639e6db1445dbbf76ad2df5b33a60
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:956
+#: e3db27d0ffe44f0b9ad21685af319107
 msgid "Edit paths if needed:"
 msgstr "در صورت نیاز، مسیرها را ویرایش کنید:"
 
-#: ../../source/cli-cluster-setup.rst:521 bd6936cea1a54da18c501ae3bce90e71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:958
+#: 357f50ebd86e4220b09f08fefff28468
 msgid "``SIESTA_CMD``: Path to SIESTA executable (default assumes it's in PATH)"
 msgstr "``SIESTA_CMD``: مسیر فایل اجرایی SIESTA (پیش‌فرض فرض می‌کند در PATH است)"
 
-#: ../../source/cli-cluster-setup.rst:522 b8ba376f72474163abec163069b05de6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:959
+#: 59b62c1aecde46e2b0f683b8cc48573a
 msgid "``SIESTA_PP_PATH``: Path to pseudopotential directory"
 msgstr "``SIESTA_PP_PATH``: مسیر پوشه شبه‌پتانسیل"
 
-#: ../../source/cli-cluster-setup.rst:523 9c0d9837cdf54af88e02029fe76dfa45
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:960
+#: c2043806d86140ec8c4764d3360037f7
 msgid "``FLOS_PATH``: Path to FLOS library for advanced MD/optimization"
 msgstr "``FLOS_PATH``: مسیر کتابخانه FLOS برای دینامیک مولکولی/بهینه‌سازی پیشرفته"
 
-#: ../../source/cli-cluster-setup.rst:524 fd76cdc45e0f43ba87aacdb7e50a9ec1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:961
+#: 1476f591a59c4fee90057052ee59b6cf
 msgid ""
 "``OPTICAL_INPUT_CMD`` and ``OPTICAL_CMD``: Commands for optical "
 "calculations"
 msgstr "``OPTICAL_INPUT_CMD`` و ``OPTICAL_CMD``: دستورات برای محاسبات نوری"
 
-#: ../../source/cli-cluster-setup.rst:526 65371835f8594392a1d14fc78e511efd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:963
+#: 816bc81453e24796a0f57b4822d4cc2b
 msgid ""
 "If you used ``--install-siesta``, SIESTA is already installed from conda-"
 "forge and should be available in your PATH."
-msgstr "اگر از ``--install-siesta`` استفاده کردید، SIESTA از قبل از conda-forge نصب شده است و باید در PATH شما در دسترس باشد."
+msgstr ""
+"اگر از ``--install-siesta`` استفاده کردید، SIESTA از قبل از conda-forge "
+"نصب شده است و باید در PATH شما در دسترس باشد."
 
-#: ../../source/cli-cluster-setup.rst:529 9ea74ca93e37472589e9e18685997764
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:966
+#: b0d457d767a346c99831c7c62b613bd3
 msgid "5. Start Runner on Cluster"
 msgstr "۵. شروع کارگر بر روی خوشه"
 
-#: ../../source/cli-cluster-setup.rst:540 74cd759848bd43318a2aa6c150f21c57
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:977
+#: 6673f484c4704872a3ef3c9025b2aaed
 msgid "6. Submit Jobs from Local Machine"
 msgstr "۶. ارسال کارها از دستگاه محلی"
 
-#: ../../source/cli-cluster-setup.rst:542 3e2eedc70dc04a769bcbfd676c87d41f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:979
+#: 3d04c0469bad426f8539cb19f7991bb1
 msgid "On your local machine, create a Python script to submit workflows:"
-msgstr "بر روی دستگاه محلی خود، یک اسکریپت Python برای ارسال گردش کارها ایجاد کنید:"
+msgstr ""
+"بر روی دستگاه محلی خود، یک اسکریپت Python برای ارسال گردش کارها ایجاد "
+"کنید:"
 
-#: ../../source/cli-cluster-setup.rst:562 4206e2c813c2434891669c4c381d4fa0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:999
+#: f7c8ad52db5a45009d8a9870dddc493a
 msgid "7. Monitor Jobs"
 msgstr "۷. نظارت بر کارها"
 
-#: ../../source/cli-cluster-setup.rst:576 a011814e0fec4b8d9c205e7978d0d7f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1013
+#: f67a7a7e27b746e0ae929ac1d726e9d8
 msgid "Troubleshooting"
 msgstr "عیب‌یابی"
 
-#: ../../source/cli-cluster-setup.rst:579 4b7872c332ea40558d4cfeb694023ffe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1016
+#: f5936b0b415945afb9ec5cf41ec83891
 msgid "SSH Connection Fails"
 msgstr "شکست اتصال SSH"
 
-#: ../../source/cli-cluster-setup.rst:581 130d07937d50443396ad74a630801aaa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1018
+#: f4ffb9c553404fe3a34e15271cb284aa
 msgid "**Error:** ``SSH connection failed!``"
 msgstr "**خطا:** ``SSH connection failed!``"
 
-#: ../../source/cli-cluster-setup.rst:583
-#: ../../source/cli-cluster-setup.rst:602
-#: ../../source/cli-cluster-setup.rst:621
-#: ../../source/cli-cluster-setup.rst:635
-#: ../../source/cli-cluster-setup.rst:740
-#: ../../source/cli-cluster-setup.rst:765 2bd620354cf341ac979ebd09b5676c55
-#: 36b40484044f4d139a2680bb3afabc8a 4635d4932d754452ade1c9d54f5fec3e
-#: e7806e068ab74ed482eaa59da0336414 ebb58591c1b648b5baa663ffbca277c1
-#: f1ce2149f1c24b6abe598a150573fc50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1020
+#: 031ce3bcad774ece9322cfe2e45b08b7
+msgid "**Quick Diagnosis:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1030
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1051
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1070
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1084
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1189
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1214
+#: 331815b69eb44016bac37dee398fe76e 3ebc3e3eb9694fb19d0865bdab5a23c5
+#: 402194857b584a8980505b6bcc1bf24f 41f2f39165b64b6b90fa5fd5dcf8f6d8
+#: 8dd13a86c38b41f39ed9d5cece27a364 d46d5aa01e744108bb0119ed81738ebd
 msgid "**Solutions:**"
 msgstr "**راه‌حل‌ها:**"
 
-#: ../../source/cli-cluster-setup.rst:585 5c9be000a81349b58cc0ae424f27d5be
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1032
+#: bf7a05ae61564b7b97c32cb64c7f0e83
+msgid ""
+"**Easy setup:** Use ``atomate2siesta-cluster ssh-setup add`` to configure"
+" SSH properly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1033
+#: 789192adcd8c4616915e4deb9b0431f0
 msgid "Verify hostname and username are correct"
 msgstr "تأیید صحیح بودن نام میزبان و نام کاربری"
 
-#: ../../source/cli-cluster-setup.rst:586 a7c380e686e64e81b63479339e18374f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1034
+#: 678da44ed9ae43ed91802074513c4e1c
 msgid "Check that SSH key has correct permissions: ``chmod 600 ~/.ssh/id_rsa``"
 msgstr "بررسی کنید که کلید SSH دارای مجوزهای صحیح است: ``chmod 600 ~/.ssh/id_rsa``"
 
-#: ../../source/cli-cluster-setup.rst:587 ca020cd58b7249c88defbc663e4799ab
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1035
+#: 2baea245a89c4ca09f2b558afdc0a834
 msgid "Test manual SSH connection: ``ssh user@host``"
 msgstr "آزمایش اتصال دستی SSH: ``ssh user@host``"
 
-#: ../../source/cli-cluster-setup.rst:588 81822d4853314746986ba3a7d1fb83ba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1036
+#: d29b5b7560ad47c29c79e832a9746a59
 msgid "Ensure firewall allows SSH connections"
 msgstr "اطمینان از اینکه فایروال اتصالات SSH را مجاز می‌کند"
 
-#: ../../source/cli-cluster-setup.rst:591 6846c3dd0d5042109fbb80fa142d3598
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1037
+#: 99799beddeac42ddb9ccdc75fa799c9f
+msgid "If using SSH config, verify entry exists: ``cat ~/.ssh/config``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1040
+#: 9e41d8a0e96848baa248101950fa7e19
 msgid "Conda Not Found"
 msgstr "Conda پیدا نشد"
 
-#: ../../source/cli-cluster-setup.rst:593 9278b55bc07f4fafada34b92b6b6338b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1042
+#: 7502a376601a466f8fa3b02d11792936
 msgid "**Error:** ``conda not found on remote host!``"
 msgstr "**خطا:** ``conda not found on remote host!``"
 
-#: ../../source/cli-cluster-setup.rst:595 1d108f3303404e34bfdbe39562f10c7c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1044
+#: d391fc70d3e14bd3b1664e43fac64695
 msgid ""
 "**Solution:** Install Miniconda/Anaconda on the remote cluster (see "
 "Prerequisites section above)"
-msgstr "**راه‌حل:** نصب Miniconda/Anaconda بر روی خوشه از راه دور (بخش پیش‌نیازها در بالا را ببینید)"
+msgstr ""
+"**راه‌حل:** نصب Miniconda/Anaconda بر روی خوشه از راه دور (بخش پیش‌نیازها"
+" در بالا را ببینید)"
 
-#: ../../source/cli-cluster-setup.rst:598 25465dfdac55407cb5b357721716b288
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1047
+#: ff35e1b11f284803813f75e41142c2ba
 msgid "sshpass Not Found"
 msgstr "sshpass پیدا نشد"
 
-#: ../../source/cli-cluster-setup.rst:600 350a41b1ecf1468fbbc3dd5a99d074f8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1049
+#: 1dc9919381d64ffda50bf774ef86b2ad
 msgid "**Error:** ``sshpass not found``"
 msgstr "**خطا:** ``sshpass not found``"
 
-#: ../../source/cli-cluster-setup.rst:604 67a1d0863a734880a86f944649e1f726
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1053
+#: 1eb3cc84b70f481e9869dbc22f308dc1
 msgid ""
 "Install sshpass: ``brew install sshpass`` (macOS) or ``apt-get install "
 "sshpass`` (Linux)"
-msgstr "نصب sshpass: ``brew install sshpass`` (macOS) یا ``apt-get install sshpass`` (Linux)"
+msgstr ""
+"نصب sshpass: ``brew install sshpass`` (macOS) یا ``apt-get install "
+"sshpass`` (Linux)"
 
-#: ../../source/cli-cluster-setup.rst:605 c2f937b03d284d02a1fce922778f80d2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1054
+#: 2acb3f31263a4aa6a3789594bb6aa4de
 msgid "Use SSH key authentication instead: ``--identity-file ~/.ssh/id_rsa``"
-msgstr "به جای آن از احراز هویت کلید SSH استفاده کنید: ``--identity-file ~/.ssh/id_rsa``"
+msgstr ""
+"به جای آن از احراز هویت کلید SSH استفاده کنید: ``--identity-file "
+"~/.ssh/id_rsa``"
 
-#: ../../source/cli-cluster-setup.rst:608 21dbd943013b4c3fb0e227470f96f753
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1057
+#: 99e6c0635ac943579ceb635b0cc0897b
 msgid "Environment Already Exists"
 msgstr "محیط از قبل وجود دارد"
 
-#: ../../source/cli-cluster-setup.rst:610 097a4b23b5d74ac6a5f5357c03b3300e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1059
+#: 23198faf70aa4f478d9bc7038177a7cc
 msgid ""
 "The tool will detect existing environments and prompt you to remove and "
 "recreate them. Answer \"yes\" to proceed or \"no\" to cancel."
-msgstr "ابزار محیط‌های موجود را تشخیص می‌دهد و از شما می‌خواهد که آنها را حذف و دوباره ایجاد کنید. برای ادامه \"yes\" و برای لغو \"no\" پاسخ دهید."
+msgstr ""
+"ابزار محیط‌های موجود را تشخیص می‌دهد و از شما می‌خواهد که آنها را حذف و "
+"دوباره ایجاد کنید. برای ادامه \"yes\" و برای لغو \"no\" پاسخ دهید."
 
-#: ../../source/cli-cluster-setup.rst:613 18d20013ca9d4edf8fbef8cfa0b4ce46
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1062
+#: 74a475dddaee48239df5c9d8e1cda26e
 msgid "Package Installation Fails"
 msgstr "شکست نصب بسته"
 
-#: ../../source/cli-cluster-setup.rst:615 fb142e89e7314e6e8dda0d83c161e522
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1064
+#: 1aa6cd03d4cf4a7c8a32fbb39c155983
 msgid "**Common causes:**"
 msgstr "**علل رایج:**"
 
-#: ../../source/cli-cluster-setup.rst:617 529cdda15a524a7ca025d83a31652404
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1066
+#: 0268a222b32e48319e918ea865adc636
 msgid "Network connectivity issues on cluster (may need proxy configuration)"
 msgstr "مشکلات اتصال شبکه در خوشه (ممکن است نیاز به پیکربندی پروکسی داشته باشد)"
 
-#: ../../source/cli-cluster-setup.rst:618 a07bf8c9ff4e4a9a8be4b421573940d9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1067
+#: 90f1c6bdafbf48539971d997f5d1d6c7
 msgid "Insufficient disk space"
 msgstr "فضای کافی دیسک وجود ندارد"
 
-#: ../../source/cli-cluster-setup.rst:619 70103a432fea41a9bff3502fe689af2c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1068
+#: 60ddb2fde7f84cf6b499a98699c7c0e8
 msgid "Package conflicts"
 msgstr "تضاد بسته‌ها"
 
-#: ../../source/cli-cluster-setup.rst:623
-#: ../../source/cli-cluster-setup.rst:767 9999a84d91f74f84bf50b5e53699e7e5
-#: cd44557feefb4121a5f59eebd4bc79d9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1072
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1216
+#: 52531c23a3664f52985bffe4aae3e7ce d1a096d2bdc4456b9e33654f7c2fdf8f
 msgid "Check internet connectivity on cluster"
 msgstr "بررسی اتصال اینترنت در خوشه"
 
-#: ../../source/cli-cluster-setup.rst:624 e8fde8bbdd054380954de671dc54ab07
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1073
+#: b86dacf48cd3488f8fc4f566cb4db314
 msgid ""
 "If cluster blocks internet access, use ``--proxy`` or ``--auto-proxy`` "
 "flag"
-msgstr "اگر خوشه دسترسی به اینترنت را مسدود می‌کند، از پرچم ``--proxy`` یا ``--auto-proxy`` استفاده کنید"
+msgstr ""
+"اگر خوشه دسترسی به اینترنت را مسدود می‌کند، از پرچم ``--proxy`` یا "
+"``--auto-proxy`` استفاده کنید"
 
-#: ../../source/cli-cluster-setup.rst:625 67e75ee91b9043a0b51e16fd777f0237
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1074
+#: 981da95d5a58441eb7ba4900678042b4
 msgid "Clear conda cache: ``conda clean --all``"
 msgstr "پاک کردن حافظه پنهان conda: ``conda clean --all``"
 
-#: ../../source/cli-cluster-setup.rst:626 2c3a0bad9bb042198221ff22226e975f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1075
+#: 0aedcfdd2f6442b3bb3c07fd00b445aa
 msgid "Try development installation with ``--dev`` flag"
 msgstr "امتحان نصب توسعه‌دهنده با پرچم ``--dev``"
 
-#: ../../source/cli-cluster-setup.rst:629 06aa48455d814f0397298a6e28ebcd1b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1078
+#: 56590d333ce6415cbaa9defa907e2fa9
 msgid "Internet Connection Errors (Proxy Required)"
 msgstr "خطاهای اتصال اینترنت (پروکسی مورد نیاز است)"
 
-#: ../../source/cli-cluster-setup.rst:631 33f0927d52ab41ef883e268c4b3ac36d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1080
+#: e07cd8b526a745dfb6f8136485b38d8c
 msgid ""
 "**Error:** ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` or ``Connection"
 " reset by peer``"
-msgstr "**خطا:** ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` یا ``Connection reset by peer``"
+msgstr ""
+"**خطا:** ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` یا ``Connection "
+"reset by peer``"
 
-#: ../../source/cli-cluster-setup.rst:633 d3cd9669e9b94e59abff7eba9d9cbaed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1082
+#: 6159204208e344bbafa95717d77eb7dc
 msgid ""
 "**Cause:** Many HPC clusters block direct internet access and require "
 "proxy configuration."
-msgstr "**علت:** بسیاری از خوشه‌های HPC دسترسی مستقیم به اینترنت را مسدود می‌کنند و نیاز به پیکربندی پروکسی دارند."
+msgstr ""
+"**علت:** بسیاری از خوشه‌های HPC دسترسی مستقیم به اینترنت را مسدود می‌کنند"
+" و نیاز به پیکربندی پروکسی دارند."
 
-#: ../../source/cli-cluster-setup.rst:637 aa4dc643a11843c7bf285cd28a9bea94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1086
+#: 432767b887f045cf9b9b9bf3a80ab476
 msgid "**Ask your cluster administrator** for the proxy URL"
 msgstr "**از مدیر خوشه خود** آدرس پروکسی را بپرسید"
 
-#: ../../source/cli-cluster-setup.rst:639 c91c99fcf9b34065a46b691140a1f257
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1088
+#: 48fd7d065bee4d73a632602da3bcbb13
 msgid "**Use proxy flag** with the setup command:"
 msgstr "**از پرچم پروکسی** با دستور راه‌اندازی استفاده کنید:"
 
-#: ../../source/cli-cluster-setup.rst:645 df34227918dd46a78e770e432902cacf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1094
+#: d51e4cd5ef7d4187a69b945fef96dd0a
 msgid "**Try auto-detection** to use existing proxy settings:"
 msgstr "**تشخیص خودکار را امتحان کنید** برای استفاده از تنظیمات پروکسی موجود:"
 
-#: ../../source/cli-cluster-setup.rst:651 57f79ba476664a7983108f89da00fcb7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1100
+#: c7b9af2b0ce6476a85e43e0c31b600fd
 msgid "**Check cluster documentation** for proxy configuration"
 msgstr "**مستندات خوشه را بررسی کنید** برای پیکربندی پروکسی"
 
-#: ../../source/cli-cluster-setup.rst:653 5246f4eda0484133822b938e308947dd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1102
+#: acce839a79904453bad596fb50cf6fa7
 msgid "**Common Proxy URLs:**"
 msgstr "**آدرس‌های پروکسی رایج:**"
 
-#: ../../source/cli-cluster-setup.rst:656 897b2c80c04346ebbb9c45c73c7ab22d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1105
+#: 0a215291170f4e429ee1fbfb2353246a
 msgid "Your cluster: Ask administrator"
 msgstr "خوشه شما: از مدیر بپرسید"
 
-#: ../../source/cli-cluster-setup.rst:659 5f40b1cadc0a4d56872911d8e8fcf409
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1108
+#: 723029e5565647a9a75767b169643fd7
 msgid "MareNostrum 5 Setup (Air-Gapped Cluster)"
 msgstr "راه‌اندازی MareNostrum 5 (خوشه جدا از اینترنت)"
 
-#: ../../source/cli-cluster-setup.rst:661 36a534758ff846a087488f75ad4bb7d2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1110
+#: d95a35914d004cda88038427757d1450
 msgid ""
 "**Issue:** MareNostrum 5 (MN5) blocks **ALL outgoing internet "
 "connections**, including proxy access."
-msgstr "**مشکل:** MareNostrum 5 (MN5) **تمام اتصالات خروجی به اینترنت**، از جمله دسترسی پروکسی را مسدود می‌کند."
+msgstr ""
+"**مشکل:** MareNostrum 5 (MN5) **تمام اتصالات خروجی به اینترنت**، از جمله "
+"دسترسی پروکسی را مسدود می‌کند."
 
-#: ../../source/cli-cluster-setup.rst:663 e76f98f175e54f969683842e9a7d6701
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1112
+#: 7d33c405d99f4fb3a3cdcd03ff36d518
 msgid "**Official Documentation:** According to BSC:"
 msgstr "**مستندات رسمی:** طبق BSC:"
 
-#: ../../source/cli-cluster-setup.rst:665 6808cb7b1c7d4180a3f3b5ab92cc53a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1114
+#: 1303c8d9b2d94604bc9383225a7d407e
 msgid ""
 "*\"Once you are logged into MareNostrum you cannot make outgoing "
 "connections for security reasons. Only incoming connections are allowed "
 "in the whole cluster.\"*"
-msgstr "*\"وقتی به MareNostrum وارد می‌شوید، به دلایل امنیتی نمی‌توانید اتصالات خروجی برقرار کنید. فقط اتصالات ورودی در کل خوشه مجاز هستند.\"*"
+msgstr ""
+"*\"وقتی به MareNostrum وارد می‌شوید، به دلایل امنیتی نمی‌توانید اتصالات "
+"خروجی برقرار کنید. فقط اتصالات ورودی در کل خوشه مجاز هستند.\"*"
 
-#: ../../source/cli-cluster-setup.rst:667 034bda4789ce424097cef206bbe0f432
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1116
+#: 80f936df88f64e90bb5224edc5d6cbe3
 msgid "**Why Standard Setup Fails:**"
 msgstr "**چرا راه‌اندازی استاندارد شکست می‌خورد:**"
 
-#: ../../source/cli-cluster-setup.rst:669 bd3ee9b5fc8c4031938e09a00502153f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1118
+#: 791f9f8df0884c40b8477b896b1b3f88
 msgid "Regular ``setup`` command requires internet access to install packages"
 msgstr "دستور معمولی ``setup`` برای نصب بسته‌ها نیاز به دسترسی اینترنت دارد"
 
-#: ../../source/cli-cluster-setup.rst:670 87b4e4ed9a9448de9948f86d3e1394a6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1119
+#: f8ffffd820ee427d89359d9eee41152c
 msgid "Proxy configuration (``--proxy`` or ``--auto-proxy``) does NOT work on MN5"
 msgstr "پیکربندی پروکسی (``--proxy`` یا ``--auto-proxy``) بر روی MN5 کار نمی‌کند"
 
-#: ../../source/cli-cluster-setup.rst:671 959b0b1bc4f74efea18032441bbec357
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1120
+#: 9d8f332c9d784cac90e3646a189fe0f5
 msgid "All conda/pip commands will fail with connection errors"
 msgstr "تمام دستورات conda/pip با خطاهای اتصال شکست می‌خورند"
 
-#: ../../source/cli-cluster-setup.rst:673 3dc4d7fd26004d2fb76a488024e1bb6a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1122
+#: 3bec6b556ef143bdb10f13727ec8e21f
 msgid "**Solution 1: SSH Tunnel (RECOMMENDED)** ✅"
 msgstr "**راه‌حل ۱: تونل SSH (توصیه می‌شود)** ✅"
 
-#: ../../source/cli-cluster-setup.rst:675 8e16ea1d584044cdb02b814bd7a5794d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1124
+#: 4d272fd52bcd48ea9ffe435d651b35fe
 msgid "Use your local machine as a proxy via SSH tunneling:"
 msgstr "از دستگاه محلی خود به عنوان پروکسی از طریق تونل‌سازی SSH استفاده کنید:"
 
-#: ../../source/cli-cluster-setup.rst:693 fe14a094fee44fb4afd1031e1d81362d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1142
+#: 7008733fe2dd49c7908cc53b91715697
 msgid "See \"SSH Tunnel for Air-Gapped Clusters\" section above for full details."
-msgstr "برای جزئیات کامل بخش \"تونل SSH برای خوشه‌های جدا از اینترنت\" در بالا را ببینید."
+msgstr ""
+"برای جزئیات کامل بخش \"تونل SSH برای خوشه‌های جدا از اینترنت\" در بالا را"
+" ببینید."
 
-#: ../../source/cli-cluster-setup.rst:695 a8e22fd3742b4ee99e2586b04ea858b3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1144
+#: 1e566f1c6ed545c98c009af423c1b0e2
 msgid "**Solution 2: Offline Environment Transfer** (if SSH tunnel doesn't work)"
 msgstr "**راه‌حل ۲: انتقال محیط آفلاین** (اگر تونل SSH کار نکند)"
 
-#: ../../source/cli-cluster-setup.rst:697 e78f2f4f52434469ada4ed39d5d224c4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1146
+#: ea7ec6e1c59540eca9abda4cc6541156
 msgid "**Build on Linux Machine** (your local machine or another cluster):"
 msgstr "**ساخت بر روی دستگاه Linux** (دستگاه محلی شما یا خوشه دیگر):"
 
-#: ../../source/cli-cluster-setup.rst:703 67d193394ed343aa923dfb0ce2f8c63b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1152
+#: 5e37e53392554b67b516515d839d3795
 msgid "**Transfer to MN5:**"
 msgstr "**انتقال به MN5:**"
 
-#: ../../source/cli-cluster-setup.rst:709 3256ee3686df4c54bd152e762b7a42b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1158
+#: 6e6f0b8107214c5499c94cf19cb91d4e
 msgid "**Install on MN5:**"
 msgstr "**نصب بر روی MN5:**"
 
-#: ../../source/cli-cluster-setup.rst:719 8b0e893700b74a6abd9f42fa74eb44b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1168
+#: d1f561fe818746fcafaeb15aaea3b6a6
 msgid "**Verify:**"
 msgstr "**تأیید:**"
 
-#: ../../source/cli-cluster-setup.rst:725 231f9f1f6567483e88b55eb7720039af
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1174
+#: e99ec97cd807473c8d11cd46c48fb90c
 msgid "**Alternative: Contact BSC Support**"
 msgstr "**جایگزین: تماس با پشتیبانی BSC**"
 
-#: ../../source/cli-cluster-setup.rst:727 f2b2bedb1cff443795a012b68c415280
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1176
+#: 2cca6b5d67f54b43a457acb9acb85b65
 msgid "Ask about:"
 msgstr "درباره موارد زیر بپرسید:"
 
-#: ../../source/cli-cluster-setup.rst:729 7afe1e216b53448cbc76bc4a6f3a10ea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1178
+#: a01284c677c54609817b7458fc774f67
 msgid "Internal package mirrors or conda channels"
 msgstr "آینه‌های داخلی بسته یا کانال‌های conda"
 
-#: ../../source/cli-cluster-setup.rst:730 d6c15ed581414a45b469cd9397cd988c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1179
+#: 81a497a5167241ea9b956d2c48cba0fa
 msgid "Pre-installed Python/conda modules"
 msgstr "ماژول‌های از پیش نصب شده Python/conda"
 
-#: ../../source/cli-cluster-setup.rst:731 27e56789eda544cf840f5bd35e81d87d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1180
+#: 1aab862e28604740b6073bd81f61e5b7
 msgid "BSC-recommended package installation procedures"
 msgstr "روش‌های نصب بسته توصیه شده توسط BSC"
 
-#: ../../source/cli-cluster-setup.rst:733 c415e8caf1d24fba9dda8f5664842ef2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1182
+#: 488b38eb3a974f16b1b4d69a00f42732
 msgid "Email: support@bsc.es"
 msgstr "ایمیل: support@bsc.es"
 
-#: ../../source/cli-cluster-setup.rst:736 0305afd5effd4af6b08ef4b1f634b436
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1185
+#: 1ed2102456184a04b4ca07f91b32c3b0
 msgid "GitHub Clone Fails (Private Repository)"
 msgstr "شکست GitHub Clone (مخزن خصوصی)"
 
-#: ../../source/cli-cluster-setup.rst:738 5c49c664e11649a48650e532489d1a44
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1187
+#: 94c1fa0f38704df68ae5f2f65f53a22c
 msgid "**Error:** Failed to install atomate2siesta - authentication failed"
 msgstr "**خطا:** شکست در نصب atomate2siesta - احراز هویت شکست خورد"
 
-#: ../../source/cli-cluster-setup.rst:742 229e6c9832ad4de986bb2f887067322d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1191
+#: 5834f687cda54f7da931ffa03e347246
 msgid "**Option 1: Use SSH (Recommended)**"
 msgstr "**گزینه ۱: استفاده از SSH (توصیه می‌شود)**"
 
-#: ../../source/cli-cluster-setup.rst:744 a5b0ad47704d41959b40d1d7a382dc6d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1193
+#: a3b05e23bfae4d6692a485e580a981df
 msgid "Ensure SSH key is set up on cluster for GitHub:"
 msgstr "اطمینان حاصل کنید که کلید SSH بر روی خوشه برای GitHub تنظیم شده است:"
 
-#: ../../source/cli-cluster-setup.rst:753 0eff4e68fdc8461180994a950e8db5a1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1202
+#: 25b2c6a054144c7aafd864ce44e005a7
 msgid ""
 "Use ``--git-ssh`` flag: ``atomate2siesta-cluster setup --host cluster "
 "--git-ssh``"
-msgstr "از پرچم ``--git-ssh`` استفاده کنید: ``atomate2siesta-cluster setup --host cluster --git-ssh``"
+msgstr ""
+"از پرچم ``--git-ssh`` استفاده کنید: ``atomate2siesta-cluster setup --host"
+" cluster --git-ssh``"
 
-#: ../../source/cli-cluster-setup.rst:755 d06f27131987463587cbd03a894d3df8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1204
+#: 737987c1de4e47c69594dcbc1620051a
 msgid "**Option 2: Use Personal Access Token**"
 msgstr "**گزینه ۲: استفاده از توکن دسترسی شخصی**"
 
-#: ../../source/cli-cluster-setup.rst:757 46da15ce015d4a7687a714808cabc953
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1206
+#: cfb94c5804be424587997749d1d98e28
 msgid ""
 "Generate token at https://github.com/settings/tokens (requires ``repo`` "
 "scope)"
 msgstr "تولید توکن در https://github.com/settings/tokens (نیاز به محدوده ``repo``)"
 
-#: ../../source/cli-cluster-setup.rst:758 f93d6ef2b83f4b18b81b95bf5b46024f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1207
+#: f4306b818bd04f45b27835c95d47cfbc
 msgid ""
 "Use ``--git-token`` flag: ``atomate2siesta-cluster setup --host cluster "
 "--git-token ghp_xxxxx``"
-msgstr "از پرچم ``--git-token`` استفاده کنید: ``atomate2siesta-cluster setup --host cluster --git-token ghp_xxxxx``"
+msgstr ""
+"از پرچم ``--git-token`` استفاده کنید: ``atomate2siesta-cluster setup "
+"--host cluster --git-token ghp_xxxxx``"
 
-#: ../../source/cli-cluster-setup.rst:761 39f7b80e36054fd7b7ec4ea4e62cc0f0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1210
+#: b357969f638841cdac80dbebab6bbd67
 msgid "SIESTA Installation Fails"
 msgstr "شکست نصب SIESTA"
 
-#: ../../source/cli-cluster-setup.rst:763 1974235c01ad4de19fb723d99adba1bb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1212
+#: 81e6ecb58f5b4046b30676f06534af08
 msgid "**Error:** Failed to install SIESTA from conda-forge"
 msgstr "**خطا:** شکست در نصب SIESTA از conda-forge"
 
-#: ../../source/cli-cluster-setup.rst:768 e0b9c4118812462199a960f126b6e09b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1217
+#: 1b67c7ee96ed475b9d7f1a8a49f65c89
 msgid "Verify conda-forge channel is accessible"
 msgstr "تأیید قابل دسترس بودن کانال conda-forge"
 
-#: ../../source/cli-cluster-setup.rst:769 03d45f0aae9240fdb00cc17d853dbc35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1218
+#: 54ab02d10d124fdebe29dc90ab96a31c
 msgid ""
 "Try manual installation: ``conda install -c conda-forge "
 "\"siesta=*=*mpich*\"``"
-msgstr "نصب دستی را امتحان کنید: ``conda install -c conda-forge \"siesta=*=*mpich*\"``"
+msgstr ""
+"نصب دستی را امتحان کنید: ``conda install -c conda-forge "
+"\"siesta=*=*mpich*\"``"
 
-#: ../../source/cli-cluster-setup.rst:770 01562991d4e24ec59c5c9cdb1d6c64f9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1219
+#: 130a5171a5374e0abc720b5cb71fe27c
 msgid ""
 "If unsuccessful, install SIESTA manually and update ``SIESTA_CMD`` in "
 "``~/.atomate2.yaml``"
-msgstr "اگر ناموفق بود، SIESTA را به صورت دستی نصب کنید و ``SIESTA_CMD`` را در ``~/.atomate2.yaml`` به‌روزرسانی کنید"
+msgstr ""
+"اگر ناموفق بود، SIESTA را به صورت دستی نصب کنید و ``SIESTA_CMD`` را در "
+"``~/.atomate2.yaml`` به‌روزرسانی کنید"
 
-#: ../../source/cli-cluster-setup.rst:773 3a3035d5b42b4d44a5355c2dea816665
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1222
+#: e7a1b99b46354c469b7e6ff80255325b
 msgid "Configuration File Creation Fails"
 msgstr "شکست در ایجاد فایل پیکربندی"
 
-#: ../../source/cli-cluster-setup.rst:775 4e67327eea174f93ae58ce6a2c0f4edc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1224
+#: dbe07be6691b46a6b12ee97add40f71d
 msgid "**Error:** Failed to create ``.atomate2.yaml``"
 msgstr "**خطا:** شکست در ایجاد ``.atomate2.yaml``"
 
-#: ../../source/cli-cluster-setup.rst:777 a3059d18c54a4ea4a00c3a642e38906e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1226
+#: 58f3346d77a94509b59eb5b152347888
 msgid "**Solution:** Create manually on the cluster:"
 msgstr "**راه‌حل:** به صورت دستی بر روی خوشه ایجاد کنید:"
 
-#: ../../source/cli-cluster-setup.rst:790 662f1060adab42b0aa453b4a07e1ac18
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1239
+#: 14e5d349247e454ea1b78854e6c28870
 msgid "Advanced Usage"
 msgstr "استفاده پیشرفته"
 
-#: ../../source/cli-cluster-setup.rst:793 ed99870d0690454282b6eafef130c354
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1242
+#: e29a6f2667634e458b001555685c6426
 msgid "Custom Worker Configuration"
 msgstr "پیکربندی سفارشی کارگر"
 
-#: ../../source/cli-cluster-setup.rst:795 f234a2ec46ab43e48d9b9a94b6ba5e4b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1244
+#: b974524847be4086ae8a85150849d7e0
 msgid ""
 "After setting up the cluster, you may want to configure custom workers in"
 " jobflow-remote:"
-msgstr "پس از راه‌اندازی خوشه، ممکن است بخواهید کارگرهای سفارشی را در jobflow-remote پیکربندی کنید:"
+msgstr ""
+"پس از راه‌اندازی خوشه، ممکن است بخواهید کارگرهای سفارشی را در jobflow-"
+"remote پیکربندی کنید:"
 
-#: ../../source/cli-cluster-setup.rst:797 2005ef611f3b486db4d6447bb2da6b32
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1246
+#: c5a74ec281234d14b181e27ff1af7893
 msgid "Edit ``~/.jfremote/<project>.yaml``"
 msgstr "ویرایش ``~/.jfremote/<project>.yaml``"
 
-#: ../../source/cli-cluster-setup.rst:798 650bbffdcaa04cf8bfeec5bc531c29b3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1247
+#: 9e9297169c1946a2b15d219400d4a766
 msgid "Add worker configurations for different partitions/queues"
 msgstr "افزودن پیکربندی‌های کارگر برای پارتیشن‌ها/صف‌های مختلف"
 
-#: ../../source/cli-cluster-setup.rst:799 8e8488d9bf134ffb9c60ee1204f2f137
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1248
+#: 66fcb34c0cf74ec1a9a28b680af2e64b
 msgid "Specify resource requirements (nodes, cores, memory, time)"
 msgstr "مشخص کردن نیازهای منابع (گره‌ها، هسته‌ها، حافظه، زمان)"
 
-#: ../../source/cli-cluster-setup.rst:800 5bfe8b7705f6424aa36b57cb5a441c71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1249
+#: c9f216c6bfeb4ba29a5e024fc5005466
 msgid "Configure scheduler settings (SLURM, PBS, etc.)"
 msgstr "پیکربندی تنظیمات زمان‌بند (SLURM، PBS و غیره)"
 
-#: ../../source/cli-cluster-setup.rst:802 0e8cb75eee10422d8ddf53cc49e34a54
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1251
+#: bf0e864b4467463cb84b117ac6be6f5e
 msgid "Example worker configuration for SLURM:"
 msgstr "مثال پیکربندی کارگر برای SLURM:"
 
-#: ../../source/cli-cluster-setup.rst:822 4ebd08c5b8ea4c96a8822c11d8770565
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1271
+#: f3ee776ba91f4a39bfd828ebedd0b5aa
 msgid "Multiple Environments"
 msgstr "محیط‌های متعدد"
 
-#: ../../source/cli-cluster-setup.rst:824 c29dfb31f8804c31bcb8f8bc6d41bd37
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1273
+#: c81f0e368334432788f3183c8cc2e16a
 msgid ""
 "You can set up multiple environments on the same cluster for different "
 "purposes:"
-msgstr "می‌توانید محیط‌های متعددی را بر روی همان خوشه برای اهداف مختلف راه‌اندازی کنید:"
+msgstr ""
+"می‌توانید محیط‌های متعددی را بر روی همان خوشه برای اهداف مختلف راه‌اندازی"
+" کنید:"
 
-#: ../../source/cli-cluster-setup.rst:838 2adbb2051ed3413b83dbd77abcba49e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1287
+#: 78843bbc79644b228dcb6a80cce65d35
 msgid "Batch Setup for Multiple Clusters"
 msgstr "راه‌اندازی دسته‌ای برای خوشه‌های متعدد"
 
-#: ../../source/cli-cluster-setup.rst:840 cc9d63d21cfc46aeb27879ee918bda78
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1289
+#: 05f1af8484564de1a15f42b32fb8b663
 msgid "Create a shell script to set up multiple clusters:"
 msgstr "یک اسکریپت پوسته برای راه‌اندازی خوشه‌های متعدد ایجاد کنید:"
 
-#: ../../source/cli-cluster-setup.rst:858 17cf7c6fb0924d07ab44c149bd89da29
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1307
+#: 58a36f7f4d67415ca708b266e6009622
 msgid "Integration with Existing Workflows"
 msgstr "یکپارچگی با گردش کارهای موجود"
 
-#: ../../source/cli-cluster-setup.rst:860 d010fc119c8c4b8a95b5bdd6995e86ba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1309
+#: 5df2850a923c4af8b254d3a48d6db5d4
 msgid "This tool integrates seamlessly with:"
 msgstr "این ابزار به طور یکپارچه با موارد زیر ادغام می‌شود:"
 
-#: ../../source/cli-cluster-setup.rst:862 bc96071401414b0391cb29feb5353f14
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1311
+#: a4f7047227544b788fee80b855423b26
 msgid ""
 "**Database CLI** (``atomate2siesta-database``): Set up MongoDB for "
 "storing calculation results"
-msgstr "**رابط خط فرمان پایگاه داده** (``atomate2siesta-database``): راه‌اندازی MongoDB برای ذخیره نتایج محاسبات"
+msgstr ""
+"**رابط خط فرمان پایگاه داده** (``atomate2siesta-database``): راه‌اندازی "
+"MongoDB برای ذخیره نتایج محاسبات"
 
-#: ../../source/cli-cluster-setup.rst:863 fcb50720877a47fab6439e981d1cd170
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1312
+#: 801ce8accdd24617873d2b79f1fb2768
 msgid ""
 "**Jobflow-Remote CLI** (``atomate2siesta-jobflow-remote``): Configure job"
 " submission from local machine"
-msgstr "**رابط خط فرمان Jobflow-Remote** (``atomate2siesta-jobflow-remote``): پیکربندی ارسال کار از دستگاه محلی"
+msgstr ""
+"**رابط خط فرمان Jobflow-Remote** (``atomate2siesta-jobflow-remote``): "
+"پیکربندی ارسال کار از دستگاه محلی"
 
-#: ../../source/cli-cluster-setup.rst:864 7e153b64bebd4d55a1ff9c9150d7c999
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1313
+#: 2396e7f5c2694e29b12acd6ecc47e692
 msgid ""
 "**Input Generator** (``atomate2siesta-inputs``): Generate SIESTA input "
 "files"
-msgstr "**تولیدکننده ورودی** (``atomate2siesta-inputs``): تولید فایل‌های ورودی SIESTA"
+msgstr ""
+"**تولیدکننده ورودی** (``atomate2siesta-inputs``): تولید فایل‌های ورودی "
+"SIESTA"
 
-#: ../../source/cli-cluster-setup.rst:865 5c711d07308245a78153e4753e763b9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1314
+#: 4dd4a4781a7f47cdb30b80a358eebb2e
 msgid ""
 "**Pseudopotential Manager** (``atomate2siesta-pseudos``): Manage "
 "pseudopotential libraries"
-msgstr "**مدیر شبه‌پتانسیل** (``atomate2siesta-pseudos``): مدیریت کتابخانه‌های شبه‌پتانسیل"
+msgstr ""
+"**مدیر شبه‌پتانسیل** (``atomate2siesta-pseudos``): مدیریت کتابخانه‌های "
+"شبه‌پتانسیل"
 
-#: ../../source/cli-cluster-setup.rst:868 716adc50926e48b98df685ab33824932
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1317
+#: 5bbb5cb1d07f45e1bdfdd8ee5234f5d9
 msgid "See Also"
 msgstr "همچنین ببینید"
 
-#: ../../source/cli-cluster-setup.rst:870 06ce064a105f400291c23ddc00363460
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1319
+#: ddf211a93e484cb3948166a1a68f715d
 msgid ":doc:`cli-database` - Database CLI Documentation"
 msgstr ":doc:`cli-database` - مستندات رابط خط فرمان پایگاه داده"
 
-#: ../../source/cli-cluster-setup.rst:871 b5ede846a0434c8d85cc2bbe0f0fa47e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1320
+#: 23e0348828fb4a19907ae4fc3c77cc52
 msgid ":doc:`cli-jobflow-remote` - Jobflow-Remote Setup"
 msgstr ":doc:`cli-jobflow-remote` - راه‌اندازی Jobflow-Remote"
 
-#: ../../source/cli-cluster-setup.rst:872 c324904351794b69b31faab45e273d79
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1321
+#: e8b3547a565f4739bcc5d25de51f9f52
 msgid "Tutorial 14: Job Submission"
 msgstr "آموزش ۱۴: ارسال کار"
 
-#: ../../source/cli-cluster-setup.rst:873 dfe9e3c0f03c4b25ba99d2c2bcc5c6f6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-cluster-setup.rst:1322
+#: c671a162b3e346748208f13d14cc717c
 msgid ""
 "`Jobflow-Remote Documentation <https://matgenix.github.io/jobflow-"
 "remote/>`_"
 msgstr "`مستندات Jobflow-Remote <https://matgenix.github.io/jobflow-remote/>`_"
+
+#~ msgid "Use your SSH private key for secure, password-less authentication:"
+#~ msgstr "از کلید خصوصی SSH خود برای احراز هویت امن و بدون رمز عبور استفاده کنید:"
+

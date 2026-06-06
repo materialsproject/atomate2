@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,1082 +20,1330 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials/advanced.rst:3 46d05903b96143edba11240e3b395e19
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:3
+#: b9ed7c6321d44cf4ae448a38f4c7a6fd
 msgid "Advanced Learning Paths"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:5 14b4240d0ecd447c9682d90ad60ad294
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:5
+#: f54853658e5b4627ab39ecccd4b3dfc6
 msgid ""
 "Complex multi-step calculations for materials properties including "
 "structural, mechanical, vibrational, and surface properties."
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:11 c0d3932ae18b44b9ad798d3b060c8c75
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:11
+#: 9cc3c2875a0f4756970e3fac85f6b702
 msgid "Tutorial 16: Phonon Calculations ⭐ NEW"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:13
-#: ../../source/tutorials/advanced.rst:120
-#: ../../source/tutorials/advanced.rst:265
-#: ../../source/tutorials/advanced.rst:293
-#: ../../source/tutorials/advanced.rst:308
-#: ../../source/tutorials/advanced.rst:338
-#: ../../source/tutorials/advanced.rst:369
-#: ../../source/tutorials/advanced.rst:488
-#: ../../source/tutorials/advanced.rst:535
-#: ../../source/tutorials/advanced.rst:556
-#: ../../source/tutorials/advanced.rst:584
-#: ../../source/tutorials/advanced.rst:630 125434de93144a2c880eee4c64a1a855
-#: 1a55f2d87a2c49fcb74fc86b621ff63f 27cf28c4e8364a7d9cc4e8c0903033fa
-#: 3c089f431c884abba53ed7b2bf0998fc 59f340a984aa482dac4681e88078f630
-#: 5a29001dcfe446659d818d3c35faf0c7 6c108c83c55e48bba649bc0267f394f6
-#: 7ed36ddc28a441ba8fd43f94b764c93d aeb2b3d40ab0455982d65513f72ca418
-#: baab00faa1ed41838de5bd0598cc1153 d42414aa44264ce7b758943be54dc81b
-#: fe5a709812d0453d9bb9e4183c3d5578
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:13
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:120
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:265
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:293
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:308
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:338
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:369
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:488
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:535
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:556
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:584
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:630
+#: 01f7dd8134334395a219d44b3f517e2f 18c4ddc1b5304671a129a4a417eea5e2
+#: 19d8740a7a0143b1b783a0bd082a1857 45de48ab4b734a75a721628efa537c28
+#: 72447131c47c4b69977897e4fe198f25 80c686f22a6d438b8dc9f8a883a037a5
+#: 89eaf23ef0254041abdbbe0e86e5cb7e 8fecffe371a54a6bac6ad2c29456ce81
+#: b4086a58036c4609933b316f2c90648e c7918a76d0d6492b8a4f395229d14fd5
+#: d0cf86933dbd43539b9828559f576846 f6e5e35117fb4fb788c02b04edfb95cf
 msgid "**Learning Objectives**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:15 60f361032b79414e9049d915a09600ef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:15
+#: 9e104498b5874c3b99d952e447e0ac7f
 msgid "Perform phonon calculations with phonopy integration"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:16 b90bc444c7984464af69b2608a422296
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:16
+#: 0d67500d55a449e7af99fbb1689f7fe5
 msgid "Analyze vibrational properties and thermal properties"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:17 8ec76c75d0c24e4d85504c6ea593bbfb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:17
+#: 7fa55fd16017486cbe925933722dd397
 msgid "Understand supercell convergence"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:18 dc9637075bdd4feeb148ebeb5c5f8d17
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:18
+#: 008ba9b09ab3426ebb9ceb221a8709fd
 msgid "Interpret phonon band structures and DOS"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:20
-#: ../../source/tutorials/advanced.rst:128
-#: ../../source/tutorials/advanced.rst:376
-#: ../../source/tutorials/advanced.rst:495 0042d5afc4cb4e8989bdbcbf39c8d17f
-#: 3c4cf14fcd1a4c91a99cc07a9a28bb4c 74d02634e58b4471ae67515616473417
-#: b7bdb75373ea4ca8be3e5995a123a662
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:20
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:128
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:376
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:495
+#: 797a1eee7933419ba4a3d7e393a2ef74 8f66d8a4a4294bb5b807d3e1c5330eeb
+#: a2889506aa124bddbb4be49d3bf264c0 f65d47b985ed483ba253fae83b146e5c
 msgid "**Key Concepts**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:22 399e04c7cba04cda87bde59fbed97b9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:22
+#: 881b60bbf95c47c7971debdb1db27381
 msgid "Phonopy force constant calculation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:23 c1f64516fce74fcea0b5705df1c39afb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:23
+#: 0d6549e2ef134e93b672cf8d7204073f
 msgid "Supercell generation (automatic and manual)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:24 4aafe900de354508b4c228afab8dc7e2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:24
+#: 6b1bb82148454b82a33a2bc8c53a8a13
 msgid "Symmetry-reduced displacements"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:25 10f9604abe304a7892df917f07c8bebb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:25
+#: 758b6b696ed74752a5d0744568b896fa
 msgid "Thermal properties (heat capacity, entropy, free energy)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:26 1f510eb127934240a0c0406a7cb70709
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:26
+#: 46a5ad78110d4ddeb53f48b37a692567
 msgid "Automatic plotting (4 plot types)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:28 228d0d031776451c93e4f3556b821888
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:28
+#: f7382691010b4ec9962502552632decd
 msgid "**Workflow Steps**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:30 e25b22b915db43bf956d801ea72859af
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:30
+#: f500b76549904416923bdb0fbaa6ed7f
 msgid "Structure relaxation (optional)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:31 fae2bc4dcbf74c4ab19a28c80a4067b4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:31
+#: 5e5fde707ad846e1b125bf050430c8e4
 msgid "Supercell generation based on ``min_length``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:32 cf8a403d15454897b2f97a32ee41a047
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:32
+#: c0f8a0ce030f47e286c1afa8b7f02670
 msgid "Displacement generation (symmetry-reduced)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:33 47eea0eaebfc4c70a6432765630fb722
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:33
+#: ac1fd5853096498cb12fd16606079845
 msgid "SIESTA force calculations for each displacement"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:34 198a059e4a384d8897979872273767ce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:34
+#: ac4ebd8606704bf796bf0b37b5b20c01
 msgid "Phonopy analysis and property calculation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:36
-#: ../../source/tutorials/advanced.rst:271
-#: ../../source/tutorials/advanced.rst:314
-#: ../../source/tutorials/advanced.rst:344
-#: ../../source/tutorials/advanced.rst:502
-#: ../../source/tutorials/advanced.rst:604
-#: ../../source/tutorials/advanced.rst:650 1c67bbd441754623bccd6f5f6a5fb7d3
-#: 34fec5fb7a7046a399db95fd4bba6511 446d89d5ec604a868777e1cb761ec3d0
-#: 64122b260acb4bdcaeed78346ad3a246 83da28ae675d4ddab70af4c50b88cd53
-#: 8c2219721bf143a19c0e1bb0e1a90b28 a93606897f0c4f17b8bad0bc6786a31e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:36
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:271
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:314
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:344
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:502
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:604
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:650
+#: 01a6db4b7e3d4fc5abb4cfbcde10c486 0f1572105325466c9d43957dce750c78
+#: 1022a0ade62944abb8140e666d4f0141 5a775bda4b3e4a219447968b4afffbe4
+#: 610ee2589d40420f939879ca0e6b9d59 cfbec8798c4443fab40238d697197976
+#: e0277b369b374d9389d1c4594084884a
 msgid "**Example**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:60
-#: ../../source/tutorials/advanced.rst:186
-#: ../../source/tutorials/advanced.rst:570 0d8736fff1434eb9a4d29b8da49f2881
-#: 5ffc01c1d9734d308184671865e21660 64e4604124fc48c0afa15b2127de5d51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:60
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:186
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:570
+#: 01e9c0482fb341b5a5c27a340098c739 4d3d8cc6591643e7900b6ba933ddc4a7
+#: 718556eaccd94e1e849a3d7690541e67
 msgid "**Output Files**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:62 06bd49937a4d4a588766d9ae53e7a602
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:62
+#: fced7179d24c4528aa78290e6fbeb1fd
 msgid "``phonon_bands.png`` - Phonon dispersion with high-symmetry path"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:63 8f7c3904a9064e96bd0db29cbc747f0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:63
+#: dfd38d7ebb024ab5b52aa077c9441879
 msgid "``phonon_dos.png`` - Phonon density of states"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:64 e62a93423afd45db923bb93b4411b580
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:64
+#: ee318dc310764bf58ed26508fd49e523
 msgid "``thermal_properties.png`` - Cv, S, F vs Temperature"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:65 e089c486da334a5bab9818550fd7323f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:65
+#: 0d0c6c551ff346ec9433881a7548f92c
 msgid "``phonon_summary.txt`` - Comprehensive text summary"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:67 fa257657b8df494faf7f83c30dac36c2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:67
+#: 90738891eb6e4adcbadc9928bcef9c6c
 msgid "**Convergence Guidelines**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:73 5148a7d0d96d40a7b050a12f33c3693f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:73
+#: 08acb208617b42d0a57401273ea6ceac
 msgid "Parameter"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:74 b4213e061111441cb7ed6f1846407eda
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:74
+#: 2801fdcbd44446ae86accda732b24a5e
 msgid "Recommendation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:75 25cb21b14735442692f55c8a82fb6d9f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:75
+#: 79aa6eb6ec8c4348b4522d57d2edf699
 msgid "Criterion"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:76 3f44af94f72240f7b7d7e86db5c20a63
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:76
+#: 60bafe4ea33746298b261d2a08e82209
 msgid "Supercell size"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:77 b831b712cd204115b364c366bb55c765
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:77
+#: f5fdc60c894640b9ab3f0b670b5638d8
 msgid "Vectors > 10-15 Å"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:78 b5bacc52405f4481a4cc4df1994442f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:78
+#: 943cf5efd9e54385a38be3832113a5dc
 msgid "Frequencies converged within 0.03 THz"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:79 24499c5f15394b81899757ff62506c11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:79
+#: a997b1cb9f1c40b6a7df712ff7c4aeb5
 msgid "Displacement"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:80 24c94b6924854507b0fe5f097d2a50da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:80
+#: 53f337c73f784b759fdc56d36a798fec
 msgid "0.005-0.02 Å"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:81 5d5988480d644a77b6d5e9c3b749282c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:81
+#: ccb0c34d92af4d2e9af7cf96e0d8610b
 msgid "Harmonic approximation valid"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:82 6380bdd513e84ca4953e32ca44a6e824
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:82
+#: 7dfb15558f8c4672bf86014292d38294
 msgid "Force k-points"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:83 7ca9db073f584ec0a068d8b2f454fe73
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:83
+#: c48547a9599249728fc29f99b1bfd884
 msgid "8×8×8 minimum"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:84 fc40399ce5124d5ebf756d1493fdfff9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:84
+#: d8f05ea55e02404085a5af7484cbd782
 msgid "Force accuracy < 0.001 eV/Å"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:85 c5b7fc1f1d46450db689e51763bbd3d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:85
+#: bdb694571a17403184f78b3f53b4d974
 msgid "Mesh cutoff"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:86 6f93699e4f4a46e88e89889ebc28657c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:86
+#: da4291ba36544b3e885c37e5014c2126
 msgid "400-500 Ry"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:87 ec885053cd9643519016961360ecd720
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:87
+#: 748eb0fb99f24bc7a349004ff8ab97be
 msgid "Higher than relaxation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:89 cf0a1f707d7a41eb952314cca762a86e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:89
+#: b2b151a78bc14890a25e4c9143226860
 msgid "**Interpreting Results**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:91 5e840cae6e4c48fa9086f7b90235dd11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:91
+#: 11c682c218864db4b8ae3a0174582418
 msgid "**Positive frequencies**: Normal vibrational modes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:92 6c5f3b42ac4b4d52bb2d66e69ae09ddb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:92
+#: cf616cf8cb594d22999bb351ed01ab21
 msgid "**Imaginary frequencies** (negative): Structural instability"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:94 2525ca067533458f8fbbd45f0c5c9bff
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:94
+#: 64f21720798f46bca9fff8946ba45711
 msgid "Check structure relaxation convergence"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:95 9fa9508e93f142c99c6d2d26c5f8aafd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:95
+#: 40fff9a0e3e145d688f92e07a7ac91eb
 msgid "May indicate phase transition"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:96 0c2c74b4c9a040b19c1c659b2a318904
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:96
+#: 60ea6c31c8a14c5d9edd251f67ecfbc5
 msgid "Could be due to insufficient supercell size"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:98 2b966648569545e0a03170de13ae01d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:98
+#: 9835fd16ae5a40f0942eb3cde7a38a8e
 msgid "**Thermal properties**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:100 3cc5d0226c66478980a97dc7de4dc84c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:100
+#: 95129dcec4824501b7ce7da367229064
 msgid "Heat capacity → 3Nk_B per atom (Dulong-Petit limit)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:101 f63679f54ab64f65908828288e2c2708
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:101
+#: 59d1578d3e3e4fb9a23476178494c304
 msgid "Entropy measures vibrational disorder"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:102 f5ac546e229c464ea11ae4b28f4740bf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:102
+#: ed628200859f4e599a00d7daeeae17fa
 msgid "Free energy F = E - TS"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:104 8f8a3e0988694450b8aa487ac5d5eec2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:104
+#: b1873d7c03af420b87fa494fdb533d32
 msgid "📁 **Location**: ``tutorials/05-vibrational-properties/01-phonons/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:106
-#: ../../source/tutorials/advanced.rst:331 0facab2040e147e59d2733f6efdc8b8f
-#: 1307ce6499a14a468cb8dd48eea4a318
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:106
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:331
+#: 071a32f0697742829d2e3cc1b41d8257 dd0fedb0a12e4e708c794bf7d3eb863f
 msgid "⏱️ **Time**: 60 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:108
-#: ../../source/tutorials/advanced.rst:303
-#: ../../source/tutorials/advanced.rst:333
-#: ../../source/tutorials/advanced.rst:625
-#: ../../source/tutorials/advanced.rst:669 07781aa7cc1b43e99197fdf139545d60
-#: 19a7016281e440fc9a3b4e3f521118d4 38ff6f0646384483b5e691f46e04da44
-#: 646e8bc4c8254c7da075d802b086dce1 cd570fb7d9814473ac5f94a391a405fb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:108
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:303
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:333
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:625
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:669
+#: 0deb54914bcd43808a2e44144846cc56 48a26e6e83f44f95b645a9c586e6bb9b
+#: 6b9fe5119fec489088e7eea9becf5ed4 d1a4e7f94f2d448a8589182767bbb591
+#: e9ca818ee3a7456993e09479821fa0ad
 msgid "⭐ **Difficulty**: Advanced"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:110
-#: ../../source/tutorials/advanced.rst:253
-#: ../../source/tutorials/advanced.rst:474 15a003b7da45444a86b74f6633f7bc08
-#: 82aae14b57ec4f4684d7d0e9474d2b7e a6240f6aef164ce8b013d83d4f329908
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:110
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:253
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:474
+#: c141dbfce48b4bb6bad141984881ed1e e446bda2fc9646e09566de85d1309dd3
+#: ecd20ef637324944a18e7996e35f800f
 msgid "📄 **Documentation**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:111 d73aa0f781964e7b8eb3389796d21aef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:111
+#: 7d232a2f61ec4d409ea52e70f91f1d91
 msgid "``README.md`` - Complete tutorial (400+ lines)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:112 630fa56736f044709162d44468370322
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:112
+#: 7ce572932d9942c1b57c10be2a91eccf
 msgid "``IMPLEMENTATION_SUMMARY.md`` - Technical details"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:113 2352c8a5f17740d394c63165a81e75d4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:113
+#: e99c6c71f96b4e21a43d67dca9020333
 msgid "``PLOTTING_IMPLEMENTATION.md`` - Plotting system"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:118 63e394f7ab1d49cdaeeff06ab038ede1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:118
+#: cda41f55fd134b1ab6981f4c564907fa
 msgid "Tutorial 17: Surface Energy Calculations ⭐ NEW"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:122 8687b540cf184477a2481191032d5f47
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:122
+#: d7b5b6e6c2ce45109492406a6290a8ed
 msgid "Calculate surface energies for crystalline materials"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:123 5a00ca3d143b462a8bfedaca72241e12
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:123
+#: fecc78837d384d0e889c965ee3acf526
 msgid "Generate slabs with multiple terminations"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:124 0b5ec3d41ef14eec992024b6dab19ab9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:124
+#: d1a8bb17ea634bc39d55ebaf0af3ec73
 msgid "Understand polar vs. non-polar surfaces"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:125 ed76040e7c0942c2a77a02eb51eaf5d8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:125
+#: 9bb581cb86f84ceeb7025ef003c138bd
 msgid "Perform multi-surface comparison studies"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:126 f70f0ba1a1544d7fb91b9c3076f33281
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:126
+#: 5ae2706b3778450c9925a728f7ca546d
 msgid "Predict equilibrium crystal morphology"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:130 f88b2c06e2eb4265a70386b1f19abcf8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:130
+#: bd88768b2cd94b359c1a97ebd8a64fd7
 msgid "Surface energy formula: γ = (E_slab - N×E_bulk) / A"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:131 95777071d06e4b7eb29c4986305241cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:131
+#: c6f3a3b81b974cc6ab08269f81ad4fd4
 msgid "Layer-based slab specification"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:132 21d6b56620cf42708a9a777181cd16ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:132
+#: 8ac0d7a27f104af584287a1902a22d6a
 msgid "Symmetric vs. asymmetric slabs"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:133 f882798948f3423282491ca20d3d5083
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:133
+#: d3b4e983151d43999e49b23207a77fe8
 msgid "K-point sampling for 2D-periodic systems"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:134 e2ceae4566c24709ac0429da52b314b9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:134
+#: fc53e95aeba94d15833ac08eb7745d47
 msgid "Dipole corrections for polar surfaces"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:135 f3583ed1a2124c2189e3fba8d2de719f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:135
+#: c087839c296946fb85f7f502bbdbee9e
 msgid "Wulff construction"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:137 b4433c593124454ca15397532f084c41
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:137
+#: ea95ec790d104392b5fd85cbc4aaab10
 msgid "**Workflow Architecture**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:139 0cd1e99781b947cfa39383c63937016e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:139
+#: ee9e8b31e3cc4b4885e8245c63c12858
 msgid "**Phase 1**: Slab generation (external Python script)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:150 df8adaef0c6049d59b33548e10c5a764
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:150
+#: 9d6e5e82643541459aa58774c7aaaf2c
 msgid "**Phase 2**: Energy calculations (atomate2siesta)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:188 752e3b5e9e8d4ddcb191b6860d35dc14
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:188
+#: 1511eef9b4a14c348e037d6b66a5f419
 msgid "``multi_surface_comparison.png`` - Two-panel bar/scatter plot"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:189 5d2c521dfbf44e75bcdcf6bcf92f2aa2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:189
+#: 10db2b86a5f040f89fc139b290753e83
 msgid "``multi_surface_summary.txt`` - Complete analysis"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:190 6e39f326bf524b8ea6485fc07ef66115
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:190
+#: 77f522d7e657450894623c5411ad7c39
 msgid "Individual slab calculation directories"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:192 d3d3ba4f1b9d46e9b4822d4a06355d02
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:192
+#: 664635aaeec74732ac7b698abbde2dc0
 msgid "**Convergence Testing**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:194 37525d3a25f14821b9d24c802168ff9c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:194
+#: 466545c299bc4722b41a675f6c293ad1
 msgid "**Slab thickness** (number of layers)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:196 6874ddc5dc2a485b9f5d97df3f7d973d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:196
+#: dda594eacfd54c7e9ffbba5360892b83
 msgid "Test: 4, 6, 8, 10 layers"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:197 eac15d3f17844d219663e09b16bc8f2d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:197
+#: 5b9108b2516c45739a11bb06c896d245
 msgid "Criterion: γ change < 0.01 eV/Ų"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:199 25bf768debba470d9ab95045c03a41fb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:199
+#: 54d1c57867b74e1abf4e5f3def8d776e
 msgid "**Vacuum spacing**"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:201 d3718e6a293a4730bf97d002c87b81e1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:201
+#: 9e2a9e47148449f89edec6b6e0f408be
 msgid "Test: 15, 20, 25 Å"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:202 b1af1cb42d294bbdb67b34ea17dae2e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:202
+#: f52d53803a2e4799a639b16771cc76cd
 msgid "Criterion: E_slab change < 0.001 eV/atom"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:204 fe19ace1960e46879592fc71c0543a5b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:204
+#: 20819f0b3b434655aac6fcedcd30397d
 msgid "**K-point sampling** (in-plane)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:206 b413d8fd681b4965bb674fb34a06aa7e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:206
+#: 644a7b8b42ee4504b68c6e167cd58986
 msgid "Test: [4,4,1], [6,6,1], [8,8,1], [10,10,1]"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:207 ccf056dda0fa4ec7aea274f397dbdd77
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:207
+#: a0d1dc01e9ce4724bd6316eb6706d636
 msgid "Criterion: γ change < 0.005 eV/Ų"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:209 dd453042fe3f4fec9f95c88eb158e6c2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:209
+#: d23dddce01ce4e9c96686eeb6e7ab4d0
 msgid "**Mesh cutoff**"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:211 8607b1f8dbca475d8098688b005d2cb6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:211
+#: 60ccf0f2bef943f9a8fbc40fe000b710
 msgid "Use same cutoff for bulk and slab"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:212 e70e1035bd1e4cc59a8e7935db2926db
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:212
+#: 2219adb9dec2467bae96a75825360dc6
 msgid "Follow bulk convergence guidelines"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:214 60492be742e84f6e8e87226d43b7e855
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:214
+#: 7497fb1e7278483db1802fb0a28e2416
 msgid "**Important Considerations**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:218 ed9b3ef549424557929d36e95688f59d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:218
+#: e049699da79a459a99a673c8e0f3c996
 msgid "**Polar Surfaces**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:220 17161a19335a43b3823edd872043512d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:220
+#: 669b7d5a14fc49cda73e8059ed8049ee
 msgid ""
 "Surfaces with net dipole moment (e.g., MgO (001), ZnO (0001)) require "
 "special treatment:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:222 982fb67c5c81435198cf958a9001d656
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:222
+#: 7f3090754ffa4c77949c69d8227cc063
 msgid "Use symmetric slabs (same termination both sides)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:223 5490c9f5095e4faba6f7a28c53a5e567
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:223
+#: 7d9b2c35a22b4251a85c80c2d5684caf
 msgid "Enable dipole corrections: ``SlabDipoleCorrection True``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:224 844c27225c8f47d48bce214732430d6d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:224
+#: 93bdfd5d2a93410589aaed53254150de
 msgid "Ensure stoichiometric slabs"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:226 9e08939646e040faa0329fe8b7ea9636
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:226
+#: 70aa514446f54e25ab59d06e70ec89e2
 msgid "Asymmetric polar slabs may have:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:228 07d08c11e1364de2aa64e498aceb7ee1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:228
+#: 6e19a8208d9e4615bc941d114a87f17e
 msgid "Non-physical electric field"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:229 7bed76d0a72247928bcce23173f7d4bd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:229
+#: 9199d6cf702a4e439aaeac01e56dd8ae
 msgid "Slow convergence with thickness"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:230 4bdea9a6db944c73a61ab8fe587a4b66
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:230
+#: 72ea324c48464ae8a470b110cdbc7afb
 msgid "Incorrect surface energies"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:232 af234963f0344484868f81d169eabac2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:232
+#: 132f4fd8e9fb495c8e16ee5e727b32b0
 msgid "**Surface Energy Units**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:234 76b78edbb9ec450096ed84f92bceae30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:234
+#: 1ac39010da3245c4bd204bc0b7d805f1
 msgid "eV/Ų (common in DFT)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:235 4dfc927d4d1146db80aabff77eaf5135
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:235
+#: 521774a7219840498ff96cc30e740731
 msgid "J/m² (experimental)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:236 ba1f65486c5e4791a30f463cab13bf7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:236
+#: d6b048c861824a549864a8fe6716d5e8
 msgid "Conversion: 1 eV/Ų = 16.0218 J/m²"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:238 f2c8ecdc30a44ffcbe9aa18ec95c01f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:238
+#: 695213bfc7714a56823e9faa6ed55e5a
 msgid "**Example Results** (MgO):"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:247 2f3e2016b4644e7783a5e266c7404295
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:247
+#: 214801b228164dbaa08034b532688149
 msgid ""
 "📁 **Location**: ``tutorials/06-surfaces-and-adsorption/01-surface-"
 "energy/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:249
-#: ../../source/tutorials/advanced.rst:301 374be9cc468f479580ecafe980020e4c
-#: 8fb2dc2e574d4f3e93512980e4fffc93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:249
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:301
+#: 13852036dc474be09c8a1c345955d158 f43b89ba3130460b8ebf082e7566b378
 msgid "⏱️ **Time**: 90 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:251
-#: ../../source/tutorials/advanced.rst:362 e53085cc8d244f3b96a832ba147df904
-#: e9dce7e3abde40198a7789961c5b8e0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:251
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:362
+#: 63956e815a8e4614ad3e1151f44eee6b ecea438f8c3a492c9393446bfd08bf3b
 msgid "⭐ **Difficulty**: Expert"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:254 4b50b050ee124b69a2d31ebdd9654114
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:254
+#: cd78ecb114874295ab63dc15d1d57859
 msgid "``README.md`` - Complete tutorial (450+ lines)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:255 59ce9e6a1c5a4b219ef1f9dd197146bb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:255
+#: 7ab0aa80c321454ca915736a2a220b62
 msgid "``SURFACE_ENERGY_STRATEGY.md`` - Implementation strategy"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:260 a748564984a14ed7a142948d6f0a55b0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:260
+#: 130ee1667519499c8081e43289d866b4
 msgid "Tutorial 09-12: Structural & Mechanical Properties"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:263 f2f181a896ef41678cd738a8933a07a4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:263
+#: 485542b4a4d24cc5bac445a79b9797cb
 msgid "Tutorial 09: Equation of State (EOS)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:267 cfee875b1cfe4048b1f6d4156513c2cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:267
+#: 6ac638bd85b640c49ec7472b33d1a31e
 msgid "Fit equation of state to energy-volume data"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:268 594ac83ddb124a3597a8e164f8942641
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:268
+#: bee3e80128f04411ae5d516035fe88ca
 msgid "Determine bulk modulus and equilibrium volume"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:269 5514041205434bb49df3edbf56150080
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:269
+#: 385fe242028b4fe987a69d3c59e73fbb
 msgid "Understand different EOS models (Birch-Murnaghan, Vinet, etc.)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:284 e3891e396ecd46598d3daf2f283ad16d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:284
+#: 5b3ea7f747e8414797ce48e151f88909
 msgid "📁 **Location**: ``tutorials/03-advanced-workflows/01-eos/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:286 e289363b65484dd2b54b4b4d9fa25a55
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:286
+#: b5be0a913e79437f98292f748f8316fc
 msgid "⏱️ **Time**: 40 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:288
-#: ../../source/tutorials/advanced.rst:472
-#: ../../source/tutorials/advanced.rst:530
-#: ../../source/tutorials/advanced.rst:551
-#: ../../source/tutorials/advanced.rst:579 375c21c84001427dab115db1cfb865f7
-#: 5b89817a7cf04860bfdd472cc3ccbce4 91feb507f8f74317ba4cc83f24ddeb98
-#: 92b1409f3917409a8a4a2ef4830b1bc0 d841e50e6692455a8a1d5d1ff63d1467
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:288
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:472
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:530
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:551
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:579
+#: 007b9c4e5eb946f8b16398143e8fae62 2a4d6274ee43448a93d8b0051bf36649
+#: d219d283fc8e4909ba71e59157ac1018 dfbb8e847e96438589a1e8d924f0ff0b
+#: f4e91df2dc9f44978fe5ecb8c9d80db0
 msgid "⭐ **Difficulty**: Intermediate"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:291 274658ca1db149359f04abe6b0709f0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:291
+#: f53eeba3d29e4bdb902da5a4885ec478
 msgid "Tutorial 10: EOS with Basis Convergence"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:295 d4c0362376f742ec9e4c5b2c5e10a614
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:295
+#: 8633cf04660c443db0467a4cdeafe6ab
 msgid "Combine EOS with basis parameter convergence"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:296 fde06b47bc284390a8547d1544cc9e72
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:296
+#: 93141f39a375456fb998447affd391fd
 msgid "Understand basis size effects on bulk modulus"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:297 90395f45e0964dfabe5ff20b59301962
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:297
+#: d6c47a3ff3d84ae79cfe2c954af3ba59
 msgid "Perform systematic convergence studies"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:299 c2f60363787e40a496b6259be35ea126
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:299
+#: 4028af83222c4f35b7b95366a93310b9
 msgid ""
 "📁 **Location**: ``tutorials/03-advanced-workflows/02-eos-basis-"
 "convergence/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:306 9ae894a6917d4012b77f78e2ed86b5fd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:306
+#: a6a94d5bca2b4abb8295ca351f929f5c
 msgid "Tutorial 11: Elastic Constants"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:310 122cca8f661a458d88e50c9cded01296
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:310
+#: 96fd933586a2426dbdae5629cb189c24
 msgid "Calculate full elastic tensor"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:311 522a893fb8af48f78dfc7237d9e8641a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:311
+#: 82b6fbb9b6cc4b6eb992ab5f37e0d59b
 msgid "Determine mechanical properties (bulk/shear modulus, Poisson ratio)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:312 1cdbd1adaa7c40a89471e8eec0022379
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:312
+#: efa68b5d16c54089b81742eaf1968dc5
 msgid "Assess mechanical stability"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:329 fc461cc991354a82a85f929aa6f15c50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:329
+#: 524e450364004492b706e974e1f8680d
 msgid "📁 **Location**: ``tutorials/03-advanced-workflows/03-elastic-constants/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:336 e17baef5274f4acb8bdb1fe0a103e060
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:336
+#: f0b8ed60c1c74f05a9842faa737deae9
 msgid "Tutorial 12: Nudged Elastic Band (NEB)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:340 92df760526894ab4a42d757c2b34dc64
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:340
+#: 45818d030d0545558917f521e50ca1b1
 msgid "Calculate transition state pathways"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:341 d4e9a2144748469b93b985e3edb23e32
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:341
+#: 5b0c6db4225a43849016ecef25afb530
 msgid "Determine activation barriers"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:342 57f8314f1bc94e55b2f4bfbaa55f6876
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:342
+#: 76d2ffb4d26149b8898d2f52694abde2
 msgid "Understand reaction mechanisms"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:358 3f332afc10924ec18814bf5f28a5e12d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:358
+#: 3ea73b541eff457fb2d1f513107a7628
 msgid "📁 **Location**: ``tutorials/03-advanced-workflows/04-neb/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:360 c4fca4f22766456da30751a6e48c893a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:360
+#: 3e9058764a7b490d8c6a5376d247df05
 msgid "⏱️ **Time**: 120 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:367 a7be645767fd4d319dcba4f67f82f292
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:367
+#: 53e7ef06b2ad4b6e958020de6bbff4d9
 msgid "Tutorial 18: Tier-Based Calculations ⭐ NEW"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:371 ffaf5cef4e224c42bdefcd72f95797ac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:371
+#: eedb9cefc0804c80bcc4a6a72807c282
 msgid "Understand the 4-tier module hierarchy"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:372 62cb59e41f5045bc824933c3620e05fc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:372
+#: 54ca378a3f204411b6f4805b619342ef
 msgid "Use material-specific presets"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:373 28f1c00e12da4138a4710fa7ecbe2abf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:373
+#: fb5044b858ac45038662bcc6cd989c8e
 msgid "Customize tier configurations"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:374 fd0dca95914b4fa0a02d6cd70c0c9956
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:374
+#: c338d37718ec4914a78f2411737cd14e
 msgid "Optimize workflow performance"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:378 35ea242a68ba4f73872f7b47cdc290e0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:378
+#: 30808fa8a65a46a4bfae42798de2b97b
 msgid "4 tiers: basic → intermediate → advanced → expert"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:379 b5d6a2574db54d79b5ca40f6115ad1d3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:379
+#: b0cf3c703aab4878b2ec686379ea1dcc
 msgid "24 dataclass modules organized by complexity"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:380 9f9a01d1d8e749b8aff7e833f09da8c4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:380
+#: 90f86480acf64c629236ccb391c29176
 msgid "14 material-specific presets"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:381 180d5c876314436b876b2edc37991827
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:381
+#: 3eb415a8cc09441c9ea1951f06e4df9e
 msgid "Automatic module activation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:382 fe26dc2f031c4c059593442875d6576c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:382
+#: bb5fa092df264cc2b01208692b46e79d
 msgid "Parameter merging precedence"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:384 1fb46ff412ae4acfb5d54806cd3e4495
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:384
+#: 40c5513d1c3442eba44e80183c13d689
 msgid "**The Four Tiers**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:390 7c602e0e69f34a768aa5345ab9de0707
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:390
+#: c0176c33a4bd475881434ee380a66fad
 msgid "Tier"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:391 a27cc5c72b184ad1a8d5c1546be0006f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:391
+#: 160008453e7642daaaae84bb3eaed6ab
 msgid "Modules"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:392 2caabd7ceaa840e98b6c4895fafeaf57
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:392
+#: 8362dacb74254d9ab9a9d992e6f6c616
 msgid "Use Case"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:393 eaa1d1ba1c0a476e81275f6b02c1c5e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:393
+#: 999f595f5e334a52a78e74b31d9a9357
 msgid "Performance"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:394 0289739990f4446e98efabcd688667ba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:394
+#: e46549c92b3f4e31a2a1ff069245dd47
 msgid "basic"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:395 bc62031a09964cafb0d3e1446f1fb21c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:395
+#: 020299082288409d9a189c896804f1c1
 msgid "6"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:396 f2b0f447276046eaad5d5b9a82aa36bb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:396
+#: be2195cf9b1844d5903f5a2b60795eac
 msgid "Quick tests, debugging"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:397 e9150d30949d4da69b050ab49a2def32
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:397
+#: 05940f2d01894f528ab1c85b6d82d151
 msgid "~17 ms"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:398 492201ecff854c53832e8e4d16fdede0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:398
+#: e4d5baf453a14c96b8c84b435ddacdd5
 msgid "intermediate"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:399 89a36855bae740a8b464b2d2d7d13a0e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:399
+#: 83ca2e49a4bd4eb6a407545c275a250f
 msgid "12"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:400 59d39a848c594c9d85604d3bfbb1f979
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:400
+#: 6b9eea6b81b9491c98853f7685b44cc7
 msgid "Standard calculations (DEFAULT)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:401 b32b56b52bcb4941902ae55c8b587daa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:401
+#: d076f1a64736476ca6bfacfe8dbc4ad2
 msgid "~20 ms"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:402 d362b4706fbd45afa045e1c1dbe03f26
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:402
+#: 801a5591c3004cd98ce2e331cf5e94c0
 msgid "advanced"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:403 04a6d5e013c4490b9a29feb546f81d95
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:403
+#: cf18b5facc1e45e486a84d04ac04abea
 msgid "19"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:404 bd50b1e1249442038950a3270dfd76ea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:404
+#: 7b0e64de431542349d11536b6098bc9c
 msgid "Phonons, optical, DFT+U"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:405 3368fc7aa164412fbdd99fb43fec44ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:405
+#: 857995f92e0742309d004d13b2e10d25
 msgid "~22 ms"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:406 fec45dc159284a6bb8c4444eb7f3a533
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:406
+#: 63db9b2e7bd84afdafcabebc541e9c07
 msgid "expert"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:407 628cef49f66d4da291deb5f2487cec40
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:407
+#: 3924cc28a49d45ab83c7c3a2985b9c9d
 msgid "24"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:408 b3795999a7c44a2cab7b6c96054517b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:408
+#: fa4d59354d4a40708377eb2fbd28decc
 msgid "Performance tuning, large systems"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:409 7d1ca9acb9af48fd83133dad00451bd6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:409
+#: e984bc7824024cbca02e522237d32095
 msgid "~23 ms"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:411 ffc818980d4d45369223e287aa794b7e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:411
+#: d84829bdecad48cd9da9cacd88b85f47
 msgid "**Direct Tier Usage**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:427 d4fbcd492d594d8997aa7078dd994a9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:427
+#: df4078a360804704a370d647eade4872
 msgid "**Material-Specific Presets**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:443 1a64f85a5465433fa10dfb093e09f613
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:443
+#: 4e77804daef14857ba94486a8a00b39a
 msgid "**Available Presets** (14 total):"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:445 707c54a1b9e84fa3b952bdb728ed796b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:445
+#: fc2880e2f4494062948e8e169cfe515b
 msgid ""
-"**Structural**: ``basic_relax``, ``standard_relax``, "
+"**Structural**: ``basic_relax``, ``relax_standard``, "
 "``high_accuracy_relax``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:446 406bc20008c44089a7362986d72ea7b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:446
+#: ffd4ed7cbd264a56a7a7e8b8ed22e460
 msgid "**Surface**: ``surface_metal``, ``surface_semiconductor``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:447 860b95cff3d040d28f3b1d4eb899790e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:447
+#: 89bcf0967f1a4ac6bc2cce5f2ba9fcda
 msgid "**Magnetic**: ``magnetic_2d``, ``magnetic_correlated``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:448 17ec7cab15264ef78fd61128eebc6c5a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:448
+#: 4d00b27916cb4c17ad2f10d8cc4a57f5
 msgid "**Phonon**: ``phonon_standard``, ``phonon_high_accuracy``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:449 e4627141a8bb45ae9f9f5ff9b9fef901
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:449
+#: 4481e3a5f1da4b2da569d7e8f6945c47
 msgid "**Optical**: ``optical_response``, ``band_structure``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:450 5ef3231a4cde4ceab7ff517d43fff11e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:450
+#: 23cf30212fac4544a5a69c4e006b6d57
 msgid "**Performance**: ``large_system``, ``parallel_hpc``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:451 e5054c191b6c49f89cd861f82a75c58b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:451
+#: f7aab29833fc4b7f907b3dc0e24a741f
 msgid "**Testing**: ``convergence_test``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:453 e01d5c200a47499eb28a7e6e58b9e98c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:453
+#: 4145b43b5e6942ee96cd71b154c4ce60
 msgid "**Override Preset Parameters**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:468 b9c5e09532ac4718b89878f9878d9ce8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:468
+#: c50b5b465b4f440b9e7e55b227fb3e42
 msgid "📁 **Location**: ``tutorials/07-advanced-features/01-tier-system/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:470
-#: ../../source/tutorials/advanced.rst:623 06847aaf5b0e424ba9f03dca35ab24d1
-#: 22cdd39ad26241e6a82e7eea7aa29df5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:470
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:623
+#: 43c5ae212c14456f8bd37037c32bda29 a6a875c7608d4493ac536851cbb1a08b
 msgid "⏱️ **Time**: 30 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:475 7d7c889b70a44aeea821eaa0c9c77764
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:475
+#: c478174cf9cb42cebdd922201b5b4b90
 msgid "``README.md`` - Complete tutorial (370+ lines)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:476 cd0990479d7b4604b5a03cffa4308c50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:476
+#: 51b4f42ebaae40f7b1a962d50cba5ab9
 msgid "See :doc:`/tier-system` for full tier system documentation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:481 77cc829ce413405daa1285c599d76a48
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:481
+#: 28e3cdb7f8514402b1ead53fcfb6c597
 msgid "Advanced Features Tutorials ⭐ NEW"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:483 4025f10e1b3a4df9894a790b2d57fc79
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:483
+#: 83862e36be164402930b0154c96978b6
 msgid ""
 "Five comprehensive tutorials demonstrating MEDIUM priority dataclass "
 "modules with direct SIESTA FDF format."
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:486 02810453caf6424396bd24ab51e9e3e5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:486
+#: 0bdb2f0294f14fc5be2e70acb6627cbe
 msgid "Tutorial 23: DOS Calculations"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:490 9418ecd862d446baa47078e0552a7393
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:490
+#: b713f11aea2f4200bbdf7b70c9f51cff
 msgid "Calculate density of states with StaticMaker and RelaxMaker"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:491 55e553f64a004896b30e3bee6c073739
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:491
+#: 150d5d96c355496eab2f7545ea439afc
 msgid "Use direct SIESTA FDF format for ProjectedDensityOfStates"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:492 8af3a6d882984cad94fb4500d4a8865a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:492
+#: 27377726812e47ac8b0bb2fb5ec61b45
 msgid "Understand automatic comment header generation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:493 2b2f9d33024d46b68edaf479ee14cf5d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:493
+#: 21499d410e2246b7abeab46829d4e351
 msgid "Interpret DOS output files"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:497 ff5623c3da74476987b603aefbddb4ad
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:497
+#: 146ba040f93d4dc7a030b28733813345
 msgid ""
 "Direct SIESTA syntax: ``\"ProjectedDensityOfStates\": [\"EF -10.000 "
 "10.000 0.100 200 eV\"]``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:498 6ce1efc1f3ac4cfaac4e4cd80363b81e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:498
+#: 3d7bfe01f6a24f0ca766befea696922f
 msgid "Automatic comment headers: ``# DensityOfStatesAndBandStructure Settings``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:499 6fa106e08135431993230fa5ed91e833
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:499
+#: 625d97680f27483487381359593a76b5
 msgid "Works with all makers (StaticMaker, RelaxMaker, BandStructureMaker)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:500 d16b959c99564c43b2d1c01b16fe30c6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:500
+#: 9ec8a651300c482d92404dfa45b36ad5
 msgid "Dry-run mode for preview"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:526 67e8ee95658647fb9607879f930cb1c2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:526
+#: f05340967b0d4ad3bf15130bdc0df77f
 msgid "📁 **Location**: ``tutorials/07-advanced-features/05-dos-calculations/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:528 5bc3ff301cb6424c801c8df627942e11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:528
+#: 42fc7221208a4d4389ea8b5b9f54659c
 msgid "⏱️ **Time**: 20 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:533 27eaa0589c4e457fbb4a948bccd11099
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:533
+#: 243698859a1e435897564d7d4863ae04
 msgid "Tutorial 24: Phonon Inputs"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:537 cf06d56cdf0343cd965231f84f7f9b5b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:537
+#: fa8f4fbcd0fb4479ad134f8591e1b59b
 msgid "Configure force constants parameters for phonon calculations"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:538 6eb19b3656df41368437b3d8c066b5d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:538
+#: 1ff2a2efdcca499a90f478d9bc81f04c
 msgid "Use MD.TypeOfRun, MD.FCDispl, MD.FCfirst, MD.FClast"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:539 1c48dd31cad7456d8c6c9f5fe47df660
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:539
+#: 2c246e61271a4a079c3e95edb92d5eab
 msgid "Prepare structures for phonopy post-processing"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:541
-#: ../../source/tutorials/advanced.rst:563
-#: ../../source/tutorials/advanced.rst:591
-#: ../../source/tutorials/advanced.rst:637 9b9ab14e3b7846ad8d7d003c7aa514b6
-#: acf3aff3e3284a29b0582bd7258a2e2e d2271ba7fc4b4fe8a581db8338a7ed56
-#: dfb37e6f1fd541959bbf196986684909
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:541
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:563
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:591
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:637
+#: 177f8b86dc3d4b23b08f6aa7d392a4c7 184dab1ce115436eada54ce0911cd329
+#: 54a1af52ff46499aa4ed84fb8aab8f12 c15d1b0f955c48e1b9f2d66c67c5dcc9
 msgid "**Key Parameters**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:543 613a4802a6974a29842b8799b743ab92
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:543
+#: e12ab2778f3b4cfab8ef7efd342f65f8
 msgid "``MD.TypeOfRun``: \"FC\" (force constants mode)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:544 e86c4c080c224a3a91264cf29291d4a2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:544
+#: 8e349f1d024b42d3bdfe1fe759995701
 msgid "``MD.FCDispl``: Atomic displacement magnitude (Å)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:545 08a70e520ab043daaca8fa43fc38fce2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:545
+#: 66b2955bb38c423490991fc24ed2cd0c
 msgid "``MD.FCfirst``, ``MD.FClast``: Atom range for displacement"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:547 f1094d59c6b14aa292077fceddd68bc6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:547
+#: 6333a3c76ba34564a650cb60e41f2397
 msgid "📁 **Location**: ``tutorials/07-advanced-features/06-phonon-inputs/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:549 d56924be5a114d72ba4f2f4ed4cc16cb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:549
+#: 1deb7c711ef147cd97cea8921ec266f1
 msgid "⏱️ **Time**: 15 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:554 3a027397aee24ab6b60782a06ab5487e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:554
+#: 3fe0e81ae66c4d3c9ce8feb75b584b18
 msgid "Tutorial 25: Optical Properties"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:558 d8cbcfe800d346f5af3a29a721c31992
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:558
+#: 35bc94f2c7b74f4993da79a1c02fd161
 msgid "Calculate optical absorption and dielectric function"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:559 9b2e615aba6f4fd294db6abd7d5d83f6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:559
+#: 886a9232a7624a6f955f054f1bd8f2cb
 msgid "Configure energy range, broadening, and scissor operator"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:560 d63062421d0647d38f4fc5c38ad0625e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:560
+#: 1865f3e0d7a74a17b6a82fac55a8b6bb
 msgid "Understand band gap corrections"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:561 db06d1d25a114298a899844e413659aa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:561
+#: 3d9d2dd132024381aba055a424434cfa
 msgid "Interpret optical output files"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:565 a1875316377349d5b9c61bacbac731a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:565
+#: aef0e20ba96543fea714a7bce337a964
 msgid "``OpticalCalculation``: Enable optical calculation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:566 cda9554a0c00469681f762eb1419edfb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:566
+#: ce12363ecaf44547a812955955b42e4b
 msgid "``Optical.Energy.Minimum/Maximum``: Energy range for spectrum"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:567 c6f6bb231fc5401ab12cce28a27feb56
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:567
+#: 0566189b530b4b758fdd15150ae8ca18
 msgid "``Optical.Broaden``: Spectral broadening (eV)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:568 8a5aa857e0d14fe6a227a9a37373c40e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:568
+#: 2e160d647027416e926f3c20a41829dc
 msgid "``Optical.Scissor``: Band gap correction (eV)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:572 2b7a4c3420fc47bc846ec7f115d19029
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:572
+#: ae96f9cc07a141c8ba9aefee70c907b8
 msgid "``siesta.EPSIMG`` - Imaginary part of dielectric function"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:573 5942a5c6747949039d8cf8a375c1bb08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:573
+#: 1ba611f2008b41ab90c0baa4cc3321ff
 msgid "``siesta.EPSREAL`` - Real part of dielectric function"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:575 f69be84a4df24b6aabd22b6c966a46ec
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:575
+#: 090e85fc58364981a1320b1aa038977c
 msgid "📁 **Location**: ``tutorials/07-advanced-features/07-optical-properties/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:577
-#: ../../source/tutorials/advanced.rst:667 40b0ebffe0db4096839de567414bc6b5
-#: 6c2530fbbffb486ebd43bfa29f0f1e34
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:577
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:667
+#: 3476b923e2e34995b1cc763cc1b920fb 504b185a36404c6f93f891402000b9d3
 msgid "⏱️ **Time**: 25 minutes"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:582 b952dee8417c42c09a50bb6d6f3cf948
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:582
+#: 1fd6cfb311cf4167a7b734c8cf95b040
 msgid "Tutorial 26: DFT+U Calculations"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:586 c36e7893a5d64313aef238c7a7507f35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:586
+#: c581a7cd453449ed9ffe7935cc040289
 msgid "Apply Hubbard U corrections for correlated systems"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:587 6744aa7aa1554fe18ca70851d0a928d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:587
+#: a21ac73067014d7f94d3c69017db2cb9
 msgid "Configure DFT+U parameters for transition metals"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:588 8a24e5947a2b46eb868661fd46a4c38c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:588
+#: b1d83e3541bf4eccae68a2324d34f8e6
 msgid "Understand projector methods"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:589 512fa4c8b0b145f494ab62283188d70c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:589
+#: 19151793eed34cd28f006782b94aa065
 msgid "Use common U values for specific elements"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:593 36380c2cccf94748bc82ed2bed7890c9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:593
+#: 8f532694967b4865bd3898fbcaa02e8f
 msgid "``LDAU.UseLDAU``: Enable DFT+U"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:594 a30eebebf47f43d2b506d505fd634b46
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:594
+#: 5236f99425e249dc9258c68ccd4a610d
 msgid "``LDAU.UEffective``: Effective U parameter (U-J) in eV"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:595 af4ff9bb6de949b8bbb8c20428b2e835
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:595
+#: 687ce30f93624ed8b075cafc77ef9f8e
 msgid "``LDAU.JHund``: Hund's exchange J in eV"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:596 5411dd11142542c694d70b8238da6876
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:596
+#: 9c4cbaa979de4f61abf19d65d4674d73
 msgid "``LDAU.ProjectorMethod``: PulaySanchez or SimplifiedLDA"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:598 942c313199734bd483a8146d6a34a12a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:598
+#: 268e9bb69341407d943487552faba495
 msgid "**Common Systems**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:600 618bec5647574d3399850a01d10fa506
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:600
+#: 2f72af41169f4796a4c84433b6f6eb44
 msgid "NiO (3d transition metal oxide)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:601 0ff79d6c2a0749a391597d00e4c0a969
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:601
+#: 8512a8d3d0c24f1f8a5d398d1eb7bf4a
 msgid "3d transition metals: Ni, Co, Fe, Mn"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:602 3bd0b965f43f4951bd3a269328366124
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:602
+#: af99d207557d41e1826aa36c6fdf9f8f
 msgid "4f rare earths: Ce, Eu"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:621 1de83efd7b6347e896e29e88122515e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:621
+#: 361ca77dbfac46c8b56fd4d37a872f91
 msgid "📁 **Location**: ``tutorials/07-advanced-features/08-dftu/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:628 f7bbae1478c249c8b02b862b0df9a464
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:628
+#: 731ce68c6b9540e9abc6c7613fc95afa
 msgid "Tutorial 27: Charge/Dipole/Electric Field"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:632 d6969a72b80f406da1cae39f4834ba85
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:632
+#: 60cc3a279b7546d8b931a17cf6512888
 msgid "Apply external electric fields to systems"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:633 ccaaf61658704609895c684cc574f753
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:633
+#: 451498987bb841eea4bc330818ede0d9
 msgid "Calculate charged defect systems"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:634 9e1757c9367e4d59bf02e639eff3f6b1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:634
+#: 0ac6b04f54074f619300acbd6d8c0fe5
 msgid "Enable dipole corrections for slabs"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:635 656b67c3cc654459b917706ef2f1b38a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:635
+#: d4681f8e0cf3455b860de71160fdabf1
 msgid "Understand field strength units and conventions"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:639 30b10012e25e4c3193b05f5f69e4efe3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:639
+#: 062bd88795734f20b16486d626ab06d3
 msgid "``ExternalElectricField``: Enable external field"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:640 7a173e9ee33540489306901910472c0b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:640
+#: 5a0bc0f5ea6d4b0297dc662cf4ca9e7e
 msgid "``Efield``: Field strength (eV/Ang)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:641 6a25484a4d804cec9819d5d5f7359fcd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:641
+#: 6cb54745240b418fbb91d3582a2fe75d
 msgid "``NetCharge``: System net charge (electrons)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:642 aa10312181854a0684ce0cd036e44a40
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:642
+#: fb001fd585e44e8ca983ac0ba75318e1
 msgid "``SlabDipoleCorrection``: Dipole correction for slabs"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:644 258833247a364926878ace47a173e1b4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:644
+#: 01e797ee3ce8406c93bcdb6b4fe19d45
 msgid "**Example Applications**:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:646 473cf5ff4e284356a23c4dd699cba53c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:646
+#: 4bd99ec5203e425987702154634917ae
 msgid "Ferroelectric materials under applied field"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:647 9c91105301f24bea81074210c9f6b855
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:647
+#: 92207ae049f94115b9082ee71f144083
 msgid "Charged defect calculations (vacancies, interstitials)"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:648 b184672191494914a678cdf60322c844
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:648
+#: 003ada5b420144f0820872057d2f2dd6
 msgid "Surface slab calculations with dipole correction"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:665 f685077972034258a6bf98e39240c38d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:665
+#: d528f9319fab4190a9ec09deeba24f9b
 msgid ""
 "📁 **Location**: ``tutorials/07-advanced-features/09-charge-dipole-"
 "efield/``"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:674 48e7f72699ac45ef9f66d0be980ddfac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:674
+#: 06782bd24d70404caf1fdbf1920d8e0e
 msgid "Next Steps"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:676 bc11a5fe079c46128e03d156175d6826
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:676
+#: f28822dfe09a4bb598ff2c995959345c
 msgid "After completing advanced tutorials:"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:678 21626196c1694b8facf6aa8722c8180f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:678
+#: b6f6bad3eeab4f268597819faaa057cd
 msgid "**Infrastructure** (Tutorials 13-15) - Production deployment"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:679 878fb1c5336e4d4da01ec4810a901038
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:679
+#: f9feeb0c39a64878b570c7a0679dd6b1
 msgid "**Custom Workflows** - Combine makers with specific needs"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:680 08a3c888a1c141feae5b84c22c9e4d8b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:680
+#: ffe761473216430ea4d0b8fb3fce4db4
 msgid "**High-Throughput** - Database integration and automation"
 msgstr ""
 
-#: ../../source/tutorials/advanced.rst:682 ce5daf847b754de88c3b1bcbd2f8f24d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials/advanced.rst:682
+#: 3be1018d5f3644f78d986f061f9ec8dd
 msgid "See :doc:`index` for full tutorial listing."
 msgstr ""
+
+#~ msgid ""
+#~ "**Structural**: ``basic_relax``, ``standard_relax``, "
+#~ "``high_accuracy_relax``"
+#~ msgstr ""
+

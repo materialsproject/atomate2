@@ -1,0 +1,1321 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:1
+#: 0ed4f8bb7bb24d169f136f8a4b59cdf0
+msgid "Tutorial 14: Efficiency and Performance Monitoring"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:3
+#: a7878d39276241b4a43e2a7f32eb8e8b
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:5
+#: de42d1d9d7c040828339bf72b0bd04f8
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's efficiency and "
+"performance monitoring options using the `EfficiencyOptions` dataclass "
+"module. These settings help optimize calculations, monitor resource "
+"usage, and manage long-running jobs on HPC clusters."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:7
+#: 1a545b03f02f4d46a847e17ab583ff23
+msgid "Learning Objectives"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:9
+#: af660e866d454bcea0308b9a31a52bd3
+msgid "Configure memory allocation reporting for debugging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:10
+#: cc6d430091a143788a95f1ef76c7d038
+msgid "Enable timing analysis for performance profiling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:11
+#: dcad28c30c454563a22730f80e7a55c7
+msgid "Set walltime limits for cluster job management"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:12
+#: 97c6a0e8f8424e059fd80e496bf5993c
+msgid "Optimize calculation efficiency with DirectPhi"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:13
+#: a06c8fc7c78f4168898575001a72bac6
+msgid "Use restart data for interrupted calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:15
+#: 663124f450714124960bd4a5cf4a1266
+msgid "Theory"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:17
+#: 0f99f2504e3c4e8da2fbbf82a593466e
+msgid "Performance Monitoring in SIESTA"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:19
+#: 6c034f4901104f2094702309175755ec
+msgid ""
+"SIESTA provides comprehensive monitoring tools to help identify "
+"bottlenecks and optimize calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:21
+#: 076acc9010b546f5b4864531d764023c
+msgid ""
+"**Memory Allocation Reporting**: Track memory usage at different "
+"verbosity levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:22
+#: 3ba8d6d14f0e43528994d1d9e6e94b7d
+msgid "**Timing Analysis**: Measure time spent in different code sections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:23
+#: 152d2e2bae0346939e05a99fd59e58a0
+msgid "**Walltime Management**: Gracefully handle cluster time limits"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:24
+#: f626976b3b694602b1222024af69fd57
+msgid "**Calculation Optimization**: Skip unnecessary intermediate steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:26
+#: 203f498dae8941af8a755cc8cb0b5f98
+msgid "Why Monitor Performance?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:28
+#: 17f69a7a9fb1437f85fcd8f58c9a8395
+msgid "**Memory Issues:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:29
+#: 57d88f1bef334eeaa7745f6e1cfdc1d5
+msgid "Identify memory leaks and allocation patterns"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:30
+#: 2c21a0c92d264c988982d8a9b290c204
+msgid "Optimize memory usage for large systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:31
+#: eb00e21f60b24dc0867eff9c35054844
+msgid "Debug out-of-memory errors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:33
+#: baf6c1703c9c43eaa62031825a924276
+msgid "**Performance Bottlenecks:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:34
+#: 947928d4c04c48b8a87ef9f77ba6a166
+msgid "Find slow code sections (diagonalization, grid operations, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:35
+#: 0a553a8ec79f43db9d26616f4abc607d
+msgid "Balance load across MPI processes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:36
+#: 03640d049fbc4aa4b9b297ff6bdb8543
+msgid "Optimize parallelization strategy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:38
+#: 3e94e5638cf84a348556afb5c5caaace
+msgid "**Job Management:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:39
+#: 0c376b59afda439da5932c26ca410f19
+msgid "Ensure calculations complete before cluster time limits"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:40
+#: 2a5c33d1befe491092ef292ef003d500
+msgid "Create restart files automatically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:41
+#: 95ba17c692f24687815552784a556441
+msgid "Avoid wasted compute time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:43
+#: e19d6c9a1da3431581e8016bb1375357
+msgid "Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: d48a3e37729d479f9fd54ad8e57840cc
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 861fd56ad48c49429fbff26f35e6b6ce
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 42249a70306b4c519f5603c55a1e2af7
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 933e8b5dddc449748c884ca83434f670
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 33ad1d0514bd45f893e2e3a414106361
+msgid "`direct_phi`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 4e208e2ed73445aeb7bf359201bda95a 5fd9c8c8b127480185cb476684a0b976
+#: 82ccb716076e40009225b3308a218e6c 99aef2e2182948bdb984262a45064b80
+#: b19bd5a625ff4b4da9c404b846d7f856
+msgid "bool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 216f4a42614647319505824d0793e198 66ddb2ac0f7e4077a45845cabeb70509
+#: 7e7c7c840c36463bad4b96cffa957ea9 84161340c2dc48909dcebaa79e1672e0
+#: eef0ba1aae3a4649b6b70d3bddbcb56f f5c1b7682e5e4ea18e46b443c6233bef
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 6b1a30420b284785b3276f657bf2482a
+msgid "Skip intermediate phi calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: d903f6ceb21f4d839d3bd6e4e9296fb5
+msgid "`alloc_report_level`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: ca683140ddcd467c9a95db0791f029f6
+msgid "int"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 865eec79ae664a2d9e9cfbdbffb15328 c7a95cd074824f7187e337763b9b21e6
+msgid "0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 9e012d45327f441f9048cd9b3c8f1035
+msgid "Memory allocation verbosity (0-3)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 56fef49d67c946388ed6ee3985dda188
+msgid "`alloc_report_threshold`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 46b03e984e14466c81783818ad620842 58f08ba8f4cb4abd8c9b2f9b129e4ebe
+#: 8d2fcc4acb5449d2ac4ae66987653b85 b7e23fd2017e464b810a0b8813bcf7bf
+msgid "float"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 8012a3408c8e4032ac44a0cea45f00da cf33a65ad6764660b965cf727a3e7ec4
+msgid "0.0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 43b7c05543b849c3adadda23fb7108b8
+msgid "Min memory (MB) to report"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 6226733328904d9aba60281f3a4df7e9
+msgid "`timer_report_threshold`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 24b87ee337df4c52be3dca7fc1638512
+msgid "Min time (s) to report"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 0dd5ce4077434cf09187ae8cb7ffb3c0
+msgid "`user_tree_timer`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 0660f847be4840be894c6036bb3f482a
+msgid "Enable hierarchical timing tree"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: bae8324087904bd9948bf6f5b28048df
+msgid "`user_parallel_timer`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 301f1c606d75497a8d212593c622600d
+msgid "Per-process timing reports"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 8b1e2172d5934507ab4a8012f26c6fdd
+msgid "`timing_split_scf_steps`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 6c85027496f1443cbf0bf00cf5cc3ec1
+msgid "Time individual SCF steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 9e862421a19d43258af07ed816fd59a4
+msgid "`max_walltime`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 16350297d0f44ebe8d905d3309ff7ee8 510f2d2cfb304a40b065d0eb4481e888
+#: c8adfc68fe4a44fbbcb26593d95fa2c8
+msgid "None"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 92cd144ed2724574950982c6f3122426
+msgid "Maximum runtime (seconds)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: c6540c95b4584b03a7dae29757ab3eef
+msgid "`max_walltime_slack`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 5094c1e38dc94e2c90ca9def0a485fb3
+msgid "5.0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: c28c1332905f4ffda3fb8c7f0d39e820
+msgid "Safety margin (seconds)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: de71d0dd41c24a2b9c011f80500d6f7c
+msgid "`use_save_data`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 68416f949e47449683fc5d501157f9a2
+msgid "Use restart data if available"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:58
+#: f1590539614840e5948750c5962335bf
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:60
+#: 1b145861461242be9100f1e67b77c9d9
+msgid "Example 1: Memory Allocation Reporting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:62
+#: 1ec6a7c3f67d4bc8a17c67dbe0554a84
+msgid "Monitor memory usage during calculation:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:73
+#: 12ffd71ce58640609b0322e1257eabcd
+msgid "**AllocReportLevel options:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:74
+#: fed51bc01d2441998c26d342f740b109
+msgid "**0**: No reporting (default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:75
+#: dab6d84d221246ed81f8daad8b67b939
+msgid "**1**: Major allocations only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:76
+#: 2e597e2c026443dfbeb150b7a78cb2b9
+msgid "**2**: Moderate verbosity (recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:77
+#: 75c4dd19f8604f06a47dabdad156ef11
+msgid "**3**: All allocations (very verbose)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:79
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:388
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:414
+#: 002efee02e2c4df3b38a74dbaf4b4048 a6eee63375674b809144b2bc12b3d3ce
+#: fb534ea0cf69403bb2db15e8ef0316e3
+msgid "**When to use:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:80
+#: 51de506512884d8f82a8c3ca9be65708
+msgid "Debugging memory issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:81
+#: 797fb693860a40eb9579d8a2d8928887
+msgid "Optimizing large calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:82
+#: 8ed2e5bd5bdf4a169358adc14b4fc536
+msgid "Identifying memory-intensive operations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:84
+#: 7f6fc28e6fe94ef6b95ec07b432dc887
+msgid "Example 2: Walltime Limits for Cluster Jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:86
+#: 05c22e8af87f43bca7306180558caad7
+msgid "Set maximum runtime with automatic restart:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:98
+#: 463bdc1c1f024a9d83ff0b7a857f1f94
+msgid "**Best practices:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:99
+#: 65985fd7dff642188bc03372cab5a9c6
+msgid "Set MaxWalltime to 90-high of cluster limit"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:100
+#: 5a2e9060076d4812abe425ef4b22fb79
+msgid "Use slack time for clean shutdown"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:101
+#: d5de23ee4bd54927af54da4f223a1e8c
+msgid "Enable UseSaveData for continuation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:103
+#: da91f865f277423a84c5de00293c78c8
+msgid "**Example: 1-hour job queue**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:111
+#: ccdc01625df249abaa0dfa83aa88f6c1
+msgid "Example 3: Comprehensive Timing Analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:113
+#: 003bf2564cb34f0b8f404483d27fc618
+msgid "Enable detailed performance profiling:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:126
+#: 0dc065d9d0c14a59a6f4088d09d33883
+msgid "**Timing output includes:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:127
+#: 56928a31b2b14e56870afafac1c5638e
+msgid "Total time per major section (setup, SCF, forces)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:128
+#: 327d317639324b34a69170628566aeb1
+msgid "Per-process timing for load balance analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:129
+#: 480b0f4c81954e688ccf7050a8758b94
+msgid "Individual SCF step timing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:130
+#: f9474e76ffe9449d80e3cdcaadd39f5d
+msgid "Grid operations, diagonalization, communication"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:132
+#: c7460fa8836445c39b93a764244c1835
+msgid "Memory Allocation Reporting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:134
+#: 2b266b922ada4d07a6302ca8fde24071
+msgid "Configuration Levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:136
+#: 733c281d97ff400fbe9d5e7b5e82835a
+msgid "**Level 0 (None):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:141
+#: 06cad6ad73ed4b4491672da1c88eda1e
+msgid "**Level 1 (Major):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:148
+#: 4f8bad58c8814ec8bccc30e84f412dd4
+msgid "Output: Major arrays (density matrix, Hamiltonian, grids)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:150
+#: c58649712ca440ceb5676bd0ed603024
+msgid "**Level 2 (Moderate):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:157
+#: 24da6d0cfb9d4a32b4478405d916b4ca
+msgid "Output: Most allocations with reasonable verbosity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:159
+#: b81e39cc799b4b45bf25c77cbb653557
+msgid "**Level 3 (All):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:166
+#: e58465ba42d140e9a62f5720085f015e
+msgid "Output: Every allocation (very verbose, for debugging only)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:168
+#: 1364ce2e758d4480ae9978914b3efae2
+msgid "Example Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:179
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:521
+#: a24c7b07f447424abc45cb12b21e23a1 c82167f3763249579055fe193c597d06
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:181
+#: 71d288343d604d3da54bc1e2d57838c6
+msgid "**Production calculations:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:188
+#: d26f71948d144b4f9b4424852683abf4
+msgid "**Development/debugging:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:196
+#: 1908a7fc73bb4867a1e55c2f18cd82d2
+msgid "**Memory issues:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:204
+#: 14b9689377744a85860e74b98b498073
+msgid "Timing Analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:206
+#: 84ce578add9e4a6e8eb0422f956128c4
+msgid "Timer Types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:208
+#: e865e89d2edb45eda41af47298c154e9
+msgid "**1. Tree Timer (UserTreeTimer)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:210
+#: 498567defd6e42d289ae15bc513b9297
+msgid "Hierarchical timing breakdown:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:224
+#: 1228b2a542224e1283e42d02ab365da2
+msgid "**2. Parallel Timer (UserParallelTimer)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:226
+#: 415d4dcc0a934de4bacb4822bcdc282d
+msgid "Per-process timing for load balancing:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:236
+#: bb582b5272284ab8b00c24240d023e02
+msgid "**3. SCF Step Timing (TimingSplitSCFSteps)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:238
+#: ee0ca779c3c342c3a270c659d62ebc4e
+msgid "Individual SCF iteration timing:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:249
+#: 7a0b3b357f6d4d869e91664372d9e7a9
+msgid "Configuration Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:251
+#: 27d14c9d25944a0f90011dd31a613158
+msgid "**Quick profiling:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:259
+#: 1cbb321250754716a7d12512eeab3418
+msgid "**Load balance analysis:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:267
+#: 9dcdf560a92343bb838409df5e186ff3
+msgid "**SCF convergence profiling:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:274
+#: 71ace71b0bb345c6a077fa114ed64577
+msgid "**Complete profiling:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:284
+#: a0975da40cb24ca2897e6315fefe4f9c
+msgid "Walltime Management"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:286
+#: 2a134b9dc12645cbb9c98ba202fffe7a
+msgid "Why Use Walltime Limits?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:288
+#: 24bca6bec1a34c03b24b4e51c0b471f3
+msgid "**Cluster job queues** have time limits:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:289
+#: 52db0aa20d7547c7bfc5951ad6d19dd3
+msgid "Short queue: 1-4 hours"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:290
+#: c8cedf70daa74f089c227076589920b3
+msgid "Medium queue: 12-24 hours"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:291
+#: feb8bc4d6ec041369f2851a29896c156
+msgid "Long queue: 48-168 hours"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:293
+#: b422faa1b70e472b9e67491e3a041eff
+msgid "**Without walltime limits:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:294
+#: 1f0683efe5c0452cb842e23978d781a0
+msgid "Job killed abruptly when time expires"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:295
+#: 94e01542811d43a796fb5ec4bd28be6e
+msgid "No restart files saved"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:296
+#: 779a43236cef4a43a671f12220191c98
+msgid "Wasted compute time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:298
+#: 9e84540a7ff242bc9374d71a74858a05
+msgid "**With walltime limits:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:299
+#: af8f6c6a0dd846238e1cbb47ca0194de
+msgid "Calculation stops gracefully"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:300
+#: 1a457d7d62254497be2d2ac405f3cc4b
+msgid "Restart files saved automatically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:301
+#: ad4c3dba5128442a8ea075c2d51e366c
+msgid "Can continue in next job"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:303
+#: bacd1d09f6e149ab8e016833befe63a5
+msgid "Configuration Strategy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:305
+#: e1133fe877ea4523912cfb3d4c6727ac
+msgid "**1. Determine cluster time limit:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:311
+#: 7a76bca3d04e4877850dd5fd4f5005cf
+msgid "**2. Set MaxWalltime with safety margin:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:317
+#: 3799566695c04ac0bbcec4fe7f1a622a
+msgid "**3. Configure slack time:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:323
+#: 8a5a4a86141244ce9fb54ff98395c36b
+msgid "**4. Enable restart:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:332
+#: 45bb39a3b8934eed98440a06f4d97546
+msgid "Example Configurations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:334
+#: f5e6216e6f004ab3871a62d2ded9eb8e
+msgid "**1-hour queue:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:343
+#: 330521e9d3ea4551850cddb56fb07205
+msgid "**12-hour queue:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:352
+#: bbb9a75235f545288c9eee233dd6afb2
+msgid "**Development (no limit):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:359
+#: 7d4d63dbdee248109b762e77a888e8e1
+msgid "Restart Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:361
+#: f554f7cbbaff4a58835ecc78026ad484
+msgid "**First job (incomplete):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:373
+#: 3e60f45fbece4d8bbc0531bf452d13b2
+msgid "**Second job (continuation):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:380
+#: 9edd798fe858488093cac883d6f4c682
+msgid "Calculation Optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:382
+#: 07d06dbcc02c423389b42178d62c3521
+msgid "DirectPhi Option"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:384
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:410
+#: c8a8317bff8945378e38090ad887ffe5 d64b0ef4d350457c9fd9ed25753ab6a3
+msgid "**What it does:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:385
+#: c7ced565ea75496ab1af3d0af0266dbd
+msgid "Skips intermediate electrostatic potential (φ) calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:386
+#: 885749cef7aa4319b6b53513168c8a8b
+msgid "Only computes final φ after SCF convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:395
+#: 9d64291e784f4aaa820c501712988d8d
+msgid "**Benefits:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:396
+#: 27f995d6ae1143529db230c48bf37b81
+#, python-format
+msgid "✅ Faster SCF iterations (10-20% speedup)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:397
+#: a0cd91067a9c4fd7b10a971d8b7d987e
+msgid "✅ Reduced I/O operations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:398
+#: e9fc2b08d86c48268d194addbc8124f9
+msgid "✅ Less memory usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:400
+#: e5bdfe4f9b4e4164b8e035a7e424abde
+msgid "**Drawbacks:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:401
+#: 77145e9fbf9946ffa53b1c1035c4f3ae
+msgid "❌ No intermediate φ analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:402
+#: a283cad4d3d645ada9ca122d7e0dbbc9
+msgid "❌ Cannot monitor potential convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:404
+#: 3d496c46a7ce4b68b3d6a63d59a4ccc7
+msgid "**Recommendation:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:405
+#: 0a5bdbc406f5413b98b162860a303769
+msgid "Enable for production calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:406
+#: baf1ce98969047c6ba0327878958fe94
+msgid "Disable for debugging or analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:408
+#: 03633fb8371b4175902e531603b94c36
+msgid "UseSaveData Option"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:411
+#: eb434a5f4da1411cb7af27a2f8fc28ed
+msgid "Reads density matrix from previous calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:412
+#: d2010a006bfd40e0b5ec838f5b5afca2
+msgid "Accelerates SCF convergence (better initial guess)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:421
+#: ad18c013448143d190eba2b2d6867a54
+msgid "**Use cases:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:422
+#: 97ad1209cdf849ae8ddfea85e48ecbfe
+msgid "**Continuation runs**: Restart after walltime limit"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:423
+#: 61ff7f165bb0477d8979f35e9ac38ea9
+msgid "**Similar structures**: Use converged density as starting point"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:424
+#: 4f6f616d35154830a5089f0639f0b671
+msgid "**Multi-step workflows**: EOS, phonons, elastic constants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:426
+#: d413ea9615f24575a815aac45edbd5b9
+msgid "**Example: EOS workflow**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:436
+#: 3447491ac8ca4d95b9a093910a43798b
+msgid "Performance Benchmarks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:438
+#: ae9c851520b64d169c923a2f87829c13
+msgid "Memory Reporting Overhead"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 76c92c020a5d4d5ab6cd8c7e6dc26321
+msgid "Level"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 0df5e83f1b0f4cc6991debc5fc369521 3af62c9cd67c4dacb598c2d1be80d126
+msgid "Overhead"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 909432cd4d8644668f9db821281281c3
+msgid "Output Size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 14d819728408418da510d7339f91839e 153962bcfe084b048fac4324d4ceccda
+msgid "0%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 9019a2759baf4d238312ae51b09f3344
+msgid "1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 33e461caeea8426e88264dde0bd879a5 4c2b897f1b344a198e95696314b1c594
+#: be886e61c7f34c3187f066ac6f51b4fa
+msgid "<1%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 63f4dce403814eaaadba0905e9cdc3e4
+msgid "~10 KB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: c4a9a5e850714d7b978b220fa64eb6fa
+msgid "2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: ad421466b8cb4aa8a59d780c53c4fccf b4d7af225ad24875ae871c411b1feebc
+msgid "~2%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 4e278c10e84c4c1d8d02ec6a11c278a9
+msgid "~100 KB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 528bd6ce934b4437a9006deca8263869
+msgid "3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 15c25a9601384a7da5c9f8837dc0c814
+msgid "~5%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 07fa04155bbb4828be3d9385e6223652
+msgid "~1 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:447
+#: bb86ec96502b4a90930b47742400a86a
+msgid "**Recommendation**: Level 2 for development, level 0 for production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:449
+#: 6a65cb9160c74ec588b955b38e60ac0c
+msgid "Timing Analysis Overhead"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 19b9ebf279ef40dd81de09b1900e73d0
+msgid "Timer Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 698167a9f7e541749e473b1bdaeb3ea4
+msgid "Use Case"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: bd2159ae2f5448a1b6d498b82bb4f307
+msgid "Production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: a1687c41c5494176b41e816023601aa8
+msgid "Tree"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 4bfb1ce10ced447f8be86a7b7d8f3e1e
+msgid "Bottleneck identification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 8eed259e65314d1f83aeeda18a920f57
+msgid "Parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: e0246feb6f6a4365a07f8710c75c0b66
+msgid "Load balance analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 48b5c040996c4c2e91245e5aba04d576
+msgid "SCF Split"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 6175432b88414aaeaf92ff784d88885b
+msgid "SCF convergence study"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: aa3406f86c814e33bb453cc3d785515f
+msgid "All"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: dc20a5c9845e459db9d245431dd1a109
+msgid "~3%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: be553a96c1134220b41ec72190a9cc26
+msgid "Complete profiling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:459
+#: 0139377be26a4a18b5d71dbca756f726
+msgid "**Recommendation**: Enable only when needed, disable for production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:461
+#: 464fea608da94b76aee036cdab6e33b6
+msgid "DirectPhi Performance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:463
+#: 1189c0ff29a64814860d50a37f32495c
+msgid "**100-atom system, DZP basis:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 6d5bd47b444c4eadbb9dbb6177b87713
+msgid "DirectPhi"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 4e17e020a8ae41669f04166851bd3ea5
+msgid "SCF Time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: d57ec5e6dff645c7a450879e78941ab1
+msgid "I/O Operations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: fd1e9cae2fa8437c9391b6cfd4484f13
+msgid "120 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: adc1ce748f1f40b2939eb66ee4357d9d
+msgid "250"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: c3d98b635ece4afdb6b5eb0b8c70aa67
+msgid "True"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 7d87df9c3c6f4409a76c7c8b9f7c0849
+msgid "100 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 206d32285ffe41929bb5a8eaf746fe6f
+msgid "150"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 780b51c788684fadb4050d6cba21553a
+msgid "**Speedup**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 152f9eb15454427187c4bfa82ab0d673
+msgid "**17%**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md
+#: 53b89c8bd3bf42689031886b5aef22a7
+#, python-format
+msgid "**40% fewer**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:471
+#: 7bff7e784f2c4a9884c60812fce526a6
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:473
+#: 2f98b4ebd13140cab2339640d9eb504b
+msgid "Issue 1: Memory Allocation Reports Too Verbose"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:475
+#: dd6aa142a72645628ee383f3f23452a3
+msgid "**Problem:** Level 3 produces GB of output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:477
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:490
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:512
+#: 3d7c279fc8804d2ca142034f198303f2 a323e7cc3b67418fb8d825d2cda6a330
+#: e6b5cfb1bfff4d51bb1597c531824253
+msgid "**Solution:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:486
+#: 7c5ff1cbe9a64531a37eda6269951099
+msgid "Issue 2: Job Killed Before Walltime"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:488
+#: ca2a5447eefd40ab9a119d07dea949a0
+msgid "**Problem:** MaxWalltime too close to cluster limit"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:499
+#: bf2217afabde48ceacba643b590f3529
+msgid "Issue 3: Restart Not Working"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:501
+#: 48ae292edc3344919789626e592c2cef
+msgid "**Problem:** UseSaveData=True but calculation starts from scratch"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:503
+#: 85f9379b5f16459d8166dc694bcb7449
+msgid "**Solutions:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:504
+#: 506b18aa11694d25a5ab6a32da471441
+msgid "Check restart files exist (*.DM, *.HSX)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:505
+#: 7cfe7bfeae714d6fa8547547d29cd6fc
+msgid "Verify prev_dir path is correct"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:506
+#: ec4dafce98a54d9dbf688d45c85a1740
+msgid "Ensure system is identical (atoms, cell, parameters)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:508
+#: 4cbd4fe6577041e1be99dd7d082eb8e5
+msgid "Issue 4: Timing Overhead Too High"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:510
+#: baf410bed4244178b1c579d10eb00766
+msgid "**Problem:** Timers slow down calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:523
+#: 16ecfa8b9f89445eadf00931eb542520
+msgid "1. Development vs Production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:525
+#: a0489f12875247eab02ae7c4d7973cc7
+msgid "**Development:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:535
+#: 15a90f764b3042c49e758a453d48570e
+msgid "**Production:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:544
+#: d5559521e1764f6980a04b5043f7d356
+msgid "2. Cluster Job Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:546
+#: c2a59910061c49e0b66344d0bba2a3a9
+msgid "**Always set for cluster jobs:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:555
+#: d421326f4d394a2caefb23db03d60a93
+msgid "3. Performance Profiling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:557
+#: d2c73852f73148f59f355d91b8a27804
+msgid "**Step 1: Identify bottleneck**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:562
+#: f054c434d1de422fad9621b68a2227c0
+msgid "**Step 2: Analyze load balance**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:567
+#: 467fb32339ad44aaa061ccefc86414df
+msgid "**Step 3: Study SCF convergence**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:572
+#: b283355a856544f88a01b33837d0ad52
+msgid "4. Memory Optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:574
+#: a68b417b550d4592bac5ceae9cbf758d
+msgid "**Step 1: Monitor usage**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:579
+#: 8b016a582d33480a8048dacd126424a7
+msgid "**Step 2: Identify large arrays**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:580
+#: a4431524436c47e59c145bfba79543a7
+msgid "Grid size (reduce Mesh.Cutoff if needed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:581
+#: d758438148b24bb2bd1e587ebdc64be9
+msgid "Basis size (consider smaller basis)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:582
+#: 1c837777cafb4edc89e96611d82434a6
+msgid "K-point sampling (reduce if possible)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:584
+#: e68852517f844438b98a6dca2e43c8cf
+msgid "**Step 3: Optimize parallelization**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:585
+#: dcf442abea9b43fb97e51776486c61ec
+msgid "More MPI processes = less memory per process"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:586
+#: c3662197f98a4897b250d773ea418cf5
+msgid "Consider hybrid MPI+OpenMP"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:588
+#: a1c5829c33834be4a71d5912baaaf3fc
+msgid "Advanced Topics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:590
+#: f42e22b97f704d18bf8b31da5e928972
+msgid "Combining Multiple Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:592
+#: 16eb0be4e7294143a44cdcfe9220a17f
+msgid "**Complete monitoring setup:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:615
+#: f86351535f974c1aa23ddddce6982cfc
+msgid "Parsing Timing Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:617
+#: b698637af3db4ab79f5d78129b8659c0
+msgid "**Extract timing data from output:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:640
+#: 8487f0cecb73415188dba7dcf5f0f12a
+msgid "Memory Usage Estimation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:642
+#: 4648ec0a43164daf900edc232a8fe9fb
+msgid "**Estimate memory requirements:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:671
+#: 934bb598b7414491b320e0c50cd729f3
+msgid "Further Reading"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:673
+#: 98f4652e5fda441bade20d26bde1ca65
+msgid "SIESTA Manual: Section 6.31 (Memory and Timing)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:674
+#: fd537a7ada4e47878fca3ec57a49b914
+msgid "HPC Job Management: Best practices for queue systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:675
+#: 34542ab38e0943a68c66094359eb9bd3
+msgid "Performance Optimization: SIESTA scaling studies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:676
+#: ba7770923ea340b0950dfe11e12496e5
+msgid "Profiling Tools: GNU gprof, Intel VTune"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:678
+#: 775032b421b540309726cc143dbcc341
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:680
+#: c8379c2190c542fe81f6b7478613491c
+msgid "Tutorial 15: Hamiltonian and Overlap Matrix Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:681
+#: 9e3962ce1e0944a68fa84253d0f392b8
+msgid "Tutorial 12: Parallel Computation Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/02-efficiency/README.md:682
+#: 80b0f1017c514f07b0d08f2d80b24666
+msgid "Tutorial 04: Job Submission and Cluster Management"
+msgstr ""
+

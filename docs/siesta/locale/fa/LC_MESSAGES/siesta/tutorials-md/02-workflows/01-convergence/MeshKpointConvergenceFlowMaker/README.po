@@ -1,0 +1,886 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:1
+#: 948f74b5baff4b0c8ed25531271102f5
+msgid "Tutorial: Combined Mesh Cutoff + K-Points Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:3
+#: e03ed94798f54c92a73d9d1c9686e671
+msgid ""
+"**Category**: 02-workflows/01-convergence/MeshKpointConvergenceFlowMaker "
+"**Difficulty**: Intermediate **Time**: ~10 min (dry-run), ~30-60 min "
+"(full calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:9
+#: af2018c2c2dd497c9fca48e993e34a2b
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:11
+#: 3e21581dedca480399b379aff554c851
+msgid ""
+"This tutorial demonstrates combined two-stage convergence testing using "
+"`MeshKpointConvergenceFlowMaker`. This workflow first converges the mesh "
+"cutoff, then uses the converged cutoff to find optimal k-points - "
+"ensuring both parameters are properly optimized together."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:13
+#: 5000d2595adb4e47bbe361280c6e951d
+msgid ""
+"**Key Goal**: Systematically determine optimal mesh cutoff AND k-points "
+"in one workflow."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:17
+#: 809dda8aa72944f799013a2a61419908
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:19
+#: 0e6317f9113746b79ac22245f3836073
+msgid "Two-stage convergence workflow (mesh cutoff → k-points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:20
+#: 80fb3b598b2c41619f215fc5bf748299
+msgid "Intelligent early stopping when convergence is reached"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:21
+#: 1d22eef7d1af4a5183dc839dc268d0e2
+msgid ""
+"Multi-property convergence criteria (energy, Fermi, forces, stress, "
+"bandgap)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:22
+#: 329c4b145a7346e78966f9c446b93cf8
+msgid "Automatic convergence analysis with 6 plots per stage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:23
+#: eff0ba38145f49059d4c99143c406b20
+msgid "Production-ready parameter determination"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:27
+#: 17e05e85ded147be8a088fc37623fd33
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:29
+#: b1fe50d60e574e43a210127bd7cbd298
+msgid ""
+"**Required**: Understanding of [mesh "
+"cutoff](../MeshCutoffConvergenceFlowMaker/) and "
+"[k-points](../KpointsConvergenceFlowMaker/) concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:30
+#: eceb509d66a346f59054b9ab07068c01
+msgid "**Recommended**: Complete individual convergence tutorials first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:31
+#: 6b51100186594ed8853ea6ca1c587e0f
+msgid "**Structure files**: Si_mp-149_primitive.cif"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:35
+#: 344b83c9b963440c98415be4e7a4c3d7
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:37
+#: fa3e283e321b4234835fc69c055ec264
+msgid "Two-Stage Approach"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:39
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:154
+#: 993c74e9f7b04ca0af39d363767e2b6c f055673ee2cf444485ffd40d6e00ab17
+msgid "**Stage 1: Mesh Cutoff Convergence**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:40
+#: 93473227f6994ecab590010f2d911c85
+msgid "Tests multiple mesh cutoff values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:41
+#: 82a9c562cb6e48d8baa6898b3eda4e98
+msgid "Uses coarse, fixed k-points (typically 1×1×1 or 2×2×2)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:42
+#: 2e5b5fe6318248a2b53a9d45d215c144
+msgid "Finds minimum converged mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:43
+#: 0e5aa0d83e6441c8bc29f627f5d31f4a
+msgid "**Early stopping**: Stops when 2 consecutive cutoffs are converged"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:45
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:162
+#: 5105b3179dd146219ab0ddfbf37823c7 755289b135dc4b25a017119b97048461
+msgid "**Stage 2: K-Points Convergence**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:46
+#: c65ba87bdd45469b9bba2fbfd4f49b21
+msgid "Uses converged mesh cutoff from Stage 1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:47
+#: b66f0cbe77534c8491375a9d5aeb5b7c
+msgid "Tests multiple k-point meshes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:48
+#: aafbf9df498243109c91a63c29ef14fb
+msgid "Finds optimal k-point density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:49
+#: 0bb2359021d74f4d9ed578fb26c0d279
+msgid "**Early stopping**: Stops when 2 consecutive k-meshes are converged"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:51
+#: ae6acfef0c244624b8255696cad5c36e
+msgid "Why Two Stages?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:53
+#: 3bae503df0304236ab8912d235356534
+msgid "**Problem**: Testing all combinations is expensive"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:54
+#: a9dbbca659084e35b69bf2b7d62eafa1
+msgid "7 mesh cutoffs × 6 k-point meshes = 42 calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:56
+#: a35165c831744e3cbc40d0b0887248b5
+msgid "**Solution**: Sequential optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:57
+#: 28ca180c8a4940699dacb7be258348de
+msgid "Stage 1: 7 mesh cutoff tests (with coarse k-points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:58
+#: fb67497a01774cecb86ca89c51ef1a6a
+msgid "Stage 2: 6 k-point tests (with converged cutoff)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:59
+#: 8a1206f96863467090482f6cb5cd2279
+msgid "Total: ~13 calculations (saves many of time!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:61
+#: ad2cf3a7fe3c45c6b4cb4ec84f215945
+msgid "Convergence Criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:63
+#: 5a2147a317604e539a28cec6b57f66b9
+msgid "**Default (Energy Only)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:64
+#: d72cf1d8df1f40849449049b42334d4d
+msgid "Energy difference < 1.0 meV between consecutive tests"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:65
+#: b84bec433f9a450194d5bde11b34e431
+msgid "Require 2 consecutive converged points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:67
+#: 2345d17d3af44e818eb2c3aca339b966
+msgid "**Multi-Property** (Optional):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:68
+#: a08374c3e6474900a2552395a8b2fbb8
+msgid "Energy: < 1.0 meV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:69
+#: a1b1ce47f5564a6a9878dadfcd3e80b9
+msgid "Fermi energy: < 0.01 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:70
+#: 54b1b7c06cd346ac83f47290b482ecc5
+msgid "Max force: < 0.01 eV/Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:71
+#: 9344a2e6b66e4ed9a4cb1606fbbcb74c
+msgid "Max stress: < 0.05 eV/Å³"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:72
+#: dbfb552abfae41b6922411e94ea7f004
+msgid "Bandgap: < 0.01 eV (if applicable)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:76
+#: 7db2cae7c49241c9af109ce43513d55d
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:78
+#: 99f0c3c917d647798d7c82e405004ff6
+msgid "This directory contains **1 example**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:80
+#: 343a3825605649f298bc93f20025db75
+msgid "`MeshKpointConvergenceFlowMaker.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:82
+#: f63a0ecd06da4bb9bedd08367038c07d
+msgid "**Description**: Combined two-stage convergence with energy-only criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:84
+#: 7d2c3b580e7b4cd4a63b5d843393b4ad
+msgid "**Stage 1 Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:85
+#: b1d2e00f8c284487ad28b27c7009506f
+msgid "Mesh cutoffs: [200, 250, 300, 350, 400] Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:86
+#: 4d85f32c716f40349bffbcebe416fd63
+msgid "K-points (fixed): [1, 1, 1] (very coarse for speed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:88
+#: c59dd0bf2cfb4edf9bfc85eb3765c2c9
+msgid "**Stage 2 Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:89
+#: 2bdcedd26f1f461e997e43deb405ecf8
+msgid "K-points: [[2, 2, 2], [4, 4, 4], [6, 6, 6], [8, 8, 8]]"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:90
+#: dd81d5e909d548d8b6c8dfb6d2daf284
+msgid "Mesh cutoff: Converged value from Stage 1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:92
+#: 7ca0d802b8074c9896056401b500242a
+msgid "**Convergence**: ΔE < 1.0 meV, require 2 consecutive"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:94
+#: 10de1889a85d4eb3b423630bb0e8383c
+msgid "**Time**: ~30-60 minutes for full workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:98
+#: 8b386da747ee449d844a5f4a92e87295
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:100
+#: c6dec4b72ab744939c9c4d3fdb8d146e
+msgid "Basic Example (Energy-Only Convergence)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:120
+#: fcf539de730e47c2b9050cf7f625194b
+msgid "With Multi-Property Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:150
+#: 4f39106f83024d27a491b0647583f08a
+msgid "Expected Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:152
+#: c1656bfbcf694cac9ea228917950a77a
+msgid "Automatic Plots (12 Total: 6 per Stage)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:155
+#: 190aeb5c85e5436395f6766838ea3377
+msgid "`convergence_mesh_cutoff_energy.png` - Energy vs. mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:156
+#: 4c5d18c580b04f6fabca1e78bf443175
+msgid ""
+"`convergence_mesh_cutoff_convergence.png` - Convergence check (meV from "
+"finest)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:157
+#: 8a933483ad79431f9aa3cc3ef82c881d
+msgid "`convergence_mesh_cutoff_fermi.png` - Fermi energy tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:158
+#: cfce54c2508645aaa3741fc96d1ccbf8
+msgid "`convergence_mesh_cutoff_bandgap.png` - Band gap evolution (if applicable)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:159
+#: 4a617cadf2244faeb95a955a2f69d740
+msgid "`convergence_mesh_cutoff_forces.png` - Maximum force tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:160
+#: 8e4e58f4c216470ebf42a3b6b1ddf3bb
+msgid "`convergence_mesh_cutoff_stress.png` - Maximum stress tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:163
+#: d8dc9f0592b54d8799b3ab8af99a0810
+msgid "`convergence_kpoints_energy.png` - Energy vs. k-points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:164
+#: 293d7fec6c48452ea65853742af92ddb
+msgid "`convergence_kpoints_convergence.png` - Convergence check"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:165
+#: 6058884e3bb8450f85f8fffe4ce2fa38
+msgid "`convergence_kpoints_fermi.png` - Fermi energy tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:166
+#: 82ddd778644d42bf8a7d30a458ab7143
+msgid "`convergence_kpoints_bandgap.png` - Band gap evolution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:167
+#: d76809f9662c407db80d440917793e13
+msgid "`convergence_kpoints_forces.png` - Maximum force tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:168
+#: ca554f69e2db49cb82c38480ea6c2679
+msgid "`convergence_kpoints_stress.png` - Maximum stress tracking"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:170
+#: 47775b44e54c417482f2bd9077352607
+msgid "Summary Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:172
+#: eebf3cd0f76e4ca9a4108a181fbf2cc7
+msgid "**Stage 1** (`convergence_mesh_cutoff.txt`):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:191
+#: 85d447ef2c484f63bd7c65d9bd13c98f
+msgid "**Stage 2** (`convergence_kpoints.txt`):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:215
+#: 6af2eb95d6ac4ccb985ee98ae096c7d9
+msgid "Early Stopping Feature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:217
+#: 9869e603788848a4b14ef35ae77239e4
+msgid "**How it works**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:218
+#: 4809536c06d445ee9839f6acd7eb6c26
+msgid "Tests proceed in order (increasing cutoff/k-density)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:219
+#: cb0e35ef95d047c2ab6d474113902a5b
+msgid "After each test, checks if last N consecutive points are converged"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:220
+#: a145640f8c6c4e6696135e36fb767e24
+msgid "If yes, stops testing and uses last converged value"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:221
+#: 67b8c5c908074c81a185ae477c49f252
+msgid "Saves computational time by avoiding unnecessary tests"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:223
+#: 3b33f8c54d2345a0b64f05619f70a151
+msgid "**Example**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:243
+#: 61b7de42ef154c27a999cdf36f65f2d3
+msgid "Common Configurations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:245
+#: c67aecba84ec45e2b5498e0148252af3
+msgid "Fast Test (Insulators/Semiconductors)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:255
+#: 97624707425a48a5aee8d34e6566b088
+msgid "Standard Test (General Purpose)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:265
+#: 7d6941fab1184386a6f3db8504520e07
+msgid "Thorough Test (Metals/Difficult Systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:277
+#: 537ca0431b904c019cc6cdd2d3f1a6d3
+msgid "Running the Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:284
+#: fa48dbef4efc4d5386b618ee90ea3b5d
+msgid "**What happens**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:285
+#: 9e6aebcf488a47a6bbb74672709a1d70
+msgid "**Stage 1**: Tests mesh cutoffs with coarse k-points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:286
+#: 220173d16efe4d688587343187d57cb3
+msgid "**Early stopping**: Stops when 2 consecutive cutoffs converge"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:287
+#: 0b4f0b7399de454188d115736206c87f
+msgid "**Stage 2**: Tests k-points with converged cutoff from Stage 1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:288
+#: 23a479010ae64b65831971cd69543cd4
+msgid "**Early stopping**: Stops when 2 consecutive k-meshes converge"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:289
+#: 45675e5c47604b6682062c92a53aea56
+msgid "**Analysis**: Generates 12 plots + 2 summary files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:291
+#: 10e3978ae5764706bf7a7e47f13fdaee
+msgid "**Check results**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:300
+#: 2f4e6154d6ce487388f4277895340c0e
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:302
+#: 1ba4eb423dc54492b93501953d0290d4
+msgid "Issue 1: \"Stage 1 Tests All Cutoffs (No Early Stopping)\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:304
+#: 7853793151644d2f9807e04ff1905b6a
+msgid "**Symptoms**: All planned mesh cutoffs are tested despite convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:306
+#: 10ab0a2f894f43cebc0721ccf71b4f85
+msgid "**Cause**: Consecutive convergence requirement not met"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:308
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:336
+#: 80d504c0eda242f18178a167bfe58a95 c856a9090b904956af081eeffa08dd8a
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:309
+#: 9702278204184611b030e904ee44330a
+msgid "**Relax convergence requirement**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:314
+#: 1efee5d179ae44da9fb5c4ca40ab4069
+msgid "**Looser tolerance**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:319
+#: 90d071c805e447d6b09779b98d96a03e
+msgid "Issue 2: \"Stage 2 Uses Wrong Cutoff\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:321
+#: 1bbe422df983485db598cac0210b8bf6
+msgid "**Symptoms**: K-point tests don't use converged cutoff from Stage 1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:323
+#: 22de3acab12944f78a785ba13c91f50e
+msgid "**Cause**: Early stopping didn't trigger, using last value from list"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:325
+#: b5d233257e9c435b9ae1b5e46578c92b
+msgid ""
+"**Solution**: Check Stage 1 summary - if not converged, extend "
+"mesh_cutoffs range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:330
+#: 83451ecc857d4fe98063c2843f80dfad
+msgid "Issue 3: \"Multi-Property Criteria Never Converge\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:332
+#: e6bfd4f8a193431ea3afbf6a8ac66582
+msgid "**Symptoms**: Tests all values, never triggers early stopping"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:334
+#: c3c43c85b3064382b968a7133f57a090
+msgid "**Cause**: One property (often forces/stress) not converging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:337
+#: 6d1c9902b7664b49947753adafb85f16
+msgid "**Check which property fails**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:338
+#: 49aa9f56a42d418ab749412a9c5b51dd
+msgid "Look at individual plots (forces, stress, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:339
+#: c22be0bf28e44ce5b3b2f4a25e379678
+msgid "Identify problematic property"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:341
+#: 4049ae5ea6ca4617aa1ff0e4cf3cf2b2
+msgid "**Relax that property's tolerance**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:351
+#: 9cdad69d84d140758361bf89c83a5351
+msgid "**Use energy-only for difficult systems**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:356
+#: 7fbf88ed6097469f9f33e723479b3dd3
+msgid "Issue 4: \"Different Properties Converge at Different Points\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:358
+#: 374b0318c48e41aabca60930ff0529a8
+msgid "**Symptoms**: Energy converges at 300 Ry, but forces need 400 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:360
+#: c75ec2228378467ab1a3ac3d9a2757f7
+msgid "**Cause**: Forces more sensitive to mesh cutoff than energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:362
+#: 2049530e99e54727983d03a0fd9bb4e2
+msgid ""
+"**Solution**: This is normal! The workflow uses the **highest** converged"
+" value"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:371
+#: 2455c976e1e743cb9fc72889589dc8a0
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:373
+#: a9f89ee0f5c64e32b70fb0b703335229
+msgid ""
+"✅ **Start with energy-only**: Test basic convergence first, then add "
+"multi-property if needed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:375
+#: b47658d78758471d96015bf6fbffdb2f
+msgid ""
+"✅ **Use coarse Stage 1 k-points**: 1×1×1 or 2×2×2 sufficient for mesh "
+"cutoff testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:377
+#: 9f0efd858f2049738c5813ae727a5d59
+msgid ""
+"✅ **Plan extra test points**: Early stopping may not trigger, better to "
+"have extra than too few"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:379
+#: efea244801e14e359505fd9a8a0aaaa0
+msgid "✅ **Check both summary files**: Verify both stages converged properly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:381
+#: 6c243b38cc624d01a2e93ab292a12ac8
+msgid "✅ **Verify plots**: Visual inspection confirms convergence behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:383
+#: ffedc4ec756a456388180cb8226f90cd
+msgid "✅ **Use for production**: These parameters are rigorously tested"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:385
+#: f3b6db75ca8c4606ac4dc2d8578d934a
+msgid ""
+"❌ **Don't use same k-points in both stages**: Stage 1 should use coarser "
+"k-points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:387
+#: d579fb48ebc74f88b8a0fc0f2e200242
+msgid ""
+"❌ **Don't skip individual tests first**: Understand mesh cutoff and "
+"k-points separately before combined"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:389
+#: e93b4fa55629473aa6afe1a29e4170aa
+msgid ""
+"❌ **Don't trust partial convergence**: If only Stage 1 converges, need to"
+" extend Stage 2 range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:393
+#: cbd5489ee4f848afbb89047b8dd28b9d
+msgid "Interpreting Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:395
+#: 100dd7d81a6e4ef6a19e011793507bfe
+msgid "Good Convergence Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:397
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:415
+#: 1f2fb5f2a16249f6ba749c34e11d2211 47363d4c99284e87b1e0d18a85fc338a
+msgid "**Stage 1**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:404
+#: c524f0b8013d46828fd0e9b61d870e20
+msgid "**Stage 2** (using 350 Ry):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:411
+#: b85e0b590c3b4cd89ae64f0c3ffdda09
+msgid "**Final recommendation**: 350 Ry, 6×6×6 k-points ✓"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:413
+#: 5126f01d75124e028a7ccb21ad684e27
+msgid "Problematic Convergence Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:422
+#: 336e69750d364205b4fb71853ed6c437
+msgid "**Action needed**: Extend mesh_cutoffs to include 450, 500 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:426
+#: 3ab354449497471a9f358b5bfe82f3d9
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:428
+#: 0e157980337c4927a36f521930d759de
+msgid "After combined convergence:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:430
+#: d9e34da55ba44dbea62dc2cbc351ee30
+msgid ""
+"**Basis parameters**: "
+"[BasisParametersConvergenceFlowMaker](../BasisParametersConvergenceFlowMaker/)"
+" - Use converged mesh cutoff and k-points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:431
+#: bcbe5ea925b24260a320c60a92ffe102
+msgid "**Production calculations**: Apply converged parameters to:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:432
+#: 9948cc83ccd746288d8ccfc3175a0f3a
+msgid "[EOS workflows](../../02-equation-of-states/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:433
+#: 48073054f07342918107f42f5593a628
+msgid "[Elastic constants](../../04-mechanical/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:434
+#: 4c8863eb89df437b82d1bb774b629c1d
+msgid "[Phonon calculations](../../06-vibrational-properties/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:435
+#: 9ffc3b6c03674520aa683ae0cc450a72
+msgid ""
+"**Tier presets**: Consider using [tier system](../../../03-advanced-"
+"features/01-tier-system/) with your converged values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:439
+#: 837479fc45094202a98ce0e1c11a7bd5
+msgid "Advanced: Custom Convergence Criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:441
+#: 36cf4d2abd1646939cb43d83bbcec73a
+msgid "For specialized calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:443
+#: 16a0300401fc4ecbbadd88510c677ee1
+msgid "**Phonon calculations** (forces critical):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:452
+#: aefd681a48bd4ec9ae64a0de457973fb
+msgid "**Band structure** (Fermi/bandgap critical):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:461
+#: 09cde8c53a5c4cca8fc0bcef8ec9f519
+msgid "**Stress/elastic** (stress critical):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:471
+#: 49867af7a6fd450c8df68718660ad30d
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:473
+#: abfefe6aa9584897834890b8b892526d
+msgid "**Convergence testing**: Lejaeghere et al., *Science* 351, aad3000 (2016)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:474
+#: cad04d7d516c4be984f7c29c66e55556
+msgid ""
+"**SIESTA convergence**: Soler et al., *J. Phys.: Condens. Matter* 14, "
+"2745 (2002)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:478
+#: 27304516bfb941e0a731e7dba604b4f1
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:480
+#: ffc6098c5d43445dbef7d271e3398185
+msgid "**Key Takeaways**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:481
+#: 53f2128fa7654e42ad2b8127f293b33a
+msgid "Two-stage approach saves many of computational time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:482
+#: b5461eeb415547eeb7f874552cf394c1
+msgid "Early stopping prevents unnecessary calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:483
+#: edbbfaf11eef41f9aa20337e7afd8c5e
+msgid "Multi-property criteria ensure all properties converged"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:484
+#: 6e16e959aa4d420e90d64a3ce598e6a0
+msgid "Energy-only sufficient for most total energy calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:485
+#: c2215e7bce7241249cbc0f16e839ecb1
+msgid "Forces/stress criteria important for phonons/elastic properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:487
+#: dd2436f9f8064a5491b30afa4e07b249
+msgid "**Workflow advantages**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:488
+#: 8bc2cb0d666d48e3b76e7a81cae7d853
+msgid "Systematic: Tests both parameters properly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:489
+#: 376db801ae1c4cf9baac63713b2e3ffc
+msgid "Efficient: Early stopping saves time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:490
+#: 1b09a71f354645f18bf9b9a18bea4aa0
+msgid "Flexible: Support multiple convergence criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:491
+#: 3b38521357ac456fa575ec566164504d
+msgid "Production-ready: Generates publication-quality plots and summaries"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshKpointConvergenceFlowMaker/README.md:495
+#: 515c02f2962943ec9a09fc4db91fb12a
+msgid ""
+"*Back to [Convergence Studies](../README.md) | [Main Tutorial "
+"Index](../../../README.md)*"
+msgstr ""
+

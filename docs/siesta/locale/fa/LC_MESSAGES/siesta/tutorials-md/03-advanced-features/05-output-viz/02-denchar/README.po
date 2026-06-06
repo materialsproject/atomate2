@@ -1,0 +1,212 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:1
+#: bee729272e0d47619850c77f21e05791
+msgid "Tutorial 11: Denchar Visualization Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:3
+#: 2d794e0bdf954956819ad7fcbea073ea
+msgid "**Level**: Advanced **Dataclass Module**: `Denchar` (ADVANCED tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:6
+#: 9a0e62bcfe134f5a96df6197466ccbda
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:8
+#: 0dea7fcc68384686bacc983db64e5b9b
+msgid ""
+"This tutorial demonstrates how to configure the denchar post-processing "
+"utility for generating charge density plots and other grid-based "
+"visualizations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:10
+#: de55f951bc8647b986ddb6f9eca93e04
+msgid "Available Denchar Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: dad3b4c7705d40bf81f391b76b3ca26d
+msgid "SIESTA FDF Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 31b6c22bffb043cf8b86c4758a7d81e2
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 9c6657beeb05429282d975dccfd473d4
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 9d8aedc3cbe14af888b89fdcd34abb90
+msgid "`Write.Denchar`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 5de224aa717f4854a7fae03afde4762a
+msgid "Enable denchar file output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 47ef4ff52e5540d98b8f94c00648169c
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 11eae81e1de74f1d8333ae893f9f60db
+msgid "`Denchar.NumberPointsX`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: fcd6520283414eb1b8d1a513078b7251
+msgid "Grid points in X direction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 42776e85ccdf46f1af2ec32655e6650e 6fafe88144f34572a135ae48926c7f5d
+#: 8bdf352369424c2f875fd36efc9622ce
+msgid "50"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 52fe148bcea641b7a7b0563b14df514f
+msgid "`Denchar.NumberPointsY`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: d742945523e54861a848f435bb0c134e
+msgid "Grid points in Y direction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 0ba04208c64d4a2fb67ffdecfa3c507c
+msgid "`Denchar.NumberPointsZ`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 89af3810e6f94db9837e5aff1867f405
+msgid "Grid points in Z direction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 08585590ef8643cab0c3351710e3373f
+msgid "`Denchar.XMin`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 95f8b38e4db44b078b55580f0838a215
+msgid "Minimum X coordinate (Bohr)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 416e9f882f4a4aaa9db32053d14490f7 5c22b72f9157453d80821958378814a3
+#: 7e596844949f4410b1757e7ffc8b953e d2372b3c0e34405ead1024d7070f6f08
+#: d6d370569e8e49b28d01af42d8f3ab19 d88b0d6243914745ad15163e1abd76be
+msgid "Auto"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: e5f3b49ed83c4503b1f2640d97561a2e
+msgid "`Denchar.XMax`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 88b9569fc5db42a1a32093e92e6bbea0
+msgid "Maximum X coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: b823931fa8e74f18a843531b5db8583b
+msgid "`Denchar.YMin`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 1de573811b84480a8e91ad1d39031f35
+msgid "Minimum Y coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 2ed963dc406e4a0993557cd2e5b32ab6
+msgid "`Denchar.YMax`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 69e6e8917d6e4072991980f46861bd9b
+msgid "Maximum Y coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: cf851559d31546f092069e12b79f7559
+msgid "`Denchar.ZMin`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: db9aaf785f5f4dc987834a3081a3db41
+msgid "Minimum Z coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: 8c3559928c24452983a865f005002d97
+msgid "`Denchar.ZMax`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md
+#: d6ec231df2ab4743854ab5d0c0e16b5d
+msgid "Maximum Z coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:25
+#: d419dd5e93cb4106965ed7e4a31ece1e
+msgid "Tutorial Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:32
+#: c9ee8cc53455477991a0138ceee7ac06
+msgid "Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:34
+#: 667fff71644e44bdaa6a6e5abdfe238a
+msgid "SIESTA creates:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:35
+#: cdbdd03612904e0eafa1d89a4f75c7af
+msgid "`systemLabel.PLD`: Binary grid data"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:36
+#: bf4c7cb4edc4484393b43235957d48cd
+msgid "`systemLabel.DIM`: Grid dimensions metadata"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/02-denchar/README.md:38
+#: cf2a1a8b4d1f47fe92e4e3adeec896a4
+msgid "Use `denchar` utility to process these files into XSF/CUBE formats."
+msgstr ""
+

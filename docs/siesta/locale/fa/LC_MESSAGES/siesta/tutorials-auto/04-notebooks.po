@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,11 +20,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-auto/04-notebooks.rst:4
-msgid "Tutorials in this category"
-msgstr ""
-
-#: ../../source/tutorials-auto/04-notebooks.rst:2
-#: b0eb059023154379bfc49055db7a7358
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/04-notebooks.rst:2
+#: ca4e0e9929d64793b5aee198b3aa1df5
 msgid "04 Notebooks"
 msgstr ""
+
+#~ msgid "Tutorials in this category"
+#~ msgstr ""
+

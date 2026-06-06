@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,936 +20,1373 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:1
-#: 5378fdb4c76f454092396aeaf3d371bc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:1
+#: 21443e4bbbb24fed8bfbe986e171f15a
 msgid "03-Advanced Features: Specialized Calculations and Advanced Functionality"
 msgstr "03-پیشرفته ویژگی‌ها: Specilized محاسبهs و پیشرفته Functionlity"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:3
-#: a60883c2ca114372b33dc00aa275702d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:3
+#: f9d0a8eefac14ff88df5c6d0b4d0748e
 msgid ""
 "**Focus**: Advanced SIESTA features, parameter customization, and "
 "infrastructure"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:5
-#: 36240b666a02461ebc7192fa795661cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:5
+#: 6fec5da1c3e24ac6b557e6a0b5aad6c2
 msgid "**Difficulty**: Intermediate to Expert"
 msgstr "**سطح سختی**: متوسط to Expert"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:7
-#: e30006cfdfb544af91445e30ee0a7b53
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:7
+#: 78d28ef1bd3a427191680d514e5249a5
 msgid "**Prerequisites**:"
 msgstr "**پیش‌نیازها**:"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:8
-#: 5792adf491a64818adb8c2f3eb355b8d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:8
+#: 478677c85319420e88bc2181ed6ce23e
 msgid "Completed [01-basics](../01-basics/) and [02-workflows](../02-workflows/)"
 msgstr "Completed [01-bsics](../01-bsics/) و [02-wیاkflows](../02-wیاkflows/)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:9
-#: 5f27615e7c9a4acabd31d866bc2369d5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:9
+#: d5836330cebc42cbb7f93d82617d0bd7
 msgid "Understanding of SIESTA FDF format"
 msgstr "درک of SIESTA FDF برایmt"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:10
-#: 88d2495567ff469882680b47fb9d75ee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:10
+#: 719391573f8548d88141368e2c200abe
 msgid "Familiarity with materials properties and advanced DFT concepts"
 msgstr "Fmilirity با mterils properties و dvnced DFT concepts"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:14
-#: c5d80b9b74384373bd9325d6fc32e463
-msgid "Tutorials in This Category"
-msgstr "Tutیاils in This دسته‌بندی"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:16
-#: d36c32c9506249548c8176214bee74bc
-msgid ""
-"This category contains 21 advanced topics covering specialized "
-"calculations, parameter systems, and infrastructure:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:14
+#: 8b39e4d5b0094ca896147d8f5341e268
+msgid "Overview"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:18
-#: e5734c8c5b8544f4850710e7140909c0
-msgid "[01-tier-system](01-tier-system/)"
-msgstr "[01-tier-system](01-tier-system/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:19
-#: 237d52bb90984aef9753e6bf8037cd76
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:16
+#: 4698b8354b05493b871ceb91398c760e
 msgid ""
-"**Description**: Tier-based parameter presets (basic_dirty → basic → "
-"intermediate → advanced → expert) **Difficulty**: Beginner to "
-"Intermediate **Key Concepts**: 5-tier hierarchy, automatic module "
-"activation, backward compatibility **Files**: Multiple examples "
-"demonstrating tier levels"
+"This category contains **8 organized groups** covering specialized "
+"calculations, parameter systems, and infrastructure. Previously scattered"
+" across 20 directories, tutorials are now logically grouped by topic for "
+"easier navigation."
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:24
-#: 167ea9940e014b898b4dcfcf11ed094b
-msgid "[02-fdf-block-inputs](02-fdf-block-inputs/)"
-msgstr "[02-fdf-block-inputs](02-fdf-block-inputs/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:25
-#: cbf901aa7a7f4c23b290ddaac9f932dd
-msgid ""
-"**Description**: FDF block parameters (electric fields, constraints, "
-"PDOS, custom k-paths) **Difficulty**: Intermediate **Key Concepts**: "
-"Block format, geometry constraints, external fields, custom band paths "
-"**Files**: Examples of k-path specification, electric fields, constraints"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:18
+#: f5438a82e99549f48ec3fbc14850ab21
+msgid "**Total**: ~120 Python tutorial files organized in 8 thematic groups"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:30
-#: 454a2914475b4a0e867b7c504a2c0e60
-msgid "[03-infrastructure](03-infrastructure/)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:22
+#: edc323e9e4b84317bc9d0eb4831f30fd
+#, fuzzy
+msgid "Tutorial Groups"
+msgstr "Tutیاil Metrics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:24
+#: d0f686e7a1024c3ab9e445e1c1017e31
+msgid "01. [Parameter Systems](01-parameter-systems/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:25
+#: bb649f51b45d4776adc1c2458e1c5a2a
+msgid ""
+"**Topics**: Tier system, material presets, basis sets, FDF blocks "
+"**Directories**: 4 (tier-system, presets, basis, fdf-blocks) **Files**: "
+"~32 tutorials **Difficulty**: Beginner to Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:30
+#: 18bdd789fd454be085de6ad016cebe5c
+msgid ""
+"Control calculation parameters through hierarchical tier system, "
+"material-specific presets, custom basis sets, and advanced FDF block "
+"inputs."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:32
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:67
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:102
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:118
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:134
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:151
+#: 537417b640ee4c0a917472115c9590f1 6a2fdbdc7ccd47c790af09a6cb635d89
+#: 8ec78f89e6484663ac07d24a2fb55bd9 adcdc11f82134b32b80d281fa4742c46
+#: b566714e7a624bef933dad74a121f634 db450802db36428db298ccd9501d861d
+#: e43add8cc76f463d82ebabfba9d55942 f02ca942d89f418ebf96da5c267f9233
+msgid "**Key Features**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:33
+#: 28b57c2676a84a42b0a61b8f36f29a55
+msgid "5-tier hierarchy (basic → intermediate → advanced → expert)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:34
+#: 9662f1c63b9c4f7e936961b8f07e3968
+#, fuzzy
+msgid "27 material-specific presets across 9 categories"
+msgstr "**26 mteril-specific presets** in 10 ctegیاies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:35
+#: ac957a18f9bf4d3e977172a90ae3e39e
+msgid "Custom basis sets with species variants and per-atom control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:36
+#: 66859d4b7ecc457b84ab31d8954322d6
+#, fuzzy
+msgid "FDF block parameters for advanced features"
+msgstr "After completing dvnced fetures:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:38
+#: 2447672324b547c89d84d7b68585b902
+msgid "**CLI Tools**: `atomate2siesta-presets list`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:42
+#: ccb276c95e884875890f798a719fcbe6
+msgid "02. [Physics Features](02-physics-features/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:43
+#: eacc2fea22cd46f58460b148425af4a2
+msgid ""
+"**Topics**: DOS, optical, magnetic, phonon, charged systems "
+"**Directories**: 5 (dos, optical, magnetic, phonon, charge) **Files**: "
+"~17 tutorials **Difficulty**: Intermediate to Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:48
+#: 8f3ec5afe6c34f78a83586a89c5e6006
+msgid ""
+"Advanced physics calculations including density of states, optical "
+"properties, magnetism, phonon parameters, and charged/dipole systems."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:51
+#: 2186141ac9e241b1b7c7e21127bf4ad1
+msgid "Automatic magnetic moment initialization (DM.InitSpin)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:52
+#: 85012a20f44242488ac6088a08a0b495
+msgid "Optical property calculations (dielectric, absorption)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:53
+#: d7d93a504b104d86a48304f6e55b32e1
+#, fuzzy
+msgid "Advanced DOS customization"
+msgstr "Bsis Customiztion (07)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:54
+#: b7294f70fc6f49a08591e3048ecb3835
+msgid "Phonon force constant control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:55
+#: 54d771dd78674015b29bbbe8bf9c8a68
+msgid "Electric field and dipole corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:59
+#: 8401e2b7c26643c4a897681ee8fcb641
+#, fuzzy
+msgid "03. [Infrastructure](03-infrastructure/)"
 msgstr "[03-infrstructure](03-infrstructure/)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:31
-#: d2c07d5d75664e2fbe1de15896b9af9d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:60
+#: 36b7834badf941aaa41706aafcc34c0b
 msgid ""
-"**Description**: Database storage, HPC job submission, dry-run mode, "
-"error handling **Difficulty**: Intermediate to Advanced **Key Concepts**:"
-" MongoDB integration, jobflow-remote, custodian error handling, "
-"checkpoint/restart **Subdirectories**: 5 infrastructure topics (database,"
-" job-submission, error-handling, restart-recovery, dry-run-preview) "
-"**Files**: Complete infrastructure setup tutorials"
+"**Topics**: Database, HPC submission, error handling, restart, dry-run "
+"**Directories**: 5 (database, jobflow-remote, error-handling, restart, "
+"dry-run) **Files**: 24 tutorials **Difficulty**: Intermediate to Advanced"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:37
-#: b2e3e518912840f285db7b9f1872f7ae
-msgid "[03-powerups](03-powerups/)"
-msgstr "[03-powerups](03-powerups/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:38
-#: f10c25a9185847349a22f05484c68890
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:65
+#: 8e237d8a1d82479e87cff936ec56a482
 msgid ""
-"**Description**: Workflow customization and dynamic parameter "
-"modification **Difficulty**: Intermediate **Key Concepts**: "
-"update_user_siesta_settings(), modify job parameters, workflow "
-"transformation **Files**: Powerup function examples for dynamic "
-"customization"
+"Complete infrastructure setup for production workflows including MongoDB "
+"integration, HPC job submission with jobflow-remote, custodian error "
+"handling, checkpoint/restart systems, and dry-run preview mode."
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:43
-#: dd7b463843284d128f7d13a74fd39679
-msgid "[04-structure-conversion](04-structure-conversion/)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:68
+#: 460e45b3326b451bb750badc801eb150
+msgid "MongoDB database storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:69
+#: 67965d07a0a440ac8773765ad44db93e
+msgid "HPC job submission via jobflow-remote"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:70
+#: 305d7cb648de4fa498af212657ff2a6f
+msgid "Automatic error recovery with custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:71
+#: 42d4a7f374c8494789a25a9ba7cf2c9c
+msgid "Checkpoint/restart for long calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:72
+#: 2cf24f4187564c1d8d65eae71f7b125e
+msgid "Dry-run mode for parameter preview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:76
+#: 9f1c18445c954c77ae01a35d02bdb938
+#, fuzzy
+msgid "04. [Structure Tools](04-structure-tools/)"
 msgstr "[04-structure-conversion](04-structure-conversion/)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:44
-#: 4b93eb08764c4dfd8efa91b1bbcecbb5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:77
+#: 384722abad95461d80f5208cf8786c04
 msgid ""
-"**Description**: Convert between structure formats (XV, FDF, XSF, CIF, "
-"VASP POSCAR) **Difficulty**: Beginner **Key Concepts**: File format "
-"conversion, structure I/O, interoperability **Files**: Conversion "
-"examples for all supported formats"
+"**Topics**: Format conversion, manipulation, powerups **Directories**: 3 "
+"(conversion, manipulation, powerups) **Files**: ~11 tutorials "
+"**Difficulty**: Beginner to Intermediate"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:49
-#: 6f3a55d7cf59432196c58b6ed30a7d39
-msgid "[05-dos-calculations](05-dos-calculations/)"
-msgstr "[05-dos-clcultions](05-dos-clcultions/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:50
-#: 47eb1fb1d70247bdb68aa0c726f93ace
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:82
+#: ca36de9c65db470aa5e67ace4d699cb0
 msgid ""
-"**Description**: Advanced DOS analysis and customization **Difficulty**: "
-"Intermediate **Key Concepts**: Energy range, broadening, DOS plotting, "
-"Fermi energy **Files**: DOS calculation with custom parameters"
+"Structure file format conversion, manipulation via CLI tools, and dynamic"
+" workflow customization with powerups."
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:55
-#: c0f755698fbf41b0b353a1dc03f909ee
-msgid "[06-phonon-inputs](06-phonon-inputs/)"
-msgstr "[06-phonon-inputs](06-phonon-inputs/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:56
-#: 9b3f5e9d018a4da6a585ac0fb85790b9
-msgid ""
-"**Description**: Phonon calculation customization (force constants, "
-"displacements) **Difficulty**: Intermediate **Key Concepts**: MD.FCfirst,"
-" MD.FCDispl, force constant parameters **Files**: Advanced phonon "
-"parameter control"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:85
+#: 220d1ba259f74f45bd7867a06879f527
+msgid "Convert between XV, FDF, XSF, CIF, VASP POSCAR"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:61
-#: fa434a6086824ff383bae837db0cb656
-msgid "[06-tier-presets-customization](06-tier-presets-customization/)"
-msgstr "[06-tier-presets-customiztion](06-tier-presets-customiztion/)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:86
+#: a45bbb289975435ab04b0faea89af6c3
+#, fuzzy
+msgid "16 structure manipulation subcommands in 4 tiers"
+msgstr "**Structure tools**: 16 CLI subcommوs in 4 tiers"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:62
-#: f20d675881fa42d393a821972e1131f5
-msgid ""
-"**Description**: Material-specific tier presets (material-specific presets in 10 "
-"categories) **Difficulty**: Beginner to Intermediate **Key Concepts**: 2D"
-" materials, surfaces, magnetic, phonons, optical, mechanical, "
-"convergence, DFT+U, vdW, testing presets **Files**: Examples for each "
-"preset category, custom preset creation **CLI**: `atomate2siesta-presets "
-"list` for automatic preset discovery"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:87
+#: d95a44f261a341a981eff8c720985715
+msgid "Dynamic parameter modification with powerups"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:68
-#: c9efe18bacab49328c3ad0d68c3ee910
-msgid "[07-basis-set-customization](07-basis-set-customization/)"
-msgstr "[07-bsis-set-customiztion](07-bsis-set-customiztion/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:69
-#: 3e0f41a06c704bf7bcd144026a3c30f7
-msgid ""
-"**Description**: Custom basis sets, species variants, per-atom basis, "
-"PAO.Basis **Difficulty**: Intermediate to Advanced **Key Concepts**: "
-"PAO.BasisSize, PAO.BasisSizes (species variants), PAO.Basis (custom "
-"orbitals), per-atom control **Files**: 14 comprehensive tutorials "
-"covering all 4 phases of species variant system **Features**: Dict format"
-" for species variants, per-atom basis helpers, PAO.Basis builder with 4 "
-"RC methods"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:88
+#: 61ac391c519743e9aa782df10aad61ae
+msgid "`update_user_siesta_settings()` workflow transformation"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:75
-#: ea6e820c8220493496a899a4576a0dbb
-msgid "[07-optical-properties](07-optical-properties/)"
-msgstr "[07-opticl-properties](07-opticl-properties/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:76
-#: 3a953cc5aa2e4a26b4228f3caec1a62b
-msgid ""
-"**Description**: Optical calculations (dielectric function, absorption, "
-"refraction) **Difficulty**: Advanced **Key Concepts**: Optical.Energy, "
-"Optical.Broaden, polarization, refractive index **Files**: Optical "
-"property calculation examples"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:90
+#: 0cff23ad8ff646018e3f47f63e3749aa
+msgid "**CLI Tools**: `atomate2siesta-structure <command>`"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:81
-#: ed9304a7aa0b4e92aa640d64bbe7ed6d
-msgid "[08-dftu](08-dftu/)"
-msgstr "[08-dftu](08-dftu/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:82
-#: 3f317064a026498294b27892cc82b05b
-msgid ""
-"**Description**: DFT+U for correlated electron systems **Difficulty**: "
-"Advanced **Key Concepts**: Hubbard U parameters, transition metal oxides,"
-" f-electron systems **Files**: DFT+U setup and parameter selection"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:94
+#: 08b3b9401df04cfdb2eba023a69e7d10
+msgid "05. [Output & Visualization](05-output-viz/)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:87
-#: f48158f047da4e58a40e03b6e070f6a9
-msgid "[08-recipe-book](08-recipe-book/)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:95
+#: 3cdc2d3d607b44c9a32b7b612c39c444
+msgid ""
+"**Topics**: Grid output, denchar visualization, NetCDF **Directories**: 3"
+" (grid, denchar, netcdf) **Files**: ~6 tutorials **Difficulty**: "
+"Intermediate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:100
+#: df594b3cb02f4ae19eae6c7a65c856c9
+msgid ""
+"Output file configuration for charge density grids, wavefunction "
+"visualization with denchar, and NetCDF format for analysis."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:103
+#: 10cfaa57ea9e47149a3c5fc06876caca
+msgid "SaveRho, SaveElectrostaticPotential, SaveTotalPotential"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:104
+#: 73a6f85f885d4b98871e638f06bef08e
+msgid "Denchar visualization tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:105
+#: 4d8a44f8033f499cb965891d09fc7a84
+msgid "NetCDF compressed output format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:106
+#: 88aa430377c64da9b54313a698e0809a
+msgid "Grid-based output for post-processing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:110
+#: 5ec492054c9a46f3b114f3764c4188be
+msgid "06. [Performance](06-performance/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:111
+#: 8ccac360fd20425a8e803f829180b418
+msgid ""
+"**Topics**: Parallel computation, efficiency options **Directories**: 2 "
+"(parallel, efficiency) **Files**: ~5 tutorials **Difficulty**: "
+"Intermediate to Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:116
+#: d6356c21353d42018b508412c9d809f3
+msgid ""
+"Performance optimization through MPI parallelization, memory management, "
+"and convergence acceleration."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:119
+#: 9f25a95bf69d48f390b2997c2e6c318e
+msgid "K-point and orbital parallelization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:120
+#: d98c07b2e08641038ab6f3f6e50916f0
+msgid "DiagUseElpa for efficient diagonalization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:121
+#: 92b3b761ec00487fbdb4589e9b8a8363
+#, fuzzy
+msgid "SolutionMethod optimization"
+msgstr "Fیا Bsis Set Optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:122
+#: 19dfd8c8cb88435480ffcc0743785604
+msgid "Memory and I/O tuning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:126
+#: a64de53ea4014f72bc3db36fed4e30fa
+msgid "07. [Advanced SIESTA](07-advanced-siesta/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:127
+#: 3274251d4b124b51acd26c4966634263
+msgid ""
+"**Topics**: Hamiltonian/overlap matrices **Directories**: 1 (hamiltonian)"
+" **Files**: 3 tutorials **Difficulty**: Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:132
+#: 2a57673816d74e31ab9f10bcb1542f8c
+msgid ""
+"Advanced SIESTA features for Hamiltonian and overlap matrix output, "
+"COOP/COHP analysis."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:135
+#: 5081d1739a2a44339688a7034036528c
+msgid "SaveHS for Hamiltonian/overlap matrices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:136
+#: 8bfe46e4724a4200af1d6d27e06a4889
+msgid "LocalDensityOfStates analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:137
+#: 8cc31c3d9e9743b2becdc7f19297ac39
+msgid "COOP/COHP chemical bonding analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:141
+#: 98d12afd8b6d4d63a0316434591c3e70
+#, fuzzy
+msgid "08. [Recipe Book](08-recipe-book/)"
 msgstr "[08-recipe-book](08-recipe-book/)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:88
-#: 6d355d9e2dd14a68979e311a16938d5d
-#, python-format
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:142
+#: a78d2415f17842cb9d14f9f394a90c38
 msgid ""
-"**Description**: High-level workflow system (recipes, 90-98% code "
-"reduction) **Difficulty**: Beginner to Advanced **Key Concepts**: One-"
-"line workflows, RecipeBook class, complete_material_study(), 16 "
-"comprehensive tutorials **Files**: tutorial files covering all 39 "
-"recipes across 6 categories **Coverage**: fully documented "
-"lines of tutorial documentation **CLI**: `atomate2siesta-recipe list` and"
-" `atomate2siesta-recipe show <name>`"
+"**Topics**: High-level one-line workflows **Directories**: 9 (by recipe "
+"category) **Files**: comprehensive tutorials **Difficulty**: Beginner to "
+"Advanced"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:95
-#: 14c02734f4a5462c82df93a4fda07a34
-msgid "[09-charge-dipole-efield](09-charge-dipole-efield/)"
-msgstr "[09-chrge-dipole-efield](09-chrge-dipole-efield/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:96
-#: 5f652427760c4cafaa4ef2f75d7575c5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:147
+#: 362de577392e4667a2e104578f983982
 msgid ""
-"**Description**: Charged systems, dipole corrections, external electric "
-"fields **Difficulty**: Advanced **Key Concepts**: NetCharge, "
-"SlabDipoleCorrection, %block ExternalElectricField **Files**: Electric "
-"field and charged defect examples"
+"**⭐ Production-ready high-level workflow system with one-line recipes "
+"achieving significant code reduction.**"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:101
-#: 6513b0df1b2349aba6bafff9863b201d
-msgid "[09-structure-manipulation](09-structure-manipulation/)"
-msgstr "[09-structure-mnipultion](09-structure-mnipultion/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:102
-#: d05f4e1aa4ee46789d4843f9b3150860
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:149
+#: 4e53a8406fd0480db80dd57d182b4598
 msgid ""
-"**Description**: Structure tools (16 subcommands in 4 tiers) "
-"**Difficulty**: Beginner to Advanced **Key Concepts**: Structure "
-"conversion, scaling, supercells, slabs, substitution, defects **CLI**: "
-"`atomate2siesta-structure <command>` with 16 subcommands **Tiers**: Basic"
-" (info, convert, scale, supercell, rotate, translate), Surface (slab, "
-"vacuum, stack), Atomic (substitute, remove, add, perturb), Analysis "
-"(compare, standardize, optimize-cell)"
+"Complete material studies, electronic properties, mechanical properties, "
+"thermal analysis, catalysis, convergence testing, and more—all in single-"
+"line function calls."
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:108
-#: c8d0c7d2e79f4c8fbd594257e6c1cd87
-msgid "[10-grid-output](10-grid-output/)"
-msgstr "[10-grid-output](10-grid-output/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:109
-#: 6ebd0d5f77c44c76b6e5d86f2b8bb0f4
-msgid ""
-"**Description**: Grid-based output files (charge density, potentials, "
-"wavefunctions) **Difficulty**: Intermediate **Key Concepts**: SaveRho, "
-"SaveElectrostaticPotential, SaveTotalPotential, grid formats **Files**: "
-"Grid output examples for visualization"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:114
-#: 53a207d38ece46cb81eccee2b6bef115
-msgid "[11-denchar-visualization](11-denchar-visualization/)"
-msgstr "[11-denchr-visuliztion](11-denchr-visuliztion/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:115
-#: 2c0aa0ca862e427ea6d494b9480d7ef3
-msgid ""
-"**Description**: Denchar visualization tools for charge density and "
-"wavefunctions **Difficulty**: Intermediate **Key Concepts**: Denchar "
-"tool, charge density plots, wavefunction visualization **Files**: Denchar"
-" usage examples"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:120
-#: fce7c077c1324a448bc1ae3bba529d9f
-msgid "[12-parallel-computation](12-parallel-computation/)"
-msgstr "[12-prllel-computtion](12-prllel-computtion/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:121
-#: eff1a6f03e2e4f9f81a92d0072dfa77c
-msgid ""
-"**Description**: Parallel execution settings (MPI, k-point "
-"parallelization, orbital parallelization) **Difficulty**: Intermediate "
-"**Key Concepts**: ParallelDistribution, DiagUseElpa, ProcessorY "
-"**Files**: Parallel configuration examples"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:126
-#: 78ed9336b5f84f47a49c2923c032080f
-msgid "[13-netcdf-output](13-netcdf-output/)"
-msgstr "[13-netcdf-output](13-netcdf-output/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:127
-#: 0cfdf7b68e2847149d0d48a0cde13a2e
-msgid ""
-"**Description**: NetCDF output format for analysis and post-processing "
-"**Difficulty**: Intermediate **Key Concepts**: CDF.Save, CDF.Compress, "
-"NetCDF format **Files**: NetCDF output configuration"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:132
-#: 64905efc9a9d4f328ee33ca7a8570948
-msgid "[14-efficiency-options](14-efficiency-options/)"
-msgstr "[14-efficiency-options](14-efficiency-options/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:133
-#: a039a88b842a41e3a1cdd3fce4d50b33
-msgid ""
-"**Description**: Performance optimization (memory, I/O, convergence "
-"acceleration) **Difficulty**: Intermediate to Advanced **Key Concepts**: "
-"SolutionMethod, DirectPhi, SaveMemory, performance tuning **Files**: "
-"Efficiency parameter examples"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:138
-#: bad0c601e4584177a1c0d244780e1b8e
-msgid "[15-hamiltonian-overlap](15-hamiltonian-overlap/)"
-msgstr "[15-hmiltonin-overlp](15-hmiltonin-overlp/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:139
-#: 23ed5f94e59a426894d7761ddd90d821
-msgid ""
-"**Description**: Hamiltonian and overlap matrix settings and output "
-"**Difficulty**: Advanced **Key Concepts**: SaveHS, LocalDensityOfStates, "
-"COOP/COHP analysis **Files**: Hamiltonian/overlap configuration"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:144
-#: c4d5a7e4aa99436d9b91030b451a04a6
-msgid "[16-magnetic-calculations](16-magnetic-calculations/)"
-msgstr "[16-mgnetic-clcultions](16-mgnetic-clcultions/)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:145
-#: 04751f4b9613427ba4df287f4c93b945
-msgid ""
-"**Description**: Spin-polarized calculations, DM.InitSpin, magnetic "
-"moments **Difficulty**: Intermediate to Advanced **Key Concepts**: "
-"Automatic DM.InitSpin generation, FM/AFM/custom orderings, sign-only "
-"mode, magnetic element detection **Files**: 6 comprehensive tutorials "
-"(basic FM, AFM, custom ordering, DFT+U integration, real-world Cu "
-"surface, sign-only format) **Features**: "
-"`get_default_initial_magnetic_moments()`, auto-detection of 3d metals "
-"(Cr, Mn, Fe, Co, Ni, Cu), default AFM ordering"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:153
-#: ed7d9e4cab2a4235bde91c1dd6d565e0
-msgid "Highlights"
-msgstr "Highlights"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:155
-#: 8138e10847364ae79220a33ca276bfda
-msgid "Recipe Book (08)"
-msgstr "Recipe Book (08)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:156
-#: 443dfa0763044615ac1452c7adcd22dd
-msgid "**One-line workflows** across 6 categories"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:152
+#: 015af00823c947ae98a36628ac3ca328
+#, fuzzy
+msgid "recipes across 6 categories"
 msgstr "**one-line wیاkflows** cross 6 ctegیاies"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:157
-#: 7aca60e6beb944bd835c5790692fbc05
-#, python-format
-msgid "**significant code reduction** (50+ lines → 1 line)"
-msgstr "**significant code reduction** (50+ lines → 1 line)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:153
+#: e0d1aafc1a004f51895f6622a56a9015
+msgid "One-line workflows: `RecipeBook.complete_material_study(structure)`"
+msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:158
-#: 40caf05b51eb46c8973932dfd2d98995
-#, python-format
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:154
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:235
+#: 49c2937b4a554eb48045d473838835ff 9f92caee35e84ec8b59af5cbd4af91b8
 msgid "fully documented with comprehensive tutorials"
 msgstr "**fully documented**: comprehensive tutیاils "
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:159
-#: 329d88070aff4940bfc5d095e99253f9
-msgid ""
-"**CLI integration**: `atomate2siesta-recipe` with list/show/search "
-"commands"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:161
-#: fb3f6e7284254b03bafc2aa9973e037c
-msgid "Tier Presets (06)"
-msgstr "Tier Presets (06)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:162
-#: d4a6963bab1a4c5f92c1ada657877f81
-msgid "**26 material-specific presets** in 10 categories"
-msgstr "**26 mteril-specific presets** in 10 ctegیاies"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:163
-#: 7fcddf776ea3437d8ec041aeee47f845
-msgid "**Automatic CLI discovery**: New presets appear automatically"
-msgstr "**Automtic CLI discovery**: New presets pper utomticlly"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:164
-#: 95c748f249db43bc8142539c139b29c8
-msgid "**Naming-based categorization**: 2d_*, surface_*, magnetic_*, etc."
-msgstr "**Nming-bsed ctegیاiztion**: 2d_*, surfce_*, mgnetic_*, etc."
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:165
-#: 0465d9cb1e43468691a03fe2e072d9b3
-msgid ""
-"**CLI tool**: `atomate2siesta-presets` with list/show/category/search "
-"commands"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:167
-#: ca44a94606d44c468527301fa25320ee
-msgid "Magnetic Calculations (16)"
-msgstr "Mgnetic محاسبهs (16)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:168
-#: d44554c07d3c44b4a09c64a409a8c035
-msgid "**Automatic DM.InitSpin generation** from structure.magmom"
-msgstr "**Automtic DM.InitSpin genertion** from structure.mgmom"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:169
-#: 990c6cb82e62475cb8816489b7a51b68
-msgid ""
-"**Magnetic element detection**: 3d (Cr, Mn, Fe, Co, Ni, Cu), 4d (Mo, Tc, "
-"Ru, Rh), lanthanides (Gd, etc.)"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:170
-#: a00572e8922a45e7850ef722df0530c4
-msgid "**Three ordering modes**: FM, AFM (default), custom"
-msgstr "**Three یاdering modes**: FM, AFM (defult), custom"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:171
-#: b64edafbbe1b4c69a93e34e25cce83fb
-msgid "**Sign-only format** (v1.0.0): Write `+`/`-` instead of numeric values"
-msgstr "**Sign-only format** (v1.0.0): Write `+`/`-` instead of numeric values"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:172
-#: da9a67e3c51d4ae2bffd9d8fdc09c28e
-msgid ""
-"**Single source of truth**: Only SpinSettings dataclass handles "
-"DM.InitSpin"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:174
-#: f216266086424ab08b56fb9037c300aa
-msgid "Basis Customization (07)"
-msgstr "Bsis Customiztion (07)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:175
-#: 86254e98b154494d9b53e945091bbbe6
-msgid ""
-"**4 phases complete**: Dict format, ASE integration, per-atom helpers, "
-"PAO.Basis builder"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:176
-#: 6f34a887f52e48219102e4ee39754cad
-#, python-brace-format
-msgid "**Species variants**: `{'Ti_surface': 'TZP', 'Ti_bulk': 'DZP'}`"
-msgstr "**Species variants**: `{'Ti_surface': 'TZP', 'Ti_bulk': 'DZP'}`"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:177
-#: 71cb330fb7f447929b3ef1be3e8f7202
-msgid ""
-"**Per-atom control**: `apply_per_atom_basis()` and "
-"`create_per_atom_basis_dict()`"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:178
-#: 1b882d362ecf481e8d52a1ca113eff95
-msgid ""
-"**PAO.Basis builder**: `create_pao_basis()` with 4 RC methods (psml, "
-"scaled, hydrogenic, fixed)"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:179
-#: bd07de193a834f95840e8ccaf9c54f42
-msgid "**14 comprehensive tutorials** covering all features"
-msgstr "**14 comprehensive tutیاils** covering ll fetures"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:181
-#: dfdb88d931a944efaa341ab07d54d4be
-msgid "Infrastructure (03)"
-msgstr "Infrstructure (03)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:182
-#: 2da2c6224f994d1481b325676ccea92b
-msgid ""
-"**5 subtopics**: Database, job submission, error handling, "
-"restart/recovery, dry-run"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:183
-#: 83a3088ce1c7432ea68e27fa918422f5
-msgid "**MongoDB integration**: Store and query calculation results"
-msgstr "**MongoDB integrtion**: Stیاe و query clcultion results"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:184
-#: 85128c67f5e84aec95f2f09c2f213d2f
-msgid "**Jobflow-remote**: HPC cluster job submission"
-msgstr "**Jobflow-remote**: HPC cluster job submission"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:185
-#: f19fdf17dfa04c6ab41365e999989601
-msgid "**Checkpoint/restart**: Universal system for ANY workflow"
-msgstr "**Checkpoint/restrt**: Universl system برای ANY wیاkflow"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:186
-#: 415deb88d9ca4e1b80c4ec6f27d46bf5
-#, python-format
-msgid "**Custodian**: 10+ error types with 95% recovery rate"
-msgstr "**Custodin**: 10+ errیا types با 95% recovery rte"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:190
-#: 9795d16c1db34c1bb80277db329a566d
-msgid "Learning Path"
-msgstr "Lerning Pth"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:192
-#: cdb49e0e32754e5d8a1b143ca2249862
-msgid "Choose tutorials based on your needs:"
-msgstr "Choose tutیاils bsed on your needs:"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:194
-#: b0caf376cd154a768240d4c223eb1a49
-msgid "For All Users (Start Here)"
-msgstr "Fیا All Users (Strt Here)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:195
-#: 70b81c307a0e40f88b65e51fea058d1e
-msgid "**[01-tier-system](01-tier-system/)** - Understand tier-based parameters"
-msgstr "**[01-tier-system](01-tier-system/)** - Understو tier-bsed prmeters"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:196
-#: dfb02216c09645eaa0d0d038427446d0
-msgid ""
-"**[06-tier-presets-customization](06-tier-presets-customization/)** - "
-"Apply material-specific presets"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:197
-#: cde818c5a9f54ef38441699d949dbf54
-msgid ""
-"**[03-infrastructure/05-dry-run-preview](03-infrastructure/05-dry-run-"
-"preview/)** - Learn preview mode"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:199
-#: 2edf30acb896470c9389b727a99b9238
-msgid "For Production Calculations"
-msgstr "Fیا Production محاسبهs"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:200
-#: dff2745b844449438e25ae850339650d
-msgid ""
-"**[03-infrastructure/01-database-storage](03-infrastructure/01-database-"
-"storage/)** - Set up MongoDB"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:201
-#: 650d9f1889bb4d589fe8e30156576886
-msgid ""
-"**[03-infrastructure/02-job-submission](03-infrastructure/02-job-"
-"submission/)** - HPC submission"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:202
-#: 32be2c4759734dacbae76002db2f698f
-msgid ""
-"**[03-infrastructure/03-error-handling](03-infrastructure/03-error-"
-"handling/)** - Custodian setup"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:203
-#: 91693d37848f4a05b5c03ed9a95f6224
-msgid ""
-"**[03-infrastructure/04-restart-recovery](03-infrastructure/04-restart-"
-"recovery/)** - Checkpoint system"
-msgstr ""
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:205
-#: b096aefce52d4abf80007d0041a7bab3
-msgid "For High-Level Workflows"
-msgstr "Fیا High-Level گردش کارs"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:206
-#: 32b504be75bc4a4b8937f45a790556a3
-msgid "**[08-recipe-book](08-recipe-book/)** - One-line workflows (START HERE!)"
-msgstr "**[08-recipe-book](08-recipe-book/)** - One-line wیاkflows (START HERE!)"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:207
-#: 62c83f63e5b84f12b2b0aa4b1577e8c9
-#, python-format
-msgid "recipes, significant code reduction"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:155
+#: 7989b38c21b14046b7135ddc0fd665d2
+#, fuzzy
+msgid "significant code reduction vs manual workflows"
 msgstr "recipes, significant code reduction"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:208
-#: 6d4e877bbda141e5a569ede78c0b57a2
-msgid "comprehensive tutorials"
-msgstr "comprehensive tutیاils"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:209
-#: d8291c4be0d844a1a917ea1e6af667b6
-msgid "Complete material studies in 1 line"
-msgstr "Complete mteril studies in 1 line"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:211
-#: e9a53a14ef42463a8b1fa728782ffda0
-msgid "For Basis Set Optimization"
-msgstr "Fیا Bsis Set Optimiztion"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:212
-#: 6e65f114f90e4ad79bb172e1e630b3fe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:157
+#: f3212d5f2e824e3abf4708ec26d88693
 msgid ""
-"**[07-basis-set-customization/08-10](07-basis-set-customization/)** - "
-"Species variants"
+"**CLI Tools**: `atomate2siesta-recipe list` and `atomate2siesta-recipe "
+"show <name>`"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:213
-#: 3041f9c01f3347389e3fd8e1743e8ddc
-msgid ""
-"**[07-basis-set-customization/03.1-03.2](07-basis-set-customization/)** -"
-" Per-atom basis"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:161
+#: 55890defa42c405488e5e3e45abad917
+#, fuzzy
+msgid "Learning Paths"
+msgstr "Lerning Pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:163
+#: eacd72abd7114af7bbfce41f1522a3fc
+#, fuzzy
+msgid "Beginner Path"
+msgstr "Lerning Pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:164
+#: 671925a3a6414abd96dae8186eb3522b
+msgid "Start with **01-Parameter-Systems/01-tier-system** (basic tier usage)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:214
-#: 553b236b16af4c3abaa53b49474adc99
-msgid ""
-"**[07-basis-set-customization/11](07-basis-set-customization/)** - "
-"PAO.Basis builder"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:165
+#: be44192b282f425a8845a807f2da59f3
+msgid "Explore **01-Parameter-Systems/02-presets** (material presets)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:216
-#: a9474a62d2964450aecb45257edaaa2d
-msgid "For Magnetic Systems"
-msgstr "Fیا Mgnetic Systems"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:166
+#: eda74efbea2441dc8e045886369646dc
+#, fuzzy
+msgid "Try **08-Recipe-Book** (one-line workflows)"
+msgstr "**[08-recipe-book](08-recipe-book/)** - One-line wیاkflows (START HERE!)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:217
-#: 438eff35abe04fafb966eabc78d1a214
-msgid ""
-"**[16-magnetic-calculations/01](16-magnetic-calculations/)** - Basic FM "
-"calculation"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:167
+#: 0f687662353c4c3484d3384136079676
+msgid "Setup **03-Infrastructure/05-dry-run** (preview mode)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:218
-#: 35157f8a27c6436f9be58bc977871da5
-msgid ""
-"**[16-magnetic-calculations/02](16-magnetic-calculations/)** - AFM "
-"ordering"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:169
+#: 4aef783b0adb43b88dea1d9314751263
+msgid "Intermediate Path"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:219
-#: 0a62b2cd381949c7971af71dd0cd0039
-msgid ""
-"**[16-magnetic-calculations/04](16-magnetic-calculations/)** - DFT+U "
-"integration"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:170
+#: b476147078ff410da93cb3dbc23d85d4
+msgid "Master **01-Parameter-Systems/03-basis** (custom basis sets)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:220
-#: d1d00d15f01f4837b1bff744973f4b04
-msgid ""
-"**[16-magnetic-calculations/06](16-magnetic-calculations/)** - Sign-only "
-"mode"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:171
+#: 9f653efadc4b491fb8cd9d09abcc43d4
+msgid "Learn **02-Physics-Features** (DOS, optical, magnetic)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:222
-#: e807fbc448d2455585a8de5247442af6
-msgid "For Parameter Customization"
-msgstr "Fیا Prmeter Customiztion"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:223
-#: ba02be7b70ca4b01bbcd50e43590198a
-msgid "**[03-powerups](03-powerups/)** - Dynamic parameter modification"
-msgstr "**[03-powerups](03-powerups/)** - Dynmic prmeter modifiction"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:224
-#: a71b814bd6764281b6591c7f6b3690af
-msgid "**[02-fdf-block-inputs](02-fdf-block-inputs/)** - Block format parameters"
-msgstr "**[02-fdf-block-inputs](02-fdf-block-inputs/)** - Block برایmt prmeters"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:225
-#: 98b6490140544d67aba544d1db83d96b
-msgid "**[14-efficiency-options](14-efficiency-options/)** - Performance tuning"
-msgstr "**[14-efficiency-options](14-efficiency-options/)** - Perبرایmnce tuning"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:227
-#: 96a4e2a0528b4d029d047eb10addb855
-msgid "For Optical/Electronic Properties"
-msgstr "Fیا Opticl/Electronic Properties"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:228
-#: 8654fb62b4e54b24a4260fae35ce92be
-msgid "**[05-dos-calculations](05-dos-calculations/)** - Advanced DOS"
-msgstr "**[05-dos-clcultions](05-dos-clcultions/)** - پیشرفته DOS"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:229
-#: 65c0da9eb8e34fb8998c9e7bcb220154
-msgid "**[07-optical-properties](07-optical-properties/)** - Optical calculations"
-msgstr "**[07-opticl-properties](07-opticl-properties/)** - Opticl clcultions"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:230
-#: 5f0cc47914324c36b30a4fb229bbb978
-msgid "**[15-hamiltonian-overlap](15-hamiltonian-overlap/)** - COOP/COHP analysis"
-msgstr "**[15-hmiltonin-overlp](15-hmiltonin-overlp/)** - COOP/COHP nlysis"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:232
-#: 2000a24978b447aeb10dedba83cac674
-msgid "For Specialized Systems"
-msgstr "Fیا Specilized Systems"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:233
-#: ed04dacd3c454ac49322fa8289ee5f96
-msgid "**[08-dftu](08-dftu/)** - Correlated electrons"
-msgstr "**[08-dftu](08-dftu/)** - Cیاrelted electrons"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:234
-#: 650b687727db4514913391d3a7756f4d
-msgid ""
-"**[09-charge-dipole-efield](09-charge-dipole-efield/)** - "
-"Charged/polarized systems"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:172
+#: b72b7814c886496b8ba1d5957f792d2d
+msgid "Configure **03-Infrastructure** (database, HPC, errors)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:235
-#: bedc897dca4e466386592b8c5d5fd7f9
-msgid ""
-"**[09-structure-manipulation](09-structure-manipulation/)** - Structure "
-"tools (16 commands)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:173
+#: b7c8f8d9c89449d3818692f5cad27f48
+msgid "Use **04-Structure-Tools/03-powerups** (dynamic customization)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:239
-#: 41ca03349df346f187f69c044f998c52
-msgid "CLI Tools Integration"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:175
+#: eedc2f6e4ca4419ca8916760dee74cc2
+msgid "Advanced Path"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:176
+#: e1b24bcca61b46cc9bc5cf9b7f992693
+msgid "Explore **02-Physics-Features/03-magnetic** (complex spin states)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:177
+#: bbcb999d78334eadb0ab1778a4ae23f9
+msgid "Master **03-Infrastructure/02-jobflow-remote** (HPC workflows)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:178
+#: 11e9b879a5cb496887d168bcffa8255d
+msgid "Optimize with **06-Performance** (parallel computation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:179
+#: 8f713a1722ac4a24bb6fccd9be2e242a
+msgid "Analyze with **07-Advanced-SIESTA** (Hamiltonian matrices)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:183
+#: 10c32599a92840b5962e939935e22d24
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:185
+#: 6464a5c941ca445da7c1a8d1abe90064
+msgid "Most Used"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:186
+#: c5d6a639216f45d0bdf4ec24bfdffca2
+msgid "**Tier presets**: `01-parameter-systems/02-presets/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:187
+#: b633e9379dff46899d395deba62d35c9
+#, fuzzy
+msgid "**Recipe book**: `08-recipe-book/`"
+msgstr "[08-recipe-book](08-recipe-book/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:188
+#: f9ce90181607496c850d862ccb1385a5
+msgid "**HPC setup**: `03-infrastructure/02-jobflow-remote/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:189
+#: c9ab0613d3884863bfa4e6afc659b595
+msgid "**Magnetic calculations**: `02-physics-features/03-magnetic/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:191
+#: ed3ce9ab4ab945489752814c1dcaf143
+msgid "By Feature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:192
+#: a86c5679cc6a49c7a95b46275906b889
+msgid "**Parameter control**: Group 01 (Parameter Systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:193
+#: bb29a0f6d72846caacf1abbb8578bb54
+msgid "**Physics calculations**: Group 02 (Physics Features)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:194
+#: ab5584935484425e8a55c544776cd519
+msgid "**Production setup**: Group 03 (Infrastructure)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:195
+#: 0fa3c4665a56454ca079235617566b79
+msgid "**Quick workflows**: Group 08 (Recipe Book)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:197
+#: 887d0255eda04dc783a718b5e57c0823
+msgid "By Difficulty"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:198
+#: f833eadad5264230a33eea5e4248fadc
+msgid "**Beginner**: Tier system, presets, recipe book, format conversion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:199
+#: 5728031032eb45998137224b8e438c92
+msgid "**Intermediate**: DOS, optical, powerups, grid output, parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:200
+#: f991ced98f9c40ba9781ff18f29183ae
+msgid ""
+"**Advanced**: Magnetic, basis customization, performance tuning, "
+"Hamiltonian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:204
+#: 3a4fce45f8de44e9a0bcb7018f6c83dd
+#, fuzzy
+msgid "CLI Tools"
 msgstr "CLI Tools Integrtion"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:241
-#: 1ebc40c2d3f443499492362d3f783aa0
-msgid "Many tutorials demonstrate CLI tools:"
-msgstr "Mny tutیاils demonstrte CLI tools:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:230
+#: 087ba820cfa64306b7d732a968bcd96a
+msgid "Highlights"
+msgstr "Highlights"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:276
-#: a07ac8acf9824d7ea07f6b1e3af5863b
-msgid "Quick Start Patterns"
-msgstr "شروع سریع Ptterns"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:232
+#: 4e6cad301ae8426484ba2fba3922045a
+#, fuzzy
+msgid "Recipe Book (Group 08)"
+msgstr "Recipe Book (08)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:278
-#: 308a701d48254ab68595f448ecbed4cc
-msgid "Using Tier Presets"
-msgstr "استفاده از Tier Presets"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:233
+#: f93d1d401fbf48658096f845a60266d3
+msgid "**One-line workflows** across 6 categories"
+msgstr "**one-line wیاkflows** cross 6 ctegیاies"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:287
-#: 7d8e464ed379441b8b5956bae2290148
-msgid "Using Recipe Book"
-msgstr "استفاده از Recipe Book"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:234
+#: 5431f99e5ebf4202a5b48c719bd4e359
+#, fuzzy
+msgid "**significant code reduction** vs manual implementation"
+msgstr "**significant code reduction** (50+ lines → 1 line)"
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:298
-#: f773a62ca87b4c42a436bb9402af2f93
-msgid "Using Powerups"
-msgstr "استفاده از Powerups"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:309
-#: d19ed77cc2d347d1b5599800f9f0ffb9
-msgid "Using Species Variants"
-msgstr "استفاده از Species Vrints"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:322
-#: 8dd2491a9ffe47f29cd0f831cb4fe0ae
-msgid "Using Magnetic Moments"
-msgstr "استفاده از Mgnetic Moments"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:340
-#: 23c4ba2c9e1f4f3884989de11ee15e49
-msgid "Best Practices"
-msgstr "بهترین روش‌ها"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:342
-#: d086a88a188747caa42776a20a74d0c9
-#, python-format
-msgid ""
-"**Start with recipe book**: Use `RecipeBook` for common workflows (90-98%"
-" code reduction)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:236
+#: e373fb00b11549ad8034a8a7588298d9
+msgid "extensive tutorial documentation"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:343
-#: 5792f5756c56416dba8ff1e5cd5f0ef1
-msgid ""
-"**Use tier presets**: Apply material-specific presets instead of manual "
-"parameters"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:238
+#: bcd3b2be5b3643efa7df4e37466564f9
+#, fuzzy
+msgid "Infrastructure (Group 03)"
+msgstr "Infrstructure (03)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:239
+#: a4a8a0246d2043b78b8084d989cd48d6
+#, fuzzy
+msgid "**24 comprehensive tutorials** for production setup"
+msgstr "**14 comprehensive tutیاils** covering ll fetures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:240
+#: 927747a4c361497bb5272efdf3414017
+msgid "**MongoDB integration** with automatic storage"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:344
-#: 4f81b2bb8aab41f9b18584ea0577dc5c
-msgid "**Enable dry-run first**: Always preview with `dry_run=True`"
-msgstr "**Enable dry-run first**: Always preview with `dry_run=True`"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:345
-#: a09130e76a32439fab4ec5d763d4449e
-msgid "**Set up infrastructure**: Configure database and job submission early"
-msgstr "**Set up infrstructure**: Configure dtbse و job submission erly"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:346
-#: 7880fba57ce342fbb20f00c192579e6d
-msgid "**Enable error handling**: Use custodian for production calculations"
-msgstr "**Enble errیا hوling**: Use custodin برای production clcultions"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:347
-#: 519f4b01d4cc403e80deccd24bbb0dbb
-msgid "**Document parameters**: Keep track of all customizations"
-msgstr "**Document prmeters**: Keep trck of ll customiztions"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:348
-#: 1353605020b8469f9e5c39991a71588a
-msgid ""
-"**Use CLI tools**: Explore `atomate2siesta-*` commands for quick "
-"operations"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:241
+#: 98be02d125bf4ef9b37ff55f8ef88d53
+msgid "**HPC job submission** via jobflow-remote"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:352
-#: 98eea18076e443a5a1eb77d1680841c2
-msgid "Common Patterns"
-msgstr "Common Ptterns"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:354
-#: ce88f28f680d4207a76045c08859e573
-msgid "Pattern 1: Tier Preset + Custom Parameters"
-msgstr "Pttern 1: Tier Preset + Custom Prmeters"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:364
-#: 4a7f947e43ed41f8b5adbfb1ca261925
-msgid "Pattern 2: Recipe Book + Tier"
-msgstr "Pttern 2: Recipe Book + Tier"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:372
-#: 1d8f884cb4dc4262b0754badd176cd53
-msgid "Pattern 3: Powerup Modification"
-msgstr "Pttern 3: Powerup Modifiction"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:380
-#: aae4a3ee52cb45efa3e8856ea6c38cdb
-msgid "Tutorial Metrics"
-msgstr "Tutیاil Metrics"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:382
-#: c5fcf1b83f7849b0a87800d26acecf7a
-msgid "**Total advanced topics**: 21 topics"
-msgstr "**Totl dvnced topics**: 21 topics"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:383
-#: ffd23cb5b5ef46beb92840bd1561b27b
-msgid "**Total tutorial files**: 100+ Python scripts"
-msgstr "**Totl tutیاil files**: 100+ Python scripts"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:384
-#: f8fa2e71459d42fca79548decd5d52f5
-#, python-format
-msgid "**Recipe book**: recipes, comprehensive tutorials, fully documented"
-msgstr "**Recipe book**: recipes, 16 tutیاils, fully documented"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:385
-#: 59365bf6b34142989947526b944e45fc
-msgid "**Tier presets**: 26 material-specific presets, automatic discovery"
-msgstr "**Tier presets**: 26 mteril-specific presets, utomtic discovery"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:386
-#: 30466071af0742139543b1664ef6aaaf
-msgid "**Magnetic tutorials**: 6 comprehensive examples"
-msgstr "**Mgnetic tutیاils**: 6 comprehensive exmples"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:387
-#: 08ed4dbf21c74636a472396329d4cc43
-msgid "**Basis customization**: 14 tutorials covering 4 phases"
-msgstr "**Bsis customiztion**: 14 tutیاils covering 4 phses"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:388
-#: 08edaf6fd29c43b6845d83054c8be95c
-msgid "**Infrastructure**: 5 subtopics with complete setup guides"
-msgstr "**Infrstructure**: 5 subtopics با complete setup guides"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:389
-#: 064a09d17a1f45c988e887d390040bba
-msgid "**Structure tools**: 16 CLI subcommands in 4 tiers"
-msgstr "**Structure tools**: 16 CLI subcommوs in 4 tiers"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:393
-#: 52d465ce489f42f7927edc200fb6f12c
-msgid "Next Steps"
-msgstr "گام‌های بعدی"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:395
-#: 9a327ae1ce6940e0bd9c9c734be71aeb
-msgid "After completing advanced features:"
-msgstr "After completing dvnced fetures:"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:397
-#: ba0757c14faf4f33be11f446aab26665
-msgid "Troubleshooting"
-msgstr "عیب‌یابی"
-
-#: ../../source/tutorials-md/03-advanced-features/README.md:398
-#: bca7c3030c6f499e9c279127e18b3b59
-msgid ""
-"**[troubleshooting/common_errors](../troubleshooting/common_errors/)** - "
-"Error solutions"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:242
+#: 89b7e3353cb347f98a45cdc8e0d04b17
+msgid "**Error recovery** with custodian (high success rate)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:399
-#: f27f0d1722004451a1e8a103ae55d44b
-msgid ""
-"**[troubleshooting/debugging_workflows](../troubleshooting/debugging_workflows/)**"
-" - Debug strategies"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:243
+#: 8a89632dc24741228c11cb46717edb23
+msgid "**Checkpoint/restart** for long calculations"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:400
-#: c71c351bed5a4f90a569fcf6a7ac32c9
-msgid ""
-"**[troubleshooting/performance_optimization](../troubleshooting/performance_optimization/)**"
-" - Speed optimization"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:245
+#: f1ea6c5534ac4a8e9b3cfb8b10576498
+msgid "Parameter Systems (Group 01)"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/README.md:404
-#: cef819e03e094e9db79839ace112c1c3
-msgid "*Back to [Main Tutorial Index](../README.md)*"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:246
+#: 32230ce73eb344818c30d9cdf8fdf1f2
+msgid "**5-tier hierarchy** with automatic module activation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:247
+#: 1fc967ddff84494bb6a6069bcceefdd5
+#, fuzzy
+msgid "**27 material presets** across 9 categories"
+msgstr "**26 mteril-specific presets** in 10 ctegیاies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:248
+#: f86e9cba5f5d4cc1b3783cfe2cc9b3aa
+msgid "**Custom basis sets** with 4-phase species variant system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:249
+#: 2b2c4ab118a9412fad8a8715bf5eabd0
+msgid "**Automatic preset discovery** via CLI"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:251
+#: 334d032b00d54bb78ada3975efb440ae
+msgid "Physics Features (Group 02)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:252
+#: eb28b7b681784a7eb54a39213c009025
+msgid ""
+"**Automatic magnetic initialization** for 3d metals (Cr, Mn, Fe, Co, Ni, "
+"Cu)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:253
+#: b774afc0fe8a4f3c90c85b3bbdb9e0fc
+msgid "**Optical property** calculations (dielectric, absorption, refraction)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:254
+#: 038a507d7d2e4b1597b45a2ea025e961
+msgid "**Advanced DOS** customization with broadening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:255
+#: 0334ebe00ec548dbac570170d47f902c
+msgid "**Electric field** and dipole corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:259
+#: 7f6d52d14f7c4a71a8295af7cbec8783
+msgid "Directory Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:273
+#: 2224316de6154c7cbc4666412919ba6f
+msgid "**Total**: 8 groups, 32 subdirectories, ~120 tutorial files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:277
+#: 30d53c9f1f374b7bb7591983eac50113
+msgid "Related Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:279
+#: 9903a206184f4662950d3c98de8a0c54
+msgid "**[02-workflows](../02-workflows/)**: Multi-step calculation workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:280
+#: 70915bbeec1f41d494dff423984dffee
+msgid "**[01-basics](../01-basics/)**: Getting started tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:281
+#: 3c88d755b69e4c9f922f90cae6005233
+#, fuzzy
+msgid "**Main tutorial index**: [tutorials/README.md](../README.md)"
 msgstr "*Back to [Main Tutorial Index](../README.md)*"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:282
+#: 7be0d44aa5644e18b7e02041959d26e0
+msgid "**CLI reference**: Run `atomate2siesta-<tool> --help` for any CLI tool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/README.md:286
+#: c724b83f4e2c4e40aa4ff06fea1a4108
+msgid "*Reorganized: 2026-01-13 (20 directories → 8 logical groups)*"
+msgstr ""
+
+#~ msgid "Tutorials in This Category"
+#~ msgstr "Tutیاils in This دسته‌بندی"
+
+#~ msgid ""
+#~ "This category contains 21 advanced "
+#~ "topics covering specialized calculations, "
+#~ "parameter systems, and infrastructure:"
+#~ msgstr ""
+
+#~ msgid "[01-tier-system](01-tier-system/)"
+#~ msgstr "[01-tier-system](01-tier-system/)"
+
+#~ msgid ""
+#~ "**Description**: Tier-based parameter presets"
+#~ " (basic_dirty → basic → intermediate "
+#~ "→ advanced → expert) **Difficulty**: "
+#~ "Beginner to Intermediate **Key Concepts**: "
+#~ "5-tier hierarchy, automatic module activation,"
+#~ " backward compatibility **Files**: Multiple "
+#~ "examples demonstrating tier levels"
+#~ msgstr ""
+
+#~ msgid "[02-fdf-block-inputs](02-fdf-block-inputs/)"
+#~ msgstr "[02-fdf-block-inputs](02-fdf-block-inputs/)"
+
+#~ msgid ""
+#~ "**Description**: FDF block parameters "
+#~ "(electric fields, constraints, PDOS, custom"
+#~ " k-paths) **Difficulty**: Intermediate **Key "
+#~ "Concepts**: Block format, geometry "
+#~ "constraints, external fields, custom band "
+#~ "paths **Files**: Examples of k-path "
+#~ "specification, electric fields, constraints"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Description**: Database storage, HPC job "
+#~ "submission, dry-run mode, error handling"
+#~ " **Difficulty**: Intermediate to Advanced "
+#~ "**Key Concepts**: MongoDB integration, "
+#~ "jobflow-remote, custodian error handling, "
+#~ "checkpoint/restart **Subdirectories**: 5 "
+#~ "infrastructure topics (database, job-"
+#~ "submission, error-handling, restart-recovery,"
+#~ " dry-run-preview) **Files**: Complete "
+#~ "infrastructure setup tutorials"
+#~ msgstr ""
+
+#~ msgid "[03-powerups](03-powerups/)"
+#~ msgstr "[03-powerups](03-powerups/)"
+
+#~ msgid ""
+#~ "**Description**: Workflow customization and "
+#~ "dynamic parameter modification **Difficulty**: "
+#~ "Intermediate **Key Concepts**: "
+#~ "update_user_siesta_settings(), modify job "
+#~ "parameters, workflow transformation **Files**: "
+#~ "Powerup function examples for dynamic "
+#~ "customization"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Description**: Convert between structure "
+#~ "formats (XV, FDF, XSF, CIF, VASP "
+#~ "POSCAR) **Difficulty**: Beginner **Key "
+#~ "Concepts**: File format conversion, structure"
+#~ " I/O, interoperability **Files**: Conversion "
+#~ "examples for all supported formats"
+#~ msgstr ""
+
+#~ msgid "[05-dos-calculations](05-dos-calculations/)"
+#~ msgstr "[05-dos-clcultions](05-dos-clcultions/)"
+
+#~ msgid ""
+#~ "**Description**: Advanced DOS analysis and "
+#~ "customization **Difficulty**: Intermediate **Key "
+#~ "Concepts**: Energy range, broadening, DOS "
+#~ "plotting, Fermi energy **Files**: DOS "
+#~ "calculation with custom parameters"
+#~ msgstr ""
+
+#~ msgid "[06-phonon-inputs](06-phonon-inputs/)"
+#~ msgstr "[06-phonon-inputs](06-phonon-inputs/)"
+
+#~ msgid ""
+#~ "**Description**: Phonon calculation customization"
+#~ " (force constants, displacements) **Difficulty**:"
+#~ " Intermediate **Key Concepts**: MD.FCfirst, "
+#~ "MD.FCDispl, force constant parameters "
+#~ "**Files**: Advanced phonon parameter control"
+#~ msgstr ""
+
+#~ msgid "[06-tier-presets-customization](06-tier-presets-customization/)"
+#~ msgstr "[06-tier-presets-customiztion](06-tier-presets-customiztion/)"
+
+#~ msgid ""
+#~ "**Description**: Material-specific tier "
+#~ "presets (material-specific presets in 10"
+#~ " categories) **Difficulty**: Beginner to "
+#~ "Intermediate **Key Concepts**: 2D materials,"
+#~ " surfaces, magnetic, phonons, optical, "
+#~ "mechanical, convergence, DFT+U, vdW, testing"
+#~ " presets **Files**: Examples for each "
+#~ "preset category, custom preset creation "
+#~ "**CLI**: `atomate2siesta-presets list` for "
+#~ "automatic preset discovery"
+#~ msgstr ""
+
+#~ msgid "[07-basis-set-customization](07-basis-set-customization/)"
+#~ msgstr "[07-bsis-set-customiztion](07-bsis-set-customiztion/)"
+
+#~ msgid ""
+#~ "**Description**: Custom basis sets, species"
+#~ " variants, per-atom basis, PAO.Basis "
+#~ "**Difficulty**: Intermediate to Advanced **Key"
+#~ " Concepts**: PAO.BasisSize, PAO.BasisSizes "
+#~ "(species variants), PAO.Basis (custom "
+#~ "orbitals), per-atom control **Files**: "
+#~ "14 comprehensive tutorials covering all "
+#~ "4 phases of species variant system "
+#~ "**Features**: Dict format for species "
+#~ "variants, per-atom basis helpers, "
+#~ "PAO.Basis builder with 4 RC methods"
+#~ msgstr ""
+
+#~ msgid "[07-optical-properties](07-optical-properties/)"
+#~ msgstr "[07-opticl-properties](07-opticl-properties/)"
+
+#~ msgid ""
+#~ "**Description**: Optical calculations (dielectric"
+#~ " function, absorption, refraction) "
+#~ "**Difficulty**: Advanced **Key Concepts**: "
+#~ "Optical.Energy, Optical.Broaden, polarization, "
+#~ "refractive index **Files**: Optical property"
+#~ " calculation examples"
+#~ msgstr ""
+
+#~ msgid "[08-dftu](08-dftu/)"
+#~ msgstr "[08-dftu](08-dftu/)"
+
+#~ msgid ""
+#~ "**Description**: DFT+U for correlated electron"
+#~ " systems **Difficulty**: Advanced **Key "
+#~ "Concepts**: Hubbard U parameters, transition"
+#~ " metal oxides, f-electron systems "
+#~ "**Files**: DFT+U setup and parameter "
+#~ "selection"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Description**: High-level workflow system"
+#~ " (recipes, 90-98% code reduction) "
+#~ "**Difficulty**: Beginner to Advanced **Key "
+#~ "Concepts**: One-line workflows, RecipeBook "
+#~ "class, complete_material_study(), 16 comprehensive"
+#~ " tutorials **Files**: tutorial files "
+#~ "covering all 39 recipes across 6 "
+#~ "categories **Coverage**: fully documented "
+#~ "lines of tutorial documentation **CLI**: "
+#~ "`atomate2siesta-recipe list` and "
+#~ "`atomate2siesta-recipe show <name>`"
+#~ msgstr ""
+
+#~ msgid "[09-charge-dipole-efield](09-charge-dipole-efield/)"
+#~ msgstr "[09-chrge-dipole-efield](09-chrge-dipole-efield/)"
+
+#~ msgid ""
+#~ "**Description**: Charged systems, dipole "
+#~ "corrections, external electric fields "
+#~ "**Difficulty**: Advanced **Key Concepts**: "
+#~ "NetCharge, SlabDipoleCorrection, %block "
+#~ "ExternalElectricField **Files**: Electric field "
+#~ "and charged defect examples"
+#~ msgstr ""
+
+#~ msgid "[09-structure-manipulation](09-structure-manipulation/)"
+#~ msgstr "[09-structure-mnipultion](09-structure-mnipultion/)"
+
+#~ msgid ""
+#~ "**Description**: Structure tools (16 "
+#~ "subcommands in 4 tiers) **Difficulty**: "
+#~ "Beginner to Advanced **Key Concepts**: "
+#~ "Structure conversion, scaling, supercells, "
+#~ "slabs, substitution, defects **CLI**: "
+#~ "`atomate2siesta-structure <command>` with 16 "
+#~ "subcommands **Tiers**: Basic (info, convert,"
+#~ " scale, supercell, rotate, translate), "
+#~ "Surface (slab, vacuum, stack), Atomic "
+#~ "(substitute, remove, add, perturb), Analysis"
+#~ " (compare, standardize, optimize-cell)"
+#~ msgstr ""
+
+#~ msgid "[10-grid-output](10-grid-output/)"
+#~ msgstr "[10-grid-output](10-grid-output/)"
+
+#~ msgid ""
+#~ "**Description**: Grid-based output files "
+#~ "(charge density, potentials, wavefunctions) "
+#~ "**Difficulty**: Intermediate **Key Concepts**: "
+#~ "SaveRho, SaveElectrostaticPotential, SaveTotalPotential,"
+#~ " grid formats **Files**: Grid output "
+#~ "examples for visualization"
+#~ msgstr ""
+
+#~ msgid "[11-denchar-visualization](11-denchar-visualization/)"
+#~ msgstr "[11-denchr-visuliztion](11-denchr-visuliztion/)"
+
+#~ msgid ""
+#~ "**Description**: Denchar visualization tools "
+#~ "for charge density and wavefunctions "
+#~ "**Difficulty**: Intermediate **Key Concepts**: "
+#~ "Denchar tool, charge density plots, "
+#~ "wavefunction visualization **Files**: Denchar "
+#~ "usage examples"
+#~ msgstr ""
+
+#~ msgid "[12-parallel-computation](12-parallel-computation/)"
+#~ msgstr "[12-prllel-computtion](12-prllel-computtion/)"
+
+#~ msgid ""
+#~ "**Description**: Parallel execution settings "
+#~ "(MPI, k-point parallelization, orbital "
+#~ "parallelization) **Difficulty**: Intermediate **Key"
+#~ " Concepts**: ParallelDistribution, DiagUseElpa, "
+#~ "ProcessorY **Files**: Parallel configuration "
+#~ "examples"
+#~ msgstr ""
+
+#~ msgid "[13-netcdf-output](13-netcdf-output/)"
+#~ msgstr "[13-netcdf-output](13-netcdf-output/)"
+
+#~ msgid ""
+#~ "**Description**: NetCDF output format for "
+#~ "analysis and post-processing **Difficulty**:"
+#~ " Intermediate **Key Concepts**: CDF.Save, "
+#~ "CDF.Compress, NetCDF format **Files**: NetCDF"
+#~ " output configuration"
+#~ msgstr ""
+
+#~ msgid "[14-efficiency-options](14-efficiency-options/)"
+#~ msgstr "[14-efficiency-options](14-efficiency-options/)"
+
+#~ msgid ""
+#~ "**Description**: Performance optimization (memory,"
+#~ " I/O, convergence acceleration) **Difficulty**:"
+#~ " Intermediate to Advanced **Key Concepts**:"
+#~ " SolutionMethod, DirectPhi, SaveMemory, "
+#~ "performance tuning **Files**: Efficiency "
+#~ "parameter examples"
+#~ msgstr ""
+
+#~ msgid "[15-hamiltonian-overlap](15-hamiltonian-overlap/)"
+#~ msgstr "[15-hmiltonin-overlp](15-hmiltonin-overlp/)"
+
+#~ msgid ""
+#~ "**Description**: Hamiltonian and overlap "
+#~ "matrix settings and output **Difficulty**: "
+#~ "Advanced **Key Concepts**: SaveHS, "
+#~ "LocalDensityOfStates, COOP/COHP analysis **Files**:"
+#~ " Hamiltonian/overlap configuration"
+#~ msgstr ""
+
+#~ msgid "[16-magnetic-calculations](16-magnetic-calculations/)"
+#~ msgstr "[16-mgnetic-clcultions](16-mgnetic-clcultions/)"
+
+#~ msgid ""
+#~ "**Description**: Spin-polarized calculations, "
+#~ "DM.InitSpin, magnetic moments **Difficulty**: "
+#~ "Intermediate to Advanced **Key Concepts**: "
+#~ "Automatic DM.InitSpin generation, FM/AFM/custom "
+#~ "orderings, sign-only mode, magnetic "
+#~ "element detection **Files**: 6 comprehensive"
+#~ " tutorials (basic FM, AFM, custom "
+#~ "ordering, DFT+U integration, real-world "
+#~ "Cu surface, sign-only format) "
+#~ "**Features**: `get_default_initial_magnetic_moments()`, "
+#~ "auto-detection of 3d metals (Cr, Mn,"
+#~ " Fe, Co, Ni, Cu), default AFM "
+#~ "ordering"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**CLI integration**: `atomate2siesta-recipe` "
+#~ "with list/show/search commands"
+#~ msgstr ""
+
+#~ msgid "Tier Presets (06)"
+#~ msgstr "Tier Presets (06)"
+
+#~ msgid "**Automatic CLI discovery**: New presets appear automatically"
+#~ msgstr "**Automtic CLI discovery**: New presets pper utomticlly"
+
+#~ msgid "**Naming-based categorization**: 2d_*, surface_*, magnetic_*, etc."
+#~ msgstr "**Nming-bsed ctegیاiztion**: 2d_*, surfce_*, mgnetic_*, etc."
+
+#~ msgid ""
+#~ "**CLI tool**: `atomate2siesta-presets` with"
+#~ " list/show/category/search commands"
+#~ msgstr ""
+
+#~ msgid "Magnetic Calculations (16)"
+#~ msgstr "Mgnetic محاسبهs (16)"
+
+#~ msgid "**Automatic DM.InitSpin generation** from structure.magmom"
+#~ msgstr "**Automtic DM.InitSpin genertion** from structure.mgmom"
+
+#~ msgid ""
+#~ "**Magnetic element detection**: 3d (Cr, "
+#~ "Mn, Fe, Co, Ni, Cu), 4d (Mo, "
+#~ "Tc, Ru, Rh), lanthanides (Gd, etc.)"
+#~ msgstr ""
+
+#~ msgid "**Three ordering modes**: FM, AFM (default), custom"
+#~ msgstr "**Three یاdering modes**: FM, AFM (defult), custom"
+
+#~ msgid "**Sign-only format** (v1.0.0): Write `+`/`-` instead of numeric values"
+#~ msgstr "**Sign-only format** (v1.0.0): Write `+`/`-` instead of numeric values"
+
+#~ msgid ""
+#~ "**Single source of truth**: Only "
+#~ "SpinSettings dataclass handles DM.InitSpin"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**4 phases complete**: Dict format, ASE"
+#~ " integration, per-atom helpers, PAO.Basis"
+#~ " builder"
+#~ msgstr ""
+
+#~ msgid "**Species variants**: `{'Ti_surface': 'TZP', 'Ti_bulk': 'DZP'}`"
+#~ msgstr "**Species variants**: `{'Ti_surface': 'TZP', 'Ti_bulk': 'DZP'}`"
+
+#~ msgid ""
+#~ "**Per-atom control**: `apply_per_atom_basis()` "
+#~ "and `create_per_atom_basis_dict()`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**PAO.Basis builder**: `create_pao_basis()` with "
+#~ "4 RC methods (psml, scaled, hydrogenic,"
+#~ " fixed)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**5 subtopics**: Database, job submission, "
+#~ "error handling, restart/recovery, dry-run"
+#~ msgstr ""
+
+#~ msgid "**MongoDB integration**: Store and query calculation results"
+#~ msgstr "**MongoDB integrtion**: Stیاe و query clcultion results"
+
+#~ msgid "**Jobflow-remote**: HPC cluster job submission"
+#~ msgstr "**Jobflow-remote**: HPC cluster job submission"
+
+#~ msgid "**Checkpoint/restart**: Universal system for ANY workflow"
+#~ msgstr "**Checkpoint/restrt**: Universl system برای ANY wیاkflow"
+
+#~ msgid "**Custodian**: 10+ error types with 95% recovery rate"
+#~ msgstr "**Custodin**: 10+ errیا types با 95% recovery rte"
+
+#~ msgid "Choose tutorials based on your needs:"
+#~ msgstr "Choose tutیاils bsed on your needs:"
+
+#~ msgid "For All Users (Start Here)"
+#~ msgstr "Fیا All Users (Strt Here)"
+
+#~ msgid ""
+#~ "**[01-tier-system](01-tier-system/)** - "
+#~ "Understand tier-based parameters"
+#~ msgstr "**[01-tier-system](01-tier-system/)** - Understو tier-bsed prmeters"
+
+#~ msgid ""
+#~ "**[06-tier-presets-customization](06-tier-"
+#~ "presets-customization/)** - Apply material-"
+#~ "specific presets"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[03-infrastructure/05-dry-run-"
+#~ "preview](03-infrastructure/05-dry-run-preview/)** -"
+#~ " Learn preview mode"
+#~ msgstr ""
+
+#~ msgid "For Production Calculations"
+#~ msgstr "Fیا Production محاسبهs"
+
+#~ msgid ""
+#~ "**[03-infrastructure/01-database-storage](03-infrastructure/01"
+#~ "-database-storage/)** - Set up MongoDB"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[03-infrastructure/02-job-submission](03-infrastructure/02"
+#~ "-job-submission/)** - HPC submission"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[03-infrastructure/03-error-handling](03-infrastructure/03"
+#~ "-error-handling/)** - Custodian setup"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[03-infrastructure/04-restart-recovery](03-infrastructure/04"
+#~ "-restart-recovery/)** - Checkpoint system"
+#~ msgstr ""
+
+#~ msgid "For High-Level Workflows"
+#~ msgstr "Fیا High-Level گردش کارs"
+
+#~ msgid "comprehensive tutorials"
+#~ msgstr "comprehensive tutیاils"
+
+#~ msgid "Complete material studies in 1 line"
+#~ msgstr "Complete mteril studies in 1 line"
+
+#~ msgid ""
+#~ "**[07-basis-set-customization/08-10](07-basis-"
+#~ "set-customization/)** - Species variants"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[07-basis-set-customization/03.1-03.2](07-basis-"
+#~ "set-customization/)** - Per-atom basis"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[07-basis-set-customization/11](07-basis-set-"
+#~ "customization/)** - PAO.Basis builder"
+#~ msgstr ""
+
+#~ msgid "For Magnetic Systems"
+#~ msgstr "Fیا Mgnetic Systems"
+
+#~ msgid ""
+#~ "**[16-magnetic-calculations/01](16-magnetic-"
+#~ "calculations/)** - Basic FM calculation"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[16-magnetic-calculations/02](16-magnetic-"
+#~ "calculations/)** - AFM ordering"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[16-magnetic-calculations/04](16-magnetic-"
+#~ "calculations/)** - DFT+U integration"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[16-magnetic-calculations/06](16-magnetic-"
+#~ "calculations/)** - Sign-only mode"
+#~ msgstr ""
+
+#~ msgid "For Parameter Customization"
+#~ msgstr "Fیا Prmeter Customiztion"
+
+#~ msgid "**[03-powerups](03-powerups/)** - Dynamic parameter modification"
+#~ msgstr "**[03-powerups](03-powerups/)** - Dynmic prmeter modifiction"
+
+#~ msgid ""
+#~ "**[02-fdf-block-inputs](02-fdf-block-"
+#~ "inputs/)** - Block format parameters"
+#~ msgstr "**[02-fdf-block-inputs](02-fdf-block-inputs/)** - Block برایmt prmeters"
+
+#~ msgid ""
+#~ "**[14-efficiency-options](14-efficiency-options/)** "
+#~ "- Performance tuning"
+#~ msgstr ""
+#~ "**[14-efficiency-options](14-efficiency-options/)** "
+#~ "- Perبرایmnce tuning"
+
+#~ msgid "For Optical/Electronic Properties"
+#~ msgstr "Fیا Opticl/Electronic Properties"
+
+#~ msgid "**[05-dos-calculations](05-dos-calculations/)** - Advanced DOS"
+#~ msgstr "**[05-dos-clcultions](05-dos-clcultions/)** - پیشرفته DOS"
+
+#~ msgid ""
+#~ "**[07-optical-properties](07-optical-properties/)** "
+#~ "- Optical calculations"
+#~ msgstr "**[07-opticl-properties](07-opticl-properties/)** - Opticl clcultions"
+
+#~ msgid ""
+#~ "**[15-hamiltonian-overlap](15-hamiltonian-overlap/)** "
+#~ "- COOP/COHP analysis"
+#~ msgstr "**[15-hmiltonin-overlp](15-hmiltonin-overlp/)** - COOP/COHP nlysis"
+
+#~ msgid "For Specialized Systems"
+#~ msgstr "Fیا Specilized Systems"
+
+#~ msgid "**[08-dftu](08-dftu/)** - Correlated electrons"
+#~ msgstr "**[08-dftu](08-dftu/)** - Cیاrelted electrons"
+
+#~ msgid ""
+#~ "**[09-charge-dipole-efield](09-charge-dipole-"
+#~ "efield/)** - Charged/polarized systems"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[09-structure-manipulation](09-structure-"
+#~ "manipulation/)** - Structure tools (16 "
+#~ "commands)"
+#~ msgstr ""
+
+#~ msgid "Many tutorials demonstrate CLI tools:"
+#~ msgstr "Mny tutیاils demonstrte CLI tools:"
+
+#~ msgid "Quick Start Patterns"
+#~ msgstr "شروع سریع Ptterns"
+
+#~ msgid "Using Tier Presets"
+#~ msgstr "استفاده از Tier Presets"
+
+#~ msgid "Using Recipe Book"
+#~ msgstr "استفاده از Recipe Book"
+
+#~ msgid "Using Powerups"
+#~ msgstr "استفاده از Powerups"
+
+#~ msgid "Using Species Variants"
+#~ msgstr "استفاده از Species Vrints"
+
+#~ msgid "Using Magnetic Moments"
+#~ msgstr "استفاده از Mgnetic Moments"
+
+#~ msgid "Best Practices"
+#~ msgstr "بهترین روش‌ها"
+
+#~ msgid ""
+#~ "**Start with recipe book**: Use "
+#~ "`RecipeBook` for common workflows (90-98% "
+#~ "code reduction)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Use tier presets**: Apply material-"
+#~ "specific presets instead of manual "
+#~ "parameters"
+#~ msgstr ""
+
+#~ msgid "**Enable dry-run first**: Always preview with `dry_run=True`"
+#~ msgstr "**Enable dry-run first**: Always preview with `dry_run=True`"
+
+#~ msgid "**Set up infrastructure**: Configure database and job submission early"
+#~ msgstr "**Set up infrstructure**: Configure dtbse و job submission erly"
+
+#~ msgid "**Enable error handling**: Use custodian for production calculations"
+#~ msgstr "**Enble errیا hوling**: Use custodin برای production clcultions"
+
+#~ msgid "**Document parameters**: Keep track of all customizations"
+#~ msgstr "**Document prmeters**: Keep trck of ll customiztions"
+
+#~ msgid ""
+#~ "**Use CLI tools**: Explore `atomate2siesta-*`"
+#~ " commands for quick operations"
+#~ msgstr ""
+
+#~ msgid "Common Patterns"
+#~ msgstr "Common Ptterns"
+
+#~ msgid "Pattern 1: Tier Preset + Custom Parameters"
+#~ msgstr "Pttern 1: Tier Preset + Custom Prmeters"
+
+#~ msgid "Pattern 2: Recipe Book + Tier"
+#~ msgstr "Pttern 2: Recipe Book + Tier"
+
+#~ msgid "Pattern 3: Powerup Modification"
+#~ msgstr "Pttern 3: Powerup Modifiction"
+
+#~ msgid "**Total advanced topics**: 21 topics"
+#~ msgstr "**Totl dvnced topics**: 21 topics"
+
+#~ msgid "**Total tutorial files**: 100+ Python scripts"
+#~ msgstr "**Totl tutیاil files**: 100+ Python scripts"
+
+#~ msgid "**Recipe book**: recipes, comprehensive tutorials, fully documented"
+#~ msgstr "**Recipe book**: recipes, 16 tutیاils, fully documented"
+
+#~ msgid "**Tier presets**: 26 material-specific presets, automatic discovery"
+#~ msgstr "**Tier presets**: 26 mteril-specific presets, utomtic discovery"
+
+#~ msgid "**Magnetic tutorials**: 6 comprehensive examples"
+#~ msgstr "**Mgnetic tutیاils**: 6 comprehensive exmples"
+
+#~ msgid "**Basis customization**: 14 tutorials covering 4 phases"
+#~ msgstr "**Bsis customiztion**: 14 tutیاils covering 4 phses"
+
+#~ msgid "**Infrastructure**: 5 subtopics with complete setup guides"
+#~ msgstr "**Infrstructure**: 5 subtopics با complete setup guides"
+
+#~ msgid "Next Steps"
+#~ msgstr "گام‌های بعدی"
+
+#~ msgid "Troubleshooting"
+#~ msgstr "عیب‌یابی"
+
+#~ msgid ""
+#~ "**[troubleshooting/common_errors](../troubleshooting/common_errors/)**"
+#~ " - Error solutions"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[troubleshooting/debugging_workflows](../troubleshooting/debugging_workflows/)**"
+#~ " - Debug strategies"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**[troubleshooting/performance_optimization](../troubleshooting/performance_optimization/)**"
+#~ " - Speed optimization"
+#~ msgstr ""
+

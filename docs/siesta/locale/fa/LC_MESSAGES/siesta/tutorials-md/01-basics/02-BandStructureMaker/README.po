@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,674 +20,777 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:1
-#: b61ea09d0c59435187c411f06ea3e05e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:1
+#: ea0d6454bb9246de92f6d928cad33e31
 msgid "Tutorial: Band Structure Calculation with BandStructureMaker"
 msgstr "Tutorial: Band Structure Calculation with BandStructureMaker"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:3
-#: d494275b05114125a56bb9bebc5286c2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:3
+#: d5f532a62087437ea21105514a42c5d0
 msgid ""
 "**Category**: 01-basics/02-BandStructureMaker **Difficulty**: Beginner "
 "**Time**: ~2 min (dry-run), ~15-20 min (full calculation)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:9
-#: d769ffc8489e4bb59e84ee7c556a1335
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:9
+#: 3d8fdc213ded4f7d8338340d411bef08
 msgid "Overview"
 msgstr "نمای کلی"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:11
-#: 50c0d115d7344bd184eac827e74caf4d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:11
+#: a3cc84816fb34ff8aeff0ffe50174399
 msgid ""
 "This tutorial demonstrates how to calculate electronic band structure "
 "using the `BandStructureMaker`. Band structure calculations are essential"
 " for understanding the electronic properties of materials, including:"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:13
-#: fecb37e999da4edb930f9edefb93dfc6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:13
+#: b39fa67e6a0c407b81fa65d95cfded72
 msgid "Band gap determination (semiconductors/insulators)"
 msgstr "Bو gp determintion (semiconductیاs/insultیاs)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:14
-#: 90228c7be69042a09f475301513b475e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:14
+#: 997556b3bf7a489594808d39d2f87f8d
 msgid "Metallic vs insulating character"
 msgstr "Metllic vs insulting chrcter"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:15
-#: 4b412d75021842d9839557884d74e415
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:15
+#: 59a4bfc5fa454827b612b26ab3680fb7
 msgid "Electronic dispersion and effective masses"
 msgstr "Electronic dispersion و effective msses"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:16
-#: 0b86bef22a254c809b3b0a8491f421c6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:16
+#: 003c51601c6147dca8eae5f42a12d1bc
 msgid "Comparison with experimental spectroscopy"
 msgstr "Comprison با experimentl spectroscopy"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:20
-#: 307c0cb2c5e64fbab404597871550f71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:20
+#: bf6bb06805ad475e83a54278a1d68f95
 msgid "What You'll Learn"
 msgstr "چیزهایی که یاد خواهید گرفت"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:22
-#: 123c2564dcc14680bf2f5f8bc9fbe1af
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:22
+#: 52eaaec6c69b416e89c420071cbf3f03
 msgid "How to use `BandStructureMaker` for automatic workflows"
 msgstr "How to use `BandStructureMaker` for automatic workflows"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:23
-#: 6c95b2b8e7494f009c685877c1206013
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:23
+#: b94d7a42b2814e1094839cf6e50c1b60
 msgid "Automatic high-symmetry k-path generation"
 msgstr "Automtic high-symmetry k-pth genertion"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:24
-#: 2766c1eb51e443fe8f183ac270ba965f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:24
+#: 841f66bea55c45d2857d5c61ca03131e
 msgid "Multi-step job creation (SCF + band structure)"
 msgstr "Multi-step job cretion (SCF + bو structure)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:25
-#: 190ee8d055e1461488fde89441569b29
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:25
+#: 8179d2b131a94e5fb3eaacc6ee9f6f4b
 msgid "Parameter customization with `user_params`"
 msgstr "Parameter customization with `user_params`"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:26
-#: 29401ff5792b4c0eacbdc376a70c33b8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:26
+#: 501f1d25e2894d78bb14b37f733f1dda
 msgid "Runtime modifications with powerups"
 msgstr "Runtime modifictions با powerups"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:27
-#: a91579e38b1b4ad1a372f5006722b75b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:27
+#: de05d40a9e744eea9fa78b2db131d54b
 msgid "Electronic structure analysis basics"
 msgstr "Electronic structure nlysis bsics"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:31
-#: 3563a1c5b8ca4646a16af78e6c6acd7d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:31
+#: f75a4530204b44b2aa6235121c64261f
 msgid "Prerequisites"
 msgstr "پیش‌نیازها"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:33
-#: 0e44b3bc78b046d88694bbafc9c6f3a1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:33
+#: 18e25f0f184a4fcf9cfd4b68b3ccd925
 msgid "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
 msgstr "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:34
-#: 2aa908da477843549e9ff820cf8b2852
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:34
+#: 68a032f3a0ac452281d3efecdcb0efda
 msgid "**Required knowledge**: Basic understanding of electronic band structure"
 msgstr "**مورد نیاز knowledge**: Bsic understوing of electronic bو structure"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:35
-#: 7791eb235d314486bb5733056015ec11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:35
+#: 63362773efc3454585de1b1eb7dd4062
 msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:36
-#: 04c32ac72b15410c9b1a8c1ad45e4e10
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:36
+#: 0f1c49cd63594106a806e6e1f3d31dbf
 msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
 msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:40
-#: 9bb58aac62f94d9983d9f6a7e0b325d8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:40
+#: d60e25870a414bf1a831704347627428
 msgid "Key Concepts"
 msgstr "مفاهیم کلیدی"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:42
-#: 77f3591e36c048a08e35816c8b77783a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:42
+#: 22c0d7822cc4413bb7c735652e68120b
 msgid "Band Structure Calculation"
 msgstr "ساختار نواری محاسبه"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:44
-#: 9d63467457eb40489c1ee627176902b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:44
+#: 84237c6fdd1647b3a1f177f2f5ae69df
 msgid "Band structure calculations involve two steps:"
 msgstr "Bو structure clcultions involve two steps:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:46
-#: 7e86642d70ee4758820386222260769d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:46
+#: 7dc8fb97f5e6499083336915f32965f3
 msgid ""
 "**SCF calculation**: Self-consistent field calculation to obtain "
 "converged charge density"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:47
-#: e0f26840b48945a487b62f5d77520ae6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:47
+#: 9c5200e28f2f46399a999705234794fe
 msgid ""
 "**Band structure calculation**: Non-self-consistent calculation along "
 "high-symmetry k-path"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:49
-#: 2c7e42399b0a4ba9b15f0814303f58c6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:49
+#: 283e6dc6e00a4155b6b249e298e87f7c
 msgid "The `BandStructureMaker` handles both steps automatically!"
 msgstr "The `BandStructureMaker` handles both steps automatically!"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:51
-#: d605b51d22b8499b8ff3cc7b4debe4b8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:51
+#: 24fc504df4404ae89255811a01da085e
 msgid "High-Symmetry K-Path"
 msgstr "High-Symmetry K-Pth"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:53
-#: 48b15fc54ca243e88ecb519590bd4cce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:53
+#: c2cccf73643b4ef0b0ee62a6f78f3b71
 msgid "The k-path is automatically generated based on crystal symmetry:"
 msgstr "The k-pth is utomticlly generted bsed on crystl symmetry:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:54
-#: 2b9bf44c08184f5dbdda90cd420c3eab
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:54
+#: 13059b838c014c958e548e4fddbd93dc
 msgid "**Cubic (FCC)**: Γ → X → W → K → Γ → L"
 msgstr "**Cubic (FCC)**: Γ → X → W → K → Γ → L"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:55
-#: f23c06b249214f42bb8ff7ed5710bd51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:55
+#: c9c3870ffc0d4b22b84ad9cc67290ad2
 msgid "**Cubic (BCC)**: Γ → H → N → Γ → P → H"
 msgstr "**Cubic (BCC)**: Γ → H → N → Γ → P → H"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:56
-#: a2093658cc6e44b3b7a79a9ba235aeaa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:56
+#: 0a727b0b1cfb418695dbc58aa9620c1a
 msgid "**Hexagonal**: Γ → M → K → Γ → A → L → H → A"
 msgstr "**Hexgonl**: Γ → M → K → Γ → A → L → H → A"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:58
-#: 3f7852bd4b86425d9c3e84f803640e09
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:58
+#: 1aa60ba58ee64897b9be5fab36fb6e62
 msgid "For Silicon (FCC), the path is: Γ → X → U|K → Γ → L → W → X"
 msgstr "Fیا Silicon (FCC),  pth is: Γ → X → U|K → Γ → L → W → X"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:60
-#: c93d86f071b34699a7c82abc684d5d68
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:60
+#: a19e3572553146479fb81d33b056312f
 msgid "Important Parameters"
 msgstr "مهم Prmeters"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:62
-#: ba7fab36648947a18f7ba4006b9413d4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:62
+#: 73d9e3d8a95546e88100ff351650be72
 msgid "**PAO.BasisSize**: Basis set quality (DZP recommended for band structure)"
 msgstr "**PAO.BsisSize**: Bsis set qulity (DZP recommended برای bو structure)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:63
-#: 7c42b2e5947045bca22822806f7b5575
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:63
+#: 44536ebcc67e4328b35befb76088c777
 msgid "**Mesh.Cutoff**: Real-space grid cutoff (200-300 Ry typical)"
 msgstr "**Mesh.Cutoff**: Rel-spce grid cutoff (200-300 Ry typicl)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:64
-#: e6afcc3e75e646a8bc498e16bde0c971
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:64
+#: e3e9e8c9ef3d4f689f7573da6fb24e26
 msgid "**k-points**: Dense mesh for SCF, special path for bands"
 msgstr "**k-points**: Dense mesh برای SCF, specil pth برای bوs"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:68
-#: 2243738c4de34d968e639720f02e7dfb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:68
+#: 5c9cb4f4ac59469389225c69bfbd7946
 msgid "Tutorials in This Section"
 msgstr "Tutیاils in This Section"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:70
-#: bcb78f8c585e44f4bf1010fb55dca4f7
-msgid "**`01_basic.py`**: Simple band structure calculation (default parameters)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:70
+#: 063f001c675743af93dd51ff20eea7be
+#, fuzzy
+msgid ""
+"**`BandStructureMaker_basic.py`**: Simple band structure calculation "
+"(default parameters)"
 msgstr "**`01_basic.py`**: Simple band structure calculation (default parameters)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:71
-#: 80834c01362049a6b03995402e3daff8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:71
+#: d6ed7c5792ca45b3bd8f6e062d5ff401
 msgid ""
-"**`02_custom_params.py`**: Customize parameters using `user_params` in "
-"maker"
+"**`BandStructureMaker_custom_params.py`**: Customize parameters using "
+"`user_params` in maker"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:72
-#: 9b2a12c29a494080a995c589bf8ba67b
-msgid "**`03_powerups.py`**: Runtime modifications using powerups functions"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:72
+#: c936289b7bac42c286728d4795a6675d
+#, fuzzy
+msgid ""
+"**`BandStructureMaker_powerups.py`**: Runtime modifications using "
+"powerups functions"
 msgstr "**`03_powerups.py`**: Runtime modifications using powerups functions"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:76
-#: d0cc4f2eaef24bc1bc3fa0a4761d5d1d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:76
+#: 1ec661573b0945299ae138e42c74cf4b
 msgid "Alternative: Using CLI Tool"
 msgstr "Alterntive: استفاده از CLI Tool"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:78
-#: a9c64148bb3743ca9588fd2b49de8a48
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:78
+#: 6aba0a85828e44b4b918d40b9e12a5e3
 msgid ""
 "Instead of writing Python code, generate this band structure script "
 "automatically:"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:88
-#: 0ddaaaafa84e4cd18a9344bd3421382a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:88
+#: 2e480eb234a44072b04003af5b0823d2
 msgid ""
 "The CLI tool generates a ready-to-run Python script with the same "
 "structure as this tutorial."
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:90
-#: 70f09149dc5a4e49bf3986e063f05939
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:90
+#: e5d2855b1e0d446382d6d3427aaf2aca
 msgid "**Benefits**:"
 msgstr "**Benefits**:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:91
-#: db0587dbfceb4e978df2fbcf0c27801b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:91
+#: 7352725a1f8d4b678cacff24d68a692a
 msgid "No Python knowledge required"
 msgstr "No Python knowledge required"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:92
-#: 1d52f5147245460ab286f016cf4fd313
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:92
+#: c4d561e7ae47408b8aecf79b112c4602
 msgid "Step-by-step prompts in interactive mode"
 msgstr "Step-by-step prompts in interctive mode"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:93
-#: ace553afcf204c7cbd3a75bd16c8e4f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:93
+#: 19225832f112431d8fc71f6220587514
 msgid "Automatic preset detection"
 msgstr "Automtic preset detection"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:94
-#: 39468aa3c84e4d4980f1f9a4ae0ca49a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:94
+#: 978ccc205edd497ca37f0382b37287d0
 msgid "Choice of execution mode (local/remote/dry-run)"
 msgstr "Choice of execution mode (locl/remote/dry-run)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:96
-#: a957496281a649c587deb256d772d899
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:96
+#: 9d70d77ba8854d569def6dfd34b828c1
 msgid ""
 "See the [CLI Tools documentation](../../../docs/source/cli-tools.rst) for"
 " all 13 available workflows."
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:100
-#: 73ec107bc3014ffeb0ea3ae0ed659efc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:100
+#: bc1841e9fa2d40b69b5b99b4c8b0ce11
 msgid "Run Modes"
 msgstr "حالت‌های اجرا"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:102
-#: f49d3f75d7c84358b37d11d3183175a6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:102
+#: d8e6e05215a246b39e7be573d2dea3e8
 msgid "1. Dry-Run (Preview)"
 msgstr "1. Dry-Run (Preview)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:109
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:125
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:142
-#: 336896b3dcd64f469d963181f0d908a2 3e98d22ed5b6426a962ead413c4a0a74
-#: f09a92da9d2040e2831b1dfe6e07cee8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:109
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:125
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:142
+#: 2a84f9e6dd7745e58be3efd1936903dd 8aa770c47966481791392ea5d5d34b1d
+#: f9d3202885fe46189ba68e98113ddadb
 msgid "**What it does**:"
 msgstr "**Wht it does**:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:110
-#: 56e44437111d4945b5ed7889a4cd7b26
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:110
+#: bfa85b2eee74409f8990feb937e6346f
 msgid "Creates folder structure"
 msgstr "Cretes folder structure"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:111
-#: 39cb779fced04536941077c5c30b61f6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:111
+#: cb3f02948a414cbbbb678365dfa26e02
 msgid "Shows multi-job workflow (SCF + bands)"
 msgstr "Shows multi-job wیاkflow (SCF + bوs)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:112
-#: f85721f6bece44f0b05586c6044c0690
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:112
+#: ff95d314f0ac47fa8ff282d6d4f3393d
 msgid "No SIESTA execution"
 msgstr "No SIESTA execution"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:114
-#: a7a8f4bbc928491094d741e5b8ee5e36
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:114
+#: c338a1fd2d1448be86d0d26c5dfb4b7b
 msgid "**Use for**:"
 msgstr "**Use برای**:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:115
-#: c57d43988a3143b9945f29ee4dd3cc91
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:115
+#: c22e6c34475349e381aedda2418313e8
 msgid "Verifying workflow setup"
 msgstr "Verifying wیاkflow setup"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:116
-#: 38888d00ec96494190d63c53d574eb47
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:116
+#: 3fc79af3b9ba48359f16634f0641fabb
 msgid "Checking job dependencies"
 msgstr "Checking job dependencies"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:117
-#: 001dd32a00944ed08820e1e3c4a97580
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:117
+#: c11979af1d694d3db81f886bf700f635
 msgid "Previewing folder structure"
 msgstr "Previewing folder structure"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:119
-#: f1d972061bcf4092bc3ff5dbe8b3e28b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:119
+#: 1ab1a71e18f84de9ba3fa1510e372dfe
 msgid "2. Local Execution"
 msgstr "2. Locl Execution"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:126
-#: 30d36ffaf0bd49d5bc80661ec2f67a4b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:126
+#: 33b94b9f4e13464aa11999ae09b963dd
 msgid "Runs SCF calculation (~10 min)"
 msgstr "Runs SCF clcultion (~10 min)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:127
-#: 1151441323af4081918ee1ace8ae2176
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:127
+#: 6c9d03fe56a64c578f14b5f13325b68b
 msgid "Runs band structure calculation (~5-10 min)"
 msgstr "Runs bو structure clcultion (~5-10 min)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:128
-#: 27d27c0659da45f89cb1700d275b2d0c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:128
+#: 8e0920f3091b47f3ae84a8d81123dbf7
 msgid "Generates electronic structure data"
 msgstr "Genertes electronic structure dt"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:130
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:147
-#: 644b04b6f5f54cd496e27d555b258698 f42976fc04904c4da7749dba253b211c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:130
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:147
+#: 47f795ad1f3e4c128aa9226a83dbcbd5 4d31e2686d724b87ab3f32096c912802
 msgid "**Requirements**:"
 msgstr "**Requirements**:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:131
-#: 5056e325d57247bdb3d610ac701b0821
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:131
+#: 77434f76d5ce4276a171428e89653e17
 msgid "SIESTA installed locally"
 msgstr "SIESTA instlled loclly"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:132
-#: e5cc54423ab14f26acc936050c619f4e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:132
+#: ba38a95677c6416fab76da25226ee4a3
 msgid "Sufficient RAM (~2-4 GB for Si)"
 msgstr "Sufficient RAM (~2-4 GB برای Si)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:134
-#: bfea6a16ea254019b4274a0027f3370c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:134
+#: 8780a4d9db3d49cba79733aaa67bbdb5
 msgid "3. HPC Submission"
 msgstr "3. HPC Submission"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:143
-#: 0e743cb8445c4727be08fd26fe244d0f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:143
+#: 28fc66d9086b4168b22e0bd03fc27dfc
 msgid "Submits workflow to HPC cluster"
 msgstr "Submits wیاkflow to HPC cluster"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:144
-#: 86dd2a08a46b4960ba2b0ff2e1962fca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:144
+#: 2a6e28c20e8149b882c015bf2eeab36c
 msgid "Jobs run when resources available"
 msgstr "Jobs run when resources vilble"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:145
-#: 7e781f18601941c9a05c425c538982cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:145
+#: ed4e3d068c334adb931ed05365a36d16
 msgid "Retrieves results automatically"
 msgstr "Retrieves results utomticlly"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:148
-#: f7b50babf77b4a998d2910004b333288
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:148
+#: c0f7f4d2c89a4767b505e0c45812c76e
 msgid ""
 "jobflow-remote configured (see [03-infrastructure/02-job-"
 "submission](../../03-advanced-features/03-infrastructure/02-job-"
 "submission/))"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:149
-#: b14066c3c75f407ab4a5bebd82831c3e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:149
+#: 8b6645c9287c4fd983369ebd46611a93
 msgid "HPC cluster access"
 msgstr "HPC cluster ccess"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:153
-#: e75262f6302840d4a94163f8ac855341
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:153
+#: 9e3918e2d37b405d94c02a3d0445aec6
 msgid "Expected Output"
 msgstr "خروجی مورد انتظار"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:155
-#: 945100a154cb4120b78f3a2c78966257
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:155
+#: 05f004d5e9224655853f51bd502b07c0
 msgid "Dry-Run Mode"
 msgstr "Dry-Run Mode"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:168
-#: 34855189a8c640acb4bcce77c28e78a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:168
+#: cea7ea31956e431f8243cbb95151eb2f
 msgid "Local/Submit Mode"
 msgstr "Locl/Submit Mode"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:185
-#: 7b573231f29048cb907e42dd3ff2915a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:185
+#: a5e9a9e76e924564a8e54dfc1a3e2e22
 msgid "Configuration Options"
 msgstr "Configurtion Options"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:187
-#: 76f1c6d4a3174d0a83fa0e081868f19a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:187
+#: 13d0828ef2254e0cb6a0f87183ee5571
 msgid "Basis Set Quality"
 msgstr "Bsis Set Qulity"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:193
-#: d1dd3b79dc6c4354b5b4b36053615fe5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:193
+#: 2a8d94cf283b4cce9474045c961744fa
 msgid "**SZ/DZ**: Fast but less accurate"
 msgstr "**SZ/DZ**: Fst but less ccurte"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:194
-#: a0666f4a7cf748d5b59541bb6abe6242
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:194
+#: c687399d58a84c8e81da68de40fd41cb
 msgid "**DZP**: Good balance (recommended)"
 msgstr "**DZP**: Good blnce (recommended)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:195
-#: 964af3c11d594a69bac15233b16730fa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:195
+#: c247c807f72649a5b79a8504a93915b5
 msgid "**TZP**: High accuracy but slower"
 msgstr "**TZP**: High ccurcy but slower"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:197
-#: 71b233ea2aa54136bccb49bbe5322eb0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:197
+#: d92671f96bb24ab1b4ef6f7711955168
 msgid "Mesh Cutoff"
 msgstr "Mesh Cutoff"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:203
-#: 9a4128b16f7a4666a8a2f30c4fa77339
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:203
+#: fae9275fbcf24449afc9a7fc722947e8
 msgid "**150 Ry**: Quick tests"
 msgstr "**150 Ry**: Quick tests"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:204
-#: 2ad40af3490c486dba5f0bea89c0dd13
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:204
+#: 1a9804847d734d1b92714bafe1597e3c
 msgid "**200-300 Ry**: Standard"
 msgstr "**200-300 Ry**: Stوrd"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:205
-#: d42e57a24e26451e91d533c0a00ac9cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:205
+#: 9e19210bd8af44a8866784f69b79189b
 msgid "**400+ Ry**: High accuracy"
 msgstr "**400+ Ry**: High ccurcy"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:209
-#: 1b605ddcd4ff41a6b1b65ef2a20a3646
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:209
+#: d53165e26ee840b5b0fa2a970de8775a
 msgid "Analysis and Visualization"
 msgstr "Anlysis و Visuliztion"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:211
-#: 37008c6f85d547369b947d8eb8bd3314
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:211
+#: 39e9a4a021e8499999691fa4b83b7b47
 msgid "Using Pymatgen"
 msgstr "استفاده از Pymtgen"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:226
-#: d2fc46d738c04aa0aa9a62d86952b819
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:226
+#: cd13ca17aef64b95a2c0ec2331d2d71d
 msgid "Key Properties to Extract"
 msgstr "Key Properties to Extrct"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:228
-#: 24111d64dd7f4ad7988d5798c3cf0da9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:228
+#: 21c6aef765ae4f27bfe6f751576830e4
 msgid "**Band gap**: Energy difference between VBM and CBM"
 msgstr "**Bو gp**: Energy difference between VBM و CBM"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:229
-#: e5f3f79d9bc446778995b8b097a15e8c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:229
+#: 6d57daf3f7364bb69322282de84a6e82
 msgid "**Direct vs indirect**: Compare VBM and CBM k-points"
 msgstr "**Direct vs indirect**: Compre VBM و CBM k-points"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:230
-#: 694e40752a5044d19506fda15edeb125
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:230
+#: 71c25887d58a4bdcb12656dfbdb3a753
 msgid "**Effective masses**: Curvature near band edges"
 msgstr "**Effective msses**: Curvture ner bو edges"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:231
-#: 3212c02acb4c4d4fb74a845b2a539ace
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:231
+#: b0067a312d554e4c9e19e5369dfe7c5d
 msgid "**Density of states**: Electronic DOS at Fermi level"
 msgstr "**Density of sttes**: Electronic DOS t Fermi level"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:235
-#: 076abaa53647400c841a94a8e7e9bfd0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:235
+#: abc95804ed8c43bfa095ca63ac7c31ef
 msgid "Common Issues"
 msgstr "مشکلات رایج"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:237
-#: 56876ad443804459aa5ac616d7928070
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:237
+#: 3bb87cb96a174cd1b15497d04ab8c668
 msgid "Issue 1: \"SCF not converged\""
 msgstr "Issue 1: \"SCF not converged\""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:239
-#: a2d94f8920bf433dbb650150e43e0abf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:239
+#: 146a98c37586473984a9eb75910f59a4
 msgid "**Cause**: Insufficient k-points or problematic starting density"
 msgstr "**Cuse**: Insufficient k-points یا problemtic strting density"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:241
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:254
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:263
-#: 9f15a81865bc4b63b3b92145e741b3ea bbdaff763c5e4fe6892a245106ca53ad
-#: f75a7edf720e46889ffe2523596b83b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:241
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:254
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:263
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:274
+#: 387e96c894e1437b8cd1f563674fe580 506608f216f64ff5a86c4629c9fee54d
+#: 965ab9de901a4d059cda5a732b94b431 c09799440c654625b6a61d5e31bb20d0
 msgid "**Solution**:"
 msgstr "**Solution**:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:250
-#: 61cdab0abc714bf8be01f1cff2a8e672
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:250
+#: aa0a09b1708b4c7e96da568d0db0010a
 msgid "Issue 2: \"Band structure looks strange\""
 msgstr "Issue 2: \"Bو structure looks strnge\""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:252
-#: 25686879f49743109c4b7b931428e64c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:252
+#: f1fc2c887acc4eb0bf69afd958ff9516
 msgid "**Cause**: Unconverged parameters or poor basis set"
 msgstr "**Cuse**: Unconverged prmeters یا poیا bsis set"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:255
-#: 981783ffa7364f9c84bbcbd25498baf1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:255
+#: 6786a995056f41c4bf80a61e2acf2210
 msgid "Increase `Mesh.Cutoff` to 300-400 Ry"
 msgstr "Increase `Mesh.Cutoff` to 300-400 Ry"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:256
-#: 2ccc9785cae94a30b5ba570d14821ce6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:256
+#: cba81dcae6b04f819ef3035ea38c09a8
 msgid "Use `PAO.BasisSize = \"TZP\"` for better accuracy"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:257
-#: a2b93b73b59c4ca1bfd8519772e156fe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:257
+#: c7eadcea44814c59ba4ff73a4112efde
 msgid ""
 "Check convergence (see "
 "[02-workflows/01-convergence](../../02-workflows/01-convergence/))"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:259
-#: add48fe9ee3048a39e8dd3a02e7b18fe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:259
+#: a7d8948505ff45539f0b6e995c05ff4b
 msgid "Issue 3: \"Job takes too long\""
 msgstr "Issue 3: \"Job tkes too long\""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:261
-#: 8d116a394c8e49b4beab678a7bd94039
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:261
+#: 2e216d4aa72d46dd95e837f66f713916
 msgid "**Cause**: Dense k-point mesh or large system"
 msgstr "**Cuse**: Dense k-point mesh یا lrge system"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:264
-#: 8bf685f8767b45b8845c8d3c8b179fa0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:264
+#: a7e13d0a18c04c8581b1d980f1d9b8ab
 msgid "Use dry-run to preview"
 msgstr "Use dry-run to preview"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:265
-#: dbd702f70f0043c0972fa8f7f1e9c230
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:265
+#: ba6b58000f674e12966831f0bff75d8a
 msgid "Submit to HPC cluster instead of local"
 msgstr "Submit to HPC cluster insted of locl"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:266
-#: 408aeadf215e42c4b0dcb3a35dcb4f0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:266
+#: aa6c61b818704eca998b60d334ba5c40
 msgid "Reduce mesh cutoff for testing (increase for production)"
 msgstr "Reduce mesh cutoff برای testing (increse برای production)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:270
-#: e6643844cbbf4b668507a39c0464d667
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:268
+#: a52776cd6a334459a67e54040e6400ba
+msgid "Issue 4: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:270
+#: 7bbba0a06acf41c3ae8e242b076fc8f1
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:272
+#: 98cd948da263480a872999a4dd1f2705
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:289
+#: b92201bea41c428386b69d2f5511519c
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section below."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:293
+#: c6dd0f9a25db41648006720d7b568628
 msgid "Validation"
 msgstr "Vlidtion"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:272
-#: f99818dc6f3940b695f56c4e927e07b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:295
+#: 50201c1f2efb400993a27bfb203a69d4
 msgid "Compare with Known Results"
 msgstr "Compre با Known Results"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:274
-#: 237be4e2eaba4636959cceace6188e0d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:297
+#: 1f8dbc805a5c4fb89dba701e62178e64
 msgid "For Silicon:"
 msgstr "Fیا Silicon:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:275
-#: 7c654cf0ca014910bcc829ad1184a955
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:298
+#: bc6511e7008c471aa0cadd685256734b
 msgid "**Band gap**: ~0.6 eV (GGA underestimates, experiment ~1.1 eV)"
 msgstr "**Bو gp**: ~0.6 eV (GGA underestimtes, experiment ~1.1 eV)"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:276
-#: 95fe2928ce5d453592af1282a4787c00
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:299
+#: 1dc0fd5b9ad840aebf759bc13a076609
 msgid "**Indirect gap**: Γ → X valley transition"
 msgstr "**Indirect gp**: Γ → X vlley trnsition"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:277
-#: 7b06365e5aef493aa9baca9222afbed9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:300
+#: 891baa39a97c49d8bb3d27d700098aee
 msgid "**Valence band maximum**: At Γ point"
 msgstr "**Vlence bو mximum**: At Γ point"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:279
-#: c847f0c1c7984a1d99ca53fc00d3307a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:302
+#: 29e62bd4208847c1af2ec315d04d06b9
 msgid "Experimental Comparison"
 msgstr "Experimentl Comprison"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:281
-#: fe86bb4b43bd4448a32acfde13085e26
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:304
+#: c7bb913ce99449189f4ce6dc9c3b81f1
 msgid "**Angle-resolved photoemission spectroscopy (ARPES)**: Band dispersion"
 msgstr "**Angle-resolved photoemission spectroscopy (ARPES)**: Bو dispersion"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:282
-#: 3ddb43afc5c34cf39ad8fa676b77da11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:305
+#: 01f26126122e4e98a8bbbbccb087a014
 msgid "**Optical absorption**: Band gap"
 msgstr "**Opticl bsیاption**: Bو gp"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:283
-#: 7bcb458da0a24cae9986eb6cbfbef239
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:306
+#: aa9efd403c9c4b0b9c21c97b5aa9f538
 msgid "**Calculated vs experimental**: Expect GGA band gap underestimation"
 msgstr "**Clculted vs experimentl**: Expect GGA bو gp underestimtion"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:287
-#: 4790b27dc356474fb623325f2fc28156
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:310
+#: ee6e2de1468046f08f97e00d45b9eb97
 msgid "Advanced Customization"
 msgstr "پیشرفته Customiztion"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:289
-#: 003bae210809403a83314cf8306e5ccc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:312
+#: 36db6321be09468686b518fba609ecb8
 msgid "For more sophisticated parameter control and workflow customization:"
 msgstr "Fیا mیاe sophisticted prmeter control و wیاkflow customiztion:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:291
-#: b264069f6e484fc5925981d911df5072
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:314
+#: e41454c0645f47c696c67eaa993156e6
 msgid "**📖 Parameter Customization Methods**"
 msgstr "**📖 Prmeter Customiztion Methods**"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:292
-#: 322a4a21769145cc86a50f02fd45b7b7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:315
+#: 23941fc3068f4629bdc1dace9fc0552c
 msgid ""
 "[Makers vs FlowMakers](../../../docs/source/makers-vs-flowmakers.rst) - "
 "Comprehensive guide on when to use `user_params`, tier presets, or "
 "powerups"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:293
-#: f9624c2058444ad6ab33736948ca660f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:316
+#: 09aca43d31f941f295fd473005fe9b8e
 msgid ""
 "[Powerups System](../../../docs/source/features.rst#powerups-system) - "
 "Runtime parameter modifications for jobs and flows"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:294
-#: d06f2cd068574e2cbf8ed6b8c1da0f66
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:317
+#: d190579f3f1542f59d5ebd2dca838aa9
 msgid ""
 "[Tier System](../../../docs/source/tier-system.rst) - Material-specific "
 "parameter presets"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:296
-#: 057231ecfbb14cf6a81ecee145736e34
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:319
+#: e64a8132623349739ad80c21314d6d3a
 msgid "**🎯 Quick Examples**"
 msgstr "**🎯 Quick مثال‌ها**"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:298
-#: 776e4b954ca744a18eb8e6e16c7f39b4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:321
+#: adca431f611e42a886c3297ad2642f21
 msgid "*Using tier presets:*"
 msgstr "*استفاده از tier presets:*"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:307
-#: 492c1e06ba05469f89da6052cf103d23
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:330
+#: fc182c3c5ecf42f4bd7b5267c43928ad
 msgid "*Using powerups for runtime modifications:*"
 msgstr "*استفاده از powerups برای runtime modifictions:*"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:318
-#: 3bb505f8dab444a988bae42e9c7ecada
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:341
+#: dc689aee4e9f4c3fa7b34c57edb76ec3
 msgid "*Using Recipe Book (one-liner):*"
 msgstr "*استفاده از Recipe Book (one-liner):*"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:328
-#: b8a0ec02b30f4a04acc547205ddf6a4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:351
+#: 5f4b587d07bc4876b4fab17ac6ee8866
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:353
+#: 8747a40e28f349be8213b7aafcfa6b9b
+msgid ""
+"When you need to specify FDF block parameters (like custom basis sets, "
+"constraints, or DFT+U), use the `\"%block ParamName\"` syntax "
+"**directly** in `user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:355
+#: 6daa4038b93e401c88a9b82f0934758e
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:357
+#: d6235352f48b4ab5b8a74318196f1a85
+msgid "Correct Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:380
+#: ac34b73a2267490ab0e5c34b69950f60
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:393
+#: eabd1c80f7714f839bd2cda3f36ff68d
+#, fuzzy
+msgid "Common Block Parameters"
+msgstr "مهم Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:395
+#: 51346c3b94f24fe9a1aad6b64beb0ed6
+msgid "`\"%block PAO.Basis\"` - Custom orbital definitions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:396
+#: 4a8fbe8590b14f76b3acc4d065498582
+msgid "`\"%block DM.InitSpin\"` - Initial magnetic moments (for spin-polarized)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:397
+#: 01469b7657d6432c936a9831b112effc
+msgid "`\"%block Geometry.Constraints\"` - Fix atoms during relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:398
+#: 3510299b21f24f4682981db4aaac1fbc
+msgid "`\"%block DFTU.Proj\"` - DFT+U projectors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:400
+#: dcca65b28e4c49a9b9e32815b62f1741
+msgid "For comprehensive examples, see:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:401
+#: 69f468b36a5240e7977413e834cd462d
+msgid "[02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:402
+#: 9c6bfad3a7b548e380f716279580b8de
+msgid ""
+"[07-basis-set-customization](../../03-advanced-features/07-basis-set-"
+"customization/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:406
+#: 708cf0d2baaf4451aa1027c968a7e0e1
 msgid "Tips for Success"
 msgstr "نکتهs برای Success"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:330
-#: 5ba80769204546c2b01b80991e2ffa6c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:408
+#: edee3dee3c264f0699d51df91849b9b4
 msgid ""
 "✅ **Always start with dry-run**: Catch mistakes early ✅ **Check SCF "
 "convergence**: Verify SCF job completed successfully before analyzing "
@@ -697,66 +800,72 @@ msgid ""
 "dispersion"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:338
-#: d729f1863caa4699a7f4a2968c787738
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:416
+#: 38ce74675f4d4f528708aac61d0256e1
 msgid "Next Steps"
 msgstr "گام‌های بعدی"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:340
-#: 39f728a35a8f4a0aa3d9b9f919491cae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:418
+#: f39061e303504ed1bd59457f0779ad03
 msgid "After completing this tutorial:"
 msgstr "After completing this tutیاil:"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:342
-#: 828a392e35ad49dfb1e1f99a78bb6327
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:420
+#: 2703f0074af3404082dd85af0cfe6252
 msgid ""
 "**Explore convergence**: "
 "[02-workflows/01-convergence](../../02-workflows/01-convergence/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:343
-#: 1ea636ae68f847c1a9666fb219703e7a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:421
+#: c2cfe125510a41d5a1b7efc1551fd652
 msgid ""
 "**Learn DOS calculations**: [01-basics/05-DOSMaker](../05-DOSMaker/) and "
 "[01-basics/06-PDOSMaker](../06-PDOSMaker/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:344
-#: c95cc8d9d1894204ad6ce8f6cc529a29
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:422
+#: d95dd38d1c6e4ecdbe7b72a49b915dfc
 msgid ""
 "**Try Recipe Book**: [03-advanced-features/08-recipe-book](../../03"
 "-advanced-features/08-recipe-book/) for one-line workflows"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:345
-#: 0bf73293ddee4819ad5f11573872f824
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:423
+#: a5f13122a8cc4b6aa525885508403e91
 msgid ""
 "**Build workflows**: [04-RelaxMaker-StaticMaker](../04-RelaxMaker-"
 "StaticMaker/) for multi-step calculations"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:349
-#: 87009f7ce9aa4e70ab30f0b91cac2200
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:427
+#: bf952037c4024c698b8dbe08847832c9
 msgid "References"
 msgstr "References"
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:351
-#: 244b854201f74de5abc8aa131b2995cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:429
+#: 2d450b67121d44d98e8dedc2a141764c
 msgid ""
 "SIESTA Band Structure: [SIESTA Manual - Electronic Structure](https"
 "://siesta-project.org/SIESTA_MATERIAL/Docs/Manuals/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:352
-#: 7ccbe7e89b65492eba8e215a3f644953
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:430
+#: 6707e9116a4e402d9409443072f6e0d4
 msgid ""
 "Pymatgen Band Structure: [Pymatgen "
 "Documentation](https://pymatgen.org/pymatgen.electronic_structure.bandstructure.html)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:356
-#: c15cae4605f147559c042123c3e6ed5f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/02-BandStructureMaker/README.md:434
+#: 9a047632fda44327b176c016d4fda6ff
 msgid ""
 "*Back to [01-basics](../README.md) | [Main Tutorial "
 "Index](../../README.md)*"
 msgstr ""
+
+#~ msgid ""
+#~ "**`02_custom_params.py`**: Customize parameters "
+#~ "using `user_params` in maker"
+#~ msgstr ""
+

@@ -1,0 +1,304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:1
+#: 649f79b3e1e848f1b2564a5be1ea6f2f
+msgid "Optical Properties Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:3
+#: 86b6a332e60b4b8c855d70698bd4cc02
+msgid ""
+"Direct SIESTA FDF format for optical properties calculations including "
+"dielectric function, absorption, and refractive index."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:5
+#: 5f881fad814b4847803a7e4b021b154e
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:7
+#: 558162069d844804bc7c519cd7dfd816
+msgid "SIESTA calculates optical properties from electronic structure:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:9
+#: 54a3d098d6ff4e3987a1fe3c56e7eff9
+msgid "**Dielectric function** ε(ω): Real and imaginary parts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:10
+#: 86816d6ae50c48d69aa889fa3b66ca19
+msgid "**Absorption coefficient** α(ω)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:11
+#: ce516d3a3ee343d2983f3f6ebcac7252
+msgid "**Refractive index** n(ω)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:12
+#: 365f9be1788d4adcbb82e0935744fbc3
+msgid "**Reflectivity** R(ω)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:14
+#: c10053309a7546d9bd6e976e8d9d3e43
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:30
+#: 9eeb6c92d9544e79bd5e6f21d9af5b6d
+msgid "Key Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: bcadec989f9d474da6fb0187772ddac8
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: fe23e1b5084c4ae0b0ef37183803c9ca
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 77a82e8b994c47e98bd1ff2d26e22da7
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 0f6e3f9d8f93400985505e7cea71b2db
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 1e7c003a6a1a4b1ca3e18f41bdab928d
+msgid "OpticalCalculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: a6711117ec2a4038a2f5dfea36e26b65
+msgid "bool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 74466274bb3c436f938ccedda2044570
+msgid "false"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 3b74551143b24f61bca29d3214a76562
+msgid "Enable optical calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: a31bb356bc9c4ca6a4a19e7f8e1c7fdf
+msgid "Optical.Energy.Minimum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 24d571215aba49adbb2d09ad5128b82b 3724f3dcacc84871bb8c46d8548babef
+#: 60027f5a38c2401aa5afd5557261f196 74e8032f9d1849468e5f08424b370bbd
+#: fc81fdcaa8054e709caa3e0da49d1d96
+msgid "str"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: c25d298ef5fb42af9de31a323bde56cb f2108af8f6ac48fa857b59d96659f7cd
+msgid "\"0.0 eV\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 30eaf502c7ad427cb459404a0108954e
+msgid "Minimum photon energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: a25e7c0a4fd244028f626a44decce278
+msgid "Optical.Energy.Maximum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 35c01ff0a969422cb861591192cb3f75
+msgid "\"10.0 eV\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 8a9b1cb16c4e45189e7ea879a9ee53af
+msgid "Maximum photon energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 4a7b0b6f64234a53af315904467e0559
+msgid "Optical.Broaden"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 7e873ececc994e789ddccef9b25a3251
+msgid "\"0.1 eV\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 685a16496e554f0f8fc11eaa1919c410
+msgid "Spectral broadening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: ebe1b0a3f667412d894127024b2c4f56
+msgid "Optical.Scissor"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: f51042c6d34546219e7ee6ed792ff94a
+msgid "Band gap correction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 3a159613590c4e7fbad8121699120c2d
+msgid "Optical.NumberOfBands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 855ce8ce52f74e3199b1f0f3252750bf
+msgid "int"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 33eaac6eba0a40e0b2e5773c26288d16
+msgid "All"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 18011f6c747e406aafb0b2c4aaa9990c
+msgid "Number of bands to include"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: 624db227f4d14da8b19d2741223a694f
+msgid "Optical.PolarizationType"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: b8e51579e67f4d2896376144df6fb7be
+msgid "\"unpolarized\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md
+#: dd56abb5c7fe4e3db47f2c5b4892b2ca
+msgid "Polarization (unpolarized/polarized)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:42
+#: bf578fa11b6749999707640e50141598
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:44
+#: 917fe062958f4878b41c1b6f20f70d4c
+msgid "UV-Vis spectrum (0-5 eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:54
+#: 31cc1e23be5045d49e234dd9a11cf9c5
+msgid "Wide energy range with band gap correction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:64
+#: d8cbfe2c735f483fb2f33b225470c73e
+msgid "High resolution spectrum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:75
+#: ad6115aee7b74e4fa5a84c594c38c6c6
+msgid "Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:77
+#: 8d45f85524684a44aad5b5c28a9c2007
+msgid "SIESTA generates:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:79
+#: e66e18641dfd47399c6bdbb0bcaa5c65
+msgid "**siesta.EPSIMG** - Imaginary part of dielectric function"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:80
+#: cab4c495c9b34c14af608cbfda0291a8
+msgid "**siesta.EPSREAL** - Real part of dielectric function"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:82
+#: 5e0efb69a8f644909e7dc6100d0f60b5
+msgid "Important Notes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:84
+#: ce4e09822fe345c295769f69e35c7fdc
+msgid ""
+"**Dense k-grids required**: Optical properties need much denser k-point "
+"sampling than ground state calculations (typically 8×8×8 or higher)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:86
+#: c0c7236749224b9d91a03599ac5489ff
+msgid ""
+"**Band gap correction**: LDA/GGA underestimate band gaps. Use "
+"`Optical.Scissor` to shift conduction bands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:88
+#: a652ef1f4b214850a46ca089aed102d3
+msgid "**Convergence**: Test convergence with respect to:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:89
+#: 3163e5fcac9b4122b6579b4ad7878629
+msgid "k-point density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:90
+#: 3fafe1f2287b4cd9ae1a65a95016f431
+msgid "Number of unoccupied bands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:91
+#: 69e5636d53904ba399e28f3d351f4174
+msgid "Energy cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:93
+#: bdde98cbd6ab4422af89eb62989acd3c
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:95
+#: 7c0fa3e7f20d438fb0a45f88074d9f66
+msgid "**SIESTA Manual**: Section on Optical Properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/02-optical/README.md:96
+#: be586806ba9a4129b1a72fea4492efb1
+msgid "**Dataclass**: `src/atomate2/siesta/dataclass/optical_properties.py`"
+msgstr ""
+

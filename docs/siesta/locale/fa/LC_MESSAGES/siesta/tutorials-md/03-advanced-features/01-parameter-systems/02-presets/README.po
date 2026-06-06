@@ -1,0 +1,362 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:1
+#: ec1f9a2451044d88bf98b2c854302995
+msgid "Tutorial 06: Tier Presets and Customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:3
+#: e33b595a26714b189213e39de0c7868c
+msgid "Learn how to use, modify, and create tier presets in atomate2siesta."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:5
+#: 4accaf1d401d40da8c24efe5a0e197e9
+msgid "Directory Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:27
+#: b0468e2f87f14ad3bfadae281fc8728a
+msgid "Part 1: Apply Tier Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:29
+#: d053a84d27654df7ab2903320b60e0fb
+msgid "**Directory**: `01-apply-preset/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:31
+#: 46c0e92061424b47ad14e5ef2c6f79fb
+msgid "Learn how to discover and apply material-specific presets."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:33
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:64
+#: c257f6fab46340dfb000574c0e47e2c7 f7e04fca2a154d66a60310d1b96a0a50
+msgid "Examples:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:35
+#: 1a1434d7f81e42f4965a08a7f8c60464
+msgid "**`01_relax_standard.py`** - Standard relaxation (intermediate tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:36
+#: 6c93343155d442cc8c2c2d0d9f2e541c
+msgid "**`02_surface_metal.py`** - Metallic surfaces with MP smearing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:37
+#: dbced79b09d740e9bf5d187805f8d15c
+msgid "**`03_adsorbate_screening.py`** - Fast screening (basic tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:38
+#: 99cfee2186774612be2451e85943b29e
+msgid "**`04_2d_metal.py`** - 2D materials with dense in-plane kpts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:39
+#: 3291c7d368c34d60bdd28da3be997d3f
+msgid "**`05_high_accuracy.py`** - High-quality results with TZP basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:41
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:74
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:113
+#: 216646d9f8f14d7fa90e3425792772a4 67acb9e875cd41cd8e30f9d9b2fc5881
+#: d0fcaf6e245f44e9bd473a5e5f0c937f
+msgid "Usage:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:47
+#: e850fe6dcd574184ba9a4746b4f37e74
+msgid "All scripts use `dry_run=True` for instant preview without running SIESTA."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:49
+#: 89580395c2ab4ed0ae5e4716c189c2d1
+msgid "CLI Discovery:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:58
+#: 3e46c7d6611b432f81084dd23b185ada
+msgid "Part 2: Modify Preset Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:60
+#: 0fd0024e46ff453887154e3d1c762f5d
+msgid "**Directory**: `02-modify-preset/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:62
+#: 492ea12f37164267bc37f4b4d7713939
+msgid ""
+"Learn how to customize presets by modifying parameters and adding new "
+"ones."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:66
+#: a6703ba1bab94fb092495789bc762478
+msgid "**`01_modify_kpts.py`** - Modify single parameter (k-points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:67
+#: 50e7639ee0304db2af6d8a3302236229
+msgid "**`02_modify_multiple.py`** - Modify multiple parameters at once"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:68
+#: daf6a6ce926a439b825e506cbed95131
+msgid "**`03_add_spin.py`** - Add spin polarization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:69
+#: b7575e95f4584ba5b2126df61023f10f
+msgid "**`04_add_vdw.py`** - Add van der Waals corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:70
+#: ab5ed52b25724fedb8e31944af430868
+msgid "**`05_add_dftu.py`** - Add DFT+U for correlated systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:71
+#: faeea683f10b4b2ca2c5c01ebb1f4444
+msgid "**`06_tighten_convergence.py`** - Tighten convergence criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:72
+#: 2f67753d70e74efb808ac074331d1a42
+msgid "**`07_add_constraints.py`** - Add geometry constraints"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:80
+#: e9b2553c2946464fa4d95dd6dd4ca2bc
+msgid "Key Pattern:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:95
+#: adcfdf36dbc644bc954687d9ee76d8f9
+msgid "Part 3: Create Custom Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:97
+#: 9807cd4ac2854c9fa0fae4e124a4768f
+msgid "**Directory**: `03-create-preset/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:99
+#: 9ccccd4141ed46bb842874cb34401092
+msgid "Learn the structure and workflow for creating your own presets."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:101
+#: 747c1825254e4c16a8a85dcbf1cc468c
+msgid "File:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:103
+#: fd633968c6b64551bd7f922a2fce107d
+msgid "**`03_create_custom_preset.py`** - Documentation and examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:105
+#: b7b44f02866e46769ea98774c1948841
+msgid "This file shows:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:106
+#: 7e3bb1edd7214678afa661ba51e7fe03
+msgid "Preset dictionary structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:107
+#: 7ba4c3c457f44b81a0a1b256b209420b
+msgid "MOF screening preset example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:108
+#: 40a91436e31241478a2bef93e86cad7f
+msgid "Catalysis preset with vdW example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:109
+#: 76adc233aabf4961bf5370dd9a93c5c3
+msgid "High-throughput screening preset"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:110
+#: fb924b1e12da4844a821d9df266cdea1
+msgid "Naming conventions for automatic CLI detection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:111
+#: 7fb934e91a1846a5bda334d8a456652c
+msgid "Testing workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:121
+#: 80de55c8ae764e7fac99c7106a1af07c
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:123
+#: edde61bff1ad434cac32f6c1aedb6ed2
+msgid "Applying a Preset"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:132
+#: e477be0c0c1642e2adb410577514e70e
+msgid "Modifying Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:142
+#: 6cabd30f9e804fa39eb89450fdfe38ad
+msgid "Adding New Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:157
+#: c3653d23564f4fd99a12c151a34b8125
+msgid "Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:159
+#: 3f9f22e997914d7c98e3a1ca75ff6baf
+msgid "All examples generate files in:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:164
+#: 450fe34011834b119a8fcde87c9f5eb2
+msgid "Check these files to verify preset parameters."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:168
+#: 6ce962b837f7477da694f346310b2d98
+msgid "Available Presets (26 Total)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:170
+#: 114f5bbbbe0b45c3becb295197806632
+msgid "Use CLI to explore:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:178
+#: c629b0e4e33543629192ff7cb8354232
+msgid "Categories:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:179
+#: 5488d33bb6c8453198978f29c1b4f07e
+msgid "**2d** (8): 2D materials (graphene, TMDs, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:180
+#: 70cc9d8e16f946f199c50792ec4d47e3
+msgid "**surface** (3): Surfaces and adsorption"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:181
+#: 9ff55082b36f4a39ad708a49959f9bed
+msgid "**structural** (3): Bulk relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:182
+#: 79a48e37d3384d60a6209dad3c8e3f9e
+msgid "**phonon** (2): Vibrational properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:183
+#: baf50f4e61214d999810d2a2b122eb67
+msgid "**magnetic** (2): Spin-polarized systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:184
+#: b90a135c8b7a4443b860f49925778588
+msgid "**electronic** (3): Band structure, DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:185
+#: ddb1c5ad689e4c109b6b4b1c400f0bfc
+msgid "**optical** (1): Optical properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:186
+#: 1b211d4b9cf34535af7f0fa2878de05e
+msgid "**molecular** (1): Gas-phase molecules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:187
+#: 722cf884c37c44d7a8d3fbbf3fc97318
+msgid "**performance** (3): Large systems, HPC"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:191
+#: 69ad4f1a6d0147d5ab2b6fa50ed19924
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:193
+#: e35497fc2364458d87498945c08a8b34
+msgid "Run examples in order: 01 → 02 → 03"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:194
+#: cbf31eaea0cb46be990a106c9ffc6a44
+msgid "Inspect generated `siesta.fdf` files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:195
+#: 5bdbd25274ab489985bdec224e65bdbd
+msgid "Try modifying parameters for your materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:196
+#: 828f21b8533c4e73861ce852033c764e
+msgid "Create custom presets following Part 3 guide"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:200
+#: 721f1090ec0742759970247b0d33b838
+msgid "Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:202
+#: 303515e857ab4ba1bc2488b1b24f3a9a
+msgid "**Tier System**: `docs/source/tier-system.rst`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:203
+#: 0e7d4a0cc0754dfba884ed3a19ff59c3
+msgid "**CLI Tools**: `docs/source/cli-tools.rst`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:204
+#: 0c1eadf87e074abe87333a8ff59a6e82
+msgid "**Parameters**: `docs/source/siesta-inputs.rst`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/02-presets/README.md:208
+#: 8405fbffdfd44804b6fc880a81599e0c
+msgid "**Last Updated**: November 2025 (v1.0.0)"
+msgstr ""
+

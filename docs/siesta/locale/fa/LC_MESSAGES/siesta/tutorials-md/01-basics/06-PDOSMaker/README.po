@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,25 +20,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:1
-#: 9b9f885501d342cd8e1672be61e431e9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:1
+#: 4ad6c3cf5f72491484766f48316c3e06
 msgid "Tutorial: Projected Density of States (PDOS) with PDOSMaker"
 msgstr "Tutorial: Projected Density of States (PDOS) with PDOSMaker"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:3
-#: e7583ad432a04dfaa70f5d836330f0c9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:3
+#: fdef82a9b6fc4b44a9db7b90f0d576bf
 msgid ""
 "**Category**: 01-basics/06-PDOSMaker **Difficulty**: Beginner **Time**: "
 "~2 min (dry-run), ~15-20 min (full calculation)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:9
-#: fffb5eeb1f894d7781fa482ff0e2ad15
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:9
+#: 8f4e18f3b0514a5db0796984d88105da
 msgid "Overview"
 msgstr "نمای کلی"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:11
-#: 0c56803168a542cb9a4453e65aa55b0e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:11
+#: 6ff0f21e8b714bcdbc1178b3b4f31a8b
 msgid ""
 "This tutorial demonstrates how to calculate the projected density of "
 "states (PDOS) using `PDOSMaker`. While total DOS shows overall electronic"
@@ -47,571 +47,690 @@ msgid ""
 "states at each energy."
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:13
-#: ae9756c925ed4a17a7789e1f5dff9c99
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:13
+#: c95f9f8425414216b9b0c4f5b6a92c60
 msgid "**What PDOS Tells You**:"
 msgstr "**Wht PDOS Tells You**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:14
-#: 5b5bd9d0795e45d4a61855735be5bdd2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:14
+#: cf0012aeb11b46cfad1ce184b5870e25
 msgid ""
 "**Orbital character**: Which orbitals (s, p, d, f) contribute at each "
 "energy"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:15
-#: 1fb651b5b21b490f844b31e45956d546
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:15
+#: c4afde6ae67b4f94b7c5c87e05e15e0c
 msgid "**Atomic contributions**: Which atoms dominate electronic states"
 msgstr "**Atomic contributions**: Which toms dominte electronic sttes"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:16
-#: a080bd73e5fd43598438bc219efde45e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:16
+#: e1a4d1b8e89749059b39ed48d31e0809
 msgid "**Bonding analysis**: Orbital overlap and hybridization"
 msgstr "**Bonding nlysis**: Orbitl overlp و hybridiztion"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:17
-#: 63a6376b2e9845d0898489218d35d502
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:17
+#: 03a170941729456bb3930e11a755c01a
 msgid "**Magnetic moments**: Spin-resolved PDOS for magnetic systems"
 msgstr "**Mgnetic moments**: Spin-resolved PDOS برای mgnetic systems"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:21
-#: 8ceefe692d9a4b84b3881bccd0dcfc04
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:21
+#: a1f0d9bf146e4e698008c58bb801a096
 msgid "What You'll Learn"
 msgstr "چیزهایی که یاد خواهید گرفت"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:23
-#: d98aa6cc2f004642971fbef8ad1742e9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:23
+#: 2c896984f0354ce2a04517f724e08d35
 msgid "Using `PDOSMaker` for projected DOS calculations"
 msgstr "Using `PDOSMaker` for projected DOS calculations"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:24
-#: bf7cc6e234874213b4ee3cc0c7782c98
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:24
+#: 841ffa3f2ca54c158fedff0da0cddacc
 msgid "Atom and orbital-resolved electronic structure"
 msgstr "Atom و یاbitl-resolved electronic structure"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:25
-#: d296bb6aeb7b414dab2004eb6228b977
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:25
+#: 0dc60d312d3142278bc4e9423ac99e7d
 msgid "PDOS analysis and interpretation"
 msgstr "PDOS nlysis و interprettion"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:26
-#: 716e47db055b4993bde462cd840a3737
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:26
+#: d765b32fb36d44edbef89f60a3cf57be
 msgid "Customizing PDOS parameters for specific atoms/orbitals"
 msgstr "Customizing PDOS prmeters برای specific toms/یاbitls"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:27
-#: 4e44d97a8df64d86a7e12319e320134b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:27
+#: 3da462851093454ea815158865e38acd
 msgid "Spin-resolved PDOS for magnetic systems"
 msgstr "Spin-resolved PDOS برای mgnetic systems"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:31
-#: c84f2f571cd84bf88e062f5092877864
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:31
+#: e2bee85f2cef4fd1a3e963f56ab04677
 msgid "Prerequisites"
 msgstr "پیش‌نیازها"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:33
-#: b2eabf34f04f457a806c8349bc213100
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:33
+#: cb5516555e2d44138a1639c8013801cc
 msgid "**Required tutorials**: [05-DOSMaker](../05-DOSMaker/)"
 msgstr "**Required tutorials**: [05-DOSMaker](../05-DOSMaker/)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:34
-#: abd6d0bdd55a498a89a6441884abfd0f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:34
+#: 98a471c61d2b409abafffa4df564c5a0
 msgid "**Required knowledge**: Understanding of atomic orbitals and DOS"
 msgstr "**مورد نیاز knowledge**: درک of tomic یاbitls و DOS"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:35
-#: 63d692464ea741d28a18b3cacb5c9ca1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:35
+#: bda6c36c99004ce78c8d232a44e0681a
 msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:36
-#: b2b72383e0d54976b4082e410a335000
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:36
+#: 85e1f2e206ea4db2ae4353254fcb22cb
 msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
 msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:40
-#: 391785b18ba1485494e112f1a2366667
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:40
+#: 832ba6ce7f364434bf7eea604c5a9ec5
 msgid "Key Concepts"
 msgstr "مفاهیم کلیدی"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:42
-#: d0cd9802403f4dea8f392ff176a8c46c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:42
+#: 30f46b9706dd403fad3261aea374b4a6
 msgid "Total DOS vs PDOS"
 msgstr "Totl DOS vs PDOS"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:44
-#: 67e777cedfc749a4b870cba4fc966914
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:44
+#: 47dbeda45c9c49d9a46ae7088a62c3ba
 #, python-brace-format
 msgid "**Total DOS**: $g(E) = \\sum_{n,k} \\delta(E - E_{n,k})$"
 msgstr "**Totl DOS**: $g(E) = \\sum_{n,k} \\delt(E - E_{n,k})$"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:45
-#: 89146a0cadf64353b407b320c7213860
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:45
+#: 0c74cd3a8924461383c920c706652d77
 msgid "Shows overall density of states"
 msgstr "Shows overll density of sttes"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:46
-#: 6b599f820ab14c609a056eaa9ccfa57f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:46
+#: f8459a1d3fe846e497d08b65ede3f871
 msgid "Single curve"
 msgstr "Single curve"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:47
-#: ff6aebd215af4ccb9231ae70143de2f5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:47
+#: abbb575c2f914312a1bfdf6f328b90a8
 msgid "Good for band gaps and Fermi level"
 msgstr "Good برای bو gps و Fermi level"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:49
-#: 852fe230db934937b77ab0cab7cd045a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:49
+#: dc7c5c4c61a34856a45af15bb3cffff5
 #, python-brace-format
 msgid ""
 "**Projected DOS**: $g_{\\alpha,l}(E) = \\sum_{n,k} "
 "|c_{\\alpha,l}^{n,k}|^2 \\delta(E - E_{n,k})$"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:50
-#: f3678c35b8024ced8ccba98e765be60a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:50
+#: 57fcf50384e74b04b82825592f64cb00
 msgid "Decomposes DOS by atom $\\alpha$ and orbital $l$"
 msgstr "Decomposes DOS by tom $\\lph$ و یاbitl $l$"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:51
-#: cd9c64cc137c4297a89c912f0a566a79
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:51
+#: 5c2e1c3da9cd44acae9be68203db9e81
 msgid "Multiple curves (one per atom/orbital type)"
 msgstr "Multiple curves (one per tom/یاbitl type)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:52
-#: a796b0dbe54f4222b146202625e91265
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:52
+#: 70c8a02551cc4f138d1d601ebb892f85
 msgid "Reveals electronic character"
 msgstr "Revels electronic chrcter"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:54
-#: 2b297323919a436eb12f2b08823293e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:54
+#: d2208d6d71f547ce943eae8d1eda3f4d
 #, python-brace-format
 msgid "**Relationship**: $\\sum_{\\alpha,l} g_{\\alpha,l}(E) = g(E)$"
 msgstr "**Reltionship**: $\\sum_{\\lph,l} g_{\\lph,l}(E) = g(E)$"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:56
-#: 86f7609050af4b2cad6c1b5c9ac5dcf7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:56
+#: dadd63d838914ebbb664f023453f91ac
 msgid "PDOS Decomposition Levels"
 msgstr "PDOS Decomposition Levels"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:58
-#: d4961076dda740db91536b9b094fdef4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:58
+#: 3893d7abc53341cf819cfe2515180929
 msgid "SIESTA provides PDOS at multiple levels:"
 msgstr "SIESTA provides PDOS t multiple levels:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:60
-#: 52c67a54429d43c79412efb5f5ec3069
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:60
+#: 0305210eb4ac4a759ba440e23272c573
 msgid "**By Atom**: Individual atomic contributions"
 msgstr "**By Atom**: Individul tomic contributions"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:67
-#: 8454aff3a3be4a1b8f76aa839c518909
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:67
+#: 3f3bc4bfbad04489a868516e7941cb36
 msgid "**By Orbital (l quantum number)**:"
 msgstr "**By Orbitl (l quntum number)**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:68
-#: f4f49bbca9df48d4b2d8312b2b6504b1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:68
+#: 4c9b33bb4b164f45a0c370f381858104
 msgid "s-orbitals (l=0)"
 msgstr "s-یاbitls (l=0)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:69
-#: c9421dfbf791444d8022644df1226a4b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:69
+#: 0bb76bba518d40dc9067d7ccb6b6f8f7
 msgid "p-orbitals (l=1)"
 msgstr "p-یاbitls (l=1)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:70
-#: ad3b8a3bcc7b449588b3c5ad9262e02a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:70
+#: bdeb63f499b847d7b608dc3c36a2a52b
 msgid "d-orbitals (l=2)"
 msgstr "d-یاbitls (l=2)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:71
-#: 76387223ee1f47e19f4a196105f759e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:71
+#: b74629866113428a851b9d4db733ae1a
 msgid "f-orbitals (l=3)"
 msgstr "f-یاbitls (l=3)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:73
-#: cbe9b0c7fae64d8db115ab0e67522c8a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:73
+#: 9fb4556af0be4793845fb0a7ccb0e35b
 msgid "**By ml quantum number** (optional):"
 msgstr "**By ml quntum number** (optionl):"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:74
-#: fa3e861ef2f44113a397acfdad88116a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:74
+#: 9d63cae1d7b84ee8a1c5390f76ddb0b7
 msgid "px, py, pz (for p-orbitals)"
 msgstr "px, py, pz (برای p-یاbitls)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:75
-#: 6176189995f34d7a859cad2eb0ec3e24
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:75
+#: b765cf3f9b954f1eb8bf139a408e600a
 msgid "dxy, dyz, dzx, dx²-y², dz² (for d-orbitals)"
 msgstr "dxy, dyz, dzx, dx²-y², dz² (برای d-یاbitls)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:77
-#: 3e006069fe834bfb88cdf9eee4453984
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:77
+#: 7963a0c6006d4b378c12466220e01f9b
 msgid "**Spin-resolved** (for magnetic systems):"
 msgstr "**Spin-resolved** (برای mgnetic systems):"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:78
-#: 5af931dd00664b12b561115a5708151e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:78
+#: 13581679eecf4f73bf2c1515803e139a
 msgid "Spin-up channel"
 msgstr "Spin-up chnnel"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:79
-#: 9c9d852f0bcc47b19b9f729cd0943a5f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:79
+#: 619629569dde4c1b8837eaab309f4c44
 msgid "Spin-down channel"
 msgstr "Spin-down chnnel"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:81
-#: 80348edcb9c34fd5912b5401d45e05d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:81
+#: d0207cc3ce474c739e0e40e3bb9f2044
 msgid "Key PDOS Parameters"
 msgstr "Key PDOS Prmeters"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:99
-#: a58019a62c994e4485cf7c49a20b4775
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:97
+#: c132a6860c1b4471b692039dc7b8c474
 msgid "Tutorial Files"
 msgstr "فایل‌های آموزشی"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:101
-#: 1eb44a235c7f4d1c9093073640256c05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:99
+#: f48a9a18985540cc9fec721ae2f8dae6
 msgid "This directory contains 2 examples:"
 msgstr "This directیاy contins 2 exmples:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:103
-#: 207795b2cae147d3baa86991bfc21f57
-msgid "**`02_pdos_all_atoms.py`** - PDOS for all atoms in structure"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:101
+#: 4ebb7413434347528a67188ea25073e5
+#, fuzzy
+msgid "**`PDOSMaker_pdos_all_atoms.py`** - PDOS for all atoms in structure"
 msgstr "**`02_pdos_all_atoms.py`** - PDOS for all atoms in structure"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:104
-#: b5cd596715fa4d48a06a7170249b798d
-msgid "**`03_custom_dos_parameters.py`** - Custom energy range and resolution"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:102
+#: 68cc8ed2f5c942fe8f9e2bd4e7867f12
+#, fuzzy
+msgid ""
+"**`PDOSMaker_custom_dos_parameters.py`** - Custom energy range and "
+"resolution"
 msgstr "**`03_custom_dos_parameters.py`** - Custom energy range and resolution"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:108
-#: bc7f3aceeb8d45ee9e4d98254b677ef6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:106
+#: 583d982ede8c4abc9f5ea1b407984285
 msgid "Quick Start"
 msgstr "شروع سریع"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:110
-#: f46478837e0745a183ab6373ed426644
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:108
+#: 3b274ba1121b4107ab294fb6e911311b
 msgid "Example 1: Basic PDOS Calculation"
 msgstr "مثال 1: Bsic PDOS محاسبه"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:126
-#: b16737e16c0a4c819ab36e44c1cc1d34
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:124
+#: 8bb5a875118c4dde8e17976031d94c6e
 msgid "Example 2: PDOS with Custom Parameters"
 msgstr "مثال 2: PDOS با Custom Prmeters"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:143
-#: 52078755c502493ca4852eb258085161
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:139
+#: c8503b17001a49ca94bd2d6be19bbfcb
 msgid "Example 3: Spin-Resolved PDOS"
 msgstr "مثال 3: Spin-Resolved PDOS"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:162
-#: 6cc99c584ef64e949770affa19ad839c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:158
+#: e4b1aa2fdfd447a59743c8b66b51035c
 msgid "Example 4: PDOS After Relaxation"
 msgstr "مثال 4: PDOS After Relxtion"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:181
-#: 5be66550f4da4cc2aa9a714500faf148
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:177
+#: 4116cddbe5c44a0593037846891ec961
 msgid "Run Modes"
 msgstr "حالت‌های اجرا"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:183
-#: d0a46842c4ab46a3959e05e3000d65ab
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:179
+#: dcc34e9995014733a47a11395ba7d365
 msgid "1. Dry-Run Mode"
 msgstr "1. Dry-Run Mode"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:189
-#: e45a93f1d5d34c9da2b73da745fc6f4a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:185
+#: 80dbd09c4ab74617b6939d98bb6b7bb5
 msgid "**Check PDOS settings**:"
 msgstr "**Check PDOS settings**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:194
-#: c781b4ec011443508bc062146e36ca4e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:190
+#: 9e1aa9de88b24344b32b0d0926191858
 msgid "2. Local Execution"
 msgstr "2. Locl Execution"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:201
-#: 2bfd5b4100f64e1c96731416c4793d1b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:197
+#: 7b2a5e5851ce4636bc95c8e051141e13
 msgid "**Output**:"
 msgstr "**Output**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:211
-#: 65403b04c0cd4d96a3a9b38e4bd43e30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:207
+#: 23f3e48990294155b093c73c61297840
 msgid "**Time**: ~15-20 minutes (PDOS requires denser k-points)"
 msgstr "**زمان**: ~15-20 minutes (PDOS requires denser k-points)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:215
-#: 78d5d0a800db40d19fe5b9426e62b160
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:211
+#: e37801fffe27416b9517d538723616fd
 msgid "Expected Output"
 msgstr "خروجی مورد انتظار"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:217
-#: 53510726023b416987dad0768d50359d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:213
+#: 4fcc2aa7de924bc196a18dd0bff94c56
 msgid "PDOS File Format"
 msgstr "PDOS فایل Fیاmt"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:219
-#: ee6c1937b57c43abb8a9271870d47faf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:215
+#: 35dddbb47fba462cbac38da582d6512d
 msgid "SIESTA outputs PDOS in XML format (`siesta.PDOS.xml`):"
 msgstr "SIESTA outputs PDOS in XML format (`siesta.PDOS.xml`):"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:236
-#: 73bc811ca85840598de6d208c424370e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:232
+#: f2eadebad17149528b537319df3936d4
 msgid "Analyzing PDOS with Pymatgen"
 msgstr "Anlyzing PDOS با Pymtgen"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:269
-#: e86c767f755c4a00a2c7962b8b3a1b50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:265
+#: 53517e57efe8403b85b3bf4c658a858b
 msgid "Comparing Multiple Atoms"
 msgstr "Compring Multiple Atoms"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:298
-#: e3e77ac8f97f4b24b55bb30b103c24d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:294
+#: 60a87c30cb444ac88aa16fd97035717e
 msgid "Spin-Resolved PDOS"
 msgstr "Spin-Resolved PDOS"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:329
-#: 99355ffdaca140c6b1ca9870fecbab50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:325
+#: 4092caba81074fee9cbb3e72c7a8ae03
 msgid "Common Issues"
 msgstr "مشکلات رایج"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:331
-#: 66f4d69bcfa3470b94d063f813521195
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:327
+#: f267bdaa00504c8889799ed3248ce2ba
 msgid "Issue 1: \"PDOS files not generated\""
 msgstr "Issue 1: \"PDOS files not generted\""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:333
-#: 78c441e6466f4a3c92e8953f6e438d11
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:329
+#: f5b3ded0a0864a649b65397d4f5aa87a
 msgid "**Symptoms**: Only total DOS file exists, no PDOS files"
 msgstr "**Symptoms**: Only totl DOS file exists, no PDOS files"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:335
-#: af09f2751ee14a368677cebd4e620903
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:331
+#: ecf3f220f76c4ed793a548a631fb737c
 msgid "**Causes & Solutions**:"
 msgstr "**Cuses & Solutions**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:337
-#: ca51a951c50a464ca668c26114d498f4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:333
+#: a79f17a51cdf43f8bbc705d8bbe016ce
 msgid "**Missing PDOS block**:"
 msgstr "**Missing PDOS block**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:345
-#: a44f57a1a3e34ee494aaa09efdcab90b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:341
+#: 2b12d32cc1834ae1be0f583595026b71
 msgid "**Wrong SIESTA version**: PDOS.xml requires SIESTA 4.1+"
 msgstr "**Wrong SIESTA version**: PDOS.xml requires SIESTA 4.1+"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:350
-#: 0eb359bdda2047c68154960b02d0d18e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:346
+#: 4ceef0e48ab34c4b87394472ab4170c2
 msgid "Issue 2: \"PDOS too noisy or has strange features\""
 msgstr "Issue 2: \"PDOS too noisy یا hs strnge fetures\""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:352
-#: 83bc5083198a4ae493a021acb487bd74
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:348
+#: fbb9a9bcb57b4bd0ad4b574899140a17
 msgid "**Cause**: Insufficient k-point sampling"
 msgstr "**Cuse**: Insufficient k-point smpling"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:354
-#: ab317d2088424a81b1219ea0d34c4031
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:350
+#: 73f28c7026c24a8e954b97cfbcce03e8
 msgid "**Solution**: PDOS requires denser k-points than total DOS"
 msgstr "**Solution**: PDOS requires denser k-points thn totl DOS"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:361
-#: 61ea0d9e003e4f2aa4440b0db3ee0103
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:357
+#: def7f050f07e416ca603b0533e899134
 msgid "Issue 3: \"Cannot distinguish orbital contributions\""
 msgstr "Issue 3: \"Cnnot distinguish یاbitl contributions\""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:363
-#: 9f44b7959ae14d36bea79f51baefa19c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:359
+#: 5846fbb9903841de89154dec319b3055
 msgid "**Cause**: Need to specify projections explicitly"
 msgstr "**Cuse**: Need to specify projections explicitly"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:365
-#: e9bd70a9b098401793915568c2a72535
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:361
+#: 8e2c08e8f24941699d0fb50a75bc8261
 msgid "**Solution**: Use `%block PDOS.kgrid_Monkhorst_Pack` for better control"
 msgstr "**Solution**: Use `%block PDOS.kgrid_Monkhorst_Pack` for better control"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:376
-#: 4a8b912a44014eb295c841de2fc60fb5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:372
+#: 5b1655e338354657a22fc14008f4f6d2
 msgid "Issue 4: \"Pymatgen cannot read PDOS\""
 msgstr "Issue 4: \"Pymtgen cnnot red PDOS\""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:378
-#: 64ae1530a50147dd950d04281d09b53c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:374
+#: 00a82d7c6189446cb2aa3ecd7121f24a
 msgid "**Cause**: Old SIESTA output format"
 msgstr "**Cuse**: Old SIESTA output برایmt"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:380
-#: ec752bda6c66488d8c9b61834337a959
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:376
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:386
+#: 53377fa2241845c2be24ab516a4ffb54 dc0e7bf21e4348fa9db952cc9eeab619
 msgid "**Solution**:"
 msgstr "**Solution**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:381
-#: 610e2a0eb40f465db19d082eb9250fca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:377
+#: 36c2a41d82eb474bac946a4dfa7aeb48
 msgid "Use SIESTA 4.1+ which outputs PDOS.xml"
 msgstr "Use SIESTA 4.1+ which outputs PDOS.xml"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:382
-#: fe257fd92be145a19e3511a147fe8a37
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:378
+#: 421dd637372f4fb89dd2fe444d93beeb
 msgid "Or parse manually from older format files"
 msgstr "Or prse mnully from older برایmt files"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:386
-#: c164ffae78e643789e02442c51035a65
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:380
+#: fc31561b9972411db34fea9bfaeb217e
+msgid "Issue 5: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:382
+#: 0120aca9eb944c308972575da02f60b6
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:384
+#: 16646a0ed8914d729ed6c98ea0b77831
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:403
+#: ba961f3f3e864a9fa0b7fd4bc7cd7130
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section below."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:407
+#: 70f0209d3b87493ba71080a95fd65d6d
 msgid "PDOS Analysis Examples"
 msgstr "PDOS Anlysis مثال‌ها"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:388
-#: def116b1227842df9982cd1e8572b097
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:409
+#: 244231eac2bb44e583d85fd986f73b54
 msgid "1. Identify Band Character"
 msgstr "1. Identify Bو Chrcter"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:407
-#: 95c2c10abb274b6caaf6d3cd6bf2695b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:428
+#: 8cc0361a64794dd883cf9e2f3daa7501
 msgid "2. Compare Cation vs Anion"
 msgstr "2. Compre Ction vs Anion"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:434
-#: ada92000c28644799222a6156c889184
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:455
+#: 17bb49a7d6c44bd3910838cbeb8ccd0d
 msgid "3. Orbital Overlap Analysis"
 msgstr "3. Orbitl Overlp Anlysis"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:456
-#: 8a7696dc490948748c89a467e9201974
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:477
+#: 8216b0aa66f44360966b146d71a439f5
 msgid "PDOS Parameter Reference"
 msgstr "PDOS Prmeter Reference"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:458
-#: c2b352c330ba46c798f6aa05ceebb599
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:479
+#: eda1b0b112f8481781d7e64d9916de9e
 msgid "ProjectedDensityOfStates Block"
 msgstr "ProjectedDensityOfSttes Block"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:468
-#: f2e39aaa8b824eea8f0c8ea23152a3b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:489
+#: a1b7c86ed4254e7ea62076ce7482e2b9
 msgid "**Parameters**:"
 msgstr "**Prmeters**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:469
-#: 16c8012b477541e2917c9577eecb79e9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:490
+#: 1941251c46f74e22b8cdc726843a04a2
 msgid "`Emin`: Minimum energy (eV or Ry)"
 msgstr "`Emin`: Minimum energy (eV or Ry)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:470
-#: df4e64aee66547bdbdd8c0fb0d00c309
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:491
+#: 8ca48c27840e4115ae277a9b4ba35f8d
 msgid "`Emax`: Maximum energy"
 msgstr "`Emax`: Maximum energy"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:471
-#: a05abb1b75164e5fb3d1cbce3b91721a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:492
+#: 21410936e6dc42878ed2c3ac156f7d9a
 msgid "`dE`: Energy spacing (optional if npts given)"
 msgstr "`dE`: Energy spacing (optional if npts given)"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:472
-#: c32b39adfc354e40a93d3aef330ca775
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:493
+#: eda4fcd727f3484fa0bdd9d7fb95beed
 msgid "`npts`: Number of energy points"
 msgstr "`npts`: Number of energy points"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:473
-#: 5ddc74e3441546a0bf94f8539dd9675d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:494
+#: 882a73d3d55b41acab3c5d090bc44963
 msgid "`units`: \"eV\" or \"Ry\""
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:475
-#: abbd2d0212c64175ac8ff817180e1780
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:496
+#: 32c8aef5c06c4b9d8284b42dcf19ffae
 msgid "**Example**:"
 msgstr "**مثال**:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:480
-#: b735e47222b14b59b1dd485dae7dc339
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:505
+#: accc279c467249d097a3b6674b968db9
 msgid "PDOS K-Grid"
 msgstr "PDOS K-Grid"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:482
-#: cd290d9c80344a2f900f0484acf2fb84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:507
+#: c67379dd38964aaabe659175bc5b55f8
 msgid "For more control:"
 msgstr "Fیا mیاe control:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:495
-#: 2693c0899318425e9a43e8acc2438e3e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:520
+#: 3518551790e24e93b4289399163a5b17
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:522
+#: c1693eb3a6fd49e0a2c1e079fd41a0de
+msgid ""
+"When you need to specify FDF block parameters (like custom PDOS energy "
+"ranges or k-grids), use the `\"%block ParamName\"` syntax **directly** in"
+" `user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:524
+#: 26d1a36c32324b4d9e515bc79551e9ad
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:526
+#: e33005d7c4644e719884ba0960709a90
+msgid "Correct Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:554
+#: cb2fd48330f949baa0094358d9b593a2
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:568
+#: 35f749aec3aa48f2984690c8cdf82677
+msgid "Common Block Parameters for PDOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:570
+#: 47e9f5bae90e4992810b383ab22e2f3a
+#, fuzzy
+msgid ""
+"`\"%block ProjectedDensityOfStates\"` - Custom PDOS energy range and "
+"resolution"
+msgstr "**`03_custom_dos_parameters.py`** - Custom energy range and resolution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:571
+#: 815b755380da4c87b43cd1ac8a275619
+msgid "`\"%block PDOS.kgrid.MonkhorstPack\"` - K-point grid for PDOS sampling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:572
+#: c4bf487d21a64c219bc6cb6a56b3d556
+msgid "`\"%block DOS.kgrid.MonkhorstPack\"` - K-point grid for total DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:573
+#: e2100c3842214a02aee5c41e0a06011b
+msgid ""
+"`\"%block DM.InitSpin\"` - Initial magnetic moments for spin-polarized "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:575
+#: 6744732069674e6da3d9c0bf2cf23451
+msgid "For comprehensive examples, see:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:576
+#: 6222a3a9dcce45ffa67ec392316131a9
+msgid "[02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:577
+#: 6e61b99f9d084430b575becb0501e691
+msgid ""
+"[16-magnetic-calculations](../../03-advanced-features/16-magnetic-"
+"calculations/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:581
+#: a686a157a9154ab0b1fad9e4f2436d06
 msgid "Alternative: Using CLI Tool"
 msgstr "Alterntive: استفاده از CLI Tool"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:508
-#: db9ec42118c74a73b23a365fd22b6e1f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:594
+#: 8daf00c62e6d496d877169eb2371bec1
 msgid "Tips for Success"
 msgstr "نکتهs برای Success"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:510
-#: 6469cab3f95f4c7c96b530bbd0e68274
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:596
+#: 4fddc86914124d0fab94c533be9ab088
 msgid ""
 "✅ **Use dense k-points**: 12×12×12 minimum for good PDOS ✅ **Check all "
 "orbitals**: Don't forget d and f if present ✅ **Compare with total DOS**:"
 " PDOS components should sum to total ✅ **Use spin polarization**: For "
 "magnetic systems, always include spin ✅ **Relax first**: Use optimized "
-"geometry for accurate PDOS"
+"geometry for accurate PDOS ✅ **Block parameters**: Use `\"%block "
+"ParamName\"` directly in `user_params` - NO `fdf_arguments` wrapper!"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:518
-#: 468a6216cbc7491995a478de8b9aaf00
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:605
+#: 4086c994723c4994be19583865003c2a
 msgid "Next Steps"
 msgstr "گام‌های بعدی"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:520
-#: a675ebc6ebcc44d9a5b479bb2ea24ae4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:607
+#: 6b2b4794cd83453b9c1a509fb17813db
 msgid "After completing PDOS tutorials:"
 msgstr "After completing PDOS tutیاils:"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:522
-#: bbffc694cf7d486a862e6b22be73f1b3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:609
+#: b65ade39f9054b34924a293710ba9fd0
 msgid ""
 "**Optical properties**: [03-advanced-features/07-optical-"
 "properties](../../03-advanced-features/07-optical-properties/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:523
-#: 64636f3424224f2585a7023b91528f7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:610
+#: efd310ea188c426e95fa80f43eadf7c3
 msgid ""
 "**COOP/COHP analysis**: [03-advanced-features/15-hamiltonian-"
 "overlap](../../03-advanced-features/15-hamiltonian-overlap/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:524
-#: 359718158952402a8ab3b358a19e67ca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:611
+#: fffccfa6e7a942f19aeba43c4c87231a
 msgid ""
 "**Magnetic systems**: [03-advanced-features/16-magnetic-"
 "calculations](../../03-advanced-features/16-magnetic-calculations/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:525
-#: 0b53d0aa38da4e459977ce000436a717
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:612
+#: e6f9e9f9f13b41398fbfcfdca8888ce9
 msgid ""
 "**DFT+U**: [03-advanced-features/08-dftu](../../03-advanced-"
 "features/08-dftu/) - For correlated d/f electrons"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:529
-#: da6cfcf66e3b472c88cd7eba7f5a711c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:616
+#: 710d79903bcd4fe5a3dba9515ee8d640
 msgid "References"
 msgstr "References"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:531
-#: 53245d70ccc74763a144d0f575931fe5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:618
+#: 670ee01233d2412cacfca1a6662d4c79
 msgid "**SIESTA Manual**: PDOS chapter"
 msgstr "**SIESTA Mnul**: PDOS chpter"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:532
-#: bc3d24ff841548e1a5daf8d3b0624b7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:619
+#: 738a78e8d36644bbbfe258253ca9594d
 msgid "**Mulliken Analysis**: Understanding orbital projections"
 msgstr "**Mulliken Anlysis**: درک یاbitl projections"
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:533
-#: 60f658f2953048838c7500a12532962c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:620
+#: a51120b5db7543a58e3721cf34306686
 msgid ""
 "**Pymatgen PDOS**: "
 "[Documentation](https://pymatgen.org/pymatgen.electronic_structure.dos.html#pymatgen.electronic_structure.dos.CompleteDos)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:537
-#: bcc85db0b58c4fa2a76cdd2203379d1d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/06-PDOSMaker/README.md:624
+#: 6c282e1fa40149c4bc578662e957e7ef
 msgid ""
 "*Back to [01-basics](../README.md) | [Main Tutorial "
 "Index](../../README.md)*"
 msgstr ""
+
+#~ msgid ""
+#~ "✅ **Use dense k-points**: 12×12×12 "
+#~ "minimum for good PDOS ✅ **Check "
+#~ "all orbitals**: Don't forget d and "
+#~ "f if present ✅ **Compare with "
+#~ "total DOS**: PDOS components should sum"
+#~ " to total ✅ **Use spin "
+#~ "polarization**: For magnetic systems, always"
+#~ " include spin ✅ **Relax first**: Use"
+#~ " optimized geometry for accurate PDOS"
+#~ msgstr ""
+

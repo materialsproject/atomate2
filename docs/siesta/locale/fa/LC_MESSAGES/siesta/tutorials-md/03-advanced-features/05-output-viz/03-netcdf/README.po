@@ -1,0 +1,1141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:1
+#: 15fec7f6df5347eabdb4bbf58f875ade
+msgid "Tutorial 13: NetCDF Output Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:3
+#: 406330c020ab480fa2011d82535add6e
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:5
+#: b817ded30c864e19939a70a2ab45b5c9
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's NetCDF (CDF4) output"
+" format using the `NetcdfOptions` dataclass module. NetCDF provides "
+"portable, self-describing binary output with optional compression and "
+"parallel I/O support."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:7
+#: 958c20f19f2d46a895a85b123b453b37
+msgid "Learning Objectives"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:9
+#: dcacdc72054c44d3b5ea621ff9586279
+msgid "Enable NetCDF output for grid-based data"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:10
+#: 1a417f4875c5462fade4e4bdc536f292
+msgid "Configure compression levels for file size optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:11
+#: a69c7a72c8274e30bbabe137bfcc0609
+msgid "Set precision (single/double) for data storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:12
+#: fd5575097ae448679d6aa3c7c5cee114
+msgid "Enable parallel I/O for MPI calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:14
+#: a0a15aca639e4acaadbe3e8a6928d336
+msgid "Theory"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:16
+#: af24ed1c850b45c380a60bbc15735873
+msgid "What is NetCDF?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:18
+#: 93639c72b81345d58aa792455a6f792e
+msgid ""
+"**NetCDF (Network Common Data Form)** is a self-describing, machine-"
+"independent data format:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:20
+#: bf2ce15b3bed40a98c76e6c9b67253dc
+msgid "**Self-Describing**: Metadata included in file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:21
+#: 559b936a79fa4d0e9c2d34038ac14063
+msgid "**Portable**: Works across different platforms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:22
+#: bab395fb3b34451ba949e04aa5b5b743
+msgid "**Efficient**: Binary format with optional compression"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:23
+#: 240fc3845a83482c964604768df9b32e
+msgid "**Standards**: CF conventions, widely supported"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:25
+#: 513f36d439c444e0b7df68927dba51bd
+msgid "NetCDF in SIESTA"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:27
+#: 3e8c2d2c49c1456c843470db3c700170
+msgid "SIESTA can save grid-based quantities in NetCDF format:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:28
+#: c2aee1a37b8945138cafc753fbf83770
+msgid "Charge density (ρ)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:29
+#: d2cc972304a0418ba35b2acacc9c1b6c
+msgid "Electrostatic potential (φ)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:30
+#: e848e7afae8948c8a7192db365aa54c8
+msgid "Wave functions (ψ)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:31
+#: 6d27210968f7453b884606eccd809c3c
+msgid "Real-space grids"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:33
+#: 275a43d2a0b94a4189ceb343101c2ee8
+msgid "**Advantages over binary format:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:34
+#: 0b551c2c8f874314ac72188727d35afb
+msgid "✅ Portable (no endianness issues)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:35
+#: f8edcc37b9f941169678acf3c6a70837
+msgid "✅ Self-describing (units, dimensions embedded)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:36
+#: 92629040258e461fbb4f6dc5286270b1
+msgid "✅ Compression (5-10× smaller files)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:37
+#: 674aec8f51a946f1bea5c23f2af76531
+msgid "✅ Parallel I/O (faster for MPI)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:38
+#: 41d75e8d336c4f58a9abebf9167abf67
+msgid "✅ Standard tools (ncdump, ncview, Python xarray)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:40
+#: 91237c5bb3ab4920b99be659be601acb
+msgid "Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 121ecc3b677d49979a96fc9434cea6f6
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: c4f0eed0ebaf4f5898fa18dc2cc4eff3
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 4ce308e4cae54cfca187f72bf32daaf5
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: f2f0382a45534953b317615108f28159
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 4abae19db0914bcb906e6f7d881f854d
+msgid "`cdf_save`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 14e2e1ff1ad44f779aafc2d76a844d44 c015a1550f274251b78a42bd1ab15fe3
+msgid "bool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 3f25745824894bcd8c96b13aa7abcffe c36b85c74f434e6e9eb3157e10c350bf
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 00f3bee5cb9b4542b5eaa0317930a5e9
+msgid "Master flag to enable NetCDF output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 2b402e1ac04a4384838af0b51a7661a2
+msgid "`cdf_compress`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 289fa52077e9497d875077e28e470761
+msgid "int"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 654913983fb84b58aedb17877fb8422b 9516a33f42f244dcb76b909dc4a8e3b6
+msgid "0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 2dffedf325a4490ca92b72db2f00921a
+msgid "Compression level (0-9, 0=none)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 446e652b0478486c8e560a911ea71b6e
+msgid "`cdf_mpi`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: a5d244c918454a8683619d18c77c1691
+msgid "Enable parallel NetCDF I/O for MPI runs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 4c8ed1aa707247019ac77b93a612f318
+msgid "`cdf_grid_precision`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: f358c764897d46bab92206d6f3f15e1f
+msgid "str"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: cbf346c60c0648158306967f71f6cefd
+msgid "'single'"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 81386a5a15344619ae8a33ef2a22d42c
+msgid "Precision for grid data ('single' or 'double')"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:49
+#: aef0ac07cbdd4fe08754d4b92b498326
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:51
+#: e449a6f2269c4259b5c2413fc5eab73a
+msgid "Example 1: Basic NetCDF Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:53
+#: 20ed79c72cf2478d912c73a37c71ca63
+msgid "Enable NetCDF with default settings:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:65
+#: 22d7fd201fe14ec5bba6799dcb4f88ef
+msgid "**Output files:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:66
+#: 3812d0a635254a3e9efe645496020f2f
+msgid "`systemLabel.nc` - NetCDF file with charge density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:68
+#: fc2d25075e30451ab9e4bbd7cb148e36
+msgid "Example 2: Compressed NetCDF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:70
+#: deb285c7016f48a193d545b6d8992f7a
+msgid "Enable compression for smaller files:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:81
+#: c8603a91bb23439fa88d9a3e25c19e10
+msgid "**Compression ratios:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:82
+#: aa04abae175f4f308e46ebc7e0227b54
+msgid "Level 0: No compression (fastest)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:83
+#: 9e9364eb668146378da0a21e8b85198a
+msgid "Level 1-3: Light (2-3× smaller, fast)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:84
+#: a2a4a3a919a64010a6005fb7de076547
+msgid "Level 4-6: Medium (4-5× smaller, moderate)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:85
+#: d9d27cc741d0412cb9c0e24cdadeb558
+msgid "Level 7-9: Heavy (6-10× smaller, slow)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:87
+#: 96d1048aff2e4b17abe3a67fecfffb00
+msgid "Example 3: High-Precision with Parallel I/O"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:89
+#: 954df76617094c03a87f78530cdcd33c
+msgid "Double precision with MPI parallel I/O:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:100
+#: 63b60d21b52e49a992743cd7699a94ca
+msgid "Compression Level Guidelines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:102
+#: 26055e5087594e7e83a28de8ae52a4cc
+msgid "Level Selection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:104
+#: 86b72c32456147658d00375001b9c468
+msgid "**Level 0 (No compression):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:105
+#: 50f72d9326fe4dc8a21aad99558e562c
+msgid "Use when: Disk I/O is fast, storage not limited"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:106
+#: b09755d5cf284403bf091431ce921b6c
+msgid "Speed: Fastest"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:107
+#: e55df3de6f834d7cb30edaa8d37d9db7
+msgid "Size: Largest (100%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:109
+#: e63eeda32ba64f3c8c1e36413d985bcd
+msgid "**Level 1-3 (Light):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:110
+#: 2ef9ac59fb284ca3b47c865aa20045d4
+msgid "Use when: Quick calculations, preview runs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:111
+#: a3af721686d74b0781a8f46cb7b01436
+#, python-format
+msgid "Speed: Fast (~10% slower than level 0)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:112
+#: 052af036957f470d96a49157a2f449f4
+#, python-format
+msgid "Size: 30-40% of uncompressed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:114
+#: c3b8abb065f34c399e428b2f05713f71
+msgid "**Level 4-6 (Medium):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:115
+#: 966c15f9c33b495f9b1f8b4497de5e6c
+msgid "Use when: Production calculations (recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:116
+#: f048be04892d44d39ad4093439d3b2a9
+#, python-format
+msgid "Speed: Moderate (~20% slower)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:117
+#: 7004fa40192e490bb6db7a1f8ceb70fc
+#, python-format
+msgid "Size: 20-25% of uncompressed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:118
+#: 83da780f24d546ef8fddab8de5af80d1
+msgid "**Best balance for most cases**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:120
+#: 53e2bff75b344577bf7e6dbef14730a5
+msgid "**Level 7-9 (Heavy):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:121
+#: 72ad37276eb14885a70672192ad9e014
+msgid "Use when: Long-term archival, limited storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:122
+#: 198e941d1d4c41f68d3267947e256c93
+#, python-format
+msgid "Speed: Slow (~40% slower)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:123
+#: 185d2ef91090434694802ef7fe5c4f4b
+#, python-format
+msgid "Size: 10-15% of uncompressed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:124
+#: 16266db80df74ddd8f6255357ea6b177
+msgid "Diminishing returns above level 6"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:126
+#: cb5c1fc274224a0d989869f9bf88a200
+msgid "Benchmarks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:128
+#: 15c36429c8b346308a4cd984a3027050
+msgid "Example: 50×50×50 grid, double precision"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 56f743f550ab4f718c60cc0c5de7474c
+msgid "Level"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: a267b6cb582044bea00004e53dc96209
+msgid "File Size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 20d545f37582462f9f30eb018345f33c da2ef32179dd4bff9b13f5e2dfa4ba83
+msgid "Write Time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 9a0da44f0de642df88ed65b2a3a58f2d
+msgid "Read Time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 04918c79032943a2b8c56b48426973fd
+msgid "1.0 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 38d7663013774a3c8a2b9364fe1058e0
+msgid "0.05 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: aeb56f538fdc48de9d4876b371695b0a
+msgid "0.02 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: cc832c71814c4b1087311259315a6da3
+msgid "3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: c968040b8bb14666b2579b9f8491c389
+msgid "0.35 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 1468692d8ec444a89ac9ca2413dd179f 8515cae9807f4fa78a292f5155bbda6f
+msgid "0.06 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 988c10d285b9454cac593b24a5f51b5b
+msgid "0.03 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: bcfcd7f34d134008aaf2d0eb2bf5b028
+msgid "6"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 61fc1c4eae384e3ea12e60948716b016
+msgid "0.22 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: ca442ed5dca546e29d59c37fe74dc937
+msgid "0.08 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 3926606e2c374fc99e46e1b8029c06cf
+msgid "0.04 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 020bfb277fd6441eb6a31f2deb925fb3
+msgid "9"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 42b772b2503b407b9485ada2426a17f8
+msgid "0.18 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 9a7af5357f364fa2ae2c293fb35f595c
+msgid "0.12 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:137
+#: 5f88d0114a8e4d88a37ac8e50e19ed8b
+msgid "**Recommendation:** Use level 6 for production, level 3 for testing."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:139
+#: d329b92bfea649748c089f816a383ac4
+msgid "Precision Selection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:141
+#: ebf7792e80334a0ebfe4827f17a405fc
+msgid "Single vs Double Precision"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:143
+#: 332428f205314802a628db93c1c3e625
+msgid "**Single Precision (float32):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:144
+#: 8530f46261d0487f982ebe52e3bc2b34
+msgid "Size: 4 bytes per value"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:145
+#: 4b4975181a9d49ffbb07b545c66de142
+msgid "Range: ±3.4×10³⁸"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:146
+#: 0a517bbf608d47cfa18e69cace77f6ed
+msgid "Precision: ~7 significant digits"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:147
+#: 28984707db4c476896f965fcb61da2a5
+msgid "Use when: Charge density, potentials, visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:149
+#: 29198ae3cf4c4a658c6d893e54fd6314
+msgid "**Double Precision (float64):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:150
+#: c43849cdd6d84b93a4a3c42a8420052b
+msgid "Size: 8 bytes per value"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:151
+#: 8360db66f5014c1ca0fb4b3283259cc7
+msgid "Range: ±1.7×10³⁰⁸"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:152
+#: 30804c717ce143d687704036c39633b7
+msgid "Precision: ~15 significant digits"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:153
+#: c776bbc3472544cc8ba9560dbe64b0ac
+msgid "Use when: Wave functions, high-accuracy analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:155
+#: 64061fa61b684b01817cb9b65a414de9
+msgid "Storage Comparison"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:157
+#: 6fa7a5e2d6084485aca0b203002b81e0
+msgid "For 100×100×100 grid:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 9e3d0fedce15471b8f71a4b834415fa5
+msgid "Precision"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: fc69fd74ea904e989f365990a194e5b9
+msgid "Uncompressed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 4b2d4cfbc4f34316b445ea2426bb463d
+msgid "Compressed (L6)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 25a8debd6630475cb70be85af384fd57
+msgid "Single"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 69ee125a99e2474e87dcfecedd14aafd
+msgid "4 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: c3d56d6c8b80465980846ad18d4ba082
+msgid "0.9 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: e8625b79ed3d4fa3a3005aff1a9d2a30
+msgid "Double"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: e02ecf2d9150404d9db764a907e53351
+msgid "8 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 85a50caa68ea4969aadde4667c07dbbd
+msgid "1.8 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:164
+#: 896614003dcc400f9901a248fa221ea1
+msgid "**Recommendation:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:165
+#: 09404f98e1004fe98e316718e0f00f32
+msgid "Single precision sufficient for most purposes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:166
+#: 75f95cba571c4488b5af45e2151468c5
+msgid "Double if post-processing requires high accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:167
+#: 56d624e49a58420899fcf9c80b83a223
+msgid "Compression more important than precision choice"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:169
+#: aa716ece32b34123aa10b8ff3ba665fb
+msgid "Parallel I/O (CDF.MPI)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:171
+#: 0d7102a32b8941bd95be8ad82bf891d5
+msgid "When to Enable"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:173
+#: eb3d3de2d7a84fb3a77543e039790652
+msgid "**Enable (CDF.MPI = True) when:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:174
+#: cb0d920892414855a9b29bab1e171d58
+msgid "✅ Using MPI parallelization (>4 processes)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:175
+#: fdbffd1ad7c9449d90c3b0cdff367ad6
+msgid "✅ Large grids (>100³ points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:176
+#: 51f060833977402d9faa8a864c362586
+msgid "✅ Multiple grid quantities saved"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:177
+#: b7fd8544e1864de5803494d513d9ff15
+msgid "✅ Parallel file system available (Lustre, GPFS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:179
+#: 5b225f7604be402bba22438b01ab4adb
+msgid "**Disable (CDF.MPI = False) when:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:180
+#: ba2b0566a18940c295b9ac61e0264e07
+msgid "❌ Serial calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:181
+#: a27f770feed340d5a1dc601b8d8725fd
+msgid "❌ Small grids (<50³ points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:182
+#: 305f634ce72548e69c75b0b4550c262a
+msgid "❌ Network file system (NFS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:183
+#: 9396c06728a14ee7afee3d6a11750965
+msgid "❌ Parallel HDF5/NetCDF not installed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:185
+#: 38103329e1b542708b9c50336a0907cd
+msgid "Performance Impact"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:187
+#: 08154fa3edf541ebb7ff64b8ec0a0086
+msgid "**4 processes, 100³ grid, double precision:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 6b15de8898a44d949068b305662199b0
+msgid "Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: ece8ccae9b1840c99093255ecf4a4103
+msgid "Speedup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 257da5567ffc4b269ae81285b903b24f
+msgid "Serial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 5dfdc2115c184060937891cd94db2ec7
+msgid "2.5 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: e94e75443627491dad6749f3b565db29
+msgid "1.0×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 9ed5df8b70794dcd8ccfdf35c0d65ab7
+msgid "Parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 1ee5de3226684d1796ec3c3977f18fa2
+msgid "0.8 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md
+#: 913c3e82409a4c08ac66f53b6787fc5d
+msgid "3.1×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:194
+#: 30a09b38590446c0a8a0db417317d2ff
+msgid "**Benefits:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:195
+#: 72fb273af5d04a9594512bfad35865c2
+msgid "Faster I/O (3-5× speedup)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:196
+#: eeeb5a50af5b45de8a7c8af30f8d6074
+msgid "Better scaling for large process counts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:197
+#: 8ff2f8e7c2c2423f8b469255fb522a34
+msgid "Reduced memory per process"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:199
+#: 27a70835939e403a9d7615e4bd98846e
+msgid "Reading NetCDF Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:201
+#: c220f4277d41494fbb74ff46bfcc2ad4
+msgid "Command-Line Tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:214
+#: f1f6f97191f147319db1e6b86feba414
+msgid "Python (xarray)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:232
+#: 7a510452b4fe4d4cbd115508fe15f927
+msgid "Python (netCDF4)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:250
+#: 494c5bec808a47918d37308e80cd3933
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:252
+#: 76a6edc577524c949de3d9cba152530c
+msgid "1. Always Enable for Production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:254
+#: 964566b275ba4e3fbb1d7137ec73fa45
+msgid "NetCDF should be default for all production calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:255
+#: 9ea335e238754f42ab73cdc249dbe1e4
+msgid "Portable across systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:256
+#: e467d7a5114c4826ac399ee57cc471cf
+msgid "Self-documenting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:257
+#: e38122de664f4c46ba38689d04d304ce
+msgid "Compression saves disk space"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:258
+#: da6ac18b454e45fb96e69e2293afa0b8
+msgid "Standard post-processing tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:260
+#: 6edb894357064dd1b86d91ed8c13822d
+msgid "2. Recommended Settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:262
+#: 16524ac956e849c6b81b9861091063f1
+msgid "**Default configuration:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:271
+#: 4d6ee008fc304691b51a5fe035af3f24
+msgid "**High-performance MPI:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:280
+#: bef341e9bd7743b6b6172589b54b7f69
+msgid "**Archival/publication:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:289
+#: e29198e4591a4b82ba434d58d808e587
+msgid "3. File System Considerations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:291
+#: fcf8fef41c774e9bacdfac58133da9eb
+msgid "**Lustre/GPFS (Parallel FS):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:292
+#: 28a6f21a46d54ed1bf9557e68e2940fe
+msgid "Enable CDF.MPI"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:293
+#: 52df9ae156444f55bddcc4d365be5e52
+msgid "Use striping for large files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:294
+#: 2baebf9be48846bda7535f9c407c3e59
+msgid "Moderate compression (level 4-6)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:296
+#: 9e26d3ff0d3b41f088421a1a2f8ffb5a
+msgid "**NFS (Network FS):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:297
+#: 1f132f7067cd44a9b208556193207b4d
+msgid "Disable CDF.MPI"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:298
+#: e8b4a96fe2b44eaab485e80f6d244398
+msgid "Higher compression to reduce traffic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:299
+#: 8ff22a05ff3a4168b1d4606404257f5d
+msgid "Consider local scratch space"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:301
+#: 8666f8c1b84c4da0b7ca2a028e0b72c9
+msgid "**Local SSD:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:302
+#: 431efe2ee7f441b1941f5689ddd8862a
+msgid "Disable CDF.MPI if serial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:303
+#: c94287f689af4e3c9d281d5d79a045e6
+msgid "Lower compression (level 3-4)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:304
+#: b473cef211d3431c97d4223198d1c221
+msgid "Focus on computation speed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:306
+#: 6853ee090ca54e47bfb6a9d73fc2da7e
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:308
+#: 760494a180434078a70ee2205892d591
+msgid "Issue 1: NetCDF Library Not Found"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:310
+#: 0b16e259324a47068b16245d24e6727a
+msgid "**Error:** `NetCDF library not available`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:312
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:321
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:330
+#: 59341abea072464aad8c12182a4098e5 97b54135a2004b6b94160eedc3696156
+#: f940d2f8151f430f9bf1ed6f528d782d
+msgid "**Solution:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:313
+#: 11473b27fe7649ce9fed71b7845d02aa
+msgid "Install NetCDF library: `conda install netcdf4`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:314
+#: 82388cc45c5b452a944eba79bd8742cc
+msgid "Check SIESTA compilation: `siesta --version`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:315
+#: d6914e4a3951472faf047e1925b865c3
+msgid "Rebuild SIESTA with NetCDF support"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:317
+#: 0f9b8f598a244a769ecec51053bfcfc7
+msgid "Issue 2: Parallel NetCDF Fails"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:319
+#: df0697e14bb74a66b4ae0f825eaec711
+msgid "**Error:** `Parallel NetCDF I/O error`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:322
+#: f9c730c89c744c9799e63162743cdd41
+msgid "Check parallel HDF5/NetCDF installed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:323
+#: 9a02d473011b4498bdbfe68c201f86bb
+msgid "Verify `CDF.MPI` matches MPI run"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:324
+#: 60fef49409d14a56bec32a5b4038569e
+msgid "Try serial I/O (`CDF.MPI = False`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:326
+#: 905a1e6549d54d2582b880844a5e8fb9
+msgid "Issue 3: File Size Too Large"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:328
+#: ba3b196d8b8e498d91d3813e359154d9
+msgid "**Problem:** NetCDF files fill disk"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:331
+#: 9a5a105a627448b6b89ef51eedfc8838
+msgid "Increase compression: `CDF.Compress = 9`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:332
+#: 8d527ef099a0456d8aaeecb2d4931bf0
+msgid "Use single precision: `CDF.Grid.Precision = \"single\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:333
+#: 6d28f3104af24cb5ba82d4363b05fe19
+msgid "Save only needed quantities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:334
+#: 05899fc55cd74612ae5348c34507c4a1
+msgid "Clean up old files regularly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:336
+#: df30c878e0c34d7b881da75ed85df6cc
+msgid "Advanced Topics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:338
+#: 303dcec649dc474189348eb02069d937
+msgid "Multiple Grid Quantities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:340
+#: f06150c0740d46af9130c59cbfe92a57
+msgid "Save multiple quantities in single file:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:350
+#: caccaa2405584b539452c160d2caf990
+msgid "All saved in `systemLabel.nc` with different variables."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:352
+#: 2de30ffc214d40ff90b43a0c35318839
+msgid "CF Conventions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:354
+#: 8e47c9df36624f73a9e09c88d8ba55ca
+msgid "SIESTA NetCDF files follow CF (Climate and Forecast) conventions:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:355
+#: 5fa057baff6e451e9b1ad21d8cd85ff0
+msgid "Standard names for variables"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:356
+#: deeb1ed922b24507a15ba90e402084f4
+msgid "Coordinate systems with units"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:357
+#: db76cedb21a143c182565b521232bbb8
+msgid "Metadata attributes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:358
+#: 0fdf5e06e5824fcaa38d5c60fb43d778
+msgid "Compatible with CF-compliant tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:360
+#: 4ff01ffa8e0e4099b43c0fd12d3bd271
+msgid "Chunking and Caching"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:362
+#: eac05a47cf974d178b2be81122255fb5
+msgid "For very large grids (>200³), consider:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:368
+#: 1fd42d5d02964ddeab3531edb9d29cec
+msgid "Further Reading"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:370
+#: e445741ef6e148748dae92481d34e0ce
+msgid "NetCDF Documentation: https://www.unidata.ucar.edu/software/netcdf/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:371
+#: 4b580c49f49d416d8700107d364a16b3
+msgid "CF Conventions: http://cfconventions.org/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:372
+#: 47262a583c8f44a8a19869084a23a906
+msgid "xarray Tutorial: https://tutorial.xarray.dev/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:373
+#: d31266c6175740f39a5d38f1efdc0fbb
+msgid "SIESTA Manual: Section 6.32 (NetCDF Output)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:375
+#: 39b8b2f435564733aeb33b5ffbfb073d
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:377
+#: be87f064ddb74dc3b4561999b25af78f
+msgid "Tutorial 14: Efficiency and Performance Monitoring"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:378
+#: 2087b82d4f284ae6ad1e241d33a85594
+msgid "Tutorial 15: Hamiltonian Matrix Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/03-netcdf/README.md:379
+#: 3da04ee1b7d74aa797ff37a0ed5863b5
+msgid "Tutorial 10: Grid Output (binary format comparison)"
+msgstr ""
+

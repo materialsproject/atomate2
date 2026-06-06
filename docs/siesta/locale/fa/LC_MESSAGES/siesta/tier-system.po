@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,32 +20,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tier-system.rst:3 3389b690dee441a98e61721ad54fa3d9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:3
+#: 77c1c3c7f25d4050b1f414898074e88b
 msgid "Tier-Based Input System"
 msgstr "سیستم ورودی مبتنی بر سطح‌بندی"
 
-#: ../../source/tier-system.rst:5 00beaedc2a854b5191088fc85b9567fa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:5
+#: 15d89d3beb4b4d38a7e4c572fd7f65f5
 msgid ""
 "**Automatic activation of SIESTA parameter modules based on calculation "
 "complexity**"
-msgstr ""
-"**فعال‌سازی خودکار ماژول‌های پارامتر SIESTA بر اساس پیچیدگی محاسبات**"
+msgstr "**فعال‌سازی خودکار ماژول‌های پارامتر SIESTA بر اساس پیچیدگی محاسبات**"
 
-#: ../../source/tier-system.rst:7 7da7ea8ee8304a098d47fc2ba462578b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:7
+#: eb2898c082b64d99b4400d64e7126582
+#, fuzzy
 msgid ""
-"The tier-based input architecture organizes 24+ SIESTA parameter "
-"dataclass modules into four hierarchical complexity tiers, enabling "
-"automatic module activation and material-specific presets."
+"The tier-based input architecture organizes 33 SIESTA parameter dataclass"
+" modules into five hierarchical complexity tiers, enabling automatic "
+"module activation and material-specific presets."
 msgstr ""
-"معماری ورودی مبتنی بر سطح‌بندی بیش از ۲۴ ماژول کلاس داده پارامتر SIESTA را "
-"در چهار سطح سلسله‌مراتبی پیچیدگی سازماندهی می‌کند و امکان فعال‌سازی خودکار "
-"ماژول‌ها و پیش‌تنظیم‌های اختصاصی مواد را فراهم می‌آورد."
+"معماری ورودی مبتنی بر سطح‌بندی بیش از ۲۴ ماژول کلاس داده پارامتر SIESTA "
+"را در چهار سطح سلسله‌مراتبی پیچیدگی سازماندهی می‌کند و امکان فعال‌سازی "
+"خودکار ماژول‌ها و پیش‌تنظیم‌های اختصاصی مواد را فراهم می‌آورد."
 
-#: ../../source/tier-system.rst:10 d13e218f6c8b449594f2263bdfb93c74
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:10
+#: 35a851e3632e4783b561ff668275c41e
 msgid "Complete module registry system with automatic initialization"
 msgstr "سیستم ثبت کامل ماژول با مقداردهی اولیه خودکار"
 
-#: ../../source/tier-system.rst:14 a8ae61e3011648489f7422a478fc69dd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:14
+#: 6dfc02d743d24b49ae28f7da515dbb7f
 msgid ""
 "**Common Confusion**: The tier system has two separate concepts - tier "
 "levels (for module activation) and tier defaults (parameter sets). If you"
@@ -53,360 +58,537 @@ msgid ""
 "has no attribute '_md_relaxation_module'\", see :doc:`tier-system-"
 "clarification` for detailed explanation and solutions."
 msgstr ""
-"**سردرگمی رایج**: سیستم سطح‌بندی دو مفهوم جداگانه دارد - سطوح (برای فعال‌سازی ماژول) "
-"و پیش‌فرض‌های سطح (مجموعه پارامترها). اگر با خطاهایی مانند \"Invalid tier\" یا "
-"\"'RelaxSetGenerator' object has no attribute '_md_relaxation_module'\" مواجه شدید، "
-"برای توضیحات تفصیلی و راه‌حل‌ها به :doc:`tier-system-clarification` مراجعه کنید."
+"**سردرگمی رایج**: سیستم سطح‌بندی دو مفهوم جداگانه دارد - سطوح (برای "
+"فعال‌سازی ماژول) و پیش‌فرض‌های سطح (مجموعه پارامترها). اگر با خطاهایی "
+"مانند \"Invalid tier\" یا \"'RelaxSetGenerator' object has no attribute "
+"'_md_relaxation_module'\" مواجه شدید، برای توضیحات تفصیلی و راه‌حل‌ها به "
+":doc:`tier-system-clarification` مراجعه کنید."
 
-#: ../../source/tier-system.rst:22 623d6d96a7e94a0c812ae37bf838da03
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:22
+#: 9799f90df91a4062bf026b6127ec7f10
 msgid "Overview"
 msgstr "نمای کلی"
 
-#: ../../source/tier-system.rst:25 5b96e9eb5c2e43a68db7521424180efd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:25
+#: 4935a5d3e3f7430eb717ba632f04295a
 msgid "Problem Solved"
 msgstr "مشکل حل‌شده"
 
-#: ../../source/tier-system.rst:27 44d5637ef60240aea263037b8306981e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:27
+#: f6fe41a86551462c9499baf7eaeaf4d3
 msgid ""
 "Previously, only 7 out of 28 dataclass modules were manually initialized,"
 " meaning:"
 msgstr ""
-"قبلاً، تنها ۷ مورد از ۲۸ ماژول کلاس داده به صورت دستی مقداردهی اولیه می‌شدند، "
-"به این معنی که:"
+"قبلاً، تنها ۷ مورد از ۲۸ ماژول کلاس داده به صورت دستی مقداردهی اولیه "
+"می‌شدند، به این معنی که:"
 
-#: ../../source/tier-system.rst:29 69330f992a714ab8afc3338854446db6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:29
+#: 18901cf6d5874602987e333a5bdab8cc
 #, python-format
 msgid "75% of SIESTA parameters were inaccessible via powerups"
 msgstr "۷۵٪ از پارامترهای SIESTA از طریق powerup ها قابل دسترسی نبودند"
 
-#: ../../source/tier-system.rst:30 99de0c1227b84601a2169e148ef21b44
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:30
+#: 7ed227080da0409eaeb970e8162b7bbd
 msgid "Manual code changes required to activate new parameter categories"
 msgstr "تغییرات دستی کد برای فعال‌سازی دسته‌بندی‌های جدید پارامتر مورد نیاز بود"
 
-#: ../../source/tier-system.rst:31 e7caec268b624462a072c333f1d74f51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:31
+#: 6a16322d3b854c3aa27a9ed4f808934d
 msgid "No organization by calculation complexity"
 msgstr "سازماندهی بر اساس پیچیدگی محاسبات وجود نداشت"
 
-#: ../../source/tier-system.rst:32 7dd1fba7fc6049fe9363ef48137a5787
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:32
+#: 756f7c16d6664beb9aa14be78f21a14b
 msgid "Difficult to manage parameter combinations for different materials"
 msgstr "مدیریت ترکیبات پارامتر برای مواد مختلف دشوار بود"
 
-#: ../../source/tier-system.rst:35 2fc726cadf6b4401b6fd45ee37b4c16c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:35
+#: f99bad38a4ee4e79bd2eaa5e8511c87e
 msgid "Solution"
 msgstr "راه‌حل"
 
-#: ../../source/tier-system.rst:37 20b7fceaeb344b709f5a826ae872c872
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:37
+#: c2fcb76f1c1448809c17d52cc254dc0c
 msgid "The tier system provides:"
 msgstr "سیستم سطح‌بندی ارائه می‌دهد:"
 
-#: ../../source/tier-system.rst:39 cb93f6881e714bc8962d404ef51fc8d8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:39
+#: 8fe384604f4442aca51db0889cf12093
 msgid "✅ **Automatic module activation** based on calculation type"
 msgstr "✅ **فعال‌سازی خودکار ماژول** بر اساس نوع محاسبات"
 
-#: ../../source/tier-system.rst:41 f3a8343f040440638d5494bb058a5007
-msgid "✅ **4-tier hierarchy**: basic → intermediate → advanced → expert"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:41
+#: 54fb531f5a1f415899db1db21299deb7
+#, fuzzy
+msgid "✅ **5-tier hierarchy**: dirty → basic → intermediate → advanced → expert"
 msgstr "✅ **سلسله‌مراتب ۴ سطحی**: basic → intermediate → advanced → expert"
 
-#: ../../source/tier-system.rst:43 a193f74a71d946e9a43decb4883b815e
-msgid "✅ **24+ modules** organized by complexity and priority"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:43
+#: 312831368029409d888e2316d4b0f52a
+#, fuzzy
+msgid "✅ **33 dataclass modules** organized by complexity and priority"
 msgstr "✅ **بیش از ۲۴ ماژول** سازماندهی‌شده بر اساس پیچیدگی و اولویت"
 
-#: ../../source/tier-system.rst:45 2362b63304844be29a3b7175a7896a58
-msgid "✅ **14 material-specific presets** for common calculations"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:45
+#: 6f74bcfc598342c8906b048272a15c57
+#, fuzzy
+msgid ""
+"✅ **32 material-specific presets** across 10 categories for common "
+"calculations"
 msgstr "✅ **۱۴ پیش‌تنظیم اختصاصی مواد** برای محاسبات رایج"
 
-#: ../../source/tier-system.rst:47 251dda5b479347b9a137df84fb8aa033
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:47
+#: 985e55023e68485fb514a286517bc4b7
 msgid "✅ **< 25ms overhead** for full module set (performance-tested)"
-msgstr "✅ **سربار کمتر از ۲۵ میلی‌ثانیه** برای مجموعه کامل ماژول‌ها (تست عملکرد شده)"
+msgstr ""
+"✅ **سربار کمتر از ۲۵ میلی‌ثانیه** برای مجموعه کامل ماژول‌ها (تست عملکرد "
+"شده)"
 
-#: ../../source/tier-system.rst:52 33d3e92870cb430aa8265bcf71a53f98
-msgid "The Four-Tier Hierarchy"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:52
+#: b480e75ec0e743728564e9219a56c0db
+#, fuzzy
+msgid "The Five-Tier Hierarchy"
 msgstr "سلسله‌مراتب چهار سطحی"
 
-#: ../../source/tier-system.rst:54 2f0d726243624130916dd5b9e4c5aefc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:54
+#: 6b9f67dfd2b5406aa881b4fdca0540bf
+#, fuzzy
 msgid ""
-"Tiers are **hierarchical** (cumulative): advanced tier includes all basic"
-" + intermediate + advanced modules."
+"Tiers are **hierarchical** (cumulative): advanced tier includes all dirty"
+" + basic + intermediate + advanced modules."
 msgstr ""
 "سطوح **سلسله‌مراتبی** (تجمعی) هستند: سطح advanced شامل تمام ماژول‌های "
 "basic + intermediate + advanced است."
 
-#: ../../source/tier-system.rst:60 6bda940f507c4198a573af5d60879059
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:60
+#: e790271166284122b292444c27a80c56
 msgid "Tier"
 msgstr "سطح"
 
-#: ../../source/tier-system.rst:61 c49f110c48b543c193b3c8c6a8f95c2a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:61
+#: bfc5f1d25b7b4523b0d028262616552c
 msgid "Modules"
 msgstr "ماژول‌ها"
 
-#: ../../source/tier-system.rst:62 3941e114074c4ba3a5633d0df82264ef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:62
+#: fd6e4bfaca1b481baf9e2804c8df6ae9
 msgid "Use Case"
 msgstr "مورد استفاده"
 
-#: ../../source/tier-system.rst:63 ../../source/tier-system.rst:609
-#: 24dab3e8ad7b49b38d98696324a6ed34 395944a3ff1f4936a9a0203400f8e931
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:63
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:636
+#: 36aa1604a80e404f9066c282f95280d8 4ace5989e10544dd8e5f9af7765d7479
 msgid "Performance"
 msgstr "عملکرد"
 
-#: ../../source/tier-system.rst:64 15827d044cd14bdb8eda7695b5534b12
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:64
+#: c17b190c9b2e4a6fa793e910c74da312
 msgid "When to Use"
 msgstr "چه زمانی استفاده شود"
 
-#: ../../source/tier-system.rst:65 0c84f95a2d084a4e8e116cbffec15733
-msgid "**basic**"
-msgstr "**basic**"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:65
+#: 713d79fadba44f4cbfc42f618fe9ac08
+#, fuzzy
+msgid "**dirty**"
+msgstr "**expert**"
 
-#: ../../source/tier-system.rst:66 cbc43cc0557341ffa567332520f8600c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:66
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:71
+#: 28963220b8b640c98fcaa2eb9497e263 654d1e69e1dc47c08d83f029f693f43a
 msgid "6"
 msgstr "۶"
 
-#: ../../source/tier-system.rst:67 54b158f103a942d0a5b8bb93f3642c9e
-msgid "Quick tests, workflow debugging"
-msgstr "تست‌های سریع، اشکال‌زدایی جریان کار"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:67
+#: d5be78cdd6944671a2e7df4ac0cbaaae
+msgid "Ultra-fast testing, rough exploration"
+msgstr ""
 
-#: ../../source/tier-system.rst:68 afd2b3b3660d447cbef5061718334647
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:68
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:73
+#: 7df30cc7be334d7e932d2f2e40ef4852 e62669487876479d941b7bfa1513010f
 msgid "~17 ms"
 msgstr "~۱۷ میلی‌ثانیه"
 
-#: ../../source/tier-system.rst:69 20ca28229b8f417595ab1ddca64399fd
-msgid "Testing only"
-msgstr "فقط آزمایش"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:69
+#: 4c9a8aaf4c4d40b987ba79bbaaf0d40e
+msgid "Quick prototyping"
+msgstr ""
 
-#: ../../source/tier-system.rst:70 1f07204f8b4246ac96b06cc5975f275f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:70
+#: a7126d26c5114574b294cb5c665c0ad2
+msgid "**basic**"
+msgstr "**basic**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:72
+#: df37b2244efd4136ba66df4778cc36d5
+msgid "Quick tests, workflow debugging"
+msgstr "تست‌های سریع، اشکال‌زدایی جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:74
+#: df72255e3b544fbf883a78e249431a20
+#, fuzzy
+msgid "Testing and validation"
+msgstr "تست و اعتبارسنجی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:75
+#: 2031ab6d831746caa271409a78ffa872
 msgid "**intermediate**"
 msgstr "**intermediate**"
 
-#: ../../source/tier-system.rst:71 7e83db2ed83b4830a3871acb7b9d7295
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:76
+#: 80a4fa3d68174f81a288c4a45a57d963
 msgid "12"
 msgstr "۱۲"
 
-#: ../../source/tier-system.rst:72 a490fa1091b24f1fa35c927f9e1282e2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:77
+#: 91212507cb90497981a5818e227f69e3
 msgid "Standard calculations (DEFAULT)"
 msgstr "محاسبات استاندارد (پیش‌فرض)"
 
-#: ../../source/tier-system.rst:73 f76b57918ff1494c98ded3d606f22300
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:78
+#: 18c1bfaebc464523ab3f871e03d94b60
 msgid "~20 ms"
 msgstr "~۲۰ میلی‌ثانیه"
 
-#: ../../source/tier-system.rst:74 4de070d3202841b39ae1432b11ccfaf4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:79
+#: 0cf2f0e903d74217b42c73b6a77ab55d
 msgid "Most production work"
 msgstr "بیشتر کارهای تولیدی"
 
-#: ../../source/tier-system.rst:75 96b5b0f7cc8c454db922268841467550
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:80
+#: ca2227f1ed5a4a2aae6c3e8aad826dac
 msgid "**advanced**"
 msgstr "**advanced**"
 
-#: ../../source/tier-system.rst:76 5947e865813040299a1c553a2935c808
-msgid "19"
-msgstr "۱۹"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:81
+#: cb3673c9c5a647199bce276cfdb9dd42
+#, fuzzy
+msgid "22"
+msgstr "~۲۲"
 
-#: ../../source/tier-system.rst:77 6406beb16202492ab61654d295481d5c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:82
+#: 4acdcc828d1c4ad1a845304d068b4194
 msgid "Phonons, optical, DFT+U, surfaces"
 msgstr "فونون‌ها، نوری، DFT+U، سطوح"
 
-#: ../../source/tier-system.rst:78 ed72c41f211047f7996870665f335d9d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:83
+#: f7935a4a6a2b47399473678c837373b2
 msgid "~22 ms"
 msgstr "~۲۲ میلی‌ثانیه"
 
-#: ../../source/tier-system.rst:79 7e8077528da1440e951ae9085cee9e27
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:84
+#: 6d7425a65bda41439cd76b8ec0cf87f6
 msgid "Specialized properties"
 msgstr "ویژگی‌های تخصصی"
 
-#: ../../source/tier-system.rst:80 3fa3c24373b441b4bf2545b0e4fd7c10
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:85
+#: 2df5748237d04ae69f606144b37c1168
 msgid "**expert**"
 msgstr "**expert**"
 
-#: ../../source/tier-system.rst:81 6b92791c05e54093aea071fc4aaa9713
-msgid "24"
-msgstr "۲۴"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:86
+#: 1653333cd25f40f09bfa1ef309d101e9
+msgid "33"
+msgstr ""
 
-#: ../../source/tier-system.rst:82 e99566c1533344acbee30fb9260540f7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:87
+#: f509c1d4d5d94ab997b503a439f68246
 msgid "Performance tuning, large systems"
 msgstr "تنظیم عملکرد، سیستم‌های بزرگ"
 
-#: ../../source/tier-system.rst:83 cde2ef6739504393b501e46e992a3441
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:88
+#: a4a0ae367d9241fe929bb7fa85533511
 msgid "~23 ms"
 msgstr "~۲۳ میلی‌ثانیه"
 
-#: ../../source/tier-system.rst:84 56215c767da54feca723b7386e22e7a2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:89
+#: 2bb7ee07794e4f4aad48b573343016a2
 msgid "HPC optimization"
 msgstr "بهینه‌سازی HPC"
 
-#: ../../source/tier-system.rst:87 07dd1df885664009af1852a90c0da462
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:92
+#: e3f83898ec8047dd9712dab41ebedbc2
 msgid "Module Categories by Tier"
 msgstr "دسته‌بندی ماژول‌ها بر اساس سطح"
 
-#: ../../source/tier-system.rst:90 213f619d062e4492bd4019534bfa5c84
-msgid "Basic Tier (6 modules)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:95
+#: 1844eb1a8bed4c1bb6a745a7a943a6ed
+#, fuzzy
+msgid "Dirty Tier (6 modules)"
 msgstr "سطح پایه (۶ ماژول)"
 
-#: ../../source/tier-system.rst:92 ebb69d6e09874e9fa47d67b6fc4f63f2
-msgid "**Essential for any calculation**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:97
+#: 9589977aba3d46b0be06546b2ea9f763
+#, fuzzy
+msgid "**Bare minimum for any calculation**:"
 msgstr "**ضروری برای هر محاسبه‌ای**:"
 
-#: ../../source/tier-system.rst:94 99ab9c7028134b7daa3a0b2356a947fb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:99
+#: 840379d663684952a63390b8362c4907
 msgid "``pseudopotentials`` - Pseudopotential file paths"
 msgstr "``pseudopotentials`` - مسیرهای فایل شبه‌پتانسیل"
 
-#: ../../source/tier-system.rst:95 bb47f81db7f54e4d80044cdb569c4aac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:100
+#: bd59593a0fde437c93bcb43bb1b0e023
 msgid ""
 "``basis_sets_and_projectors`` - PAO basis set parameters (size, shift, "
 "norm)"
 msgstr ""
-"``basis_sets_and_projectors`` - پارامترهای مجموعه پایه PAO (اندازه، انتقال، نرم)"
+"``basis_sets_and_projectors`` - پارامترهای مجموعه پایه PAO (اندازه، "
+"انتقال، نرم)"
 
-#: ../../source/tier-system.rst:96 cea5aefca5dc4177875205c931bdddfa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:101
+#: 5a6ff76980664ac2b6009f0b76ac4ceb
 msgid "``xc_functional`` - Exchange-correlation functional (LDA, GGA, etc.)"
 msgstr "``xc_functional`` - تابعک تبادل-همبستگی (LDA، GGA و غیره)"
 
-#: ../../source/tier-system.rst:97 ea1bbcca16c0463e9542f4ddd7c99bfc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:102
+#: 5157d2a109134e7da4e6ca1d4ee2b771
 msgid "``kpoints`` - K-point sampling for Brillouin zone"
 msgstr "``kpoints`` - نمونه‌برداری نقاط k برای ناحیه بریلوئن"
 
-#: ../../source/tier-system.rst:98 d705ce8bc2ec45a7956f2e6bfae97e38
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:103
+#: 645d5f601c334241912439bda4c4bdb9
 msgid "``mesh_cutoff`` - Real-space grid cutoff energy"
 msgstr "``mesh_cutoff`` - انرژی برش شبکه فضای حقیقی"
 
-#: ../../source/tier-system.rst:99 4af62ad329e2454d980bffe6a04f2e4d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:104
+#: 6eb45ac86e6d4b2ab3af7cd0b71994db
 msgid "``general_system`` - System descriptors (label, energy units)"
 msgstr "``general_system`` - توصیف‌گرهای سیستم (برچسب، واحدهای انرژی)"
 
-#: ../../source/tier-system.rst:102 284b714a9005453fabe6dfb3d7a4873b
-msgid "Intermediate Tier (+6 modules)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:107
+#: e8a58bfd743d4766a43af46dfc0575b9
+msgid "Basic Tier (6 modules)"
+msgstr "سطح پایه (۶ ماژول)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:109
+#: fdf8efa865e04352ae5738d3e5eec534
+#, fuzzy
+msgid "**Same as dirty tier** - Essential modules for any calculation."
+msgstr "**ضروری برای هر محاسبه‌ای**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:112
+#: 3bd379e5d89c4a8c809c4516e27852b9
+#, fuzzy
+msgid "Intermediate Tier (+6 modules = 12 total)"
 msgstr "سطح متوسط (۶+ ماژول)"
 
-#: ../../source/tier-system.rst:104 c1cd9d7587154aa9ae2a2421d7dae131
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:114
+#: 904f394bf19141a38afa88e23200de96
 msgid "**Common advanced features**:"
 msgstr "**ویژگی‌های پیشرفته رایج**:"
 
-#: ../../source/tier-system.rst:106 2fc91ac34df14f0e886160cc28bf5eaf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:116
+#: 6f4172e505ee45b2b09dbd67dedc0836
 msgid "``spin`` - Spin polarization settings"
 msgstr "``spin`` - تنظیمات قطبش اسپین"
 
-#: ../../source/tier-system.rst:107 88ff0fd7349d4b3db595d85c098f27c4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:117
+#: bc60444cbb5f46daa20cd1045631a51c
 msgid "``scf_loop_parameters`` - SCF convergence (mixer, tolerance)"
 msgstr "``scf_loop_parameters`` - همگرایی SCF (مخلوط‌کننده، تلرانس)"
 
-#: ../../source/tier-system.rst:108 f0e29f5b18174e9fb14760729d1074a1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:118
+#: 4c171f89c611497889d4f19bc031202f
 msgid ""
 "``electronic_structure_calculation_options`` - Occupation functions, "
 "smearing"
-msgstr ""
-"``electronic_structure_calculation_options`` - توابع اشغال، گسترش"
+msgstr "``electronic_structure_calculation_options`` - توابع اشغال، گسترش"
 
-#: ../../source/tier-system.rst:109 f3e9142633024a53b092e2ba671b960f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:119
+#: 63e448bedf924c388d78425be0cd3493
 msgid "``md_relaxation`` - MD and geometry relaxation settings"
 msgstr "``md_relaxation`` - تنظیمات آرام‌سازی MD و هندسه"
 
-#: ../../source/tier-system.rst:110 314031ba48ad4c65be1cf3d19baf0272
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:120
+#: 1b2ba4d8f25149dfb84f883e0aefcc9a
 msgid "``constraints`` - Atomic position/cell constraints"
 msgstr "``constraints`` - محدودیت‌های موقعیت اتمی/سلول"
 
-#: ../../source/tier-system.rst:111 3fe858599f724179b5afb9a2754bfbd9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:121
+#: 1fe35974afb24d298288d2080c620605
 msgid "``lua_scripting`` - Lua scripting for advanced features (FLOS)"
 msgstr "``lua_scripting`` - اسکریپت‌نویسی Lua برای ویژگی‌های پیشرفته (FLOS)"
 
-#: ../../source/tier-system.rst:114 6239bf20f2224020a87f91e9386d0007
-msgid "Advanced Tier (+7 modules)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:124
+#: 27dc76006d2b4d43938ab2d44bf34f3f
+#, fuzzy
+msgid "Advanced Tier (+10 modules = 22 total)"
 msgstr "سطح پیشرفته (۷+ ماژول)"
 
-#: ../../source/tier-system.rst:116 248c560b31bc4722b1b4d70412cdc8b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:126
+#: 792ff6d603f64878a6b8ba115b765573
 msgid "**Specialized calculations**:"
 msgstr "**محاسبات تخصصی**:"
 
-#: ../../source/tier-system.rst:118 bc143c0867a34925b4cc7a5e979fd4da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:128
+#: 92f62d0c4e4c479d9a5157d0c5141d51
 msgid "``phonons`` - Phonon calculation parameters"
 msgstr "``phonons`` - پارامترهای محاسبات فونون"
 
-#: ../../source/tier-system.rst:119 c1e0b0a64bbe4ac184312145f5831f09
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:129
+#: ff024f7d155d4406bf4b7dc30addf468
 msgid "``optical`` - Optical properties and polarizability"
 msgstr "``optical`` - خواص نوری و قطبش‌پذیری"
 
-#: ../../source/tier-system.rst:120 d0b7d288105c4772a2c61940b8f54c1c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:130
+#: dec43623f1b141d6952de6632eb7fc62
 msgid "``dos_bands`` - DOS and band structure options"
 msgstr "``dos_bands`` - گزینه‌های DOS و ساختار نواری"
 
-#: ../../source/tier-system.rst:121 c4d20d72329744359548474d1a9d2f94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:131
+#: 19f0660f38b94b7a84d06d034b07193e
 msgid "``dftu`` - DFT+U parameters for correlated systems"
 msgstr "``dftu`` - پارامترهای DFT+U برای سیستم‌های همبسته"
 
-#: ../../source/tier-system.rst:122 6b12242c05bc40a6b8110122f7d4e78e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:132
+#: 4653e8036e40421eaf03a988e678a545
 msgid "``charge_dipole`` - Electric fields, dipole corrections"
 msgstr "``charge_dipole`` - میدان‌های الکتریکی، تصحیحات دوقطبی"
 
-#: ../../source/tier-system.rst:123 1b15384f746b4481b053f454829d4d64
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:133
+#: 5ca1e1df6909439698ac6fc4f3c0e8f7
 msgid "``grids_advanced`` - Advanced real-space grid settings"
 msgstr "``grids_advanced`` - تنظیمات پیشرفته شبکه فضای حقیقی"
 
-#: ../../source/tier-system.rst:124 6b52b481eb474c16b748b85be03c7c88
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:134
+#: 0ba7dec6aac443c0a7d32824cbfa1157
 msgid "``denchar`` - Charge density plotting options"
 msgstr "``denchar`` - گزینه‌های رسم چگالی بار"
 
-#: ../../source/tier-system.rst:127 4c1c643f7db84f11b227319ea730d948
-msgid "Expert Tier (+5 modules)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:135
+#: 216470f9b7c748ccb18ecc427c3f24d2
+msgid "``vdw`` - Van der Waals corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:136
+#: 0279eafc58874e3a85f8abd476d102a9
+msgid "``ts_tbtrans`` - TranSIESTA/TBtrans transport properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:137
+#: 04cfcf649097445d964a368705197fda
+msgid "``linear_response`` - Linear response calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:140
+#: 822e5b82d6ec4c35b6705f416e6533a8
+#, fuzzy
+msgid "Expert Tier (+11 modules = 33 total)"
 msgstr "سطح خبره (۵+ ماژول)"
 
-#: ../../source/tier-system.rst:129 ee6eb9c4f88f418294cce3342db624db
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:142
+#: 010267dff8434d78b40e290855a5459f
 msgid "**Performance tuning and optimization**:"
 msgstr "**تنظیم و بهینه‌سازی عملکرد**:"
 
-#: ../../source/tier-system.rst:131 71d8679329574d558e9d426c4919e02e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:144
+#: 3334e41a2b9c4c61b0cc03c8a4d82730
 msgid "``parallel`` - MPI parallelization settings"
 msgstr "``parallel`` - تنظیمات موازی‌سازی MPI"
 
-#: ../../source/tier-system.rst:132 f9f60024a3de4e75bc65c59266571865
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:145
+#: f7b19fc4299e44a58539ad1091cbd67f
 msgid "``solvers`` - Diagonalization methods and solvers"
 msgstr "``solvers`` - روش‌های قطری‌سازی و حل‌کننده‌ها"
 
-#: ../../source/tier-system.rst:133 e07026b8bec44b5b8d1d83c418c2b748
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:146
+#: 4673ce7d7d0841779053dc88e8b48076
 msgid "``efficiency`` - Memory and I/O optimization"
 msgstr "``efficiency`` - بهینه‌سازی حافظه و ورودی/خروجی"
 
-#: ../../source/tier-system.rst:134 fc4c73943fee4b2096de731e23a7e63a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:147
+#: 770e8fabebd4483da8a930ede72ba43e
 msgid "``hamiltonian_overlap`` - Matrix storage and cutoffs"
 msgstr "``hamiltonian_overlap`` - ذخیره‌سازی ماتریس و برش‌ها"
 
-#: ../../source/tier-system.rst:135 89f62f06be90478db1b6088be904b9e9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:148
+#: a34a549493344d80a8fe893e7c7cdfd3
 msgid "``netcdf`` - NetCDF output options"
 msgstr "``netcdf`` - گزینه‌های خروجی NetCDF"
 
-#: ../../source/tier-system.rst:140 1825f6e83324499987895fa67c14a799
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:149
+#: 949dd7a659a740a7abf9a4e840dc3245
+msgid "``wavefunction_output`` - Wavefunction file output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:150
+#: 031991d41cb643d9a7b5fe15606a1638
+msgid "``siesta_fdf_arguments`` - Direct FDF block arguments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:151
+#: a877e3e4e7df42f8ae3e8bb3799241df
+#, fuzzy
+msgid "``geometry_output`` - Geometry file output options"
+msgstr "``netcdf`` - گزینه‌های خروجی NetCDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:152
+#: df7176b2f3b14750a33204307fe7b78e
+msgid "``eigenvalue_output`` - Eigenvalue output control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:153
+#: 89dce2c087e74afeaced3aa751e9f605
+msgid "``analysis`` - Post-processing analysis options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:154
+#: 37c8d6174a8642efa5e349fd1e700ba5
+#, fuzzy
+msgid "``md_advanced`` - Advanced MD simulation parameters"
+msgstr "``grids_advanced`` - تنظیمات پیشرفته شبکه فضای حقیقی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:159
+#: 8a449245bf9f4c75b6014fced34118a6
 msgid "Usage Examples"
 msgstr "نمونه‌های استفاده"
 
-#: ../../source/tier-system.rst:143 bab30628c64f4c968e1a163f913d5c6d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:162
+#: b053b092ed184335bf1ef2370650956e
 msgid "Method 1: Direct Tier Parameter"
 msgstr "روش ۱: پارامتر مستقیم سطح"
 
-#: ../../source/tier-system.rst:145 d8b013414ae1478d888dd7fbbb5d699e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:164
+#: 9ddd75ddccad48fe9002cd6ba3d268f7
 msgid "Pass ``tier`` directly to Maker:"
 msgstr "``tier`` را مستقیماً به Maker ارسال کنید:"
 
-#: ../../source/tier-system.rst:165 0d60a115456843f99ed1276e2401520f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:184
+#: 7af3a022f4eb4502b89acf34b897584f
 msgid "Method 2: Material-Specific Presets"
 msgstr "روش ۲: پیش‌تنظیم‌های اختصاصی مواد"
 
-#: ../../source/tier-system.rst:167 c65f4b3a16bd417e8f22f4fbcdd358e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:186
+#: bac4ecfee91042e38b2a2553f9180b8c
 msgid "Use pre-configured tier + parameter combinations:"
 msgstr "از ترکیبات سطح + پارامتر پیش‌پیکربندی‌شده استفاده کنید:"
 
-#: ../../source/tier-system.rst:189 346210d2294343aab744c38d38e91c5d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:208
+#: 8d4c4bdce3f842e498cf1f0ab2567935
 msgid "Method 3: Custom Tier with Overrides"
 msgstr "روش ۳: سطح سفارشی با بازنویسی‌ها"
 
-#: ../../source/tier-system.rst:191 7ca17de2bbe444a9a8a6035b9ee20090
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:210
+#: 324f9767566744f69733b895283e83fe
 msgid "Start with a tier, enable specific modules:"
 msgstr "با یک سطح شروع کنید، ماژول‌های خاص را فعال کنید:"
 
-#: ../../source/tier-system.rst:203 0d351b0cf1104001b1fd32d959d87e80
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:222
+#: 654fe7c4668644069f7f3d729fb1da14
 msgid "Method 4: Override Preset Parameters"
 msgstr "روش ۴: بازنویسی پارامترهای پیش‌تنظیم"
 
-#: ../../source/tier-system.rst:205 59d7dc21f9594c729b4626868088eecc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:224
+#: 76a9665cff30473f998af6f5a2dd061c
 msgid "Apply preset, then customize:"
 msgstr "پیش‌تنظیم را اعمال کنید، سپس سفارشی‌سازی کنید:"
 
-#: ../../source/tier-system.rst:228 48f2f9d7a4024bcaabe86caf683f1762
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:247
+#: e8caf4a116f5494c99cfb55d32c74807
 msgid ""
 "To modify preset parameters, use ``override_params`` in "
 "``apply_tier_preset()``:"
@@ -414,1143 +596,1514 @@ msgstr ""
 "برای تغییر پارامترهای پیش‌تنظیم، از ``override_params`` در "
 "``apply_tier_preset()`` استفاده کنید:"
 
-#: ../../source/tier-system.rst:249 5f4fa9b2d1734739b7d2e08744250b63
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:268
+#: e6a01f9e4ed24337b5be18af7cbb071e
 msgid "Material-Specific Presets"
 msgstr "پیش‌تنظیم‌های اختصاصی مواد"
 
-#: ../../source/tier-system.rst:251 978545931ba347518c25f78eccbed08d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:270
+#: 362bc9112b7c4399bfadfadd8a365613
 msgid ""
 "2025 Tier presets reorganized into modular package structure for better "
 "maintainability. All functionality remains backward compatible."
 msgstr ""
-"پیش‌تنظیم‌های سطح ۲۰۲۵ برای قابلیت نگهداری بهتر به ساختار بسته ماژولار سازماندهی "
-"مجدد شده‌اند. تمام عملکردها سازگار با نسخه‌های قبلی باقی می‌مانند."
+"پیش‌تنظیم‌های سطح ۲۰۲۵ برای قابلیت نگهداری بهتر به ساختار بسته ماژولار "
+"سازماندهی مجدد شده‌اند. تمام عملکردها سازگار با نسخه‌های قبلی باقی "
+"می‌مانند."
 
-#: ../../source/tier-system.rst:255 43f662f30c4a4685a501cbd75ecad4da
-msgid "18 pre-configured presets organized into 7 categories:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:274
+#: 9d836eafc81b4835a2d9708c7ff2b10a
+#, fuzzy
+msgid "32 pre-configured presets organized into 10 categories:"
 msgstr "۱۸ پیش‌تنظیم پیش‌پیکربندی‌شده سازماندهی‌شده در ۷ دسته:"
 
-#: ../../source/tier-system.rst:257 faea623ce0734a0eb720bdbd0f9a953b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:276
+#: 87b589fb52dc474999f763d1992f87ec
 msgid "**New Organization** (November 2025):"
 msgstr "**سازماندهی جدید** (نوامبر ۲۰۲۵):"
 
-#: ../../source/tier-system.rst:259 76513dadb3f840409d4204371264e2f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:278
+#: 7f91d8e2286a4c50949bb92f86a21cf2
 msgid ""
 "The tier preset system has been reorganized from a single file into a "
 "well-structured package for better maintainability:"
 msgstr ""
-"سیستم پیش‌تنظیم سطح از یک فایل واحد به یک بسته با ساختار مناسب برای قابلیت "
-"نگهداری بهتر سازماندهی مجدد شده است:"
+"سیستم پیش‌تنظیم سطح از یک فایل واحد به یک بسته با ساختار مناسب برای "
+"قابلیت نگهداری بهتر سازماندهی مجدد شده است:"
 
-#: ../../source/tier-system.rst:278 a07ac2a9bf0644e4be3969ffc2a3493b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:300
+#: 45477982889e4a0fa3cd1ec3022642ca
 msgid ""
 "All imports remain backward compatible. See project documentation for "
 "migration details."
 msgstr ""
-"تمام import ها سازگار با نسخه‌های قبلی باقی می‌مانند. برای جزئیات مهاجرت به "
-"مستندات پروژه مراجعه کنید."
+"تمام import ها سازگار با نسخه‌های قبلی باقی می‌مانند. برای جزئیات مهاجرت "
+"به مستندات پروژه مراجعه کنید."
 
-#: ../../source/tier-system.rst:281 6a05f4382edc4d85a4bbaeda898548c7
-msgid "Structural Presets (3)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:304
+#: f46190501a724c638917160baf54648b
+msgid ""
+"The sections below show representative examples of commonly-used presets."
+" For the complete list of all presets, use: ``atomate2siesta-presets "
+"list``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:308
+#: dea1cc5076db48b0a84c7fa2dbd7163f
+#, fuzzy
+msgid "Structural Presets (5 total)"
 msgstr "پیش‌تنظیم‌های ساختاری (۳)"
 
-#: ../../source/tier-system.rst:284 f49e1af757004fe5b8f72f6c2539883c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:311
+#: d1b0e22ece2a41c98c01d45227d4fe12
 msgid "``basic_relax``"
 msgstr "``basic_relax``"
 
-#: ../../source/tier-system.rst:286 33a4036b3fd744c3ae9835d257715f82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:313
+#: 9101165661e64c36aee404eed62d2c35
 msgid "Minimal parameters for quick tests:"
 msgstr "پارامترهای حداقلی برای تست‌های سریع:"
 
-#: ../../source/tier-system.rst:288 dbac74a7dc104ee290c0c9d1ef6d8273
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:315
+#: 68276f7a6dc04ab98c9ee2f00dc383a7
 msgid "Tier: basic"
 msgstr "سطح: basic"
 
-#: ../../source/tier-system.rst:289 740da7214ea64b76b96ce897957c5008
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:316
+#: 6057a0809e6c43fa86990d53dd90eac9
 msgid "``PAO.BasisSize``: SZ"
 msgstr "``PAO.BasisSize``: SZ"
 
-#: ../../source/tier-system.rst:290 923fe6368ccf4bc187dc87ea391b89cb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:317
+#: 8ea250d0066545f08a133971ca5716c1
 msgid "``kpts``: [1, 1, 1]"
 msgstr "``kpts``: [۱، ۱، ۱]"
 
-#: ../../source/tier-system.rst:291 39998cfb71b14e28b3212dbc6c101921
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:318
+#: e0ed96d904c249baae6c09de8990a2d3
 msgid "``Mesh.Cutoff``: 200 Ry"
 msgstr "``Mesh.Cutoff``: ۲۰۰ Ry"
 
-#: ../../source/tier-system.rst:293 b9b7d6e206524c9386da63249ab9d46b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:320
+#: 520d606e70474b23874a53e5589d5b49
 msgid "**Use for**: Workflow debugging, quick checks"
 msgstr "**استفاده برای**: اشکال‌زدایی جریان کار، بررسی‌های سریع"
 
-#: ../../source/tier-system.rst:296 b61216bae11d425e8dab58442a1a6ed9
-msgid "``standard_relax``"
-msgstr "``standard_relax``"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:323
+#: 53c0a7cfb9264f5293715b2e31414cb3
+#, fuzzy
+msgid "``relax_standard``"
+msgstr "``phonon_standard``"
 
-#: ../../source/tier-system.rst:298 cb915279794f4aa988105f69c6e1e111
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:325
+#: 0b935d68c937455fb66bc986f80b33ba
 msgid "Default production relaxation:"
 msgstr "آرام‌سازی پیش‌فرض تولیدی:"
 
-#: ../../source/tier-system.rst:300 ../../source/tier-system.rst:313
-#: ../../source/tier-system.rst:330 ../../source/tier-system.rst:360
-#: 2d32aced0f5547fb8e31021467de2f48 64f58e6d2237401d84a18d47c9cf4037
-#: 769d97a053254fba811324a001acee7b cbff5a61840a4a738183f605cbe04cf7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:327
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:340
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:357
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:387
+#: 2556618e5bda4ce78f88f1273982b5c7 7984405930d844a7a3ca5ffa509855c2
+#: 879e899996394c4486037c2743c4e399 bcbf71c09bbd4c5a977070174e5eb041
 msgid "Tier: intermediate"
 msgstr "سطح: intermediate"
 
-#: ../../source/tier-system.rst:301 a4e405eeea2d4ed791c18d9f7dcd050c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:328
+#: eab98471ceff432497ee605e21ba3b40
 msgid "``PAO.BasisSize``: DZP"
 msgstr "``PAO.BasisSize``: DZP"
 
-#: ../../source/tier-system.rst:302 32e248bfb7df4748aacdbc798bd9f607
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:329
+#: f98658e6810b4e33944bffcc7ef35233
 msgid "``kpts``: [4, 4, 4]"
 msgstr "``kpts``: [۴، ۴، ۴]"
 
-#: ../../source/tier-system.rst:303 a6c7d3408e3b40d38c5f3dd06c2913e2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:330
+#: 3ec86214ade84bac814a0888a8a51093
 msgid "``Mesh.Cutoff``: 300 Ry"
 msgstr "``Mesh.Cutoff``: ۳۰۰ Ry"
 
-#: ../../source/tier-system.rst:304 bcc05046087e4c7eb03acdaf540b143c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:331
+#: fa7dc5ee01194cf6adf4e3eef5979945
 msgid "``MD.MaxForceTol``: 0.02 eV/Å"
 msgstr "``MD.MaxForceTol``: ۰.۰۲ eV/Å"
 
-#: ../../source/tier-system.rst:306 e0320743864f4b188b5fd2c9f6c1a481
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:333
+#: a827b7cad14441c7afaa654c29582dd9
 msgid "**Use for**: Standard production calculations"
 msgstr "**استفاده برای**: محاسبات استاندارد تولیدی"
 
-#: ../../source/tier-system.rst:309 ../../source/tier-system.rst:970
-#: c53920e81c5f42fe9d6f478cf8cdce56 fcf645c3bd9248b191dc62d8839837fe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:336
+#: 4806662f80d54d3a860d3ebd9e61bec1
 msgid "``high_accuracy_relax``"
 msgstr "``high_accuracy_relax``"
 
-#: ../../source/tier-system.rst:311 1d025e66b2d145f39ecf60730450337b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:338
+#: 1d15d1cb46404ac4959c8046c0a9d821
 msgid "Tight convergence:"
 msgstr "همگرایی محکم:"
 
-#: ../../source/tier-system.rst:314 c7a57699f90c4978b7e0fc938fd507fa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:341
+#: cd301c91cc6444e99d9ea6f7d50e82a9
 msgid "``PAO.BasisSize``: TZP"
 msgstr "``PAO.BasisSize``: TZP"
 
-#: ../../source/tier-system.rst:315 ../../source/tier-system.rst:403
-#: ../../source/tier-system.rst:420 ../../source/tier-system.rst:432
-#: 0940073daf7442bab42b543061cf4c9c 87f2672162484547b96e0019bf3a47dd
-#: b7a5ed08916c4371ab9c74be0006c433 d8ee2d01aad14b879da7a9651a829e22
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:342
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:430
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:447
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:462
+#: 1a2dd2ac092a4181a98e9f68dcffa0dc 32d42249c54f4907ba9e432d467fb12f
+#: 33a5ff70c82d45b2aeeeb34b77964400 78e8aa49b9834796b792ca75ae351a69
 msgid "``kpts``: [8, 8, 8]"
 msgstr "``kpts``: [۸، ۸، ۸]"
 
-#: ../../source/tier-system.rst:316 ../../source/tier-system.rst:404
-#: 3e0de52aab6447108448528fd2cdd176 469ccc51a1af45a8b86bc2b06a4d4178
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:343
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:431
+#: ab6c0ab721b54ec6bf87cf6c866b46b3 c8782ca403b442d6a70675659d8e3fd3
 msgid "``Mesh.Cutoff``: 500 Ry"
 msgstr "``Mesh.Cutoff``: ۵۰۰ Ry"
 
-#: ../../source/tier-system.rst:317 ../../source/tier-system.rst:405
-#: 3189fc5982a645c88339f74ddcb848e8 7f42677faaa04a66a00e87e0b168f01c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:344
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:432
+#: 2fdbf5b9dcaf4dce8ba28d4e19096541 42cb9c59ff5e4eeba075377b08a763ef
 msgid "``MD.MaxForceTol``: 0.005 eV/Å"
 msgstr "``MD.MaxForceTol``: ۰.۰۰۵ eV/Å"
 
-#: ../../source/tier-system.rst:318 ../../source/tier-system.rst:406
-#: 4afa1ef886914c29b1ce54919a3d32db f51f4cd779e948d9abd3646a62ec9722
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:345
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:433
+#: 5086da891f4642748d4679e6d95572db 5e0e6e8732914274a89e82f9eb2f4bfc
 msgid "``SCF.DM.Tolerance``: 1e-6"
 msgstr "``SCF.DM.Tolerance``: ۱e-۶"
 
-#: ../../source/tier-system.rst:320 1ad40299b9734186acb39efdf6df7caf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:347
+#: 5876da7240464880b76a09b8ae0dfc33
 msgid "**Use for**: Publication-quality results, benchmarking"
 msgstr "**استفاده برای**: نتایج با کیفیت انتشار، معیارسنجی"
 
-#: ../../source/tier-system.rst:323 73d33798f0a34cbe9bbdc4ef439ec118
-msgid "Surface Presets (2)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:350
+#: 824b874c50c7497cbdfd94dfdc11892c
+#, fuzzy
+msgid "Surface Presets (3 total)"
 msgstr "پیش‌تنظیم‌های سطح (۲)"
 
-#: ../../source/tier-system.rst:326 ../../source/tier-system.rst:952
-#: 15fdec030b794c7eacf8d5583f52fd8f 329122a559a74cb79fa7b014dd57f44f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:353
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:993
+#: 4dd16618de0f4159bcb4f0172c78ff61 d6aa192c8eb84ee48aaa8d3be154f398
 msgid "``surface_metal``"
 msgstr "``surface_metal``"
 
-#: ../../source/tier-system.rst:328 548f06fda3a74b9c8240c7b39f147e1b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:355
+#: 222a00962e354bdd8fed055a45aaeadf
 msgid "Metallic surfaces with MP smearing:"
 msgstr "سطوح فلزی با گسترش MP:"
 
-#: ../../source/tier-system.rst:331 45597445f34d4b42aabf3b37736c5433
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:358
+#: acde0ab4ea1e49c595fa630bcd53756c
 msgid "``OccupationFunction``: MP"
 msgstr "``OccupationFunction``: MP"
 
-#: ../../source/tier-system.rst:332 65203ee0c6bf4e719585c9fc06bf9040
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:359
+#: eaedf72351fe474eaee7973964adb14e
 msgid "``ElectronicTemperature``: 300 K"
 msgstr "``ElectronicTemperature``: ۳۰۰ K"
 
-#: ../../source/tier-system.rst:333 fb0e4f7c9f8a4ebd855f6f6101c66fa2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:360
+#: 13bafaa5f7014278a947b19b1425e21a
 msgid "``SCF.Mixer.Weight``: 0.005"
 msgstr "``SCF.Mixer.Weight``: ۰.۰۰۵"
 
-#: ../../source/tier-system.rst:334 d38e33a94aa7470f8a7f1ae7acdfc58e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:361
+#: 0ecb6806daf943458ffd6878ceecb90e
 msgid "``SCF.Mixer.Method``: Pulay"
 msgstr "``SCF.Mixer.Method``: Pulay"
 
-#: ../../source/tier-system.rst:335 037450bf7f2c429a87d8839580ecb315
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:362
+#: 226f90947adc4ca1b7f34912e350d417
 msgid "``SCF.Mixer.History``: 8"
 msgstr "``SCF.Mixer.History``: ۸"
 
-#: ../../source/tier-system.rst:336 e3cf4cbeaea8404db5498039b62ecd2b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:363
+#: 46ca795bf3864f12b28e3bafa2358e13
 msgid "``kpts``: [6, 6, 1]  # 2D sampling"
 msgstr "``kpts``: [۶، ۶، ۱]  # نمونه‌برداری دوبعدی"
 
-#: ../../source/tier-system.rst:338 ea2a5021c5a84e0b94516c57ecdbfc82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:365
+#: edb22fa36c604bf1984c49f8c24b99a4
 msgid "**Use for**: Metallic surfaces, high DOS at Fermi level"
 msgstr "**استفاده برای**: سطوح فلزی، DOS بالا در سطح فرمی"
 
-#: ../../source/tier-system.rst:341 5e1222fdc7ae44279bf88bfc08ab71f6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:368
+#: 757ff109ca9d40dfad93bed66a38984a
 msgid "``surface_semiconductor``"
 msgstr "``surface_semiconductor``"
 
-#: ../../source/tier-system.rst:343 f7c1d88970be4b42b38ed6e04ca8197f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:370
+#: 6275022f985e46f58d2b1a25f56387f0
 msgid "Semiconductor surfaces with dipole corrections:"
 msgstr "سطوح نیمه‌رسانا با تصحیحات دوقطبی:"
 
-#: ../../source/tier-system.rst:345 ../../source/tier-system.rst:373
-#: ../../source/tier-system.rst:388 ../../source/tier-system.rst:401
-#: ../../source/tier-system.rst:418 ../../source/tier-system.rst:430
-#: 03a7d5a0282f4f3d88721b7cd606c373 12b1a90d32274ae1b1b993d45a73f268
-#: 4d6f445ef62f4aa7931cfda36c46d326 7833c54610864c6992d7546df28d45f2
-#: 8f9af5e3d5c44d8eb7e9845533f6e1c1 bc8ec0863fd44856b3575d7c03614c30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:372
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:400
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:415
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:428
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:445
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:460
+#: 2e3df84df65e4cc1b92678e38bd413dc 884ba753410b4d1fa44de14a0bcfb149
+#: 9b335d29d226494dac4c7eab12afe9bc ada74987a41243c3a295fc545d716273
+#: eb92e966439d4bf48702c93cc1de2852 edcbaf1f805d431f8fa6f1f6b4cba6e1
 msgid "Tier: advanced"
 msgstr "سطح: advanced"
 
-#: ../../source/tier-system.rst:346 8a13333a79e1440aa5c8d4eae6b49809
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:373
+#: 0cad5fcbef8341d4a806c95e5b1da389
 msgid "Enabled modules: ``charge_dipole``"
 msgstr "ماژول‌های فعال: ``charge_dipole``"
 
-#: ../../source/tier-system.rst:347 398198d3e32645fe9f9fd309d778b404
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:374
+#: 0a6ffb127da4402e81a7526beeb1e285
 msgid "``SlabDipoleCorrection``: True"
 msgstr "``SlabDipoleCorrection``: True"
 
-#: ../../source/tier-system.rst:348 ../../source/tier-system.rst:362
-#: 4187e514260f42edb28f972306c19afb 51f3f52941094e6ab7757d76eb15cf09
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:375
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:389
+#: 005ee3727c1e4b6f87efe1989c8b1811 2a70732da10845c0b02f16018a89d2e4
 msgid "``kpts``: [6, 6, 1]"
 msgstr "``kpts``: [۶، ۶، ۱]"
 
-#: ../../source/tier-system.rst:350 4fafb897f39543ed932b71f4f6e5125b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:377
+#: 372f66dfa2524039a543e846397ff254
 msgid "**Use for**: Polar semiconductor surfaces"
 msgstr "**استفاده برای**: سطوح نیمه‌رسانای قطبی"
 
-#: ../../source/tier-system.rst:353 065e02a08058475cac01f5993b977377
-msgid "Magnetic Presets (2)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:380
+#: ab6c4a3a4af8459a80af657369cdb996
+#, fuzzy
+msgid "Magnetic Presets (2 total)"
 msgstr "پیش‌تنظیم‌های مغناطیسی (۲)"
 
-#: ../../source/tier-system.rst:356 ../../source/tier-system.rst:961
-#: 2b3e3d14ba62482b8f4eb74965cc7a4e ebe8c0026867422793599652d862a0cb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:383
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1002
+#: 6b61312988574014a9dc89d292031d82 ce96ecbeb8874681b2526e763a598f55
 msgid "``magnetic_2d``"
 msgstr "``magnetic_2d``"
 
-#: ../../source/tier-system.rst:358 343bd5c81db2498fbcb6cde33d293061
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:385
+#: 26875799b4174c9cb9c0d1cd0d59501b
 msgid "2D magnetic materials:"
 msgstr "مواد مغناطیسی دوبعدی:"
 
-#: ../../source/tier-system.rst:361 ../../source/tier-system.rst:375
-#: dfcf87658cb54898a7c84adfe1f31fcd efd519d27a0446c6b2e5acefeadb37a2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:388
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:402
+#: 1fe07c46b1a149fabfc35aaef777f13f 26950618cb994705ad28b285349b3e50
 msgid "``spin``: polarized"
 msgstr "``spin``: polarized"
 
-#: ../../source/tier-system.rst:363 0bf81d7c1d984b7383112b63734bc99a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:390
+#: 65da1819b59044de86555479b50dbfcd
 msgid "``OccupationFunction``: FD"
 msgstr "``OccupationFunction``: FD"
 
-#: ../../source/tier-system.rst:364 59612f2040e7419a9004b9ccfae3ef2a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:391
+#: 650966f8dd2b49488075608b5827d024
 msgid "``ElectronicTemperature``: 100 K"
 msgstr "``ElectronicTemperature``: ۱۰۰ K"
 
-#: ../../source/tier-system.rst:366 d3f3122cd9014ce5a149e8d9765b3f8b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:393
+#: bcea0b6365cb45c28b76c4ea05c0e0fa
 msgid "**Use for**: 2D magnets, spin-polarized systems"
 msgstr "**استفاده برای**: مغناطیس‌های دوبعدی، سیستم‌های قطبیده اسپینی"
 
-#: ../../source/tier-system.rst:369 469d4c83204346aeabdecd50fd04f748
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:396
+#: 6a37689a7c1a419985fe326b9112c9b2
 msgid "``magnetic_correlated``"
 msgstr "``magnetic_correlated``"
 
-#: ../../source/tier-system.rst:371 95126d596a124ae9af29709aab991c2e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:398
+#: 7c87e8ff0f28457f92062a8acd1dc9fe
 msgid "DFT+U for strongly correlated systems:"
 msgstr "DFT+U برای سیستم‌های به شدت همبسته:"
 
-#: ../../source/tier-system.rst:374 b08e1d8881af470bbd55647247a2f17e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:401
+#: ce8b2b49d3a14a078d6a20784d01e8f7
 msgid "Enabled modules: ``dftu``"
 msgstr "ماژول‌های فعال: ``dftu``"
 
-#: ../../source/tier-system.rst:376 463b5ae336f247938ddfbecd3bfb20e8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:403
+#: 39a9a79c245f4e2ab880abb95a63a671
 msgid "DFT.U.Projectors: specified per element"
 msgstr "DFT.U.Projectors: مشخص‌شده برای هر عنصر"
 
-#: ../../source/tier-system.rst:378 c842d4fe7e91430aae42df9ee1ae3e77
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:405
+#: 551cb52e15aa463ca9dde17d9dbc4b60
 msgid "**Use for**: Transition metal oxides, f-electron systems"
 msgstr "**استفاده برای**: اکسیدهای فلزات واسطه، سیستم‌های الکترونی f"
 
-#: ../../source/tier-system.rst:381 a62fd6aee4d944fcb451eed3dfe0a47e
-msgid "Phonon Presets (2)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:408
+#: 6bd0f09bb2414dac932982713e2d627c
+#, fuzzy
+msgid "Phonon Presets (3 total)"
 msgstr "پیش‌تنظیم‌های فونون (۲)"
 
-#: ../../source/tier-system.rst:384 ../../source/tier-system.rst:964
-#: 15edf282665a48879b54fd42bdd0ee66 6627e1e3baeb453fae55efd855f9c075
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:411
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1005
+#: df3a0729f2994a4ea3e93632e9dbf4bb e60fddf7cc5e4d4e957f1e0cd057c6b0
 msgid "``phonon_standard``"
 msgstr "``phonon_standard``"
 
-#: ../../source/tier-system.rst:386 7a74e6811ee04e5e9e307ed3ba33a5ea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:413
+#: 7d5066db467a45daa7df5cdb72092083
 msgid "Standard phonon calculations:"
 msgstr "محاسبات استاندارد فونون:"
 
-#: ../../source/tier-system.rst:389 b8f9923c1d4343b590e664a6fc2221b8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:416
+#: 45f408cfa3b54981a45b0c535d44cad1
 msgid "Enabled modules: ``phonons``"
 msgstr "ماژول‌های فعال: ``phonons``"
 
-#: ../../source/tier-system.rst:390 1e174a384f594066baa1bbb88b19e02b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:417
+#: 597970fbb0bc4d7e8501a535819beebc
 msgid "``kpts``: [6, 6, 6]"
 msgstr "``kpts``: [۶، ۶، ۶]"
 
-#: ../../source/tier-system.rst:391 50a274f4e13c41819a2d9bbc380bf8a6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:418
+#: 3b7692587a3d4f1686c57572f6ebba6b
 msgid "``Mesh.Cutoff``: 400 Ry"
 msgstr "``Mesh.Cutoff``: ۴۰۰ Ry"
 
-#: ../../source/tier-system.rst:392 64ec287266ad49368744f18c910bfe80
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:419
+#: a118a35ee1134429baa0d1234e71e6f1
 msgid "``MD.MaxForceTol``: 0.01 eV/Å"
 msgstr "``MD.MaxForceTol``: ۰.۰۱ eV/Å"
 
-#: ../../source/tier-system.rst:394 2b2f3634810b427abb7fb087faeae892
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:421
+#: 9bebb6baa5294341af59777c822a3f34
 msgid "**Use for**: Routine phonon calculations"
 msgstr "**استفاده برای**: محاسبات معمول فونون"
 
-#: ../../source/tier-system.rst:397 833964def8fd4d60b8020127239213da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:424
+#: c90fce08c0f1466696e49f2f19994845
 msgid "``phonon_high_accuracy``"
 msgstr "``phonon_high_accuracy``"
 
-#: ../../source/tier-system.rst:399 8b74d79eb32a4c689ddaab593b26b827
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:426
+#: d663efc22a9d43f98ad61bdeafcfa49a
 msgid "Tight forces for accurate phonons:"
 msgstr "نیروهای محکم برای فونون‌های دقیق:"
 
-#: ../../source/tier-system.rst:402 cfa5ed849b81431c85fdf4159d5001f0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:429
+#: 466459297cb840cbb9e92cd950d52d9c
 msgid "Enabled modules: ``phonons``, ``dos_bands``"
 msgstr "ماژول‌های فعال: ``phonons``، ``dos_bands``"
 
-#: ../../source/tier-system.rst:408 2475e21ce74b4a8c879d7770cf417aeb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:435
+#: 25b4bb25e96546ca8ebcde9ec5e46644
 msgid "**Use for**: Publication-quality phonon dispersions"
 msgstr "**استفاده برای**: پراکندگی‌های فونونی با کیفیت انتشار"
 
-#: ../../source/tier-system.rst:411 ef29da0d6cda405980161ac35e738d6c
-msgid "Optical Presets (2)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:438
+#: f7fd5c1404014c77b9e5eac5a24950e5
+#, fuzzy
+msgid "Optical Presets (1 total)"
 msgstr "پیش‌تنظیم‌های نوری (۲)"
 
-#: ../../source/tier-system.rst:414 ../../source/tier-system.rst:967
-#: 3d124547728140c3bcd691e412790827 c4ff2eb858cb4478b68e188910c44a96
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:441
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1008
+#: 57155143055248fe8a4cc9cd488c8302 d703a91878eb4bcbadb6ade718fb6acd
 msgid "``optical_response``"
 msgstr "``optical_response``"
 
-#: ../../source/tier-system.rst:416 1a033eed505b44ecb63011a49acf01eb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:443
+#: ab69b98afa984690aec00c72026571e6
 msgid "Optical absorption and dielectric properties:"
 msgstr "جذب نوری و خواص دی‌الکتریک:"
 
-#: ../../source/tier-system.rst:419 3974547d89d4479f85265133c8ef7ea0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:446
+#: 6711504097554634af63b8fa7bd8534d
 msgid "Enabled modules: ``optical``, ``dos_bands``"
 msgstr "ماژول‌های فعال: ``optical``، ``dos_bands``"
 
-#: ../../source/tier-system.rst:421 89807150901642efa766b91a8e9b536f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:448
+#: be8e62be97634b518016b5301f63be90
 msgid "Optical calculation parameters enabled"
 msgstr "پارامترهای محاسبات نوری فعال شده"
 
-#: ../../source/tier-system.rst:423 86e67a60088d4f31a10ea9813ab3a007
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:450
+#: dc795e0dc48c4625ba41e0617dd59a4b
 msgid "**Use for**: Optical properties, absorption spectra"
 msgstr "**استفاده برای**: خواص نوری، طیف‌های جذب"
 
-#: ../../source/tier-system.rst:426 0af99ea67ab9426990eaf2a543d17e9d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:453
+#: 36b454bbacc6471bbf7b58ea3b35c523
+#, fuzzy
+msgid "Electronic Presets (1 total)"
+msgstr "پیش‌تنظیم‌های عملکرد (۲)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:456
+#: 31a5eb386ce5428d8f116fa271014bc1
 msgid "``band_structure``"
 msgstr "``band_structure``"
 
-#: ../../source/tier-system.rst:428 fd937bef296e443da2b52679051e7046
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:458
+#: 2b0717ab7fa9403fb3f378f8f606045a
 msgid "Electronic band structure and DOS:"
 msgstr "ساختار نواری الکترونی و DOS:"
 
-#: ../../source/tier-system.rst:431 b307d35483ac4b6b8b22c74277974e26
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:461
+#: 702e782de6f54e3e8de4bdb447b12a2a
 msgid "Enabled modules: ``dos_bands``"
 msgstr "ماژول‌های فعال: ``dos_bands``"
 
-#: ../../source/tier-system.rst:433 18fb9ad2588044a2937b9e6045c7d899
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:463
+#: d1684b629e1543ce84fcedf209b143d4
 msgid "Dense k-path for bands"
 msgstr "مسیر k متراکم برای نوارها"
 
-#: ../../source/tier-system.rst:435 05ad0ed4b1d04b3899a3d8afde18a129
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:465
+#: 2cf39fde1b8c49d6aaacb49a225b1957
 msgid "**Use for**: Electronic structure analysis"
 msgstr "**استفاده برای**: تحلیل ساختار الکترونی"
 
-#: ../../source/tier-system.rst:438 39e756d5d23249c686201d6edc425825
-msgid "Performance Presets (2)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:468
+#: 174b19ff9929407ea9c414ea044cd29b
+#, fuzzy
+msgid "Performance Presets (3 total)"
 msgstr "پیش‌تنظیم‌های عملکرد (۲)"
 
-#: ../../source/tier-system.rst:441 19648829269942008f54ea71f9149659
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:471
+#: f38632503e374b16a75e49e82d2e1d7c
 msgid "``large_system``"
 msgstr "``large_system``"
 
-#: ../../source/tier-system.rst:443 04a38b7c15a84f49bdc912102b88ecd2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:473
+#: 64dfff3636e14b948cb5970b2c8a39b0
 msgid "Linear-scaling for >100 atoms:"
 msgstr "مقیاس‌بندی خطی برای بیش از ۱۰۰ اتم:"
 
-#: ../../source/tier-system.rst:445 ../../source/tier-system.rst:457
-#: 2d46628f103d4c44b7b4698b700b5013 6a2610bddf944f15a9e92e68cab29be3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:475
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:487
+#: 24b71d3f8f4c4a9682c662b28afa82cf 8e40236df37b4a1aab9456a83a36538e
 msgid "Tier: expert"
 msgstr "سطح: expert"
 
-#: ../../source/tier-system.rst:446 459e3cdbcf13434eb174f8463d99addc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:476
+#: 0c685a7a46db4efda5b3a080716ce037
 msgid "Enabled modules: ``parallel``, ``solvers``, ``efficiency``"
 msgstr "ماژول‌های فعال: ``parallel``، ``solvers``، ``efficiency``"
 
-#: ../../source/tier-system.rst:447 05d38a7b48c14de08dded2b8e3b475e8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:477
+#: 29c5a5679acc4a7a93305d5a0e3543d6
 msgid "``SolutionMethod``: OrderN"
 msgstr "``SolutionMethod``: OrderN"
 
-#: ../../source/tier-system.rst:448 45813faf87334e9fa7d4c580fa712c47
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:478
+#: f537b731a28b4d158b0b90cfdb628bca
 msgid "``ON.MaxNumIter``: 1000"
 msgstr "``ON.MaxNumIter``: ۱۰۰۰"
 
-#: ../../source/tier-system.rst:450 8b22be8ff64440a29caff606c8b5dd79
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:480
+#: 565104f673e34487ade62feaf246382a
 msgid "**Use for**: Large systems (>100 atoms), biomolecules"
 msgstr "**استفاده برای**: سیستم‌های بزرگ (بیش از ۱۰۰ اتم)، بیومولکول‌ها"
 
-#: ../../source/tier-system.rst:453 ec3881da4f924a3ebaf1ca5f33959ed1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:483
+#: ea4025ae8f5c4285b7eba42c1cb4befe
 msgid "``parallel_hpc``"
 msgstr "``parallel_hpc``"
 
-#: ../../source/tier-system.rst:455 268fa98c8131414e9fd7aa87f7303973
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:485
+#: 827adf58a63e41f0a7d1c58be6a7dae7
 msgid "MPI optimization for HPC:"
 msgstr "بهینه‌سازی MPI برای HPC:"
 
-#: ../../source/tier-system.rst:458 2a9b2e146ce84f24abd9dc08345a168d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:488
+#: c4ec107e82a64781a4932d4a2a034c9a
 msgid "Enabled modules: ``parallel``, ``solvers``"
 msgstr "ماژول‌های فعال: ``parallel``، ``solvers``"
 
-#: ../../source/tier-system.rst:459 b4bec7d69b5745459843997f59c66d07
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:489
+#: 41c64d8c06a94030921d8fb171f0350e
 msgid "Diagonalization parallelization settings"
 msgstr "تنظیمات موازی‌سازی قطری‌سازی"
 
-#: ../../source/tier-system.rst:460 9c288b582d85426cac009951e36ba0f9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:490
+#: 43fd648b326c4c669b881ff0051038c6
 msgid "MPI-related optimizations"
 msgstr "بهینه‌سازی‌های مرتبط با MPI"
 
-#: ../../source/tier-system.rst:462 76faac2a196c450289c65587cd0249c5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:492
+#: bd94e3d6fef34ebaba7839eb88bd3dcc
 msgid "**Use for**: HPC clusters, parallel efficiency tuning"
 msgstr "**استفاده برای**: خوشه‌های HPC، تنظیم کارایی موازی"
 
-#: ../../source/tier-system.rst:465 14b13bd22eeb42a89fb3f3a8cb850734
-msgid "Testing Preset (1)"
-msgstr "پیش‌تنظیم تست (۱)"
-
-#: ../../source/tier-system.rst:468 ../../source/tier-system.rst:976
-#: a51cc9df23e2467886cbd36f78e2aa36 fa74d8037916443c8f66625db0e6f598
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:495
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1017
+#: 3c87589f4b35460b9a997ba8614b97f5 5b0addb9b9da40a3b6e97cbb0bfb1f1c
 msgid "``convergence_test``"
 msgstr "``convergence_test``"
 
-#: ../../source/tier-system.rst:470 0ed2160641a249df9550ab6f90e61d30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:497
+#: 7cecb7b322124714a9e2c061d67c18d8
 msgid "All modules for comprehensive testing:"
 msgstr "تمام ماژول‌ها برای تست جامع:"
 
-#: ../../source/tier-system.rst:472 052021f0a6544afbbe54e0b7ba8b2592
-msgid "Tier: expert (all 24 modules)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:499
+#: 29886ba7d3234bb9be3593208879c93f
+#, fuzzy
+msgid "Tier: expert (all 33 modules)"
 msgstr "سطح: expert (تمام ۲۴ ماژول)"
 
-#: ../../source/tier-system.rst:473 e1e3c4bce130439ca1841cbecf686699
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:500
+#: fa4997e50b8a45a9ab5aca7b149050d6
 msgid "Comprehensive parameter exploration"
 msgstr "کاوش جامع پارامترها"
 
-#: ../../source/tier-system.rst:475 7ee0a75924de421d8676ee1f3c4d3b59
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:502
+#: 25f133bfa35040e893eea23250df1355
 msgid "**Use for**: Testing, debugging, full parameter access"
 msgstr "**استفاده برای**: تست، اشکال‌زدایی، دسترسی کامل به پارامترها"
 
-#: ../../source/tier-system.rst:480 7308e7ee27d34c6b9563acf55b939889
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:507
+#: 13ae5365b73f420586c53a5c4771dac6
 msgid "Listing Presets"
 msgstr "فهرست پیش‌تنظیم‌ها"
 
-#: ../../source/tier-system.rst:483 e6a8203463ff49b1a774fef45cebe748
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:510
+#: fe7be2af0f0b4de08c61d8edbe5b3590
 msgid "Programmatic Access"
 msgstr "دسترسی برنامه‌نویسی"
 
-#: ../../source/tier-system.rst:505 8d5b8389c3c7418db418961b1075b219
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:532
+#: 56fa770d45c745f0988c44a133122506
 msgid "Interactive Display"
 msgstr "نمایش تعاملی"
 
-#: ../../source/tier-system.rst:513 bb3fcc8215904e96a81a6aa62661745f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:540
+#: 1229c19c80d7468ea6834dd46a256848
 msgid "Output:"
 msgstr "خروجی:"
 
-#: ../../source/tier-system.rst:530 e4af9cdc5dbd45f7a9008c3277e053b1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:557
+#: 34d7de40ae3048d2a2235d77494b168d
 msgid "Implementation Details"
 msgstr "جزئیات پیاده‌سازی"
 
-#: ../../source/tier-system.rst:533 d8f8de1206ad489a89d1511af34ead0f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:560
+#: 0829949240d04ab68516deed0cf65389
 msgid "Module Registry"
 msgstr "ثبت ماژول"
 
-#: ../../source/tier-system.rst:535 8e1df5868614418d915f56511604bf27
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:562
+#: 7b6d98a56dc24dfc80e61c6138fb68df
 msgid "All modules registered in ``src/atomate2/siesta/dataclass/registry.py``:"
 msgstr "تمام ماژول‌های ثبت‌شده در ``src/atomate2/siesta/dataclass/registry.py``:"
 
-#: ../../source/tier-system.rst:554 8a17f6cdc1ba4894a6b902d7ed64cf84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:581
+#: eb8c8a223e324f3493ce30252a5f0caf
 msgid "**Priority-Based Initialization**:"
 msgstr "**مقداردهی اولیه مبتنی بر اولویت**:"
 
-#: ../../source/tier-system.rst:556 ecd4d4887c954b44abf634e98fe8a681
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:583
+#: f3288d1a34f3429a8bbd82dbdc4528ad
 msgid "1-19: Core modules (pseudos, basis, XC, mesh, kpoints)"
 msgstr "۱-۱۹: ماژول‌های اصلی (شبه‌پتانسیل‌ها، پایه، XC، شبکه، نقاط k)"
 
-#: ../../source/tier-system.rst:557 7640f949d7b6429a96410547c9162536
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:584
+#: bd9a3e7abe8d443c90ff93d7fcef3ae7
 msgid "20-39: Electronic structure (spin, SCF, occupation)"
 msgstr "۲۰-۳۹: ساختار الکترونی (اسپین، SCF، اشغال)"
 
-#: ../../source/tier-system.rst:558 4458e3622b0b46e69c777b95331a0888
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:585
+#: 8bd042ec932a4028b4b8c55cbdd26faf
 msgid "40-59: Structural (MD, relaxation, constraints)"
 msgstr "۴۰-۵۹: ساختاری (MD، آرام‌سازی، محدودیت‌ها)"
 
-#: ../../source/tier-system.rst:559 ef44b1edeb484b04bcf6a2e3fc003042
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:586
+#: dbf551f6df7646938e6e4efc17057164
 msgid "60-79: Specialized (phonons, optical, DOS/bands)"
 msgstr "۶۰-۷۹: تخصصی (فونون‌ها، نوری، DOS/نوارها)"
 
-#: ../../source/tier-system.rst:560 25e70cd0e3004407a3787117d4477698
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:587
+#: 9d42fb98a7af47bf9375dcf13c96cf13
 msgid "80-99: Performance & advanced"
 msgstr "۸۰-۹۹: عملکرد و پیشرفته"
 
-#: ../../source/tier-system.rst:563 e115f57e93de48bbb1b6ea307ca614e0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:590
+#: 92d54c5d580449f6bb515e1f4cbd5c53
 msgid "Auto-Initialization"
 msgstr "مقداردهی اولیه خودکار"
 
-#: ../../source/tier-system.rst:565 b3df773945914ad6bd584928329a99fa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:592
+#: 962f33af30e14b1b9e66c9551870d4da
 msgid "Modules automatically initialized in ``SiestaInputGenerator``:"
-msgstr "ماژول‌هایی که به‌طور خودکار در ``SiestaInputGenerator`` مقداردهی اولیه می‌شوند:"
+msgstr ""
+"ماژول‌هایی که به‌طور خودکار در ``SiestaInputGenerator`` مقداردهی اولیه "
+"می‌شوند:"
 
-#: ../../source/tier-system.rst:582 87e8fefc2f9941c7bc40393f54b87174
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:609
+#: 64c669d4744d42e0bb94431bfc9699fe
 msgid "Dynamic Module Loading"
 msgstr "بارگذاری پویای ماژول"
 
-#: ../../source/tier-system.rst:584 11d392914c964b829facc3f1eba8abd4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:611
+#: 2a3411277c25477da556a7fe6db942c5
 msgid "Uses Python's ``importlib`` for dynamic imports:"
 msgstr "از ``importlib`` پایتون برای import های پویا استفاده می‌کند:"
 
-#: ../../source/tier-system.rst:612 ca358d009905470faeaf3a11ff05c562
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:639
+#: 427e5409a311438a8011f0715fe0ce3d
 msgid "Benchmarked Performance"
 msgstr "عملکرد معیارسنجی‌شده"
 
-#: ../../source/tier-system.rst:618 aa489e9cd3a64d8488a26eb5058c5210
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:645
+#: a41f326cc2b3439084a2e76e8a6df50b
 msgid "Configuration"
 msgstr "پیکربندی"
 
-#: ../../source/tier-system.rst:619 13bcfbc7306c4403b0aa586a742c912a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:646
+#: a2e0393afd674731b5e80a048a028232
 msgid "Time (ms)"
 msgstr "زمان (میلی‌ثانیه)"
 
-#: ../../source/tier-system.rst:620 90dddad8787b4c62834f35a8bf8a9cea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:647
+#: f8212908bee34b6c87b5a680741e6de4
 msgid "Overhead"
 msgstr "سربار"
 
-#: ../../source/tier-system.rst:621 ec60835deed840dc842aea28d92cf30a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:648
+#: 779b7e9cf215449c95e1be8d75ae660d
 msgid "Assessment"
 msgstr "ارزیابی"
 
-#: ../../source/tier-system.rst:622 846c9d78687a45acb4d36c92f8701d7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:649
+#: 3d9afb259eca4d28bad2c2a03099af24
 msgid "Basic tier (6 modules)"
 msgstr "سطح پایه (۶ ماژول)"
 
-#: ../../source/tier-system.rst:623 7a2fcecd56754a1588c7459dea3f18c6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:650
+#: ea5b6d34e0824052a130d8f160e1ba51
 msgid "~17"
 msgstr "~۱۷"
 
-#: ../../source/tier-system.rst:624 aba94e2d65294efda6a7f7f4ccad2a6c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:651
+#: 11b7ab1735804edaa874417934e51681
 msgid "Baseline"
 msgstr "خط پایه"
 
-#: ../../source/tier-system.rst:625 ../../source/tier-system.rst:629
-#: ../../source/tier-system.rst:633 181e31c084774f1eb9932bb61b7a4a6d
-#: 4ce62b1709f94cffb401d959658119e0 f89a8fa4f8664b5198a7eca4925ae273
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:652
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:656
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:660
+#: 12779904f6b34cb7ae2fa3db2a9e5342 7c7cacf91e28413888fb2331e6302236
+#: d06360c3d6a743029fc1ddf764bae37b
 msgid "✅ Fast"
 msgstr "✅ سریع"
 
-#: ../../source/tier-system.rst:626 2653e22223464bc8912411ccf2f91c2a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:653
+#: a4fde61883b3476ca72ef46c22369021
 msgid "Intermediate tier (12)"
 msgstr "سطح متوسط (۱۲)"
 
-#: ../../source/tier-system.rst:627 46ce0d7d14cc4817b391e71e3a776fa4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:654
+#: d9fca2055f1b49d0af48876e84125a46
 msgid "~20"
 msgstr "~۲۰"
 
-#: ../../source/tier-system.rst:628 6cf2984cf9c04f8484a35bdcec2e1647
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:655
+#: 149ff516ccac4678b42d1b4b56f64ea0
 msgid "+18%"
 msgstr "+۱۸٪"
 
-#: ../../source/tier-system.rst:630 dd88f967c9d64232bdb4a59650ea7e4e
-msgid "Advanced tier (19)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:657
+#: b8a7da0694e249a7b7bf52c2714811fa
+#, fuzzy
+msgid "Advanced tier (22)"
 msgstr "سطح پیشرفته (۱۹)"
 
-#: ../../source/tier-system.rst:631 62ed0f3d27c3487896de7c0ac8542f66
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:658
+#: 43961f807f9344ce8f47c80491dad64f
 msgid "~22"
 msgstr "~۲۲"
 
-#: ../../source/tier-system.rst:632 cce55b54c0f9440c8b3ed8ce4c18e184
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:659
+#: 84d563941b2e4f58a00f0b4d50c2f128
 msgid "+29%"
 msgstr "+۲۹٪"
 
-#: ../../source/tier-system.rst:634 445e3d5063434bdab147cd2fc62a3145
-msgid "Expert tier (24)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:661
+#: 73d6c8b9fba34d13aa17f3fbdab49ff8
+#, fuzzy
+msgid "Expert tier (33)"
 msgstr "سطح خبره (۲۴)"
 
-#: ../../source/tier-system.rst:635 3d7855b982fe43fba63f413b6685c2b0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:662
+#: be6cd1c77bb34e4f9e855522499847c2
 msgid "~23"
 msgstr "~۲۳"
 
-#: ../../source/tier-system.rst:636 48cd446d728740f7853598a73a92f43c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:663
+#: db4184bd621f4018b1810e90e7799b91
 msgid "+35%"
 msgstr "+۳۵٪"
 
-#: ../../source/tier-system.rst:637 76f0eb4e77534328bddc7485b6a0cc25
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:664
+#: b17715d221a74f3a86e8c021eb412a1d
 msgid "✅ Acceptable"
 msgstr "✅ قابل قبول"
 
-#: ../../source/tier-system.rst:638 a82a34c51d6d4369a5704e936390a387
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:665
+#: 07a7e48cf42f496580b5b8a87931c258
 msgid "Preset application"
 msgstr "اعمال پیش‌تنظیم"
 
-#: ../../source/tier-system.rst:639 7028415642094612963e21710b5c38c3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:666
+#: eb3cc2ed81254b3e8eed90d4cfd8ad73
 msgid "< 1"
 msgstr "< ۱"
 
-#: ../../source/tier-system.rst:640 a47ccd7a0e04488eafb3f91ca80bb67c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:667
+#: 564996e5143c47cfa7f81dfcd45b5e20
 msgid "Negligible"
 msgstr "ناچیز"
 
-#: ../../source/tier-system.rst:641 15f7daaaf0444990a32ca0919c1513ba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:668
+#: 9c307190d9394f47a11ca13f42d31b22
 msgid "✅ Negligible"
 msgstr "✅ ناچیز"
 
-#: ../../source/tier-system.rst:643 ff2472ea8a594a9e96009830d34bf383
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:670
+#: e61424988059476187c689f5507b61eb
 msgid ""
 "**Conclusion**: ✅ Production-ready with minimal performance impact (< "
 "25ms for all modules)"
 msgstr ""
-"**نتیجه**: ✅ آماده تولید با تأثیر حداقلی بر عملکرد (کمتر از ۲۵ میلی‌ثانیه برای تمام ماژول‌ها)"
+"**نتیجه**: ✅ آماده تولید با تأثیر حداقلی بر عملکرد (کمتر از ۲۵ میلی‌ثانیه"
+" برای تمام ماژول‌ها)"
 
-#: ../../source/tier-system.rst:646 afffe2f144404bc6a42251b74ae1415c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:673
+#: 1cab8564171a49649e0cd85ce15f5a63
 msgid "Scaling Characteristics"
 msgstr "ویژگی‌های مقیاس‌بندی"
 
-#: ../../source/tier-system.rst:648 1bf92dfdc3124c188cb146e78201d332
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:675
+#: 89e0f7e8df7c48c8a3e0bd72da51cad6
 msgid "**Structure size**: Sub-linear scaling (1.29× for 4× structure size)"
 msgstr "**اندازه ساختار**: مقیاس‌بندی زیرخطی (۱.۲۹× برای ۴× اندازه ساختار)"
 
-#: ../../source/tier-system.rst:649 1b49fcbbcc1048d4bd4d6fea95cd3ad5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:676
+#: 5b4cee36d8ed4f52a4e9b5a8d6dcd409
 msgid "**Module count**: Linear scaling (predictable overhead)"
 msgstr "**تعداد ماژول**: مقیاس‌بندی خطی (سربار قابل پیش‌بینی)"
 
-#: ../../source/tier-system.rst:650 f4396797415541ed9b240036c3cb4011
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:677
+#: 2175caaa76584b928af7912327b9d1f9
 msgid "**Preset overhead**: < 0.5ms (negligible)"
 msgstr "**سربار پیش‌تنظیم**: < ۰.۵ میلی‌ثانیه (ناچیز)"
 
-#: ../../source/tier-system.rst:652 792f35f448814743ac70a003960886d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:679
+#: 88b72935cea14c5680be8b4c7ccda5fc
 msgid "📄 **Full benchmarks**: ``tests/performance/BENCHMARK_RESULTS.md``"
 msgstr "📄 **معیارسنجی‌های کامل**: ``tests/performance/BENCHMARK_RESULTS.md``"
 
-#: ../../source/tier-system.rst:657 eba57b31a8734a2081f6c9a89b36a19c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:684
+#: aa36da479b884e11bbc22d137e724e6a
 msgid "Best Practices"
 msgstr "بهترین شیوه‌ها"
 
-#: ../../source/tier-system.rst:660 4588c273455e4889868e883dea43f200
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:687
+#: 7161a2ac7f8544519f060bf37fa9e793
 msgid "When to Use Each Tier"
 msgstr "چه زمانی از هر سطح استفاده شود"
 
-#: ../../source/tier-system.rst:662 3fd92d3f82bd452a9cb8a0349d1cdbbb
-msgid "**Basic Tier**:"
-msgstr "**سطح پایه**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:689
+#: 4799dec7ac1c4b1a9c837243df2f99dd
+#, fuzzy
+msgid "**Dirty Tier**:"
+msgstr "**سطح خبره**:"
 
-#: ../../source/tier-system.rst:664 0bf89580031b4160a7758b93c6cb01b0
-msgid "✅ Quick convergence tests"
-msgstr "✅ تست‌های همگرایی سریع"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:691
+#: ab0c80ca52c94fb0865774038285bf41
+msgid "✅ Ultra-fast prototyping"
+msgstr ""
 
-#: ../../source/tier-system.rst:666 131d0aa9c44c4f55a913579b8b7444c6
-msgid "✅ Workflow debugging"
-msgstr "✅ اشکال‌زدایی جریان کار"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:693
+#: 23f780bb69d448b7804ab611ce120490
+msgid "✅ Rough exploration of new systems"
+msgstr ""
 
-#: ../../source/tier-system.rst:668 a22586b71c834266a9422651f2b4df3f
-msgid "✅ Preliminary structure checks"
-msgstr "✅ بررسی‌های مقدماتی ساختار"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:695
+#: efc897cbc6024ccf87cfb4a7bba12175
+msgid "✅ Quick sanity checks"
+msgstr ""
 
-#: ../../source/tier-system.rst:670 fd8f5aedb8394131a885ebad457669ac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:697
+#: 358b032514fe4b5786ff74db1553204e
+#, fuzzy
+msgid "✅ Minimal parameter testing"
+msgstr "پارامترهای حداقلی برای تست‌های سریع:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:699
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:711
+#: 644d9a938c234ab1a79a5eb35a0854c8 7c06bc73b4ea4d2b849a2bc7f1d724aa
 msgid "❌ Production calculations"
 msgstr "❌ محاسبات تولیدی"
 
-#: ../../source/tier-system.rst:672 6a217144b5804298a7d5ef50b67fccf7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:701
+#: c8f824bc7c5f49ed9f2b2541a15f73b7
+msgid "❌ Accurate results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:703
+#: c820e711db2240f7a687567a5bb0a666
+msgid "**Basic Tier**:"
+msgstr "**سطح پایه**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:705
+#: a7fdc1f7db744bd286c3d124e466e763
+msgid "✅ Quick convergence tests"
+msgstr "✅ تست‌های همگرایی سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:707
+#: 3f0bd89585ba4f9bba87b63990f7b66e
+msgid "✅ Workflow debugging"
+msgstr "✅ اشکال‌زدایی جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:709
+#: 5eb171e7cdfb4065b1f141bea180e4db
+msgid "✅ Preliminary structure checks"
+msgstr "✅ بررسی‌های مقدماتی ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:713
+#: 87c7ce6cd9fe4bbca8955c9fce3823e7
 msgid "**Intermediate Tier (DEFAULT)**:"
 msgstr "**سطح متوسط (پیش‌فرض)**:"
 
-#: ../../source/tier-system.rst:674 ab92c3d12d154a438fd5b7bc96881e84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:715
+#: 4ec447fd6e9e4b989e071eca9adbbf07
 msgid "✅ Standard relaxations"
 msgstr "✅ آرام‌سازی‌های استاندارد"
 
-#: ../../source/tier-system.rst:676 bfc193cbfda941c99cb41d8c7a752c68
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:717
+#: 55b4d49d89b94d73a753007dd888b86c
 msgid "✅ Band structure calculations"
 msgstr "✅ محاسبات ساختار نواری"
 
-#: ../../source/tier-system.rst:678 130086efbd44456295dd1ebfb52abd48
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:719
+#: 4ef1d9dbad354cceb42b2e8166db6429
 msgid "✅ Most production work"
 msgstr "✅ بیشتر کارهای تولیدی"
 
-#: ../../source/tier-system.rst:680 902a315fca80430cb2fcb1807af6e6b3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:721
+#: 26fb4702b530403b996903fa4fbe15c9
 msgid "✅ SCF convergence control"
 msgstr "✅ کنترل همگرایی SCF"
 
-#: ../../source/tier-system.rst:682 c4005a380be7440c9421ae7ec2a7e2a2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:723
+#: 4fa7388129954f0bbf8e37dbc0861700
 msgid "✅ Spin-polarized calculations"
 msgstr "✅ محاسبات قطبیده اسپینی"
 
-#: ../../source/tier-system.rst:684 029a2a6e92864d749ede6b92899d3d30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:725
+#: 1f77d44b922f4e5c8c2c9099d0ac5849
 msgid "**Advanced Tier**:"
 msgstr "**سطح پیشرفته**:"
 
-#: ../../source/tier-system.rst:686 600d4397174c47e1ad98e0b81efc20e8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:727
+#: a2a7c53d42724d42a81f7c40225b0b9f
 msgid "✅ Phonon calculations"
 msgstr "✅ محاسبات فونون"
 
-#: ../../source/tier-system.rst:688 571b70e43f044745b7144f3fbe034cc2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:729
+#: a785674cb78d4ad99fa4bd95e272eddd
 msgid "✅ Optical properties"
 msgstr "✅ خواص نوری"
 
-#: ../../source/tier-system.rst:690 22229ee252b14e79a963cced8c6b8aeb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:731
+#: 28b87fbc8f77487eaba7c0834472cfa3
 msgid "✅ DFT+U correlated systems"
 msgstr "✅ سیستم‌های همبسته DFT+U"
 
-#: ../../source/tier-system.rst:692 e5c04523930b4a98881a79e3209556d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:733
+#: 4bbbff6e3f5e40de9e84d9b587e0dffc
 msgid "✅ Surface calculations with dipole corrections"
 msgstr "✅ محاسبات سطح با تصحیحات دوقطبی"
 
-#: ../../source/tier-system.rst:694 d3a22bb5ba47414b9b9fbddbe1c47d8b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:735
+#: 71ff1d579f2540d3a692f44912baa491
 msgid "✅ Advanced analysis (DOS, bands)"
 msgstr "✅ تحلیل پیشرفته (DOS، نوارها)"
 
-#: ../../source/tier-system.rst:696 7e899bfc0ed041138569818c82e0b6f6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:737
+#: 34527831024c4c8282495f78f458357c
 msgid "**Expert Tier**:"
 msgstr "**سطح خبره**:"
 
-#: ../../source/tier-system.rst:698 7b2914541e2d4bf8a9da711eb92c2689
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:739
+#: d6f503cb3e4740abb3b88cacfa1109dc
 msgid "✅ Large systems (>100 atoms)"
 msgstr "✅ سیستم‌های بزرگ (بیش از ۱۰۰ اتم)"
 
-#: ../../source/tier-system.rst:700 e28922feb5104105b48411092a9d1752
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:741
+#: 7f7f93aa5c0648be93b8d247b402e115
 msgid "✅ HPC parallel optimizations"
 msgstr "✅ بهینه‌سازی‌های موازی HPC"
 
-#: ../../source/tier-system.rst:702 c665880b05b448e2b08d8b5882649d56
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:743
+#: 1b31255a21154df585ce21f59bb530ac
 msgid "✅ Custom solver configurations"
 msgstr "✅ پیکربندی‌های سفارشی حل‌کننده"
 
-#: ../../source/tier-system.rst:704 d718d579c4144e908e13d646912be541
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:745
+#: b1e60a7251aa408ba55dafdcc02853d3
 msgid "✅ Memory/IO tuning"
 msgstr "✅ تنظیم حافظه/ورودی-خروجی"
 
-#: ../../source/tier-system.rst:706 7338a1cb4f1d49f181decb6e3e6efbff
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:747
+#: ca94783d00a14a549ee28d851e2639d9
 msgid "✅ Full parameter control"
 msgstr "✅ کنترل کامل پارامتر"
 
-#: ../../source/tier-system.rst:709 6161f54efb5340a6a4e051d7655b7e4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:750
+#: b2262bdd8035447c9f8a1922c55e0f20
 msgid "Preset Usage Guidelines"
 msgstr "راهنمای استفاده از پیش‌تنظیم"
 
-#: ../../source/tier-system.rst:711 6e326f8d95b14c37ac7fe342fc6ec3ad
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:752
+#: bc9daaa9e5fa47fb8b510b081fe95897
 msgid "**Start with presets**: Use material-specific presets as starting point"
-msgstr "**با پیش‌تنظیم‌ها شروع کنید**: از پیش‌تنظیم‌های اختصاصی مواد به عنوان نقطه شروع استفاده کنید"
+msgstr ""
+"**با پیش‌تنظیم‌ها شروع کنید**: از پیش‌تنظیم‌های اختصاصی مواد به عنوان "
+"نقطه شروع استفاده کنید"
 
-#: ../../source/tier-system.rst:712 eb947d4fa75945f495f21b02e0f71f8b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:753
+#: 8a46230b44f149ff98f4260c6e522788
 msgid "**Override as needed**: Customize specific parameters"
 msgstr "**در صورت نیاز بازنویسی کنید**: پارامترهای خاص را سفارشی‌سازی کنید"
 
-#: ../../source/tier-system.rst:713 82c48cd92317485e9354e9adf906b176
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:754
+#: b814dec2ee184ed580b11a2ffd65e702
 msgid "**Document choices**: Note preset + overrides in workflow scripts"
-msgstr "**انتخاب‌ها را مستند کنید**: پیش‌تنظیم + بازنویسی‌ها را در اسکریپت‌های جریان کار یادداشت کنید"
+msgstr ""
+"**انتخاب‌ها را مستند کنید**: پیش‌تنظیم + بازنویسی‌ها را در اسکریپت‌های "
+"جریان کار یادداشت کنید"
 
-#: ../../source/tier-system.rst:714 26c0aa2396d94b4dac5e91c89014ba25
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:755
+#: 8ef39f5eead04150aa22d548baccbbed
 msgid "**Test locally**: Verify preset works for your system"
-msgstr "**به صورت محلی تست کنید**: بررسی کنید که پیش‌تنظیم برای سیستم شما کار می‌کند"
+msgstr ""
+"**به صورت محلی تست کنید**: بررسی کنید که پیش‌تنظیم برای سیستم شما کار "
+"می‌کند"
 
-#: ../../source/tier-system.rst:715 cd37f002a206440691745b72b2cdf27f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:756
+#: 0794b2ea3f5343dfa46faf7cba3e3248
 msgid "**Combine with powerups**: Presets + powerups for maximum flexibility"
-msgstr "**با powerup ها ترکیب کنید**: پیش‌تنظیم‌ها + powerup ها برای انعطاف‌پذیری بیشینه"
+msgstr ""
+"**با powerup ها ترکیب کنید**: پیش‌تنظیم‌ها + powerup ها برای انعطاف‌پذیری"
+" بیشینه"
 
-#: ../../source/tier-system.rst:718 969f4ad166754afbb6543cb66c908d57
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:759
+#: 44976e8d0235495d90a296701c6dd1a0
 msgid "Common Pitfalls"
 msgstr "دام‌های رایج"
 
-#: ../../source/tier-system.rst:720 25416dfe89f34db8b17a3a75ff2c4633
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:761
+#: 6ee13b1c2ffc4c15b9c7d060fb4cdefc
 msgid "❌ **Don't** use expert tier unless you need performance tuning"
 msgstr "❌ از سطح expert استفاده **نکنید** مگر اینکه به تنظیم عملکرد نیاز دارید"
 
-#: ../../source/tier-system.rst:722 3cd6ad179c3340c1b2741cc31f37b2bc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:763
+#: 38ef0f869c274213bf6197f41f0d8d62
 msgid "❌ **Don't** try to use modules without setup methods (they'll be skipped)"
-msgstr "❌ سعی **نکنید** از ماژول‌های بدون متدهای راه‌اندازی استفاده کنید (نادیده گرفته خواهند شد)"
+msgstr ""
+"❌ سعی **نکنید** از ماژول‌های بدون متدهای راه‌اندازی استفاده کنید (نادیده "
+"گرفته خواهند شد)"
 
-#: ../../source/tier-system.rst:724 82c236675b904ba1a2e2b74134867702
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:765
+#: 9f9f293f51c84161adabe3b106899031
 msgid "❌ **Don't** forget to document your tier/preset choices"
 msgstr "❌ مستندسازی انتخاب‌های سطح/پیش‌تنظیم خود را فراموش **نکنید**"
 
-#: ../../source/tier-system.rst:726 22d10964fb00427d92e14492525af55e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:767
+#: 99e10b423f554df38c8da18c810ccae8
 msgid "✅ **Do** start with presets and override as needed"
 msgstr "✅ با پیش‌تنظیم‌ها شروع کنید و در صورت نیاز بازنویسی **کنید**"
 
-#: ../../source/tier-system.rst:728 595b45be4fc743d493786df343e445e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:769
+#: 85d7ef96adf341b19d1f4a90a62caf74
 msgid "✅ **Do** use intermediate tier (default) for most work"
 msgstr "✅ از سطح intermediate (پیش‌فرض) برای بیشتر کارها استفاده **کنید**"
 
-#: ../../source/tier-system.rst:730 5da2a41dddbf4477bc6f0112ae9ca2b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:771
+#: a0a4cc6a3d6945279b2af1a3bf857487
 msgid "✅ **Do** check module warnings to see which modules couldn't initialize"
-msgstr "✅ هشدارهای ماژول را بررسی **کنید** تا ببینید کدام ماژول‌ها نتوانستند مقداردهی اولیه شوند"
+msgstr ""
+"✅ هشدارهای ماژول را بررسی **کنید** تا ببینید کدام ماژول‌ها نتوانستند "
+"مقداردهی اولیه شوند"
 
-#: ../../source/tier-system.rst:735 7aaf9d3a63c3434cbfaa0c978581b770
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:776
+#: 17a921206a2e4e8e9fad14c202962dd3
 msgid "Advanced Usage"
 msgstr "استفاده پیشرفته"
 
-#: ../../source/tier-system.rst:738 1473e41ddbfb4186882e5a811aab20a1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:779
+#: 5f9c2b7e4d4e4069b8692a022c20a0e0
 msgid "Creating Custom Presets (Programmatically)"
 msgstr "ایجاد پیش‌تنظیم‌های سفارشی (به صورت برنامه‌نویسی)"
 
-#: ../../source/tier-system.rst:740 33873329ac0e4941b8ad4cef9fe61ad6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:781
+#: f104eada502045b98f3090dd76c599f0
 msgid ""
 "While you can't add presets without modifying source code, create "
 "reusable functions:"
 msgstr ""
-"در حالی که نمی‌توانید بدون تغییر کد منبع پیش‌تنظیم اضافه کنید، توابع قابل استفاده "
-"مجدد ایجاد کنید:"
+"در حالی که نمی‌توانید بدون تغییر کد منبع پیش‌تنظیم اضافه کنید، توابع قابل"
+" استفاده مجدد ایجاد کنید:"
 
-#: ../../source/tier-system.rst:762 dcb2e109e5794bfa820d16ada6c54d3c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:803
+#: 79cd230081b64922830217ff68530532
 msgid "Combining with Powerups"
 msgstr "ترکیب با Powerup ها"
 
-#: ../../source/tier-system.rst:764 0fb83e8e72914861ae6290b6e6892755
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:805
+#: f58a2176dfca46239fac595687cc56e8
 msgid "Presets work seamlessly with powerup functions:"
 msgstr "پیش‌تنظیم‌ها به طور یکپارچه با توابع powerup کار می‌کنند:"
 
-#: ../../source/tier-system.rst:782 b7d62d6854c04eababf6b57a009334bd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:823
+#: 1b61728e59e34fb991445dc92c3ab431
 msgid "Testing & Validation"
 msgstr "تست و اعتبارسنجی"
 
-#: ../../source/tier-system.rst:785 9935745fd3bf4ce7b120708e89c2bd4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:826
+#: ca666123bc30483991880f9a4d6a17b0
 msgid "Comprehensive Test Suite"
 msgstr "مجموعه تست جامع"
 
-#: ../../source/tier-system.rst:787 2af8de475f1246e6bbd1635b3b5a15f7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:828
+#: b6b1e5cafd7e426d82ac9f4b1540b95b
 msgid "**Comprehensive tests, fully passing**:"
 msgstr "**۷۴ تست، ۱۰۰٪ موفق**:"
 
-#: ../../source/tier-system.rst:789 82393f426c204fd297376f7a0f0109cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:830
+#: b42d732707a346c0b03e3e3462be4e35
 msgid "26 tests: Module registry validation"
 msgstr "۲۶ تست: اعتبارسنجی ثبت ماژول"
 
-#: ../../source/tier-system.rst:790 cdbb61082ab445fd9aaacf8394664f49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:831
+#: 452fa9de9fa748b69cf90bd0429b4c1d
 msgid "33 tests: Tier preset verification"
 msgstr "۳۳ تست: تأیید پیش‌تنظیم سطح"
 
-#: ../../source/tier-system.rst:791 5bc481d37c674ba0ab76aa777e737d0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:832
+#: 705dce11b8f9457381fd16191a8d68f4
 msgid "15 tests: Integration tests (end-to-end)"
 msgstr "۱۵ تست: تست‌های یکپارچگی (سرتاسر)"
 
-#: ../../source/tier-system.rst:793 bb26dd44503f4506bccdca33bad3dfc4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:834
+#: de669728ac924f96a2bda450d213b5c9
 msgid "📄 **Test documentation**: ``tests/TEST_SUMMARY.md``"
 msgstr "📄 **مستندات تست**: ``tests/TEST_SUMMARY.md``"
 
-#: ../../source/tier-system.rst:796 dbaaed16c39d4e66942e975135955773
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:837
+#: 0de35d4090504d5e81369f14de6985ea
 msgid "Running Tests"
 msgstr "اجرای تست‌ها"
 
-#: ../../source/tier-system.rst:813 77402cc08e9f455cba18332855019c0c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:854
+#: b0bf68625d0143f6b245ed822d831cf3
 msgid "Adding Custom Tiers and Presets"
 msgstr "افزودن سطوح و پیش‌تنظیم‌های سفارشی"
 
-#: ../../source/tier-system.rst:815 b89f7805dc5d437cafd95c0d3046aa82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:856
+#: 38d4d946ed324df59b06ba87944a2e40
 msgid ""
 "The CLI tools automatically detect new tiers and presets - no manual "
 "updates needed!"
 msgstr ""
-"ابزارهای CLI به طور خودکار سطوح و پیش‌تنظیم‌های جدید را شناسایی می‌کنند - به "
-"به‌روزرسانی دستی نیازی نیست!"
+"ابزارهای CLI به طور خودکار سطوح و پیش‌تنظیم‌های جدید را شناسایی می‌کنند -"
+" به به‌روزرسانی دستی نیازی نیست!"
 
-#: ../../source/tier-system.rst:818 36793e7af6a940138d5fbb041f392604
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:859
+#: 301d43f2b696495a830c9e90ad1bdb1d
 msgid "Adding New Tier Defaults"
 msgstr "افزودن پیش‌فرض‌های سطح جدید"
 
-#: ../../source/tier-system.rst:820 714acbfa77e640629d4ee2e7f3760e0f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:861
+#: 34b9d71c645e4ec88bad1832a62d5c6c
 msgid "**File**: ``src/atomate2/siesta/sets/tiers/defaults.py``"
 msgstr "**فایل**: ``src/atomate2/siesta/sets/tiers/defaults.py``"
 
-#: ../../source/tier-system.rst:822 071b1bd6f782427da68aa7fbfd38d01b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:863
+#: fd3aabb69b324823a195ec06c66d9672
 msgid "Add a new tier level to ``TIER_DEFAULTS``:"
 msgstr "یک سطح جدید به ``TIER_DEFAULTS`` اضافه کنید:"
 
-#: ../../source/tier-system.rst:845 ../../source/tier-system.rst:883
-#: b4f3c644ee20441aa16f27f9ffa20263 f32228ae734c4b3cb339980d4fe52d05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:886
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:924
+#: 05cc46071e3e43fa8257ec0fef1f19a9 b549629e61ef476da86fe09626877b43
 msgid "**Result**: Automatically appears in CLI:"
 msgstr "**نتیجه**: به طور خودکار در CLI ظاهر می‌شود:"
 
-#: ../../source/tier-system.rst:853 d069213732f34695b9c64edd3aae58c2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:894
+#: 7908c79b262e4d268e298489e51133fa
 msgid "✅ **Dynamic detection** - CLI counts and displays all tiers automatically"
 msgstr "✅ **شناسایی پویا** - CLI همه سطوح را به طور خودکار شمارش و نمایش می‌دهد"
 
-#: ../../source/tier-system.rst:856 34b3e9be5b1e4ec3bc9639959d8039d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:897
+#: a4fc1ee37b8749efbf8d26438012c4fe
 msgid "Adding New Presets"
 msgstr "افزودن پیش‌تنظیم‌های جدید"
 
-#: ../../source/tier-system.rst:858 8be7dc1c0cc54f30bdb0b2ee6a705cd3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:899
+#: 77375ec0341c46fda5bf0646d45aaff0
 msgid "**Files**: ``src/atomate2/siesta/sets/tiers/presets/*.py``"
 msgstr "**فایل‌ها**: ``src/atomate2/siesta/sets/tiers/presets/*.py``"
 
-#: ../../source/tier-system.rst:860 19d9e05b1b824781ad87658c586d803a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:901
+#: c2ae88de41324906a261e8467cce556c
 msgid "Add a preset to the appropriate category file:"
 msgstr "یک پیش‌تنظیم به فایل دسته مناسب اضافه کنید:"
 
-#: ../../source/tier-system.rst:862 a088f9c88b2149cc96f53788b9c27f7a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:903
+#: c3404cc7441e46cb9abcd6992b1a8cc2
 msgid "**Example 1: Add to existing category**"
 msgstr "**مثال ۱: افزودن به دسته موجود**"
 
-#: ../../source/tier-system.rst:864 88e180eb11e044a0a651417331bf9cca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:905
+#: 78398342848443ca9dae50da28dffd47
 msgid "Edit ``src/atomate2/siesta/sets/tiers/presets/surface.py``:"
 msgstr "ویرایش ``src/atomate2/siesta/sets/tiers/presets/surface.py``:"
 
-#: ../../source/tier-system.rst:896 aa7e05f80b3446f38933270c5d34372c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:937
+#: 39245fed9e74442ca7a8dea2c413e621
 msgid "**Example 2: Create new category file**"
 msgstr "**مثال ۲: ایجاد فایل دسته جدید**"
 
-#: ../../source/tier-system.rst:898 7f7f71864f304ba78b9fd3ff445b6c15
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:939
+#: 298c52fa157e4faca6d2a94f739d1d13
 msgid "Create ``src/atomate2/siesta/sets/tiers/presets/catalysis.py``:"
 msgstr "ایجاد ``src/atomate2/siesta/sets/tiers/presets/catalysis.py``:"
 
-#: ../../source/tier-system.rst:920 3c7230dd03f34a53904c361d4a2306e0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:961
+#: 73de719b23254811a53c1f0e681953df
 msgid "Update ``src/atomate2/siesta/sets/tiers/presets/__init__.py``:"
 msgstr "به‌روزرسانی ``src/atomate2/siesta/sets/tiers/presets/__init__.py``:"
 
-#: ../../source/tier-system.rst:933 39d8127dacc4478197d6af70b1315c98
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:974
+#: 4e9bfb6c93964f42b5c41532fe63a95d
 msgid ""
 "**Result**: All ``catalysis_*`` or ``reaction_*`` presets automatically "
 "categorized"
 msgstr ""
-"**نتیجه**: تمام پیش‌تنظیم‌های ``catalysis_*`` یا ``reaction_*`` به طور خودکار "
-"دسته‌بندی می‌شوند"
+"**نتیجه**: تمام پیش‌تنظیم‌های ``catalysis_*`` یا ``reaction_*`` به طور "
+"خودکار دسته‌بندی می‌شوند"
 
-#: ../../source/tier-system.rst:936 ba0ba5aa201e4a84914b8fe0f157fac1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:977
+#: 3ca787e5e3c7440f8e89ff48bf0526a7
 msgid "Automatic CLI Detection Rules"
 msgstr "قوانین شناسایی خودکار CLI"
 
-#: ../../source/tier-system.rst:938 8caebebcb22f4aaba5e52db67f389968
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:979
+#: 1b3d4197b2954873b8afca7244b77839
 msgid "The CLI automatically categorizes presets based on naming patterns:"
-msgstr "CLI به طور خودکار پیش‌تنظیم‌ها را بر اساس الگوهای نام‌گذاری دسته‌بندی می‌کند:"
+msgstr ""
+"CLI به طور خودکار پیش‌تنظیم‌ها را بر اساس الگوهای نام‌گذاری دسته‌بندی "
+"می‌کند:"
 
-#: ../../source/tier-system.rst:944 c81ab783cdbf4a55ad58d96415c7de28
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:985
+#: fdbe7ba623204550b5c3781262f5d444
 msgid "Preset Name Pattern"
 msgstr "الگوی نام پیش‌تنظیم"
 
-#: ../../source/tier-system.rst:945 f295fadbffaa4aba923e87bdd2bae1f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:986
+#: 82ba823631644dd985325da09b59ddd9
 msgid "Category"
 msgstr "دسته"
 
-#: ../../source/tier-system.rst:946 716c5244a89641f5aaa38b85a38c31f9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:987
+#: 3b663ed6298240c3b6b91e8b8407d1fc
 msgid "Example"
 msgstr "مثال"
 
-#: ../../source/tier-system.rst:947 2148af288d9c41a78e4f44f887221371
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:988
+#: 9654e3a6a2414db1aa060d9cf071f846
 msgid "``2d_*``"
 msgstr "``2d_*``"
 
-#: ../../source/tier-system.rst:948 d9dac89d4966442090cbe8b3797db2c5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:989
+#: b327a81952a34c589d9e218bb3315ed6
 msgid "2d"
 msgstr "۲d"
 
-#: ../../source/tier-system.rst:949 410d6817891f4d57ab39613018bef498
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:990
+#: 9091b947c24940549ed07a8524283bb2
 msgid "``2d_metal_rough``"
 msgstr "``2d_metal_rough``"
 
-#: ../../source/tier-system.rst:950 0027c81b9d694d68993a2bd386a9d80a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:991
+#: 7cd9d604614941dcb399753020553bd8
 msgid "``surface_*``"
 msgstr "``surface_*``"
 
-#: ../../source/tier-system.rst:951 ../../source/tier-system.rst:954
-#: 8388446e32b841d0bb1d0623f332c774 d8c3daaab2014fa39c68f1ed9b34a536
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:992
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:995
+#: 6fcbd8bfc0a24ddda22cd59e7afea561 e2418ce08fd14c3ca883a4efa8db15ba
 msgid "surface"
 msgstr "سطح"
 
-#: ../../source/tier-system.rst:953 a8152bc3651e44a3a0cfe3850e10561e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:994
+#: b1154d86860d4d4bb43addd5a9d7a054
 msgid "``adsorbate_*``"
 msgstr "``adsorbate_*``"
 
-#: ../../source/tier-system.rst:955 baad1b10462c4b1990fe081ddfe1268c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:996
+#: cd6f303a78dd45f9a5c407f6ad1247fd
 msgid "``adsorbate_screening``"
 msgstr "``adsorbate_screening``"
 
-#: ../../source/tier-system.rst:956 e8d934144a3f434da87d1f482f1d682f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:997
+#: c7ce23e286474d898323d31b0d821cac
 msgid "``molecule_*``, ``molecular_*``"
 msgstr "``molecule_*``، ``molecular_*``"
 
-#: ../../source/tier-system.rst:957 1c9f7ea6094f48468a98413382f9b8f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:998
+#: ab88faf4f948479e9811389fd79dfdc1
 msgid "molecular"
 msgstr "مولکولی"
 
-#: ../../source/tier-system.rst:958 df0736614fd44b9cbd51300af64247a8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:999
+#: fc33aa1d97e7410492b593ed67c3143f
 msgid "``molecule_gas_phase``"
 msgstr "``molecule_gas_phase``"
 
-#: ../../source/tier-system.rst:959 db3e0f1cc256447c963b2048ac9cfffb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1000
+#: f697436a09cb4cc79d13949b6d18947c
 msgid "``magnetic_*``"
 msgstr "``magnetic_*``"
 
-#: ../../source/tier-system.rst:960 d3b09184090e4cef9b7a4f99ed024d50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1001
+#: 1ea624d9b9f54048a3bc2f84066ff159
 msgid "magnetic"
 msgstr "مغناطیسی"
 
-#: ../../source/tier-system.rst:962 d367dc1a665a4eb2b1e23f9ee2656931
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1003
+#: 54a1bc5e830047b7b3dfb0180eb23137
 msgid "``phonon_*``"
 msgstr "``phonon_*``"
 
-#: ../../source/tier-system.rst:963 19074f621afc4588bc14b5e86212f638
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1004
+#: f662681f0c2441908c6c6330c30f3e82
 msgid "phonon"
 msgstr "فونون"
 
-#: ../../source/tier-system.rst:965 88031cb7dfcc47da8c22e0e72852f228
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1006
+#: f436fa32dc7a416c8a7e2b4f8406914f
 msgid "``optical_*``"
 msgstr "``optical_*``"
 
-#: ../../source/tier-system.rst:966 a314202fa9d34d58a3bdaf4fd2bd956f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1007
+#: f96e3a0184ef4b649530facbc734b5f0
 msgid "optical"
 msgstr "نوری"
 
-#: ../../source/tier-system.rst:968 3b3a00a62b674521aec8bf38b1abacc8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1009
+#: 1283fe0d60064233882aa31792e9bc24
 msgid "Contains ``relax``"
 msgstr "شامل ``relax``"
 
-#: ../../source/tier-system.rst:969 456aa93e8a064ddeb12f3d05a80db88a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1010
+#: 6a76b16a57a94f0f8855baac6ee9e671
 msgid "structural"
 msgstr "ساختاری"
 
-#: ../../source/tier-system.rst:971 768b9596d3884b54a651a396a0b25169
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1011
+#: 21eabb3c01a34c0d9cbe6e64a4f0f3a4
+#, fuzzy
+msgid "``relax_high_accuracy``"
+msgstr "``phonon_high_accuracy``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1012
+#: fa0856160e324debade57b9a733613d0
 msgid "``bulk_*``, ``band_structure``"
 msgstr "``bulk_*``، ``band_structure``"
 
-#: ../../source/tier-system.rst:972 f86911fa8e1a4e3cb15f671b5bdf7854
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1013
+#: 8bc32012c1774ba4834d92e684739b58
 msgid "electronic"
 msgstr "الکترونی"
 
-#: ../../source/tier-system.rst:973 976285e15d9a45499504e8f9515dc7ee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1014
+#: 635a1c26f09242ae9a70ded87a9e91e1
 msgid "``bulk_metal``"
 msgstr "``bulk_metal``"
 
-#: ../../source/tier-system.rst:974 7482427e6133401aa229716d0c0e55bf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1015
+#: a5ea07c41b044ba8869966eb39e4e46a
 msgid "``large_system``, ``parallel_hpc``"
 msgstr "``large_system``، ``parallel_hpc``"
 
-#: ../../source/tier-system.rst:975 7f705d8828024b458d9c0ada6fe7d156
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1016
+#: 9963268af28649c7838a62f0ee2d9bfb
 msgid "performance"
 msgstr "عملکرد"
 
-#: ../../source/tier-system.rst:978 4b54f98dda844bb19921a85227c1bed1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1019
+#: 7c2f6320d1d245d2bf770c7f270e5529
 msgid ""
 "**Best Practice**: Name presets with appropriate prefixes for automatic "
 "categorization."
 msgstr ""
-"**بهترین شیوه**: پیش‌تنظیم‌ها را با پیشوندهای مناسب برای دسته‌بندی خودکار نام‌گذاری کنید."
+"**بهترین شیوه**: پیش‌تنظیم‌ها را با پیشوندهای مناسب برای دسته‌بندی خودکار"
+" نام‌گذاری کنید."
 
-#: ../../source/tier-system.rst:981 fc6536fa94a041cab40d04bca11d75c0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1022
+#: b383c8da79d646fcbe9657661dc9e0f7
 msgid "Viewing Your Changes"
 msgstr "مشاهده تغییرات شما"
 
-#: ../../source/tier-system.rst:983 219b6b9bb9d8411787ef3eac47b97bb2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1024
+#: afce60e1607c468d91f1b259484ad079
 msgid "After adding new tiers or presets:"
 msgstr "پس از افزودن سطوح یا پیش‌تنظیم‌های جدید:"
 
-#: ../../source/tier-system.rst:1002 91f7f1f7f5e64f848b0b9e1c27ae6f09
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1043
+#: c5352de0c6274dbca88f02507ee110f4
 msgid "**No restart or reinstall needed** - changes detected immediately!"
-msgstr "**نیازی به راه‌اندازی مجدد یا نصب مجدد نیست** - تغییرات بلافاصله شناسایی می‌شوند!"
+msgstr ""
+"**نیازی به راه‌اندازی مجدد یا نصب مجدد نیست** - تغییرات بلافاصله شناسایی "
+"می‌شوند!"
 
-#: ../../source/tier-system.rst:1005 1ff2b48f2692467db4c8d2fa8beabdb8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1046
+#: 477713bb338a46b48683b3e45375c7da
 msgid "Complete Workflow Example"
 msgstr "مثال کامل جریان کار"
 
-#: ../../source/tier-system.rst:1007 cb430f6f2553417a94b2098effec8c5c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1048
+#: 1fc36995dd044e57ab6ee42b61051233
 msgid "**Goal**: Add a fast screening preset for metal-organic frameworks"
 msgstr "**هدف**: افزودن یک پیش‌تنظیم غربالگری سریع برای چارچوب‌های آلی-فلزی"
 
-#: ../../source/tier-system.rst:1009 65cb224b61c744bbaa531687fc7ee14d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1050
+#: d369a2b3a7d94370b012afa9b6234608
 msgid "**Step 1**: Add to ``presets/molecular.py``:"
 msgstr "**مرحله ۱**: به ``presets/molecular.py`` اضافه کنید:"
 
-#: ../../source/tier-system.rst:1029 93c6766ba51c44ca88a44ce3395cc967
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1070
+#: 9632b29d8d6544758e14dab1a8da07e4
 msgid "**Step 2**: Verify in CLI:"
 msgstr "**مرحله ۲**: در CLI تأیید کنید:"
 
-#: ../../source/tier-system.rst:1039 67a4bc9bf98e4ee6957d685f0987e900
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1080
+#: 89f102139e124bcc8537b21cfdb20bcf
 msgid "**Step 3**: Use in code:"
 msgstr "**مرحله ۳**: در کد استفاده کنید:"
 
-#: ../../source/tier-system.rst:1050 a13c0be3ea3b4f9a81e5dc608306f73b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1091
+#: 5637b0123f6044a7a8c8b85a7d9c05c3
 msgid "**Done!** No CLI updates, no documentation changes - everything automatic."
 msgstr "**انجام شد!** بدون به‌روزرسانی CLI، بدون تغییر مستندات - همه چیز خودکار."
 
-#: ../../source/tier-system.rst:1055 0ffd7268a5834f959ff98569a32e567a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1096
+#: 8dd713e008cd42818950625d3f9dd9e7
 msgid "Future Enhancements"
 msgstr "بهبودهای آینده"
 
-#: ../../source/tier-system.rst:1058 72622c620c0b48c3aa4f81470797320b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1099
+#: 105613b4c99e4bf8ab81593a23e80d30
 msgid "Planned Improvements"
 msgstr "بهبودهای برنامه‌ریزی‌شده"
 
-#: ../../source/tier-system.rst:1060 9c8860c33a544997a6164e5992c42503
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1101
+#: 17190d8275654e5fb9087cd3ae283dde
 msgid "**Missing Setup Methods** (12 modules need implementation):"
 msgstr "**متدهای راه‌اندازی ناموجود** (۱۲ ماژول نیاز به پیاده‌سازی دارند):"
 
-#: ../../source/tier-system.rst:1062 6d5f5bbb84f0420490307f5a9a3b6b73
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1103
+#: 3a76c414b59d4c59b381819a7752ee7a
 msgid "``md_relaxation``, ``constraints``, ``phonons``, ``optical``"
 msgstr "``md_relaxation``، ``constraints``، ``phonons``، ``optical``"
 
-#: ../../source/tier-system.rst:1063 16bdeb4f60214296975a9e3b256dc8f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1104
+#: 256d4746159e464c8b5bec57c6981baf
 msgid "``dos_bands``, ``charge_dipole``, ``grids_advanced``, ``denchar``"
 msgstr "``dos_bands``، ``charge_dipole``، ``grids_advanced``، ``denchar``"
 
-#: ../../source/tier-system.rst:1064 8eaf1f40a653450e9b0e8fd075aecd08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1105
+#: 5d79a169a62747faa23d5b0aff31a9eb
 msgid "``parallel``, ``solvers``, ``efficiency``, ``hamiltonian_overlap``"
 msgstr "``parallel``، ``solvers``، ``efficiency``، ``hamiltonian_overlap``"
 
-#: ../../source/tier-system.rst:1066 f6ef4c31f7174d4d9008463869c55f35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1107
+#: f03c08a4e4a84cdbad6145d62c09252a
 msgid "**Interactive Preset Selection**:"
 msgstr "**انتخاب تعاملی پیش‌تنظیم**:"
 
-#: ../../source/tier-system.rst:1068 40ab844daeb44660bbd8680ede06b30c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1109
+#: 6a1ffb8cd7a44aca99127e0e8531e9ea
 msgid "``SiestaConfigurationWizard`` for guided preset selection"
 msgstr "``SiestaConfigurationWizard`` برای انتخاب راهنمایی‌شده پیش‌تنظیم"
 
-#: ../../source/tier-system.rst:1069 4f645be5009041adb7f7c45f65720fa4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1110
+#: 2b4509fb5c5445ac869bc4f73aee0475
 msgid "Structure property-based recommendations"
 msgstr "توصیه‌های مبتنی بر ویژگی ساختار"
 
-#: ../../source/tier-system.rst:1071 60bddc11fc3e48c68275b611b390d7a4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1112
+#: 34767cfa51ce4112a2c620c166cded7a
 msgid "**More Presets**:"
 msgstr "**پیش‌تنظیم‌های بیشتر**:"
 
-#: ../../source/tier-system.rst:1073 38fe437975834a9098f4b920e7f6eae0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1114
+#: 8c69cb20c78c4111befca9b288592327
 msgid "Specific material classes (perovskites, 2D materials, etc.)"
 msgstr "کلاس‌های خاص مواد (پروسکایت‌ها، مواد دوبعدی و غیره)"
 
-#: ../../source/tier-system.rst:1074 907ca6b4b7d94edf8296be7261bce48e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1115
+#: 035a03996ae447f8b0f743c0ee3725f6
 msgid "Calculation type presets (screening, production, benchmark)"
 msgstr "پیش‌تنظیم‌های نوع محاسبات (غربالگری، تولید، معیارسنجی)"
 
-#: ../../source/tier-system.rst:1079 c5df3fc00f6b4d6a98d17fdde211da33
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1120
+#: f6bd4dc8de264eacabaeaf9dcb661bcd
 msgid "See Also"
 msgstr "همچنین ببینید"
 
-#: ../../source/tier-system.rst:1081 1e184b76627640d8a0396180110cddde
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1122
+#: 669174940c6b4c61bf77c3779060c9c4
 msgid ":doc:`features` - Overview of all recent features"
 msgstr ":doc:`features` - نمای کلی تمام ویژگی‌های اخیر"
 
-#: ../../source/tier-system.rst:1082 c3002408c0da49199ab555ba7647b384
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1123
+#: 414e16ff143643208471ac733436eb97
 msgid ":doc:`tutorials/advanced` - Tutorial 18 (tier-based calculations)"
 msgstr ":doc:`tutorials/advanced` - آموزش ۱۸ (محاسبات مبتنی بر سطح‌بندی)"
 
-#: ../../source/tier-system.rst:1083 f827700757f944558381390885ffc7eb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1124
+#: ad503cf4cd2b4541aa0708a695edddf3
 msgid ":doc:`tutorials/infrastructure` - Production deployment"
 msgstr ":doc:`tutorials/infrastructure` - استقرار تولیدی"
 
-#: ../../source/tier-system.rst:1089 581a82cd71d54f3bad8ccb6cb3f3f265
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tier-system.rst:1130
+#: abe2f4c03cfb4551b7041e4ee3933591
+#, fuzzy
 msgid ""
-"The tier system is production-ready (2024) with comprehensive testing and"
-" performance validation. All 14 presets are fully functional."
+"The tier system is production-ready (2024-2025) with comprehensive "
+"testing and performance validation. All presets are fully functional."
 msgstr ""
-"سیستم سطح‌بندی آماده تولید (۲۰۲۴) با تست جامع و اعتبارسنجی عملکرد است. تمام "
-"۱۴ پیش‌تنظیم به طور کامل کاربردی هستند."
+"سیستم سطح‌بندی آماده تولید (۲۰۲۴) با تست جامع و اعتبارسنجی عملکرد است. "
+"تمام ۱۴ پیش‌تنظیم به طور کامل کاربردی هستند."
+
+#~ msgid "Testing only"
+#~ msgstr "فقط آزمایش"
+
+#~ msgid "19"
+#~ msgstr "۱۹"
+
+#~ msgid "24"
+#~ msgstr "۲۴"
+
+#~ msgid "``standard_relax``"
+#~ msgstr "``standard_relax``"
+
+#~ msgid "Testing Preset (1)"
+#~ msgstr "پیش‌تنظیم تست (۱)"
+

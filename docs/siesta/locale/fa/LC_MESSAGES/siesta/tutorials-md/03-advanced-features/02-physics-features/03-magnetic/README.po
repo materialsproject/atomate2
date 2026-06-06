@@ -1,0 +1,681 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:1
+#: 949d6f59c9d74830ac35fb936affed01
+msgid "Tutorial: Magnetic Calculations in atomate2siesta"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:3
+#: acead2ef1eae4ae1a4dbe305d4c43320
+msgid ""
+"This tutorial covers magnetic calculations in atomate2siesta, including "
+"automatic magnetic moment detection, various magnetic ordering types, and"
+" practical examples."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:5
+#: 0e5bfedc6f6c4c94989762e6db70a4eb
+msgid "Contents"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:7
+#: cddf7f1d2fc64c1cbef451839cce5140
+msgid ""
+"**`01-automatic-moments/`** - Automatic detection and initialization (7 "
+"examples)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:8
+#: 2f52d3396df24753b34a2f6c0fc89eea
+msgid ""
+"**`02-antiferromagnetic/`** - Antiferromagnetic (AFM) calculations (9 "
+"examples)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:9
+#: a09232fd4e1b42239a6afef3f9c64d84
+msgid ""
+"**`03-2d-materials/`** - 2D magnetic materials (9 examples: graphene, "
+"CrI₃, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:11
+#: fa819c54bf5a4a89b741bb96443b9595
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:13
+#: 153995c200434396928a3be9d5eb998b
+msgid "atomate2siesta automatically handles magnetic calculations by:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:14
+#: f81bfc995f0d4c46b4c16664f92f817d
+msgid ""
+"Detecting magnetic elements (3d/4d transition metals, lanthanides, "
+"actinides)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:15
+#: e9111ffe206648099721d8bf0fd52c88
+msgid "Assigning physically reasonable initial magnetic moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:16
+#: 02dcd794a3fe4995b6d1e48321ed4d33
+msgid "Writing the `DM.InitSpin` block in SIESTA input files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:17
+#: 249bdd90bd0a43fbaa30eaac22907763
+msgid "Supporting various magnetic orderings (FM, AFM, FiM, custom)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:19
+#: 0929edeb612e4d679d80b7a73a956eef
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:21
+#: 8ac85f5a8b984943bcf53b46d8ff0d18
+msgid "Automatic Ferromagnetic (Default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:34
+#: ccfbab7161694991a31b7287909b6b52
+msgid "Antiferromagnetic Ordering"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:47
+#: d289123f6f814f2b98ab927b4d1bf2b1
+msgid "Supported Magnetic Elements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:49
+#: f6081183dcc3474a8a39cd70fe7c8f34
+msgid "3d Transition Metals (Commonly Magnetic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:50
+#: cd1660e815a74d4b9373b92f58c285ac
+msgid "**Cr** (Z=24): 4.0 μB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:51
+#: 5c861440cae141998d0c24560bc817b3
+msgid "**Mn** (Z=25): 5.0 μB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:52
+#: b2be14bdcd2c411588f6c579eefd29f7
+msgid "**Fe** (Z=26): 4.0 μB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:53
+#: 91bd31b138e2490e85d8f5b2cea8f79e
+msgid "**Co** (Z=27): 3.0 μB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:54
+#: afa7f8ba575f4b7a92363db52e8e8161
+msgid "**Ni** (Z=28): 2.0 μB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:56
+#: 03ce1f3774c64acea5382ed3a048e121
+msgid "4d Transition Metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:57
+#: d38eec7eb32b46afbf1243251b018eca
+msgid "Mo, Tc, Ru, Rh (Z=42-45): 1.0 μB (default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:59
+#: fa13ee8201964ec1bef57f1916ef38d4
+msgid "Lanthanides"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:60
+#: 0841a8ccc00746b19517eb661cfb4f2a
+msgid "La through Tm (Z=57-69): 1.0 μB (default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:61
+#: 4cc9ac002c31475fa09164b914a041c7
+msgid "**Gd** (Z=64): 7.0 μB (highest)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:63
+#: f7de153103da4e528166ebccde80f592
+msgid "Actinides"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:64
+#: 00f1b981ce95497baac2fc141f4fecea
+msgid "Ac through Es (Z=89-99): 1.0 μB (default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:66
+#: e5c2158ac5e943338138113c1d5222f9
+msgid "Magnetic Ordering Types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:68
+#: 00410e906f2f4ccab78be5ce276bdf52
+msgid "1. Ferromagnetic (FM)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:69
+#: a6f35f2c6319476e8fcdbfa14dfd9e8f
+msgid "All magnetic moments aligned parallel (same direction)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:75
+#: bc63d178f5bb48d0983ffc08344d5751
+msgid "**Example materials**: Fe, Co, Ni metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:77
+#: c96d3d9420124673b1575520b9177699
+msgid "2. Antiferromagnetic (AFM)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:78
+#: 49d3102e49b84e6ca21ef9935bf9431a
+msgid "Magnetic moments alternate between up and down."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:84
+#: 765ca9c6f5074c8691b89f39bcfeb6e7
+msgid "**Example materials**: NiO, MnO, FeO, Cr₂O₃"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:86
+#: 48b5e012b3394346ba7761f10c826796
+msgid "3. Ferrimagnetic (FiM)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:87
+#: ec5303ea207f4d7a9af597cdb139f635
+msgid "Like AFM but with unequal moment magnitudes on different sublattices."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:93
+#: ee420d3642504969abbd094a939b7e9d
+msgid "**Example materials**: Fe₃O₄ (magnetite), ferrites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:95
+#: b835693b89ff42b2a7ed38f3d63eac62
+msgid "4. Custom Patterns"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:96
+#: 4a86d9bd4f824f5d9577926b8c84940e
+msgid "User-defined magnetic configurations for complex structures."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:98
+#: c631ef8d8eee4a2ea10c2424cf0c534f
+msgid "Key Functions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:100
+#: 839531ef82374df685074e7b31e23eb0
+msgid "`get_default_initial_magnetic_moments(structure)`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:101
+#: ac4417acf57144b3ac5805e864eb9afb
+msgid "Automatically detect magnetic elements and assign default moments."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:110
+#: 74063b83c7de4ca6a52f47c094116bd8
+msgid "`set_magnetic_ordering(structure, ordering, ...)`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:111
+#: a243bbee7a734b298b38cedefe9d3efe
+msgid "Set specific magnetic ordering patterns."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:130
+#: 0f1a9d96f19c46669fc37c2f7acff7cd
+msgid "`get_magnetic_structure_info(structure)`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:131
+#: bb4ffb6613aa46eb918fa98f1acd19d2
+msgid "Analyze structure and get magnetic information."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:141
+#: 8fae5292264f42f7a3f23fd9d6136226
+msgid "`pymatgen_to_ase(..., magnetic_ordering=\"AFM\")`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:142
+#: c296bdf105ed48ff9f361f80b99e5d70
+msgid "Convert structure with specific magnetic ordering."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:151
+#: 472b7ebb319e4a06924a6983366420af
+msgid "DM.InitSpin Block"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:153
+#: 58f763b3da7e4f39b321ba0db7b3d0dd
+msgid "SIESTA uses the `DM.InitSpin` block to set initial magnetic moments:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:162
+#: bf0eb3bc5715467f86b7ad06cc7e7860
+msgid ""
+"This block is automatically generated from the magnetic moments set on "
+"the ASE Atoms object."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:164
+#: 59338390504a4eb6864b038f7dfd48ab
+msgid "Tips and Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:166
+#: dfeae05bfc434ea8b1e46fee51038ac9
+msgid "**Start with defaults**: Let the system auto-detect and assign moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:167
+#: f8b4ef58b214443e9226d75026a4151d
+msgid "**For oxides**: AFM is often the ground state (NiO, MnO, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:168
+#: 91b727c0660e4027b47e1666d38b5d72
+msgid "**For metals**: FM is typically preferred (Fe, Co, Ni)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:169
+#: 55ce749c128342dbbaf68e0e88a2bc40
+msgid "**Check convergence**: Test different initial configurations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:170
+#: 964aef5c4027406f9ed5c4811947a11e
+msgid "**Use 2D presets**: For 2D magnetic materials, use `2d_magnetic` preset"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:172
+#: 3062027893cc4847a7ec6708d3fdf819
+msgid "Common Magnetic Materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 5215d01a63d447a3aac5bbeb2426594b
+msgid "Material"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: dc816a0d07304ffeb4b31503fbafc733
+msgid "Formula"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 83cb365acfa844d3a3f8dfd2e60fe6b1
+msgid "Ordering"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 9993c1d3adc749a08f18bae9362eeb7e
+msgid "Ground State"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: b5a5a79e60fc4b36a7aa7002abc83d8f
+msgid "Iron"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 38aff09aae4f4bcf8aa8ecab1b316360
+msgid "Fe"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 124fea46c92042bfb9805c48e07a7f9f 9d5cf326d0be4f169d910f9d2b256cb9
+#: e8b540d5cc52465992e7dfac428c645d
+msgid "FM"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 893655a457fc4361b936eeda47cc6d94
+msgid "BCC, magnetic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: fa0b82388f7f4e6697569f2187c34bd0
+msgid "Nickel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: d54eaded35314899a00f136a199cfd0d
+msgid "Ni"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 97432f3b0ba84be58ae919fdbf0ed119
+msgid "FCC, magnetic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: cdd4ce4229624ed38b48dfc90780576d
+msgid "Nickel oxide"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 2ed5aaf1e28a4f04b48dc0adfe5b651f
+msgid "NiO"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 9e08c861b22b4555a02ccbc489da4de7
+msgid "AFM (Type II)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 544df831af084edaa0527bf798f5e7d3 d04625fd00ea4ffc899ba4332b5e2b55
+#: e71036c4e27b4bc3a5c0cca27dcefe1e
+msgid "Rock salt"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: bd75e2b4b8af413ea251d7eaa6c62d10
+msgid "Iron oxide"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: f977caca540c43958d16461457476b2a
+msgid "FeO"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 9d202dcb256746448e0d8d21bec97e9c 9df45bfa024345dda4873f693524f54f
+#: a09ab7d5d45f4a23ad931b1a010bf15c e6dfe8d9747346529048f7c98bcfa74b
+msgid "AFM"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 842e48fc8b4d4e5d9d99a5fd6bdd8898
+msgid "Manganese oxide"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 976d533ef6ae45b3b0857adf47aedbcf
+msgid "MnO"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: ff73f6835fd94ad3966af5d4305230ed
+msgid "Magnetite"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 5e499f8ff61346f2b5e98ac73a758883
+msgid "Fe₃O₄"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: aa9ca4d2842b45b19cc186630bfd023c
+msgid "FiM"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: e8748687de794f2d94666eb52094bf82
+msgid "Inverse spinel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: b25e37dc830b44a09d1e4899a8de29d3
+msgid "Chromium"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: ca1378023e714dbd886c401353b7bb26
+msgid "Cr"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 6b925526ff7e420b9938bd0640dcab0c
+msgid "BCC"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 3f98767f5c534d0c942c688288b8b9c5
+msgid "Chromium(III) oxide"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: e9f3acef367348aa83adabd5af16ad80
+msgid "Cr₂O₃"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: c3ffd3977cd044ea8c600fdd35c728a4
+msgid "Corundum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 529ebf733cc64115b2cd0ba554561d08
+msgid "Cobalt"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: c3d2d046914d4d499e94ccd7cfffe1dd
+msgid "Co"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md
+#: 21f37af1639f41749c0fd1c0c7348e6f
+msgid "HCP, magnetic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:186
+#: 1c253e77645b4b53ba80f653b0bdfd2c
+msgid "Advanced Topics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:188
+#: a08dc910f34c4458938ba9552affae3a
+msgid "Spin-Orbit Coupling (SOC)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:189
+#: 204477ca40944c048ef5509dc893e8f2
+msgid "For heavy elements, enable SOC in spin settings:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:198
+#: 2a34e9aae0604f2da54d736349971d57
+msgid "Non-Collinear Magnetism"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:199
+#: a416cf49585246beae7eab7e25cb2860
+msgid "For complex magnetic textures:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:207
+#: 39320f720541408a8de653945d155c31
+msgid "Constrained Magnetic Moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:208
+#: 851017a97a5044f6926c5536718fbdd1
+msgid "Fix total magnetization:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:217
+#: 5bff629861184e58acd031f22ebb1b0d
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:219
+#: e55a33ad1c3544928b5a643d27c09f3b
+msgid "Issue: SCF not converging with magnetic moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:220
+#: 847c25e739974ea5bc63e3c32f0c05c4
+msgid ""
+"**Solution**: Try different initial configurations (FM vs AFM) or reduce "
+"mixer weight:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:229
+#: 236f82e97a464ed490aa8b22b16fd247
+msgid "Issue: Wrong magnetic ground state"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:230
+#: 9b3174ce86044880a686b73f7f48c080
+msgid "**Solution**: Test multiple configurations and compare energies:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:239
+#: 9052aa28f25d472c810c2d72bb851741
+msgid "Issue: Magnetic moments collapse to zero"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:240
+#: aa6a65959d85428a97870d23cab78fd0
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:241
+#: 8ce43869f05b491a8ea8d7da1249353e
+msgid "Ensure `Spin: polarized` is set"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:242
+#: 60be25c5608742f682dd66090f27f41b
+msgid "Check if material is actually magnetic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:243
+#: 2dab9e61caa0410d8c65d72953901113
+msgid "Try larger initial moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:244
+#: 95d63a1c549a416aadca600567f7dbb7
+msgid "Check pseudopotentials support magnetism"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:246
+#: bb4699cfd21e4ea48f7c4395db46b817
+msgid "Example Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:248
+#: 83dba7a77d7846cd894ac1e0424d7bc7
+msgid "See the individual tutorial files for complete working examples of:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:249
+#: 1cd8b12e60b14d8ea1b09d7dca65cb3c
+msgid "Automatic magnetic moment detection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:250
+#: 1f4a02db2e1b40a0bf808e788161354d
+msgid "FM, AFM, and FiM calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:251
+#: 40fb46f36f924b7ebb60ccdc74a638d9
+msgid "Custom magnetic patterns"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:252
+#: 617731c010044c53a2f39f7823000bf2
+msgid "2D magnetic materials (CrI₃, VSe₂)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:253
+#: bec0d2854a2d4d36b7e353a7d7c7dcae
+msgid "Magnetic oxide calculations (NiO, Fe₂O₃)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:255
+#: 27a355fbbce944e8988f1283d8650289
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:257
+#: db508d6ec81448968d05a3e60dde87b1
+msgid "SIESTA Manual: Spin polarization section"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:258
+#: f45b4d147f7d4a2281fde70a78d70bc9
+msgid "[DFT magnetism tutorial](https://docs.materialsproject.org/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:259
+#: b96f15e75c0b4f43a9d9e77d15c8d4e3
+msgid "Pymatgen magnetic ordering analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:261
+#: f489e2cc422146a8bfe2004ef0291574
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:263
+#: 8a35c87433eb42acb98cae3e8ccd3a81
+msgid "After completing this tutorial:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:264
+#: d31c7ab1f61f4b6c9f20b629ad66a343
+msgid "Try the Recipe Book for quick magnetic workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:265
+#: a5005c7c6df04c4eafa499b4026aaa0f
+msgid "Explore DFT+U for strongly correlated systems (Tutorial 08)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:266
+#: d5dccde26c66411d9e415c74e2370164
+msgid "Learn about phonon calculations in magnetic materials (Tutorial 15)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/03-magnetic/README.md:270
+#: a22ad899bf0444ada5f781885e052059
+msgid ""
+"**Tutorial version**: 1.0 **Last updated**: November 5, 2025 "
+"**Requires**: atomate2siesta v1.0.0+"
+msgstr ""
+

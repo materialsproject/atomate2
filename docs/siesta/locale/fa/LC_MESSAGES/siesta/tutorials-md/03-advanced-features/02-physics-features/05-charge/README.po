@@ -1,0 +1,388 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:1
+#: c31c7b197c35417b89cf42158fa52dda
+msgid "Charge, Dipole, and Electric Field Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:3
+#: 3891fdd08b03468b97a282de2700e071
+msgid ""
+"Direct SIESTA FDF format for charged systems, external fields, and dipole"
+" corrections."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:5
+#: 042201aaeeb143609cade457c424b1d0
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:7
+#: 058661d60cea48e4b1610969570cfed9
+msgid "This module covers three related features:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:9
+#: e073d722bfc34cd8bda37c787b2c96c5
+msgid "**Charged Systems**: Net charge on the system (ions, defects)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:10
+#: 9fd0a50093ba4169ac420db2bbe4748c
+msgid "**External Electric Fields**: Applied electric fields"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:11
+#: 0395b8c75cbe4227b59407024921802c
+msgid "**Dipole Corrections**: Corrections for slab dipoles"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:13
+#: 9ad7f94c4fb84f08bd3f428eb8000d07
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:15
+#: 2e9458e9c66e4287844d7fb4712841ec
+msgid "External Electric Field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:23
+#: 49c8725848b84b38bd32ebc83e072c72
+msgid "Charged System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:30
+#: a377a563571e4db48f4a073a350744d9
+msgid "Slab Dipole Correction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:37
+#: 091009d391ce4a1da1d71b60aa2b0a8b
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:39
+#: 9913ebf924d64fd58fa88ed6a6d14d59
+msgid "01_external_electric_field.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:40
+#: 39b7c26ee4c742b49da33a0a180e33a9
+msgid "Apply external electric field to a slab geometry."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:42
+#: 7fcd19e81e65462894df11faa0d32af6
+msgid "02_charged_system.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:43
+#: 757e0843171349bc9087b6a45076d3f7
+msgid "Simulate a charged defect (vacancy with +2 charge)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:45
+#: 655bc547763b492d83f465ef58c7fd83
+msgid "Key Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 9333f8c3e04242b9be1d55c4ea5294c5
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 03eb739b01fc46cbab69a7fe0f1cd947
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 003282e5051346b8839faa7e7b173a36
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: a2f6e14c22f740c4ac848f01dfe56d9e
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 81b2e92151c44580b8718dc675b5131c
+msgid "NetCharge"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 0aa0f7a181eb493b891c60f390000f3b 15cb386a33cc4e15b36a984e8afb23ad
+msgid "str"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: ba8aaad6c18d435abc8ca02f39fdb5fc
+msgid "\"0.0\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: e61dcc1e14754795b243f37b512a3619
+msgid "Net system charge (electrons removed/added)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: c5952293309e441b921e9727a48adbfa
+msgid "ExternalElectricField"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 41c61dd5be1648968b7cec5f8c9ced99 e03b1c53a681486e95c72160f74ff2fc
+msgid "bool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 6ceb30b5ec8947b8891240ce121cdbd6 b981ae756ea446d6b21c389d06940e02
+msgid "false"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: b6c30419a7c24006bf6f4fe25159e4df
+msgid "Enable external field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 22337842e20d4b139eee061f2676a27b
+msgid "Efield"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 000642d4be21409e87cca60f4497ced1
+msgid "\"0.0 eV/Ang\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: d173aae5778a43e2be73f4d98fcf4c4d
+msgid "Field strength"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 84ab2314eaf64b9dba98b2a6970c039d
+msgid "SlabDipoleCorrection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: b8624536f9d440cfab799fd02fcfeb6d
+msgid "Dipole correction for slabs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:54
+#: deb6f311a0004eee9527f98686325a9b
+msgid "Common Use Cases"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:56
+#: fd486528224446659f9b8db98369e006
+msgid "1. Field Effect in 2D Materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:65
+#: cbda8e2b19a0487a8177a84494369835
+msgid "2. Charged Defects (Vacancies, Interstitials)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:73
+#: 810585a698a845a2ac13ce39bfc8c85c
+msgid "3. Asymmetric Slab (Surface Dipole)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:80
+#: 0c50998df5eb4cb092e3183900f1600a
+msgid "4. Ferroelectric Switching"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:88
+#: c68dff6097e4446f896b8d958d2e5520
+msgid "5. Ionization Energy Calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:99
+#: 8937b604cf96465689b1c3ec823d0641
+msgid "Important Notes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:101
+#: e4d667065d7c489bba017fac3c7c2862
+msgid "Charged Systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:103
+#: 548d817ac89841baa0dd2e8076080bf9
+msgid ""
+"**Background charge**: SIESTA adds uniform background charge for "
+"neutrality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:104
+#: d4ecc05cafe143aeb97d9179712ec0c1
+msgid "**Large supercells needed**: Minimize interaction between periodic images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:105
+#: 8712f264bf18431f8611861ddda14be9
+msgid ""
+"**Finite-size corrections**: May need correction schemes (Makov-Payne, "
+"etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:107
+#: 1ff8c1b15a8d4a4bb095c44e0ef59235
+msgid "Electric Fields"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:109
+#: 582233b5738b47b59979ff55ec66fcde
+msgid "**Field direction**: Typically along non-periodic direction (z for slabs)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:110
+#: d2ba43daff264996bbbeb6efcfd94da3
+msgid "**Units**: eV/Ang or V/Ang"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:111
+#: 158b3595a8344e56afbbe7d2c290d625
+msgid "**Convergence**: Strong fields may require:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:112
+#: c42bea9f8a04440c8cac4a4db4bdbee0
+msgid "Smaller mixing: `\"SCF.Mixer.Weight\": 0.01`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:113
+#: 982f3ef8e1004e18aed6edf6e6e883a6
+msgid "More iterations: `\"MaxSCFIterations\": 200`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:115
+#: 9ede7c0bc2cc406baed72472fe0bdd0e
+msgid "Dipole Corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:117
+#: 45f8493b9bbd408cb205d91df0d568b2
+msgid "**When to use**: Asymmetric slabs with net dipole moment"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:118
+#: fc6a8bab86d248129f0d8074051e87d7
+msgid ""
+"**Effect**: Removes spurious electric field from periodic boundary "
+"conditions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:119
+#: 9b5ec3a7830c4e2c85d0e1c8cf265371
+msgid "**Combine with vacuum**: Need sufficient vacuum (>10 Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:121
+#: ff5b57debfcc43cdb4dd046a4c0b0556
+msgid "Field Strength Guidelines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 0207c95562bb402ab4ad7d3f65ab5abf
+msgid "Application"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: f988c77e5e944e84a35d10ea852b0f95
+msgid "Field Strength"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: f97c03a974724138b0bbf32f35843762
+msgid "Notes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: b335fb1a8bbb4cf29cf6ce7f09f51ebb
+msgid "Weak perturbation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 338fdb94041846e296816699028a8bce
+msgid "0.001-0.01 eV/Ang"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: f8d2ab48f6e043569a73e807cb03dc2c
+msgid "Linear response regime"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: c5feae9c9962470dba72e61441416258
+msgid "Moderate field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 95d6d630fc464e17bc22242619e73e05
+msgid "0.01-0.1 eV/Ang"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 22bd1c61e561487790ae84f40ea3e8e8
+msgid "Typical simulations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 9f6a62c1cc664a30befa5fb4885ccab2
+msgid "Strong field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: 9e69618f49b645c49cf77b3b6b6000c9
+msgid "0.1-1.0 eV/Ang"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md
+#: c94af2ec40cf4e3397d9c7f568ef4c6b
+msgid "Breakdown, switching"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:129
+#: d3881bbcfe814e319a2b6dff3f93cf98
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:131
+#: 33b48c1023e445cda70685e1be48bb7d
+msgid ""
+"**SIESTA Manual**: Sections on NetCharge, External Electric Field, Slab "
+"Dipole Correction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/05-charge/README.md:132
+#: cec34a5a523e400f870bd3e65fe43a0b
+msgid ""
+"**Dataclass**: "
+"`src/atomate2/siesta/dataclass/charge_dipole_electric_field.py`"
+msgstr ""
+

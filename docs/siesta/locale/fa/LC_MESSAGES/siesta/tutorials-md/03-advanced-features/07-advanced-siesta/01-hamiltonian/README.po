@@ -1,0 +1,1217 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:1
+#: 3e4cf0d3d9a144e293b37887af50872c
+msgid "Tutorial 15: Hamiltonian and Overlap Matrix Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:3
+#: 6e19a8d1c1944ed7a4af276efe1f0bb8
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:5
+#: 2a7f0e27ff7245e091bf12dbe3ef5efd
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's Hamiltonian (H) and "
+"overlap (S) matrix element handling using the "
+"`HamiltonianAndOverlapParameters` dataclass module. These settings "
+"control matrix storage, sparsity approximations, and post-processing "
+"capabilities."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:7
+#: ac0e20c886f34c14aee15e73eaf1a87d
+msgid "Learning Objectives"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:9
+#: c92818182e5540ab8f37c42e0d54b9e4
+msgid "Save Hamiltonian and overlap matrices (.HS files)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:10
+#: 99d858474bb140a881fd3c8ff017af63
+msgid "Configure sparsity approximations for performance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:11
+#: a7d2c84de68e4fba8a6abf4a8c0b1d59
+msgid "Enable extra SCF information for debugging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:12
+#: 52ad7b77091545039f2ddac87c696cf1
+msgid "Understand auxiliary supercells for periodic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:14
+#: 3086b025aa5749fab52938e657cada98
+msgid "Theory"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:16
+#: 24ea130402db467cbb0ac8766e63d93d
+msgid "Hamiltonian and Overlap Matrices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:18
+#: 2611e9d8036347e89087d807609fef39
+msgid ""
+"In DFT calculations, the electronic structure is determined by the "
+"generalized eigenvalue problem:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:20
+#: 90a87fa7010042c1a77976bc25611ddb
+msgid "**H ψ = E S ψ**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:22
+#: caf417e9faf341dfb0ab6ef4d8606f24
+msgid "Where:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:23
+#: 05d605cf2b584f84a3b992bbefea7a58
+msgid "**H** = Hamiltonian matrix (energy operator)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:24
+#: ad588372ab5d4b63b6be4f5a0e2272d4
+msgid "**S** = Overlap matrix (basis function overlaps)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:25
+#: 4502ac27af5b4752997a4df6b84789a9
+msgid "**ψ** = Wave functions (eigenvectors)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:26
+#: ef5c96a19d7f4aa2a4f2cb7c45f0bcca
+msgid "**E** = Eigenvalues (energy levels)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:28
+#: 7500032ed10b4f55be2c78b3ce76f650
+msgid "Matrix Sparsity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:30
+#: b97cd4fe72fc4a8eafa020c26d0f9f38
+msgid ""
+"**Key concept**: Most matrix elements are zero due to localized basis "
+"functions."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:32
+#: 7a7fa07e0d744ace997e09a99bf83021
+msgid "For localized atomic orbital (LCAO) basis:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:33
+#: d66e19ff1c634d14ad9749dc5e41b9d2
+msgid "Basis functions decay exponentially with distance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:34
+#: 0035eff3a2984aaaae8987e98998f757
+msgid "Only nearby orbital pairs have non-zero matrix elements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:35
+#: b829448c24e24fefac8b8e664302c61d
+#, python-format
+msgid "**Sparsity**: ~99% of elements are zero for large systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:37
+#: f1599bbcfdb143238ffbbd01e189208e
+msgid "**Example: 100-atom system with DZP basis**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:38
+#: 26858eb9780f4fa59cf905f7bc62ac62
+msgid "Total matrix size: 2,600 × 2,600 = 6.76M elements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:39
+#: cf52422679d0434f82b0bd1eb73270c0
+msgid "Non-zero elements: ~50,000 (0.7%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:40
+#: 0d5ead7f207e47aba24a134c47fbeff9
+#, python-format
+msgid "**Memory savings**: 99.3% reduction using sparse storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:42
+#: 711a9f179803469f9d167236199f8813
+msgid "Matrix Storage Formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:44
+#: a4bb5dd56ac84710b092b8ee965fce22
+msgid "**1. Dense Storage (not used in SIESTA)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:50
+#: 38625cfd3acd4d65b1638c616d4bc606
+msgid "**2. Sparse Storage (SIESTA default)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:57
+#: 8f2c3684d8c04fa299d9c1dfe64a83ff
+msgid "Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: c059977f1f644590868439b3fa3927cc
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 8fa3ee644371448faf5c6e21a502d052
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: af41defbc9a0425eb4667d83f64eac6d
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 9c823a5605204f2c8563e813aa3a0cda
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 840a6ca3abe14ed187c0851fff053bac
+msgid "`negl_non_overlap_int`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 7d8ffcac74b14882bc5bb1345b4f8c82 9656803863384167825efbc2ba63b4e1
+#: aa30063b7af3430893ffacae979f6a37 e25674303bf74253929fda9280f14353
+msgid "bool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: bb4586d80db54e0481a34e3a88173487 c00ae5182ba649ef9dae122978685fad
+#: dd375eb6a33a44b7891478e9469613b2
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 5eb552ee62c74810ae252aff7069e30f
+msgid "Neglect matrix elements for non-overlapping orbital pairs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 8f04a9288d364b78bd3ba936d5113113
+msgid "`scf_write_extra`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: be62ce86fee545b08cf8e3e782c754fc
+msgid "Write extra SCF information for debugging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 6760fbe506b6480fb0caec74e2bc4da0
+msgid "`save_hs`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 31ddf702668c439bad1da860ad4f3bfc
+msgid "True"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 84ac087d2e4b48ac97dba310c4852dc8
+msgid "Save Hamiltonian and overlap matrices to .HS file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 0025b8b3a1fc46d3b5038810c4043c1a
+msgid "`force_aux_cell`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: a231a49ead5446d58a44bb0b8bef4195
+msgid "Force use of auxiliary supercell for matrix elements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:66
+#: cd935f54d0a842dfb7bc500aa0bf6457
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:68
+#: 3c510d72bdd2496a844bf44cf119d02a
+msgid "Example 1: Save Hamiltonian and Overlap Matrices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:70
+#: a89f7895424c439fa0ba198883e9cea2
+msgid "Enable .HS file output for post-processing:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:81
+#: e336347a12c04f2f8f76f751617d018b
+msgid "**Output files:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:82
+#: b8d0f33e4cc241099b49817523f06ea2
+msgid "`systemLabel.HS` - Binary file with H, S matrices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:83
+#: 41cf502146ec464c8336a71edd340e7f
+msgid "Contains sparse matrix in COO (coordinate) format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:84
+#: 291f9fc44dec477f9149a87b78105383
+msgid "Essential for transport calculations (TranSIESTA)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:85
+#: df0b03cac35e4d0298ea77fbf59fa415
+msgid "Required for wannier90 interface"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:86
+#: 480194580c0d4e3e9ff384bc3c3d957e
+msgid "Useful for post-processing and analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:88
+#: 907a18e3b5aa4dd9b3576d902fbe5770
+msgid "**File size estimate:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:89
+#: f7b7a202042a450b97dc149ca130abdf
+msgid "100 atoms, DZP: ~5 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:90
+#: a29263c74ee84b0ab48524101ac1e955
+msgid "1000 atoms, DZP: ~50 MB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:91
+#: 7149766e94194a53baa4d27417aaf916
+msgid "Scales linearly with system size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:93
+#: 045047cb3cef4c9197c2d6e568861fec
+msgid "Example 2: Sparsity Approximation for Large Systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:95
+#: 87988ffeb14745c1bd63fadff4ba972a
+msgid "Neglect matrix elements for non-overlapping orbitals:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:106
+#: 9047999a319649888befef1f7629b853
+msgid "**Effect:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:107
+#: 633a62196e1640239c9561e42f7cdddb
+msgid "Matrix elements computed only if orbital pairs overlap"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:108
+#: 5c3e052a131e42b3aa1c13b91e092fb0
+#, python-format
+msgid "Speedup: 10-30% for large systems (>500 atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:109
+#: dc46070acf9c4dbcaae0097b0f20d8cd
+msgid "Accuracy: Negligible impact (<0.1 meV/atom)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:111
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:164
+#: 22d923eb8d9d491d9f208dcdd70a137d a730edf72d114604938ae05bc644ac16
+msgid "**When to use:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:112
+#: 9a18f9da2f944e91a369de4123a93dd5
+msgid "Large systems (>200 atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:113
+#: cdf9acd634e74b36b0d774151a0d6d3b
+msgid "Preliminary calculations and screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:114
+#: cc3b94b7a4b743ab99e4940f1bfda03e
+msgid "Geometries with well-separated fragments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:116
+#: 526c0cbb877c4c86b49503db4818f0ca
+msgid "**When NOT to use:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:117
+#: ac314fe7ea0d40b79c2039af0b8b6b2d
+msgid "High-accuracy calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:118
+#: 9ef82cf67cae4b95860b0b484d3e4785
+msgid "Publication-quality results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:119
+#: e0ffae59d8274921a329b6193fa1632d
+msgid "Systems with weak interactions (van der Waals)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:121
+#: 422ef842a2144ae2ac29e15d35a54676
+msgid "Example 3: Debug SCF Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:123
+#: 082e8c3ad5674f5b891405a813be583a
+msgid "Enable extra SCF information:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:135
+#: aa4ea19a7935450b84943545ffb399ae
+msgid "**Additional output:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:136
+#: b049273e04fd47a9bb17594b9aad60cb
+msgid "Matrix eigenvalue spectrum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:137
+#: 15e8db4189fd453fa9735799e70b9c03
+msgid "Charge mixing details"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:138
+#: f3547d930c3046ef90463619d5226000
+msgid "Orbital populations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:139
+#: abedbfe5646c4cb18651d82c667b5f36
+msgid "Mulliken analysis per iteration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:141
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:371
+#: 4dee7277cc804552a5411049363134d8 4f04eded4b4543c2a4aa19e4b832435b
+msgid "**Use cases:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:142
+#: 306adbbe2e1f4b84b6131d0f6b3eef33
+msgid "SCF convergence problems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:143
+#: ab3dd7c3a1b94b2ab7f13fbd157756dd
+msgid "Understanding charge transfer"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:144
+#: 774f724545b149c1b40d62874fa9de28
+msgid "Debugging electronic structure issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:146
+#: 58866b0300b74fd19e8635acd8f70ecb
+msgid "Example 4: Force Auxiliary Supercell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:148
+#: 8908e8dbadd7447b8148ffa29489340c
+msgid "Manually control auxiliary cell for matrix elements:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:159
+#: 6bfd75a2b06b4327a29bb6efbed6aab7
+msgid "**What it does:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:160
+#: a3aeecf1ff7a433b9458c81e73908e67
+msgid "Forces SIESTA to use larger auxiliary cell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:161
+#: dcb7f80416c24ef78cc7bc249494272a
+msgid "Ensures matrix elements computed in supercell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:162
+#: ef0e56de1ebb446cac503f954a46e44e
+msgid "Rarely needed (automatic detection usually works)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:165
+#: 99553f6dc6e64c1097b7df7d96d597eb
+msgid "Very small unit cells with long-range basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:166
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:336
+#: 4e576ae8dea7440f8e58fe571713084d a90b6a2324094ddc94aa3fefd0a2b358
+msgid "Debugging matrix element issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:167
+#: d636a4d2dd0b48d6aff740b150aa98d4
+msgid "Non-standard boundary conditions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:169
+#: 643a8fd783ec428b877725d12a82906d
+msgid "Hamiltonian and Overlap Matrix Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:171
+#: b065cb3e7dc44913b15f87fdc78f716c
+msgid ".HS File Format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:173
+#: dcee009991834ae0814b5e308ed58934
+msgid ""
+"The `.HS` file contains the Hamiltonian and overlap matrices in sparse "
+"format:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:175
+#: a3431445f34141ad8f21f3da74541474
+msgid "**Structure:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:176
+#: af9397a158f1471eab46bdd62ffb562b
+msgid "Header: System information (atoms, orbitals, cell)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:177
+#: d2114375f2934eb1ae4d7cae75c82791
+msgid "Sparse pattern: List of non-zero element indices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:178
+#: 69ff462f09324e32a8fdd35c625f42ad
+msgid "Hamiltonian: Non-zero matrix elements of H"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:179
+#: 62630126dde148828ef6e6ab1d3600dc
+msgid "Overlap: Non-zero matrix elements of S"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:181
+#: 675069d94c9b4755b90025fcffffc60e
+msgid "**Storage format (COO - Coordinate Format):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:191
+#: 97e6f0a16b514a6c890ac1e326987f45
+msgid "Reading .HS Files in Python"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:193
+#: 1b029f84389743809643ac3c94bee452
+msgid "**Using sisl library:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:212
+#: 7bf0cb63b3e74332ac31b750298be8c2
+msgid "**Using custom Python code:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:239
+#: 6693e6637eaa4e36b0ef66ad9a8a38ce
+msgid "Post-Processing Applications"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:241
+#: 9fbd0263042e498d8f7959b26d527292
+msgid "**1. Density of States (DOS):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:253
+#: 9472dc102abc4e968c068d377d1328c4
+msgid "**2. Band Structure:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:262
+#: f3442ba0f94c40d09f1889ffaf00b567
+msgid "**3. Transport Calculations:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:269
+#: 6d3c3cc21e3745e4b8009a0186e8aa9a
+msgid "Sparsity Approximation Details"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:271
+#: 81cbe5ec7d994457929d6140ca36159f
+msgid "Negl.NonOverlap.Int Option"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:273
+#: ecff2a0db83e4b3e9a348b76d4bcefd8
+msgid "**Default behavior (False):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:274
+#: af47136258f1466ab420bf92314b7dc1
+msgid "Compute all matrix elements within cutoff radius"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:275
+#: 9011d32d7baf4090947889696e23263d
+msgid "Includes elements even if orbital densities barely overlap"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:276
+#: 9793ab318748450387a42a66fc0d3348
+msgid "Most accurate, but slower"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:278
+#: 826364264e1349efabe3653667e7aa72
+msgid "**With approximation (True):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:279
+#: 05865e2227a6494db7ed97a59cf5b2f5
+msgid "Skip matrix elements if orbital overlap < threshold"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:280
+#: 23a03446a34344aaa2dbcc21addfd596
+msgid "Faster matrix construction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:281
+#: 0750dd768f4b47fdbfc7c619c8a6eb33
+msgid "Negligible accuracy loss"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:283
+#: dde0ab5f40694983816dd6e5374365dd
+msgid "**Performance impact:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: cf238abc9a054d2f9d34338f76e976ff
+msgid "System Size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 042fb1c6fe324bf791c6c82cdb92b4e7
+msgid "Without"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: b9d999ae012c4c3f832fbda92af5d419
+msgid "With"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 12a6fd090c7a484daeab4003fdf3741e
+msgid "Speedup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 9ca5b5de5ebb45a088c23a1d69fd22ef
+msgid "50 atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 291f09f4ac4f4e22bcd18713989f1055
+msgid "100 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 7d0bb17d88424362a333cbfe9cf95bf9
+msgid "95 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 310617d12b044bf8b517197f00ed32d3
+msgid "5%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 40e027f1e827490e9e1559aef8dc9678
+msgid "200 atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 55a63aa97ee14b9e9bd45f3e6db0600c
+msgid "450 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 3e2799c7d18c4f20b050b311de3fe823
+msgid "380 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: a6c1b5c02e9c4f99b01ba423ecec3501
+msgid "15%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: e1c95e7c329743488ad6b1a1d98d6fc3
+msgid "1000 atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: d985dd8848ca4cfd8d013da71dfd3aed
+msgid "2800 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 7c9d4fca252345daa96501c9f6f3f695
+msgid "2100 s"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: ab393e0e41114021b7ec63afd9b12d8f
+msgid "25%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:291
+#: a5df41002a3446358b3f3584a415897f
+msgid "**Accuracy impact:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 7b055f0923e74bc49ee59b5399dd02af
+msgid "Property"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: ee0162667d9d486a8612d10ff6909530
+msgid "Difference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 1053933b487a49da85898b7fc4a29fcd
+msgid "Total energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 4e6d78d5734041049c6f298b51c4c743
+msgid "<0.1 meV/atom"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 3dd85599ae5b4c97951f4b0bc118b5e7
+msgid "Forces"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 33de8ee19eb04025b1af617132fc4681
+msgid "<0.01 eV/Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 43bae9c80438420f951de3c19df85d19
+msgid "Stress"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: d46ee1a1913e40aa997f6149834891fe
+msgid "<0.1 GPa"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 2fc2f5e0de5248e9b12aeff5cf6f1bf8
+msgid "Band gap"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md
+#: 42ff91a91bc84ad181e3b77c3c381f55
+msgid "<0.001 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:300
+#: 513a1269e12b44918e905b0d1141e10d
+msgid "Overlap Threshold"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:302
+#: 287e2f3033b2478e8655a2c99d8275e8
+msgid "Internal threshold for orbital overlap (not user-configurable):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:303
+#: 13f599a86d99408e8a649721421351e6
+msgid "Default: 10⁻⁶ (overlap integral)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:304
+#: 837553439e7f4617823ddb332a01b7a3
+msgid "Very small, affects only distant pairs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:305
+#: 945827b9680d48558bc23f7f6e94cc46
+msgid "Conservative value ensures accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:307
+#: 30a7332fe13b4f838a7ab962e93a45bd
+msgid "Auxiliary Supercell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:309
+#: efba7320f2774d71bb1827f3d89f98e3
+msgid "What is the Auxiliary Cell?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:311
+#: ec3c49a0efc3474996f46f0d44faae08
+msgid "**Purpose**: Ensure matrix elements include all periodic images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:313
+#: 2f38c71a66644f708914851c2c98cf2c
+msgid "For periodic systems:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:314
+#: 9c5a4a947f354df89293cbd3ba6577e1
+msgid "Orbitals can overlap across cell boundaries"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:315
+#: 7de7de959efd467bb93585db8b2d3e8b
+msgid "Need to include neighboring cell images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:316
+#: 24814cffd7ed4516959458bafdfc6fd5
+msgid "Auxiliary cell = enlarged supercell for matrix evaluation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:318
+#: 31cb8354269d4da78f9d4287146d70b8
+msgid "**Automatic determination:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:319
+#: c437894f936440a5842c8b2d7068c470
+msgid "SIESTA calculates required auxiliary cell size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:320
+#: 5afe891a5ade4d8cb6128d4345241b25
+msgid "Based on maximum orbital cutoff radius"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:321
+#: bb2304fcd1214bc8bd461e6257490030
+msgid "Typically 1-3 times unit cell in each direction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:323
+#: 3fe04e1897c24cdab0d04a043fb4b27f
+msgid "Manual Control with ForceAuxCell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:325
+#: b82f26f11a1c45249e1ad60f80baa961
+msgid "**Rarely needed**, but can force larger auxiliary cell:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:333
+#: ffe982b67d8f47e996c5f2eebf526097
+msgid "**When to consider:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:334
+#: 8a45d598b80f410599fe08464c244f5d
+msgid "Very small unit cells (<5 Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:335
+#: 0c90b6bce693419bae8c9782ea60ba04
+msgid "Very diffuse basis functions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:338
+#: 384848910ec74112afaaa23c493fdef7
+msgid "**Example scenario:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:346
+#: 7e96246adfa44427a570480481f0f7b0
+msgid "SCF Extra Information"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:348
+#: d0c8f8b0200f485db40fb9163f58ea4a
+msgid "SCF.WriteExtra Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:350
+#: 262371bad8974040b6d51c981b1f210f
+msgid "**Standard output (SCF.WriteExtra=False):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:358
+#: 397d453d63fb49aa92cb34bb5f1fc47e
+msgid "**Extra output (SCF.WriteExtra=True):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:372
+#: 5f082181e85f4537ad63d8a1c1cec530
+msgid "Understanding electronic structure evolution during SCF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:373
+#: c40e0cde82bf4880a89fbf9444f3c97b
+msgid "Debugging convergence issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:374
+#: d1285c837ed549938a67bad52d95c67d
+msgid "Analyzing charge transfer"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:375
+#: e56b3c56482a45e1a3fc8440e0c401a4
+msgid "Verifying orbital populations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:377
+#: 91d36c685d664b249656577d0cad3f3a
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:379
+#: 0f7d8ad978ef41288f1e5c7dbc3f8e86
+msgid "1. Standard Production Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:381
+#: f30f9b3bc16a4eb0967b608f6a017e67
+msgid "**Default settings (recommended):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:391
+#: d49dea0c84b74180ab2bde69bbf68f56
+msgid "2. Large System Optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:393
+#: 7c51a7c2035d4e3b8130af60d4c28826
+msgid "**For systems >200 atoms:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:402
+#: 42792efcf397488ab729fd1fa62994a4
+msgid "**Verify accuracy:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:403
+#: 140c7339aba74ceabae3e7c3af583399
+msgid "Compare with/without approximation on smaller test system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:404
+#: 71b168a3e10443aeba0eec1ac52101a3
+msgid "Check total energy converged to <1 meV/atom"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:405
+#: 6f3da7c436dd4ba587373aa55205532e
+msgid "Verify forces agree to <0.01 eV/Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:407
+#: 90fbd03036a345e2a81b76744477e105
+msgid "3. SCF Convergence Debugging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:409
+#: 478905b9366845bb9b9c371b890bbcb2
+msgid "**For difficult convergence:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:419
+#: 9d4cc3f35f8e4ae49b28a51dd71ea0a6
+msgid "4. Post-Processing Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:421
+#: f8f624514f794e088498ade6cc8384cc
+msgid "**Transport calculations (TranSIESTA):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:435
+#: e86aeec4ed244e61ad7a1b6ec7658851
+msgid "**Band structure and DOS:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:444
+#: d645fe8d57ee4b66875a71d105c74325
+msgid "5. Memory-Limited Systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:446
+#: 0431738d02744b59b6d2af7a4a0ea088
+msgid "**Disable .HS if memory is critical:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:454
+#: 71177992616848eeaeb00038bde56a75
+msgid "**Memory savings:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:455
+#: 143cec87d5eb49b0810dc86e6fbc0ae4
+msgid "No .HS file on disk (typically 5-50 MB)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:456
+#: e4c22866f6f84131a7a51e0b1d3e5d9f
+msgid "Slightly less memory during run (~5%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:458
+#: ca03c8bf446846569c1feacb9b7a1a93
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:460
+#: 3903f07a28a245299b4b032439b6ab2d
+msgid "Issue 1: .HS File Too Large"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:462
+#: 7ba37ae2ca574672bb46f22c19336b1d
+msgid "**Problem:** .HS file fills disk (>1 GB)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:464
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:515
+#: a61ce3f5e3824661aaa6ddc1e807c0ce df424fa037b24b8aa033ddb127d15a36
+msgid "**Causes:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:465
+#: ed75e2ab0d42453b879ab58990162491
+msgid "Very large system (>5000 atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:466
+#: a748c2f752494bc6a699034a74266972
+msgid "Dense basis (TZP or larger)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:468
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:520
+#: 65856b2879244a1ab6637dbbcc8852ac bd86930860f8424bb6fcc68626325b7a
+msgid "**Solutions:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:480
+#: 7eb6a77f03c64a3c8443b30afad9168c
+msgid "Issue 2: Matrix Elements Seem Wrong"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:482
+#: 694ed75356e04ac99816db71369a4aa5
+msgid "**Problem:** Unexpected eigenvalues or band structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:484
+#: ee523813934143498de010c944bc7bfb
+msgid "**Debug steps:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:485
+#: 1ca5f9e8933c4d4d90ff37c4dbe31597
+msgid "Check auxiliary cell size (look for warnings in output)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:486
+#: 2b1b247d1a6645df99d59c603f7729c0
+msgid "Try ForceAuxCell=True"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:487
+#: 9952321564c245cbbaea9b89d0ed6514
+msgid "Verify basis set is appropriate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:488
+#: 5d79131111024a97b24851ddf6177f00
+msgid "Check cutoff radius (PAO.EnergyShift)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:499
+#: 558315fe6eb64069918ec2aab778d3ba
+msgid "Issue 3: SCF Convergence with Approximation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:501
+#: fb0dda6c0eef48bfb9814cfca7a9e98c
+msgid "**Problem:** Negl.NonOverlap.Int causes SCF oscillations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:503
+#: 9604aa4939504c7d9b13565a3c0b0ff3
+msgid "**Solution:** Disable approximation for difficult cases"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:511
+#: 4d06df42d8af49fd9c9d2319799adf21
+msgid "Issue 4: Reading .HS File Fails"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:513
+#: b40777f80f03498ca6dc950841fb2d38
+msgid "**Problem:** Cannot read .HS file in post-processing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:516
+#: 31c476d0b981481a8419a206f3c4aacc
+msgid "File corrupted (calculation crashed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:517
+#: 086c26abd0d14dd9b272226deb7e1c7a
+msgid "Incompatible SIESTA version"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:518
+#: d526bc25be4d49048b9f6c6d47ee9a91
+msgid "Incorrect file format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:533
+#: cb249b7a31ba42058d4ee9d3774a1353
+msgid "Advanced Topics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:535
+#: e9fff77a7067466d9b8230c9ed349e22
+msgid "Matrix Element Analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:537
+#: 55964ad4339f4801b3a3a35946cdc187
+msgid "**Extract specific matrix elements:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:555
+#: 171713f4677a48efaa9df59ec7519e06
+msgid "Sparse Matrix Statistics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:557
+#: 98d933c9b453463eb64cb0056a71ecc6
+msgid "**Analyze sparsity pattern:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:578
+#: 80693ac8642942f285f50c4b2499f669
+msgid "**Typical results:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:586
+#: 84b4a0c12ba04b6c9d1a507c86d6e421
+msgid "Hamiltonian Visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:588
+#: eb753d2e951740f881726b88fcbd66b5
+msgid "**Plot sparse pattern:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:604
+#: 1b68e496e1e54b27bc0290b66942a5b0
+msgid "Further Reading"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:606
+#: 0c5c8768df604f15a1ae3fc57239fa71
+msgid "SIESTA Manual: Section 4.25 (Hamiltonian and Overlap)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:607
+#: e5c0b4e499b841d999fde8d7d94cd1d7
+msgid "sisl Documentation: https://zerothi.github.io/sisl/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:608
+#: 6fac8fec565a4f948a63cdc1417f5786
+msgid "TranSIESTA Tutorial: Transport calculations with .HS files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:609
+#: 39f11b407c174c80a9a242f076e4673a
+msgid "Sparse Matrix Methods: Compressed storage formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:611
+#: 843f1f0db98d4d20adf2c8f3d2522d69
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:613
+#: 88b38b36024444b8bcdd342e1473475e
+msgid "Tutorial 12: Parallel Computation (optimize matrix diagonalization)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:614
+#: f8f3a270e5944fbe968c3b76aebfe0e0
+msgid "Tutorial 14: Efficiency Options (timing matrix operations)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/07-advanced-siesta/01-hamiltonian/README.md:615
+#: 367f9c30643a4e1e9150dae4669c2c01
+msgid "Tutorial 10: Grid Output (complementary to matrix output)"
+msgstr ""
+

@@ -1,0 +1,565 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:1
+#: 47b3e1b0d08f4948a011d20319b8a6a4
+msgid "Recipe Book Customization Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:3
+#: 578210abb27a4beb8f7f04994b6c601d
+msgid ""
+"This folder contains **minimal working examples** demonstrating how to "
+"customize Recipe Book workflows."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:5
+#: 4421847651884c65bdfb9d8021a0ede4
+msgid "Files in This Folder"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:7
+#: 2587aef568284587a1a52aff6301dfbc
+msgid ""
+"**`00_FULL_TUTORIAL.py`** - Complete tutorial with all examples "
+"(reference)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:8
+#: 7f149348299443ebbb8520cfe07b2a0a
+msgid ""
+"**`01_user_params.py`** - Method 1: Direct parameter customization ⭐ "
+"START HERE"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:9
+#: 860a355a921848ba8b6d7539207608db
+msgid "**`02_tier_levels.py`** - Method 2: Computational rigor levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:10
+#: 6a288051815d4e049c576dd03113c60b
+msgid "**`03_presets.py`** - Method 3: Material-specific presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:11
+#: 5d99acb111ce4b838d57ca2bb672ff8d
+msgid ""
+"**`04_combining_methods.py`** - Method 4: Preset + user_params "
+"(RECOMMENDED!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:12
+#: b0ab78ec7e26479c8ce6fa7ce6f5f222
+msgid "**`05_magnetic_dftu.py`** - Advanced: Magnetic + DFT+U"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:13
+#: 6badcdb30ba043f986cc99cb57067902
+msgid "**`06_vdw_2d_materials.py`** - Advanced: 2D materials + vdW"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:14
+#: d1dc06a7ba524d659d1cd9d8b13128f6
+msgid "**`07_recipe_specific_params.py`** - Workflow-specific parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:15
+#: 6b63bcb656e0450294d481a46688bfc2
+msgid "**`README.md`** - This file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:17
+#: c5524c2542b64a049f7b38714bfac5dd
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:19
+#: 674cde65bc4c4bd1a58c5d941f4fb067
+msgid "Run any example directly:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:26
+#: 8d96c6b2472e413191df93a52cde4dc9
+msgid ""
+"All examples use `dry_run=True` to generate input files without running "
+"calculations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:28
+#: 9d21c56269ac45adb28d4bcb6208559e
+msgid "Examples Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:30
+#: 99b53735e71a49c8bff399a1fe880f9d
+msgid "Method 1: Direct Parameter Customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:31
+#: f6dd0b67cb74438db6c27fd9aaa68a73
+msgid "**`01_user_params.py`** - Basic FDF parameter customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:32
+#: c5a1e08772bf409597485e50fc68119f
+msgid "Most common approach"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:33
+#: 83bf7a0bc41247fa9e912986d783f1f8
+msgid "Pass parameters directly in `user_params` dictionary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:34
+#: 133e967665d14eeaa34f1fe90a2eecdb
+msgid ""
+"**IMPORTANT**: Use `auto_params=False` to disable automatic parameter "
+"detection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:35
+#: 3f37c7918850429d9f559a45b8d057a3
+msgid "Example: Custom basis, cutoff, k-points, convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:37
+#: a301717ce7744babb4ae8133e56d349d
+#, python-brace-format
+msgid ""
+"**Key takeaway**: Use `auto_params=False` + `user_params={...}` for full "
+"control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:41
+#: 4817a3ee15224ef183933fb08663549f
+msgid "Method 2: Tier Levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:42
+#: c2745219b793454396db1e42dda63b8e
+msgid "**`02_tier_levels.py`** - Computational rigor levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:43
+#: 6a0220a906af4a4c88cb3911bd02cb7a
+msgid ""
+"5 tier levels: `basic_dirty`, `basic`, `intermediate`, `advanced`, "
+"`expert`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:44
+#: 964ee98829684ccd93deaafef098b2d8
+msgid "Controls overall accuracy vs speed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:45
+#: 154967d16efc4c16a80c110ddd0f9938
+msgid "Example: Publication-quality with `tier='advanced'`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:47
+#: 8ed02109786a4dc89793ca74d8b95754
+msgid "**Key takeaway**: Use `tier` parameter to set computational level"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:51
+#: 1e3d3ae506ec4245af4089f2acdcfdd6
+msgid "Method 3: Material-Specific Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:52
+#: d89e8731dc8048c09efd184f9f889f83
+msgid "**`03_presets.py`** - Optimized parameter sets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:53
+#: b0e8fd7b79184a95b3b9ba4023194c71
+msgid "material-specific presets for different material types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:54
+#: 33b04ee0b00342d3a87bd63d42355a93
+msgid "Examples: `surface_metal`, `2d_vdw`, `phonon_high_accuracy`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:55
+#: b364febc17644b938e85be5af59b993e
+msgid "View all: `atomate2siesta-presets list`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:57
+#: 0daa478602264a99901d640dd5d7fc03
+msgid "**Key takeaway**: Use `preset` for material-optimized defaults"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:61
+#: e27affe259134f538cc3d44c8bd16544
+msgid "Method 4: Combining Methods (RECOMMENDED!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:62
+#: 79dcf604cb09431d87fd8706606babe9
+msgid "**`04_combining_methods.py`** - Preset + user_params"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:63
+#: b677c489f91946c2b6a68a6e95df9ad4
+msgid "Start with preset, override specific parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:64
+#: 23ae87350a6949b383c6cad936db0e05
+msgid "Best of both worlds: optimization + customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:65
+#: 3c702783e21d4c66ab9c66ed498ca0b6
+msgid "Priority: tier → preset → user_params (highest)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:67
+#: 038004c57aef4afa94b322e4f955ce1a
+msgid "**Key takeaway**: This is the **recommended approach** for most cases"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:71
+#: 2f6cdf82342f48b7a2476b2b10cb59ee
+msgid "Advanced Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:73
+#: cc5550592e564b9fac1a081a9c6bd991
+msgid "**`05_magnetic_dftu.py`** - Spin-polarized and DFT+U"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:74
+#: e6adea33d7fc40e6af0bb221cb3e8635
+msgid "Magnetic calculations with `Spin='polarized'`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:75
+#: 9f5110cff9d94966b265384ace63876c
+msgid "DFT+U for correlated systems (NiO, CuO, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:76
+#: cd387f808b1f46d480e9bbca1a182ac1
+msgid "Correct SIESTA syntax for DFTU.Proj block"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:78
+#: 9d3d1f9ad65240e9a434e7c72a35d0ad
+msgid ""
+"**Key takeaway**: Use `DFTU.ProjectorGenerationMethod` + `%block "
+"DFTU.Proj`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:82
+#: 809d494a836d4db8aba1960296170993
+msgid "**`06_vdw_2d_materials.py`** - van der Waals functionals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:83
+#: e2d864f5490a4cb085cddf2b2c55b578
+msgid "2D materials (graphene, MoS2, h-BN)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:84
+#: 5173517213044b65af5f13d19670a570
+msgid "vdW functionals: DRSLL, C09, BH, KBM"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:85
+#: 1adb5926e19e48beb8a676c077df7e84
+msgid "Proper k-mesh for 2D ([12,12,1])"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:87
+#: 6716fba4d3794617b7d93b4f0571d957
+msgid "**Key takeaway**: Use `vdw='DRSLL'` + `preset='2d_vdw'`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:91
+#: 99679a05e1ef4954ba9c2b54c45e4732
+msgid "**`07_recipe_specific_params.py`** - Workflow parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:92
+#: 14eaf7a644e442619f3b85fd1e37da62
+msgid "Phonon: `supercell_matrix`, `min_length`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:93
+#: 789227cff4d943f6b64c3aece4ba60df
+msgid "Surface: `miller_indices`, `slab_layers`, `vacuum`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:94
+#: d91e9c63f58b44ba831313bcdf831d22
+msgid "EOS: `number_of_frames`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:95
+#: a86177a190c74f58ac07e82632282eaf
+msgid "Separate from FDF parameters!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:97
+#: 727fa1c1ab2b41f1b98dba25ab5d5042
+msgid "**Key takeaway**: Workflow params vs FDF params are different"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:101
+#: e21c162f3dd148898681b47f076b28ce
+msgid "Understanding auto_params"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:103
+#: 552bc98c1963489181edfef54dd055d4
+msgid ""
+"By default, Recipe Book workflows use `auto_params=True`, which "
+"automatically analyzes your structure and sets optimal parameters "
+"(k-points, cutoff, basis). This is convenient but can override your "
+"explicit `user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:105
+#: 8935b31ccc254e788c6fa4536b5b911e
+msgid "**When to use `auto_params=False`:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:106
+#: e4d57dc095e54fdabce77f3eed3270b2
+msgid "You want complete control over all parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:107
+#: 3813150aa9f84d379344e6cca2c267a7
+msgid "You're setting specific k-points, cutoff, or basis values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:108
+#: 3111a1dddd6d403b8ad503fa7d45169c
+msgid "You're following a specific computational protocol"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:110
+#: 16561da0fc4444c59c1503eab0202fbd
+msgid "**When to use `auto_params=True` (default):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:111
+#: 0e3c0df920354f4ea6bfffe2378e0969
+msgid "You want smart defaults based on your material type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:112
+#: c97192aaef124e649ad81441218fc984
+msgid "You're combining automatic + custom parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:113
+#: 30bea47ae44c43e79726dea308b70ba1
+msgid "You trust the MaterialAnalyzer recommendations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:115
+#: b599d84f854e4627a99a651d6567a976
+msgid "**Example:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:132
+#: 380d61c9258c43948d16441f9a49b9b6
+msgid "Common Patterns"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:134
+#: 11ec4686e8c74865bfc46503af9f5600
+msgid "Pattern 1: Quick Testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:143
+#: a8065588e03640cc867201a45d087b97
+msgid "Pattern 2: Publication Quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:155
+#: e8985d9268c84cb7a9248ec00d2b752b
+msgid "Pattern 3: Material-Specific"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:166
+#: b0fa1fa55af044d28390facee4f9497b
+msgid "Pattern 4: Complex System (DFT+U + Magnetic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:184
+#: 1e940b06a14f42369bf2dff9cc043837
+msgid "Important: What NOT to Do"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:186
+#: bbc3b0a0bd6a420e969567c831146688
+msgid "❌ WRONG - Don't wrap in fdf_arguments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:196
+#: 7878ca9c4fa042ba826802a8e439c431
+msgid "✅ CORRECT - Pass directly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:204
+#: 8a319716cd4245579660af5587149fad
+msgid "❌ WRONG - VASP parameters in SIESTA"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:213
+#: 919fc5330cba4f45a9e1732f6e243e8f
+msgid "✅ CORRECT - SIESTA DFT+U syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:222
+#: b61d6a967fe74f53ad9f14d01f2b3a8c
+msgid "CLI Tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:224
+#: 94b58e70676c439998692b40b09daee6
+msgid "Discover presets and recipes:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:247
+#: 9ee9119227e84de6921dc0aa2ee38dce
+msgid "Parameter Priority"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:249
+#: 65e0c8b85e51496abf985bde6e90ac0a
+msgid "When combining customization methods:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:256
+#: cebf0d469d98411ebfd52d5f24424fba
+msgid "Example:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:268
+#: ec4c87e16f6a46278005e27dfad5a2c0
+msgid "Result: `Mesh.Cutoff='500 Ry'` (from user_params, highest priority)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:270
+#: df9f71904fe84df2b07318838e359de0
+msgid "All Recipes Accept These Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:283
+#: 484232769e584f598654a7a102082fe7
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:285
+#: c1ba4c21e4564d309cf25f3869c3df44
+msgid "**Start simple**: Try `01_user_params.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:286
+#: 9863685975d440fa92ddb21101dc83cb
+msgid ""
+"**Learn presets**: Try `03_presets.py`, explore with `atomate2siesta-"
+"presets list`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:287
+#: 7f5e35c11d4a48f28cbd83dae9aa9b4a
+msgid "**Combine methods**: Try `04_combining_methods.py` (RECOMMENDED!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:288
+#: 6af235cc618a4464b2d89212386835b7
+msgid "**Advanced topics**: Try `05_magnetic_dftu.py` or `06_vdw_2d_materials.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:290
+#: 74e3a8f8f5a24f8e9320c689716de756
+msgid "Additional Resources"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:292
+#: e0d3d36e152249098cf2e12ea8e2d6a9
+msgid ""
+"**Main guide**: `../RECIPE_CUSTOMIZATION_GUIDE.md` (comprehensive "
+"reference)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:293
+#: 5dc199938401433394b3302fec53d2a0
+msgid ""
+"**Full tutorial**: `../10_customizing_recipes.py` (all examples in one "
+"file)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:294
+#: 67c2310229da48428a02e340577b7aec
+msgid "**Recipe stats**: `atomate2siesta-recipe stats`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:295
+#: 0e249a3049bb4658891bfc1f262cdf3c
+msgid "**Code comparisons**: `atomate2siesta-recipe compare <recipe_name>`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:297
+#: ac1d867d71a24f41882558b883732f4c
+msgid "Tips"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:299
+#: 6c6a0c3e5ad041898808c9a4aafd23ff
+msgid "**Always start with a preset** if available for your material type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:300
+#: 6d383ba34dc64fd5b988d8d90cc433b8
+msgid "**Use tier** to quickly adjust accuracy (basic → expert)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:301
+#: cbd649ce17b24e54b3f3dbce37d95ebc
+msgid "**Override specific params** with user_params only when needed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:302
+#: 4ee5e6936fef46488c4761582eae91fc
+msgid "**Use dry_run=True** to preview input files before running"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:303
+#: f85e08ae95be47baaab04de588054e7a
+msgid "**Check generated siesta.fdf** to verify your customizations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/10_customizing_recipes/README.md:305
+#: bb875f6dcbbb44c392318f3815794ef6
+msgid "Happy customizing! 🚀"
+msgstr ""
+

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,11 +20,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/features.rst:3 d3a3366ab7694f2e9b83c8113498115c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:3
+#: ea7fc64b2fd24de89ac474bc89954071
 msgid "Feature Highlights"
 msgstr "برجسته‌ترین ویژگی‌ها"
 
-#: ../../source/features.rst:5 bb66d8e4257d41529a539e3f22b6eb59
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:5
+#: 47138c6580e44c9da98306d1a3f53234
 msgid ""
 "This page highlights the key features and recent enhancements in "
 "atomate2siesta, organized by functionality."
@@ -32,15 +34,18 @@ msgstr ""
 "این صفحه ویژگی‌های کلیدی و بهبودهای اخیر در atomate2siesta را که بر اساس "
 "عملکرد سازماندهی شده‌اند، برجسته می‌کند."
 
-#: ../../source/features.rst:10 be9a7b8cf7a548e18c06a172aa45694b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:10
+#: 3414d3db8642455eb39e28074f7fa544
 msgid "Core Workflow System"
 msgstr "سیستم هسته جریان کار"
 
-#: ../../source/features.rst:13 064ca12d52e044dba768481090760f8e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:13
+#: 1d1450c43bfb4cd68b4d8b4ca8089e0c
 msgid "Maker Pattern"
 msgstr "الگوی سازنده (Maker Pattern)"
 
-#: ../../source/features.rst:15 f8331a13853849748d392c1c4837f786
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:15
+#: 8dbe8498e99d48cd92d340b4f55573c6
 msgid ""
 "All calculations follow the **Maker pattern** for consistent, composable "
 "workflows:"
@@ -48,55 +53,67 @@ msgstr ""
 "تمام محاسبات از **الگوی سازنده** برای جریان‌های کار سازگار و ترکیب‌پذیر "
 "پیروی می‌کنند:"
 
-#: ../../source/features.rst:41 d5bf28799ac448589324526fdc48f2e2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:41
+#: 5db8c4d7a6d148128d5d6ed924c54c8a
 msgid "**Available Makers:**"
 msgstr "**سازنده‌های موجود:**"
 
-#: ../../source/features.rst:43 6f75eccd3ded4e25b2ab3bcfaa978a5a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:43
+#: 80cc78e8cb894bc9b4e200a40b5ddb5b
 msgid "``RelaxMaker`` - Fixed/variable cell relaxation"
 msgstr "``RelaxMaker`` - بهینه‌سازی سلول ثابت/متغیر"
 
-#: ../../source/features.rst:44 3c6eb6917d3b49f2894811748f620824
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:44
+#: b659bd15a3954a2ba8277285734ebccf
 msgid "``StaticMaker`` - Single-point energy calculations"
 msgstr "``StaticMaker`` - محاسبات انرژی تک‌نقطه‌ای"
 
-#: ../../source/features.rst:45 db45b90eb0fc4af7b22798c4201cdb4a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:45
+#: 2c51f0f3bfbe4f7e9bbae6f3a5b26ad1
 msgid "``BandStructureMaker`` - Electronic band structure"
 msgstr "``BandStructureMaker`` - ساختار نواری الکترونی"
 
-#: ../../source/features.rst:46 54ef15f1f3664d368dbf7379f226a3b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:46
+#: d8848d0e10084898a4fc5711d90ba137
 msgid "``PhononMaker`` - Phonon calculations with phonopy"
 msgstr "``PhononMaker`` - محاسبات فونون با phonopy"
 
-#: ../../source/features.rst:47 2fe98696b22743c38afbc4f3e61fa757
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:47
+#: 63162eb471984b54bf3c6b70e60fbc10
 msgid "``ElasticFlowMaker`` - Elastic constants"
 msgstr "``ElasticFlowMaker`` - ثابت‌های الاستیک"
 
-#: ../../source/features.rst:48 86c27758d13c44f394947bc6cb1249da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:48
+#: fa10e325459d423293e0d31ffcdf3ce0
 msgid "``SurfaceEnergyFlowMaker`` - Surface energy calculations"
 msgstr "``SurfaceEnergyFlowMaker`` - محاسبات انرژی سطح"
 
-#: ../../source/features.rst:49 b18da4ba4fb24c6b87325f40625a1414
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:49
+#: f93b5ace27b048e1bd738855e023b185
 msgid "``NebDirectFlowMaker`` - Nudged Elastic Band (Lua-based, SIESTA native)"
 msgstr ""
 "``NebDirectFlowMaker`` - نوار الاستیک تکان‌داده‌شده (مبتنی بر Lua، بومی "
 "SIESTA)"
 
-#: ../../source/features.rst:50 2b52cbc87fc84843a654759ce5593102
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:50
+#: aa392eaddc344225bbbde4d16792b693
 msgid "``AseNebFlowMaker`` - Nudged Elastic Band (ASE-based, no FLOS required)"
 msgstr ""
 "``AseNebFlowMaker`` - نوار الاستیک تکان‌داده‌شده (مبتنی بر ASE، بدون نیاز"
 " به FLOS)"
 
-#: ../../source/features.rst:51 aa27d4946bc1429dbce2d15ba9258841
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:51
+#: 04d2fe916f7343ea843f2f5fb00efda6
 msgid "``EOSMaker`` - Equation of State fitting"
 msgstr "``EOSMaker`` - برازش معادله حالت"
 
-#: ../../source/features.rst:54 5ba12cfd225b4c9389c59b55d9cf6de5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:54
+#: 003653dd051d4af18f5e15235848db72
 msgid "Powerups System"
 msgstr "سیستم Powerups"
 
-#: ../../source/features.rst:56 54e3371855a4495db315fc8ef352acaf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:56
+#: 4986da4888784c8aafa4887340c41a3a
 msgid ""
 "Powerups are runtime modification functions that allow you to dynamically"
 " update workflow parameters after job/flow creation. They work on "
@@ -107,21 +124,25 @@ msgstr ""
 "روی **Makers** (کارهای منفرد)، **Jobs** و **Flows** (جریان‌های کار "
 "چندمرحله‌ای) کار می‌کنند."
 
-#: ../../source/features.rst:59 742b48e69315434bac657840ae3c7c93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:59
+#: a04981c49dc447d3bc9216e6722384d9
 msgid "**When to use powerups vs other customization methods:**"
 msgstr "**چه زمانی از powerups در مقابل سایر روش‌های سفارشی‌سازی استفاده کنیم:**"
 
-#: ../../source/features.rst:61 af21136da7404328b0b465d70c559699
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:61
+#: d6614175d95a4aaf9950d779786f4fb3
 msgid "**user_params** (at creation): Set base parameters before applying presets"
 msgstr ""
 "**user_params** (در زمان ایجاد): تنظیم پارامترهای پایه قبل از اعمال "
 "پیش‌تنظیم‌ها"
 
-#: ../../source/features.rst:62 549ea4878e23482f97c3ccb76e57b359
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:62
+#: 9eea9990f5a642b49e8efe5434ffbe88
 msgid "**Tier presets** (at creation): Apply material-specific parameter sets"
 msgstr "**Tier presets** (در زمان ایجاد): اعمال مجموعه پارامترهای ویژه مواد"
 
-#: ../../source/features.rst:63 0ae8f914877f4a1891f6be9da32e8eba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:63
+#: 55419745de304dc392c9a5c0c1e3cf67
 msgid ""
 "**Powerups** (after creation): Runtime modifications, conditional "
 "updates, flow-wide changes"
@@ -129,96 +150,116 @@ msgstr ""
 "**Powerups** (پس از ایجاد): اصلاحات زمان اجرا، به‌روزرسانی‌های شرطی، "
 "تغییرات در سطح جریان"
 
-#: ../../source/features.rst:65 6779c12075074d05be7ecc7072cb3a3c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:65
+#: a34d11c4589b40d5819bc1335a97eb14
 msgid "See :doc:`makers-vs-flowmakers` for detailed comparison."
 msgstr "برای مقایسه دقیق به :doc:`makers-vs-flowmakers` مراجعه کنید."
 
-#: ../../source/features.rst:68 203d505247b74b86b995e94fdec3d848
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:68
+#: 8f1bb936320c4eeba2d7ebf3754292d0
 msgid "Available Powerup Functions"
 msgstr "توابع Powerup موجود"
 
-#: ../../source/features.rst:71 459428aa64ff4b268bf28ba9f34166f0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:71
+#: 6bfa16b253384504a2c9c1ce92916ddd
 msgid "1. update_user_siesta_settings"
 msgstr "۱. update_user_siesta_settings"
 
-#: ../../source/features.rst:73 02fc6d5a6cb84ad5879b8c25b60521b9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:73
+#: 7287504c10d1455385cb5a2df0f149ea
 msgid "Update FDF parameters in any job, flow, or maker."
 msgstr "به‌روزرسانی پارامترهای FDF در هر کار، جریان یا سازنده."
 
-#: ../../source/features.rst:75 ../../source/features.rst:226
-#: 2a7f4ee25ec347c5bc091d4c47d679b1 988d2cb8f8ae44ada193d45c8451cac1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:75
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:226
+#: 96ee6da368244a0caf3102f62935beeb bcff2fab333847318423c86b4297abf9
 msgid "**Signature:**"
 msgstr "**امضا:**"
 
-#: ../../source/features.rst:88 ../../source/features.rst:237
-#: 85159aa950b647629ad1c72d0c51cebb 978bbfcf79934066a2c6540d06a1d54b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:88
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:237
+#: da348ae778d248a68677ee4196b674ab f3061fdad615446d84fb821c36f98929
 msgid "**Parameters:**"
 msgstr "**پارامترها:**"
 
-#: ../../source/features.rst:90 00ffb6736e194818af2e3adf67d13e20
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:90
+#: f62c578e56da4d7e8533e5af5671ed95
 #, python-brace-format
 msgid ""
 "**siesta_updates**: Dictionary of FDF parameters (e.g., "
 "``{\"PAO.BasisSize\": \"DZP\", \"a2s_kpts\": [4,4,4]}``)"
 msgstr ""
 
-#: ../../source/features.rst:91 8e0ecddff57a4f03832f9a6f0bb562f9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:91
+#: 8186a32533ba4ce6bd0cb85f70388c85
 msgid ""
 "**name_filter**: Only update jobs whose name contains this string (e.g., "
 "``\"relax\"``)"
 msgstr ""
 
-#: ../../source/features.rst:92 8b262fc8d66146aaba993f276459fbfa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:92
+#: c327b428a0884b5eb41abc6ade540427
 msgid ""
 "**class_filter**: Only update jobs from specific maker classes (default: "
 "all SIESTA jobs)"
 msgstr ""
 
-#: ../../source/features.rst:93 363ec62e16404198b87e14099205329e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:93
+#: bf423c4422474adf8598ebdc21c3a44a
 msgid "**new_fdf_flags**: Raw FDF arguments (advanced users only)"
 msgstr ""
 
-#: ../../source/features.rst:94 c0fd441a0cbf4e168e7033ffbaf1916b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:94
+#: f631a71b8d044db385777fc5bed8e278
 msgid ""
 "**force_unknown**: Allow parameters not registered by any dataclass (use "
 "with caution)"
 msgstr ""
 
-#: ../../source/features.rst:96 4ecd9b8bc11d4f94adbde639569bb848
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:96
+#: 17bebcfa1d814ffc97cf389b142dcb07
 msgid "**Example 1: Update single job**"
 msgstr "**مثال ۱: به‌روزرسانی یک کار**"
 
-#: ../../source/features.rst:113 297d306f94e84b479970ce5bbcdb65d5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:113
+#: fed38f2ed8214b04903a84bdc2e0de24
 msgid "**Example 2: Update entire flow**"
 msgstr "**مثال ۲: به‌روزرسانی کل جریان**"
 
-#: ../../source/features.rst:130 da7d042bc7294adf9aafd9f4390aa750
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:130
+#: 5bd5fe91309941c89e3690c552f1a4ef
 msgid "**Example 3: Selective updates with name_filter**"
 msgstr "**مثال ۳: به‌روزرسانی انتخابی با name_filter**"
 
-#: ../../source/features.rst:153 5f97920a9a9147f49ebbd44326e09b35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:153
+#: 5e4e519877cb4d09bb248fd0d90d1529
 msgid "**Example 4: Conditional updates based on structure analysis**"
 msgstr "**مثال ۴: به‌روزرسانی شرطی بر اساس تحلیل ساختار**"
 
-#: ../../source/features.rst:179 f73055b4a354454a9fdeb54d5b088097
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:179
+#: 148f15b6dbf44618bbc3c4bfd9fdf429
 msgid "**Example 5: Using class_filter for targeted updates**"
 msgstr "**مثال ۵: استفاده از class_filter برای به‌روزرسانی هدفمند**"
 
-#: ../../source/features.rst:205 f14fea0ebacc43fc8a143e64ce7d64ea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:205
+#: 756fa769cc964e5f96bcb23107b43b91
 msgid "**Example 6: Using force_unknown for advanced FDF parameters**"
 msgstr "**مثال ۶: استفاده از force_unknown برای پارامترهای پیشرفته FDF**"
 
-#: ../../source/features.rst:222 f52fd722b9f24e67b561a78b54e92755
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:222
+#: 180d7e1de8e04b72bc55d08cc746329c
 msgid "2. add_metadata"
 msgstr "۲. add_metadata"
 
-#: ../../source/features.rst:224 c18f5620e1b04d3bb332224cedd3f014
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:224
+#: 2adda33b5cb3404e939b9c7056d29004
 msgid ""
 "Add custom metadata to jobs for tracking, organization, or post-"
 "processing."
 msgstr "افزودن فراداده سفارشی به کارها برای ردیابی، سازماندهی یا پس‌پردازش."
 
-#: ../../source/features.rst:239 1a4c916bf48e464f9afacb80ccb7aefe
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:239
+#: 69769906a5e34f76afa5aaaef013b076
 #, python-brace-format
 msgid ""
 "**metadata**: Dictionary of metadata to add (e.g., ``{\"project\": "
@@ -227,29 +268,35 @@ msgstr ""
 "**metadata**: دیکشنری فراداده برای افزودن (مثلاً ``{\"project\": "
 "\"catalyst_study\", \"batch\": \"2025-01\"}``)"
 
-#: ../../source/features.rst:240 841ce1360e6c4a219cdfb26ed3c07962
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:240
+#: a4be6d0c72c54fad9a8a9e6efbc558d2
 msgid "**name_filter**: Only add metadata to jobs whose name contains this string"
 msgstr ""
 "**name_filter**: فقط فراداده را به کارهایی اضافه کند که نام آنها شامل این"
 " رشته باشد"
 
-#: ../../source/features.rst:241 45575af3eb3f40ebb9c902cf76f1ffe8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:241
+#: e06bf1c7ffdd4311b4065407471b7995
 msgid "**class_filter**: Only add metadata to jobs from specific maker classes"
 msgstr "**class_filter**: فقط فراداده را به کارهای کلاس‌های سازنده خاص اضافه کند"
 
-#: ../../source/features.rst:243 35fb0514624246038ddd369ab6cb72b1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:243
+#: c15bd43242da4e3683f180b5487ab6c2
 msgid "**Example 1: Add metadata to single job**"
 msgstr "**مثال ۱: افزودن فراداده به یک کار**"
 
-#: ../../source/features.rst:259 068b8bc99a5b46f5bd61abdf4409781a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:259
+#: 8efbbdf9f566463cb5b8fb7e2a5e25f3
 msgid "**Example 2: Add metadata to flow**"
 msgstr "**مثال ۲: افزودن فراداده به جریان**"
 
-#: ../../source/features.rst:274 61578ae7e1c24c8bb783bfe38d88386b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:274
+#: f8e060458d134d649af8300bace51626
 msgid "**Example 3: Selective metadata with name_filter**"
 msgstr "**مثال ۳: فراداده انتخابی با name_filter**"
 
-#: ../../source/features.rst:298 57616274fd614f03b1fc964b34d63358
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:298
+#: 5531f42896f449b6a0bec3728cde53b4
 msgid ""
 "**Note**: Metadata is stored in job.metadata and can be queried later "
 "from database."
@@ -257,1962 +304,2540 @@ msgstr ""
 "**توجه**: فراداده در job.metadata ذخیره می‌شود و بعداً می‌توان آن را از "
 "پایگاه داده جستجو کرد."
 
-#: ../../source/features.rst:301 6eab5cc0bbc8483589233cfabab99715
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:301
+#: d974d7a084ad47eb9653d0195b4fafce
 msgid "Common Powerup Patterns"
 msgstr "الگوهای رایج Powerup"
 
-#: ../../source/features.rst:304 e178e09613614b99b1fd2bcfd78fe1c7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:304
+#: 3b48c98e957947f3b9b15458b9b02677
 msgid "Pattern 1: Flow-wide parameter updates"
 msgstr "الگوی ۱: به‌روزرسانی پارامترها در سطح جریان"
 
-#: ../../source/features.rst:306 a777d7654a344f74ad842b164d1fb64c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:306
+#: ba6d0985ba4a47dba01b3c5080e01ca1
 msgid "Apply the same settings to all jobs in a multi-step workflow:"
 msgstr "اعمال تنظیمات یکسان به تمام کارها در یک جریان کار چندمرحله‌ای:"
 
-#: ../../source/features.rst:330 59fef951ef8c4d2a8a393a99b1b126cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:330
+#: 0c0718aaf12a460dabec1592f93e5e82
 msgid "Pattern 2: Tiered parameter updates"
 msgstr "الگوی ۲: به‌روزرسانی پارامترها به‌صورت سطحی"
 
-#: ../../source/features.rst:332 374475c2d2a7475c97765ef3c3951cb8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:332
+#: ad5524803c5e44e18aa7f2076ad7e2ad
 msgid "Apply different settings to different stages of a workflow:"
 msgstr "اعمال تنظیمات مختلف به مراحل مختلف یک جریان کار:"
 
-#: ../../source/features.rst:367 11c88f309bad417998405837259a8c06
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:367
+#: 2372a0ecfb424a349b882dce9fdaef04
 msgid "Pattern 3: Conditional updates"
 msgstr "الگوی ۳: به‌روزرسانی‌های شرطی"
 
-#: ../../source/features.rst:369 7040e1c6903044f28b8e5d953f43993b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:369
+#: ffb9b82c769f4f2e9ec5cccf2ea6fea3
 msgid "Apply powerups based on runtime structure analysis:"
 msgstr "اعمال powerups بر اساس تحلیل ساختار در زمان اجرا:"
 
-#: ../../source/features.rst:417 83c188b67a6542e9ad0a0e73672c262c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:417
+#: 5ac2b75dd4d949f89b51a43c7aa12654
 msgid "Pattern 4: Maker-level updates"
 msgstr "الگوی ۴: به‌روزرسانی در سطح سازنده"
 
-#: ../../source/features.rst:419 63c75765ccd846e8a61cfacea6545910
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:419
+#: fd982a6c69fe4f9585f7f73d5e178b93
 msgid "Update a maker before creating jobs (useful for factory functions):"
 msgstr "به‌روزرسانی سازنده قبل از ایجاد کارها (مفید برای توابع کارخانه‌ای):"
 
-#: ../../source/features.rst:445 199fd181d17f4b2389ba21d517bc43ac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:445
+#: 5ad0868b4ff54775bb2f4a9a9acb4065
 msgid "Best Practices"
 msgstr "بهترین روش‌ها"
 
-#: ../../source/features.rst:447 e6a0f1d257f742098f6f1afe953e4f08
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:447
+#: bd5d445110dd4522bc50cd362bc38fd2
 msgid "✅ **Do:**"
 msgstr "✅ **انجام دهید:**"
 
-#: ../../source/features.rst:449 365cb8f8d4c94251aa45ffe6fea47a6e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:449
+#: 885a9b02c93c4c81ba4b27e0c94adad5
 msgid "Use powerups for runtime parameter modifications"
 msgstr "از powerups برای اصلاح پارامترها در زمان اجرا استفاده کنید"
 
-#: ../../source/features.rst:450 914f20590e8242e8ba3014de91ef9bb7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:450
+#: 7e0b528472dd494d8cda5eb31d71cb0d
 msgid "Apply powerups to flows for consistent settings across all jobs"
 msgstr "powerups را به جریان‌ها برای تنظیمات سازگار در تمام کارها اعمال کنید"
 
-#: ../../source/features.rst:451 96138525322846c8aaae8d0868d60995
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:451
+#: ad9ab7497b824621856bfa9f6d50f541
 msgid "Use ``name_filter`` for selective job updates"
 msgstr ""
 
-#: ../../source/features.rst:452 55ad0f382bed4300a358726806c17b49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:452
+#: 15bb9025b4574f1696c0fbf60e454877
 msgid "Combine powerups with metadata for tracking"
 msgstr ""
 
-#: ../../source/features.rst:453 7d1b01b2b3ed4d4d912e9b5105798462
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:453
+#: dc98e73c3280494d89384079622d5aa4
 msgid "Use conditional logic based on structure analysis"
 msgstr ""
 
-#: ../../source/features.rst:454 ded022b3ed724e4cb86a7dd0f82e894b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:454
+#: 8641dcfe68044fdcb4e10e7b34333cff
 msgid "Document why specific powerups are applied"
 msgstr ""
 
-#: ../../source/features.rst:456 f9a219499374418bb9c90581e9afda9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:456
+#: 1d53ba73c2e948c0bf5b668fda398b0f
 msgid "✗ **Don't:**"
 msgstr ""
 
-#: ../../source/features.rst:458 1b6f22967c854823975b0e29ee6f5bbf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:458
+#: ea376fd46fbb49fdb4515cc1278b6a4d
 msgid ""
 "Mix powerups with ``user_params`` for the same parameter (choose one "
 "method)"
 msgstr ""
 
-#: ../../source/features.rst:459 fb96e6e31f454f4db167d9523679b63e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:459
+#: 0a2fd2d8b3ef433189bf82569ff78ea7
 msgid "Apply conflicting powerups (last one wins)"
 msgstr ""
 
-#: ../../source/features.rst:460 da83253859ac49849ca03215ba0358aa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:460
+#: 22897f803a29496d82dd946378275ab9
 msgid "Use ``force_unknown=True`` unless you understand the FDF parameter"
 msgstr ""
 
-#: ../../source/features.rst:461 04fd36f7730646d1af6a3ef692f68649
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:461
+#: ca45b3ed0b21435a8889415472b1a4d4
 msgid ""
 "Forget that powerups return a copy (must reassign: ``flow = "
 "update_user_siesta_settings(flow, ...)``)"
 msgstr ""
 
-#: ../../source/features.rst:464 d3bee22494864219a320e9d2834773d2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:464
+#: 9067626af73d4704b86ccb665c2a52dc
 msgid "Powerups vs Other Customization Methods"
 msgstr ""
 
-#: ../../source/features.rst:467 a183eee745164816b987ff67fa359892
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:467
+#: f64a4394060e4bae8e8740bf1bdc5917
 msgid "Method"
 msgstr ""
 
-#: ../../source/features.rst:467 ac77516cd73f44ac825abe42aae89611
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:467
+#: 2ef5d47c8eb446598eac32bee6a58eee
 msgid "Timing"
 msgstr ""
 
-#: ../../source/features.rst:467 ../../source/features.rst:827
-#: 74768befad834c07b8c31328d33660a8 779533a4efb94ded8aa3b71318227b93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:467
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:827
+#: 69bc67fa1696466ab5786abdf350c271 d60bf2d356e943a68cfb356c66eae2ab
 msgid "Use Case"
 msgstr ""
 
-#: ../../source/features.rst:467 6e1ef7fc043e49d7bb84095021a62543
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:467
+#: 7acc86ee0b56407bb7853628eac5a6b2
 msgid "Example"
 msgstr ""
 
-#: ../../source/features.rst:469 b91d0b747c3c476f8a9f21b8ddb0ba28
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:469
+#: 8fa25d96609a484395a044d483c6b56e
 msgid "user_params"
 msgstr ""
 
-#: ../../source/features.rst:469 ../../source/features.rst:471
-#: 42466f8a592c4140a7f25ed88133ef77 7a4591bc527f473ca966e8bb5fda2926
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:469
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:471
+#: b48483c5c3734772823cd9f7de224740 f67ac543a3af4b3db6e23a47c17172df
 msgid "At creation"
 msgstr ""
 
-#: ../../source/features.rst:469 3d180e35f2e44228a73e20d374b15a42
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:469
+#: 5bdfefac784d4594addbc41236b67d28
 msgid "Base parameters"
 msgstr ""
 
-#: ../../source/features.rst:469 34ef961d70b64ff79a7740df6aaa7515
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:469
+#: 3cf6cb77853d4285a3a10bd12ad4ba6b
 msgid "Basis size, k-points"
 msgstr ""
 
-#: ../../source/features.rst:471 1e7deb1a2b6947d8960f68a92ae9359f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:471
+#: acacf43f7144496e987b69b5d85230b2
 msgid "Tier presets"
 msgstr ""
 
-#: ../../source/features.rst:471 a13e8bee966a43be94be10ec6c9fa689
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:471
+#: 198f8baf656e4e8ba95f798e19855d68
 msgid "Material-specific sets"
 msgstr ""
 
-#: ../../source/features.rst:471 a058181c26cd4158ad7a63d2bd54203c
-msgid "standard_relax"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:471
+#: f693cb2ac6dc4bec9f76c2f35548a876
+msgid "relax_standard"
 msgstr ""
 
-#: ../../source/features.rst:473 793f3030e63a4bb89bb1ee241c1822c9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:473
+#: fc079c31137c41f6adf34b61bb76fc44
 msgid "Powerups"
 msgstr ""
 
-#: ../../source/features.rst:473 79231508967544949ed6a396ffc8e541
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:473
+#: e1b3d5a363244f7ba2c7fd59704b6c88
 msgid "After creation"
 msgstr ""
 
-#: ../../source/features.rst:473 d134d15fcbab435c86a7e246da1d291c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:473
+#: e3181a5f20b04ca3ba855d0d480511c8
 msgid "Runtime modifications"
 msgstr ""
 
-#: ../../source/features.rst:473 092ead1cd8954df5b257080b327ef3fd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:473
+#: 231c641a87f640209be36f5a8e66caf1
 msgid "Conditional updates"
 msgstr ""
 
-#: ../../source/features.rst:476 5ca7c1778e604a1b86244791a8f922ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:476
+#: 02c556ad37c34f3a8ee9160c96d652f4
 msgid "See :doc:`makers-vs-flowmakers` for comprehensive comparison and examples."
 msgstr ""
 
-#: ../../source/features.rst:479 95791dffc2be41998830542da71603d9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:479
+#: ccb375b259b745e8af06c0d40510d259
 msgid "Complete Example: Multi-Stage Workflow"
 msgstr ""
 
-#: ../../source/features.rst:481 396dc4b4715341a5b94831cdde02b740
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:481
+#: 9c095de6961a4c1dad6c937ac33e99bc
 msgid "Here's a complete example showing powerups in a complex workflow:"
 msgstr ""
 
-#: ../../source/features.rst:535 0fe01c10c450468888d5512b82c03a36
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:535
+#: 118847329fc64258b779186959100478
 msgid "Restart Workflows"
 msgstr ""
 
-#: ../../source/features.rst:537 ../../source/features.rst:613
-#: ../../source/features.rst:715 ../../source/features.rst:814
-#: ../../source/features.rst:990 ../../source/features.rst:1103
-#: ../../source/features.rst:1240 2d43c1d8f86443ccbe231acc38ce047f
-#: 719b76337b084c1b8b0e168091a65f27 79891d778cc64fb9b495f21009216a04
-#: d66264b53d0b405993b1ad1bfbae1923 f37d0e4d74be48d788de052db46357b0
-#: f437007fb6d64356bfdb7bc866909b2d fcbda5622076494ea035039dec812a6c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:537
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:613
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:715
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:814
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1017
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1130
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1267
+#: 1e6c388c088348d0b48bd63edb44ee9e 644160a7df234339b89a08463f304131
+#: 673614a80a344ad4916d171a5c76ddc6 7ee15dcc7a16441da8b4a6e9e2dbc24f
+#: 897bc1fe0107420689be030836210cc9 988001669a1c47d49e76034f21065398
+#: bfcb216003e1464ca234b35c6a010b40
 msgid "**Status**: ✅ Production-ready"
 msgstr ""
 
-#: ../../source/features.rst:539 6e03d82adfd84471989aa1ec2149aa9d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:539
+#: 5ebe0add909f406c8457bd0d9729cd66
 msgid ""
 "Accelerate multi-stage calculations by reusing converged results from "
 "previous steps. Can reduce total computation time by **30-60%** for "
 "common workflows."
 msgstr ""
 
-#: ../../source/features.rst:542 c2225f4dc2434a0785a09fa61ee506d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:542
+#: bdd81672be604bf3b6f523a0ab9d1a98
 msgid "**Density Matrix (DM) Restart** - Faster SCF convergence:"
 msgstr ""
 
-#: ../../source/features.rst:563 4481ba728a2e47faaee96cf85f0110fb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:563
+#: 51f7574d514742d6a6be1083b56189d0
 msgid "**Geometry (XV) Restart** - Fewer relaxation steps:"
 msgstr ""
 
-#: ../../source/features.rst:590 ce959939554b443d9980263a55411707
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:590
+#: 5cada9059c5d4d9c8f877b6cb88fbe89
 #, python-brace-format
 msgid "**Files Copied** with ``copy_siesta_kwargs={\"restart_to_input\": True}``:"
 msgstr ""
 
-#: ../../source/features.rst:592 8cbeea136ebe4285ae19957cdfbd7037
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:592
+#: cf47b7345e7e4301a870bd185863f85a
 msgid "``siesta.DM`` - Density matrix"
 msgstr ""
 
-#: ../../source/features.rst:593 46feea93280144fcba3a706efe4ba2cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:593
+#: b3b76efe2268452e96dc4b04399d665a
 msgid "``*.STRUCT_OUT`` - Structure outputs"
 msgstr ""
 
-#: ../../source/features.rst:594 9c1038ea385a46b6b2bf693c2f6c524d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:594
+#: 99755160ba244669858cdb1678f6a819
 msgid "``*.xyz`` - Trajectories"
 msgstr ""
 
-#: ../../source/features.rst:595 fb282cbce86046c2be4756df99c3c0a8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:595
+#: 34f5f28ea9dc4bd3ba5bdd1dc556009d
 msgid "**NOT** ``siesta.XV`` - Must add via ``additional_siesta_files``"
 msgstr ""
 
-#: ../../source/features.rst:597 5f2d386c1c4643d181bffe73c78c9365
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:597
+#: 3e28e8eeb8714224acef98a10a42a95b
 msgid "**Common Use Cases**:"
 msgstr ""
 
-#: ../../source/features.rst:599 c0eda7173b9941459604889fb820bca4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:599
+#: 3e3f14bbd51f4ccdbe26a9e0dea4b451
 msgid "Coarse → Fine k-points (DM restart)"
 msgstr ""
 
-#: ../../source/features.rst:600 c94fba85c4ed4849bb6c2a5b3f55fe88
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:600
+#: e93bac62b743473db605b8eb776d49bd
 msgid "Loose → Tight relaxation (XV restart)"
 msgstr ""
 
-#: ../../source/features.rst:601 7736906abb1e4baf9d3661c8c5ab9959
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:601
+#: 1542ceee74494cc0952be8e41b8f1719
 msgid "DFT → DFT+U calculations (DM restart)"
 msgstr ""
 
-#: ../../source/features.rst:602 a6a487c30f5145afb89ed3a01407aa9b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:602
+#: fe6af384474d477a8f5d872e3cc399a2
 msgid "Phonon supercell forces (DM restart for each displacement)"
 msgstr ""
 
-#: ../../source/features.rst:604 a5a0dad0b22843ac9ffac40c12392c31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:604
+#: ee5a147425ef4de690526614d1529647
 msgid ""
 "📖 **Tutorials**: "
 "``tutorials/01-basics/05-workflows/02_restart_from_dm.py``, "
 "``03_restart_from_xv.py``"
 msgstr ""
 
-#: ../../source/features.rst:606 06c858e490d0436f8109923e6b25c009
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:606
+#: 79a657cf480f40368013d1f702e0148c
 msgid ""
 "📘 **Documentation**: :doc:`advanced-workflows` (Restart Workflows for "
 "Efficiency)"
 msgstr ""
 
-#: ../../source/features.rst:611 083225e2f4254c76870e9edf79cd2b31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:611
+#: 0736b3172471429ebb16c3cb83151c1d
 msgid "🎵 Phonon Calculations"
 msgstr ""
 
-#: ../../source/features.rst:615 9f8b23c58dff44b4b3f0c46f05c5013f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:615
+#: 37f92c17365d4cacb43a1d3b1baa0429
 msgid "Complete phonopy integration for vibrational properties calculations."
 msgstr ""
 
-#: ../../source/features.rst:618 ../../source/features.rst:720
-#: ../../source/features.rst:995 ../../source/features.rst:1245
-#: 3339aa88d0d5412f9fbf5fdb53c4b910 7fbb6fc5e4ff4fe4b43508acaf15462d
-#: cc129cb4c9bb4bb685489c5a0874ba56 fc2d24fc7b0d4f11ac0be99580e2f366
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:618
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:720
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1022
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1272
+#: 306b41f13d2d41209b626f2abae9977b b3dee900366f43cf95015e687f175dd0
+#: c6e23a7f3ac54b3491aeed663e449f6e cbc9711e6efd456e86ee4d85c19b926c
 msgid "Key Features"
 msgstr ""
 
-#: ../../source/features.rst:620 eeb6265264704a0e82e0b9e003b53aee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:620
+#: 60ffbcaf68f6477093104fb699771ea0
 msgid "✨ **Automatic Supercell Generation**"
 msgstr ""
 
-#: ../../source/features.rst:621 2213dd6da6d44a8995beea035573648c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:621
+#: 9c039f7a76ea47039711fb1c0889a601
 msgid ""
 "Intelligent supercell sizing based on ``min_length`` criterion (default: "
 "12 Å)"
 msgstr ""
 
-#: ../../source/features.rst:623 30c7a91ff9444470a403be9213727c6b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:623
+#: 7f61327425c841b9a13bf8113b5caf4e
 msgid "🔄 **Symmetry Reduction**"
 msgstr ""
 
-#: ../../source/features.rst:624 1ef8fa332b9040e69726e886cdb7bbda
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:624
+#: e153a2b0800d4b43a74dacd63541c407
 #, python-format
 msgid ""
 "Uses phonopy symmetry analysis to minimize displacement calculations "
 "(50-80% reduction)"
 msgstr ""
 
-#: ../../source/features.rst:626 33762527b1804c00b54cf400906a2a5a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:626
+#: 320b95d6953f4e2189aad3148d64b8ee
 msgid "📊 **Automatic Plotting** (4 plot types)"
 msgstr ""
 
-#: ../../source/features.rst:627 e7e7e4331ae6440db2f22e050919f39e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:627
+#: 71db02148e5e4f2f911295a50ed55fb8
 msgid "Phonon band structure with high-symmetry path"
 msgstr ""
 
-#: ../../source/features.rst:628 ff65326b25934a2fa644496395d812a0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:628
+#: 50a3cb9f13e44c40afe23f9837cbaf4a
 msgid "Phonon density of states"
 msgstr ""
 
-#: ../../source/features.rst:629 c0f226f478aa4d7b8ff9f4fb429ed1d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:629
+#: 32abe0a1cca749eda3a7219aeadfe374
 msgid "Thermal properties (Cv, S, F vs T)"
 msgstr ""
 
-#: ../../source/features.rst:630 af21bfc78e6f4877967559075bbc4a26
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:630
+#: 958854e9ff5d4502b5dddb9e3f12aeac
 msgid "Comprehensive text summary"
 msgstr ""
 
-#: ../../source/features.rst:632 6f7d8fffe2d1473d9cf3a171d5fd3e51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:632
+#: 0201282c30c74d019430193193a4a263
 msgid "🔥 **Thermal Properties**"
 msgstr ""
 
-#: ../../source/features.rst:633 d02c9462948142ec93c7814d28ac78c9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:633
+#: 981aecd6ec1049d0a246763f1add5a31
 msgid "Heat capacity, entropy, and free energy from 0-1000 K"
 msgstr ""
 
-#: ../../source/features.rst:636 ../../source/features.rst:759
-#: ../../source/features.rst:1161 ../../source/features.rst:1292
-#: 1dfa7d8142444856aa30c3d533c16000 56bae9f0efb0438fa6503e68257f504b
-#: 68b6a636a8074a0c9de6ebc3c46f224a 98fe1079b085455887a9155e78e7e712
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:636
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:759
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1188
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1319
+#: 19a634ef42364d30804edf766ddfabf3 3e261a35882644dba899ba3c60510f0d
+#: 43dd90d7164b476ca36bbce5d60e0ec9 eb458396082841789fecb551a641ccad
 msgid "Example Usage"
 msgstr ""
 
-#: ../../source/features.rst:663 4d01c6fb149c4bcf8049b21cd0337a2a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:663
+#: 582027b1cb5646b698bd4e44afc2603d
 msgid "Output Example"
 msgstr ""
 
-#: ../../source/features.rst:665 436801cb20304078994efb5e8b8abe80
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:665
+#: b640ddeda7e249958605a6a2e7706fce
 msgid "**Phonon Document Schema**:"
 msgstr ""
 
-#: ../../source/features.rst:686 18383b3dcd9344658ecb9c736a96350e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:686
+#: 8f82e757e0ce4d05b3ba16edf88c0c40
 msgid "Convergence Guidelines"
 msgstr ""
 
-#: ../../source/features.rst:692 223f2cc8cc474a469a3d132944e20338
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:692
+#: c5577a10b19b416bb573be87d1052810
 msgid "Parameter"
 msgstr ""
 
-#: ../../source/features.rst:693 e791e9b7b4e9466084e7c019342d63ee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:693
+#: 53a3c43437a4472f925824da27f3f782
 msgid "Recommendation"
 msgstr ""
 
-#: ../../source/features.rst:694 c64b68bb970844fbb4084f755bb80c0d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:694
+#: 358b73154672467aa09cbb9483de3c05
 msgid "Criterion"
 msgstr ""
 
-#: ../../source/features.rst:695 463989dae8624337ab5979eef0f5db31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:695
+#: 531d75fda5714f7380fd7e5c02a6ecbf
 msgid "Supercell"
 msgstr ""
 
-#: ../../source/features.rst:696 9357da0d0ea6424985a94382486b8fa1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:696
+#: 3f6b5c325dfa4c11a5718845620f4df6
 msgid "Vectors > 10-15 Å"
 msgstr ""
 
-#: ../../source/features.rst:697 c28608d9af3e41f583ffa248406080e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:697
+#: 8df0aa534fb34d2e8d2ba15fe1107612
 msgid "Frequencies converged within 0.03 THz"
 msgstr ""
 
-#: ../../source/features.rst:698 39e5b35008444e059e2b886edd257b8f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:698
+#: 1877189c50b44b93acc789fcb4998dc0
 msgid "Displacement"
 msgstr ""
 
-#: ../../source/features.rst:699 1e4947ab447c452ea0990b6f583f98f0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:699
+#: 35e97140927b4086b86b4f5300378164
 msgid "0.005-0.02 Å"
 msgstr ""
 
-#: ../../source/features.rst:700 dd322133106e49c8b3bb7710f4206411
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:700
+#: d4c410b933b04c5c9e3156d9a3d5800c
 msgid "Harmonic approximation valid"
 msgstr ""
 
-#: ../../source/features.rst:701 fbb2defa5ec14bf6851cac0c9808511b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:701
+#: 10f54bd9436341a99b7e9a4aebbd057e
 msgid "Force k-points"
 msgstr ""
 
-#: ../../source/features.rst:702 eddb9ed392ff49b1bac5056ba082314d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:702
+#: 6424f943ce04438fb3489793c44c9a71
 msgid "8×8×8 minimum"
 msgstr ""
 
-#: ../../source/features.rst:703 3d0a4d3202d04d5181021227d3c4db1c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:703
+#: 4d3ee47875b947a18902ce4ff8745545
 msgid "Forces accurate to < 0.001 eV/Å"
 msgstr ""
 
-#: ../../source/features.rst:704 f6d7eb2e5136458b99cbf01deee255b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:704
+#: 468d0834d04c457a82c1d0a4aaf9a397
 msgid "Mesh cutoff"
 msgstr ""
 
-#: ../../source/features.rst:705 6daa58dd6ec04e3cb41005b0d68d4ae4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:705
+#: 2dc7594326e141adbc1dd55aef3a7b72
 msgid "400-500 Ry"
 msgstr ""
 
-#: ../../source/features.rst:706 15f6feb3bb8543eaaafa60335e7f4b90
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:706
+#: 814167dd188b421599c856e565b15482
 msgid "Higher than relaxation"
 msgstr ""
 
-#: ../../source/features.rst:708 7f1f4fafc695499494e0ddd5b60cde9f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:708
+#: 52e920ed61f04f66af50e873d41fc53f
 msgid "📖 **Tutorial**: ``tutorials/16-phonon-calculations/``"
 msgstr ""
 
-#: ../../source/features.rst:713 548f77ff0c95455aa7f4791e974bf2ae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:713
+#: f75dea8048fe4756b739070b8a13a326
 msgid "🏔️ Surface Energy Calculations"
 msgstr ""
 
-#: ../../source/features.rst:717 413925988628486a94581b55db07d873
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:717
+#: 13440d4dad4745599ccbeede461199e8
 msgid ""
 "Multi-surface energy workflows with automatic termination discovery and "
 "analysis."
 msgstr ""
 
-#: ../../source/features.rst:722 3a36dc6cac45400fb826e516633eff24
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:722
+#: 0e5d1e7875a14de4818b3546215a1529
 msgid "🎯 **Layer-Based Specification**"
 msgstr ""
 
-#: ../../source/features.rst:723 c38427671ccd40fa830ef7009db1ca21
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:723
+#: 1400b0bf9da64a74b1b46d00e1de8aeb
 msgid ""
 "Specify slab thickness in atomic layers (e.g., \"4 layers\") instead of "
 "Ångströms"
 msgstr ""
 
-#: ../../source/features.rst:725 8d747654fd4147efbfb05ff518e612e1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:725
+#: 5e26240b287d481b932a82f3fe51c8e7
 msgid "🔍 **Automatic Termination Discovery**"
 msgstr ""
 
-#: ../../source/features.rst:726 c755a3680de44685929043df6e93e840
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:726
+#: b214294737a84a55aeaff25f14cf1253
 msgid "Explores all unique surface terminations with symmetry analysis"
 msgstr ""
 
-#: ../../source/features.rst:728 5d9696a834c943f2900acc2238b09827
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:728
+#: c768dbd86abd4177a64af901b6631add
 msgid "📊 **Multi-Surface Comparison**"
 msgstr ""
 
-#: ../../source/features.rst:729 3e43551f9dd6444aa3c8c548214ae909
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:729
+#: ca2e18e8e641419d899b33648d629d9f
 msgid "Calculate energies for multiple Miller indices in single workflow"
 msgstr ""
 
-#: ../../source/features.rst:731 6023438b731c4397901d7eeb8ac2ad62
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:731
+#: c86e086d4cb8433e82ddc6ab431fc86c
 msgid "📈 **Publication-Quality Plots**"
 msgstr ""
 
-#: ../../source/features.rst:732 74f64549bb2e47a0a7e8824bfcb25b96
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:732
+#: 16280da4a0894eb1a1eab7315818bf7d
 msgid "Bar chart of lowest energy per surface"
 msgstr ""
 
-#: ../../source/features.rst:733 ec32f350af754f76a0041048541df757
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:733
+#: 1455bfc8c33d4d389ca002eb431d31e0
 msgid "Scatter plot of all terminations"
 msgstr ""
 
-#: ../../source/features.rst:734 d71e6ff7ebe144c795544cc57a994a73
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:734
+#: 35bcb1efb4eb493f8fe48e7f78c8596a
 msgid "300 dpi, publication-ready"
 msgstr ""
 
-#: ../../source/features.rst:736 43f7ae5dbfba4f268e6224ec49af7a91
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:736
+#: c7540e87325646d3b4af2da4629604b2
 msgid "📄 **Comprehensive Summaries**"
 msgstr ""
 
-#: ../../source/features.rst:737 cd7e5fbb162b4787b1b825a5d5a685e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:737
+#: 6cc8cb36fb174d7f82635319c7adfdca
 msgid "Theoretical background and formulas"
 msgstr ""
 
-#: ../../source/features.rst:738 39a77bc8084a4d82a2443ea9fa1f9614
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:738
+#: d57f0aaffb82410b888568b0f1b831e6
 msgid "Surface energy comparison tables"
 msgstr ""
 
-#: ../../source/features.rst:739 ../../source/features.rst:1412
-#: 3b81e9f441bb4b4bb20fe64c3830af0b 764b10c0e1774be1af35aa06b63c03e1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:739
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1439
+#: 0c71948bab554ef0bb662d43f09bd6b9 1c471314b1a742aa920c8224d5784859
 msgid "Convergence recommendations"
 msgstr ""
 
-#: ../../source/features.rst:742 1243a67973384d6b9100504a6265f94f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:742
+#: 50f99f5cab0f42238eeff027cb7ee2fa
 msgid "Surface Energy Formula"
 msgstr ""
 
-#: ../../source/features.rst:744 fdb6d300e28a4958835e2abe1e66bc71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:744
+#: 8de468ad079641d894daac14d6cf4536
 msgid "\\gamma = \\frac{E_{\\text{slab}} - N \\times E_{\\text{bulk}}}{A}"
 msgstr ""
 
-#: ../../source/features.rst:748 33b83704de094a6781fdca0a990e0755
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:748
+#: 39386b9bd5df4ff29733242810ff9f94
 msgid "Where:"
 msgstr ""
 
-#: ../../source/features.rst:750 8df93d2e62ba40cc8ff388d5675385e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:750
+#: c068e8c86dd64e5291899a70b647e9a1
 msgid ":math:`E_{\\text{slab}}` = Total energy of the slab"
 msgstr ""
 
-#: ../../source/features.rst:751 963b928298af43208d19e67254184cee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:751
+#: 0dbb232d3f9b442da1aba1dbb4218b27
 msgid ":math:`E_{\\text{bulk}}` = Energy per formula unit of bulk"
 msgstr ""
 
-#: ../../source/features.rst:752 d790836d7a66400092888f485d8f45f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:752
+#: 9b26c852b1514f20bc542dc0408774ef
 msgid ":math:`N` = Number of formula units in slab"
 msgstr ""
 
-#: ../../source/features.rst:753 d88afc8baf8b4962b97fcceb330c185a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:753
+#: f249ca10a1594cf18c9bc4d808402928
 msgid ":math:`A` = Surface area"
 msgstr ""
 
-#: ../../source/features.rst:756 26f46c14c3fe411c803bc703868f442f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:756
+#: 978662b97d6848ec991919696dd8782c
 msgid ""
 "For symmetric slabs (same termination on both sides), divide by "
 ":math:`2A` instead of :math:`A`"
 msgstr ""
 
-#: ../../source/features.rst:801 2e5be039853e41999e0ec8949753a24d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:801
+#: 7e0d8c7c48c84bee93a28be9ac7be0e8
 msgid "Output Files"
 msgstr ""
 
-#: ../../source/features.rst:803 20c2950c51dc42398e0e7c6dbc7cc00b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:803
+#: b4693657044d4a988f79a5dd4b494427
 msgid "``multi_surface_comparison.png`` - Two-panel visualization"
 msgstr ""
 
-#: ../../source/features.rst:804 c97a01070b7e49bf8276416a01bd4858
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:804
+#: 306868e2935b4bb1b76a2564a496b1e7
 msgid ""
 "``multi_surface_summary.txt`` - Complete analysis with literature "
 "comparison"
 msgstr ""
 
-#: ../../source/features.rst:805 9a22d5eafbd54ada878da08fb3350a52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:805
+#: ae5cd0a7cc2c4287bf0fb5d3f8e63b0f
 msgid "Individual slab calculation directories"
 msgstr ""
 
-#: ../../source/features.rst:807 4ba3e79603e94e2c987e60b8c229c573
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:807
+#: aed46d9b2e6a4ae9a8db74f8744299f6
 msgid "📖 **Tutorial**: ``tutorials/17-surface-energy-calculations/``"
 msgstr ""
 
-#: ../../source/features.rst:812 42401bf99bcd4a77af07daa6104b8c9b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:812
+#: 4d8d596a9bb34677adbb56847109ce4a
 msgid "⚙️ Tier-Based Input Architecture"
 msgstr ""
 
-#: ../../source/features.rst:816 ab2a46df1a7f46bf8e5dff819bf20877
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:816
+#: f1e883f1cc0c4329ba546cadf914fa57
 msgid ""
 "Automatic activation of SIESTA parameter modules based on calculation "
 "complexity."
 msgstr ""
 
-#: ../../source/features.rst:819 c1f0e74cd9614081ad841d811219bb47
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:819
+#: 83be65a5362d42fd995450933e2aa393
 msgid "The Four-Tier Hierarchy"
 msgstr ""
 
-#: ../../source/features.rst:825 643d736716b442e8a6ae47ed47139725
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:825
+#: 81e2b0618f474125906a02a2f30a5881
 msgid "Tier"
 msgstr ""
 
-#: ../../source/features.rst:826 07ca70147b9042029ce5822228f62887
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:826
+#: a22ac43456394498902ef102b1e9f9ac
 msgid "Modules"
 msgstr ""
 
-#: ../../source/features.rst:828 4edb6f3d38de4224801057b3e57dd6f5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:828
+#: 598069cfabf3460c97bf89f549834532
 msgid "Performance"
 msgstr ""
 
-#: ../../source/features.rst:829 49ae11eddadc4dc28fceed4e61bc5e5d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:829
+#: b7f1100b3ef44e868cf8de1401e5398f
 msgid "**basic**"
 msgstr ""
 
-#: ../../source/features.rst:830 0a71e1bc6ace472880faf5664430dad0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:830
+#: 6730314ec5f74173a4755b26d0b3f9d7
 msgid "6"
 msgstr ""
 
-#: ../../source/features.rst:831 eba62b54c2324626a481b67fda794dec
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:831
+#: d8657c9e3fe24495bcbb2f54553b94d9
 msgid "Quick tests, workflow debugging"
 msgstr ""
 
-#: ../../source/features.rst:832 4c9b0a649c114015b578098afd477271
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:832
+#: 834b77eed2c94cd98cc2c5d1db844b5e
 msgid "~17 ms"
 msgstr ""
 
-#: ../../source/features.rst:833 e9c0e8f03cca497db001f7c929d8e4b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:833
+#: 187a3ef4cc9940199c17f2f4d4b031b4
 msgid "**intermediate**"
 msgstr ""
 
-#: ../../source/features.rst:834 ce0ff3a0f3fd4d4f8bdf6998b175e186
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:834
+#: be1dfcc26ce74a77a25b2f3831bc274d
 msgid "12"
 msgstr ""
 
-#: ../../source/features.rst:835 82e72fb53e854d3685121c3c3909c0be
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:835
+#: 472971808c344cedafb7161e2e515acf
 msgid "Standard calculations (DEFAULT)"
 msgstr ""
 
-#: ../../source/features.rst:836 fe9027cae089472985fc64194e390d49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:836
+#: 8cc691ac628d46b3bdea1395227e016a
 msgid "~20 ms"
 msgstr ""
 
-#: ../../source/features.rst:837 a712019620ef44978527bb383f0eabc0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:837
+#: 6ecfb229934f492ea247aa7533129b7c
 msgid "**advanced**"
 msgstr ""
 
-#: ../../source/features.rst:838 3270215d79f24f92a3005d671892293f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:838
+#: 633bfa3c3c424810b381a4cfc1bcbf29
 msgid "19"
 msgstr ""
 
-#: ../../source/features.rst:839 3392a108bb9d4602a54f055b23bf68e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:839
+#: 2e9b092b21a14484aa6dbcc2cb469e09
 msgid "Phonons, optical, DFT+U"
 msgstr ""
 
-#: ../../source/features.rst:840 488c6edc05a74763ab3240cb6d1fb354
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:840
+#: 5dff37e4e68247ab9231c630ed6b08e8
 msgid "~22 ms"
 msgstr ""
 
-#: ../../source/features.rst:841 1166eee3953a4e8fa4260e02466fa265
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:841
+#: e944a211f95747c5a077c3fe28ee6ca7
 msgid "**expert**"
 msgstr ""
 
-#: ../../source/features.rst:842 1e9af2ba3d684b45a01407cd3c6f148a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:842
+#: 2c054aa5bc504887ae3afa46ddfe08af
 msgid "24"
 msgstr ""
 
-#: ../../source/features.rst:843 f9a3530ab52d49ba9d2956328706c76e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:843
+#: 4cf94e9b34864dfd857779c36d63e671
 msgid "Performance tuning, large systems"
 msgstr ""
 
-#: ../../source/features.rst:844 e220e1d433184fc8a10781bb843ad7b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:844
+#: 84e3e42109de468390afa5c034360819
 msgid "~23 ms"
 msgstr ""
 
-#: ../../source/features.rst:847 db94e60bf21d4f72aae993c041853cde
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:847
+#: 0b7f83d2504d4a6fb282291fca7e5710
 msgid "Module Categories"
 msgstr ""
 
-#: ../../source/features.rst:849 85410a500d634a56a029faa986628dd5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:849
+#: 347afdc611164b81aefbadf8f9824c06
 msgid "**Basic Tier (6 modules)**:"
 msgstr ""
 
-#: ../../source/features.rst:851 4583c3d56d0844b4bb22f7953cbd02ef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:851
+#: a51b299405a34bfa82e47c1206638b67
 msgid "Pseudopotentials"
 msgstr ""
 
-#: ../../source/features.rst:852 f888fad4aa8647238aa176c9c01f9f90
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:852
+#: fa5e97fccb2943e8bca19a25efadcc9f
 msgid "Basis sets (PAO parameters)"
 msgstr ""
 
-#: ../../source/features.rst:853 eef9065f5b1b416d9a015526ad49bfb6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:853
+#: 5a4979e90e734881b77afca573159ac9
 msgid "Exchange-correlation functional"
 msgstr ""
 
-#: ../../source/features.rst:854 a92b37f1617e40e0b18a180fc6e071c6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:854
+#: 9924f5615d3b48d99f0f49e87a3005d9
 msgid "K-point sampling"
 msgstr ""
 
-#: ../../source/features.rst:855 0575bfd75efe4137a50c3358c8ea9da2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:855
+#: 70dbbdc8e493453bb261cad1a64c3b35
 msgid "Real-space grid cutoff"
 msgstr ""
 
-#: ../../source/features.rst:856 51a3c90b172d4e79bff85681414eebc2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:856
+#: e8add027415d457794f8bfa0b82fe4ae
 msgid "General system descriptors"
 msgstr ""
 
-#: ../../source/features.rst:858 aff89a6dc9a949ce8f99fe38f228e48a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:858
+#: f851d919b5c543a8aa8ec4c74548010d
 msgid "**Intermediate Tier (+6 modules)**:"
 msgstr ""
 
-#: ../../source/features.rst:860 b65a07a251244ddc9ef567b9c7383dd4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:860
+#: e9230fb5fbc1434a834265e9fa0ab9ea
 msgid "Spin polarization"
 msgstr ""
 
-#: ../../source/features.rst:861 16f64da17c0141ac8639873e3127b86b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:861
+#: 8557b5e2984a46f6856f6b26ff4e34f0
 msgid "SCF convergence parameters"
 msgstr ""
 
-#: ../../source/features.rst:862 3e64a9083c744194b71ec5bc388b8621
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:862
+#: 1e6fc675551447ca9504f495a37984a6
 msgid "Occupation functions"
 msgstr ""
 
-#: ../../source/features.rst:863 149561dee0de426f9efacd56dbbecbb7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:863
+#: e1f9b4c72a7949a38bca1bec99291dd0
 msgid "MD/relaxation settings"
 msgstr ""
 
-#: ../../source/features.rst:864 82cd65e50b6c4f0594bc1efb7fa75b31
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:864
+#: 2940b37a052c48f098d73f16e68a4066
 msgid "Atomic constraints"
 msgstr ""
 
-#: ../../source/features.rst:865 95d944b606eb4a99879045e30761f10c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:865
+#: 6c2dad9985f743eda71713961492894a
 msgid "Lua scripting"
 msgstr ""
 
-#: ../../source/features.rst:867 ece34965e80a492fa7adeca5ec589d03
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:867
+#: 62ddbb10e42c4f08ba0794689ff43600
 msgid "**Advanced Tier (+7 modules)**:"
 msgstr ""
 
-#: ../../source/features.rst:869 4b127382295743a5948a7bfd3f71dbb0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:869
+#: 6ac14d1b20c34ae9a88310e963fe1174
 msgid "Phonon calculations"
 msgstr ""
 
-#: ../../source/features.rst:870 de89cab804ff4a1db9f12d47f7311e86
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:870
+#: 1e772ee7d2234b759482f0c1f99a4c79
 msgid "Optical properties"
 msgstr ""
 
-#: ../../source/features.rst:871 59e6fd36e852416387c757c613a51b3a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:871
+#: 47163cad1439417b82ee6752a9423c6b
 msgid "DOS and band structure"
 msgstr ""
 
-#: ../../source/features.rst:872 1b726ef43b8d4c00a2a6e6970b3f0181
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:872
+#: 2b2a684a3f824413b053b0589360e9c8
 msgid "DFT+U parameters"
 msgstr ""
 
-#: ../../source/features.rst:873 8ffd306bd877496dbac342074c679f71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:873
+#: 1c753ca2d709424a861a0fae201c5861
 msgid "Electric fields, dipole corrections"
 msgstr ""
 
-#: ../../source/features.rst:874 29191e2fc4fa4a3890fd2e214f1a8aee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:874
+#: af09e3f1beb8477cbdecbd5b37738cad
 msgid "Advanced grid settings"
 msgstr ""
 
-#: ../../source/features.rst:875 8e8e11a9bb89460ba5a4de60e9769376
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:875
+#: 99a221a0c10748dda97d56d99c546770
 msgid "Charge density plotting"
 msgstr ""
 
-#: ../../source/features.rst:877 87361b9efc814033b7cc30e242bee777
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:877
+#: fb83b1c1387f43e58d1576db1eed9bf9
 msgid "**Expert Tier (+5 modules)**:"
 msgstr ""
 
-#: ../../source/features.rst:879 531843a397b848328a342610e23b7cee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:879
+#: c4f24c4ccb484a8c849951d310a37e90
 msgid "MPI parallelization"
 msgstr ""
 
-#: ../../source/features.rst:880 2b11124e9219458dbd675af364eacf2b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:880
+#: cb888f2dd9de474d92c32196d0d3387f
 msgid "Diagonalization methods"
 msgstr ""
 
-#: ../../source/features.rst:881 8df29bad5deb4e6092e40a9000aff46a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:881
+#: ebbfc40dbd0840b6b99c0da8f4cebadc
 msgid "Memory and I/O optimization"
 msgstr ""
 
-#: ../../source/features.rst:882 4ebce61a3d3c466fbbc98638143bcf37
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:882
+#: 2cddcc0b4ce84f22ab35f9be4c900034
 msgid "Matrix cutoffs"
 msgstr ""
 
-#: ../../source/features.rst:883 8572678a72ab4b3ebeca20f84fdf2f7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:883
+#: 71f74c5569cd44ea841e04e0f543760e
 msgid "NetCDF output options"
 msgstr ""
 
-#: ../../source/features.rst:886 f4dbf6159728474982e103185070249b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:886
+#: 64156089158a473ea750c5c324dc4094
 msgid "Direct Tier Usage"
 msgstr ""
 
-#: ../../source/features.rst:903 c4970a322e8d4a55a9d953e6a0f4a6ce
-msgid "Material-Specific Presets (14 Total)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:903
+#: aef42c6340264accb86a5411f006aef6
+msgid "Material-Specific Presets (32 Total)"
 msgstr ""
 
-#: ../../source/features.rst:905 259215add4a64547a83d10f9a4578bab
-msgid "Pre-configured tier + parameter combinations:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:905
+#: 0bf93a96aea5413fa527a63408f98c4e
+msgid "Pre-configured tier + parameter combinations across 10 categories:"
 msgstr ""
 
-#: ../../source/features.rst:907 246418d9a92843548443d6788c919a3e
-msgid "**Structural (3 presets)**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:907
+#: 1d1b1864e48e4c69b6c348d8c2d40dad
+msgid "**2D Materials (8 presets)**:"
 msgstr ""
 
-#: ../../source/features.rst:909 2facbc7b7bc74d80ac306524d7b5f8a4
-msgid "``basic_relax`` - Minimal parameters for quick tests"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:909
+#: 4680164f50464c789c94789221ddc99d
+msgid "``2d_insulator`` - 2D insulators (h-BN, silicene oxide) with z-vacuum"
 msgstr ""
 
-#: ../../source/features.rst:910 45b5044edaad49c78f98561f1ac110e9
-msgid "``standard_relax`` - Default production relaxation"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:910
+#: d2169108b9fb4591bfab7c566009ebf5
+msgid "``2d_magnetic`` - 2D magnetic materials (CrI3, VSe2)"
 msgstr ""
 
-#: ../../source/features.rst:911 80ae588b150c460bb5970b34d29cd563
-msgid "``high_accuracy_relax`` - Tight convergence"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:911
+#: 79bfe81e239f4ddbaa7c447fac210be5
+msgid "``2d_metal`` - 2D metallic materials (graphene, MXenes)"
 msgstr ""
 
-#: ../../source/features.rst:913 b05578f7699d42f1ac8eb079903e2add
-msgid "**Surface (2 presets)**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:912
+#: 5aef7038c90d458ba737d09bd784015d
+msgid "``2d_metal_rough_auto`` - 2D metallic with automatic settings"
 msgstr ""
 
-#: ../../source/features.rst:915 0f795b9504144488bb46e9a4f02d61e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:913
+#: 396a3f1c4d1a4584896976c4b6cf94aa
+msgid "``2d_optical`` - 2D materials for optical properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:914
+#: c08e761177914680bcbeaeef90b60312
+msgid "``2d_screening`` - Fast 2D material screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:915
+#: 90bac7ac812942d7a03050a0296252f5
+msgid "``2d_semiconductor`` - 2D semiconductors (TMDs, h-BN)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:916
+#: c8d5c63a03dc4e3eaeb5ca5f612b3f4d
+msgid "``2d_vdw`` - 2D materials with van der Waals corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:918
+#: 0858094ce21543feaee97a8c05688998
+msgid "**Structural (5 presets)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:920
+#: 70b4bc12fed842adaabfcb78a635ff84
+msgid "``relax_dirty`` - Fast testing (basic tier, minimal parameters)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:921
+#: 1a94b7253b50460aa250b27ffcb8e8ae
+msgid "``relax_standard`` - Standard production relaxation (intermediate tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:922
+#: 7d5c1711703e42ca9b9dc91cd7797613
+msgid "``relax_high_accuracy`` - High-accuracy structural relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:923
+#: ef6dfa3183e8463789a01cfa68fee90d
+msgid "``relax_bulk_metal`` - Bulk metallic systems with electronic temperature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:924
+#: d8de8234132e44e5996a8e6222ee0ed4
+msgid "``relax_bulk_semiconductor`` - Bulk semiconductor systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:926
+#: e71cfedd317f42759a244c13a604f8ff
+msgid "**Surface (3 presets)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:928
+#: 49062b8c8b8d4c028cc4fddeb13eff5e
+msgid "``adsorbate_screening`` - Fast adsorbate screening (basic tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:929
+#: 6bcf4f4bb27f449a9c4fb8005dc4ba2c
 msgid "``surface_metal`` - Metallic surfaces (MP smearing, tight SCF)"
 msgstr ""
 
-#: ../../source/features.rst:916 5dd19bbb582541fa97201cb374f59261
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:930
+#: 3d5477308ff340a8b45e069dd6dfdfc9
 msgid "``surface_semiconductor`` - Semiconductor surfaces (dipole corrections)"
 msgstr ""
 
-#: ../../source/features.rst:918 6bfb4004d7324f87b5f811f8b3962dd3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:932
+#: 306d18ffc8474d09a910b5a545c60051
 msgid "**Magnetic (2 presets)**:"
 msgstr ""
 
-#: ../../source/features.rst:920 a592dc6c79464ce5bc40919661103f43
-msgid "``magnetic_2d`` - 2D magnetic materials"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:934
+#: 068d558fa9b94ac9a064531cf07aedd9
+msgid "``magnetic_2d`` - 2D magnetic materials (spin + constraints)"
 msgstr ""
 
-#: ../../source/features.rst:921 e9bd2db38c6a463594cb60bfabc9bf1a
-msgid "``magnetic_correlated`` - DFT+U for strongly correlated systems"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:935
+#: ded7d021da164876bec37e89923930b4
+msgid "``magnetic_correlated`` - Strongly correlated magnetic systems (DFT+U)"
 msgstr ""
 
-#: ../../source/features.rst:923 81c2837727f74b369dadb88ac5748e4e
-msgid "**Phonon (2 presets)**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:937
+#: 893eb936bbde4ed4a7bc3daf05f043a5
+msgid "**Phonon (3 presets)**:"
 msgstr ""
 
-#: ../../source/features.rst:925 88bd23c9b3f84957b6ee9744c5492934
-msgid "``phonon_standard`` - Standard phonon calculations"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:939
+#: 519cecc34860447a862d049636d416e9
+msgid "``phonon_dirty`` - Fast phonon testing"
 msgstr ""
 
-#: ../../source/features.rst:926 f7e8bdd1769e4da38d1def41b82e7417
-msgid "``phonon_high_accuracy`` - Tight forces for accurate phonons"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:940
+#: 4934f22625984600a29ccbdd01c8805f
+#, fuzzy
+msgid "``phonon_standard`` - Standard phonon calculations (advanced tier)"
+msgstr "``PhononMaker`` - محاسبات فونون با phonopy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:941
+#: 95b580533bf94b569867685d453f15bd
+msgid "``phonon_high_accuracy`` - High-accuracy phonons (tight forces)"
 msgstr ""
 
-#: ../../source/features.rst:928 73571c6f130741c69cbc7f2436c4b516
-msgid "**Optical (2 presets)**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:943
+#: 39ac2af769784b8d803e87ea3ea2f762
+msgid "**Defects (5 presets)**:"
 msgstr ""
 
-#: ../../source/features.rst:930 15827b51ecc4486fb8965d7a6342661b
-msgid "``optical_response`` - Optical absorption, dielectric"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:945
+#: acce47a57c554776b387d1fbb3f8bee4
+msgid "``defect_dirty`` - Quick defect screening (basic tier)"
 msgstr ""
 
-#: ../../source/features.rst:931 74bf27bf2ee4416e97313380914fa798
-msgid "``band_structure`` - Electronic band structure and DOS"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:946
+#: 4158642f1e7b4f3ca9147108a5912991
+msgid "``defect_standard`` - Standard defect calculations"
 msgstr ""
 
-#: ../../source/features.rst:933 b91dbc3bb4644737a4e8f808ac211d6b
-msgid "**Performance (2 presets)**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:947
+#: 2c9a6094fb56498d95730941a7aae1c9
+msgid "``defect_accurate`` - High-accuracy defect calculations"
 msgstr ""
 
-#: ../../source/features.rst:935 99dd9b04f53242e4a06e09f467124f95
-msgid "``large_system`` - Linear-scaling for >100 atoms"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:948
+#: 3e6f31bf8cb54639b4d468f088a77890
+msgid "``defect_metal`` - Defects in metallic systems"
 msgstr ""
 
-#: ../../source/features.rst:936 688224a92a804632aae21de9e3254578
-msgid "``parallel_hpc`` - MPI optimization for HPC"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:949
+#: aeedd17da0fa45f7a368d3bd8ba7555f
+msgid "``defect_oxide`` - Defects in oxide materials"
 msgstr ""
 
-#: ../../source/features.rst:938 17115808538b4b4ba5a67be164117cca
-msgid "**Testing (1 preset)**:"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:951
+#: 333e25d82d5d4eb3a0ff4c15beebe505
+msgid "**Electronic (1 preset)**:"
 msgstr ""
 
-#: ../../source/features.rst:940 97b01616eb7543be9968c68a79178660
-msgid "``convergence_test`` - All modules for comprehensive testing"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:953
+#: efdd600321da49998aabb69b4c81ee4b
+#, fuzzy
+msgid "``band_structure`` - Electronic band structure and DOS (advanced tier)"
+msgstr "``BandStructureMaker`` - ساختار نواری الکترونی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:955
+#: 193ab650389e42e39ed71d5e3d8a660c
+msgid "**Optical (1 preset)**:"
 msgstr ""
 
-#: ../../source/features.rst:943 4c2d41e0754c4825b8a69c6087c10f41
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:957
+#: ffc2c9a99dd04eddb9a5e7659d56a050
+msgid "``optical_response`` - Optical absorption and dielectric properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:959
+#: e553cfe0034a462e9b81965bea34dcd9
+msgid "**Molecular (1 preset)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:961
+#: 8ea951cb55cb49a1b84a54f63b93bc56
+msgid "``molecule_gas_phase`` - Isolated molecules in gas phase"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:963
+#: c512dd9dee8243009398283a4c1e3c37
+msgid "**Performance (3 presets)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:965
+#: daaade30ae7c45b18edcf5ef4fb8ef68
+msgid "``convergence_test`` - All modules for comprehensive testing (expert tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:966
+#: a8bbcd3a554d4d82982e36dc0a52b582
+msgid "``large_system`` - Linear-scaling for systems >100 atoms (expert tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:967
+#: 4846c9b8cd7048e09d27846cff4c82cc
+msgid "``parallel_hpc`` - MPI optimization for HPC (expert tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:970
+#: d1980f5ef04f4c6683f8216eae26f178
 msgid "Preset Application"
 msgstr ""
 
-#: ../../source/features.rst:969 ../../source/features.rst:1219
-#: ../../source/features.rst:1354 0e9edcb64d4141fc81390efd1e72e9db
-#: 1b33d8448e4b42a981e813a671344212 5b3cb90637624672b5938a698f7b4d36
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:996
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1246
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1381
+#: 726e41eda1454b7ca5601f59b470cf26 874a3eb442be435a99f95d8fca3482a4
+#: d088c8fc7281408eac129a1c8695eaee
 msgid "Benefits"
 msgstr ""
 
-#: ../../source/features.rst:971 447b1f6a6e3e47488b41407cc0a6f60a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:998
+#: ffb79abb83374da388b0ab79a04c45f0
 msgid "✅ **For Users**:"
 msgstr ""
 
-#: ../../source/features.rst:972 8db2ab9242d74cecb3f7d763fa88950f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:999
+#: ea944bf5b6d142049167153e439688b8
 msgid "No manual module initialization needed"
 msgstr ""
 
-#: ../../source/features.rst:973 932707ed4d404a5589ec5bfc3b2a2c22
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1000
+#: 8de1c86e187b4ce188ae8ef302d0fdcf
 msgid "Material-specific recommended settings"
 msgstr ""
 
-#: ../../source/features.rst:974 2d89b5a36e304a31941b64c169cc9f6b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1001
+#: 6a799aecdf5f436ba6a6c83d5ad618e7
 msgid "Easy parameter customization"
 msgstr ""
 
-#: ../../source/features.rst:975 fd8bba37bed14d0fbf3f379d3c8e7efb
-msgid "All 24 modules work with powerups"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1002
+#: 6ac6f7391be245c6ae528c8b7aabf64c
+msgid "All 33 dataclass modules work with powerups"
 msgstr ""
 
-#: ../../source/features.rst:977 ab0d8b54816146b7a6c8e638b9dd1b7c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1004
+#: 6c6225ab4b2f488ba341eda59cd771ac
 msgid "✅ **For Developers**:"
 msgstr ""
 
-#: ../../source/features.rst:978 287d64b52d8b488abdd232acbb4378c1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1005
+#: e7a84e3b541f4e2688f7910602b5b808
 msgid "Easy extension (registry-based)"
 msgstr ""
 
-#: ../../source/features.rst:979 d0118ef9e0b141cc8b73d8a328160ab3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1006
+#: 1b39231c52994375a674e14bd32c6c66
 msgid "Clear organization by complexity"
 msgstr ""
 
-#: ../../source/features.rst:980 eb91df7b997d40369d9f7f3f986e80ba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1007
+#: 1efb30e9bae84dcc88e9d91eec73b40c
 msgid "Automatic dependency ordering"
 msgstr ""
 
-#: ../../source/features.rst:981 44441e23c96b4dfd8d77b3064b890e07
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1008
+#: a69b3703d339401fbde3c5a203433422
 msgid "Graceful fallback handling"
 msgstr ""
 
-#: ../../source/features.rst:983 ec7560489a774536ab7cac71abd61c18
-msgid "📖 **Tutorial**: ``tutorials/18-tier-based-calculations/``"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1010
+#: 45f7d4a30bd34bb9b63e726ce12280e0
+msgid ""
+"📖 **Tutorials**: ``tutorials/03-advanced-features/01-tier-system/`` and "
+"``06-tier-presets-customization/``"
 msgstr ""
 
-#: ../../source/features.rst:988 c73e07c7782c4b0d82db6ec0e7816475
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1015
+#: d075e8b931c2447db2814a00daef15bb
 msgid "🧲 Magnetic Calculations"
 msgstr ""
 
-#: ../../source/features.rst:992 5736eb7beedf4cc6997e3736ff5773f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1019
+#: 008c267bb7144e8aa709232f3adc9b7d
 msgid ""
 "Comprehensive support for spin-polarized calculations with automatic "
 "magnetic moment initialization."
 msgstr ""
 
-#: ../../source/features.rst:997 424fad7880084c2c90be3ee00752a935
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1024
+#: dc63957f55ba4f4aac9d44b4580d6219
 msgid "✨ **Automatic DM.InitSpin Generation**"
 msgstr ""
 
-#: ../../source/features.rst:998 bf4f94720d9b40fca50de82107a72cc9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1025
+#: cc6c693f50824d7093543774c1d8da6f
 msgid ""
 "Magnetic moments automatically detected from structure properties and "
 "converted to SIESTA format"
 msgstr ""
 
-#: ../../source/features.rst:1000 92533112b9e144ee82c43268d2604593
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1027
+#: ecfd8b1cbc704afdb9da6dc2cc938b7d
 msgid "🔍 **Magnetic Element Detection**"
 msgstr ""
 
-#: ../../source/features.rst:1001 90cc30fcd3d44ac0a4098df06ef4a21b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1028
+#: cdd39e01c7c84e51bb9daaf6aec39a26
 msgid ""
 "Auto-detection of 3d (Cr, Mn, Fe, Co, Ni, Cu), 4d (Mo, Tc, Ru, Rh), and "
 "lanthanide elements"
 msgstr ""
 
-#: ../../source/features.rst:1003 641dbdd2571747f58cfa776a636498e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1030
+#: 8bc54aae347849ee97280939683fab87
 msgid "📋 **Descriptive Comments**"
 msgstr ""
 
-#: ../../source/features.rst:1004 632dc7cd85d44eb2b2ab1b3e8c76404a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1031
+#: cbf3247a55c24feab4bab2c3ec9017cb
 msgid ""
 "Each DM.InitSpin line includes species name, atom number, and Cartesian "
 "coordinates"
 msgstr ""
 
-#: ../../source/features.rst:1006 d564b3bf57ff47d6b3db0d94c0a3a97f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1033
+#: f8fd3684388a414199f2b8ef21547193
 msgid "🎯 **Magnetic Ordering Support**"
 msgstr ""
 
-#: ../../source/features.rst:1007 aac5a0ebfbb543ba89399b76b3e299d0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1034
+#: 5c98bfdb8fee40eb9d1a233e13a88b72
 msgid "Ferromagnetic (FM), antiferromagnetic (AFM), and custom ordering patterns"
 msgstr ""
 
-#: ../../source/features.rst:1010 cf2eacf0e0d2444886dd1e5ed9ed9d9e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1037
+#: eb1aa5030d1d47558082eee3724164f7
 msgid "Automatic DM.InitSpin Generation"
 msgstr ""
 
-#: ../../source/features.rst:1012 20070613c8644de5b007b8b4e5b3999a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1039
+#: 5dc6d19cfe344bc0bc9267907eabbb34
 msgid ""
 "The SpinSettings dataclass automatically generates SIESTA's DM.InitSpin "
 "block from pymatgen structure properties:"
 msgstr ""
 
-#: ../../source/features.rst:1040 ../../source/features.rst:1318
-#: 71fccfac375447eeb326ee7196ec0948 db08d11c57054192b66abd898dba654e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1067
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1345
+#: f165853c65814b06a19c489da86ced84 f29c516acfbf4c2d99ad04ad6ad140bc
 msgid "Generated FDF Output"
 msgstr ""
 
-#: ../../source/features.rst:1042 bd191c79c65f4e11b584526d7cc9a9cf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1069
+#: c217d8cc26d8400f86005d59d8aa1617
 msgid "The DM.InitSpin block now includes informative comments:"
 msgstr ""
 
-#: ../../source/features.rst:1052 c5f205403c544571913145391ef29c1e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1079
+#: a5f26a1dab2e4ca0b137660f9c10c09a
 msgid "Comments show:"
 msgstr ""
 
-#: ../../source/features.rst:1053 ef689fcae78e457c8ba43009b8bf4f85
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1080
+#: fd9041c49678442d902da2af7be221da
 msgid "Species name (Fe, Cu, Ni, etc.)"
 msgstr ""
 
-#: ../../source/features.rst:1054 59a590c55f1441d08d6ee820c597adfc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1081
+#: b2741c157b6143968935166a68640577
 msgid "Atom number (1-indexed)"
 msgstr ""
 
-#: ../../source/features.rst:1055 d746c5aa2f85467aa91e2927512fdea7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1082
+#: 237055876ec94daea9dce9db7f58e0a2
 msgid "Cartesian coordinates in Angstroms"
 msgstr ""
 
-#: ../../source/features.rst:1057 20675d3da1d740d588b9d2ec908f8717
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1084
+#: 68122a2e790e4a9db8292a833f181c08
 msgid "This makes it easy to:"
 msgstr ""
 
-#: ../../source/features.rst:1058 c284c90365a64bff8ed867d09cbc2fce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1085
+#: e40b7fe0377a40e8accb3e5973042182
 msgid "Identify which atoms have magnetic moments"
 msgstr ""
 
-#: ../../source/features.rst:1059 57f6eabc86504a3f82fa625b4c2d6812
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1086
+#: c7f29d06a283406a891c95e075d9a8d7
 msgid "Verify magnetic ordering patterns (FM/AFM)"
 msgstr ""
 
-#: ../../source/features.rst:1060 d24c89fba54745289c0f8c34db9c9f2f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1087
+#: 03cf52ec3f494c379d66bc7bc51bc520
 msgid "Debug unexpected magnetic configurations"
 msgstr ""
 
-#: ../../source/features.rst:1061 b0985eac54574a9a85b74f4506638c53
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1088
+#: 865a498d69c047f2b7fe87d20239e44a
 msgid "Locate atoms in complex structures"
 msgstr ""
 
-#: ../../source/features.rst:1064 3dd7c5c983d14f5499b8b557ec92becf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1091
+#: e6abff74befd410e96d6c7156d0e8f6a
 msgid "Supported Magnetic Elements"
 msgstr ""
 
-#: ../../source/features.rst:1066 ce29912a8782475b98865a881de7fc64
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1093
+#: 5a74db8981234c41addc4b1456c67117
 msgid "**3d Transition Metals:**"
 msgstr ""
 
-#: ../../source/features.rst:1067 ee9d41a9727e4646b71ad63a403726f3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1094
+#: fe0a41f5f25b4432a609a39b48f730cf
 msgid "Cr (4.0 μB), Mn (5.0 μB), Fe (4.0 μB)"
 msgstr ""
 
-#: ../../source/features.rst:1068 6e4c15344c9845d9bc2e9a1356ddbd24
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1095
+#: d1faeaaabc584655a82d78b4dbb3432e
 msgid "Co (3.0 μB), Ni (2.0 μB), Cu (0.6 μB)"
 msgstr ""
 
-#: ../../source/features.rst:1070 d116c0f6ab4b44a1a5fb2508ed250649
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1097
+#: b7650eb36ab24e1eb9af377e13c6dcea
 msgid "**4d Transition Metals:**"
 msgstr ""
 
-#: ../../source/features.rst:1071 7dfb70d4eca84c3983d9ae4b4618d1e8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1098
+#: 6aa77e9c3e9447709f7b95696b745778
 msgid "Mo, Tc, Ru, Rh (2.0 μB default)"
 msgstr ""
 
-#: ../../source/features.rst:1073 bcea881d0d254ab092f24b6209247a17
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1100
+#: c732756204a74d8aa32f033e343b824f
 msgid "**Lanthanides:**"
 msgstr ""
 
-#: ../../source/features.rst:1074 ee160ec227944efb89516b0c1c550874
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1101
+#: e215a760479e45199f997193ef3d478f
 msgid "Gd (7.0 μB), other 4f elements (configurable)"
 msgstr ""
 
-#: ../../source/features.rst:1077 f030ac6df7904ab5acb2acca2a1ded6b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1104
+#: e66330cee83e4ce8874a4d85decc89dc
 msgid "Magnetic Ordering Options"
 msgstr ""
 
-#: ../../source/features.rst:1079 bc5d868920fa4b958559e11a0ccdb60e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1106
+#: ad84f7924492421083b1c7424b990a48
 msgid "**Ferromagnetic (FM)** All magnetic moments aligned parallel (same sign)"
 msgstr ""
 
-#: ../../source/features.rst:1082 2db0ff71e5d44d4ca6c4fb9fb0f607cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1109
+#: ba206329b39a45009db1bcbef9388c95
 msgid "**Antiferromagnetic (AFM)** Alternating spin directions (opposite signs)"
 msgstr ""
 
-#: ../../source/features.rst:1085 2e927c006e5a473fac66caf755de7b68
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1112
+#: 8b552fc4ea8c42ef9eac51a6179cff7d
 msgid "**Custom** Preserve exact signs from structure.magmom property"
 msgstr ""
 
-#: ../../source/features.rst:1089 ../../source/features.rst:1108
-#: 0dd5952b933e4b5caf21ce321485fd6d c1e58f44a0f742ef8382adff102c4d05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1116
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1135
+#: 0d8a22bde0e2428bbd75a386b086d3d7 dd44122435a94201806f4ee50fa5c506
 msgid "Architecture"
 msgstr ""
 
-#: ../../source/features.rst:1091 82a6eee979c2415695915651fa664703
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1118
+#: 208c7059eec2461d92679e0037aed252
 msgid ""
 "**Single Source of Truth**: DM.InitSpin generation is exclusively handled"
 " by the SpinSettings dataclass, ensuring:"
 msgstr ""
 
-#: ../../source/features.rst:1092 73eef0f503af4fca9bbb591a30e7ddcf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1119
+#: 9a44e9369d404894986a9cafd31e343f
 msgid "Consistent behavior across all workflows"
 msgstr ""
 
-#: ../../source/features.rst:1093 0da641d5be384b0f9c65b5bd9191e4d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1120
+#: 09cd4dad70bf4ecd9dc1327d36250d0f
 msgid "No duplicate generation logic"
 msgstr ""
 
-#: ../../source/features.rst:1094 9a5955e7ad93490db2f84d56e028d8d5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1121
+#: e101c5fa0081499eb602035fb3852055
 msgid "Clean architectural separation"
 msgstr ""
 
-#: ../../source/features.rst:1096 e7a1bf2bf78946068fcc152a6fa275b2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1123
+#: 7b62e5b18ac0492d80b6c75a302770dd
 msgid ""
 "📖 **Tutorials**: ``tutorials/07-advanced-features/16-magnetic-"
 "calculations/``"
 msgstr ""
 
-#: ../../source/features.rst:1101 032c476ecc0e4604889841c568222a4e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1128
+#: cc3038296cb54db2b6e7c2fed7faf885
 msgid "🛡️ Custodian Error Handling"
 msgstr ""
 
-#: ../../source/features.rst:1105 788ae24380e746d6959019fb85fa85e0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1132
+#: b8c43e1537d04a04871bb55a33310a00
 msgid ""
 "Automatic error detection and recovery using the "
 "MaterialsProject/custodian library."
 msgstr ""
 
-#: ../../source/features.rst:1110 c248b7cadb2043718789df9506634444
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1137
+#: 75d17ccca6454aba84021e3b96789dc2
 msgid "Built on the battle-tested **custodian library** from MaterialsProject:"
 msgstr ""
 
-#: ../../source/features.rst:1112 dccbe57ccf28472da69aadbb782fb5fc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1139
+#: 0b601bc15e1347f29eef719d9a6bfacb
 msgid "10+ error types automatically detected"
 msgstr ""
 
-#: ../../source/features.rst:1113 866be8b1087f40539f479783e5debb30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1140
+#: d510fc1d6cdf4121a22a259b20c09a67
 msgid "Progressive correction strategies"
 msgstr ""
 
-#: ../../source/features.rst:1114 ac44bf9718bc4f299555e175cbd14f51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1141
+#: 672179a618f841c1b0fa71e397477060
 msgid "Automatic JSON logging (``custodian.json``)"
 msgstr ""
 
-#: ../../source/features.rst:1115 6b612d6be4b04aa98d3c4e0ae99c0544
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1142
+#: 1505a0935c8b44bc9fd710cb323c9529
 msgid "MSONable serialization for jobflow"
 msgstr ""
 
-#: ../../source/features.rst:1116 5a6b849973d34f0cae69718f737e2328
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1143
+#: 983b5b980c024698a1f90e1759f6b6cd
 msgid "Validation framework for output quality"
 msgstr ""
 
-#: ../../source/features.rst:1119 4baed6b8709340d48ad6a64873d8cb16
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1146
+#: d793340d003b4178aa93351255db74df
 msgid "Error Types Detected"
 msgstr ""
 
-#: ../../source/features.rst:1121 ea19fa48b2fd41aeb9ef1e06602309e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1148
+#: 49e118daa3204a58934a960ebfdb2bac
 msgid "**SCF_NOT_CONV** - SCF did not converge in max iterations"
 msgstr ""
 
-#: ../../source/features.rst:1122 8b9b665b94524a85824575c3f626673e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1149
+#: dba6805a1b3d45e39abd4b4e8bdc9683
 msgid "**MEMORY** - Out of memory errors"
 msgstr ""
 
-#: ../../source/features.rst:1123 496604b6d03e462ea06d49b16d36ca4c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1150
+#: f815a03e0a3d4ab5b7a0c46e18e0da82
 msgid "**TIME_LIMIT** - Job canceled due to time limit"
 msgstr ""
 
-#: ../../source/features.rst:1124 e15fa46925da4cd4b373b4482199a89b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1151
+#: e267b8c83e964d0d96e5e86f79bb2de2
 msgid "**NUMERICAL** - NaN/Inf in calculations"
 msgstr ""
 
-#: ../../source/features.rst:1125 9a25e84a7152499d9d0c29f706f987c5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1152
+#: d8472cd208ce42eb9646e19e7e7b6bcb
 msgid "**SINGULAR_OVERLAP** - Singular overlap matrix"
 msgstr ""
 
-#: ../../source/features.rst:1126 d1a3491f12f04066b6c636083c237e5e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1153
+#: eede46fe2a324da5bc9fafba222bf1e3
 msgid "**NEGATIVE_EIGENVALUES** - Negative eigenvalues in overlap"
 msgstr ""
 
-#: ../../source/features.rst:1127 9d299c127eab47f7bb0ae54b14f681b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1154
+#: 034f53ab0468448090491d3aff7ff23c
 msgid "**GEOMETRY_OPTIMIZATION** - Relaxation failed"
 msgstr ""
 
-#: ../../source/features.rst:1128 d33595b71e0e41869f0dbe31a13339b0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1155
+#: 263546b3df8a4760973a2bb1e87c58bc
 msgid "**BASIS_GENERATION** - Error in basis set generation"
 msgstr ""
 
-#: ../../source/features.rst:1129 93d1e344cc6d4bdb9034f2a19c000942
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1156
+#: b825e565e5cf4531bb874b6e631d7750
 msgid "**GRID_INTEGRATION** - Real-space grid errors"
 msgstr ""
 
-#: ../../source/features.rst:1130 f356ee0bfe9445aeafdf3f0360145838
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1157
+#: 74605a2c1d2c4c598e106a0e56b356ad
 msgid "**FILE_IO** - File input/output errors"
 msgstr ""
 
-#: ../../source/features.rst:1133 2661c54d85b14bbda36780d8214f1cba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1160
+#: 097e6086866341c99ba948ba18ad1a19
 msgid "SCF Convergence Correction (5-Level Strategy)"
 msgstr ""
 
-#: ../../source/features.rst:1135 b4352dc78d0a44bc8897248a5d060271
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1162
+#: 4259aaa37bc44fe689c1c9fd9234f54b
 msgid "Progressive correction applied automatically:"
 msgstr ""
 
-#: ../../source/features.rst:1141 be472be6a1ce479e8a9531b2870a9b10
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1168
+#: d8144be073ee48bba4da482f234162df
 msgid "Level"
 msgstr ""
 
-#: ../../source/features.rst:1142 c4e7682507344687a2130cf95376578b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1169
+#: 59fa02828ba04cc28b8389b632e4e473
 msgid "Changes"
 msgstr ""
 
-#: ../../source/features.rst:1143 902bab01aa4548dbb8872a73f4809b0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1170
+#: edb7f329603f4698b497f9d507d1d2a0
 msgid "Strategy"
 msgstr ""
 
-#: ../../source/features.rst:1144 e907a3199de048c89c7584ebbcf7eb49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1171
+#: 73d8aa4f4e3f456781e0357687d3643a
 msgid "1"
 msgstr ""
 
-#: ../../source/features.rst:1145 5e73e568e5eb4a94942e1bf69e554b7b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1172
+#: 703a44d02ba84603986d005c4a0b72e4
 msgid "``Mixer.Weight=0.05``, ``Mix.First=True``"
 msgstr ""
 
-#: ../../source/features.rst:1146 175b9f47c56d4eb587df04b7a112d35a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1173
+#: 323ee513971e427c98296adf28d28fd5
 msgid "Gentle reduction"
 msgstr ""
 
-#: ../../source/features.rst:1147 10e9d37213ed4386a781fb7b29de3447
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1174
+#: 4633ccc2f2d348dfa8c8efb3247d8a51
 msgid "2"
 msgstr ""
 
-#: ../../source/features.rst:1148 c6dcf75fe6c44b3f8b738cefe76cade7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1175
+#: cb49b260ee514f00805adc629590b494
 msgid "``Mixer.Weight=0.01``, ``History=5``"
 msgstr ""
 
-#: ../../source/features.rst:1149 ea3109c2ad7f4f968fd0220ab8c8ec6a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1176
+#: 0891b32369fd48208de3762bcbb34c16
 msgid "More conservative"
 msgstr ""
 
-#: ../../source/features.rst:1150 c2b358f395f0468b82673af1a87c27b1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1177
+#: c261df24007e4e7f9b210e0e1f0b2f9c
 msgid "3"
 msgstr ""
 
-#: ../../source/features.rst:1151 34f662e948524bc7a31654a9d7fc9750
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1178
+#: 403015ca32e744f7a31c3c4b6689955b
 msgid "``Mixer.Weight=0.005``, ``History=8``, ``Kick=40``"
 msgstr ""
 
-#: ../../source/features.rst:1152 1de05065c50d47cf8604957263b94156
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1179
+#: 975d47421f0542c28c66babc0c4fc725
 msgid "Add perturbation"
 msgstr ""
 
-#: ../../source/features.rst:1153 c58764c9574f40c89719a1c60c7e09d8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1180
+#: 93cca115983044d7b7b7c8886dcf0f94
 msgid "4"
 msgstr ""
 
-#: ../../source/features.rst:1154 e265e88784f8402bac5ea7bec05e5d28
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1181
+#: 758994171d9f4d2e83ba3362b8fef9a3
 msgid "Switch to Pulay, ``History=10``"
 msgstr ""
 
-#: ../../source/features.rst:1155 d3ca2b2f8ef34ae5bd905631bd1b1597
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1182
+#: fc1f018cedd44cbda2b8309a29dcf15c
 msgid "Change algorithm"
 msgstr ""
 
-#: ../../source/features.rst:1156 b275c2cfceab4fb192758eca5389fd09
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1183
+#: 7ce3e6403ba940b0a961f482280ffae4
 msgid "5"
 msgstr ""
 
-#: ../../source/features.rst:1157 36272a250d46419bac98621ba4b336ec
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1184
+#: 7a8556327097453ab9d01eef7e4d6566
 msgid "Switch to Broyden, ``Weight=0.001``"
 msgstr ""
 
-#: ../../source/features.rst:1158 bce25321fc0945b8863d46d14dc35557
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1185
+#: 0f4bca4d82c04cd9a4fbb54fdbb2608a
 msgid "Last resort"
 msgstr ""
 
-#: ../../source/features.rst:1190 2ec5a0942e204a59a2ab298110a92b22
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1217
+#: 572b98a36bba4e038a06cf9a48fdaeed
 msgid "Custodian Output"
 msgstr ""
 
-#: ../../source/features.rst:1192 bb86eb1a401d45f0a623ab89b3d03143
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1219
+#: 2a005945845c4dd2b8e969b700543ed3
 msgid "**``custodian.json``** contains full history:"
 msgstr ""
 
-#: ../../source/features.rst:1221 8714211223f54bf3b152435018cfbdae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1248
+#: 8819bc2de1614f80ae30ad29dd9d07d3
 msgid "✅ **Automatic**: Errors detected and corrected without manual intervention"
 msgstr ""
 
-#: ../../source/features.rst:1223 20f074829e494b4b90c50d7863968cc4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1250
+#: a11dcce2116d49f2919d69779222a574
 msgid "✅ **Transparent**: Full correction history in ``custodian.json``"
 msgstr ""
 
-#: ../../source/features.rst:1225 ea49a61d01b84e5abd33cd2f1dc0a580
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1252
+#: 3772f4d828f842cba9b5571837ae0f10
 msgid "✅ **Configurable**: Custom handlers and correction strategies"
 msgstr ""
 
-#: ../../source/features.rst:1227 46accbadf4da4b9caa7ce5e3a0b7aeaa
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1254
+#: 1954b25ad49a4f0e87c4eb1a26fb2e02
 msgid "✅ **Production-tested**: Built on MaterialsProject's proven framework"
 msgstr ""
 
-#: ../../source/features.rst:1229 ba903e8b714b49328acdb8bd9d7e2f85
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1256
+#: 1f8c6a5ba3b3465abdb367065f8a8e93
 msgid "✅ **Safety limits**: Respects max attempts per handler"
 msgstr ""
 
-#: ../../source/features.rst:1231 e57cab1e802b4edb960ee001a990c3dc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1258
+#: 27745357598f44d7ade4451cebba6f94
 msgid "📖 **Tutorial**: ``tutorials/15-custodian-error-handling/``"
 msgstr ""
 
-#: ../../source/features.rst:1233 cdbeb469ab374848bcdc2319511e748e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1260
+#: ea8e60db60fe412aa538b18fb86084de
 msgid ""
 "📄 **Documentation**: ``REFACTORING_SUMMARY.md`` (complete custodian "
 "library integration guide)"
 msgstr ""
 
-#: ../../source/features.rst:1238 ac94034129c647819f9d157e9865a8e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1265
+#: 17109bd2304742cba1008e01bc571d07
 msgid "📚 Dataclass Tutorials & Comment Headers"
 msgstr ""
 
-#: ../../source/features.rst:1242 71cc1f37020f4c3a8adb216bef514a50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1269
+#: 23751256173d4d1ca7411a9c9414e6dd
 msgid ""
 "Comprehensive tutorials for MEDIUM priority dataclass modules with "
 "automatic comment header generation for FDF output files."
 msgstr ""
 
-#: ../../source/features.rst:1247 f0d3239cf43b426fb9580bd0e10a0b44
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1274
+#: 7dd604558d284d1ab7a7dfcc432cd12a
 msgid "✨ **Direct SIESTA FDF Format**"
 msgstr ""
 
-#: ../../source/features.rst:1248 b54d4a46243144fdb621336509fa08ce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1275
+#: e92c38ce4de448b782678e57239ee08a
 msgid "Users write native SIESTA syntax without wrapper abstractions"
 msgstr ""
 
-#: ../../source/features.rst:1250 46dfb89bed714188a032a8ed4e810894
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1277
+#: 6f54c221c92641df8d455c7ee80f5526
 msgid "🔤 **Automatic Comment Headers**"
 msgstr ""
 
-#: ../../source/features.rst:1251 f09986cee53b45e194b53d56354c7bf4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1278
+#: efa5dd8f398847a3896cc375b6267632
 msgid ""
 "System detects FDF parameters and adds appropriate dataclass headers "
 "automatically"
 msgstr ""
 
-#: ../../source/features.rst:1253 53171607750f470b86a6c2f76d44e624
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1280
+#: 32c96c6ce87d4ccc9cef442865b19481
 msgid "📖 **Comprehensive Documentation**"
 msgstr ""
 
-#: ../../source/features.rst:1254 df374f6612444a08b86addd3758cad6b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1281
+#: 504e694a490246cfb31ba733991645d1
 msgid ""
 "Each tutorial includes theory, best practices, parameter references, and "
 "troubleshooting"
 msgstr ""
 
-#: ../../source/features.rst:1256 140ef22f75be4633a846ef05efc55503
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1283
+#: d4ed4f39545a4d9aacc36f42ac42ae13
 msgid "🎯 **Universal Maker Support**"
 msgstr ""
 
-#: ../../source/features.rst:1257 d63167360acf4572aac6be87182d1263
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1284
+#: 1cf623254bdf41b686ed0cf813c110a3
 msgid ""
 "Works with StaticMaker, RelaxMaker, BandStructureMaker, and all workflow "
 "makers"
 msgstr ""
 
-#: ../../source/features.rst:1260 f96527db792645d9b702a5bb7891ca2b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1287
+#: 068e3ead19894d0080cac8cb99a27774
 msgid "Tutorial Modules"
 msgstr ""
 
-#: ../../source/features.rst:1262 5712bfdc70a44d3d8015e6cc4d99c5b6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1289
+#: cb669baebf28431ba1258a0442ffa8e9
 msgid "Five MEDIUM priority dataclass modules are now fully documented:"
 msgstr ""
 
-#: ../../source/features.rst:1264 fca39e2e5cf24fb1bec30dbf691dd068
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1291
+#: cd5b7e8ffa474db99ee56ad4e0a87ff9
 msgid ""
 "**1. DOS Calculations** (``tutorials/07-advanced-features/05-dos-"
 "calculations/``)"
 msgstr ""
 
-#: ../../source/features.rst:1265 b3e66869f7034c2989fb8f87d1faa0a3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1292
+#: 28665320e4d14ee584c521a36e3f99d0
 msgid "Density of states calculation with StaticMaker and RelaxMaker"
 msgstr ""
 
-#: ../../source/features.rst:1266 d6a07218a9fd4a3faebe54a2ba5e3df1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1293
+#: 8ae481a57d8040f19663b03a45fc44fb
 msgid ""
 "Direct SIESTA FDF format: ``\"ProjectedDensityOfStates\": [\"EF -10.000 "
 "10.000 0.100 200 eV\"]``"
 msgstr ""
 
-#: ../../source/features.rst:1267 c0b44d2e845f45abb606af9f1d821fd1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1294
+#: d0c86534532847df8196403ff1878aa7
 msgid "Automatic comment header: ``# DensityOfStatesAndBandStructure Settings``"
 msgstr ""
 
-#: ../../source/features.rst:1269 7704329c754b49d580d1535fc86ad463
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1296
+#: dee1d1efe75946178945c05bc5dfd237
 msgid ""
 "**2. Phonon Inputs** (``tutorials/07-advanced-features/06-phonon-"
 "inputs/``)"
 msgstr ""
 
-#: ../../source/features.rst:1270 16704b2893a24cc29109dba55e85b72f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1297
+#: 1448e7028aad4c93895e317f489f1380
 msgid "Force constants parameters for phonon calculations"
 msgstr ""
 
-#: ../../source/features.rst:1271 ../../source/features.rst:1346
-#: 3f3980b43e01447b8c1e6eaeeb182ce6 73ee8f3472fe4702ae153cebb9366f66
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1298
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1373
+#: 2ac9c5d200df4670a4cd30f21c631021 3e4857bf9be94e48be26bb1d3aa0d100
 msgid "``MD.TypeOfRun``, ``MD.FCDispl``, ``MD.FCfirst``, ``MD.FClast``"
 msgstr ""
 
-#: ../../source/features.rst:1272 3518b58e8297472bba8ed3bdf6656457
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1299
+#: 69aa76f8611d4cc4bc56a3a5e69a49e4
 msgid "Automatic comment header: ``# PhononCalculations Settings``"
 msgstr ""
 
-#: ../../source/features.rst:1274 d32dbb66811c47978ef757936feb8c10
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1301
+#: 89560d094e7045ef916d3c0e023e08aa
 msgid ""
 "**3. Optical Properties** (``tutorials/07-advanced-features/07-optical-"
 "properties/``)"
 msgstr ""
 
-#: ../../source/features.rst:1275 6084140f93e54636b51e0a5116aef8f6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1302
+#: 5bd314a628da406fa7dffa37abb68db2
 msgid "Optical absorption and dielectric function calculations"
 msgstr ""
 
-#: ../../source/features.rst:1276 2237c40fa56f47e68b1a5d10252fb586
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1303
+#: 78486f76daaa4bfa86c7e90c7fb1543d
 msgid "Energy range, broadening, scissor operator for band gap corrections"
 msgstr ""
 
-#: ../../source/features.rst:1277 5da6d80da1cc465099b7a0ab3c05250c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1304
+#: 662306a42c444d7fbc1713bd958b7864
 msgid "Automatic comment header: ``# OpticalProperties Settings``"
 msgstr ""
 
-#: ../../source/features.rst:1278 eea542b907f54ba399373ebdaaebdb35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1305
+#: 45cc89833704438d8ac87265b939761c
 msgid "Output: ``siesta.EPSIMG``, ``siesta.EPSREAL``"
 msgstr ""
 
-#: ../../source/features.rst:1280 f83ddb4dc7f947d9a61c94461910e784
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1307
+#: 44a95cf9802d48f482609edecb470cd2
 msgid "**4. DFT+U** (``tutorials/07-advanced-features/08-dftu/``)"
 msgstr ""
 
-#: ../../source/features.rst:1281 d2b21a1bb80f4a90b9bf5a8d009f7bdf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1308
+#: 4547c4632b2646e09fe844afc7bacfdd
 msgid ""
 "Hubbard U corrections for correlated systems (NiO, transition metals, "
 "rare earths)"
 msgstr ""
 
-#: ../../source/features.rst:1282 ../../source/features.rst:1348
-#: 3bba3973e2544b4e841966a6c748fd14 bee0f95613fc4dc5896d2c053d98ba39
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1309
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1375
+#: 2f6e2eee13ef47d8b09dc7c42bc75ea8 a2885959c54542b2b2b24fff476ab24a
 msgid ""
 "``LDAU.UseLDAU``, ``LDAU.UEffective``, ``LDAU.JHund``, "
 "``LDAU.ProjectorMethod``"
 msgstr ""
 
-#: ../../source/features.rst:1283 9db5fc7d03d54de28cc2886f5ddafdf6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1310
+#: a78e1fe018ed420ea24ab1dd081c3c13
 msgid "Automatic comment header: ``# DFTU Settings``"
 msgstr ""
 
-#: ../../source/features.rst:1284 3b738834e5e244c9915fdac9dc23ee28
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1311
+#: df5770f8201b40e5a2109a8e7d3c07d3
 msgid "Common U values documented for 3d transition metals and 4f rare earths"
 msgstr ""
 
-#: ../../source/features.rst:1286 8bb91ef0c68644ae9bce694c91a625a4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1313
+#: 3a16989207de49179618465d99ff0eda
 msgid ""
 "**5. Charge/Dipole/Electric Field** (``tutorials/07-advanced-features/09"
 "-charge-dipole-efield/``)"
 msgstr ""
 
-#: ../../source/features.rst:1287 fa4a253ec74044a0ae5676b56a910d93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1314
+#: 88c81ded509548979afc268fb0b4d6cc
 msgid "External electric field application and charged system calculations"
 msgstr ""
 
-#: ../../source/features.rst:1288 9a8effc206e447a6b3ad545837c2f87a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1315
+#: 1030feee95fa4ceeb76e427990d91377
 msgid ""
 "``ExternalElectricField``, ``Efield``, ``NetCharge``, "
 "``SlabDipoleCorrection``"
 msgstr ""
 
-#: ../../source/features.rst:1289 ee996a41764249ce9f41e55aa6957fe9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1316
+#: c5afe18a1b6b4ff2b64895bc0ed46c70
 msgid "Automatic comment header: ``# ChargeDipoleElectricField Settings``"
 msgstr ""
 
-#: ../../source/features.rst:1320 98152fe379e947cf8360d311011397ce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1347
+#: 8aaaaa56202e41e4be3abce99c30b4f6
 msgid "The system automatically detects FDF parameters and adds comment headers:"
 msgstr ""
 
-#: ../../source/features.rst:1332 a47479309bfc4dad91ee1dd7f80316ae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1359
+#: cf88c68482f342d1942edaaba6eb7d47
 msgid "FDF Parameter Mapping"
 msgstr ""
 
-#: ../../source/features.rst:1334 ee6ab9cc71d7419c8436686063c13081
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1361
+#: 632dcec191b84ac59c1a3df561a98ac2
 msgid "The system includes 21 parameter mappings for automatic detection:"
 msgstr ""
 
-#: ../../source/features.rst:1340 0de601b38915493aab5b926d5cb28cef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1367
+#: f6950f9e62424e17830bda4595bd93ef
 msgid "FDF Parameters"
 msgstr ""
 
-#: ../../source/features.rst:1341 396e7346fafa42da804cb2eccd7f3cb2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1368
+#: f00f10f29520453dbe4fb5b7f7440eb3
 msgid "Comment Header"
 msgstr ""
 
-#: ../../source/features.rst:1342 6749713457094ef68f0b4c49f5182e71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1369
+#: 1c5544c27dd4438c842c4dcf030829cd
 msgid "``ProjectedDensityOfStates``, ``WaveFuncKKpoints``"
 msgstr ""
 
-#: ../../source/features.rst:1343 0764f7f163ac4eadaabb6227f0855e82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1370
+#: aa2657b8cb83496d8098763dc5b350a7
 msgid "DensityOfStatesAndBandStructure Settings"
 msgstr ""
 
-#: ../../source/features.rst:1344 476c2d6a2198435499b2841f631a5609
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1371
+#: e8e5ad4118584eaa8fbafd0b85b04ed9
 msgid ""
 "``OpticalCalculation``, ``Optical.Energy.Minimum/Maximum``, "
 "``Optical.Broaden``, ``Optical.Scissor``"
 msgstr ""
 
-#: ../../source/features.rst:1345 21acba1e417f48af9d11029a5dc320cc
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1372
+#: 9ace47b80327486aa8a4f2074bb221b0
 msgid "OpticalProperties Settings"
 msgstr ""
 
-#: ../../source/features.rst:1347 66be8466573246bd8dc3117cf8b35dd1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1374
+#: 72d95cae047d40abb45e42d08c3b7a30
 msgid "PhononCalculations Settings"
 msgstr ""
 
-#: ../../source/features.rst:1349 22999798d64443f6b709fb3a6b6223f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1376
+#: e65f00ad520b47e3b02b6971ec34c259
 msgid "DFTU Settings"
 msgstr ""
 
-#: ../../source/features.rst:1350 7d2d81e97c6f48dc984a88d6afb7b606
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1377
+#: 2b76a39b7f234afa9d1759eeb74891fd
 msgid "``ExternalElectricField``, ``NetCharge``, ``SlabDipoleCorrection``"
 msgstr ""
 
-#: ../../source/features.rst:1351 effb9a4f49d34baf84b2508e59b2451b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1378
+#: 7ae1e61748df48b48773f5af93ae1ff7
 msgid "ChargeDipoleElectricField Settings"
 msgstr ""
 
-#: ../../source/features.rst:1356 b99729ca6d8f49d1bc69da39934730ea
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1383
+#: a4124d70a7374a628b9dcfbdd6bc1b42
 msgid ""
 "✅ **Maximum Transparency**: Direct SIESTA syntax with no wrapper "
 "abstractions"
 msgstr ""
 
-#: ../../source/features.rst:1358 bf0bea8685b042809187265bf772dd4c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1385
+#: 16a50cef043e4253bd466e41b56511f4
 msgid ""
 "✅ **Automatic Formatting**: Comment headers added without manual "
 "intervention"
 msgstr ""
 
-#: ../../source/features.rst:1360 a1c27678e5af4be6b4959eb3bc8ae494
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1387
+#: 679fd79bd7d241eb8cf63dc0dd9ed411
 msgid ""
 "✅ **Comprehensive Guides**: Theory, best practices, troubleshooting in "
 "each README"
 msgstr ""
 
-#: ../../source/features.rst:1362 9d3f7e8fb3064719a42e19836377925f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1389
+#: d723d0da84a748239d95e9aa9655dd31
 msgid ""
 "✅ **Dry-Run Compatible**: Preview all FDF output before running "
 "calculations"
 msgstr ""
 
-#: ../../source/features.rst:1364 3bf245272aa04395b1b5da02673ef182
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1391
+#: bce066aacea94e21b89361a690e1dc2f
 msgid "✅ **Extensible**: Easy to add new parameter mappings"
 msgstr ""
 
-#: ../../source/features.rst:1366 ccaf4c0623ee476ba887a6f78ac0eeb6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1393
+#: 59e226414cfb49d1bb247465571da2b6
 msgid "📖 **Tutorials**: ``tutorials/07-advanced-features/05-09/``"
 msgstr ""
 
-#: ../../source/features.rst:1371 384cdadcd8364466b0cc6061175e10da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1398
+#: f29f5e4eebb3412bb109189cb3c5cb46
 msgid "📊 Analysis & Visualization"
 msgstr ""
 
-#: ../../source/features.rst:1374 47ee5f02018c4188ac23134e24b1c5f4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1401
+#: e69772fa92904401af5405f1885c7eb7
 msgid "Automatic Plotting"
 msgstr ""
 
-#: ../../source/features.rst:1376 1d2dd8254e0b4e2e8f00ef78a04a0444
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1403
+#: da18f0dc562d45779946a8de1b5d4210
 msgid "Many workflows generate publication-quality plots automatically:"
 msgstr ""
 
-#: ../../source/features.rst:1378 9a98f8afd1c148eeb8f7b1bf2c42496b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1405
+#: 2d7fea96d24044889cfd0b6576deba6d
 msgid "**Phonon Calculations**:"
 msgstr ""
 
-#: ../../source/features.rst:1379 88f97c0e4e184f04992a51ed17ca4ae5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1406
+#: ed10bcb6c5d94e0389419ef9f6789b06
 msgid "Band structure with high-symmetry path"
 msgstr ""
 
-#: ../../source/features.rst:1380 64cfebf682ac4cfa93454c8a432dfc62
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1407
+#: 1653b5992cfa45dca5dc8b537a0ca83b
 msgid "Density of states"
 msgstr ""
 
-#: ../../source/features.rst:1381 e5422926243241ba84820c18dcda8d5f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1408
+#: b175daf9a997456d940e3cf011c89503
 msgid "Thermal properties (3-panel subplot)"
 msgstr ""
 
-#: ../../source/features.rst:1383 bf68e096fc7c41a2941a80142e5de32d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1410
+#: fdfdd92b26894ac39f45f45ebd02459f
 msgid "**Surface Energy**:"
 msgstr ""
 
-#: ../../source/features.rst:1384 0f52af1b96b94cbead2f739474b1e5e1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1411
+#: 5cf57039457a4243a6bcd17800bdbdae
 msgid "Multi-surface comparison (eV/Ų and J/m²)"
 msgstr ""
 
-#: ../../source/features.rst:1385 31bff7d0e5eb4c67846d30b912215f9d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1412
+#: 8fd92f3142c3438883a1aca20eca4d59
 msgid "Bar charts with color coding"
 msgstr ""
 
-#: ../../source/features.rst:1387 2f9b073f1e004388992ab3ecd790685d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1414
+#: 628aef4d5da14aafa1e4a59bcecae10f
 msgid "**EOS Workflows**:"
 msgstr ""
 
-#: ../../source/features.rst:1388 baaecea707b34cdc86a731b7ad511c1f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1415
+#: 0953826fe38a479aab234092a0ba32a5
 msgid "Energy vs. volume with fitted curve"
 msgstr ""
 
-#: ../../source/features.rst:1389 a525a5a7da814333964040fec11914e2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1416
+#: 14598f93fce345b78d41c65f3f297935
 msgid "Residuals plot"
 msgstr ""
 
-#: ../../source/features.rst:1391 67ae276997914a90984c0d759b4b71ee
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1418
+#: 60e91f5a0e7f4332b4fb6b42b7f8cfed
 msgid "**Convergence Studies**:"
 msgstr ""
 
-#: ../../source/features.rst:1392 be0640511c50484b8ce378c13187d498
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1419
+#: c56eb464f0454af19d7425c9551dfce6
 msgid "Parameter sweep results"
 msgstr ""
 
-#: ../../source/features.rst:1393 50ffffa4224d4e66b0ebda5d0a87e039
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1420
+#: 81678efc4881427aa4acb66ff6402c48
 msgid "Convergence criteria visualization"
 msgstr ""
 
-#: ../../source/features.rst:1395 3b48af2b6e0b4ef99b97f202e4a47b85
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1422
+#: 43d7afd113884626967384a2c489d208
 msgid "All plots are:"
 msgstr ""
 
-#: ../../source/features.rst:1397 cc57f37ffe514752b62a40c6777fed63
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1424
+#: 3641417b89804e659bc4458d7380d7db
 msgid "300 dpi (publication-ready)"
 msgstr ""
 
-#: ../../source/features.rst:1398 f7b3b18c607944b68cbc598613b2c80b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1425
+#: 89374d1d736d47dfbee80fbeea014bee
 msgid "Properly labeled with units"
 msgstr ""
 
-#: ../../source/features.rst:1399 9314705b6a774f4781db03b8ea6335d2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1426
+#: 229e7cc6d3da44eb85c5ed143edef532
 msgid "Color-coded for clarity"
 msgstr ""
 
-#: ../../source/features.rst:1400 87678a36fa884c37b7fb90f9c99ad658
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1427
+#: e8c5e763703645399f40bde19c31743c
 msgid "Saved automatically to workflow directory"
 msgstr ""
 
-#: ../../source/features.rst:1403 008e2bc303564fec8874caef4189406b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1430
+#: b1748a67d82e451bb6afd6617239c06e
 msgid "Text Summaries"
 msgstr ""
 
-#: ../../source/features.rst:1405 4d3bb2831c29457da7a733bb9a47fa43
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1432
+#: d31198c60f5d4d6da4876c082b75ae83
 msgid "Comprehensive text summaries automatically generated:"
 msgstr ""
 
-#: ../../source/features.rst:1407 383a0a0951004b1fb1e959928df69148
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1434
+#: 514fb461d89f406eb36d520708909d23
 msgid "**Phonon Summary** (``phonon_summary.txt``):"
 msgstr ""
 
-#: ../../source/features.rst:1408 11b400f1841f434c9ee4d1954db56343
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1435
+#: 305fdcbc516d48329a3c4c71acc3f8ff
 msgid "Structure information"
 msgstr ""
 
-#: ../../source/features.rst:1409 a06a7630e4ee410683b09c4ba5a3902d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1436
+#: 0e789d00bf1744519894abc3393ad037
 msgid "Calculation parameters"
 msgstr ""
 
-#: ../../source/features.rst:1410 4e1096a9bf724ae5b9efb61684b51117
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1437
+#: 0f5ec610c4d64c47aadff9516bcd0516
 msgid "Frequency analysis (min/max, imaginary modes)"
 msgstr ""
 
-#: ../../source/features.rst:1411 11f20810f3864083819d3090d42ce601
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1438
+#: 86f52e9b07b74b8c8e91551600f622cb
 msgid "Thermal properties table"
 msgstr ""
 
-#: ../../source/features.rst:1414 f63f15a0af4b44b48e23ee9648809ac4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1441
+#: 07ab28a1722b4f42b2b96b78142d3850
 msgid "**Surface Energy Summary** (``multi_surface_summary.txt``):"
 msgstr ""
 
-#: ../../source/features.rst:1415 ce0831265b304afa94e394a6a2218eb3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1442
+#: 15d5859ea72d4171966ad7ff5f6d989e
 msgid "Theoretical background"
 msgstr ""
 
-#: ../../source/features.rst:1416 3c6314cc69504d88a8b9a85fba63f0d6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1443
+#: 65d8114dbfc74bed980bc190edfaa196
 msgid "Surface energy formulas"
 msgstr ""
 
-#: ../../source/features.rst:1417 4166481fab6b4de983c946d9c7e30dd6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1444
+#: a903f9902d90415ea96a7030bc0de1b6
 msgid "Comparison table"
 msgstr ""
 
-#: ../../source/features.rst:1418 0572252413854479b8855c9cfa0ce1b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1445
+#: 071d73f952304c409a8ac87b521f4340
 msgid "Convergence guidelines"
 msgstr ""
 
-#: ../../source/features.rst:1419 4ddca8b7ff8b458a91d86c24144c013f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1446
+#: ea81d5789777435ab94f8859eb1844a3
 msgid "Literature references"
 msgstr ""
 
-#: ../../source/features.rst:1421 e2f70902d2c64eaaa08430fc7197bfb4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1448
+#: aa83feb0676941b4889b6328cb42b17e
 msgid "**Elastic Constants Summary**:"
 msgstr ""
 
-#: ../../source/features.rst:1422 27395f6c9abc4f70bba782752ecbb22b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1449
+#: cad1e3943e6a4304ad3f05e116d40a5c
 msgid "Full elastic tensor"
 msgstr ""
 
-#: ../../source/features.rst:1423 e3fb82a9d62144c18154e140467b836f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1450
+#: 953fc91aec1444a6b8c1e1fb5e6308be
 msgid "Mechanical properties (bulk/shear modulus, Poisson ratio)"
 msgstr ""
 
-#: ../../source/features.rst:1424 b762811a58c34a07b1990f5db9d62f02
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1451
+#: f2f2a6e5641d470d8a2a494255724ba4
 msgid "Stability analysis"
 msgstr ""
 
-#: ../../source/features.rst:1427 0db7005f8eea4b82a074ff02746f1bba
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1454
+#: 48c63c6961824eaab683be6220109189
 msgid "JSON Output"
 msgstr ""
 
-#: ../../source/features.rst:1429 3494a47fb387434bb27a82b505447f39
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1456
+#: f49ab6030afd4274a4d86120d2be9af3
 msgid "All results available as structured data:"
 msgstr ""
 
-#: ../../source/features.rst:1448 90789be2041b45bab5e3e8f9947299b5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1475
+#: 9a1b59929928475ea02f19b500482faf
 msgid "🔬 Production Features"
 msgstr ""
 
-#: ../../source/features.rst:1451 5443362ae5364b619d703b8f31d348cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1478
+#: 32274d667ef14f1589344990ef448721
 msgid "HPC Integration"
 msgstr ""
 
-#: ../../source/features.rst:1453 4f4cae82566840ec9b83765684fb0865
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1480
+#: bc7a02d30ec1461b9c67324a085c03a8
 msgid "Seamless integration with HPC job schedulers:"
 msgstr ""
 
-#: ../../source/features.rst:1466 23277c69ac1c408abb415e656868043e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1493
+#: ce2ca37d4a504018bcbef119a18290f4
 msgid "Supports:"
 msgstr ""
 
-#: ../../source/features.rst:1468 5de8d776511e4656900077a545c9d1ac
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1495
+#: 7dd06f2193c040f7ad4dfba218a66078
 msgid "SLURM"
 msgstr ""
 
-#: ../../source/features.rst:1469 5400107849a24f15b9a26516299a2a2e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1496
+#: 90b67ced2e7a4af6944e7e3a73437b4a
 msgid "PBS/Torque"
 msgstr ""
 
-#: ../../source/features.rst:1470 e62f0546eb2e4a08a640e8cb4d9bdc76
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1497
+#: 50d33cee625e44f7a1008175bb19d2ef
 msgid "SGE"
 msgstr ""
 
-#: ../../source/features.rst:1471 bf00e884b4074ddda1da19d466d97dc9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1498
+#: 24b49c58fc45411bb3a70cace8de9e2c
 msgid "LSF"
 msgstr ""
 
-#: ../../source/features.rst:1474 b19e54d3ccb340af9ebc8ae8d5600c88
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1501
+#: 51c127c688bb438eb1a30dd2ccf4e455
 msgid "Database Storage"
 msgstr ""
 
-#: ../../source/features.rst:1476 be7fd5c94cec4facbdd6177497ad79bb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1503
+#: 5a0d6f6dcdb1413182561af0c72e8c59
 msgid "Store results in MongoDB for high-throughput studies:"
 msgstr ""
 
-#: ../../source/features.rst:1497 ab0b691913b94bb29cc0697c7385ad3b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1524
+#: 0086c3a29baa4e7b9cd3c1bb5cc6f291
 msgid "Testing & Quality"
 msgstr ""
 
-#: ../../source/features.rst:1499 1bd172a86a33437c92a460775496340e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1526
+#: 40221e5c7921475595f3fefbba3c21e4
 msgid "**Comprehensive Test Suite**:"
 msgstr ""
 
-#: ../../source/features.rst:1501 cbdea0d0c06f4b108826ed069ced125c
-#, python-format
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1528
+#: 30b109e51cf64b2794c2ceb75374f3c0
 msgid "**Comprehensive test suite** (fully passing)"
 msgstr ""
 
-#: ../../source/features.rst:1502 9dade6d7776642bca9beeac8327f3bb4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1529
+#: 0e91e9bb5d2c46babefdf1df6b477bb7
 msgid "Infrastructure tests: parser (39%), file_client (86%), schemas (97%)"
 msgstr ""
 
-#: ../../source/features.rst:1503 dc12cbfa5a24490597736b5469f28fd8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1530
+#: 9a7a8ecf40df4e16bd6809371f600236
 #, python-format
 msgid "Module registry validation (tier system: 100% coverage)"
 msgstr ""
 
-#: ../../source/features.rst:1504 6f0e7fa930764204ae0b6608606c0f7e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1531
+#: ae6354dde02b421c914a922c165e0970
 msgid "Tier preset verification"
 msgstr ""
 
-#: ../../source/features.rst:1505 5201ae2bca844a8c8c35b9e49756f90d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1532
+#: 473323099de1495eb44b4b0986cbea04
 msgid "Integration tests for workflows (Grüneisen, QHA, custodian)"
 msgstr ""
 
-#: ../../source/features.rst:1506 09acc6205de249ba86d3f943d5862c0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1533
+#: 853a347af138405dbf467c67ddd8d047
 msgid "Performance benchmarks"
 msgstr ""
 
-#: ../../source/features.rst:1507 5b038fa239524bf38844873671b36f3f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1534
+#: 5261229e5c9444f59efb7c633f9e9f6f
 msgid "**Fast execution**: full test suite runs in seconds"
 msgstr ""
 
-#: ../../source/features.rst:1509 817cadd6c7b64a2e85ad038e8c262638
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1536
+#: f807981264124013aab0d48f8ae76f6d
 msgid "**Coverage by Component**:"
 msgstr ""
 
-#: ../../source/features.rst:1515 fbad184319ae40db894b1ec7df26a52f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1542
+#: 6bf35b369d1c46b5b0cfa5bb51ca83a5
 msgid "Component"
 msgstr ""
 
-#: ../../source/features.rst:1516 b787b8221e504481873c6cf90201a571
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1543
+#: 39a6d73843c54f12a56ddcb53b6dc3b7
 msgid "Coverage"
 msgstr ""
 
-#: ../../source/features.rst:1517 9c016bac202e4dec9374e6bd916b9d64
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1544
+#: 0f279c2c8e0349c79e64e7df3e6fe18e
 msgid "Tests"
 msgstr ""
 
-#: ../../source/features.rst:1518 e24bc4509a4147c58d237b96d98daffb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1545
+#: 495255aa1a3245b79f930d5156316e28
 msgid "Status"
 msgstr ""
 
-#: ../../source/features.rst:1519 e71728be006b4b9cb8dded9ff4c8da00
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1546
+#: 11d2a5dd03c340a5b9a46880e8e6beae
 msgid "Tier System"
 msgstr ""
 
-#: ../../source/features.rst:1520 4e9e63fd38874b0390e00c9718bf915f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1547
+#: d78b3438c6394c82a30149b68dd22c34
 msgid "100%"
 msgstr ""
 
-#: ../../source/features.rst:1521 7a1bcccd43fb42b2846f1dbb61229bd8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1548
+#: 26bfe5113d8f4138a9cc7bfb94e0fd0e
 msgid "74"
 msgstr ""
 
-#: ../../source/features.rst:1522 e4f1c889dfcc46958d36db01157ecd73
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1549
+#: 398d450c389e4d238794a742eb218e3a
 msgid "✅ Complete"
 msgstr ""
 
-#: ../../source/features.rst:1523 d673f4c885c841a6b59c0032679e2209
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1550
+#: 6442df65c6ab4db490213dd86c7dfcf0
 msgid "Task Schemas"
 msgstr ""
 
-#: ../../source/features.rst:1524 6177495132654dda86a734679395da17
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1551
+#: 4da000c424a448ff8504ef3dae683f67
 msgid "97%"
 msgstr ""
 
-#: ../../source/features.rst:1525 fcb4affdf07f453992528efb85ce20bd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1552
+#: 3518df6684324345aa9b88165c768d44
 msgid "33"
 msgstr ""
 
-#: ../../source/features.rst:1526 ../../source/features.rst:1530
-#: ../../source/features.rst:1534 06551281482a4712b8213cd6fae58c59
-#: 13a7c7c8f4a8425998599a9b8659723e 560bd2e0897441ab95dcd3106a230cf1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1553
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1557
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1561
+#: 1b81f146c9bc4b7c8feba3d8c06b80a5 6ada5db7108e4e5fa158fad7ee0aefc1
+#: cec8493eea4049dc9e43af3321fd0e36
 msgid "✅ Nearly Complete"
 msgstr ""
 
-#: ../../source/features.rst:1527 e293cfc5e3fb437db50d04f3faa5c531
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1554
+#: d63c2a02aa174191ade16c500f923a0b
 msgid "File Client (SSH/SFTP)"
 msgstr ""
 
-#: ../../source/features.rst:1528 b87e9bdf4a364962aa3cf10fed05afc6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1555
+#: 8cf22e491221450397a2dc74feeb9b17
 msgid "86%"
 msgstr ""
 
-#: ../../source/features.rst:1529 0e41a179419c43688919ab6bb23082d4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1556
+#: 543b460d79924a82959148aa6324d35c
 msgid "57"
 msgstr ""
 
-#: ../../source/features.rst:1531 50571cd48a3842a5b4d4ffabd7e1b380
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1558
+#: 91d3b6d026654225b111e3c4f15063ab
 msgid "Calculation Schemas"
 msgstr ""
 
-#: ../../source/features.rst:1532 7dcbbe9cce0747309f5250a1b9c20789
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1559
+#: 63b904e823c44f5bbaa7f34a0d3f07dd
 msgid "87%"
 msgstr ""
 
-#: ../../source/features.rst:1533 bdb380f7db3e40f0b20cdac26217cf94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1560
+#: 884e56425fb84fcfa0551b8f703122a2
 msgid "49"
 msgstr ""
 
-#: ../../source/features.rst:1535 bba1936cac0b4db188eb447f17088b71
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1562
+#: 6cb00ca91fd74aff806f87557bc3ddf7
 msgid "Parser (SIESTA output)"
 msgstr ""
 
-#: ../../source/features.rst:1536 503937b7e34d4e0d90169acff288edb0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1563
+#: d4aa41cd8836445b9cd3dba4e7b77282
 msgid "39%"
 msgstr ""
 
-#: ../../source/features.rst:1537 83acbef0616d46469eb0972428552085
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1564
+#: 711a725039c34888b0deb2d966eb617c
 msgid "63"
 msgstr ""
 
-#: ../../source/features.rst:1538 cca0e9dd0b194531b9816fb481da7dd9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1565
+#: fd690c1844594d08b761cb4f546da465
 msgid "🔄 In Progress"
 msgstr ""
 
-#: ../../source/features.rst:1539 34ca87d8c4804a68bbf026322eeb88d7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1566
+#: 4be5875eb354411b98d27b0ea332a71f
 msgid "Core Jobs/Flows"
 msgstr ""
 
-#: ../../source/features.rst:1540 5d609be0319446308850bf9df7d06950
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1567
+#: 2b4f75fa791745248efcdf36ccd643e6
 msgid "~15%"
 msgstr ""
 
-#: ../../source/features.rst:1541 0e177262d550441ca489da5296251811
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1568
+#: f2481ba7429c449aadf5115e156f9c74
 msgid "TBD"
 msgstr ""
 
-#: ../../source/features.rst:1542 1408f803383442ce89a2a7395b4489bf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1569
+#: da5d9902eae34946a8f7269c0507502c
 msgid "⏭️ Next Priority"
 msgstr ""
 
-#: ../../source/features.rst:1544 6d4d4afc923440e7aa19386dab6a2ab4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1571
+#: 96a4fa6357704dcfa00c3116916ed5a3
 msgid "**Performance Benchmarked**:"
 msgstr ""
 
-#: ../../source/features.rst:1546 9f6884a179e945638d6541b776acb443
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1573
+#: e49bb07365524e78afe878db5971e289
 msgid "Basic tier: ~17 ms"
 msgstr ""
 
-#: ../../source/features.rst:1547 a3be82a9e2ae46bba5cb518df58abf80
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1574
+#: bbe8743947eb43afa2bb0f0fe79bc683
 msgid "Expert tier: ~23 ms"
 msgstr ""
 
-#: ../../source/features.rst:1548 55b8a0dbd7ac47cbbaedd52615c37c06
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1575
+#: 26e99ef874df4603a52f21d8be87d59b
 msgid "< 25 ms overhead for all modules"
 msgstr ""
 
-#: ../../source/features.rst:1549 79f02d84075e4d6685a6a0953e3865b3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1576
+#: 4e95802eaf15402184a9fe47f6a17b00
 msgid "Sub-linear scaling with structure size"
 msgstr ""
 
-#: ../../source/features.rst:1550 ad8716a575414b56bb7eef7f8b142e0d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1577
+#: f02df48ea62d43e59189f7b1c18d5d72
 msgid "Test suite: runs in seconds"
 msgstr ""
 
-#: ../../source/features.rst:1552 9167351b75804ddf8670879184839f82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1579
+#: 547c3d221e26406bb59ce2b426c9a7f3
 msgid "**Testing Patterns Established**:"
 msgstr ""
 
-#: ../../source/features.rst:1554 c3888e573c8347a08c3669861b82614e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1581
+#: d337e7b41e4143b3abb6b733bde52337
 msgid "Mock-based testing for SIESTA output parsing (no real calculations needed)"
 msgstr ""
 
-#: ../../source/features.rst:1555 2ce328da011f4ff9af523bf7519f4234
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1582
+#: b83ad70c70a44b0a8b1f84cfefc25ed9
 msgid "SSH/SFTP operation testing with paramiko mocks"
 msgstr ""
 
-#: ../../source/features.rst:1556 1e9fde405f9c48dcac84f0fe2b872a54
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1583
+#: f56c0d7f60c940d7a4fedd098862e3a8
 msgid "Pydantic schema validation techniques"
 msgstr ""
 
-#: ../../source/features.rst:1557 540296b8e90d4a969d5fa36fe0d1df19
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1584
+#: 213a5c850e6f46dd88438764a39dd32f
 msgid "Edge case coverage (None values, empty structures, error conditions)"
 msgstr ""
 
-#: ../../source/features.rst:1562 32dfcd20c0054a10b5240866fa316102
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1589
+#: cde5cf746a0d453a8c24d561f43659f4
 msgid "🔧 Development Tools"
 msgstr ""
 
-#: ../../source/features.rst:1565 f0543bc60a5d4215b0afa2caa1f3143e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1592
+#: c35fde124e7f43f09061ef0d895c302d
 msgid "Module Registry"
 msgstr ""
 
-#: ../../source/features.rst:1567 83d40384bf04467f9069aa3ace955df8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1594
+#: 0f470b601d9f4acea674b2714ee0a419
 msgid "Centralized registry for all SIESTA parameter modules:"
 msgstr ""
 
-#: ../../source/features.rst:1584 6748b54c05d0466aa87ea481dd05a0ff
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1611
+#: 70e5888db66145c6a3d4d1005c52b5bb
 msgid "Validation Framework"
 msgstr ""
 
-#: ../../source/features.rst:1586 9b9dbeb5f2c946bb88850abde51dd2e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1613
+#: ccc32c99b6e34162a48ca93a9154db2a
 msgid "Validators for output quality checking:"
 msgstr ""
 
-#: ../../source/features.rst:1588 6baa7baa565d46449a3adb676fccd9cd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1615
+#: c3cec633ff7b4777afccea49261de4db
 msgid "``SiestaOutputValidator`` - General SIESTA output"
 msgstr ""
 
-#: ../../source/features.rst:1589 e45a7e81c4a64ed0be8078a851dd335f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1616
+#: b5373c6072ff46d398250299c4410c40
 msgid "``RelaxationValidator`` - Geometry optimization"
 msgstr ""
 
-#: ../../source/features.rst:1590 3e1c9840bea0413ab7c14830963ff208
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1617
+#: bf95dfbe37dc46c48d3f9c2d865ba17d
 msgid "``BandStructureValidator`` - Electronic structure"
 msgstr ""
 
-#: ../../source/features.rst:1592 9691b617eef1416ea3c02434bb9cd806
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1619
+#: 600e4e8095ba4788ba261590cfcaf174
 msgid ""
 "All validators inherit from ``custodian.custodian.Validator`` for "
 "consistency."
 msgstr ""
 
-#: ../../source/features.rst:1597 1b0054aef10c48d19909475491a58625
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1624
+#: 0cc66b317b2a424d9f150cd10b8e241b
 msgid "See Also"
 msgstr ""
 
-#: ../../source/features.rst:1599 da25c54c43e54af78488344447c637bf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1626
+#: 0e8616a7617f4ab1a8de9dbab04a7611
 msgid ":doc:`tier-system` - Complete tier system documentation"
 msgstr ""
 
-#: ../../source/features.rst:1600 30450956aa2745a89b976b84b228ec7a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1627
+#: 81cdf343c9094c17b778aa724818b3b0
 msgid ":doc:`custodian` - Custodian error handling details"
 msgstr ""
 
-#: ../../source/features.rst:1601 60ce498328744d1eb69c1aa1b3ca9a35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1628
+#: 79c90a9d6c0b4a5f8d05dfdc6141c9b8
 msgid ":doc:`advanced-workflows` - Complex workflow examples"
 msgstr ""
 
-#: ../../source/features.rst:1602 8db141f725e24e7990d8233014078acd
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1629
+#: 2f07466f464f470abf441bf6f34f0cfa
 msgid ":doc:`tutorials/index` - Hands-on tutorials"
 msgstr ""
 
-#: ../../source/features.rst:1608 885802e77b7841c385a648a2f53c494d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/features.rst:1635
+#: 78d6690cfe39486c8b1319cea1b1edb6
 msgid ""
 "All features are production-ready and fully tested. See individual "
 "tutorials for detailed usage examples and best practices."
@@ -2229,3 +2854,73 @@ msgstr ""
 
 #~ msgid "Architecture (v1.0.1)"
 #~ msgstr ""
+
+#~ msgid "standard_relax"
+#~ msgstr ""
+
+#~ msgid "Material-Specific Presets (14 Total)"
+#~ msgstr ""
+
+#~ msgid "Pre-configured tier + parameter combinations:"
+#~ msgstr ""
+
+#~ msgid "**Structural (3 presets)**:"
+#~ msgstr ""
+
+#~ msgid "``basic_relax`` - Minimal parameters for quick tests"
+#~ msgstr ""
+
+#~ msgid "``standard_relax`` - Default production relaxation"
+#~ msgstr ""
+
+#~ msgid "``high_accuracy_relax`` - Tight convergence"
+#~ msgstr ""
+
+#~ msgid "**Surface (2 presets)**:"
+#~ msgstr ""
+
+#~ msgid "``magnetic_2d`` - 2D magnetic materials"
+#~ msgstr ""
+
+#~ msgid "``magnetic_correlated`` - DFT+U for strongly correlated systems"
+#~ msgstr ""
+
+#~ msgid "**Phonon (2 presets)**:"
+#~ msgstr ""
+
+#~ msgid "``phonon_standard`` - Standard phonon calculations"
+#~ msgstr ""
+
+#~ msgid "``phonon_high_accuracy`` - Tight forces for accurate phonons"
+#~ msgstr ""
+
+#~ msgid "**Optical (2 presets)**:"
+#~ msgstr ""
+
+#~ msgid "``optical_response`` - Optical absorption, dielectric"
+#~ msgstr ""
+
+#~ msgid "``band_structure`` - Electronic band structure and DOS"
+#~ msgstr ""
+
+#~ msgid "**Performance (2 presets)**:"
+#~ msgstr ""
+
+#~ msgid "``large_system`` - Linear-scaling for >100 atoms"
+#~ msgstr ""
+
+#~ msgid "``parallel_hpc`` - MPI optimization for HPC"
+#~ msgstr ""
+
+#~ msgid "**Testing (1 preset)**:"
+#~ msgstr ""
+
+#~ msgid "``convergence_test`` - All modules for comprehensive testing"
+#~ msgstr ""
+
+#~ msgid "All 24 modules work with powerups"
+#~ msgstr ""
+
+#~ msgid "📖 **Tutorial**: ``tutorials/18-tier-based-calculations/``"
+#~ msgstr ""
+

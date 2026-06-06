@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,15 +20,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-index.rst:25
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:25
 msgid "Browse by Category"
 msgstr "مرور بر اساس دسته‌بندی"
 
-#: ../../source/tutorials-index.rst:2 df117d68ddda4936bfb7b15759e38bd8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:2
+#: 0bf33f273a9844879f347030e48a471d
 msgid "Tutorial Index"
 msgstr "فهرست آموزش‌ها"
 
-#: ../../source/tutorials-index.rst:4 ec0b68ad1f0d4271abbf25ce0ca994b8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:4
+#: 24ceebff4cee4f6d919cac4c21249f65
 msgid ""
 "Interactive tutorials for atomate2siesta. All tutorials include working "
 "code examples and can be run in three modes: dry-run (preview), local "
@@ -38,7 +40,8 @@ msgstr ""
 "کاربردی هستند و می‌توانند در سه حالت اجرا شوند: dry-run (پیش‌نمایش)، "
 "اجرای محلی، یا ارسال به HPC."
 
-#: ../../source/tutorials-index.rst:8 496831e5f9f741d1b5a0c17670e7e3ce
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:8
+#: 0b5d6bb2f1d74fed9b0ca225e6d8c304
 msgid ""
 "**New to atomate2siesta?** Start with :doc:`tutorials-auto/01-basics` and"
 " the relaxation tutorial."
@@ -46,99 +49,122 @@ msgstr ""
 "**تازه‌وارد atomate2siesta هستید؟** با :doc:`tutorials-auto/01-basics` و "
 "آموزش relaxation شروع کنید."
 
-#: ../../source/tutorials-index.rst:12 9c7b6cc04a07401bafb1b30eea1d2a4f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:12
+#: 9cf0f0ef65714024822fc84513f5c949
 msgid "Generate tutorial scripts automatically with the CLI:"
 msgstr "اسکریپت‌های آموزشی را به‌طور خودکار با CLI تولید کنید:"
 
-#: ../../source/tutorials-index.rst:23 24e560b08a344db8bc716dd14d4e9179
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:23
+#: 10f1dd4019b247069d92e515eb306493
 msgid "Tutorial Categories"
 msgstr "دسته‌بندی آموزش‌ها"
 
-#: ../../source/tutorials-index.rst:38 513a04e0b9ec495e9b6b3a6e116d4adb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:38
+#: e859e4465d5f4554aba1b4a70bd66b15
 msgid "Quick Links"
 msgstr "پیوندهای سریع"
 
-#: ../../source/tutorials-index.rst:40 55cc5c237a5d40be882a09b97358d6ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:40
+#: 3a8d0e54a65343ebb2599e232c20e1f8
 msgid "**Getting Started**"
 msgstr "**شروع کار**"
 
-#: ../../source/tutorials-index.rst:41 1cd472c317c94fc8849daa3eb828e310
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:41
+#: c284baec104c4f07a395b9291b7dbfc5
 msgid ":doc:`tutorials-auto/01-basics` - Essential basics for all users"
 msgstr ":doc:`tutorials-auto/01-basics` - مبانی ضروری برای همه کاربران"
 
-#: ../../source/tutorials-index.rst:42 d6beff5a7d374299992640e4da8bb30e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:42
+#: 7405c9af230d45758e70b42ab7c7916c
 msgid ":doc:`installation` - Setup guide"
 msgstr ":doc:`installation` - راهنمای نصب و پیکربندی"
 
-#: ../../source/tutorials-index.rst:43 a70854e4ad994d09be9b7ae3a1e6ceda
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:43
+#: 8876b3c0bb8b4da7b3946ef274e32ca9
 msgid ":doc:`cli-tools` - Command-line tools"
 msgstr ":doc:`cli-tools` - ابزارهای خط فرمان"
 
-#: ../../source/tutorials-index.rst:45 688b2f24dbdd4de4bf39c8bcc9e0956c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:45
+#: ef8df629e80c4e369dc44d1c0521b7ad
 msgid "**Advanced Topics**"
 msgstr "**موضوعات پیشرفته**"
 
-#: ../../source/tutorials-index.rst:46 71057eb459564465a032dbc42472ab95
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:46
+#: 82203bdf7c6c49f9b5b5cacdb06e350c
 msgid ":doc:`tutorials-auto/02-workflows` - Complex multi-step calculations"
 msgstr ":doc:`tutorials-auto/02-workflows` - محاسبات پیچیده چندمرحله‌ای"
 
-#: ../../source/tutorials-index.rst:47 1c08648e45f6439fb2fa1ffdade23883
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:47
+#: fa7bab3e7c4642a8befeeed7f8aba9ef
 msgid ":doc:`tutorials-auto/03-advanced-features` - Expert features"
 msgstr ":doc:`tutorials-auto/03-advanced-features` - ویژگی‌های تخصصی"
 
-#: ../../source/tutorials-index.rst:48 c9e2f20172414dcb83c19041ddcbf970
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:48
+#: eca77f82e4694cc59e152bd9e3489c0d
 msgid ":doc:`tier-system` - Material-specific presets"
 msgstr ":doc:`tier-system` - پیش‌تنظیمات اختصاصی مواد"
 
-#: ../../source/tutorials-index.rst:50 c171062008424f73bd77481165516b61
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:50
+#: 1c86dd88a2b04e1194517bb81ba7268e
 msgid "**Workflow Optimization**"
 msgstr "**بهینه‌سازی جریان کار**"
 
-#: ../../source/tutorials-index.rst:51 674a894b11904976890439c493b10e1c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:51
+#: 83da8a4fd095493c98fc7ca2dc37fbc5
 msgid ":doc:`makers-vs-flowmakers` - Parameter customization guide"
 msgstr ":doc:`makers-vs-flowmakers` - راهنمای سفارشی‌سازی پارامترها"
 
-#: ../../source/tutorials-index.rst:52 81b10314a79f448e9ed1d8f9cd330568
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:52
+#: 9db15a8ac32242bca85a0a65e84c4999
 msgid ":doc:`recipe-book` - High-level workflow recipes"
 msgstr ":doc:`recipe-book` - دستورهای جریان کار سطح بالا"
 
-#: ../../source/tutorials-index.rst:55 e07d95ee39c64614b13f43783a18432a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:55
+#: fe7d7bb9e13845ab90d6f9d9c6470423
 msgid "Tutorial Statistics"
 msgstr "آمار آموزش‌ها"
 
-#: ../../source/tutorials-index.rst:57 434b201d1d9641719d51173275da3db4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:57
+#: 0539eca5953347c38152e8236776ab75
 msgid "**00 Structures**: 1 tutorials"
 msgstr "**۰۰ ساختارها**: ۱ آموزش"
 
-#: ../../source/tutorials-index.rst:58 377ed87262a94281909e00f7b5a3ad1b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:58
+#: ba55810a0a714150b025dbaa967425a1
 #, fuzzy
 msgid "**01 Basic Tutorials**: 9 tutorials"
 msgstr "**۰۱ مبانی**: ۹ آموزش"
 
-#: ../../source/tutorials-index.rst:59 1000f530627b433097d474ef7216e7c1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:59
+#: c235139c3857405e9abe751b59a8332f
 #, fuzzy
-msgid "**02 Workflows**: 21 tutorials"
+msgid "**02 Workflows**: 26 tutorials"
 msgstr "**۰۲ جریان‌های کار**: ۱۹ آموزش"
 
-#: ../../source/tutorials-index.rst:60 b4bcc3f63bda4b69b3b35e7b9091e4cb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:60
+#: 4d920f68972545a48537cddde1bbe98b
 #, fuzzy
-msgid "**03 Advanced Features**: 33 tutorials"
+msgid "**03 Advanced Features**: 35 tutorials"
 msgstr "**۰۳ ویژگی‌های پیشرفته**: ۳۴ آموزش"
 
-#: ../../source/tutorials-index.rst:61 06b37ad404094513bf08c45ad17f26db
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:61
+#: 7e02a011bfca482c902f9c49a92e8f97
 #, fuzzy
 msgid "**04 Notebooks**: 1 tutorials"
 msgstr "**نوت‌بوک‌ها**: ۱ آموزش"
 
-#: ../../source/tutorials-index.rst:62 e399593b1d334d5891789bd0822e9013
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:62
+#: 2ae03b3d8fa1446f8a26bea701f9344e
 #, fuzzy
-msgid "**05 Troubleshooting**: 3 tutorials"
+msgid "**05 Troubleshooting**: 4 tutorials"
 msgstr "**عیب‌یابی**: ۱ آموزش"
 
-#: ../../source/tutorials-index.rst:64 d8b9cd4bb1014dc08183be93f424c9b1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-index.rst:64
+#: 930aaf7550484a828f97d989ec67f075
 #, fuzzy
-msgid "**Total**: 68 interactive tutorials"
+msgid "**Total**: 76 interactive tutorials"
 msgstr "**مجموع**: ۶۶ آموزش تعاملی"
 
 #~ msgid "**Case Studies**: 1 tutorials"
 #~ msgstr "**مطالعات موردی**: ۱ آموزش"
+

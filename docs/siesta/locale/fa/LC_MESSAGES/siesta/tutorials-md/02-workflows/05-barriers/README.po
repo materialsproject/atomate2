@@ -1,0 +1,994 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:1
+#: 29401a43c24e4dd3b3b7a0b8d08b8af7
+msgid "Tutorial: Defect Migration Workflows (NEB)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:3
+#: 52c114c449ac46ce83d36859dc0a8697
+msgid ""
+"**Category**: 02-workflows/05-defects **Difficulty**: Advanced **Time**: "
+"~5 min (dry-run), ~2-8 hours (full NEB calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:9
+#: afc062ff201c4eb4af814ef146d5e55e
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:11
+#: c06c44695c3f425b8dbd5733b566f814
+msgid ""
+"This tutorial demonstrates **defect migration** calculations using the "
+"Nudged Elastic Band (NEB) method. NEB finds minimum energy paths (MEPs) "
+"and transition states for atomic migration, diffusion, and reaction "
+"pathways. These calculations are essential for understanding ion "
+"conductivity, catalytic reactions, and defect dynamics."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:13
+#: 5b09d81b81604f0397a220281ed7aac0
+msgid "**What NEB Calculations Tell You**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:14
+#: b25cdb1dba404d3597b1185adbd202d0
+msgid "**Migration barrier (Eb)**: Energy required for defect to hop (eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:15
+#: dbeb546b18cf4611aab4e114d98a5c82
+msgid "**Transition state geometry**: Saddle point structure on MEP"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:16
+#: cf264171dda64d49a7eb61bacb35b863
+msgid "**Reaction coordinate**: Complete energy profile from initial → final"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:17
+#: c3db9a66cd984690b615689c6c4d59c4
+msgid "**Diffusion mechanism**: Pathway and intermediate states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:18
+#: e834d0805156481fa44dfcfaacb11d31
+msgid "**Pre-exponential factor**: For Arrhenius diffusion D = D₀ exp(-Eb/kT)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:20
+#: 5dd8d04d5fde46b9b6c90c9530cab1c6
+msgid ""
+"**Note**: This section focuses on **migration barriers** (NEB). For "
+"**defect formation energies** (vacancies, interstitials, substitutions), "
+"future tutorials are planned."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:24
+#: d3159e3186784790b9e1675eb5a8caaf
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:26
+#: 333b7527712a47f08b2114b3fdf5e1dc
+msgid "Using `NebDirectFlowMaker` for SIESTA Lua-based NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:27
+#: 507b442f0c6442f58a82b658cb9dfa5a
+msgid "Using `AseNebFlowMaker` for ASE optimizer-based NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:28
+#: ebfa0a3f18254fb18420819363f83d51
+msgid "Using `NebVacancyExchangeFlowMaker` for atom exchange barriers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:29
+#: d5ec65e56f964ee79b5f56b08a3b709c
+msgid "Image generation and interpolation methods"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:30
+#: f4eae18b87104544b7edf17a539e9247
+msgid "Convergence criteria for transition states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:31
+#: 1390567e0d7b4cfbbef5ed57876b4d9f
+msgid "NEB checkpoint/resume capabilities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:32
+#: 6159de45bf294e9494670cc49b855cbb
+msgid "Post-processing: barrier heights, reaction coordinates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:36
+#: a05d2f0ba59d480a89237aaeb2ccffe8
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:38
+#: 8d3977ffc47c4b639e563b5b3abed34a
+msgid ""
+"**Required tutorials**: "
+"[01-basics/01-RelaxMaker](../../01-basics/01-RelaxMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:39
+#: c14dfc8995d949ac83d6467a5de2cad4
+msgid "**Required knowledge**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:40
+#: 19bbfa992f8f4a73b7f22a4149956fed
+msgid "Transition state theory"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:41
+#: 7bf84e2da52d4bacb6a0a6677307742b
+msgid "NEB method basics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:42
+#: 6f0b8d48e72d4d46a9a68b1ee60e79dd
+msgid "Defect chemistry concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:43
+#: 09227b27c8a0470f86778c412e422353
+msgid ""
+"**Recommended**: [01-convergence](../01-convergence/) - Converged "
+"parameters critical for accurate barriers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:44
+#: 718aa1db8eb5464a9a332b81a8102adc
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:48
+#: ef3277aa80d642f8a05a3381835c60a2
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:50
+#: 95441ad0a0bb4986b1cf9ac417677ce1
+msgid "Nudged Elastic Band Method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:52
+#: 00ae76fd406d489d86442dcae9afe611
+msgid "NEB finds minimum energy paths (MEPs) by:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:54
+#: 9c9b1b95eba04c53b6ab9f5b1dcb94a4
+msgid ""
+"**Create image chain**: Interpolate N images between initial and final "
+"states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:55
+#: a33728ffce384e178c94ebb8c9d74562
+msgid ""
+"**Add spring forces**: Connect images with fictitious springs (prevent "
+"collapse)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:56
+#: f91873f5cf92405bbb9ca9c3769d05d4
+msgid ""
+"**Project forces**: Remove spring force parallel to path, real force "
+"perpendicular to path"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:57
+#: 3e4601c1709c4fc781418547b6b75e6e
+msgid "**Optimize images**: Move perpendicular to path to find MEP"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:58
+#: aabe135b1a214b998b94c3482d81b213
+msgid "**Extract barrier**: Maximum energy along path = activation energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:60
+#: 9048bf9f87b8430aa15270de597632a7
+msgid "**Energy Expression**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:62
+#: 11e5cf0a4fd04aa4bb2a94fc9e0f1ebe
+msgid ""
+"\n"
+"E_{\\text{barrier}} = \\max_i E_i - E_{\\text{initial}}\n"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:66
+#: 817ee7d6c5164622aba0a3a835309c09
+msgid "Where $E_i$ is energy of image $i$ along the path."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:68
+#: e048a4a7e0ee44e0a1f1c8e25d369c6e
+msgid "NEB Variants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:70
+#: ed4f7dd9b1c14ceeb31a8ac1c77b6864
+msgid "**Standard NEB**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:71
+#: cc783fb19ebd47ac8a47fc007825d5f5
+msgid "All images move toward MEP simultaneously"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:72
+#: f09c4d86e68e4049b7e5d23fb3c12b41
+msgid "Good for simple barriers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:74
+#: 1b7730e7eecc45eea354bf6bd076a7e8
+msgid "**Climbing Image NEB (CI-NEB)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:75
+#: 97034e761a0742c2b4df7a6ea1322634
+msgid "Highest energy image climbs to exact saddle point"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:76
+#: 6e1380d0c5d44081b2d1788731827221
+msgid "More accurate transition state"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:77
+#: c265466f86b64b8fa43e8a684deb9966
+msgid "Slightly more expensive"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:79
+#: f0d81f8df9d64256a4a20efcb20132fd
+msgid "**ASE vs SIESTA Lua NEB**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: afa8c755de5348959014fcb82439fb02
+msgid "Aspect"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 17e92b39a5284fa99cfc4bb18337b50c
+msgid "ASE (Python)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 661b6e31ebe14ae5b3db150dcdc8ee26
+msgid "SIESTA Lua (FLOS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: d58bb57e161f45559c0906741ad3b68c
+msgid "**Optimizer**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: dea91432660c4b168e3edcdad5f0d62b
+msgid "BFGS, FIRE (ASE)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 2b1351a24df14ebcb9718fd5755ca0a0
+msgid "Lua NEB script"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 3adf0271d81b400282104d1b62c88919
+msgid "**Flexibility**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 729e6524af92410fbcdd09511b922e4c
+msgid "High (custom optimizers)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: d0595d44805648cbac675f62417c38c7
+msgid "SIESTA-native only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 5438738e7ee2499082fedec0e4078169
+msgid "**Checkpoint**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: a388752141894a409a8b1164bbb1c200
+msgid "Full state saving"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 0105ff56f33a45d1a10fd9dd3f9aceb6
+msgid "Limited"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: d5ee990dce7645d49ed10390564b1f41
+msgid "**Best for**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: fff934dbbe8f4c76ab5df93c66ccef53
+msgid "Complex paths, CI-NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md
+#: 8fd537f7e8134c11a3ed40916eb22b1c
+msgid "Quick calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:87
+#: 4a18072ed6be46dda3410ff9fe701b79
+msgid "Number of Images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:89
+#: ed331127b2bf4d8bae4d3cb99189a7e7
+msgid "**Guidelines**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:90
+#: 62214b4aa4714973bf39ac2d984ab9c5
+msgid "**Simple hops** (nearest neighbor): 5-7 images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:91
+#: b89f9353c6ac45c8a90a08a1249676db
+msgid "**Complex paths** (multi-step): 9-13 images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:92
+#: ad7a6ba84e1d4f7cbcd44f1ba4371b9b
+msgid "**Molecular rotations**: 7-11 images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:93
+#: bdc774e3ab81485b9b2eac0a156a72aa
+msgid "**Rule of thumb**: Barrier peak should have ≥2 images nearby"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:95
+#: 17165f7bb2c84769a5454279a2ca1217
+msgid ""
+"**Too few images**: Miss transition state, underestimate barrier **Too "
+"many images**: Expensive, diminishing returns"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:98
+#: 4023adbd00ad4f66b8804b90a4457954
+msgid "Convergence Criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:100
+#: 30de1e3ff130490987b4e1df995c1c59
+msgid "For accurate barriers:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:110
+#: cc0a9bf0c7294d9f9a418ed779b7a227
+msgid "**Typical values**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:111
+#: a992730a264748d2a3d1ef06606d47f9
+msgid "Force tolerance: 0.02-0.05 eV/Å (looser than relaxation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:112
+#: 786229b20a014b45bcc8087e1f2efbfc
+msgid "Max iterations: 200-500 (path optimization slower)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:116
+#: aabc11771238401c8dd18a6e7a460298
+msgid "Tutorial Subdirectories"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:118
+#: 407dd8ba775642c6b97737ac99e0be52
+msgid "[01-NebDirectFlowMaker](01-NebDirectFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:119
+#: a3585ace355244d3a93416ae62cee0b5
+msgid "**Description**: SIESTA Lua-based NEB calculations **Tutorial Files**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:121
+#: 21a78f751dcc4b55a769d1ab711c1712
+msgid "`01_li_diffusion.py` - Li ion diffusion in MgO (5 images)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:122
+#: 22abac403f4e41afbf96615ebc2bf846
+msgid "`02_li_diffusion_relax.py` - With endpoint relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:123
+#: 5aad1f30c62640acb1eee8fe01ed53eb
+msgid "`03_li_diffusion_remote.py` - HPC submission example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:124
+#: 36e99f0544514478bc1d14c5a41eaf02
+msgid "`to-test/` - Additional examples (vacancy diffusion, O vacancy, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:126
+#: 21454255001145e4b8b2137e1617b182
+msgid "**Features**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:127
+#: 5cead0745ca447bdbfb876f554271256
+msgid "SIESTA native Lua NEB (`neb.lua`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:128
+#: 4a33ad6f89ff4eb1851934b93d638d83
+msgid "Simpler setup than ASE"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:129
+#: a12f01148c51402ab59114eb5bfb894f
+msgid "Automatic interpolation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:130
+#: da988d315c884b78b83433327fce1e4f
+msgid "Summary files with barrier heights"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:134
+#: 729cb0b5384841d29510e7eaaaa1b3bc
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:136
+#: d195e27a52654ee6bc79b9e77eff17fd
+msgid "Example 1: Basic Li Diffusion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:169
+#: 20c8a036b9a04d968e499ad118c5d8f3
+msgid "Example 2: With Endpoint Relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:191
+#: 636418356a81469dabd75c85218af64f
+msgid "Example 3: ASE-Based NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:209
+#: ac8d2efc949945caac4e97b3c17aa1a2
+msgid "Example 4: Vacancy Exchange"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:229
+#: fdea938bc2564407a504952b6323b471
+msgid "Run Modes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:231
+#: ad3a451487ea4f2781d11a681f476a41
+msgid "1. Dry-Run Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:237
+#: ac99b0c7d95f4a92b5cb61760f90d8dc
+msgid "**Output**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:246
+#: 7a169221d937447690e370eab9a5be86
+msgid "**Check images**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:252
+#: 47d45c9545664555bcb47fab85080e05
+msgid "2. Local Execution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:259
+#: b0d0b77f6d7b4a47ba8d75655270eb26
+msgid "**What happens**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:260
+#: b0d1c47bf20f4f079eb63099c20520f0
+msgid "(Optional) Relax initial and final structures"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:261
+#: 1058c8665d0d4a7b97ab883d40435aa1
+msgid "Generate interpolated images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:262
+#: 0212d4607ba24b3aad2a98af2fcd37a4
+msgid "Run NEB optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:263
+#: 45650010996e429286c7b96e47b95d06
+msgid "Extract barrier height"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:264
+#: fe9c0dec97ac4fe0abbc55ed28d99949
+msgid "Create `neb_summary.txt` with full analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:266
+#: c0558416dd3842f0be8074d910ac4383
+msgid "**Time**: 2-8 hours depending on:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:267
+#: 0b883111c31e447a900e20b9ba7af28d
+msgid "System size (atoms in supercell)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:268
+#: 8ec538cf266743f9b17cf72a56511f69
+msgid "Number of images (5-13 typical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:269
+#: 6ef550b8a0244ac2af459024b8d1b144
+msgid "Convergence criteria (tighter = longer)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:270
+#: 9481fc8e97cd432a863515b191c07037
+msgid "K-points and basis size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:274
+#: d09bb04b1e9941c2a386ff499f4d629c
+msgid "Expected Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:276
+#: b4c9fa020fe94301bf2ccb08dc3ac972
+msgid "NEB Summary File"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:278
+#: 0754e08d69c144fe96c1510434a28239
+msgid "After calculation, check `job_neb_analysis_*/neb_summary.txt`:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:310
+#: 6f33d5d5f614488e86f50d332824f299
+msgid "Analyzing Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:345
+#: ca28b152ad1646afb6db47f0dc4dbf38
+msgid "Diffusion Coefficient"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:347
+#: 6607ee9933bb4d5796a4fd03a28353f6
+msgid "From barrier height, estimate diffusion coefficient:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:371
+#: 3c2a1d211f2747f08f6cecfd408ca83f
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:373
+#: 8a3a9202abfc4150afc30c3fcfc5a9cc
+msgid "Issue 1: \"NEB not converging\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:375
+#: ba99667c5299428f9644aa1807ecdcd7
+msgid "**Symptoms**: Exceeds max iterations, forces still high"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:377
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:411
+#: 6e2b0996c43d4e7985485c14bba13584 70e610df556343cab8b43132272c7c4a
+msgid "**Causes & Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:379
+#: ec6f1d5ee9284c5bbc76cdf1a7c46b03
+msgid "**Images too far apart**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:385
+#: b6260a845cda45d9a19198b64493c005
+msgid "**Initial path poor**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:394
+#: eeaf38e97598497ca0a57eb9fc355221
+msgid "**Tolerance too tight**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:401
+#: 2a64e966e812468b85a52335845f4913
+msgid "**Spring constant issues**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:407
+#: 2e1fdd1f4f3d4690b3baea441dbde734
+msgid "Issue 2: \"Barrier height unrealistic\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:409
+#: e11e6913ef1f45ab96ca257ac2884c09
+msgid "**Symptoms**: Eb too high/low compared to experiments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:413
+#: 859a35d2628e43f2bfde90a8e4d2cc81
+msgid "**Unconverged parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:414
+#: 3ecb64deb9b447758020633a65a91765
+msgid "Run [01-convergence](../01-convergence/) first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:415
+#: 7f5c5b69bf584321a5e7f8cc571406a6
+msgid "Barriers very sensitive to k-points and basis!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:423
+#: 39446e3db0804cb8bdea2c2b781e1886
+msgid "**Endpoints not relaxed**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:434
+#: eff97a63436c48ce90419e8cf658f453
+msgid "**GGA limitations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:435
+#: 007e3a3a02d4402c8d5ff65f56a8e5f2
+msgid "PBE underestimates barriers by ~0.1-0.3 eV for ionic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:436
+#: ea8e00d4f86c4959b7e7954bf2b7dd5f
+msgid ""
+"Consider DFT+U for transition metals (see [03-advanced-"
+"features/12-dftu](../../03-advanced-features/12-dftu/))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:438
+#: bc515d60a8bb4b15bf27fd4192792d09
+msgid "**Supercell size effects**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:439
+#: 30f5964956ea41b4adf666d0ae608feb
+msgid "Defect-defect interactions if cell too small"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:440
+#: 22bde02986ce47268a30f33f63cecc08
+msgid "Use ≥10 Å separation between periodic images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:442
+#: 6a0a05a5dc3f4acdb578a2ecd029ff95
+msgid "Issue 3: \"Transition state at endpoint\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:444
+#: be62065b762d4c8f86712a5a9f28b7bf
+msgid "**Symptoms**: Maximum energy at image 0 or N"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:446
+#: d48b80c1a488454882e5a80548069e10
+msgid "**Cause**: Poor initial/final structures or wrong reaction coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:448
+#: d0c5e6426e6445de845d73b11608e6a0
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:450
+#: 6d7cbaf92b8d40bdbb0660b036729fe9
+msgid "**Verify endpoint structures**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:457
+#: b900a5be4c1e41c197303da95a29d17b
+msgid "**Wrong direction**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:458
+#: 43887cea2d40498d9da99781fdd8ae9f
+msgid "Swap initial ↔ final"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:459
+#: 9d3d4781faaa427388b5ca98712c6a12
+msgid "Check that structures differ only by intended atomic position"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:461
+#: 40bfe12810184024ad1341810213747d
+msgid "**Multiple barriers**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:462
+#: 9cece1591e0a466b99ecc097181c5f99
+msgid "Path may have multiple steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:463
+#: 24f0eeaadcc04492979ce3dd4fee3915
+msgid "Run separate NEB for each elementary step"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:465
+#: 3cb0a6d0d9974a5bb34c353cf264dcdf
+msgid "Issue 4: \"Images collapsing\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:467
+#: b36501242650475e8f92bf26b5f133ea
+msgid "**Symptoms**: All images converge to same structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:469
+#: 1a2d119987024f12b3a7b066b1a10553
+msgid "**Causes**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:471
+#: eb12eb4160004c4fa93134b89bd926fb
+msgid "**Spring forces too weak** (ASE NEB):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:476
+#: 53d737b63dc44d47b8738f2c106ac790
+msgid "**Initial path degenerate**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:477
+#: 0f6e39ea0a3f42f3a658c66e1c7b9349
+msgid "Verify initial ≠ final before NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:478
+#: 85feec0e097344b6aadfa03da0afe2e8
+msgid "Check interpolation worked correctly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:482
+#: 466307b650804b5aa3c48376a1e8c0ac
+msgid "NEB Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:484
+#: 79a49da3879d4075a54de7aa454d7dbb
+msgid "1. Always Relax Endpoints First"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:499
+#: b925ae7c7bae46478407a52471296f9a
+msgid "**Why**: Endpoint forces propagate to images → incorrect barriers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:501
+#: f4ca8a3b0c01406bb84e4ac210233701
+msgid "2. Use Adequate Supercell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:503
+#: d59d651ced5f4726aa147e2053ec7e2c
+msgid "For defect migration:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:518
+#: 207113bc646a47e382261e5cef3661f5
+msgid "3. Converge NEB Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:520
+#: efbfff72f8b74a338181d2992cbc308f
+msgid "Test barrier convergence with:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:536
+#: a51a18867cbc413b99c6904a9da3f14e
+msgid "4. Checkpoint Long Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:538
+#: 6ebc376dc36745f0ab1642c3a24849f0
+msgid "For NEB on HPC:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:552
+#: d52e65e9def54555b61d93f753566205
+msgid "Tips for Success"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:554
+#: 46f06bac23ab401aa59c0cbb3e7063e6
+msgid ""
+"✅ **MUST relax endpoints tightly**: Forces < 0.01 eV/Å ✅ **Adequate "
+"images**: 5-7 for simple hops, 9-13 for complex paths ✅ **Converged "
+"parameters**: k-points, basis, cutoff (see "
+"[01-convergence](../01-convergence/)) ✅ **Large supercell**: ≥10 Å "
+"separation between defect images ✅ **Reasonable tolerance**: 0.02-0.05 "
+"eV/Å (don't over-converge) ✅ **Verify initial ≠ final**: Check structures"
+" differ by intended coordinate ✅ **Use custodian**: Automatic error "
+"recovery (use_custodian=True)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:564
+#: c26694df79424ef9914c382b0ce13cff
+msgid "Advanced Features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:566
+#: 163adca116af408e9a8df6d6a7a08388
+msgid "Climbing Image NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:568
+#: 256ab334c25f4774982a109f36234858
+msgid "For accurate transition state geometry:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:580
+#: 0e74f22b366a455780d11448cc54ee42
+msgid "**When to use**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:581
+#: 27d3b19771db44d08e4af407b4744389
+msgid "Need exact transition state structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:582
+#: 1b32fad1e72a4af1bec3cf08a4194a20
+msgid "Calculating pre-exponential factors (vibrations at TS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:583
+#: bc84db2994c04c439e7dec7d2162b50c
+msgid "Comparing with experiments on TS geometry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:585
+#: f21e47a0e3544ee3ba74ee944615078c
+msgid "Variable-Cell NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:587
+#: dc176ef0947742cba599237f617216eb
+msgid "For reactions involving cell changes (rare):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:595
+#: 77813af9e3164443992d52b3b4304101
+msgid "**Note**: Most defect migration occurs at fixed cell volume."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:597
+#: 438096d0dc8c4b328290ad3e2630a87b
+msgid "Multi-Step Reactions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:599
+#: 13072e09e53149518795bd76b8ac8f28
+msgid "For complex paths (A → B → C):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:616
+#: ac1219fa199b4ad59022305bec53b62a
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:618
+#: d7896c54b6474ab0b7aad8e4c3a6b72b
+msgid "After completing NEB tutorials:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:620
+#: 90dd4e9fee4a4120af78f90ffd301472
+msgid ""
+"**Phonons at TS**: [06-vibrational-properties](../06-vibrational-"
+"properties/) - Calculate pre-exponential factor"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:621
+#: 2f9a45a640da4276b26aa48132c2a053
+msgid ""
+"**Charged defects**: Combine with [03-advanced-features/05-charged-"
+"calculations](../../03-advanced-features/05-charged-calculations/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:622
+#: 92c4ad7b65d8431e9b8cb318d58cf27d
+msgid ""
+"**Surface diffusion**: [03-surfaces-adsorption](../03-surfaces-"
+"adsorption/) - Adsorbate migration on surfaces"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:626
+#: 97eab08b5a334f67af57422cc1e631ce
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:628
+#: e0f231499f894be79f729ec33f5f0548
+msgid "**NEB Method**: Henkelman & Jónsson, J. Chem. Phys. 113, 9901 (2000)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:629
+#: 3caef1f8b3a446c7a0953245efa4c2a7
+msgid "**Climbing Image**: Henkelman et al., J. Chem. Phys. 113, 9978 (2000)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:630
+#: 2e83ce7271e849578fc5c721bd85f22d
+msgid "**SIESTA NEB**: SIESTA Manual, Lua scripting chapter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:631
+#: b1feefa335a746a98d883534eb3bf369
+msgid "**ASE NEB**: ASE documentation, Transition State Tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:632
+#: 39a38c9c84854196ac988c2a0fd1687a
+msgid "**Defect Migration**: Van der Ven et al., Acc. Chem. Res. 42, 364 (2009)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/05-barriers/README.md:636
+#: b98a2a80d6884a58bf3bf25ddae1b15f
+msgid ""
+"*Back to [02-workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+

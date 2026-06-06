@@ -1,0 +1,476 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:1
+#: 51826cadae8f4517af644eb2019f98eb
+msgid "Electrocatalysis Workflow Fixes Applied"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:3
+#: bc8d925b9d624c13a543150b979da098
+msgid "Files Modified"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:5
+#: e09bc345118d4c6dbc66264985eceb44
+msgid "1. `src/atomate2/siesta/flows/electrocatalysis/analysis/thermodynamics.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:7
+#: b6f622d8c6324084aaecf0cc67d42681
+msgid "**All bugs fixed in the core thermodynamics calculation:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:9
+#: 33c359639d7a4fd0bbc2ac12c9a3f6dc
+msgid "Fix 1: Gas-Phase Species Handling (Lines 319-352)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:10
+#: 4254b5048f0147dda50e52b1fa0121f9
+msgid ""
+"**Problem**: Hardcoded logic assumed O2 always reactant, H2O always "
+"product."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:12
+#: c44cb1c3e44f4eca957f3c25629c3d35
+msgid "**Solution**: Use `n_H` sign to determine reactant vs product:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:13
+#: e55787dad85f4d8e8804ba2d1c679cc6
+msgid "**H2O**: `n_H > 0` → product (ORR), `n_H < 0` → reactant (OER)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:14
+#: e5407f9165334bbf8de9cd05fd0ba130
+msgid "**O2**: `n_H >= 0` → reactant (ORR), `n_H < 0` → product (OER)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:15
+#: ba1d964b3a72442c9e9877322e371805
+msgid ""
+"**Reference states**: Skip corrections for `n_H=0, n_e=0` (except O2 "
+"adsorption)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:37
+#: f7f1c4a87f254e83a3ee70d0d361c81e
+msgid "**Impact**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:38
+#: 611df300680f42e298f92af6f56f167f
+msgid "✅ ORR now works correctly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:39
+#: b2144d373f104ed19afe34ca2c18bfe6
+msgid "✅ OER now works correctly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:40
+#: ee97c4932bb24bdf8c31e26ba71ec47b
+msgid "✅ HER unaffected (doesn't use O2/H2O)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:44
+#: 9af9bcf5d93741c2add1053f44b0c518
+msgid "Fix 2: Electrode Potential Sign (Line 369)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:45
+#: cbac0a2c6e79489983cc04dd6d5d1b8a
+msgid "**Problem**: Wrong sign was introduced in a previous session"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:47
+#: 5bdf07a52df5416fad8974a3d8408f44
+msgid "**Solution**: Use `-eU` (the standard Nørskov convention)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:54
+#: 82c4812e175448df91c532ebc428ecf3
+msgid "**Derivation** (Nørskov formulation):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:64
+#: d0b0e160a3894451b96faeef6746e6eb
+msgid ""
+"**Verification**: Tested against Pt(111) ORR literature values (η ≈ 0.45 "
+"V)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:65
+#: 440b664ac5a84260be0b144b3108b3d5
+msgid "Convention 1 (+eU): η = 1.93 V ✗ (wrong)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:66
+#: e9e67f1272f94eda847d1685a0343f05
+msgid "Convention 2 (-eU): η = 0.53 V ✓ (correct, within 0.08 V of literature)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:68
+#: 06920cb250e3482abade1c171b4575a1
+msgid "**Impact**: Overpotentials now match experimental values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:72
+#: af141be7e50c4d8e832247dc9ce9639f
+msgid "Fix 3: Overpotential Formula (Lines 352-370)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:73
+#: bd2a136a24ae4b0a85454caef6f2d8f4
+msgid "**Problem**: Wrong formula gave negative overpotentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:75
+#: 26e754b1ede445a6a049ab7316d5b553
+msgid "**Solution**: At equilibrium potential, `η = max_delta_G`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:87
+#: 34a9f2030c2f4905849e4a0cb9a67c16
+msgid "**Impact**: Overpotentials now positive as expected"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:91
+#: a8612009093d471fa314c83c77e69f29
+msgid "2. `src/atomate2/siesta/flows/electrocatalysis/orr.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:93
+#: 50417984208a43cea28a854a6dfd8fd0
+msgid "**Fix**: Removed experimental H2O energy (Line 157-162)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:111
+#: 5cfa18f0c65343e78090043fa19a39b2
+msgid "**Impact**: Now using 100% DFT data as demanded"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:115
+#: a19a8bc70ffe4021844aa9cfcec52845
+msgid "3. `src/atomate2/siesta/flows/electrocatalysis/oer.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:117
+#: 9d8d014e9cc54930b57036cc1d681523
+msgid "**Status**: ✅ Already correct! Uses `h2o_gas_energy` (DFT value)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:119
+#: b0b324ae082a4e0f9c19a05edd260026
+msgid "No changes needed - OER was already using DFT values."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:123
+#: ea80ab059db048dbadddfa7963f12058
+msgid "4. `src/atomate2/siesta/flows/electrocatalysis/her.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:125
+#: 8a1c3b1eb4504a9c8fe98edb68aa67ba
+msgid "**Status**: ✅ No issues - HER doesn't use O2/H2O gas-phase corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:127
+#: 96b5c1065e9e482f9858042139691838
+msgid "HER only needs H2 reference, which was always correct."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:131
+#: 746f5b2b45394b1b964ed4b386374a1b
+msgid "Test Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:133
+#: 2e35a5d338d64246b310bdf261935cf0
+msgid "ORR (Oxygen Reduction Reaction)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:151
+#: d44b8461f4fb42c8bdda4d75cc9b0e7c
+msgid "OER (Oxygen Evolution Reaction)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:171
+#: 9fe7d6d2a9bf4517abfc9f8e60ec1f70
+msgid "Remaining Issues (NOT CODE BUGS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:173
+#: e5073edcd37c4f89b671c6f694dba1af
+msgid "1. Thermochemical Error (+1 eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:174
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:187
+#: d02c295849ac4367ad2f85400399eab0 dee892d29f9147af85df2593483f9af3
+msgid "**Cause**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:175
+#: 2b813b4352d64012b63ded146a3b8461
+msgid "DFT water formation error (~0.13 eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:176
+#: 126108d270bc4da59570efc6325b0f96
+msgid "Missing ZPE + entropy corrections (~0.5-1.0 eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:177
+#: 78745355ea244adea5ac71104eeb4ba4
+msgid "\"Dirty\" parameters (low convergence)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:179
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:192
+#: 764d437ff6e84dd0a8466526d9ca088e 79962d745feb492b96e4bf54c21f1932
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:180
+#: 76837462be5f40c1ae2f9b64170566e2
+msgid "Use proper convergence parameters (not `_dirty`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:181
+#: 559c463b925b4bbdb637f5ec8bca36df
+msgid "Run phonon calculations for gas molecules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:182
+#: 2802bf695d86412bba64a687608c56bb
+msgid "Use experimental ΔG_f(H2O) = -2.46 eV (standard practice in literature)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:186
+#: e8b6c710de754579b307542fa7185dc0
+msgid "2. Large Overpotentials (η > 2 V)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:188
+#: 12303bf663ae4f6d85999f332198adb5
+msgid "Surface may not be optimized for ORR/OER"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:189
+#: 278a1e4febc34d3b9c7472f7b1669f8f
+msgid "\"Dirty\" parameters give poor energies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:190
+#: b9f307aa769c4e83b6de91817b68b5c8
+msgid "No structure relaxation for adsorbates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:193
+#: 3d2e990fa31145dbb79be6da438e1376
+msgid "Use `electrocatalysis_gas_phase` preset (NOT `_dirty`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:194
+#: acace9c5eb474eec89aadd1080a4e91f
+msgid "Verify surface structure (Pt(111) vs other)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:195
+#: 1cb5d706d75b47d584df258781e036a2
+msgid "Ensure proper geometry optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:199
+#: 58e9a0a8ed7042c68206d923f2896990
+msgid "Code Status: ✅ FULLY FIXED"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:201
+#: cbb05cf243c949e0a5b25522d5689349
+msgid "All bugs are now corrected:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:203
+#: 70ace82cdefa4271898230a918b27ad8
+msgid "✅ **Thermodynamics**: Correct gas-phase handling for both ORR and OER"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:204
+#: 7d1ddd8af7ad4464ab624912ef1b566b
+msgid "✅ **Electrode potential**: Correct sign in CHE model"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:205
+#: 296eb3cec365479baa958220328273b7
+msgid "✅ **Overpotential**: Correct formula"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:206
+#: dc0bcd20a0fa4e4eb34bb5c51fe9ec53
+msgid "✅ **DFT data**: Using 100% DFT values (no experimental mixing)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:207
+#: b51843541b8f43a19a197bd36332aca2
+msgid "✅ **Reference states**: Properly handled (n_H=0, n_e=0)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:209
+#: 5beacb1b03be4b629547834fb54c31f4
+msgid "Remaining errors are from:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:210
+#: 672386c87a1c40ad84839b5ddca20e93
+msgid "**Physics**: Missing ZPE/entropy, DFT water formation error"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:211
+#: cbe0de81486e4495938c39f7b9528b65
+msgid "**Computation**: \"Dirty\" parameters, poor convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:215
+#: 1647f1b124b44db6b76e55de247aea73
+msgid "Recommendations for Production Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:217
+#: 6e45c1ecd18a4c2e9d55388cdf2c5088
+msgid "**Use proper presets**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:218
+#: c70e4185586f42c782263779bb08c91e
+msgid "Gas-phase: `electrocatalysis_gas_phase` (NOT `_dirty`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:219
+#: f2f0cfb67be64aab97ae7afabe1d25cb
+msgid "Surface: `electrocatalysis` or `standard_relax`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:221
+#: cd3ba0076a9143fc81392d166981a314
+msgid "**Include phonon corrections**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:222
+#: 3ecbfc6402e34cc4af6fdfa5a521a005
+msgid "Run vibration analysis for gas molecules (H2, O2, H2O)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:223
+#: af1e585a33da4d748a9b467d81acb2c1
+msgid "Include ZPE + entropy corrections at 298K"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:225
+#: 51464800525249339bbbdb84b9542b13
+msgid "**Use experimental H2O** (standard practice):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:226
+#: dc5f1ce5538644488b561b00bca4d1c2
+msgid "Set `H2O: -2.46` eV (experimental ΔG_f)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:227
+#: b77ad21e04434cc0ae93fcf3bd1ccf59
+msgid "This is NOT \"cheating\" - it's the Nørskov standard!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:228
+#: 106d0586ed444582b9c4a9b5b476a7a2
+msgid "Reason: DFT systematically errors on small molecules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:230
+#: 407e6eea0fdb44a091f0782baffda3b4
+msgid "**Verify structures**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:231
+#: 184bd3fcb8be430b99d15ffdaf818460
+msgid "Ensure surface is correct catalyst (Pt(111), IrO2, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:232
+#: 1d512fcbd0c44c4aab3de02c6c92e859
+msgid "Check that adsorbates are properly relaxed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:233
+#: a325fac5f42349a284e913ba6fb76728
+msgid "Use sufficient supercell size (3×3 or larger)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:235
+#: 8ef9c636e6d745feb000f2b327a64dd5
+msgid "**Expected results** for Pt(111):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:236
+#: a271c73928cb477282a11e2600b68f28
+msgid "ORR: η ≈ 0.45 V"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:237
+#: 3214982f1c744c748de4145c830d94d3
+msgid "OER: η ≈ 0.80 V"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:238
+#: 6c81fff5f1a4444a9170c6e9952a8aa6
+msgid "All ΔG steps < 1.5 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:242
+#: a64696e742e44ed5a3d4f1295e035d68
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:244
+#: 20cd3718a23a42ae884ed933b1a1c10a
+msgid "Nørskov et al., *J. Phys. Chem. B* **108**, 17886 (2004): CHE model"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:245
+#: 9c1ae98253d94797afa04e8db3d771ac
+msgid "Man et al., *ChemCatChem* **3**, 1159 (2011): OER universality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:246
+#: 05aaf90c515b46aab14c43dc451f663c
+msgid "Viswanathan et al., *ACS Catal.* **2**, 1654 (2012): ORR/OER scaling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/09-electrocatalysis/FIXES_APPLIED.md:248
+#: 916b7985e4544417875efaf7ec457787
+msgid ""
+"**Key takeaway**: The code is now correct. Use proper calculation "
+"parameters and phonon corrections for accurate results!"
+msgstr ""
+

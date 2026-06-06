@@ -1,0 +1,709 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:1
+#: 85299fe11adc452687556c9fc5c82145
+msgid "Tutorial: Phonon Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:3
+#: fe79d755870f4bbbb4415e71fac2d2b9
+msgid ""
+"**Category**: 06-vibrational-properties **Difficulty**: Advanced "
+"**Time**: ~5 min (dry-run), ~2-6 hours (full calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:9
+#: aafd6498cbd64a8ea47755da40f8f2cf
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:11
+#: 1f78da33937f45019e68e6bd4c62af25
+msgid ""
+"Complete phonon calculation workflow using phonopy integration with "
+"SIESTA. Computes phonon band structure, density of states, and thermal "
+"properties from first principles."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:13
+#: 6e24f75c37314460a2a6572e99c53327
+msgid ""
+"This tutorial demonstrates the **SiestaPhononFlowMaker**, which automates"
+" supercell generation, displacement calculations, force constant "
+"extraction, and phonon analysis with automatic plotting."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:17
+#: b153b74565dd4d249822200b0e11af1d
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:19
+#: f17a790f08a840ec8085673053ab3b84
+msgid "Phonon calculation workflow using finite displacements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:20
+#: c712ff86630b4e759f17b3c9b323e1a0
+msgid "Supercell generation (automatic and manual)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:21
+#: 56d9c8eace1a46caa3641af274a8861e
+msgid "Separate parameters for relaxation vs force calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:22
+#: 74c67a1a030c412aadad77e01410ae8c
+msgid "Phonon band structure and density of states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:23
+#: 8f053f561f3c409ba3187a61de60fdc4
+msgid "Thermal properties (heat capacity, entropy, free energy)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:24
+#: d7394f8f8ca842948c981724876bcb94
+msgid "Automatic plotting with phonopy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:25
+#: 3659813ee53546b1b82fc0c0fceed086
+msgid "Critical importance of well-relaxed structures"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:29
+#: 5e24d225731248029fbd333f90b343ec
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:31
+#: 8b9d4194e1d74fc9a8d9101853a9e171
+msgid "**Required**: [01-RelaxMaker](../../../01-basics/01-RelaxMaker/) completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:32
+#: c1944571080043169598e02415741322
+msgid "**CRITICAL**: **Fully relaxed structure** with forces < 0.01 eV/Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:33
+#: 03dc9fb6a6ab4623ac67b3859a00de5e
+msgid ""
+"**Required**: [01-convergence](../../01-convergence/) - Converged "
+"k-points and basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:34
+#: 757943b03b44406aace13427a4bac837
+msgid "**Recommended**: Basic phonon theory and phonopy familiarity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:38
+#: e63ba2147e2e4eef9228cba19a938ab4
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:40
+#: 27bce5185fbf49de9c0ab651bbefe8f6
+msgid "Phonon Calculation Method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:42
+#: 0dacbb89e9a8448f809e93f03c78f050
+msgid "**Finite Displacement Approach** (phonopy):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:43
+#: edc23ae107054e3698c0cf4eb6162503
+msgid "Create supercell (e.g., 2×2×2) from unit cell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:44
+#: 4f39cc2683274f788b5a943d8dadc3b9
+msgid "Apply small atomic displacements (0.01 Å typical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:45
+#: e0b5c025461d40ad8cabf36bbc9165ee
+msgid "Calculate forces on all atoms for each displacement"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:46
+#: bf5128a699204806b1576832cbda8c42
+msgid "Extract force constants from force-displacement relationship"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:47
+#: 474ea102723e4c0589212e3f08eb0dbb
+msgid "Diagonalize dynamical matrix → phonon frequencies and eigenvectors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:48
+#: 5813ff2bf8884984a205b62453c8292b
+msgid "Plot band structure, DOS, thermal properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:50
+#: 53c3331202194ace91a6d25a83d1d74a
+msgid ""
+"**Force Constant Matrix**: For atoms i and j in Cartesian directions α "
+"and β:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:53
+#: b14f6270027e404d83addc9197d3410e
+msgid ""
+"$ \\Phi_{i\\alpha,j\\beta} = \\frac{\\partial^2 E}{\\partial u_{i\\alpha}"
+" \\partial u_{j\\beta}} \\approx "
+"\\frac{F_{j\\beta}(u_{i\\alpha})}{u_{i\\alpha}} $"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:57
+#: e3ecee15ed25449d8a5ee4044cd8dc62
+msgid "Where u is displacement, F is force."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:59
+#: 144b797985e0426b9d4cfe51b3278f56
+msgid "Supercell Requirements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:61
+#: e10fd0b3a23a4ff79b327cec7e1bb964
+msgid "**Size Considerations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:62
+#: 410f3cf65ed24e8ca12d2c6b69db1d49
+msgid "**Minimum**: 2×2×2 (quick testing)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:63
+#: 9dc4d7571f1e43abb500215bde3c7258
+msgid "**Standard**: 3×3×3 (publication quality)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:64
+#: 307a528a048f474dbbd182bc32a2f8ef
+msgid "**Very large systems**: 2×2×2 may suffice"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:66
+#: 09f13a699c344f88882704dd35215dda
+msgid "**Two Specification Methods**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:67
+#: c1b2938789304361a8564401ac93d855
+msgid "**Automatic** (`min_length`): Phonopy chooses supercell ≥ specified length"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:68
+#: 640db730589a4957af505289e98d6ab9
+msgid "**Explicit** (`supercell_matrix`): Full control over supercell shape"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:70
+#: 39a1282a37cc4be4ae59f70ff05b3ed0
+msgid ""
+"**Rule**: Supercell should be large enough that force constants decay to "
+"zero at boundaries (typically > 12 Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:72
+#: 9e00b290b5e745fd98415e35b3f323ba
+msgid "Number of Displacement Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:74
+#: 51a79e8724164eccab428601e40e1012
+msgid "Depends on symmetry:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:75
+#: 228903959341408287c33ce6a69b96fa
+msgid "**High symmetry** (cubic): 6-10 displacements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:76
+#: c07245fe63204ab4b1184cfa5c607bb3
+msgid "**Medium symmetry** (hexagonal): 10-20 displacements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:77
+#: d5c57b59e98b424398dafeaab9158ccb
+msgid "**Low symmetry** (triclinic): 50-100+ displacements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:79
+#: edae4f8350f74ac68ac7a944dc38161b
+msgid "Use `dry_run=True` to preview number before running!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:81
+#: f4b4d64b1a874a1fad81065472ac44f8
+msgid "Separate Relaxation and Force Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:83
+#: 989ce8253d934254bb34ce234b9c8ddb
+msgid "**Strategy** (demonstrated in `01_standard.py`):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:84
+#: 0e24450e7ad844f68c42c88ea9ef62b6
+msgid "**Relaxation**: Moderate parameters (faster, just need geometry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:85
+#: 52d6c5c2ab574a30a2b380c981d48c67
+msgid "Looser k-points [3,3,3]"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:86
+#: 59d957faa3e248ef8290db35dba42cdb
+msgid "Standard cutoff (300 Ry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:87
+#: 68df2d2af4ea4c1f96eeab788c09dd47
+msgid "Moderate basis (DZP)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:89
+#: bb45cdbc4ce24d8990eeaa28638fdee6
+msgid "**Force calculations**: Tight parameters (accurate forces critical!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:90
+#: a1d80de6e11942729651aecade7b82b6
+msgid "Denser k-points [6,6,6] or higher"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:91
+#: 7f9b7b24b91d4fad9bf32a6a653a35e1
+msgid "Higher cutoff (400-500 Ry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:92
+#: 06425cda9d5f491a97c3bd1b7a490923
+msgid "Tight SCF (DM.Tolerance=1e-6)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:94
+#: 1e2e4b1180ba44ada9455b096145da6e
+msgid ""
+"**Why**: Phonon frequencies very sensitive to force accuracy, but not to "
+"initial structure optimization details."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:98
+#: 6a47a71b990d41ef8f499bd9b37b80b9
+msgid "Workflow Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:123
+#: e0fef2dc3f0242e0881a2efd32312c37
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:125
+#: 05d6a8f3db0146e082b23b3f122a7bff
+msgid "Basic Example (Automatic Supercell)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:152
+#: a95c346e1d33403c9b7a0596ccfa7421
+msgid "Explicit Supercell with Custom Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:204
+#: a87928a48c2849e28360a639671fe1f5
+msgid "Configuration Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:206
+#: 57125371025944028a6c5dfa1cc36670
+msgid "Supercell Specification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:219
+#: b7e7d78c35e841b4a365866b638d9b8b
+msgid "Displacement Distance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:232
+#: 914cb6ad93f34ec298a9d0027cf9419c
+msgid "Q-Point Mesh for DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:245
+#: 87fb9aba53834bb5befd3fd5f9c39c7a
+msgid "Thermal Properties Temperature Range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:261
+#: 4765bc29a6434d9486f97d9c81795853
+msgid "Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:263
+#: 7b2a3c37c79e497899297fc7b58caab7
+msgid "File Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:276
+#: a9727d120f044e5d86e30b4bf594af55
+msgid "Phonon Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:283
+#: 5f858c12cf9a47e4b584b8e0e90495bc
+msgid "**Output**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:305
+#: 920aa9b536664a9c948d837671ad9969
+msgid "Analyzing Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:335
+#: 57219f9e3cff472898ad50c0edb41344
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:337
+#: d317bbdd5c4740c0a06d9f92795daeec
+msgid ""
+"✅ **CRITICAL - Well-relaxed structure**: Forces < 0.01 eV/Å before phonon"
+" calculation ✅ **Converged parameters**: Use converged k-points, cutoff, "
+"basis from convergence studies ✅ **Separate relaxation/force params**: "
+"Tight parameters for forces, moderate for relaxation ✅ **Use symmetry**: "
+"`use_symmetry=True` reduces calculations dramatically ✅ **Preview "
+"first**: `dry_run=True` to see number of displacements ✅ **Enable "
+"custodian**: Automatic error recovery for long calculations ✅ **Dense "
+"q-mesh**: mesh=(50,50,50) or higher for smooth DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:345
+#: a3944b0bc05b46e688d49bd40fa3e986
+msgid ""
+"❌ **Don't use unrelaxed structure**: Will give imaginary frequencies ❌ "
+"**Don't use too small supercell**: < 10 Å risks artificial interactions ❌"
+" **Don't skip convergence**: Phonons very sensitive to parameters ❌ "
+"**Don't ignore imaginary modes**: Indicates structural instability or "
+"insufficient relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:352
+#: 2227ca7441df47a48489cca4719a8e41
+msgid "Importance of Relaxed Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:354
+#: deb30dcc22e94e5ebaa1801140798ee8
+msgid "**Why forces < 0.01 eV/Å is critical**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:373
+#: 316250a87be34ef098ba76ac28470039
+msgid ""
+"**Physical reason**: Small residual forces → large spurious force "
+"constants → wrong frequencies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:377
+#: cac7ba2172f84219acfb529cc715c642
+msgid "Supercell Size Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:379
+#: 11ae297698884cf394d400c7a94d1574
+msgid "Test phonon convergence with supercell size:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:406
+#: 77778b5618044f08af1e6fb2aab4c27d
+msgid ""
+"**Typical result**: 2×2×2 often sufficient for cubic systems, 3×3×3 for "
+"high accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:410
+#: 55962b34903e47dcab705aab47a89904
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:412
+#: 5300debbfe094155aff8a78142a2e960
+msgid "**Problem**: Imaginary frequencies (negative values)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:414
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:428
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:443
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:462
+#: 95a6f3902a054d6589124c417d420479 bc41dffb8b1446969a3c34f1f7824c20
+#: bdc0bfffa1ce4c36917e73e27ca3bd35 c781249d930048ccbf808183c3b325ff
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:415
+#: 24d83d6252c8470ab82fbbf56c3edb7b
+msgid "**Most common**: Structure not fully relaxed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:416
+#: 0c4927c6af3749399b4f198a600624c0
+msgid "Re-relax with MD.MaxForceTol=\"0.005 eV/Ang\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:417
+#: 57675074efc9469e9d4afa640bcfd0c6
+msgid "Check final forces < 0.01 eV/Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:418
+#: b5abba2eb71e4f6e8a990158a96aa930
+msgid "**Structure actually unstable**: Phonons correctly predict instability"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:419
+#: 1f04008d667942f9904b9bbb5a0eca54
+msgid "Check for phase transitions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:420
+#: 1cfaf54db1e948cba6cd95579d648ca9
+msgid "Try different structure (temperature, pressure)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:421
+#: 57c90b48c44049c7a68bf7721b286cec
+msgid "**Supercell too small**: Artificial interactions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:422
+#: a96a293b5df44a74ad9d039bfa1dcb84
+msgid "Increase supercell size (2×2×2 → 3×3×3)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:426
+#: 51bc61aca54c4d8a89fc2e007d1716fc
+msgid "**Problem**: Too many displacement calculations (> 100)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:429
+#: 4b07efa8b7834b85bb40112509df41c2
+msgid "Enable symmetry: `use_symmetry=True` (default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:430
+#: 4fe10908bda64749b71c74bcc6d57b60
+msgid "Use smaller supercell for testing: 2×2×2 instead of 3×3×3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:431
+#: 8d518a8ca4644616aa2827a5e7422ad4
+msgid "Check structure has correct symmetry:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:437
+#: b8535629a6c6478c984e61a32105a955
+msgid "Submit to HPC cluster with job arrays"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:441
+#: 51e521505c8b472eac37d7eb26fe73e6
+msgid "**Problem**: Phonon frequencies don't match experiments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:444
+#: 881834250ee743dc931fdd7fdb2c1740
+msgid "**Most common**: Unconverged k-points or basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:445
+#: 2cea9afada4a462480c8be932e7fca25
+msgid "Run convergence tests first!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:446
+#: 65ddd8e9e4ee4ba39370a5f4e4a550fc
+msgid "Phonons very sensitive to computational parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:447
+#: e04c1e3c884f4e529e1d26ea0d257cb3
+msgid "Check supercell size: Try 3×3×3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:448
+#: 6c6ac1c63cdd475aa82f00b3c07f1931
+msgid "Tighter force calculation parameters:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:456
+#: 14fd3a031ede466893a504f0d97ca034
+msgid "GGA limitations: PBE typically overestimates frequencies by ~2-5%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:460
+#: cd318946ac2e43bda5a73d983dabf72c
+msgid "**Problem**: Calculation takes too long"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:463
+#: 3fcbc67dacf3464796404346854fecda
+msgid "Use smaller supercell for testing (2×2×2)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:464
+#: c61e9cef79f943a5a8650d848ab00020
+msgid "Enable custodian: Automatic error recovery prevents restarts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:465
+#: eb67a2a71b7a423dbc1c6a16d02fe096
+msgid "Submit to HPC cluster"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:466
+#: 51e84f42302b417cb3ad076c3a79b0f4
+msgid "Check number of displacements: `dry_run=True` first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:470
+#: fa2d11cd52c24658b93bed3d4522af28
+msgid "Thermal Properties Interpretation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:472
+#: 577071cf5bce46a599997ab0f1229111
+msgid "Heat Capacity at Constant Volume (Cv)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:490
+#: c1a9c057c49240bdbb4dc56390ab0695
+msgid "**Expected**: Cv → 3kB at high T (Dulong-Petit law)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:492
+#: f679355cf8fd43f3bc8cfd9e0c7b0c0d
+msgid "Zero-Point Energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:494
+#: 10bb3249e1f34363bf1f3452269cfdac
+msgid "Quantum contribution at T=0:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:496
+#: 32e1b061b4164b13885baa67285a6c47
+msgid ""
+"$ E_{ZPE} = \\sum_{\\mathbf{q},s} \\frac{1}{2} \\hbar "
+"\\omega_{\\mathbf{q},s} $"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:500
+#: 3c691f8fcd1e448a8f56c6a860c78241
+msgid "Typically 0.01-0.1 eV/atom depending on element mass."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:504
+#: eee0b74db2144879b802bc1e5b77a5f1
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:506
+#: cd93b06262df4fcdb2e7252e378a5c0b
+msgid "After completing phonon calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:508
+#: d719369db13e4523802d8815ccb56b27
+msgid ""
+"**Grüneisen parameters**: "
+"[02-SiestaGruneisenFlowMaker](../02-SiestaGruneisenFlowMaker/) - Volume-"
+"dependent phonons"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:509
+#: eec83b79a4ea45e5b7283624e2c58fe8
+msgid ""
+"**QHA thermodynamics**: "
+"[03-SiestaQhaFlowMaker](../03-SiestaQhaFlowMaker/) - Temperature-"
+"dependent free energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:510
+#: 64d7942922ae46cda3cf9e2c96ee8938
+msgid ""
+"**Thermal conductivity**: Use phonon results as input for transport "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:511
+#: 93804c2100954a418a8fd2751a77e22d
+msgid "**Spectroscopy**: Compare with IR/Raman experiments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:515
+#: 58b33cad097241238f13d0377496a504
+msgid "Related Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:517
+#: f3e12a2910334eab97423fdd380fa1fd
+msgid ""
+"[02-SiestaGruneisenFlowMaker](../02-SiestaGruneisenFlowMaker/) - "
+"Grüneisen parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:518
+#: 46cf596a2fdf4fcaa166af9d2bacfe87
+msgid ""
+"[03-SiestaQhaFlowMaker](../03-SiestaQhaFlowMaker/) - Quasi-harmonic "
+"approximation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:519
+#: cd68e50e56db49a4997915b4161d8624
+msgid "[Vibrational Properties Overview](../README.md) - All phonon tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:520
+#: 7e446c5ea3ea4045bfbf2e60f8ba3e1a
+msgid ""
+"[01-convergence](../../01-convergence/) - Parameter convergence (do this "
+"first!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/01-SiestaPhononFlowMaker/README.md:524
+#: 86f571fed12e4cbeb7ab0bb0dfbb9495
+msgid ""
+"**📚 [Back to Vibrational Properties](../README.md)** | **📖 [All "
+"Tutorials](../../../README.md)**"
+msgstr ""
+

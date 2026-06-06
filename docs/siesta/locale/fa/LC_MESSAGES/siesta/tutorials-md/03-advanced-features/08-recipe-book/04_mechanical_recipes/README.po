@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,259 +20,272 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:1
-#: d7a14885807547e48fce0eb3253f4d6b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:1
+#: e50a141bc5194875abd1991505ab9036
 msgid "Mechanical Properties Recipes"
 msgstr "Mechnicl Properties Recipes"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:3
-#: b5a5a0bbbb424413843256f05c846d6c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:3
+#: 883e87ad763a4930bfebcde71681c158
 msgid "Calculate mechanical properties using RecipeBook one-liners."
 msgstr "Clculte mechnicl properties using RecipeBook one-liners."
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:5
-#: a0febb4780e6413193e25bc42c4fd73c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:5
+#: 7ac8a0c463ef4770a2f4477d6470f78d
 msgid "Overview"
 msgstr "نمای کلی"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:7
-#: 4bc0717b451f49e2a4745c19d53916f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:7
+#: 9a09d74c2df04786ad51fb3b46443a4b
 msgid "Recipes for mechanical characterization:"
 msgstr "Recipes برای mechnicl chrcteriztion:"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:8
-#: 3a2cd5eac884429496d97acda7d9034e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:8
+#: fbc9083608594166a36509b294662fb9
 msgid "**Elastic Constants**: Full elastic tensor and derived properties"
 msgstr "**Elstic Constnts**: Full elstic tensیا و derived properties"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:9
-#: d94390a029e84c0dbd3faa50dfbe9281
-msgid "**Bulk Modulus**: EOS-based bulk modulus calculations"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:9
+#: c2d5d75d37c84ac8a2eea163711cc9b0
+#, fuzzy
+msgid "**EOS and Bulk Modulus**: Energy-volume curve and bulk modulus"
 msgstr "**Bulk Modulus**: EOS-bsed bulk modulus clcultions"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:10
-#: 70fcd7e1dcbc451b8cf96aba7931af87
-msgid "**Stress-Strain**: Stress-strain curves and yield properties"
-msgstr "**Stress-Strin**: Stress-strin curves و yield properties"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:10
+#: 2f10a7adbb5e47b99f25d30f5c5b034b
+msgid "**Complete Mechanical**: All mechanical properties in one workflow"
+msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:12
-#: 07e0fc72dae34cc8806d6501a5d16827
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:12
+#: 13aec463f6eb4ec2bf0dce7772dba808
 msgid "Files"
 msgstr "فایلs"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:14
-#: 014d5f6c841349daa2c46f217fd9b358
-msgid ""
-"`elastic_constants_recipes.py` - Elastic tensor calculations (HIGH "
-"priority)"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:14
+#: 49b13f0677d9483d90bc23d12066719c
+msgid "`mechanical_recipes.py` - Complete mechanical property calculations"
 msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:15
-#: bab64b8884634afa8ef762053757597a
-msgid "`bulk_modulus_recipes.py` - Bulk modulus from EOS (MEDIUM priority)"
-msgstr "`bulk_modulus_recipes.py` - Bulk modulus from EOS (MEDIUM priority)"
-
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:16
-#: bed60d92409a4e3984934427810b92bc
-msgid "`stress_strain_recipes.py` - Stress-strain analysis (LOW priority)"
-msgstr "`stress_strain_recipes.py` - Stress-strain analysis (LOW priority)"
-
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:17
-#: 1b7b5db5153a4896bb6f4c0635d6b1e3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:15
+#: 3a3dd783d49845389f43d97eab3570c5
 msgid "`README.md` - This file"
 msgstr "`README.md` - This file"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:19
-#: 8e06d93dde11497ead5be3f81f03f7f7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:17
+#: 66f67dd2b30043e286a6bf0c258a2ced
 msgid "Quick Start"
 msgstr "شروع سریع"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:34
-#: e9ac95d2e56e4dc286fd9e09a8303dd2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:32
+#: a9c482f2e0394f5f86b8d9bad68fdbf0
 msgid "Properties Calculated"
 msgstr "Properties Clculted"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:36
-#: 4376b6eb2da94609a9518335660de61c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:34
+#: f19f349a6bc342b3a424259d00b32fee
 msgid "Elastic Constants Workflow"
 msgstr "Elstic Constnts گردش کار"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:37
-#: aaad67a1fc8d4e31aceab9f6819a50ec
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:35
+#: 2f7c571c04564caea8d4bf7d718a6e8e
 msgid "Full elastic tensor (Cᵢⱼ)"
 msgstr "Full elstic tensیا (Cᵢⱼ)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:38
-#: 0938a19b63bb4551b3ca995b73c64389
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:36
+#: 1c3231e187cd42d5a90d3d10a9776e62
 msgid "Bulk modulus (K)"
 msgstr "Bulk modulus (K)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:39
-#: 8daa03d6b1254a87a44a62379fd66217
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:37
+#: 097095cd83c04b7fb215ac1cdbd36619
 msgid "Shear modulus (G)"
 msgstr "Sher modulus (G)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:40
-#: 23c63529100c49a18d5cbf82ed3a04f2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:38
+#: 2589cb202ee94dbca2b99723c43e9a90
 msgid "Young's modulus (E)"
 msgstr "Young's modulus (E)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:41
-#: ce93881424d94a6dbe7c975ce85934ab
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:39
+#: cc884db44b9b44f984287fe9169fd793
 msgid "Poisson's ratio (ν)"
 msgstr "Poisson's rtio (ν)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:42
-#: a535e4ec743b44b289337bd96524632a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:40
+#: bb94f4f904c648e4ad3bf3f6ab8e969a
 msgid "Mechanical stability analysis"
 msgstr "Mechnicl stbility nlysis"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:44
-#: 3479db0148ed4527a17313547dde649e
-msgid "Bulk Modulus Workflow"
-msgstr "Bulk Modulus گردش کار"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:42
+#: 28f55edc79764f4193c0b358769b73ce
+msgid "EOS Workflow (includes Bulk Modulus)"
+msgstr ""
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:45
-#: a32a1a2cb3e74a3ba1ab2b50a8d8d59f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:43
+#: 7a732d8c030a487e98e73f562a1256a2
 msgid "Energy vs volume curve"
 msgstr "Energy vs volume curve"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:46
-#: f8c7d92ab6cf4cf3a44f095110dcc865
-msgid "Bulk modulus from EOS fitting"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:44
+#: d0668fa42a394f8d892759c8fa32dd60
+#, fuzzy
+msgid "Bulk modulus from EOS fitting (Birch-Murnaghan or Vinet)"
 msgstr "Bulk modulus from EOS fitting"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:47
-#: 16462b83cc3a4af7a895fec3dd296c14
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:45
+#: dffb28f112cc452fa8fd426615323334
 msgid "Equilibrium volume"
 msgstr "Equilibrium volume"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:48
-#: 46b69cd815f143d3abeeb496321e49f7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:46
+#: fe4a3350bc15442a9eef0cf81400b139
 msgid "Pressure derivative B'"
 msgstr "Pressure derivtive B'"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:50
-#: 7372aec2be54416a850abba3893af2e4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:47
+#: dbbe5763e26746e5b2cbc4365ca0b53f
+msgid "NOTE: This is the same as the old bulk_modulus_workflow()"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:49
+#: 4b5a5eff540f43fe93e56db01c7619ed
 msgid "Mechanical Properties (Complete)"
 msgstr "Mechnicl Properties (Complete)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:51
-#: 81624aeedf824b6ab7345a8023f89bd4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:50
+#: 385ad2c42cfa4c7fbff2ff9e437652ad
 msgid "All elastic properties"
 msgstr "All elstic properties"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:52
-#: fd1c578d830c4ae189836dae6c931f4e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:51
+#: 7977840c84304b6b9ad469789c5968ae
 msgid "Bulk modulus (both methods)"
 msgstr "Bulk modulus (both methods)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:53
-#: f473aad0721e4036b669656c66ed3293
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:52
+#: 2c351b64506a406a824dd196ef4af578
 msgid "Anisotropy factors"
 msgstr "Anisotropy fctیاs"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:54
-#: 2cff1393ff3047d78512e3d6520dc981
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:53
+#: a83b1fc1b73744b4a2e7313294159f44
 msgid "Sound velocities"
 msgstr "Sound velocities"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:55
-#: c158dfa49df14d5cae9af348c48a085c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:54
+#: 6a83844526da40fdb67ece48d0b3f980
 msgid "Hardness predictions"
 msgstr "Hrdness predictions"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:57
-#: 07dd3cc3cfbc4a5c8c22efa92a73b359
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:56
+#: f311fc077c334a43b920049e3dddc77c
 msgid "When to Use"
 msgstr "When to Use"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:59
-#: 40abf4fe0bc2440397e6d89b1a59419a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:58
+#: b2bc9a1ed3524e8783d54af4b1c7dea2
 msgid "**Structural materials**: Need elastic moduli for engineering"
 msgstr "**Structurl mterils**: Need elstic moduli برای engineering"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:60
-#: bf26e043c6af43d989b6e82d09ff9de9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:59
+#: 74075af1bdc8470197f4d4c3ffdcdec7
 msgid "**Hard materials**: Diamond, carbides, nitrides"
 msgstr "**Hrd mterils**: Dimond, crbides, nitrides"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:61
-#: f81874f678e14afd8fc285a015fa30b4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:60
+#: b32e617b6aca488ab9dfae0cdb118488
 msgid "**Mechanical stability**: Check if structure is stable"
 msgstr "**Mechnicl stbility**: Check if structure is stble"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:62
-#: a7a3b63f591d4bdface06c8bac04d1d8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:61
+#: 15cafbfd12bf4eaca0db6ec36806f225
 msgid "**Pressure effects**: Compressibility studies"
 msgstr "**Pressure effects**: Compressibility studies"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:63
-#: 9521677bf90440ae927e1b31195ae6e5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:62
+#: f767ece52a7e4cf3b64f01fd087cc5e8
 msgid "**Material design**: Optimize stiffness, strength"
 msgstr "**Mteril design**: Optimize stiffness, strength"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:65
-#: 47424180e79a4455b7bb34fa977c6d52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:64
+#: fa11a66df4564434859ebc0fab516fa5
 msgid "Computational Cost"
 msgstr "Computtionl Cost"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: a98aa9f7e90c4101b47fb0f50cfd9a59
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: 9ce651ddc5b342f2bcea751a34f17f44
 msgid "Workflow"
 msgstr "گردش کار"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: 9bd2e9f9ca344dd7ba5d47a8f1e71f3f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: 870f78b35b03422aa2c35a5f0033b38d
 msgid "Time (10 atoms, 4 cores)"
 msgstr "زمان (10 toms, 4 cیاes)"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: 0c4aeee1154f4a57850340ca0636bc46
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: ee0e1681700d47a09d77d6bf00d7ad67
 msgid "Elastic constants"
 msgstr "Elstic constnts"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: ebafad3658d74c9587db64fb806cdba6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: 2ffc4f325b2a4204b0025e8f0f355b90
 msgid "2-4 hours"
 msgstr "2-4 hours"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: 724728f197c846a6a7f67b1a089ea7ec
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: 3a25ab749a07472eb5ae6d0368a2ceca
 msgid "Bulk modulus"
 msgstr "Bulk modulus"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: f0473a40a6b94977880e9dcfceb07286
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: 33ea4e78652549d5a8444ef6e7c3041b
 msgid "1-2 hours"
 msgstr "1-2 hours"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: e7fa3e6fc8b8444e8fb86add132db5ab
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: e35f599481f441a1891f532ea65a6854
 msgid "Complete mechanical"
 msgstr "Complete mechnicl"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
-#: 00fe7167b6284d30a830595a6ff809f1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md
+#: befff5a557b34c4981bda5b52a2280bc
 msgid "3-5 hours"
 msgstr "3-5 hours"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:73
-#: 4a36ae4a06844b0ca2b331bf8e5c242b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:72
+#: 7ca655cf158c480ca1cf9fe4682371d0
 msgid "Next Steps"
 msgstr "گام‌های بعدی"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:75
-#: 865879ad18a748b3b47232e7a26effa2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:74
+#: 11bd8d6f74864233acf4282db2efb17e
 msgid "**Electronic properties**: `03_electronic_recipes/`"
 msgstr "**Electronic properties**: `03_electronic_recipes/`"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:76
-#: e631c332038d42e19a0e82714df7f0d5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:75
+#: b659a18afec44df6b63abe42a7f78876
 msgid "**Thermal properties**: `05_thermal_recipes/`"
 msgstr "**Thermal properties**: `05_thermal_recipes/`"
 
-#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:77
-#: cbfc1b3869414502b09bb1e7fd8a9d42
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/04_mechanical_recipes/README.md:76
+#: 0b40433c405e4679822ba4475d5da9ff
 msgid "**Complete study**: `02_complete_workflows/`"
 msgstr "**Complete study**: `02_complete_workflows/`"
+
+#~ msgid "**Stress-Strain**: Stress-strain curves and yield properties"
+#~ msgstr "**Stress-Strin**: Stress-strin curves و yield properties"
+
+#~ msgid ""
+#~ "`elastic_constants_recipes.py` - Elastic tensor "
+#~ "calculations (HIGH priority)"
+#~ msgstr ""
+
+#~ msgid "`bulk_modulus_recipes.py` - Bulk modulus from EOS (MEDIUM priority)"
+#~ msgstr "`bulk_modulus_recipes.py` - Bulk modulus from EOS (MEDIUM priority)"
+
+#~ msgid "`stress_strain_recipes.py` - Stress-strain analysis (LOW priority)"
+#~ msgstr "`stress_strain_recipes.py` - Stress-strain analysis (LOW priority)"
+
+#~ msgid "Bulk Modulus Workflow"
+#~ msgstr "Bulk Modulus گردش کار"
+

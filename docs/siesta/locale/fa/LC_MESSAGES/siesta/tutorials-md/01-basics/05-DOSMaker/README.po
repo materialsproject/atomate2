@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: atomate2siesta \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fa\n"
@@ -20,25 +20,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:1
-#: 1e766cb14de543de802e1b6b5de1b6a9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:1
+#: 7d5d9d992e3842ffaf5c5127e0a07c00
 msgid "Tutorial: Density of States (DOS) with DOSMaker"
 msgstr "Tutorial: Density of States (DOS) with DOSMaker"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:3
-#: 0b5b5567cd404654a5ab35a1c6898485
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:3
+#: 3ed8a8ba7c814d348f0491986da71855
 msgid ""
 "**Category**: 01-basics/05-DOSMaker **Difficulty**: Beginner **Time**: ~2"
 " min (dry-run), ~10-15 min (full calculation)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:9
-#: ad41ab57252e4ba78ca39c25273b7d98
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:9
+#: 065cfc78d2ad4c62a3213b559e630df7
 msgid "Overview"
 msgstr "نمای کلی"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:11
-#: 9ae1980a3fe748ea83b2551f29cacc0a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:11
+#: 3af679cea2414b0099e8dde4c8932da7
 msgid ""
 "This tutorial demonstrates how to calculate the electronic density of "
 "states (DOS) using `DOSMaker`. The DOS provides crucial information about"
@@ -46,603 +46,716 @@ msgid ""
 "at each energy level."
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:13
-#: 57cafeba87ca408994b50b61aaa847ae
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:13
+#: bf7e2a226e8440eaa3df390094290422
 msgid "**What DOS Tells You**:"
 msgstr "**Wht DOS Tells You**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:14
-#: c0ce4c3f90464670bae10f590dd81fb8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:14
+#: 9eee268483554e61bdffb163ff9c7f85
 msgid "**Band gap**: Energy range with zero states (insulators/semiconductors)"
 msgstr "**Bو gp**: Energy rnge با zero sttes (insultیاs/semiconductیاs)"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:15
-#: 559041dbb4964745a90d1cd6906ee017
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:15
+#: a25e328ae4b84a118d400557fff9e729
 msgid "**Metallic character**: Finite DOS at Fermi level = metal"
 msgstr "**Metllic chrcter**: Finite DOS t Fermi level = metl"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:16
-#: 4c8960d703a9491eae4822cd012f0df6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:16
+#: 709f8d24da6f4b698ebbf51617417ba0
 msgid "**Fermi energy**: Chemical potential of electrons"
 msgstr "**Fermi energy**: Chemicl potentil of electrons"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:17
-#: bfd355084a4842edb86737aaf090b5ef
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:17
+#: cda688a7a7f44021803d20db9280f0e5
 msgid "**Electronic distribution**: How states are distributed across energy"
 msgstr "**Electronic distribution**: How sttes re distributed cross energy"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:21
-#: c8693c5762cc411aa3531e6ff29459da
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:21
+#: 2dcf953a8ab04506b8707c19dfce5183
 msgid "What You'll Learn"
 msgstr "چیزهایی که یاد خواهید گرفت"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:23
-#: efa7bfcde64c4a53a2bcefd935e99a04
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:23
+#: 13940ef23d0c424491632f7874f4f9eb
 msgid "Using `DOSMaker` for DOS calculations"
 msgstr "Using `DOSMaker` for DOS calculations"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:24
-#: 4d1ed2827ff84c8ea0077e8d92a9dd51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:24
+#: 028bdb9d9a95440097582f72c7a495a7
 msgid "DOS energy range and broadening parameters"
 msgstr "DOS energy rnge و brodening prmeters"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:25
-#: 3b5b1591317b42988ae8b712989d0670
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:25
+#: 8923c23ca0d24a2bad0307c84acb9e57
 msgid "Analyzing DOS plots and Fermi energy"
 msgstr "Anlyzing DOS plots و Fermi energy"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:26
-#: 4817af355b444688bbc0865b12f90909
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:26
+#: 8a32641d0d18479fb9e5c959f0887d4a
 msgid "Runtime parameter modification with powerups"
 msgstr "Runtime prmeter modifiction با powerups"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:27
-#: eb799c7827974765abc185cde78b643a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:27
+#: 8525b017998d4f73b140ec1105a48325
 msgid "Integration with relaxation workflows"
 msgstr "Integrtion با relxtion wیاkflows"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:31
-#: a90979fb18424abe8511be7e82a07578
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:31
+#: e4a2f4ff0a7440dba8ea726444c92e94
 msgid "Prerequisites"
 msgstr "پیش‌نیازها"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:33
-#: a8ccd8663bd94350b64d693527ba1ac6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:33
+#: 228fa475c8104d13b0abe8e8ac58f71e
 msgid "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
 msgstr "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:34
-#: df9a2de73448445493eda3c650350b59
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:34
+#: abeb85c5c6dc42edb61e5e3bcee8fd7a
 msgid "**Required knowledge**: Basic understanding of electronic structure"
 msgstr "**مورد نیاز knowledge**: Bsic understوing of electronic structure"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:35
-#: 7c6e879ee05c4b928579bdc7bb3670ed
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:35
+#: 72133669426f41ffa267fc6c99c55b10
 msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:36
-#: 0aaee9a26e774434a1fe98b47dc088d8
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:36
+#: 1d070c3a735645698131dd19ef71d62d
 msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
 msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:40
-#: 60ef5e6cfe6949ff847665d05a4a484c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:40
+#: 36182caed9fe4e6fb27f9ed9cbcc867f
 msgid "Key Concepts"
 msgstr "مفاهیم کلیدی"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:42
-#: 21480cd41c2542cc9b25089f976a5300
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:42
+#: 778f3030f29247e69128027746235977
 msgid "What is Density of States (DOS)?"
 msgstr "Wht is چگالی حالت‌ها (DOS)?"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:44
-#: 8905cc66e2a54f0c8e57154329e0dc35
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:44
+#: 33b1a22f62d04c408f238ffaf093ff37
 msgid ""
 "The DOS, $g(E)$, gives the number of electronic states per unit energy at"
 " energy $E$:"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:46
-#: 8719cf59260b459fa8b500dca05fb7e1
-#, python-brace-format
-msgid "$$DOS(E) = \\sum_k \\sum_n \\delta(E - E_{n,k})$$"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:46
+#: 3891e4e2d2be48e7a95e93fa181e0934
+#, fuzzy, python-brace-format
+msgid "DOS(E) = \\sum_k \\sum_n \\delta(E - E_{n,k})"
 msgstr "$$DOS(E) = \\sum_k \\sum_n \\delt(E - E_{n,k})$$"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:48
-#: 80a2992a12134c96bf0046f46d675c45
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:48
+#: 9daffeb3692b4005bc7579575aa544d3
 msgid "Where:"
 msgstr "Where:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:49
-#: 23af5fb900a3483992b9e752f95d0c32
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:49
+#: c475b2573c364f3a98bc3e0a3ac743de
 #, python-brace-format
 msgid "$E_{n,k}$ are the eigenvalues at k-point $k$, band $n$"
 msgstr "$E_{n,k}$ re  eigenvlues t k-point $k$, bو $n$"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:50
-#: d5f4fe3f00e44535a4d7ce4555732310
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:50
+#: 1f6806f6e9d542769fffb813b3f031ac
 msgid "$\\delta$ is broadened to a Gaussian or Lorentzian"
 msgstr "$\\delt$ is brodened to  Gussin یا Lیاentzin"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:52
-#: 17b0b785f8c24c969afbcd69a634e8e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:52
+#: d5bacb82e6c34edf9bd5f086f97c9fb6
 msgid "**Physical Meaning**:"
 msgstr "**Physicl Mening**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:53
-#: 614cf44c6a144d27b94edc8154ccd26e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:53
+#: 6e268507f5b147d8bacac150ff2348a1
 msgid "High DOS → many states available → high density of electrons possible"
 msgstr "High DOS → mny sttes vilble → high density of electrons possible"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:54
-#: 299ceefae36c430aae4e6556f4d3931c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:54
+#: 94680364a6924f2fb5e4fef474c1ce41
 msgid "Zero DOS → band gap → insulator/semiconductor"
 msgstr "Zero DOS → bو gp → insultیا/semiconductیا"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:55
-#: 1ebbffbd6f0246cf820dd5a380caedf3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:55
+#: 2ca4e82007b947f3901ca0778dc3c7ab
 msgid "DOS at Fermi level → electrical conductivity, heat capacity"
 msgstr "DOS t Fermi level → electricl conductivity, het cpcity"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:57
-#: 081ca16d0448428583ce33099141af2d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:57
+#: 61a91bbb7b9c42ff83da94af578efeaa
 msgid "DOS vs Band Structure"
 msgstr "DOS vs ساختار نواری"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:59
-#: b100835f83804b1085d0d88164a23f4e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:59
+#: 06241bbcc0a54a568e0fe69cf1510be3
 msgid "**Band Structure**: $E(k)$ - energy as function of k-point"
 msgstr "**ساختار نواری**: $E(k)$ - energy s function of k-point"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:60
-#: 4a9a7f5a6462488fb2f9b38c3661ead2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:60
+#: 585de2d3379d4e8eb0aefa766521404a
 msgid "Shows dispersion and effective masses"
 msgstr "Shows dispersion و effective msses"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:61
-#: a6bac9fc83f84f2e8bc904a4eee1384f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:61
+#: 63da3b56128b432496d4936862e7efc5
 msgid "Requires high-symmetry path"
 msgstr "Requires high-symmetry pth"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:62
-#: 816a4200fcc94e9cb7ac4590dafd4122
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:62
+#: bc792c8ca1c34fa3a65855138d2e59fb
 msgid "Good for visualizing band gaps and dispersion"
 msgstr "Good برای visulizing bو gps و dispersion"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:64
-#: dd36f99efe9c46a3bf06fc652445e71e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:64
+#: a039b46667cf413abe13b1cf0b66a322
 msgid "**DOS**: $g(E)$ - number of states as function of energy"
 msgstr "**DOS**: $g(E)$ - number of sttes s function of energy"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:65
-#: cfe4a8ea44dc43acb7402bb17a978d33
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:65
+#: 3016b636cd9d42b59e74609bd7e96862
 msgid "Shows state density at each energy"
 msgstr "Shows stte density t ech energy"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:66
-#: 3c537d14df7148f0ac5f0c24023e6dcf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:66
+#: 54ce5bdfc756457cbdcd61e1636ba35f
 msgid "Requires dense k-point sampling"
 msgstr "Requires dense k-point smpling"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:67
-#: 2ac9c222870d404db7258d08c1dedc6a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:67
+#: a3585323e6224a26a2037766122f8a5c
 msgid "Good for Fermi level analysis and integration"
 msgstr "Good برای Fermi level nlysis و integrtion"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:69
-#: 158d8fed8b484be0954330435401dc51
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:69
+#: a63330d5f9554fb891c54fcfa71696d7
 msgid "**Use Both**: Band structure for insight, DOS for quantitative analysis"
 msgstr "**Use Both**: Bو structure برای insight, DOS برای quntittive nlysis"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:71
-#: 3bfcd8e0ea734249bddfac3761f43eda
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:71
+#: 9a2c32e13151494bbd8328626d1d3b6e
 msgid "Important Parameters"
 msgstr "مهم Prmeters"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:85
-#: 44786d1870e142b096c5f476e6942ec6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:85
+#: 5ee0ec0bf11c49b1b749ec448e8a6ce6
 msgid "Tutorial Files"
 msgstr "فایل‌های آموزشی"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:87
-#: 6282b0bec13c48bb9f79ea57121429cb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:87
+#: 9063b74dbd3e42a495b65b6885152d9a
 msgid "This directory contains 2 examples:"
 msgstr "This directیاy contins 2 exmples:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:89
-#: 2b9c2aafc8c648b4aa26de6c2fbc339f
-msgid "**`01_basic_dos.py`** - Simple DOS calculation with default parameters"
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:89
+#: d6b77565790b43ff9393abbdfb050343
+#, fuzzy
+msgid ""
+"**`DOSMaker_basic_dos.py`** - Simple DOS calculation with default "
+"parameters"
 msgstr "**`01_basic_dos.py`** - Simple DOS calculation with default parameters"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:90
-#: 764aab5b3a034171be6f8f1305adb8df
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:90
+#: 3206bd1a0d844d2b8a04fa9825da4ee1
+#, fuzzy
 msgid ""
-"**`04_powerups_customization.py`** - Runtime parameter modification using"
-" powerups"
-msgstr ""
+"**`DOSMaker_powerups_customization.py`** - Runtime parameter modification"
+" using powerups"
+msgstr "Runtime prmeter modifiction با powerups"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:94
-#: 928aed2fb0624c438483644f94164245
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:94
+#: d9726a613aeb4e8a9b2873812c2a9e0e
 msgid "Quick Start"
 msgstr "شروع سریع"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:96
-#: 2312338b388d4ea6ac4223b5719a1d70
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:96
+#: 2532ef8c514a44fc93f68e6148ae6eaf
 msgid "Example 1: Basic DOS Calculation"
 msgstr "مثال 1: Bsic DOS محاسبه"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:112
-#: a2ada2ded3e943cd9215e29711291325
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:112
+#: 7da31e2b58594afab89ea6c5281ffbee
 msgid "Example 2: DOS with Custom Parameters"
 msgstr "مثال 2: DOS با Custom Prmeters"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:128
-#: 5f15b87a72614e36a7e305ffbb163030
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:128
+#: 5458802a193c437d89d62c3d83af614b
 msgid "Example 3: DOS After Relaxation"
 msgstr "مثال 3: DOS After Relxtion"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:147
-#: 09e7f558fefe43609519c6cdbf08dea4
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:147
+#: 369647b25a564bd68b5304456541f89a
 msgid "Example 4: Using Powerups"
 msgstr "مثال 4: استفاده از Powerups"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:166
-#: 206b1c5861cc424593da4b3054e31a07
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:166
+#: 77ae440f7d1f41a4aa9fc4114c5fadec
 msgid "Run Modes"
 msgstr "حالت‌های اجرا"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:168
-#: 8328702eb78b4b4187f456088b49a113
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:168
+#: 16a29dd8bb1847c99d7aa47d65fa071d
 msgid "1. Dry-Run Mode"
 msgstr "1. Dry-Run Mode"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:174
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:195
-#: 47786098cf7c4a4a8ad62434207b0284 6a01c040e4a543ec8aa7de1027ecb1f5
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:174
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:195
+#: 52710d14d8cf425ab697c34f52f7dfb9 f6fbd7395e6a45f99240e97706bf89e9
 msgid "**Output**:"
 msgstr "**Output**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:183
-#: 6cbe46bed9834e709e856129f7f42cca
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:183
+#: 14ecb68e45fd491e8d49f079fde7e165
 msgid "**Check DOS parameters**:"
 msgstr "**Check DOS prmeters**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:188
-#: 42f9876a4bad40cd882a11417da2d8f3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:188
+#: b184c8be08f144f2817cf23cf884a3e4
 msgid "2. Local Execution"
 msgstr "2. Locl Execution"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:205
-#: fc44640527444fa9afbd92925b1c494d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:205
+#: aa158171327d49e6b639ef3605610ba6
 msgid "**Time**: ~10-15 minutes for small systems"
 msgstr "**زمان**: ~10-15 minutes برای smll systems"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:209
-#: 41ce6f0743da4fb2882e99c25e24ec65
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:209
+#: d6686d6ca205463e8b221ae5942b232d
 msgid "Expected Output"
 msgstr "خروجی مورد انتظار"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:211
-#: b0d556afcc02486b8bc0c2de5621e20a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:211
+#: 4c48a1c9e56448a3b17fc147fb43c2d0
 msgid "DOS File Format"
 msgstr "DOS فایل Fیاmt"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:213
-#: ff0bb57d7c0b413aa7edd54bb9d84d4b
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:213
+#: 9e1e2a4a302b4f4eadbef22e165398ba
 msgid "The `siesta.DOS` file contains:"
 msgstr "The `siesta.DOS` file contains:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:222
-#: 10917c28a9a54555a0bcbe35ca482f7c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:222
+#: 64739d877b11407aaf2e0060a6151291
 msgid "Analyzing DOS"
 msgstr "Anlyzing DOS"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:246
-#: e72a6fd1f2964f47b5bd5655f663a859
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:246
+#: f7b24689b2e3450788b15e9545e050e7
 msgid "Extract Fermi Energy"
 msgstr "Extrct Fermi Energy"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:253
-#: 13e7415c6108452aa05062d4c8bcdc65
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:253
+#: 464b125758f749488903909070496fc1
 msgid "Or with Python:"
 msgstr "Or با Python:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:262
-#: 190586f5b5c7404d8eb15202f5804192
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:262
+#: 8f7ed1ad0c9a4887ac71c09d99231a5d
 msgid "Determine Band Gap"
 msgstr "Determine Bو Gp"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:289
-#: 4180e5bb6e3a408bbfecd7617df626a0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:289
+#: 7d488d523c384780bf5cc7aa532add97
 msgid "Common Issues"
 msgstr "مشکلات رایج"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:291
-#: 4ddc00dfc0e847f980d9b3c946e84648
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:291
+#: f7c7f7a895084f66bec0718fa89c8ed2
 msgid "Issue 1: \"DOS is too noisy\""
 msgstr "Issue 1: \"DOS is too noisy\""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:293
-#: 1f2ba0d87c2d4e30913b5237c2bfd317
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:293
+#: 5adfa3dc1f7049f585497407de285fba
 msgid "**Cause**: Insufficient k-points or too narrow broadening"
 msgstr "**Cuse**: Insufficient k-points یا too nrrow brodening"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:295
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:326
-#: 07e361bf2fc84cc18b5007d6d6f42794 6862b1673b40412fadd4d034c214b642
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:295
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:326
+#: 5da1a530b06e4f2982f290e1b72deaca 6fb0dcfc2ed74431bf2f124214dde18f
 msgid "**Solutions**:"
 msgstr "**Solutions**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:304
-#: 01530c2517534813884e8ce9d681cb05
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:304
+#: d6bbc86167154f779fc5b1093b7164c9
 msgid "Issue 2: \"DOS has strange features\""
 msgstr "Issue 2: \"DOS hs strnge fetures\""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:306
-#: 14c9f73611074c5e9ec25faa0260118a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:306
+#: 65a29995ee734b59ba304baac4ab3ccc
 msgid "**Cause**: Unconverged electronic structure"
 msgstr "**Cuse**: Unconverged electronic structure"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:308
-#: 3efa8ab5a9834d4ba49d2dadd754328d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:308
+#: 999636b9bfe04c7692db1cd1d5f72fd4
 msgid "**Solution**: Check SCF convergence"
 msgstr "**Solution**: Check SCF convergence"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:314
-#: 782cbcbf5e9244c99df548314f2b904d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:314
+#: d07926b6a9fd492dbefe2951c96c711e
 msgid "If not converged:"
 msgstr "If not converged:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:322
-#: 911fed58630a494a9b9b3ee1f364aeb3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:322
+#: 6c0e6ac294664c2087071a0d26496755
 msgid "Issue 3: \"Band gap incorrect\""
 msgstr "Issue 3: \"Bو gp incیاrect\""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:324
-#: 8fe4fb72ec9545aeb2a77e458e0e6f3f
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:324
+#: c6907b9d0ff643b690f1c8ff0b9a47e3
 msgid "**Cause**: GGA functionals underestimate band gaps"
 msgstr "**Cuse**: GGA functionls underestimte bو gps"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:327
-#: b4f9cc3ddf764ebebf58cbfaff96029c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:327
+#: 87097a13542444fbb6f16d8adc753b06
 msgid "**Accept limitation**: GGA typically underestimates by 30-50%"
 msgstr "**Accept limittion**: GGA typiclly underestimtes by 30-50%"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:328
-#: 6ee8707690444404a7fab118d58d61b9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:328
+#: 90ad232625ca4d7092f32b19ff5aeb56
 msgid ""
 "**Use DFT+U**: For strongly correlated systems (see [03-advanced-"
 "features/08-dftu](../../03-advanced-features/08-dftu/))"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:329
-#: 72c7f3f1e43c42538b37348c71e2e72d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:329
+#: f9d5307694154742b6abc603435cd4e8
 msgid "**Compare trends**: Relative gaps are more reliable than absolute values"
 msgstr "**Compre trends**: Reltive gps re mیاe relible thn bsolute vlues"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:331
-#: b6d215c2aa004872854079fcb6fb0da6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:331
+#: 99e40cb02c56431b83053ec490522353
 msgid "Issue 4: \"Fermi level position wrong\""
 msgstr "Issue 4: \"Fermi level position wrong\""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:333
-#: b7dead40c73d4bfcaf567d096a139a43
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:333
+#: 155bb5743ddb4b108e9e50d8d4ffa71d
 msgid "**Cause**: Wrong number of electrons or charge"
 msgstr "**Cuse**: Wrong number of electrons یا chrge"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:335
-#: 0ed1fbf3d12148c2ac8b269aca78cf78
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:335
+#: a5189bfb22774ecca156c32104a19079
 msgid "**Solution**: Check electron count"
 msgstr "**Solution**: Check electron count"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:340
-#: b4ea55d3c16f47208d468e8a375648d3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:340
+#: 94a04088637140a7ad1a8cfe27190367
 msgid "For charged systems:"
 msgstr "Fیا chrged systems:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:347
-#: fdbf4e6011194aa2aa3ad472b1adf36d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:345
+#: 729761d4ef024dfc8704a20e78313e0a
+msgid "Issue 5: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:347
+#: 44d9362a2ef248b78fa7ed06a9f2d0c3
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:349
+#: 06e62aa723fa44e1aaf89bf2d3aa47e0
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:351
+#: 1c5e36f134bb452c97c51e55f329dab9
+#, fuzzy
+msgid "**Solution**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:366
+#: e9abdabde10d469fbf6a8264d7d9995e
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section below."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:370
+#: 1af8ebcb87d44cdcaed60688157e9dbd
 msgid "DOS Parameters Reference"
 msgstr "DOS Prmeters Reference"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:349
-#: 89ef5df3e4c241d5abf22d01d4bcc290
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:372
+#: 1652aa024e1b42f8956364e6f0713586
 msgid "Energy Range"
 msgstr "Energy Rnge"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:356
-#: c3d476da2dad4823a74f811f542c4916
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:379
+#: 29e5251cb3d74281850ba76810cec8df
 msgid "**Tips**:"
 msgstr "**نکتهs**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:357
-#: 86483de312f14aae8963b6de66470222
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:380
+#: 476aca109bae4b6493d7e3c89623278a
 msgid "Too narrow: Miss important features"
 msgstr "Too nrrow: Miss impیاtnt fetures"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:358
-#: 1970ab7f1c144173aae8c49971b0aa3e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:381
+#: 1a38b8e354f74991b4164161cb3ed939
 msgid "Too wide: Waste computation"
 msgstr "Too wide: Wste computtion"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:359
-#: db0bb762d89644bba954b0bcbceab369
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:382
+#: de8c9779bbb64e0b8beea58f3c831dbf
 msgid "Typical: ±10 eV covers valence + conduction bands"
 msgstr "Typicl: ±10 eV covers vlence + conduction bوs"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:361
-#: 90b4118839984e009daf7e38a915f9a1
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:384
+#: 295a15df72d94ce28d551aa7804e343a
 msgid "Broadening"
 msgstr "Brodening"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:367
-#: b41c23f5ee1d4148b02bf6b66e5330c2
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:390
+#: 615e2d6363584a5abfd7f0cb9e856420
 msgid "**Effects**:"
 msgstr "**Effects**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:368
-#: b67a521474d147c28af9d5465d24c306
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:391
+#: cec6be181607453ab103ac169164f417
 msgid "**Small (0.01-0.05 eV)**: Sharp features, noisy"
 msgstr "**Smll (0.01-0.05 eV)**: Shrp fetures, noisy"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:369
-#: 7b2c764a64bf45719c5f2874a3ceef22
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:392
+#: a285cf05f102482fb9a101da1146f9c3
 msgid "**Medium (0.1-0.2 eV)**: Good balance"
 msgstr "**Medium (0.1-0.2 eV)**: Good blnce"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:370
-#: 7551e0df56c64f198ad1494ada67e80a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:393
+#: 2022f0fcc7194b10ae3949f6a2dc6733
 msgid "**Large (0.3-0.5 eV)**: Smooth, loss of detail"
 msgstr "**Lrge (0.3-0.5 eV)**: Smooth, loss of detil"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:372
-#: 8cbd964f815b41b6a28894696a11bf29
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:395
+#: a2196da63cdd424e9761a56b54658ea3
 msgid ""
 "**Physical meaning**: Simulates finite lifetime of states, experimental "
 "resolution"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:374
-#: a8ed7b5be1ed45ba8ff9bfae1a085efb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:397
+#: d78e7106792b4587be6df9692f4028e8
 msgid "Energy Grid"
 msgstr "Energy Grid"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:380
-#: 0acd84bf501a4340b6e6dc2d6ae52d7d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:403
+#: 754f6f4a380f4f8dbbd3cbb7bf4f7cf6
 msgid "**Guidelines**:"
 msgstr "**Guidelines**:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:381
-#: 0ce512a64e4e44198b1a0fe4d967388d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:404
+#: 3184789b9b8c4bddaf904192c628245f
 msgid "Minimum: 500 points"
 msgstr "Minimum: 500 points"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:382
-#: 19ac83159ca1491eaf3415627d164cf3
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:405
+#: b8ba8d4637774b0fa3cdb6d367331707
 msgid "Standard: 1000 points"
 msgstr "Stوrd: 1000 points"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:383
-#: 8182a85054b34d2a9b83ddee362351cb
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:406
+#: a9b802faaba2405aad90265fdb835a36
 msgid "High resolution: 2000+ points"
 msgstr "High resolution: 2000+ points"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:387
-#: 02746ac462104be5990f837301925225
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:410
+#: 08da3daf8cb946328442b82b6148bdb0
+#, fuzzy
+msgid "FDF Block Parameters (Advanced)"
+msgstr "DOS Prmeters Reference"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:412
+#: 5a46b83a8c8f40a8a031c96eb7d49c86
+msgid ""
+"When you need to specify FDF block parameters (like custom DOS energy "
+"ranges), use the `\"%block ParamName\"` syntax **directly** in "
+"`user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:414
+#: 1bb76508e74c40aeb7558c34928408ca
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:416
+#: 65cd21b0c2794892b681654051663ea3
+msgid "Correct Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:436
+#: 0e0fd0206f4e45448952ed7a1001d729
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:449
+#: f358ce5a92a748acac6d52a53f6df487
+msgid "Common Block Parameters for DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:451
+#: c15966a082bf4b239d521739231d8bf3
+msgid ""
+"`\"%block ProjectedDensityOfStates\"` - Custom DOS energy range and "
+"resolution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:452
+#: 863f9b7a0bad4932b36c8cd4de8c77a6
+msgid ""
+"`\"%block DOS.kgrid.MonkhorstPack\"` - Custom k-point grid for DOS "
+"sampling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:453
+#: a4eb34f7fd7545818becc27eba26aa37
+msgid "`\"%block PDOS.kgrid.MonkhorstPack\"` - K-point grid for projected DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:455
+#: 1d164ec573974e3d85e858067c588ca8
+msgid ""
+"For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-"
+"features/02-fdf-block-inputs/)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:459
+#: 8a3a6ab0a1aa4c09baff9978a31a87b4
 msgid "Alternative: Using CLI Tool"
 msgstr "Alterntive: استفاده از CLI Tool"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:389
-#: d3c30e782e40428c9a870c0913542ae0
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:461
+#: c6aeb01b5c5648f79b5018655b4e5ad8
 msgid "Generate DOS scripts automatically:"
 msgstr "Generte DOS scripts utomticlly:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:402
-#: e4231246c861475f8e06348ff2ad5113
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:474
+#: eb35abf575e64ebb94899e129cba2451
 msgid "Advanced Customization"
 msgstr "پیشرفته Customiztion"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:404
-#: 447c226b3ec8481c89c5797745a346f9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:476
+#: 0481e049ad004dc2a6fe8ade054a2c51
 msgid "Using Tier Presets"
 msgstr "استفاده از Tier Presets"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:413
-#: 3628249ccaa94e51b2105bf75a5bc881
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:485
+#: baf02af24586484689ebf866e122c547
 msgid "Using Recipe Book"
 msgstr "استفاده از Recipe Book"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:422
-#: 735aaadfcf4c48eeb71920f9f59447a6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:494
+#: 6950cb7604f94634b7dabbdf2e7066b0
 msgid "Projected DOS (PDOS)"
 msgstr "Projected DOS (PDOS)"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:424
-#: eb6b6d8fcbb344d8958effc08eb81a0c
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:496
+#: 6ff6fa93bf3e4398be35713a5e84e145
 msgid ""
 "For atom/orbital-resolved DOS, use `PDOSMaker` (see "
 "[06-PDOSMaker](../06-PDOSMaker/))"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:428
-#: f022facc37114f0592be858666a320cf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:500
+#: deb090b180f64fcf84c9303c2fb1ca83
 msgid "Tips for Success"
 msgstr "نکتهs برای Success"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:430
-#: 03479ecd1ef245eaa6a0660e5f0e0eb7
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:502
+#: d257e77d08b6451b90d082c675a6359f
 msgid ""
 "✅ **Use dense k-points**: 8×8×8 minimum, 12×12×12 better ✅ **Check "
 "convergence**: Verify SCF converged in siesta.out ✅ **Plot your DOS**: "
 "Visual inspection catches errors ✅ **Compare with bands**: DOS should "
 "match band structure features ✅ **Note GGA limitations**: Band gaps will "
-"be underestimated"
+"be underestimated ✅ **Block parameters**: Use `\"%block ParamName\"` "
+"directly in `user_params` - NO `fdf_arguments` wrapper!"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:438
-#: 5d64e139f1ea4e8b90b18cb098526a49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:511
+#: 95a7f8acc15f4077b0cbfffa3facf170
 msgid "Next Steps"
 msgstr "گام‌های بعدی"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:440
-#: 854510177853459fb3fbece64cda4877
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:513
+#: 90fb8e5fed924810a1987fb8d5707b6e
 msgid "After completing DOS tutorials:"
 msgstr "After completing DOS tutیاils:"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:442
-#: 14147f01e8644c4e914578df099e63a9
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:515
+#: 9552701eec374f918957d5ba3c767f51
 msgid ""
 "**Projected DOS**: [06-PDOSMaker](../06-PDOSMaker/) - Orbital and atom "
 "decomposition"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:443
-#: 852e8bcbcc324f54a352461e51a83d1e
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:516
+#: 4eed5dc3129242d4b54e53970f043cc8
 msgid ""
 "**Band structure**: [02-BandStructureMaker](../02-BandStructureMaker/) - "
 "Complementary view"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:444
-#: 601cfc47cf1e4aa2a122ec85918a3312
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:517
+#: 2289e0f111ba43ae9883d1afdf56e32a
 msgid ""
 "**Optical properties**: [03-advanced-features/07-optical-"
 "properties](../../03-advanced-features/07-optical-properties/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:445
-#: 0e5d4b9fd069495894e4304fbb68c52d
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:518
+#: 5863bbfb57b94056b70b5ec415433881
 msgid ""
 "**One-line workflows**: [03-advanced-features/08-recipe-book](../../03"
 "-advanced-features/08-recipe-book/)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:449
-#: 6e150fac7301492d9d110dcb5e6082e6
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:522
+#: d07c43f0945f4974aef8b4c04e9de14e
 msgid "References"
 msgstr "References"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:451
-#: 6d9015588aa44bbeb53010c583f04b86
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:524
+#: df8745346c44425c8bd28b0c1f5ed91a
 msgid "**SIESTA Manual**: DOS chapter"
 msgstr "**SIESTA Mnul**: DOS chpter"
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:452
-#: 338781536ae34dd081c10ce81c96cf34
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:525
+#: d3be5c0acebc4178a2c39c24d6b17e8f
 msgid "**Ashcroft & Mermin**: \"Solid State Physics\" - DOS theory"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:453
-#: 5e5f03ccc094483f83f05bb0b957eebf
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:526
+#: 445daab931a7409690f71272a69ecbe3
 msgid ""
 "**Pymatgen DOS**: "
 "[Documentation](https://pymatgen.org/pymatgen.electronic_structure.dos.html)"
 msgstr ""
 
-#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:457
-#: 3e2070814cbf47a5933d4c7339f39b4a
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/05-DOSMaker/README.md:530
+#: b16105a38a2a4c55b141b0db6c15946e
 msgid ""
 "*Back to [01-basics](../README.md) | [Main Tutorial "
 "Index](../../README.md)*"
 msgstr ""
+
+#~ msgid ""
+#~ "**`04_powerups_customization.py`** - Runtime "
+#~ "parameter modification using powerups"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "✅ **Use dense k-points**: 8×8×8 minimum,"
+#~ " 12×12×12 better ✅ **Check convergence**:"
+#~ " Verify SCF converged in siesta.out ✅"
+#~ " **Plot your DOS**: Visual inspection "
+#~ "catches errors ✅ **Compare with bands**:"
+#~ " DOS should match band structure "
+#~ "features ✅ **Note GGA limitations**: "
+#~ "Band gaps will be underestimated"
+#~ msgstr ""
+
