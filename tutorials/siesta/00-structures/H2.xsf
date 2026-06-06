@@ -1,0 +1,17 @@
+# File created by: sisl 2025-11-10
+#
+CRYSTAL
+#
+# Primitive lattice vectors:
+#
+PRIMVEC
+7.65424485 0.00000000 0.00000000
+-3.82712242 6.61962388 0.00000000
+0.00000000 0.00000000 91.12036687
+#
+# Atomic coordinates (in primitive coordinates)
+#
+PRIMCOORD
+2 1
+  1  1.73351296  2.96673528  63.12041202
+  1  2.09360964  3.65288909  63.12041184

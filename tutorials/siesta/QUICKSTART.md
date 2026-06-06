@@ -11,12 +11,8 @@ Welcome to **atomate2siesta**! This guide will walk you through your first DFT c
 ## Step 1: Installation (1 minute)
 
 ```bash
-# Clone the repository
-git clone https://github.com/arsalan-akhtar/atomate2siesta.git
-cd atomate2siesta
-
-# Install in development mode
-pip install -e .
+# Install atomate2 with the SIESTA extra
+pip install atomate2[siesta]
 ```
 
 ## Step 2: Configuration (1 minute)
@@ -235,7 +231,7 @@ maker = RelaxMaker.fixed_cell_relaxation(
 
 - 📖 **Full Documentation**: `docs/source/index.rst`
 - 📚 **All Tutorials**: `tutorials/README.md`
-- 🐛 **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
+- 🐛 **Issues**: https://github.com/materialsproject/atomate2/issues
 - 💬 **Discussions**: GitHub Discussions
 
 ## Congratulations!

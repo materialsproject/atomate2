@@ -25,12 +25,9 @@ from atomate2.siesta.flows.neb import AseNebFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
 from atomate2.siesta.powerups import update_user_siesta_settings
 
-# Load initial and final structures RELAXED
-initial = Structure.from_file("initial.xsf")
-final = Structure.from_file("final.xsf")
 # Load initial and final structures
-# initial = Structure.from_file("../../../00-structures/mgo_li-initial.xsf")
-# final = Structure.from_file("../../../00-structures/mgo_li-final.xsf")
+initial = Structure.from_file("../../../00-structures/mgo_li-initial.xsf")
+final = Structure.from_file("../../../00-structures/mgo_li-final.xsf")
 
 
 print("ASE NEB with Endpoint Relaxation")

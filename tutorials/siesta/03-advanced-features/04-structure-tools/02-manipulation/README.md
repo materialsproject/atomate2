@@ -445,7 +445,7 @@ atomate2siesta-structure slab --help
 
 If you find errors or have suggestions for improving these tutorials:
 
-1. Open an issue: https://github.com/arsalan-akhtar/atomate2siesta/issues
+1. Open an issue: https://github.com/materialsproject/atomate2/issues
 2. Submit a pull request with improvements
 3. Share your own workflow examples
 
@@ -460,7 +460,7 @@ These tutorials are part of the atomate2siesta project and are distributed under
 ## Contact
 
 For questions about these tutorials or the `atomate2siesta-structure` command:
-- GitHub: https://github.com/arsalan-akhtar/atomate2siesta
+- GitHub: https://github.com/materialsproject/atomate2
 - Documentation: See `docs/` directory
 
 ---

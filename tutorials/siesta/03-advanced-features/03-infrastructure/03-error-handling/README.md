@@ -1022,7 +1022,7 @@ After completing this tutorial:
    - Source code for all handlers
 
 4. **Online Documentation**:
-   - See https://github.com/arsalan-akhtar/atomate2siesta for technical details
+   - See https://github.com/materialsproject/atomate2 for technical details
 
 ---
 

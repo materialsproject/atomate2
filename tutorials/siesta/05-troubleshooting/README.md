@@ -609,7 +609,7 @@ If you've tried the troubleshooting guides and still failing:
 
 ### Where to Get Help
 
-- **GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
+- **GitHub Issues**: https://github.com/materialsproject/atomate2/issues
 - **SIESTA Forum**: https://siesta-project.org/SIESTA/Forum
 - **Atomate2 Discussions**: Check general jobflow/atomate2 issues
 

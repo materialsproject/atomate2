@@ -236,7 +236,7 @@ from atomate2.siesta.flows.defects.generation import (
 )
 from pymatgen.core import Structure
 
-structure = Structure.from_file("MoS2.cif")
+structure = Structure.from_file("../../../00-structures/Mos2.cif")
 generator = SiestaVacancyGenerator(structure, use_ghost_atoms=True)
 defects = list(generator.generate_defects(species="S"))
 write_defects_to_folders(defects, output_dir="vacancies", write_fdf=True)
