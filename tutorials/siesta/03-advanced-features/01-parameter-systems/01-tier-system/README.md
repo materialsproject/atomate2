@@ -112,7 +112,7 @@ results = run_locally(job, create_folders=True)
 ### 3. Run Tutorial
 
 ```bash
-cd tutorials/03-advanced-features/01-tier-system
+cd tutorials/03-advanced-features/01-parameter-systems/01-tier-system
 python 01_basic_tier.py  # Start with basic tier
 ```
 

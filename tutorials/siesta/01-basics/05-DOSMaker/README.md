@@ -325,7 +325,7 @@ user_params={
 
 **Solutions**:
 1. **Accept limitation**: GGA typically underestimates by 30-50%
-2. **Use DFT+U**: For strongly correlated systems (see [03-advanced-features/08-dftu](../../03-advanced-features/08-dftu/))
+2. **Use DFT+U**: For strongly correlated systems (see [03-advanced-features/02-physics-features/03-magnetic](../../03-advanced-features/02-physics-features/03-magnetic/))
 3. **Compare trends**: Relative gaps are more reliable than absolute values
 
 ### Issue 4: "Fermi level position wrong"
@@ -452,7 +452,7 @@ maker = DOSMaker(
 - `"%block DOS.kgrid.MonkhorstPack"` - Custom k-point grid for DOS sampling
 - `"%block PDOS.kgrid.MonkhorstPack"` - K-point grid for projected DOS
 
-For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/).
+For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/).
 
 ---
 
@@ -514,7 +514,7 @@ After completing DOS tutorials:
 
 1. **Projected DOS**: [06-PDOSMaker](../06-PDOSMaker/) - Orbital and atom decomposition
 2. **Band structure**: [02-BandStructureMaker](../02-BandStructureMaker/) - Complementary view
-3. **Optical properties**: [03-advanced-features/07-optical-properties](../../03-advanced-features/07-optical-properties/)
+3. **Optical properties**: [03-advanced-features/02-physics-features/02-optical](../../03-advanced-features/02-physics-features/02-optical/)
 4. **One-line workflows**: [03-advanced-features/08-recipe-book](../../03-advanced-features/08-recipe-book/)
 
 ---

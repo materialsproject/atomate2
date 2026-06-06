@@ -25,7 +25,7 @@ This tutorial demonstrates how to configure the denchar post-processing utility 
 ## Tutorial Example
 
 ```bash
-cd tutorials/03-advanced-features/11-denchar-visualization
+cd tutorials/03-advanced-features/05-output-viz/02-denchar
 python3 01_basic_denchar.py
 ```
 

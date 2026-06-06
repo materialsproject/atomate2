@@ -354,14 +354,14 @@ flow = RecipeBook.convergence_study(structure, tier="intermediate")
 After completing workflows, proceed to:
 
 ### Advanced Workflow Features
-- **[03-advanced-features/03-powerups](../03-advanced-features/03-powerups/)** - Customize workflows dynamically
+- **[03-advanced-features/04-structure-tools/03-powerups](../03-advanced-features/04-structure-tools/03-powerups/)** - Customize workflows dynamically
 - **[03-advanced-features/08-recipe-book](../03-advanced-features/08-recipe-book/)** - High-level workflow system (recipe book)
 - **[03-advanced-features/03-infrastructure](../03-advanced-features/03-infrastructure/)** - Database, HPC, error handling
 
 ### Specialized Calculations
-- **[03-advanced-features/16-magnetic-calculations](../03-advanced-features/16-magnetic-calculations/)** - Spin-polarized systems
-- **[03-advanced-features/08-dftu](../03-advanced-features/08-dftu/)** - DFT+U for correlated electrons
-- **[03-advanced-features/07-optical-properties](../03-advanced-features/07-optical-properties/)** - Optical absorption
+- **[03-advanced-features/02-physics-features/03-magnetic](../03-advanced-features/02-physics-features/03-magnetic/)** - Spin-polarized systems
+- **[03-advanced-features/02-physics-features/03-magnetic](../03-advanced-features/02-physics-features/03-magnetic/)** - DFT+U for correlated electrons
+- **[03-advanced-features/02-physics-features/02-optical](../03-advanced-features/02-physics-features/02-optical/)** - Optical absorption
 
 ---
 

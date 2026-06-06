@@ -639,7 +639,7 @@ atomate2siesta provides many workflow types:
 - Relax → Force constants → Phonon bands
 - Thermal properties calculation
 
-**EOSMaker** (see [09-equation-of-state](../../../02-workflows/01-equation-of-state/)):
+**EOSMaker** (see [09-equation-of-state](../../../02-workflows/02-equation-of-states/)):
 - Multiple volumes → Fit equation of state
 - Bulk modulus, equilibrium volume
 
@@ -653,7 +653,7 @@ atomate2siesta provides many workflow types:
 - Multiple deformations → Elastic tensor
 - Mechanical properties
 
-**SurfaceEnergyMaker** (see [17-surface-energy](../../../02-workflows/03-surfaces-and-adsorption/01-surface-energy/)):
+**SurfaceEnergyMaker** (see [17-surface-energy](../../../02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/)):
 - Multiple surface orientations
 - Convergence vs slab thickness
 
@@ -735,7 +735,7 @@ After completing this tutorial:
 
 1. **Convergence studies**: [02-convergence](../../../02-workflows/01-convergence/) category
 2. **Advanced workflows**: [03-advanced-workflows](../../../02-workflows/) category
-3. **HPC submission**: [04-infrastructure/02-job-submission](../../../03-advanced-features/03-infrastructure/02-job-submission/)
+3. **HPC submission**: [04-infrastructure/02-job-submission](../../../03-advanced-features/03-infrastructure/02-jobflow-remote/)
 4. **Custom workflows**: Learn Flow and jobflow patterns
 
 ---
@@ -787,7 +787,7 @@ workflow = update_user_siesta_settings(
 - `"%block Geometry.Constraints"` - Fix atoms during relaxation
 - `"%block DFTU.Proj"` - DFT+U projectors
 
-For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/).
+For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/).
 
 ---
 

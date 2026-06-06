@@ -249,7 +249,7 @@ maker = MeshCutoffConvergenceFlowMaker(
 - `"%block kgrid.MonkhorstPack.Offset"` - Custom k-point offsets
 - `"%block Geometry.Constraints"` - Fix atoms during convergence tests
 
-For comprehensive examples, see [Advanced Features: FDF Block Inputs](../../03-advanced-features/02-fdf-block-inputs/).
+For comprehensive examples, see [Advanced Features: FDF Block Inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/).
 
 ---
 

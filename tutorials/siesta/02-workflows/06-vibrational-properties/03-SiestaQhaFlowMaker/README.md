@@ -29,7 +29,7 @@ This tutorial consolidates 5 comprehensive QHA examples into a single configurab
 ## Prerequisites
 
 - **Required**: [16-phonon-calculations](../02-phonon-calculations/) completed
-- **Required**: [09-equation-of-state](../../../02-workflows/01-equation-of-state/)
+- **Required**: [09-equation-of-state](../../../02-workflows/02-equation-of-states/)
 - **Recommended**: Understanding of statistical thermodynamics
 - **Recommended**: Familiarity with phonon density of states
 

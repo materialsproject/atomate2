@@ -463,7 +463,7 @@ maker = LuaMaker.fixed_cell_relaxation(
 - `"%block Geometry.Constraints"` - Fix atoms (complementary to Lua constraints)
 - `"%block DFTU.Proj"` - DFT+U projectors
 
-For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/).
+For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/).
 
 ---
 

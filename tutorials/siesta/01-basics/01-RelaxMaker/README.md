@@ -395,7 +395,7 @@ maker = apply_tier_preset(maker, "relax_standard")
 # Applies material-specific optimized parameters
 ```
 
-**Available presets** (see [06-tier-presets-customization](../../03-advanced-features/06-tier-presets-customization/)):
+**Available presets** (see [06-tier-presets-customization](../../03-advanced-features/01-parameter-systems/02-presets/)):
 - `relax_standard`: Balanced accuracy/speed
 - `tight_relax`: High accuracy
 - `quick_relax`: Fast testing
@@ -471,7 +471,7 @@ user_params = {
 - `"%block DFTU.Proj"` - DFT+U projectors
 - `"%block PAO.Basis"` - Custom orbital definitions
 
-See [02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/) for comprehensive examples.
+See [02-fdf-block-inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/) for comprehensive examples.
 
 ---
 
@@ -494,7 +494,7 @@ After completing relaxation tutorials:
 1. **Multi-step workflows**: [04-RelaxMaker-StaticMaker](../04-RelaxMaker-StaticMaker/)
 2. **Electronic structure**: [02-BandStructureMaker](../02-BandStructureMaker/), [05-DOSMaker](../05-DOSMaker/)
 3. **Convergence testing**: [02-workflows/01-convergence](../../02-workflows/01-convergence/)
-4. **Magnetic systems**: [03-advanced-features/16-magnetic-calculations](../../03-advanced-features/16-magnetic-calculations/)
+4. **Magnetic systems**: [03-advanced-features/02-physics-features/03-magnetic](../../03-advanced-features/02-physics-features/03-magnetic/)
 5. **One-line workflows**: [03-advanced-features/08-recipe-book](../../03-advanced-features/08-recipe-book/)
 
 ---

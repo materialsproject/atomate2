@@ -90,26 +90,26 @@ Common structures:
 
 **[03-advanced-features/](03-advanced-features/)** - Specialized calculations and advanced functionality
 
-1. **[01-tier-system](03-advanced-features/01-tier-system/)** - Tier-based parameter presets (basic → expert)
-2. **[02-fdf-block-inputs](03-advanced-features/02-fdf-block-inputs/)** - FDF block parameters (electric fields, constraints, PDOS, custom k-paths)
+1. **[01-tier-system](03-advanced-features/01-parameter-systems/01-tier-system/)** - Tier-based parameter presets (basic → expert)
+2. **[02-fdf-block-inputs](03-advanced-features/01-parameter-systems/04-fdf-blocks/)** - FDF block parameters (electric fields, constraints, PDOS, custom k-paths)
 3. **[03-infrastructure](03-advanced-features/03-infrastructure/)** - Database, HPC submission, dry-run mode
-4. **[03-powerups](03-advanced-features/03-powerups/)** - Workflow customization and parameter modification
-5. **[04-structure-conversion](03-advanced-features/04-structure-conversion/)** - XV, FDF, XSF, CIF file conversion
-6. **[05-dos-calculations](03-advanced-features/05-dos-calculations/)** - Advanced DOS analysis
-7. **[06-phonon-inputs](03-advanced-features/06-phonon-inputs/)** - Phonon calculation customization
-8. **[06-tier-presets-customization](03-advanced-features/06-tier-presets-customization/)** - Material-specific presets (material-specific presets in 10 categories)
-9. **[07-basis-set-customization](03-advanced-features/07-basis-set-customization/)** - Custom basis sets, species variants, PAO.Basis
-10. **[07-optical-properties](03-advanced-features/07-optical-properties/)** - Optical calculations
+4. **[03-powerups](03-advanced-features/04-structure-tools/03-powerups/)** - Workflow customization and parameter modification
+5. **[04-structure-conversion](03-advanced-features/04-structure-tools/01-conversion/)** - XV, FDF, XSF, CIF file conversion
+6. **[05-dos-calculations](03-advanced-features/02-physics-features/01-dos/)** - Advanced DOS analysis
+7. **[06-phonon-inputs](03-advanced-features/02-physics-features/04-phonon/)** - Phonon calculation customization
+8. **[06-tier-presets-customization](03-advanced-features/01-parameter-systems/02-presets/)** - Material-specific presets (material-specific presets in 10 categories)
+9. **[07-basis-set-customization](03-advanced-features/01-parameter-systems/03-basis/)** - Custom basis sets, species variants, PAO.Basis
+10. **[07-optical-properties](03-advanced-features/02-physics-features/02-optical/)** - Optical calculations
 11. **[08-recipe-book](03-advanced-features/08-recipe-book/)** - High-level workflow system (significant code reduction)
-12. **[09-charge-dipole-efield](03-advanced-features/09-charge-dipole-efield/)** - Electric fields and dipole corrections
-13. **[09-structure-manipulation](03-advanced-features/09-structure-manipulation/)** - Structure tools (16 subcommands)
-14. **[10-grid-output](03-advanced-features/10-grid-output/)** - Grid-based output (charge density, potentials)
-15. **[11-denchar-visualization](03-advanced-features/11-denchar-visualization/)** - Denchar visualization tools
-16. **[12-parallel-computation](03-advanced-features/12-parallel-computation/)** - Parallel execution settings
-17. **[13-netcdf-output](03-advanced-features/13-netcdf-output/)** - NetCDF output format
-18. **[14-efficiency-options](03-advanced-features/14-efficiency-options/)** - Performance optimization
-19. **[15-hamiltonian-overlap](03-advanced-features/15-hamiltonian-overlap/)** - Hamiltonian and overlap matrix settings
-20. **[16-magnetic-calculations](03-advanced-features/16-magnetic-calculations/)** - Spin-polarized calculations, DM.InitSpin, magnetic moments
+12. **[09-charge-dipole-efield](03-advanced-features/02-physics-features/05-charge/)** - Electric fields and dipole corrections
+13. **[09-structure-manipulation](03-advanced-features/04-structure-tools/02-manipulation/)** - Structure tools (16 subcommands)
+14. **[10-grid-output](03-advanced-features/05-output-viz/01-grid/)** - Grid-based output (charge density, potentials)
+15. **[11-denchar-visualization](03-advanced-features/05-output-viz/02-denchar/)** - Denchar visualization tools
+16. **[12-parallel-computation](03-advanced-features/06-performance/01-parallel/)** - Parallel execution settings
+17. **[13-netcdf-output](03-advanced-features/05-output-viz/03-netcdf/)** - NetCDF output format
+18. **[14-efficiency-options](03-advanced-features/06-performance/02-efficiency/)** - Performance optimization
+19. **[15-hamiltonian-overlap](03-advanced-features/07-advanced-siesta/01-hamiltonian/)** - Hamiltonian and overlap matrix settings
+20. **[16-magnetic-calculations](03-advanced-features/02-physics-features/03-magnetic/)** - Spin-polarized calculations, DM.InitSpin, magnetic moments
 
 **Highlights**:
 - **Recipe Book (08)**: One-line workflows, fully documented
@@ -157,12 +157,12 @@ run_locally(job, create_folders=True)
 
 ### 📊 **For Convergence Testing**
 1. **02-workflows/01-convergence/** - K-points and mesh cutoff
-2. **03-advanced-features/07-basis-set-customization/** - Basis optimization
-3. **03-advanced-features/01-tier-system/** - Tier presets for quick setup
+2. **03-advanced-features/01-parameter-systems/03-basis/** - Basis optimization
+3. **03-advanced-features/01-parameter-systems/01-tier-system/** - Tier presets for quick setup
 
 ### 🚀 **For Production Calculations**
 1. Complete convergence studies (02-workflows/01-convergence)
-2. Apply tier presets (03-advanced-features/06-tier-presets-customization)
+2. Apply tier presets (03-advanced-features/01-parameter-systems/02-presets)
 3. Set up infrastructure (03-advanced-features/03-infrastructure)
 4. Use recipe book for one-line workflows (03-advanced-features/08-recipe-book)
 
@@ -172,24 +172,24 @@ run_locally(job, create_folders=True)
 3. **02-workflows/06-vibrational-properties/03-qha/** - Quasi-harmonic approximation
 
 ### 🧲 **For Magnetic Systems**
-1. **03-advanced-features/16-magnetic-calculations/** - Spin polarization, magnetic moments, FM/AFM orderings
-2. **03-advanced-features/02-fdf-block-inputs/** - DFT+U parameters for correlated electrons
+1. **03-advanced-features/02-physics-features/03-magnetic/** - Spin polarization, magnetic moments, FM/AFM orderings
+2. **03-advanced-features/01-parameter-systems/04-fdf-blocks/** - DFT+U parameters for correlated electrons
 
 ### 🔧 **For HPC Users**
 1. **03-advanced-features/03-infrastructure/** - Database, jobflow-remote
-2. **03-advanced-features/12-parallel-computation/** - Parallel settings
-3. **03-advanced-features/14-efficiency-options/** - Performance tuning
+2. **03-advanced-features/06-performance/01-parallel/** - Parallel settings
+3. **03-advanced-features/06-performance/02-efficiency/** - Performance tuning
 
 ### 📚 **For Advanced Users**
 1. **03-advanced-features/08-recipe-book/** - High-level workflow system
-2. **03-advanced-features/03-powerups/** - Workflow customization
-3. **03-advanced-features/07-basis-set-customization/** - Species variants, PAO.Basis
+2. **03-advanced-features/04-structure-tools/03-powerups/** - Workflow customization
+3. **03-advanced-features/01-parameter-systems/03-basis/** - Species variants, PAO.Basis
 
 ## Requirements
 
 ### Installation
 ```bash
-pip install -e .
+pip install atomate2[siesta]
 ```
 
 ### Configuration
@@ -251,8 +251,8 @@ Many tutorials demonstrate CLI tools:
 - **Phonons**: 01-basics/07-PhonopyMaker, 02-workflows/06-vibrational-properties
 - **Surfaces**: 02-workflows/03-surfaces-and-adsorption
 - **Convergence**: 02-workflows/01-convergence
-- **Magnetic**: 03-advanced-features/16-magnetic-calculations
-- **DFT+U**: 03-advanced-features/08-dftu
+- **Magnetic**: 03-advanced-features/02-physics-features/03-magnetic
+- **DFT+U**: 03-advanced-features/02-physics-features/03-magnetic
 - **Recipes**: 03-advanced-features/08-recipe-book
 
 ### By Workflow Type
@@ -262,9 +262,9 @@ Many tutorials demonstrate CLI tools:
 
 ### By Material Type
 - **Bulk crystals**: Most tutorials use Si, MgO
-- **2D materials**: 03-advanced-features/01-tier-system (2D presets)
+- **2D materials**: 03-advanced-features/01-parameter-systems/01-tier-system (2D presets)
 - **Surfaces**: 02-workflows/03-surfaces-and-adsorption
-- **Magnetic**: 03-advanced-features/16-magnetic-calculations
+- **Magnetic**: 03-advanced-features/02-physics-features/03-magnetic
 
 ## Getting Help
 

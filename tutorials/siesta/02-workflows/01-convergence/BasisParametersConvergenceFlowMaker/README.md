@@ -477,7 +477,7 @@ After completing basis parameter convergence:
 1. **Use converged parameters** in production calculations
 2. **Test different basis sizes**: DZ vs. DZP vs. TZP with optimal parameters
 3. **Apply to workflows**: [EOS](../../02-equation-of-states/), [Elastic Constants](../../04-mechanical/), [Phonons](../../06-vibrational-properties/)
-4. **Material-specific presets**: See [Tier System](../../../03-advanced-features/01-tier-system/)
+4. **Material-specific presets**: See [Tier System](../../../03-advanced-features/01-parameter-systems/01-tier-system/)
 
 ---
 

@@ -432,7 +432,7 @@ After combined convergence:
    - [EOS workflows](../../02-equation-of-states/)
    - [Elastic constants](../../04-mechanical/)
    - [Phonon calculations](../../06-vibrational-properties/)
-3. **Tier presets**: Consider using [tier system](../../../03-advanced-features/01-tier-system/) with your converged values
+3. **Tier presets**: Consider using [tier system](../../../03-advanced-features/01-parameter-systems/01-tier-system/) with your converged values
 
 ---
 

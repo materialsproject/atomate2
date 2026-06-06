@@ -78,7 +78,7 @@ Vibrational calculations enable:
 - **Multiply Grüneisen cost by 1.5** (additional analysis)
 - **Example**: Si QHA = ~20-25 hours total
 
-**Recommendation**: Use HPC cluster (see [04-infrastructure/02-job-submission](../../03-advanced-features/03-infrastructure/02-job-submission/))
+**Recommendation**: Use HPC cluster (see [04-infrastructure/02-job-submission](../../03-advanced-features/03-infrastructure/02-jobflow-remote/))
 
 ---
 

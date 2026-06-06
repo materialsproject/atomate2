@@ -145,7 +145,7 @@ submit_flow(job, project="production")
 - Retrieves results automatically
 
 **Requirements**:
-- jobflow-remote configured (see [03-infrastructure/02-job-submission](../../03-advanced-features/03-infrastructure/02-job-submission/))
+- jobflow-remote configured (see [03-infrastructure/02-jobflow-remote](../../03-advanced-features/03-infrastructure/02-jobflow-remote/))
 - HPC cluster access
 
 ---
@@ -398,8 +398,8 @@ maker = BandStructureMaker(
 - `"%block DFTU.Proj"` - DFT+U projectors
 
 For comprehensive examples, see:
-- [02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/)
-- [07-basis-set-customization](../../03-advanced-features/07-basis-set-customization/)
+- [02-fdf-block-inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/)
+- [07-basis-set-customization](../../03-advanced-features/01-parameter-systems/03-basis/)
 
 ---
 

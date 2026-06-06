@@ -133,7 +133,7 @@ Success! You've completed your first atomate2siesta calculation.
 
 ### Learn More About Relaxation
 - 📚 **Tutorial 01-basics/01-RelaxMaker**: Detailed relaxation guide
-- 📚 **Tutorial 03-advanced-features/01-tier-system**: Customize SIESTA parameters with tiers
+- 📚 **Tutorial 03-advanced-features/01-parameter-systems/01-tier-system**: Customize SIESTA parameters with tiers
 
 ### Try Other Calculations
 ```python
@@ -162,7 +162,7 @@ flow = RecipeBook.complete_material_study(structure)
 
 ### Production Setup
 - 📚 **Tutorial 03-advanced-features/03-infrastructure/01-database-storage**: Save results to MongoDB
-- 📚 **Tutorial 03-advanced-features/03-infrastructure/02-job-submission**: Submit to HPC clusters
+- 📚 **Tutorial 03-advanced-features/03-infrastructure/02-jobflow-remote**: Submit to HPC clusters
 - 📚 **Tutorial 03-advanced-features/03-infrastructure/03-error-handling**: Automatic error recovery
 
 ## Common Issues

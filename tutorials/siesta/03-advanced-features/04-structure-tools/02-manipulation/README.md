@@ -271,7 +271,7 @@ All command examples in tutorials can be copy-pasted directly into your terminal
 
 ### Required Packages
 ```bash
-pip install atomate2siesta pymatgen
+pip install atomate2[siesta] pymatgen
 ```
 
 ### Verify Installation

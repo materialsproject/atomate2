@@ -573,8 +573,8 @@ maker = PDOSMaker(
 - `"%block DM.InitSpin"` - Initial magnetic moments for spin-polarized calculations
 
 For comprehensive examples, see:
-- [02-fdf-block-inputs](../../03-advanced-features/02-fdf-block-inputs/)
-- [16-magnetic-calculations](../../03-advanced-features/16-magnetic-calculations/)
+- [02-fdf-block-inputs](../../03-advanced-features/01-parameter-systems/04-fdf-blocks/)
+- [16-magnetic-calculations](../../03-advanced-features/02-physics-features/03-magnetic/)
 
 ---
 
@@ -606,10 +606,10 @@ atomate2siesta-maker pdos MgO.cif
 
 After completing PDOS tutorials:
 
-1. **Optical properties**: [03-advanced-features/07-optical-properties](../../03-advanced-features/07-optical-properties/)
-2. **COOP/COHP analysis**: [03-advanced-features/15-hamiltonian-overlap](../../03-advanced-features/15-hamiltonian-overlap/)
-3. **Magnetic systems**: [03-advanced-features/16-magnetic-calculations](../../03-advanced-features/16-magnetic-calculations/)
-4. **DFT+U**: [03-advanced-features/08-dftu](../../03-advanced-features/08-dftu/) - For correlated d/f electrons
+1. **Optical properties**: [03-advanced-features/02-physics-features/02-optical](../../03-advanced-features/02-physics-features/02-optical/)
+2. **COOP/COHP analysis**: [03-advanced-features/07-advanced-siesta/01-hamiltonian](../../03-advanced-features/07-advanced-siesta/01-hamiltonian/)
+3. **Magnetic systems**: [03-advanced-features/02-physics-features/03-magnetic](../../03-advanced-features/02-physics-features/03-magnetic/)
+4. **DFT+U**: [03-advanced-features/02-physics-features/03-magnetic](../../03-advanced-features/02-physics-features/03-magnetic/) - For correlated d/f electrons
 
 ---
 

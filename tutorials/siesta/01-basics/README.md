@@ -174,10 +174,9 @@ ls ../00-structures/
 ```
 
 ### Issue 4: "Module not found: atomate2.siesta"
-**Solution**: Install atomate2siesta in development mode:
+**Solution**: Install atomate2 with the SIESTA extra:
 ```bash
-cd /path/to/atomate2siesta
-pip install -e .
+pip install atomate2[siesta]
 ```
 
 ### Issue 5: "Unknown FDF parameter: fdf_arguments"
@@ -283,7 +282,7 @@ maker = RelaxMaker.fixed_cell_relaxation(
 
 **Note**: The `fdf_arguments` wrapper is deprecated. See individual tutorial READMEs for comprehensive examples.
 
-See **[03-advanced-features/01-tier-system](../03-advanced-features/01-tier-system/)** for detailed tier preset documentation.
+See **[03-advanced-features/01-parameter-systems/01-tier-system](../03-advanced-features/01-parameter-systems/01-tier-system/)** for detailed tier preset documentation.
 
 ---
 
@@ -293,7 +292,7 @@ After completing the basics, proceed to:
 
 ### Immediate Next Steps
 - **[02-workflows/01-convergence](../02-workflows/01-convergence/)** - Learn systematic parameter optimization
-- **[03-advanced-features/01-tier-system](../03-advanced-features/01-tier-system/)** - Material-specific parameter presets
+- **[03-advanced-features/01-parameter-systems/01-tier-system](../03-advanced-features/01-parameter-systems/01-tier-system/)** - Material-specific parameter presets
 
 ### By Research Interest
 - **Electronic properties**: [02-workflows/02-equation-of-states](../02-workflows/02-equation-of-states/)
