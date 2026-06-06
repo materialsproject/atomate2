@@ -35,13 +35,12 @@ class TestGetLocalPseudoPath:
 
     def test_get_local_pseudo_path_exists(self, tmp_path, monkeypatch):
         """Test finding an existing local pseudo file."""
-        # Mock the script directory path
-        mock_script_dir = tmp_path / "src" / "atomate2" / "siesta" / "cli"
+        # Mock the cli/pseudo module directory
+        mock_script_dir = tmp_path / "src" / "atomate2" / "siesta" / "cli" / "pseudo"
         mock_script_dir.mkdir(parents=True)
 
-        # Create pseudos directory at project root
-        project_dir = tmp_path
-        pseudos_dir = project_dir / "pseudos"
+        # Pseudos are bundled with the package, two levels up from cli/pseudo
+        pseudos_dir = tmp_path / "src" / "atomate2" / "siesta" / "pseudos"
         pseudos_dir.mkdir()
 
         # Create a pseudo file (filename comes from the PSEUDOS entry's local_path)
@@ -61,8 +60,8 @@ class TestGetLocalPseudoPath:
 
     def test_get_local_pseudo_path_not_found(self, tmp_path, monkeypatch):
         """Test when local pseudo file doesn't exist."""
-        # Mock the script directory path
-        mock_script_dir = tmp_path / "src" / "atomate2" / "siesta" / "cli"
+        # Mock the cli/pseudo module directory
+        mock_script_dir = tmp_path / "src" / "atomate2" / "siesta" / "cli" / "pseudo"
         mock_script_dir.mkdir(parents=True)
 
         # Don't create pseudos directory - should return None
