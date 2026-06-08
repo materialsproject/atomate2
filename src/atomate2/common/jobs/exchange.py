@@ -18,6 +18,7 @@ from atomate2.common.schemas.exchange import ExchangeDocument
 if TYPE_CHECKING:
     from pymatgen.analysis.magnetism.heisenberg import HeisenbergModel
     from pymatgen.core.structure import Structure
+    from atomate2.vampire.schemas.vampire_output import VampireOutput
 
 logger = logging.getLogger(__name__)
 
