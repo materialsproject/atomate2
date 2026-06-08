@@ -1,7 +1,6 @@
 """Flow for fitting magnetic exchange parameters and estimating Tc.
 
-Ports atomate1's ``ExchangeWF`` to atomate2. This is a post-processing workflow:
-it runs no DFT itself. Given magnetic structures and their energies (e.g. the
+This is a post-processing workflow and runs no DFT itself. Given magnetic structures and their energies (e.g. the
 output of the magnetic-orderings workflow), it fits a classical Heisenberg
 Hamiltonian and optionally runs Vampire Monte-Carlo for the critical temperature.
 """
@@ -16,8 +15,8 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.exchange import (
     build_exchange_doc,
     heisenberg_mapping,
-    run_vampire,
 )
+from atomate2.vampire.jobs.run_vampire import run_vampire
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure

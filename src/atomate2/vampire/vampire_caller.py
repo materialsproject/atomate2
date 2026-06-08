@@ -38,6 +38,7 @@ from monty.dev import requires
 from monty.json import MSONable
 
 from pymatgen.analysis.magnetism.heisenberg import HeisenbergMapper
+from atomate2.vampire.schemas.vampire_output import VampireOutput
 
 __author__ = "ncfrey"
 __version__ = "0.1"
@@ -415,20 +416,3 @@ class VampireCaller:
         critical_temp = df_stdout.iloc[df_stdout.X_m.idxmax()]["T"]
 
         return parsed_out, critical_temp
-
-
-class VampireOutput(MSONable):
-    """This class processes results from a Vampire Monte Carlo simulation
-    and parses the critical temperature.
-    """
-
-    def __init__(self, parsed_out=None, nmats=None, critical_temp=None):
-        """
-        Args:
-            parsed_out (str): JSON rep of parsed stdout DataFrame.
-            nmats (int): Number of distinct materials (1 for each specie and up/down spin).
-            critical_temp (float): Monte Carlo Tc result.
-        """
-        self.parsed_out = parsed_out
-        self.nmats = nmats
-        self.critical_temp = critical_temp

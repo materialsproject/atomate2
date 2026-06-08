@@ -10,7 +10,7 @@ from pymatgen.core.structure import Structure
 if TYPE_CHECKING:
     from pymatgen.analysis.magnetism.heisenberg import HeisenbergModel
 
-    from atomate2.vampire import VampireOutput
+    from atomate2.vampire.schemas.vampire_output import VampireOutput
 
 
 class ExchangeDocument(BaseModel):
@@ -44,10 +44,13 @@ class ExchangeDocument(BaseModel):
         None, description="Tolerance for grouping near-equal bond distances."
     )
     javg: float | None = Field(
-        None, description="Average exchange parameter <J> in Kelvin."
+        None, description="Estimated average exchange parameter <J> in meV/atom (atom = magnetic ion) from the energy difference between the lowest energy FM and AFM orderings."
     )
     ex_params: dict | None = Field(
-        None, description="Fitted exchange parameters J_ij keyed by interaction label."
+        None, description="Fitted exchange parameters J_ij keyed by interaction label in meV/atom (atom = magnetic ion)."
+    )
+    ex_mat: dict | None = Field(
+        None, description="Heisenberg Hamiltonian matrix used for the Heisenberg model fit."
     )
     heisenberg_model: dict | None = Field(
         None, description="Full HeisenbergModel as a serialized dict (as_dict())."
@@ -95,6 +98,7 @@ class ExchangeDocument(BaseModel):
             nn_tol=heisenberg_model.tol,
             javg=heisenberg_model.javg,
             ex_params=heisenberg_model.ex_params,
+            ex_mat=heisenberg_model.ex_mat.to_dict(),
             heisenberg_model=heisenberg_model.as_dict(),
             critical_temp=vampire_output.critical_temp if vampire_output else None,
             vampire_output=vampire_output.as_dict() if vampire_output else None,
