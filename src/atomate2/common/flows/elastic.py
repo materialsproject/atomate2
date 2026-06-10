@@ -72,6 +72,8 @@ class BaseElasticMaker(Maker, ABC):
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
+    socket : bool
+        If True use the socket-io (batch-mode) interface to increase performance.
     """
 
     name: str = "elastic"
@@ -86,6 +88,7 @@ class BaseElasticMaker(Maker, ABC):
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+    socket: bool = False
 
     def make(
         self,
@@ -135,15 +138,16 @@ class BaseElasticMaker(Maker, ABC):
             **self.generate_elastic_deformations_kwargs,
         )
 
-        vasp_deformation_calcs = run_elastic_deformations(
+        deformation_calcs = run_elastic_deformations(
             structure,
             deformations.output,
             elastic_relax_maker=self.elastic_relax_maker,
             prev_dir=prev_dir,
+            socket=self.socket,
         )
         fit_tensor = fit_elastic_tensor(
             structure,
-            vasp_deformation_calcs.output,
+            deformation_calcs.output,
             equilibrium_stress=equilibrium_stress,
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
@@ -156,7 +160,7 @@ class BaseElasticMaker(Maker, ABC):
         # allow some of the deformations to fail
         fit_tensor.config.on_missing_references = OnMissing.NONE
 
-        jobs += [deformations, vasp_deformation_calcs, fit_tensor]
+        jobs += [deformations, deformation_calcs, fit_tensor]
 
         return Flow(
             jobs=jobs,
