@@ -127,7 +127,7 @@ class OutputDoc(BaseModel):
 
     born: list[Matrix3D] | None = Field(
         None,
-        description="Born charges as computed from phonopy. Only for symmetrically "
+        description="Born charges as computed from DFPT. Only for symmetrically "
         "different atoms",
     )
 
