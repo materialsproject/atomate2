@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12"]
-        dep-group: ["generic", "torch-limited", "numpy-limited"]
+        dep-group: ["generic", "torch-limited", "e3nn-limited", "numpy-limited"]
 
     steps:
       - name: Check out repo
