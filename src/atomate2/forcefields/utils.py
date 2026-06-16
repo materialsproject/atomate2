@@ -349,23 +349,22 @@ def ase_calculator(
                 )
 
                 import matgl
+                from matgl.ext.ase import PESCalculator
 
-                # matgl >= 3.0 dropped the legacy MP-2021.2.8 / MPtrj weights and
-                # the GitHub `pretrained_models/` fallback. All pre-trained
-                # weights now live on the `materialyze` HF org with the
-                # ``<Architecture>-PES-<Dataset>-<Func>-<Version>`` naming.
-                # See https://huggingface.co/materialyze for the canonical list.
+                # matgl >= 4.0 removed the DGL backend; matgl now targets
+                # PyTorch Geometric exclusively and all potentials load through
+                # the single ``matgl.ext.ase.PESCalculator``. Pre-trained weights
+                # use the ``<Architecture>-PES-<Dataset>-<Func>-<Version>`` naming
+                # and live on the ``materialyze`` HF org (resolved from bare names
+                # by ``load_model``), except the CHGNet PyG weights, hosted under
+                # ``BowenD-UCB``. See https://huggingface.co/materialyze.
                 match calculator_name:
                     case MLFF.M3GNet:
-                        # Only the MatPES-trained PyG M3GNet potential is
-                        # distributed on HF for matgl 3.x.
                         path = kwargs.get("path", "M3GNet-PES-MatPES-PBE-2025.2")
-                        backend = "PYG"
                     case MLFF.CHGNet:
-                        # The MatPES-trained CHGNet weights remain DGL-backed.
-                        path = kwargs.get("path", "CHGNet-PES-MatPES-PBE-2025.2.10")
-                        backend = "DGL"
-
+                        path = kwargs.get(
+                            "path", "BowenD-UCB/CHGNet-PyG-MatPES-PBE-2025.2.10"
+                        )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                         # ``calculator_name.value`` is e.g. "MatPES-PBE";
                         # take the suffix to construct the HF repo name.
@@ -376,20 +375,11 @@ def ase_calculator(
                             "path",
                             f"{architecture}-PES-MatPES-{functional}-{version}",
                         )
-                        backend = "PYG"
-
-                _set_matgl_backend(backend)
 
                 if default_dtype is not None:
                     matgl.set_default_dtype(default_dtype)
 
-                matgl_calc = getattr(
-                    import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
-                    "PESCalculator",
-                    None,
-                )
-
-                calculator = matgl_calc(matgl.load_model(path), **kwargs)
+                calculator = PESCalculator(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
                 from mace.calculators import MACECalculator, mace_mp
@@ -490,37 +480,6 @@ def _load_calc_cls(
         module, klass = calculator_meta.rsplit(".", 1)
         return getattr(import_module(module), klass)
     return MontyDecoder().process_decoded(calculator_meta)
-
-
-def _set_matgl_backend(backend: str) -> None:
-    """Switch the active matgl backend, reloading dependent submodules.
-
-    matgl reads ``matgl.config.BACKEND`` once when ``matgl.models`` /
-    ``matgl.apps.pes`` are first imported, and the conditional imports inside
-    those packages decide which backend-specific classes (e.g.
-    ``matgl.models.CHGNet``) are exposed. Mutating ``matgl.config.BACKEND``
-    after those modules have been loaded does not re-run the imports, so a
-    second forcefield call requesting a different backend in the same Python
-    process raises ``AttributeError: module 'matgl.models' has no attribute
-    'CHGNet'`` when ``matgl.load_model`` looks up the class.
-
-    Reload the affected submodules so subsequent loads pick the correct
-    backend-specific implementations. No-op if the backend is already set.
-    """
-    import importlib
-    import sys
-
-    import matgl
-
-    if backend == matgl.config.BACKEND:
-        return
-
-    matgl.config.BACKEND = backend
-    # Submodules that read BACKEND at import time and need to be re-evaluated
-    # so that backend-specific classes/functions get re-bound.
-    for modname in ("matgl.models", "matgl.apps.pes", "matgl.apps"):
-        if modname in sys.modules:
-            importlib.reload(sys.modules[modname])
 
 
 @contextmanager
