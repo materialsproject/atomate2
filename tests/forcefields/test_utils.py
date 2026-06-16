@@ -59,29 +59,6 @@ def test_raises_error():
         ase_calculator("not_a_calculator")
 
 
-@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
-def test_m3gnet_pot():
-    import matgl
-    from matgl.ext.ase import PESCalculator
-
-    kwargs_calc = {"path": "M3GNet-MP-2021.2.8-DIRECT-PES", "stress_weight": 2.0}
-    kwargs_default = {"stress_weight": 2.0}
-
-    m3gnet_calculator = ase_calculator(calculator_meta="MLFF.M3GNet", **kwargs_calc)
-
-    # uses "M3GNet-MP-2021.2.8-PES" per default
-    m3gnet_default = ase_calculator(calculator_meta="MLFF.M3GNet", **kwargs_default)
-
-    potential = matgl.load_model("M3GNet-MP-2021.2.8-DIRECT-PES")
-    m3gnet_pes_calc = PESCalculator(potential=potential, stress_weight=2.0)
-
-    assert str(m3gnet_pes_calc.potential) == str(m3gnet_calculator.potential)
-    # casting necessary because <class 'matgl.apps.pes.Potential'> can't be compared
-    assert str(m3gnet_pes_calc.potential) != str(m3gnet_default.potential)
-    assert m3gnet_pes_calc.stress_weight == m3gnet_calculator.stress_weight
-    assert m3gnet_pes_calc.stress_weight == m3gnet_default.stress_weight
-
-
 @pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_mace_explicit_dispersion(ba_ti_o3_structure: Structure):
     from ase.calculators.mixing import SumCalculator
