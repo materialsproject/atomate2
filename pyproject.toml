@@ -103,10 +103,10 @@ strict-forcefields-torch-limited = [
     "matgl>=4.0.2",
     "nequip>=0.17.1", # requires numpy<2 because of matscipy
 ]
-strict-forcefields-e3nn-limited = [
-    "mace-torch==0.3.16",
-    "torch-dftd==0.5.3",
-]
+# strict-forcefields-e3nn-limited = [
+#     "mace-torch>=0.3.15",
+#     "torch-dftd==0.5.3",
+# ]
 # strict-forcefields-e3nn-limited = [
 #     "mace-torch>=0.3.15",
 #     "torch-dftd>=0.5.3",
