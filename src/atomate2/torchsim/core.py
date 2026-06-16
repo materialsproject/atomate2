@@ -163,15 +163,11 @@ def process_trajectory_reporter_dict(
         for i, props in prop_calculators_typed.items()
     }
 
-    # torch-sim >= 0.6 makes ``filenames`` a read-only property and opens the
-    # trajectory files in the constructor, so resolve the paths up front and
-    # pass them in rather than assigning after construction.
-    trajectory_reporter_dict = {
-        **trajectory_reporter_dict,
-        "filenames": [
-            Path(p).resolve() for p in trajectory_reporter_dict.get("filenames", [])
-        ],
-    }
+    # ``filenames`` is a read-only property and the trajectory files are opened
+    # in the constructor, so resolve the paths before passing them in.
+    trajectory_reporter_dict["filenames"] = [
+        Path(p).resolve() for p in trajectory_reporter_dict.get("filenames", [])
+    ]
     trajectory_reporter = ts.TrajectoryReporter(
         **trajectory_reporter_dict, prop_calculators=prop_calculators_functions
     )
