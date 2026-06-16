@@ -62,7 +62,7 @@ forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
 ]
-jdftx = ["pymatgen==2026.3.23"]
+jdftx = ["pymatgen==2026.5.4"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 openmm = [
     "mdanalysis>=2.8.0",
@@ -75,7 +75,7 @@ strict-openff = [
     "monty>=2026.2.18",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.5.1",
-    "pymatgen==2026.3.23", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "pymatgen==2026.5.4", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
 # Forcefields have separate strict groupings because of conflicting dependencies.
@@ -103,6 +103,10 @@ strict-forcefields-torch-limited = [
     "matgl>=4.0.2",
     "nequip>=0.17.1", # requires numpy<2 because of matscipy
 ]
+strict-forcefields-e3nn-limited = [
+    "mace-torch==0.3.16",
+    "torch-dftd==0.5.3",
+]
 # strict-forcefields-e3nn-limited = [
 #     "mace-torch>=0.3.15",
 #     "torch-dftd>=0.5.3",
@@ -115,7 +119,7 @@ strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
-    "pymatgen==2026.3.23",
+    "pymatgen==2026.5.4",
 ]
 
 [project.scripts]
