@@ -16,6 +16,7 @@ from atomate2.common.schemas.gruneisen import (
 )
 from atomate2.forcefields.flows.gruneisen import GruneisenMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 
 def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
@@ -28,6 +29,8 @@ def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
             "gruneisen_bs": f"{tmp_path}/gruneisen_band.pdf",
         },
         phonon_maker=PhononMaker(
+            bulk_relax_maker = ForceFieldRelaxMaker(
+            force_field_name="CHGNet", relax_kwargs={"fmax": 1e-5}),
             use_symmetrized_structure="conventional",
             create_thermal_displacements=False,
             store_force_constants=False,
