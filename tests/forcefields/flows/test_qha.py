@@ -10,7 +10,7 @@ from pymatgen.core.structure import Structure
 from atomate2.common.schemas.qha import PhononQHADoc
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.flows.qha import CHGNetQhaMaker, ForceFieldQhaMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 from ..conftest import mlff_is_installed  # noqa: TID252
 
@@ -75,14 +75,14 @@ from ..conftest import mlff_is_installed  # noqa: TID252
 #     assert ph_bs_dos_doc.volumes[4] == pytest.approx(ph_bs_dos_doc.volumes[2] * 1.03**3)
 
 
-@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
+@pytest.mark.skipif(not mlff_is_installed("MACE_MP_0B3"), reason="mace_torch is not installed")
 def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
     matrix = [[2.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     flow = CHGNetQhaMaker(
-        initial_relax_maker=ForceFieldRelaxMaker(force_field_name="CHGNet", relax_kwargs={"fmax": 1e-2}),
-        eos_relax_maker=ForceFieldRelaxMaker(force_field_name="CHGNet", 
+        initial_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", relax_kwargs={"fmax": 1e-2}),
+        eos_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", 
                                              relax_cell=False, relax_kwargs={"fmax": 1e-2}), 
         number_of_frames=4,
         ignore_imaginary_modes=True,
@@ -90,6 +90,8 @@ def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: 
         phonon_maker=PhononMaker(
             store_force_constants=False,
             bulk_relax_maker=None,
+            phonon_displacement_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+            static_energy_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
             generate_frequencies_eigenvectors_kwargs={
                 "tol_imaginary_modes": 5e-1,
                 "tmin": 0,
