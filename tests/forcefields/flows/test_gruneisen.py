@@ -16,7 +16,7 @@ from atomate2.common.schemas.gruneisen import (
 )
 from atomate2.forcefields.flows.gruneisen import GruneisenMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
