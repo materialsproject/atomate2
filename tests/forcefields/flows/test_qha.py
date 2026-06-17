@@ -9,7 +9,7 @@ from pymatgen.core.structure import Structure
 
 from atomate2.common.schemas.qha import PhononQHADoc
 from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.flows.qha import CHGNetQhaMaker, ForceFieldQhaMaker
+from atomate2.forcefields.flows.qha import ForceFieldQhaMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 from ..conftest import mlff_is_installed  # noqa: TID252

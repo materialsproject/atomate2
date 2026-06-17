@@ -32,11 +32,11 @@ def test_approx_neb_from_endpoints(test_dir, clean_dir):
 
     assert isinstance(output["collate_images_single_hop"], NebResult)
     # Initially, this test was written with MATPES_PBE, but had to be
-    # changed to MACE_MP_0B3, so exact-energy references no longer apply. 
+    # changed to MACE_MP_0B3, so exact-energy references no longer apply.
     # Verify the path structure: 7 finite energies, endpoints
     # degenerate, all in a sensible band for the
     # Zn host structure (~-1500 eV total).
-    
+
     energies = output["collate_images_single_hop"].energies
     assert len(energies) == 7
     assert all(e is not None for e in energies)
