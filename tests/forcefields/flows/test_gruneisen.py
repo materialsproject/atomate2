@@ -29,18 +29,18 @@ def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
             "gruneisen_mesh": f"{tmp_path}/gruneisen_mesh.pdf",
             "gruneisen_bs": f"{tmp_path}/gruneisen_band.pdf",
         },
-
         phonon_maker=PhononMaker(
             use_symmetrized_structure="conventional",
             create_thermal_displacements=False,
             store_force_constants=False,
             prefer_90_degrees=False,
         ),
-        const_vol_relax_maker= ForceFieldRelaxMaker(
+        const_vol_relax_maker=ForceFieldRelaxMaker(
             force_field_name="CHGNet", relax_kwargs={"fmax": 0.01}, relax_cell=False
         ),
         bulk_relax_maker=ForceFieldRelaxMaker(
-            force_field_name="CHGNet", relax_kwargs={"fmax": 0.01}),
+            force_field_name="CHGNet", relax_kwargs={"fmax": 0.01}
+        ),
     ).make(structure=si_structure)
 
     # run the flow or job and ensure that it finished running successfully
