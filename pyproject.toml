@@ -102,10 +102,13 @@ strict-forcefields-generic = [
     "wandb>=0.24.0", # required for mattersim
     "upet>=0.2.1",
 ]
-strict-forcefields-torch-limited = [
+strict-forcefields-torch-limited-0 = [
     "matgl>=4.0.2",
+]
+strict-forcefields-torch-limited-1 = [
     "nequip>=0.17.1", # requires numpy<2 because of matscipy
 ]
+
 strict-forcefields-e3nn-limited = [
     "mace-torch>=0.3.15",
     "torch-dftd>=0.5.3",
