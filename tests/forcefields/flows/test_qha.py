@@ -80,7 +80,7 @@ def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: 
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
     matrix = [[2.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-    flow = CHGNetQhaMaker(
+    flow = ForceFieldQhaMaker(
         initial_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", relax_kwargs={"fmax": 1e-2}),
         eos_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", 
                                              relax_cell=False, relax_kwargs={"fmax": 1e-2}), 
