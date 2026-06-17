@@ -15,7 +15,7 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMake
 from ..conftest import mlff_is_installed  # noqa: TID252
 
 
-@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
+@pytest.mark.skipif(not mlff_is_installed("MACE_MP_0B3"), reason="mace_torch is not installed")
 def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
@@ -48,14 +48,15 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
 
 
-@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
+@pytest.mark.skipif(not mlff_is_installed("MACE_MP_0B3"), reason="mace_torch is not installed")
 def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
     flow = ForceFieldQhaMaker(
+        initial_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", relax_kwargs={"fmax": 1e-2}),
+        eos_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", 
+                                             relax_cell=False, relax_kwargs={"fmax": 1e-2}), 
         number_of_frames=4,
-        phonon_displacement_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
-        static_energy_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
         ignore_imaginary_modes=True,
         linear_strain=(-0.03, 0.03),
         min_length=10,
