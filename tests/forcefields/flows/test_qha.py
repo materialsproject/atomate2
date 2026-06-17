@@ -75,34 +75,37 @@ from ..conftest import mlff_is_installed  # noqa: TID252
 #     assert ph_bs_dos_doc.volumes[4] == pytest.approx(ph_bs_dos_doc.volumes[2] * 1.03**3)
 
 
-# @pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
-# def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: Path):
-#     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
+def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: Path):
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-#     matrix = [[2.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-#     flow = CHGNetQhaMaker(
-#         number_of_frames=4,
-#         ignore_imaginary_modes=True,
-#         min_length=10,
-#         phonon_maker=PhononMaker(
-#             store_force_constants=False,
-#             bulk_relax_maker=None,
-#             generate_frequencies_eigenvectors_kwargs={
-#                 "tol_imaginary_modes": 5e-1,
-#                 "tmin": 0,
-#                 "tmax": 1000,
-#                 "tstep": 10,
-#             },
-#         ),
-#     ).make(si_structure, supercell_matrix=matrix)
+    matrix = [[2.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+    flow = CHGNetQhaMaker(
+        initial_relax_maker=ForceFieldRelaxMaker(force_field_name="CHGNet", relax_kwargs={"fmax": 1e-2}),
+        eos_relax_maker=ForceFieldRelaxMaker(force_field_name="CHGNet", 
+                                             relax_cell=False, relax_kwargs={"fmax": 1e-2}), 
+        number_of_frames=4,
+        ignore_imaginary_modes=True,
+        min_length=10,
+        phonon_maker=PhononMaker(
+            store_force_constants=False,
+            bulk_relax_maker=None,
+            generate_frequencies_eigenvectors_kwargs={
+                "tol_imaginary_modes": 5e-1,
+                "tmin": 0,
+                "tmax": 1000,
+                "tstep": 10,
+            },
+        ),
+    ).make(si_structure, supercell_matrix=matrix)
 
-#     # run the flow or job and ensure that it finished running successfully
-#     responses = run_locally(flow, create_folders=True, ensure_success=True)
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-#     # # validate the outputs
-#     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
-#     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
-#     assert_allclose(ph_bs_dos_doc.supercell_matrix, matrix)
+    # # validate the outputs
+    ph_bs_dos_doc = responses[flow[-1].uuid][1].output
+    assert isinstance(ph_bs_dos_doc, PhononQHADoc)
+    assert_allclose(ph_bs_dos_doc.supercell_matrix, matrix)
 
 
 _MLFFS_TO_TEST = [mlff for mlff in ("CHGNet", "M3GNet") if mlff_is_installed(mlff)]
