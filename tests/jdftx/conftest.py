@@ -48,7 +48,7 @@ def jdftx_test_dir(test_dir):
     return test_dir / "jdftx"
 
 
-@pytest.fixture(params=["sp_test", "ionicmin_test", "latticemin_test"])
+@pytest.fixture
 def task_name(request):
     task_table = {
         "sp_test": "Single Point",
