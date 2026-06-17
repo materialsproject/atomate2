@@ -110,160 +110,160 @@ def test_phonon_maker_initialization_with_all_mlff(
         ) from exc
 
 
-# @pytest.mark.skipif(
-#     not mlff_is_installed("CHGNet"), reason="matgl/chgnet is not installed"
-# )
-# @pytest.mark.parametrize("from_name, socket", list(product(*[[True, False]] * 2)))
-# def test_phonon_wf_force_field(
-#     clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool, socket: bool
-# ):
-#     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+@pytest.mark.skipif(
+    not mlff_is_installed("CHGNet"), reason="matgl/chgnet is not installed"
+)
+@pytest.mark.parametrize("from_name, socket", list(product(*[[True, False]] * 2)))
+def test_phonon_wf_force_field(
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool, socket: bool
+):
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-#     # See issue: https://github.com/materialsproject/atomate2/issues/1395
-#     # Testing JSON store explicitly to avoid regression for this flow
-#     json_dir = TemporaryDirectory()
-#     json_store = JobStore.from_dict_spec(
-#         {
-#             "docs_store": {
-#                 "type": "JSONStore",
-#                 "paths": str(Path(json_dir.name) / "output.json"),
-#                 "read_only": False,
-#             },
-#             "additional_stores": {
-#                 "data": {
-#                     "type": "JSONStore",
-#                     "paths": str(Path(json_dir.name) / "blob_output.json"),
-#                     "read_only": False,
-#                 }
-#             },
-#         }
-#     )
+    # See issue: https://github.com/materialsproject/atomate2/issues/1395
+    # Testing JSON store explicitly to avoid regression for this flow
+    json_dir = TemporaryDirectory()
+    json_store = JobStore.from_dict_spec(
+        {
+            "docs_store": {
+                "type": "JSONStore",
+                "paths": str(Path(json_dir.name) / "output.json"),
+                "read_only": False,
+            },
+            "additional_stores": {
+                "data": {
+                    "type": "JSONStore",
+                    "paths": str(Path(json_dir.name) / "blob_output.json"),
+                    "read_only": False,
+                }
+            },
+        }
+    )
 
-#     is_matgl_chgnet = find_spec("matgl") is not None
+    is_matgl_chgnet = find_spec("matgl") is not None
 
-#     phonon_kwargs = dict(
-#         use_symmetrized_structure="conventional",
-#         create_thermal_displacements=False,
-#         store_force_constants=False,
-#         prefer_90_degrees=False,
-#         generate_frequencies_eigenvectors_kwargs={
-#             "tstep": 100,
-#             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
-#             "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
-#         },
-#         socket=socket,
-#     )
+    phonon_kwargs = dict(
+        use_symmetrized_structure="conventional",
+        create_thermal_displacements=False,
+        store_force_constants=False,
+        prefer_90_degrees=False,
+        generate_frequencies_eigenvectors_kwargs={
+            "tstep": 100,
+            "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
+            "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
+        },
+        socket=socket,
+    )
 
-#     if from_name:
-#         phonon_maker = PhononMaker.from_force_field_name("CHGNet", **phonon_kwargs)
-#         if phonon_kwargs.get("relax_initial_structure", True):
-#             assert isinstance(phonon_maker.bulk_relax_maker, ForceFieldRelaxMaker)
-#             assert "CHGNet" in phonon_maker.bulk_relax_maker.force_field_name
+    if from_name:
+        phonon_maker = PhononMaker.from_force_field_name("CHGNet", **phonon_kwargs)
+        if phonon_kwargs.get("relax_initial_structure", True):
+            assert isinstance(phonon_maker.bulk_relax_maker, ForceFieldRelaxMaker)
+            assert "CHGNet" in phonon_maker.bulk_relax_maker.force_field_name
 
-#         for attr in ("static_energy_maker", "phonon_displacement_maker"):
-#             assert "CHGNet" in getattr(phonon_maker, attr).force_field_name
+        for attr in ("static_energy_maker", "phonon_displacement_maker"):
+            assert "CHGNet" in getattr(phonon_maker, attr).force_field_name
 
-#         assert (
-#             PhononMaker.from_force_field_name(
-#                 "CHGNet", relax_initial_structure=False
-#             ).bulk_relax_maker
-#             is None
-#         )
-#     else:
-#         phonon_maker = PhononMaker(**phonon_kwargs)
+        assert (
+            PhononMaker.from_force_field_name(
+                "CHGNet", relax_initial_structure=False
+            ).bulk_relax_maker
+            is None
+        )
+    else:
+        phonon_maker = PhononMaker(**phonon_kwargs)
 
-#     flow = phonon_maker.make(si_structure)
+    flow = phonon_maker.make(si_structure)
 
-#     # run the flow or job and ensure that it finished running successfully
-#     responses = run_locally(
-#         flow, create_folders=True, ensure_success=True, store=json_store
-#     )
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(
+        flow, create_folders=True, ensure_success=True, store=json_store
+    )
 
-#     # close temp dir for JSON store
-#     json_dir.cleanup()
+    # close temp dir for JSON store
+    json_dir.cleanup()
 
-#     # validate the outputs
-#     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
-#     assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
+    # validate the outputs
+    ph_bs_dos_doc = responses[flow[-1].uuid][1].output
+    assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
 
-#     # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
-#     # CHGNet weights distributed by matgl 3.x; the legacy MPtrj-trained CHGNet
-#     # references are kept for the `chgnet` package path.
-#     assert_allclose(
-#         ph_bs_dos_doc.free_energies,
-#         [3164.0, 3053.0, 2351.0, 999.0, -868.0]
-#         if is_matgl_chgnet
-#         else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174],
-#         atol=1000,
-#     )
+    # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
+    # CHGNet weights distributed by matgl 3.x; the legacy MPtrj-trained CHGNet
+    # references are kept for the `chgnet` package path.
+    assert_allclose(
+        ph_bs_dos_doc.free_energies,
+        [3164.0, 3053.0, 2351.0, 999.0, -868.0]
+        if is_matgl_chgnet
+        else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174],
+        atol=1000,
+    )
 
-#     ph_band_struct = ph_bs_dos_doc.phonon_bandstructure
-#     assert isinstance(ph_band_struct, PhononBandStructureSymmLine)
+    ph_band_struct = ph_bs_dos_doc.phonon_bandstructure
+    assert isinstance(ph_band_struct, PhononBandStructureSymmLine)
 
-#     ph_dos = ph_bs_dos_doc.phonon_dos
-#     assert isinstance(ph_dos, PhononDos)
-#     assert ph_bs_dos_doc.thermal_displacement_data is None
-#     assert isinstance(ph_bs_dos_doc.structure, Structure)
-#     assert_allclose(ph_bs_dos_doc.temperatures, [0, 100, 200, 300, 400])
-#     assert ph_bs_dos_doc.force_constants is None
-#     assert isinstance(ph_bs_dos_doc.jobdirs, PhononJobDirs)
-#     assert isinstance(ph_bs_dos_doc.uuids, PhononUUIDs)
-#     assert_allclose(ph_bs_dos_doc.total_dft_energy, -5.37245798, 4)
-#     assert ph_bs_dos_doc.born is None
-#     assert ph_bs_dos_doc.epsilon_static is None
-#     assert_allclose(
-#         ph_bs_dos_doc.supercell_matrix,
-#         [[4.0, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 4.0]],
-#     )
-#     assert_allclose(
-#         ph_bs_dos_doc.primitive_matrix,
-#         ((0, 0.5, 0.5), (0.5, 0.0, 0.5), (0.5, 0.5, 0.0)),
-#         atol=1e-8,
-#     )
-#     assert ph_bs_dos_doc.code == "forcefields"
-#     assert isinstance(ph_bs_dos_doc.phonopy_settings, PhononComputationalSettings)
-#     assert ph_bs_dos_doc.phonopy_settings.npoints_band == 101
-#     assert ph_bs_dos_doc.phonopy_settings.kpath_scheme == "seekpath"
-#     assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
-#     # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
-#     # CHGNet weights distributed by matgl 3.x.
-#     assert_allclose(
-#         ph_bs_dos_doc.entropies,
-#         [0.0, 3.46, 10.50, 16.31, 20.85]
-#         if is_matgl_chgnet
-#         else [0.0, 3.733666, 12.536534, 20.344558, 26.627292],
-#         atol=2,
-#     )
-#     # heat_capacities and internal_energies depend strongly on the phonon
-#     # spectrum; loose tolerances let the test work for both the legacy
-#     # chgnet-package CHGNet and the matgl-served MatPES-PBE-2025.2.10 variant
-#     # (which has a softer phonon spectrum).
-#     assert_allclose(
-#         ph_bs_dos_doc.heat_capacities,
-#         [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
-#         atol=10,
-#     )
-#     assert_allclose(
-#         ph_bs_dos_doc.internal_energies,
-#         [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
-#         atol=4000,
-#     )
+    ph_dos = ph_bs_dos_doc.phonon_dos
+    assert isinstance(ph_dos, PhononDos)
+    assert ph_bs_dos_doc.thermal_displacement_data is None
+    assert isinstance(ph_bs_dos_doc.structure, Structure)
+    assert_allclose(ph_bs_dos_doc.temperatures, [0, 100, 200, 300, 400])
+    assert ph_bs_dos_doc.force_constants is None
+    assert isinstance(ph_bs_dos_doc.jobdirs, PhononJobDirs)
+    assert isinstance(ph_bs_dos_doc.uuids, PhononUUIDs)
+    assert_allclose(ph_bs_dos_doc.total_dft_energy, -5.37245798, 4)
+    assert ph_bs_dos_doc.born is None
+    assert ph_bs_dos_doc.epsilon_static is None
+    assert_allclose(
+        ph_bs_dos_doc.supercell_matrix,
+        [[4.0, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 4.0]],
+    )
+    assert_allclose(
+        ph_bs_dos_doc.primitive_matrix,
+        ((0, 0.5, 0.5), (0.5, 0.0, 0.5), (0.5, 0.5, 0.0)),
+        atol=1e-8,
+    )
+    assert ph_bs_dos_doc.code == "forcefields"
+    assert isinstance(ph_bs_dos_doc.phonopy_settings, PhononComputationalSettings)
+    assert ph_bs_dos_doc.phonopy_settings.npoints_band == 101
+    assert ph_bs_dos_doc.phonopy_settings.kpath_scheme == "seekpath"
+    assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
+    # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
+    # CHGNet weights distributed by matgl 3.x.
+    assert_allclose(
+        ph_bs_dos_doc.entropies,
+        [0.0, 3.46, 10.50, 16.31, 20.85]
+        if is_matgl_chgnet
+        else [0.0, 3.733666, 12.536534, 20.344558, 26.627292],
+        atol=2,
+    )
+    # heat_capacities and internal_energies depend strongly on the phonon
+    # spectrum; loose tolerances let the test work for both the legacy
+    # chgnet-package CHGNet and the matgl-served MatPES-PBE-2025.2.10 variant
+    # (which has a softer phonon spectrum).
+    assert_allclose(
+        ph_bs_dos_doc.heat_capacities,
+        [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
+        atol=10,
+    )
+    assert_allclose(
+        ph_bs_dos_doc.internal_energies,
+        [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
+        atol=4000,
+    )
 
-#     # check phonon plots exist
-#     assert os.path.isfile(filename_bs)
-#     assert os.path.isfile(filename_dos)
+    # check phonon plots exist
+    assert os.path.isfile(filename_bs)
+    assert os.path.isfile(filename_dos)
 
 
-# @pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
-# def test_ext_load_phonon_initialization():
-#     calculator_meta = {
-#         "@module": "mace.calculators",
-#         "@callable": "mace_mp",
-#     }
-#     maker = PhononMaker.from_force_field_name(
-#         force_field_name=calculator_meta,
-#         relax_initial_structure=True,
-#     )
-#     assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
-#     assert maker.static_energy_maker.ase_calculator_name == "mace_mp"
-#     assert maker.phonon_displacement_maker.ase_calculator_name == "mace_mp"
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
+def test_ext_load_phonon_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = PhononMaker.from_force_field_name(
+        force_field_name=calculator_meta,
+        relax_initial_structure=True,
+    )
+    assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.static_energy_maker.ase_calculator_name == "mace_mp"
+    assert maker.phonon_displacement_maker.ase_calculator_name == "mace_mp"
