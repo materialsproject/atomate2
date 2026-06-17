@@ -22,7 +22,7 @@ def test_approx_neb_from_endpoints(test_dir, clean_dir):
 
     flow = ForceFieldApproxNebFromEndpointsMaker(
         image_relax_maker=ForceFieldStaticMaker(force_field_name="MATPES_R2SCAN")
-    ).make("Zn", endpoints, vasp_aneb_dir / "host_structure_relax_2/outputs/CHGCAR.bz2")
+    ).make("Zn", endpoints, vasp_aneb_dir / "host_structure_relax_2/outputs/CHGCAR.bz2",n_images=3)
 
     response = run_locally(flow)
     output = {
