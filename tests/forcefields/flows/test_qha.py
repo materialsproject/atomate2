@@ -15,64 +15,73 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMake
 from ..conftest import mlff_is_installed  # noqa: TID252
 
 
-# @pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
-# def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
-#     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
+def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-#     flow = CHGNetQhaMaker(
-#         number_of_frames=5,
-#         ignore_imaginary_modes=True,
-#         min_length=10,
-#         phonon_maker=PhononMaker(
-#             store_force_constants=False,
-#             bulk_relax_maker=None,
-#             generate_frequencies_eigenvectors_kwargs={
-#                 "tol_imaginary_modes": 5e-1,
-#                 "tmin": 0,
-#                 "tmax": 1000,
-#                 "tstep": 10,
-#             },
-#         ),
-#     ).make(si_structure)
+    flow = ForceFieldQhaMaker(
+        initial_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", relax_kwargs={"fmax": 1e-2}),
+        eos_relax_maker=ForceFieldRelaxMaker(force_field_name="MACE_MP_0B3", 
+                                             relax_cell=False, relax_kwargs={"fmax": 1e-2}), 
+        number_of_frames=5,
+        ignore_imaginary_modes=True,
+        min_length=10,
+        phonon_maker=PhononMaker(
+            phonon_displacement_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+            static_energy_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+            store_force_constants=False,
+            bulk_relax_maker=None,
+            generate_frequencies_eigenvectors_kwargs={
+                "tol_imaginary_modes": 5e-1,
+                "tmin": 0,
+                "tmax": 1000,
+                "tstep": 10,
+            },
+        ),
+    ).make(si_structure)
 
-#     # run the flow or job and ensure that it finished running successfully
-#     responses = run_locally(flow, create_folders=True, ensure_success=True)
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-#     # # validate the outputs
-#     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
-#     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
+    # # validate the outputs
+    ph_bs_dos_doc = responses[flow[-1].uuid][1].output
+    assert isinstance(ph_bs_dos_doc, PhononQHADoc)
 
 
-# @pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
-# def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: Path):
-#     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
+def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: Path):
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-#     flow = CHGNetQhaMaker(
-#         number_of_frames=4,
-#         ignore_imaginary_modes=True,
-#         linear_strain=(-0.03, 0.03),
-#         min_length=10,
-#         phonon_maker=PhononMaker(
-#             store_force_constants=False,
-#             bulk_relax_maker=None,
-#             generate_frequencies_eigenvectors_kwargs={
-#                 "tol_imaginary_modes": 5e-1,
-#                 "tmin": 0,
-#                 "tmax": 1000,
-#                 "tstep": 10,
-#             },
-#         ),
-#     ).make(si_structure)
+    flow = ForceFieldQhaMaker(
+        number_of_frames=4,
+        phonon_displacement_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+        static_energy_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+        ignore_imaginary_modes=True,
+        linear_strain=(-0.03, 0.03),
+        min_length=10,
+        phonon_maker=PhononMaker(
+            phonon_displacement_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+            static_energy_maker=ForceFieldStaticMaker(force_field_name="MACE_MP_0B3"),
+            store_force_constants=False,
+            bulk_relax_maker=None,
+            generate_frequencies_eigenvectors_kwargs={
+                "tol_imaginary_modes": 5e-1,
+                "tmin": 0,
+                "tmax": 1000,
+                "tstep": 10,
+            },
+        ),
+    ).make(si_structure)
 
-#     # run the flow or job and ensure that it finished running successfully
-#     responses = run_locally(flow, create_folders=True, ensure_success=True)
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-#     # # validate the outputs
-#     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
-#     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
-#     assert len(ph_bs_dos_doc.volumes) == 5
-#     assert ph_bs_dos_doc.volumes[0] == pytest.approx(ph_bs_dos_doc.volumes[2] * 0.97**3)
-#     assert ph_bs_dos_doc.volumes[4] == pytest.approx(ph_bs_dos_doc.volumes[2] * 1.03**3)
+    # # validate the outputs
+    ph_bs_dos_doc = responses[flow[-1].uuid][1].output
+    assert isinstance(ph_bs_dos_doc, PhononQHADoc)
+    assert len(ph_bs_dos_doc.volumes) == 5
+    assert ph_bs_dos_doc.volumes[0] == pytest.approx(ph_bs_dos_doc.volumes[2] * 0.97**3)
+    assert ph_bs_dos_doc.volumes[4] == pytest.approx(ph_bs_dos_doc.volumes[2] * 1.03**3)
 
 
 @pytest.mark.skipif(not mlff_is_installed("MACE_MP_0B3"), reason="mace_torch is not installed")
