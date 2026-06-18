@@ -112,7 +112,7 @@ strict-forcefields-e3nn-limited = [
     "torch-dftd==0.5.3",
 ]
 strict-forcefields-numpy-limited = [
-    "nequip-allegro==0.8.2",
+    "nequip-allegro==0.8.3",
 ]
 
 strict = [
