@@ -63,21 +63,21 @@ ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 
 torchsim = [
-    "torch-sim-atomistic>=0.6.0; python_version >= '3.12'"
+    "torch-sim-atomistic==0.6.0; python_version >= '3.12'"
 ]
-jdftx = ["pymatgen>=2026.5.4"]
+jdftx = ["pymatgen==2026.5.4"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 openmm = [
     "mdanalysis>=2.8.0",
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["fireworks>=2.1.3"]
+fireworks = ["fireworks==2.1.3"]
 strict-openff = [
-    "mdanalysis>=2.10.0",
-    "monty>=2026.2.18",
-    "openmm-mdanalysis-reporter>=0.1.0",
-    "openmm>=8.5.1",
+    "mdanalysis==2.10.0",
+    "monty==2026.2.18",
+    "openmm-mdanalysis-reporter==0.1.0",
+    "openmm==8.5.1",
     "pymatgen==2026.5.4", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
@@ -90,36 +90,36 @@ strict-openff = [
 # ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the current set of
 # forcefield dependency groups.
 strict-forcefields-generic = [
-    "calorine>=3.3; python_version >= '3.12'",
-    "calorine>=3.1; python_version < '3.12'",
-    "chgnet>=0.4.2",
-    "quippy-ase>=0.10.3",
-    "sevenn>=0.12.1",
-    "deepmd-kit>=3.1.3",
-    "tensorflow-cpu>=2.21.0; sys_platform == 'linux'",
-    "tensorflow>=2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
-#     "mattersim>=1.2.3",
-    "wandb>=0.24.0", # required for mattersim
-    "upet>=0.2.1",
+    "calorine==3.3; python_version >= '3.12'",
+    "calorine==3.1; python_version < '3.12'",
+    "chgnet==0.4.2",
+    "quippy-ase==0.10.3",
+    "sevenn==0.12.1",
+    "deepmd-kit==3.1.3",
+    "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
+    "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
+#     "mattersim>=1.2.3", # need to be activated again
+    "wandb==0.24.0", # required for mattersim
+    "upet==0.2.1",
 ]
 strict-forcefields-torch-limited = [
-    "matgl>=4.0.2",
-    "nequip>=0.17.1", # requires numpy<2 because of matscipy
+    "matgl==4.0.2",
+    "nequip==0.17.1", # requires numpy<2 because of matscipy
 ]
 
 strict-forcefields-e3nn-limited = [
-    "mace-torch>=0.3.15",
-    "torch-dftd>=0.5.3",
+    "mace-torch==0.3.15",
+    "torch-dftd==0.5.3",
 ]
 strict-forcefields-numpy-limited = [
-    "nequip-allegro>=0.8.2",
+    "nequip-allegro==0.8.2",
 ]
 
 strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
-    "pymatgen>=2026.5.4",
+    "pymatgen==2026.5.4",
 ]
 
 [project.scripts]
@@ -134,45 +134,26 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
 tests = [
-    "fireworks>=2.1.3",
-    "nbmake>=1.5.5",
-    "pytest-cov>=7.1.0",
-    "pytest-mock>=3.15.1",
-    "pytest-split>=0.11.0",
-    "pytest-xdist>=3.8.0",
-    "pytest>=9.0.3",
+    "fireworks==2.1.3",
+    "nbmake==1.5.5",
+    "pytest-cov==7.1.0",
+    "pytest-mock==3.15.1",
+    "pytest-split==0.11.0",
+    "pytest-xdist==3.8.0",
+    "pytest==9.0.3",
 ]
 docs = [
-    "fireworks>=2.1.3",
-    "autodoc_pydantic>=2.2.0",
-    "furo>=2025.12.19",
-    "ipython>=9.13.0",
+    "fireworks==2.1.3",
+    "autodoc_pydantic==2.2.0",
+    "furo==2025.12.19",
+    "ipython==9.13.0",
     "jsonschema[format]",
-    "myst_parser>=5.0.0",
-    "numpydoc>=1.10.0",
-    "sphinx-copybutton>=0.5.2",
-    "sphinx>=9.0.4",
-    "sphinx_design>=0.7.0",
-    "jupyterlab>=4.5.7",
-]
-
-[tool.uv]
-# These extras pull in mutually incompatible dependency stacks and cannot be
-# resolved together (e.g. nequip requires numpy<2 via matscipy, while
-# deepmd-kit/tensorflow and nequip-allegro require numpy>=2; mace/torch-dftd
-# pin different e3nn/torch versions again; strict-openff is locked to a
-# specific pymatgen/openmm combination). Declaring them as conflicts lets
-# `uv lock` build a separate resolution for each instead of failing to satisfy
-# all of them at once. CI installs at most one of these at a time.
-conflicts = [
-    [
-        { extra = "strict-forcefields-generic" },
-        { extra = "strict-forcefields-torch-limited" },
-        { extra = "strict-forcefields-e3nn-limited" },
-        { extra = "strict-forcefields-numpy-limited" },
-        { extra = "strict-openff" },
-        { extra = "torchsim" },
-    ],
+    "myst_parser==5.0.0",
+    "numpydoc==1.10.0",
+    "sphinx-copybutton==0.5.2",
+    "sphinx==9.0.4",
+    "sphinx_design==0.7.0",
+    "jupyterlab==4.5.7",
 ]
 
 [tool.setuptools.package-data]
