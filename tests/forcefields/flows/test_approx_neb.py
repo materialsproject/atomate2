@@ -39,7 +39,7 @@ def test_approx_neb_from_endpoints(test_dir, clean_dir):
     assert all(e is not None for e in energies)
     # endpoints (i=0, 6) should be ~degenerate by construction
     assert energies[0] == pytest.approx(energies[-1], rel=1e-3)
-    
+
     assert len(output["collate_images_single_hop"].images) == 7
     assert all(
         image.volume == pytest.approx(endpoints[0].volume)
