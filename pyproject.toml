@@ -104,7 +104,7 @@ strict-forcefields-generic = [
 ]
 strict-forcefields-torch-limited = [
     "matgl==4.0.2",
-    "nequip==0.17.1", # requires numpy<2 because of matscipy
+    "nequip==0.18.0", # requires numpy<2 because of matscipy
 ]
 
 strict-forcefields-e3nn-limited = [
