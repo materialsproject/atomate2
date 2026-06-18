@@ -38,9 +38,10 @@ jobs:
       run:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.12"]
-        dep-group: ["generic", "torch-limited", "e3nn-limited"]
+        dep-group: ["generic", "torch-limited", "e3nn-limited", "numpy-limited"]
 
     steps:
       - name: Check out repo
@@ -79,9 +80,13 @@ jobs:
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
 
+        # torch-limited loads the heaviest MLIP stack (matgl + nequip + torch);
+        # running it single-process avoids the OOM that kills the runner when
+        # xdist spawns multiple workers each holding a copy of the models.
         run: |
           micromamba activate a2
-          pytest -n auto --cov=atomate2 --cov-report=xml tests/forcefields
+          pytest -n ${{ matrix.dep-group == 'torch-limited' && '1' || 'auto' }} --cov=atomate2 --cov-report=xml tests/forcefields
+          #pytest -n auto --cov=atomate2 --cov-report=xml tests/forcefields
 
       - name: Forcefield tutorial
         if: matrix.dep-group == 'torch-limited'
@@ -113,6 +118,7 @@ jobs:
       run:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12"]
         split: [1, 2, 3]
