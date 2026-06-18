@@ -304,8 +304,10 @@ def ase_calculator(
 
     if (
         isinstance(calculator_meta, str)
-        and (calculator_meta in map(str, MLFF) 
-             or calculator_meta in {m.value for m in MLFF})
+        and (
+            calculator_meta in map(str, MLFF)
+            or calculator_meta in {m.value for m in MLFF}
+        )
     ) or isinstance(calculator_meta, MLFF):
         calculator_name = MLFF(calculator_meta)
 
@@ -431,9 +433,11 @@ def ase_calculator(
 
                 calculator = getattr(
                     NequIPCalculator,
-                    "from_compiled_model"
-                    if hasattr(NequIPCalculator, "from_compiled_model")
-                    else "from_deployed_model",
+                    (
+                        "from_compiled_model"
+                        if hasattr(NequIPCalculator, "from_compiled_model")
+                        else "from_deployed_model"
+                    ),
                 )(**kwargs)
 
             case MLFF.FAIRChem:
