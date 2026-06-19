@@ -54,7 +54,7 @@ def test_retrieve_structure_from_materials_project():
     db_version = stored_data["database_version"].split(".post")[0]
     datetime.strptime(db_version, "%Y.%m.%d").replace(tzinfo=timezone.utc)
 
-    assert AlphaID(stored_data["task_id"],prefix="mp").startswith("mp-")
+    assert AlphaID(stored_data["task_id"], prefix="mp").startswith("mp-")
 
     job = retrieve_structure_from_materials_project(
         "mp-13", reset_magnetic_moments=False
