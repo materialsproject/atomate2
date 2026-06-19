@@ -38,6 +38,9 @@ def test_structure_to_conventional(si_structure):
     reason="Materials Project API key not set in environment.",
 )
 def test_retrieve_structure_from_materials_project():
+
+    from emmet.core.mpid import AlphaID
+
     job = retrieve_structure_from_materials_project("mp-149")
 
     responses = run_locally(job)
@@ -50,10 +53,11 @@ def test_retrieve_structure_from_materials_project():
     # Note that patches use `.post` suffix in MP DB versions
     db_version = stored_data["database_version"].split(".post")[0]
     datetime.strptime(db_version, "%Y.%m.%d").replace(tzinfo=timezone.utc)
-    assert stored_data["task_id"].startswith("mp-")
+
+    assert AlphaID(stored_data["task_id"], prefix="mp").startswith("mp-")
 
     job = retrieve_structure_from_materials_project(
-        "mp-19009", reset_magnetic_moments=False
+        "mp-13", reset_magnetic_moments=False
     )
 
     responses = run_locally(job)
@@ -62,7 +66,7 @@ def test_retrieve_structure_from_materials_project():
     assert "magmom" in output.site_properties
 
     job = retrieve_structure_from_materials_project(
-        "mp-19009", reset_magnetic_moments=True
+        "mp-13", reset_magnetic_moments=True
     )
 
     responses = run_locally(job)
