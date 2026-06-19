@@ -163,13 +163,14 @@ def process_trajectory_reporter_dict(
         for i, props in prop_calculators_typed.items()
     }
 
+    # ``filenames`` is a read-only property and the trajectory files are opened
+    # in the constructor, so resolve the paths before passing them in.
+    trajectory_reporter_dict["filenames"] = [
+        Path(p).resolve() for p in trajectory_reporter_dict.get("filenames", [])
+    ]
     trajectory_reporter = ts.TrajectoryReporter(
         **trajectory_reporter_dict, prop_calculators=prop_calculators_functions
     )
-
-    trajectory_reporter.filenames = [
-        Path(p).resolve() for p in trajectory_reporter_dict.get("filenames", [])
-    ]
 
     reporter_details = TrajectoryReporterDetails(
         state_frequency=trajectory_reporter.state_frequency,
