@@ -341,9 +341,14 @@ def pick_model(
             return MaceModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MATTERSIM:
+            from mattersim.forcefield.potential import Potential
             from torch_sim.models.mattersim import MatterSimModel
 
-            return MatterSimModel(model=model_path, **model_kwargs)
+            model_instance = Potential.from_checkpoint(
+                load_path=model_path,
+                load_training_state=False,
+            )
+            return MatterSimModel(model=model_instance, **model_kwargs)
 
         case TorchSimModelType.METATOMIC:
             from torch_sim.models.metatomic import MetatomicModel
@@ -353,12 +358,25 @@ def pick_model(
         case TorchSimModelType.NEQUIPFRAMEWORK:
             from torch_sim.models.nequip_framework import NequIPFrameworkModel
 
-            return NequIPFrameworkModel(model=model_path, **model_kwargs)
+            return NequIPFrameworkModel.from_compiled_model(
+                model=model_path, **model_kwargs
+            )
 
         case TorchSimModelType.ORB:
+            from orb_models.forcefield.pretrained import ORB_PRETRAINED_MODELS
             from torch_sim.models.orb import OrbModel
 
-            return OrbModel(model=model_path, **model_kwargs)
+            model_fn = ORB_PRETRAINED_MODELS.get(str(model_path))
+            if model_fn is None:
+                raise ValueError(
+                    f"Invalid ORB model name: {model_path}. "
+                    f"Available ORB models: {list(ORB_PRETRAINED_MODELS.keys())}"
+                )
+
+            model_instance, atoms_adapter = model_fn()
+            return OrbModel(
+                model=model_instance, atoms_adapter=atoms_adapter, **model_kwargs
+            )
 
         case TorchSimModelType.SEVENNET:
             from torch_sim.models.sevennet import SevenNetModel
