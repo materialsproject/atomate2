@@ -320,20 +320,10 @@ def pick_model(
         If an invalid model type is provided.
     """
     match model_type:
-        case TorchSimModelType.FAIRCHEMV1:
-            from torch_sim.models.fairchem_legacy import FairChemV1Model
-
-            return FairChemV1Model(model=model_path, **model_kwargs)
-
         case TorchSimModelType.FAIRCHEM:
             from torch_sim.models.fairchem import FairChemModel
 
             return FairChemModel(model=model_path, **model_kwargs)
-
-        case TorchSimModelType.GRAPHPESWRAPPER:
-            from torch_sim.models.graphpes import GraphPESWrapper
-
-            return GraphPESWrapper(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MACE:
             from torch_sim.models.mace import MaceModel
