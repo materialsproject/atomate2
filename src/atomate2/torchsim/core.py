@@ -323,33 +323,28 @@ def pick_model(
         case TorchSimModelType.FAIRCHEM:
             from torch_sim.models.fairchem import FairChemModel
 
-            return FairChemModel(model=model_path, **model_kwargs)
+            base_model = FairChemModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MACE:
             from torch_sim.models.mace import MaceModel
 
-            return MaceModel(model=model_path, **model_kwargs)
+            base_model = MaceModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MATTERSIM:
-            from mattersim.forcefield.potential import Potential
             from torch_sim.models.mattersim import MatterSimModel
 
-            model_instance = Potential.from_checkpoint(
-                load_path=model_path,
-                load_training_state=False,
-            )
-            return MatterSimModel(model=model_instance, **model_kwargs)
+            base_model = MatterSimModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.METATOMIC:
             from torch_sim.models.metatomic import MetatomicModel
 
-            return MetatomicModel(model=model_path, **model_kwargs)
+            base_model = MetatomicModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.NEQUIPFRAMEWORK:
             from torch_sim.models.nequip_framework import NequIPFrameworkModel
 
-            return NequIPFrameworkModel.from_compiled_model(
-                model=model_path, **model_kwargs
+            base_model = NequIPFrameworkModel.from_compiled_model(
+                compile_path=model_path, **model_kwargs
             )
 
         case TorchSimModelType.ORB:
@@ -364,22 +359,24 @@ def pick_model(
                 )
 
             model_instance, atoms_adapter = model_fn()
-            return OrbModel(
+            base_model = OrbModel(
                 model=model_instance, atoms_adapter=atoms_adapter, **model_kwargs
             )
 
         case TorchSimModelType.SEVENNET:
             from torch_sim.models.sevennet import SevenNetModel
 
-            return SevenNetModel(model=model_path, **model_kwargs)
+            base_model = SevenNetModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.LENNARD_JONES:
             from torch_sim.models.lennard_jones import LennardJonesModel
 
-            return LennardJonesModel(**model_kwargs)
+            base_model = LennardJonesModel(**model_kwargs)
 
         case _:
             raise ValueError(f"Invalid model type: {model_type}")
+
+    return base_model
 
 
 @dataclass
