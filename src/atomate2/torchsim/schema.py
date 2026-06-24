@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 class TorchSimModelType(StrEnum):  # type: ignore[attr-defined]
     """Enum for model types."""
 
-    FAIRCHEMV1 = "FairChemV1Model"
     FAIRCHEM = "FairChemModel"
-    GRAPHPESWRAPPER = "GraphPESWrapper"
     MACE = "MaceModel"
     MATTERSIM = "MatterSimModel"
     METATOMIC = "MetatomicModel"
