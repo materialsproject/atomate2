@@ -1,9 +1,14 @@
+"""Tests for TorchSim models APIs."""
+# ruff: noqa: E402
+
 from __future__ import annotations
 
 import importlib.metadata
 from pathlib import Path
 
 import pytest
+
+ts = pytest.importorskip("torch_sim")
 
 from atomate2.torchsim.core import pick_model
 from atomate2.torchsim.schema import TorchSimModelType
