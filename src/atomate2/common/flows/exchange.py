@@ -68,6 +68,7 @@ class ExchangeMaker(Maker):
         self,
         structures: list[Structure],
         energies: list[float],
+        parent: Structure | None = None,
     ) -> Flow:
         """Make a flow to fit Heisenberg exchange parameters.
 
@@ -102,7 +103,7 @@ class ExchangeMaker(Maker):
                     "required to fit a Heisenberg model."
                 )
 
-        hmap = heisenberg_mapping(structures, energies, self.heisenberg_settings)
+        hmap = heisenberg_mapping(structures, energies, parent, self.heisenberg_settings)
         jobs = [hmap]
 
         vampire_output = None
@@ -115,7 +116,7 @@ class ExchangeMaker(Maker):
         # non-magnetic atoms internally, so pass the original through for provenance)
         doc = build_exchange_doc(
             hmap.output,
-            parent_structure=structures[0],
+            parent_structure=parent or structures[0],
             vampire_output=vampire_output,
         )
         jobs.append(doc)
@@ -149,6 +150,7 @@ class ExchangeMaker(Maker):
             The exchange-parameter fitting workflow.
         """
         structures, energies = [], []
+
         for output in doc.outputs:
             structure = output.structure.copy()
             # HeisenbergMapper needs magmoms; the output stores them separately
@@ -157,4 +159,4 @@ class ExchangeMaker(Maker):
             structures.append(structure)
             energies.append(output.energy_per_atom)
 
-        return self.make(structures, energies)
+        return self.make(structures, energies, doc.parent_structure)

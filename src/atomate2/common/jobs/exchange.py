@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 def heisenberg_mapping(
     structures: list[Structure],
     energies: list[float],
+    parent: Structure | None = None,
     heisenberg_settings: dict | None = None,
 ) -> HeisenbergModel:
     """Fit a classical Heisenberg Hamiltonian to magnetic structures and energies.
@@ -52,7 +53,7 @@ def heisenberg_mapping(
     """
     heisenberg_settings = heisenberg_settings or {}
     total_energies = [e * len(s) for s, e in zip(structures, energies, strict=True)]
-    hmapper = HeisenbergMapper(structures, total_energies, **heisenberg_settings)
+    hmapper = HeisenbergMapper(structures, total_energies, parent, **heisenberg_settings)
     return hmapper.get_heisenberg_model()
 
 
@@ -69,9 +70,8 @@ def build_exchange_doc(
     heisenberg_model : HeisenbergModel
         The fitted Heisenberg model from :func:`heisenberg_mapping`.
     parent_structure : Structure or None
-        The full ground-state structure, used to populate the document's
-        parent_structure/formula fields. If None, the model's (magnetic-only)
-        structure is used instead.
+        The full parent structure from which the magnetic structures were derived. 
+        This is used to store the final fitted exchange parameters in the context of the original structure.
     vampire_output : VampireOutput or None
         The Vampire Monte-Carlo result, if the critical-temperature step was run.
 
