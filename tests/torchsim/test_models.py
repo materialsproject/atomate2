@@ -3,9 +3,6 @@
 
 from __future__ import annotations
 
-import importlib.metadata
-from pathlib import Path
-
 import pytest
 
 ts = pytest.importorskip("torch_sim")
@@ -20,54 +17,41 @@ try:
 except ImportError:
     HAS_HF = False
 
-
-def _is_backend_missing(package_names: str | list[str]) -> bool:
-    if isinstance(package_names, str):
-        package_names = [package_names]
-
-    missing = False
-    try:
-        for pkg_name in package_names:
-            importlib.metadata.distribution(pkg_name)
-    except importlib.metadata.PackageNotFoundError:
-        missing = True
-
-    return missing
-
-
-_SKIP_FAIRCHEM = _is_backend_missing("fairchem-core")
-_SKIP_MACE = _is_backend_missing("mace-torch")
-_SKIP_MATTERSIM = _is_backend_missing("mattersim")
-_SKIP_METATOMIC = _is_backend_missing(["metatomic_torchsim", "upet"])
-_SKIP_NEQUIP = _is_backend_missing("nequip")
-_SKIP_ORB = _is_backend_missing("orb_models")
-_SKIP_SEVENNET = _is_backend_missing("sevenn")
+from .conftest import (
+    _SKIP_FAIRCHEM,
+    _SKIP_MACE,
+    _SKIP_MATTERSIM,
+    _SKIP_METATOMIC,
+    _SKIP_NEQUIP,
+    _SKIP_ORB,
+    _SKIP_SEVENNET,
+)
 
 
 @pytest.mark.skipif(
     not HAS_HF or get_token() is None,
     reason="Hugging Face is not installed or token is not available.",
 )
-@pytest.mark.skipif(_SKIP_FAIRCHEM, reason="FAIRCHEM is not installed.")
+@pytest.mark.skipif(_SKIP_FAIRCHEM, reason="fairchem-core is not installed.")
 def test_pick_model_fairchem() -> None:
     pick_model(TorchSimModelType.FAIRCHEM, model_path="uma-s-1p1")
 
 
-@pytest.mark.skipif(_SKIP_MACE, reason="MACE is not installed.")
-def test_pick_model_mace() -> None:
-    from mace.calculators.foundations_models import download_mace_mp_checkpoint
-
-    path = download_mace_mp_checkpoint("small")
+@pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")
+def test_pick_model_mace(test_dir) -> None:
+    path = f"{test_dir}/forcefields/mace/MACE.model"
     pick_model(TorchSimModelType.MACE, model_path=path)
 
 
-@pytest.mark.skipif(_SKIP_MATTERSIM, reason="MATTERSIM is not installed.")
+@pytest.mark.skipif(_SKIP_MATTERSIM, reason="mattersim is not installed.")
 def test_pick_model_mattersim() -> None:
     pick_model(TorchSimModelType.MATTERSIM, model_path="mattersim-v1.0.0-1m.pth")
 
 
 # Upstreamed in torchsim v0.6.0
-@pytest.mark.skipif(_SKIP_METATOMIC, reason="METATOMIC or UPET is not installed.")
+@pytest.mark.skipif(
+    _SKIP_METATOMIC, reason="metatomic_torchsim or upet is not installed."
+)
 def test_pick_model_metatomic() -> None:
     from upet import get_upet
 
@@ -79,25 +63,19 @@ def test_pick_model_metatomic() -> None:
 
 
 # Upstreamed in torchsim v0.5.1
-@pytest.mark.skipif(_SKIP_NEQUIP, reason="NEQUIP is not installed.")
-def test_pick_model_nequip() -> None:
-    path = (
-        Path(__file__).parent.parent
-        / "test_data"
-        / "forcefields"
-        / "nequip"
-        / "nequip_ff_sr_ti_o3.nequip.pth"
-    )
+@pytest.mark.skipif(_SKIP_NEQUIP, reason="nequip is not installed.")
+def test_pick_model_nequip(test_dir) -> None:
+    path = f"{test_dir}/forcefields/nequip/nequip_ff_sr_ti_o3.nequip.pth"
     pick_model(TorchSimModelType.NEQUIPFRAMEWORK, model_path=path)
 
 
 # Upstreamed in torchsim 0.6.0
-@pytest.mark.skipif(_SKIP_ORB, reason="ORB is not installed.")
+@pytest.mark.skipif(_SKIP_ORB, reason="orb_models is not installed.")
 def test_pick_model_orb() -> None:
     pick_model(TorchSimModelType.ORB, model_path="orb-v2")
 
 
 # Upstreamed in torchsim 0.6.0
-@pytest.mark.skipif(_SKIP_SEVENNET, reason="SEVENN is not installed.")
+@pytest.mark.skipif(_SKIP_SEVENNET, reason="sevenn is not installed.")
 def test_pick_model_sevennet() -> None:
     pick_model(TorchSimModelType.SEVENNET, model_path="7net-0")
