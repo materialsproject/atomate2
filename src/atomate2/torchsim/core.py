@@ -15,6 +15,7 @@ from jobflow import Maker, Response, job
 from pymatgen.core import Structure
 from pymatgen.util.due import Doi, due
 from torch_sim.autobatching import BinningAutoBatcher, InFlightAutoBatcher
+from torch_sim.optimizers import Optimizer
 
 from atomate2.torchsim.schema import (
     CONVERGENCE_FN_REGISTRY,
@@ -35,7 +36,6 @@ if TYPE_CHECKING:
     from typing import Any
 
     from torch_sim.models.interface import ModelInterface
-    from torch_sim.optimizers import Optimizer
     from torch_sim.trajectory import TrajectoryReporter
 
 
@@ -511,6 +511,16 @@ class TorchSimOptimizeMaker(Maker):
         )
 
         optimizer_kwargs = self.optimizer_kwargs or {}
+
+        # When a TorchSimOptimizer is passed to a job, the optimizer is converted
+        # to a string to be serialized but we need the actual Enum member
+        if isinstance(self.optimizer, str):
+            try:
+                self.optimizer = Optimizer[self.optimizer.lower()]
+            except (KeyError, ValueError) as e:
+                raise ValueError(
+                    f"Could not convert string '{self.optimizer}' to an Optimizer."
+                ) from e
 
         start_time = time.time()
         state = ts.optimize(
