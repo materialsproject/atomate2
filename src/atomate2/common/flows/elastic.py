@@ -24,6 +24,7 @@ if TYPE_CHECKING:
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.torchsim import TorchSimOptimizeMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -80,10 +81,16 @@ class BaseElasticMaker(Maker, ABC):
     order: int = 2
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
-    bulk_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker | None = None
-    elastic_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker = (
-        None  # constant volume optimization
-    )
+    bulk_relax_maker: (
+        BaseAimsMaker
+        | BaseVaspMaker
+        | ForceFieldRelaxMaker
+        | TorchSimOptimizeMaker
+        | None
+    ) = None
+    elastic_relax_maker: (
+        BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker | TorchSimOptimizeMaker
+    ) = None  # constant volume optimization
     max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)

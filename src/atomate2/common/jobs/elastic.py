@@ -106,7 +106,9 @@ def run_elastic_deformations(
     deformations: list[Deformation],
     prev_dir: str | Path | None = None,
     prev_dir_argname: str | None = None,
-    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = None,
+    elastic_relax_maker: BaseVaspMaker
+    | ForceFieldRelaxMaker
+    | TorchSimOptimizeMaker = None,
     socket: bool = False,
 ) -> Response:
     """
@@ -159,24 +161,22 @@ def run_elastic_deformations(
         batched_job.append_name(" batched_socket")
         elastic_jobs.append(batched_job)
 
-        if isinstance(elastic_relax_maker, TorchSimOptimizeMaker):
-            for idx, deformation in enumerate(deformations):
+        for idx, deformation in enumerate(deformations):
+            if isinstance(elastic_relax_maker, TorchSimOptimizeMaker):
                 output = {
                     "stress": batched_job.output.output.stress[idx],
                     "deformation": deformation,
                     "uuid": batched_job.output.uuid,
                     "job_dir": batched_job.output.dir_name,
                 }
-                outputs.append(output)
-        else:
-            for idx, deformation in enumerate(deformations):
+            else:
                 output = {
                     "stress": batched_job.output[idx].output.stress,
                     "deformation": deformation,
                     "uuid": batched_job.output[idx].uuid,
                     "job_dir": batched_job.output[idx].dir_name,
                 }
-                outputs.append(output)
+            outputs.append(output)
 
     else:
         for idx, deformed_structure in enumerate(deformed_structures):
@@ -256,7 +256,7 @@ def fit_elastic_tensor(
             failed_uuids.append(data["uuid"])
             continue
 
-        stresses.append(Stress(stress_sign_factor * np.array(data["stress"])))
+        stresses.append(Stress(stress_sign_factor * np.squeeze(data["stress"])))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])
         job_dirs.append(data["job_dir"])

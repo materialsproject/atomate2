@@ -19,6 +19,8 @@ from atomate2.torchsim.flows.elastic import ElasticMaker
 from ..conftest import _SKIP_MACE  # noqa: TID252
 
 
+# TODO: looks like the output is unstable and symmetries must be enforced
+# see https://github.com/materialsproject/atomate2/issues/1440
 @pytest.mark.skipif(_SKIP_MACE, reason="mace_torch is not installed")
 @pytest.mark.parametrize("socket", [True, False])
 def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir, socket: bool):
