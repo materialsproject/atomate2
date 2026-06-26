@@ -163,13 +163,14 @@ def process_trajectory_reporter_dict(
         for i, props in prop_calculators_typed.items()
     }
 
+    # ``filenames`` is a read-only property and the trajectory files are opened
+    # in the constructor, so resolve the paths before passing them in.
+    trajectory_reporter_dict["filenames"] = [
+        Path(p).resolve() for p in trajectory_reporter_dict.get("filenames", [])
+    ]
     trajectory_reporter = ts.TrajectoryReporter(
         **trajectory_reporter_dict, prop_calculators=prop_calculators_functions
     )
-
-    trajectory_reporter.filenames = [
-        Path(p).resolve() for p in trajectory_reporter_dict.get("filenames", [])
-    ]
 
     reporter_details = TrajectoryReporterDetails(
         state_frequency=trajectory_reporter.state_frequency,
@@ -319,58 +320,63 @@ def pick_model(
         If an invalid model type is provided.
     """
     match model_type:
-        case TorchSimModelType.FAIRCHEMV1:
-            from torch_sim.models.fairchem_legacy import FairChemV1Model
-
-            return FairChemV1Model(model=model_path, **model_kwargs)
-
         case TorchSimModelType.FAIRCHEM:
             from torch_sim.models.fairchem import FairChemModel
 
-            return FairChemModel(model=model_path, **model_kwargs)
-
-        case TorchSimModelType.GRAPHPESWRAPPER:
-            from torch_sim.models.graphpes import GraphPESWrapper
-
-            return GraphPESWrapper(model=model_path, **model_kwargs)
+            base_model = FairChemModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MACE:
             from torch_sim.models.mace import MaceModel
 
-            return MaceModel(model=model_path, **model_kwargs)
+            base_model = MaceModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MATTERSIM:
             from torch_sim.models.mattersim import MatterSimModel
 
-            return MatterSimModel(model=model_path, **model_kwargs)
+            base_model = MatterSimModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.METATOMIC:
             from torch_sim.models.metatomic import MetatomicModel
 
-            return MetatomicModel(model=model_path, **model_kwargs)
+            base_model = MetatomicModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.NEQUIPFRAMEWORK:
             from torch_sim.models.nequip_framework import NequIPFrameworkModel
 
-            return NequIPFrameworkModel(model=model_path, **model_kwargs)
+            base_model = NequIPFrameworkModel.from_compiled_model(
+                compile_path=model_path, **model_kwargs
+            )
 
         case TorchSimModelType.ORB:
+            from orb_models.forcefield.pretrained import ORB_PRETRAINED_MODELS
             from torch_sim.models.orb import OrbModel
 
-            return OrbModel(model=model_path, **model_kwargs)
+            model_fn = ORB_PRETRAINED_MODELS.get(str(model_path))
+            if model_fn is None:
+                raise ValueError(
+                    f"Invalid ORB model name: {model_path}. "
+                    f"Available ORB models: {list(ORB_PRETRAINED_MODELS.keys())}"
+                )
+
+            model_instance, atoms_adapter = model_fn()
+            base_model = OrbModel(
+                model=model_instance, atoms_adapter=atoms_adapter, **model_kwargs
+            )
 
         case TorchSimModelType.SEVENNET:
             from torch_sim.models.sevennet import SevenNetModel
 
-            return SevenNetModel(model=model_path, **model_kwargs)
+            base_model = SevenNetModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.LENNARD_JONES:
             from torch_sim.models.lennard_jones import LennardJonesModel
 
-            return LennardJonesModel(**model_kwargs)
+            base_model = LennardJonesModel(**model_kwargs)
 
         case _:
             raise ValueError(f"Invalid model type: {model_type}")
+
+    return base_model
 
 
 @dataclass
