@@ -18,6 +18,7 @@ from pymatgen.transformations.standard_transformations import (
 from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.torchsim import TorchSimOptimizeMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
@@ -104,14 +105,14 @@ def run_elastic_deformations(
     structure: Structure,
     deformations: list[Deformation],
     prev_dir: str | Path | None = None,
-    prev_dir_argname: str = None,
+    prev_dir_argname: str | None = None,
     elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = None,
     socket: bool = False,
 ) -> Response:
     """
     Run elastic deformations.
 
-    Note, this job will replace itself with N relaxation calculations, 
+    Note, this job will replace itself with N relaxation calculations,
     or a single socket calculation for all deformations.
 
     Parameters
@@ -122,16 +123,20 @@ def run_elastic_deformations(
         The deformations to apply.
     prev_dir : str or Path or None
         A previous directory to use for copying outputs.
-    prev_dir_argname: str
+    prev_dir_argname: str or None
         argument name for the prev_dir variable
     elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
         A VaspMaker or a ForceFieldMaker to use to generate the elastic relaxation jobs.
     socket : bool
         If True use the socket-io (batch-mode) interface to increase performance.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
     num_deformations = len(deformations)
     elastic_jobs = []
     outputs = []
+
+    if socket and isinstance(elastic_relax_maker, BaseVaspMaker):
+        raise ValueError("socket=True is not supported for BaseVaspMaker.")
 
     deformed_structures = []
     for deformation in deformations:
@@ -140,10 +145,7 @@ def run_elastic_deformations(
         deformed_structures.append(ts.final_structure)
 
         with contextlib.suppress(Exception):
-            # write details of the transformation to the transformations.json file
-            # this file will automatically get added to the task document and allow
-            # the elastic builder to reconstruct the elastic document; note the ":" is
-            # automatically converted to a "." in the filename.
+            # Write details of the transformation to the transformations.json file
             elastic_relax_maker.write_additional_data["transformations:json"] = ts
 
     elastic_job_kwargs = {}
@@ -151,26 +153,36 @@ def run_elastic_deformations(
         elastic_job_kwargs[prev_dir_argname] = prev_dir
 
     if socket:
-        if isinstance(elastic_relax_maker, BaseVaspMaker):
-            raise ValueError("socket=True is not supported for BaseVaspMaker.")
-
-        batched_job = elastic_relax_maker.make(deformed_structures, **elastic_job_kwargs)
+        batched_job = elastic_relax_maker.make(
+            deformed_structures, **elastic_job_kwargs
+        )
         batched_job.append_name(" batched_socket")
         elastic_jobs.append(batched_job)
 
-        # Build outputs consistent with the serial execution
-        for idx, deformation in enumerate(deformations):
-            output = {
-                "stress": batched_job.output[idx].output.stress,
-                "deformation": deformation,
-                "uuid": batched_job.output[idx].uuid,
-                "job_dir": batched_job.output[idx].dir_name,
-            }
-            outputs.append(output)
+        if isinstance(elastic_relax_maker, TorchSimOptimizeMaker):
+            for idx, deformation in enumerate(deformations):
+                output = {
+                    "stress": batched_job.output.output.stress[idx],
+                    "deformation": deformation,
+                    "uuid": batched_job.output.uuid,
+                    "job_dir": batched_job.output.dir_name,
+                }
+                outputs.append(output)
+        else:
+            for idx, deformation in enumerate(deformations):
+                output = {
+                    "stress": batched_job.output[idx].output.stress,
+                    "deformation": deformation,
+                    "uuid": batched_job.output[idx].uuid,
+                    "job_dir": batched_job.output[idx].dir_name,
+                }
+                outputs.append(output)
 
     else:
         for idx, deformed_structure in enumerate(deformed_structures):
-            relax_job = elastic_relax_maker.make(deformed_structure, **elastic_job_kwargs)
+            relax_job = elastic_relax_maker.make(
+                deformed_structure, **elastic_job_kwargs
+            )
             relax_job.append_name(f" {idx + 1}/{num_deformations}")
             elastic_jobs.append(relax_job)
 

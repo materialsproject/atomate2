@@ -29,15 +29,13 @@ def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir, socket: bool):
         optimizer=ts.Optimizer.fire,
         model_type=TorchSimModelType.MACE,
         model_path=model_path,
-        optimizer_kwargs={"cell_filter": ts.CellFilter.frechet},
-        model_kwargs={"default_dtype": "float64"},
+        init_kwargs={"cell_filter": ts.CellFilter.frechet, "compute_stress": True},
         convergence_fn_kwargs={"force_tol": 0.00001},
     )
     elastic_relax_maker = TorchSimOptimizeMaker(
         optimizer=ts.Optimizer.fire,
         model_type=TorchSimModelType.MACE,
         model_path=model_path,
-        model_kwargs={"default_dtype": "float64"},
         convergence_fn_kwargs={"force_tol": 0.00001},
     )
 
