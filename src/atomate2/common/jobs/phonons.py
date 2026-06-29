@@ -21,11 +21,8 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
-from atomate2.ase.jobs import AseRelaxMaker
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
 from atomate2.common.utils import get_supercell_matrix
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
-from atomate2.torchsim.core import TorchSimStaticMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
@@ -34,6 +31,8 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.ase.jobs import AseRelaxMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 logger = logging.getLogger(__name__)
 
@@ -298,6 +297,10 @@ def run_phonon_displacements(
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
 
+    def is_maker_type(obj: object, class_names: list[str]) -> bool:
+        """Check if an object's class name matches an allowed list."""
+        return type(obj).__name__ in class_names
+
     num_disp = len(displacements)
     if socket:
         if isinstance(phonon_maker, BaseVaspMaker):
@@ -309,8 +312,9 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        if not isinstance(
-            phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker | TorchSimStaticMaker
+        if not is_maker_type(
+            phonon_maker,
+            ["AseRelaxMaker", "ForceFieldRelaxMaker", "TorchSimStaticMaker"],
         ):
             phonon_job.update_maker_kwargs(
                 {"_set": {"write_additional_data->phonon_info:json": info}},
@@ -319,7 +323,7 @@ def run_phonon_displacements(
 
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(num_disp))
-        if isinstance(phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker):
+        if is_maker_type(phonon_maker, ["AseRelaxMaker", "ForceFieldRelaxMaker"]):
             outputs["uuids"] = [phonon_job.output[0].uuid] * num_disp
             outputs["dirs"] = [phonon_job.output[0].dir_name] * num_disp
             outputs["forces"] = [
@@ -342,9 +346,9 @@ def run_phonon_displacements(
                 "displaced_structure": displacement,
             }
             with contextlib.suppress(Exception):
-                if not isinstance(
+                if not is_maker_type(
                     phonon_maker,
-                    AseRelaxMaker | ForceFieldRelaxMaker | TorchSimStaticMaker,
+                    ["AseRelaxMaker", "ForceFieldRelaxMaker", "TorchSimStaticMaker"],
                 ):
                     phonon_job.update_maker_kwargs(
                         {"_set": {"write_additional_data->phonon_info:json": info}},

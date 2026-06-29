@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-pytest.importorskip("ase")
 ts = pytest.importorskip("torch_sim")
 
 from jobflow import Flow, run_locally
