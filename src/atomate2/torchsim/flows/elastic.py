@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
+from atomate2.torchsim.units import EV_PER_A3_TO_KBAR
 
 if TYPE_CHECKING:
     from atomate2.torchsim import TorchSimOptimizeMaker
@@ -87,6 +88,4 @@ class ElasticMaker(BaseElasticMaker):
 
         We also convert to kbar, which is the expected unit.
         """
-        from ase.units import GPa
-
-        return -10.0 / GPa
+        return -1.0 * EV_PER_A3_TO_KBAR
