@@ -101,7 +101,7 @@ class BaseElasticMaker(Maker, ABC):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        equilibrium_stress: Matrix3D = None,
+        equilibrium_stress: Matrix3D | None = None,
         conventional: bool = False,
     ) -> Flow:
         """

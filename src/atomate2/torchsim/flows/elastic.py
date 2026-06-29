@@ -80,3 +80,13 @@ class ElasticMaker(BaseElasticMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
+
+    @property
+    def stress_sign_correction(self) -> float:
+        r"""Correct the sign of the stress tensor.
+
+        We also convert to kbar, which is the expected unit.
+        """
+        from ase.units import GPa
+
+        return -10.0 / GPa
