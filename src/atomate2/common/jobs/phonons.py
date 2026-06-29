@@ -25,6 +25,7 @@ from atomate2.ase.jobs import AseRelaxMaker
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
 from atomate2.common.utils import get_supercell_matrix
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.torchsim.core import TorchSimStaticMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
@@ -308,7 +309,9 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        if not isinstance(phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker):
+        if not isinstance(
+            phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker | TorchSimStaticMaker
+        ):
             phonon_job.update_maker_kwargs(
                 {"_set": {"write_additional_data->phonon_info:json": info}},
                 dict_mod=True,
@@ -339,7 +342,10 @@ def run_phonon_displacements(
                 "displaced_structure": displacement,
             }
             with contextlib.suppress(Exception):
-                if not isinstance(phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker):
+                if not isinstance(
+                    phonon_maker,
+                    AseRelaxMaker | ForceFieldRelaxMaker | TorchSimStaticMaker,
+                ):
                     phonon_job.update_maker_kwargs(
                         {"_set": {"write_additional_data->phonon_info:json": info}},
                         dict_mod=True,
