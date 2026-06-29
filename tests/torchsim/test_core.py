@@ -11,7 +11,6 @@ ts = pytest.importorskip("torch_sim")
 
 from ase.build import bulk
 from jobflow import run_locally
-from mace.calculators.foundations_models import download_mace_mp_checkpoint
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -22,11 +21,7 @@ from atomate2.torchsim.core import (
 )
 from atomate2.torchsim.schema import ConvergenceFn, TorchSimModelType
 
-
-@pytest.fixture
-def mace_model_path():
-    """Download and return path to MACE model checkpoint."""
-    return Path(download_mace_mp_checkpoint("small"))
+from .conftest import _SKIP_MACE
 
 
 @pytest.fixture
@@ -130,13 +125,14 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert result.time_elapsed > 0
 
 
-def test_relax_job_mace(
-    ar_structure: Structure, mace_model_path: str, tmp_path
-) -> None:
+@pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")
+def test_relax_job_mace(ar_structure: Structure, tmp_path, test_dir) -> None:
     """Test TSOptimizeMaker with MACE model.
 
     Includes trajectory reporter and autobatcher.
     """
+    mace_model_path = f"{test_dir}/forcefields/mace/MACE.model"
+
     # Perturb the structure to make optimization meaningful
     perturbed_structure = ar_structure.copy()
     perturbed_structure.translate_sites(
