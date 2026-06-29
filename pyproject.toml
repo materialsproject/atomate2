@@ -99,7 +99,7 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 #     "mattersim>=1.2.3", # need to be activated again
-    "wandb==0.27.2", # required for mattersim
+    "wandb==0.28.0", # required for mattersim
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
