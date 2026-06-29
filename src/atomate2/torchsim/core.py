@@ -447,6 +447,11 @@ class TorchSimOptimizeMaker(Maker):
         Keyword arguments passed to the optimizer step function.
     tags : list[str] | None
         Tags for the job.
+    fix_symmetry : bool
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float | None
+        Tolerance for symmetry finding in case of fix_symmetry.
     """
 
     optimizer: Optimizer
@@ -463,6 +468,8 @@ class TorchSimOptimizeMaker(Maker):
     init_kwargs: dict | None = None
     optimizer_kwargs: dict | None = None
     tags: list[str] | None = None
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
 
     @torchsim_job
     def make(
@@ -522,9 +529,16 @@ class TorchSimOptimizeMaker(Maker):
                     f"Could not convert string '{self.optimizer}' to an Optimizer."
                 ) from e
 
+        init_state = ts.io.structures_to_state(structures)
+        if self.fix_symmetry:
+            constraint = ts.constraints.FixSymmetry.from_state(
+                init_state, symprec=self.symprec
+            )
+            init_state.constraints = constraint
+
         start_time = time.time()
         state = ts.optimize(
-            system=structures,
+            system=init_state,
             model=model,
             optimizer=self.optimizer,
             convergence_fn=convergence_fn_obj,
