@@ -297,29 +297,28 @@ def run_phonon_displacements(
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
 
+    if socket and isinstance(phonon_maker, BaseVaspMaker):
+        raise ValueError("VASP makers do not currently support socket/batch mode.")
+
+    infos = []
+
     num_disp = len(displacements)
     if socket:
-        if isinstance(phonon_maker, BaseVaspMaker):
-            raise ValueError("VASP makers do not currently support socket/batch mode.")
-
         phonon_job = phonon_maker.make(displacements, **phonon_job_kwargs)
+
         info = {
             "original_structure": structure,
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        if not check_class_name(
-            phonon_maker,
-            ["AseRelaxMaker", "ForceFieldRelaxMaker", "TorchSimStaticMaker"],
-        ):
-            phonon_job.update_maker_kwargs(
-                {"_set": {"write_additional_data->phonon_info:json": info}},
-                dict_mod=True,
-            )
+        infos.append(info)
 
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(num_disp))
-        if check_class_name(phonon_maker, ["AseRelaxMaker", "ForceFieldRelaxMaker"]):
+        if check_class_name(
+            phonon_maker,
+            ["AseRelaxMaker", "ForceFieldStaticMaker", "ForceFieldRelaxMaker"],
+        ):
             outputs["uuids"] = [phonon_job.output[0].uuid] * num_disp
             outputs["dirs"] = [phonon_job.output[0].dir_name] * num_disp
             outputs["forces"] = [
@@ -341,20 +340,30 @@ def run_phonon_displacements(
                 "supercell_matrix": supercell_matrix,
                 "displaced_structure": displacement,
             }
-            with contextlib.suppress(Exception):
-                if not check_class_name(
-                    phonon_maker,
-                    ["AseRelaxMaker", "ForceFieldRelaxMaker", "TorchSimStaticMaker"],
-                ):
-                    phonon_job.update_maker_kwargs(
-                        {"_set": {"write_additional_data->phonon_info:json": info}},
-                        dict_mod=True,
-                    )
+            infos.append(info)
+
             phonon_jobs.append(phonon_job)
             outputs["displacement_number"].append(idx)
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)
+
+    for info, phonon_job in zip(infos, phonon_jobs, strict=True):
+        with contextlib.suppress(Exception):
+            if not check_class_name(
+                phonon_maker,
+                [
+                    "AseRelaxMaker",
+                    "ForceFieldRelaxMaker",
+                    "ForceFieldStaticMaker",
+                    "TorchSimStaticMaker",
+                    "TorchSimOptimizeMaker",
+                ],
+            ):
+                phonon_job.update_maker_kwargs(
+                    {"_set": {"write_additional_data->phonon_info:json": info}},
+                    dict_mod=True,
+                )
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)
