@@ -126,7 +126,7 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
 
 
 @pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")
-def test_relax_job_mace(ar_structure: Structure, tmp_path, test_dir) -> None:
+def test_relax_job_mace(si_structure: Structure, tmp_path, test_dir) -> None:
     """Test TSOptimizeMaker with MACE model.
 
     Includes trajectory reporter and autobatcher.
@@ -134,7 +134,7 @@ def test_relax_job_mace(ar_structure: Structure, tmp_path, test_dir) -> None:
     mace_model_path = f"{test_dir}/forcefields/mace/MACE.model"
 
     # Perturb the structure to make optimization meaningful
-    perturbed_structure = ar_structure.copy()
+    perturbed_structure = si_structure.copy()
     perturbed_structure.translate_sites(
         list(range(len(perturbed_structure))), [0.01, 0.01, 0.01]
     )

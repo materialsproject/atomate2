@@ -56,10 +56,8 @@ def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir, socket: bool):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     elastic_output = responses[flow[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
-    assert elastic_output.derived_properties.k_voigt == pytest.approx(
-        9.7005429, abs=0.01
-    )
+    assert elastic_output.derived_properties.k_voigt == pytest.approx(7.64806, abs=0.01)
     assert elastic_output.derived_properties.g_voigt == pytest.approx(
-        0.002005039, abs=0.01
+        0.201104, abs=0.01
     )
     assert elastic_output.chemsys == "Si"

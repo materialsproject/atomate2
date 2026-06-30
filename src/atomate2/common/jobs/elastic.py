@@ -18,7 +18,7 @@ from pymatgen.transformations.standard_transformations import (
 from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
-from atomate2.torchsim import TorchSimOptimizeMaker
+from atomate2.common.utils import check_class_name
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.torchsim import TorchSimOptimizeMaker
 
 
 logger = logging.getLogger(__name__)
@@ -162,7 +163,7 @@ def run_elastic_deformations(
         elastic_jobs.append(batched_job)
 
         for idx, deformation in enumerate(deformations):
-            if isinstance(elastic_relax_maker, TorchSimOptimizeMaker):
+            if check_class_name(elastic_relax_maker, "TorchSimOptimizeMaker"):
                 output = {
                     "stress": batched_job.output.output.stress[idx],
                     "deformation": deformation,

@@ -22,7 +22,7 @@ from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
-from atomate2.common.utils import get_supercell_matrix
+from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
@@ -297,10 +297,6 @@ def run_phonon_displacements(
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
 
-    def is_maker_type(obj: object, class_names: list[str]) -> bool:
-        """Check if an object's class name matches an allowed list."""
-        return type(obj).__name__ in class_names
-
     num_disp = len(displacements)
     if socket:
         if isinstance(phonon_maker, BaseVaspMaker):
@@ -312,7 +308,7 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        if not is_maker_type(
+        if not check_class_name(
             phonon_maker,
             ["AseRelaxMaker", "ForceFieldRelaxMaker", "TorchSimStaticMaker"],
         ):
@@ -323,7 +319,7 @@ def run_phonon_displacements(
 
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(num_disp))
-        if is_maker_type(phonon_maker, ["AseRelaxMaker", "ForceFieldRelaxMaker"]):
+        if check_class_name(phonon_maker, ["AseRelaxMaker", "ForceFieldRelaxMaker"]):
             outputs["uuids"] = [phonon_job.output[0].uuid] * num_disp
             outputs["dirs"] = [phonon_job.output[0].dir_name] * num_disp
             outputs["forces"] = [
@@ -346,7 +342,7 @@ def run_phonon_displacements(
                 "displaced_structure": displacement,
             }
             with contextlib.suppress(Exception):
-                if not is_maker_type(
+                if not check_class_name(
                     phonon_maker,
                     ["AseRelaxMaker", "ForceFieldRelaxMaker", "TorchSimStaticMaker"],
                 ):

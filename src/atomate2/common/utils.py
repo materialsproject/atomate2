@@ -221,3 +221,16 @@ def _recursive_to_list(voigt_data: Any) -> Any:
     if hasattr(voigt_data, "tolist"):
         return voigt_data.tolist()
     return voigt_data
+
+
+def check_class_name(obj: object, class_names: str | list[str]) -> bool:
+    """Check if an object's class name matches an allowed list.
+
+    This allows us to check if an object is an instance of a class
+    (eg a Maker) without importing the class itself. Useful to replace
+    `isinstance(obj, Maker)` in common workflows or jobs where we should
+    avoid introducing other dependencies.
+    """
+    if isinstance(class_names, str):
+        class_names = [class_names]
+    return type(obj).__name__ in class_names
