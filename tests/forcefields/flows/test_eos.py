@@ -23,7 +23,7 @@ def test_ml_ff_eos_makers(
 
     calculator_kwargs = {}
     if mlff == "CHGNet":
-        calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}
+        calculator_kwargs = {"path": "CHGNet-PES-MatPES-PBE-2025.2.10"}
     elif mlff == "MACE":
         calculator_kwargs = {"model": "medium-0b3", "default_dtype": "float32"}
 

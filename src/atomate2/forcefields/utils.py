@@ -80,12 +80,12 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
     MLFF.MATPES_PBE: {
         "architecture": "TensorNet",
-        "version": "2025.1",
+        "version": "2025.2",
         "stress_unit": "eV/A3",
     },
     MLFF.MATPES_R2SCAN: {
         "architecture": "TensorNet",
-        "version": "2025.1",
+        "version": "2025.2",
         "stress_unit": "eV/A3",
     },
     MLFF.NEP: {"model_filename": "nep.txt"},
@@ -304,7 +304,10 @@ def ase_calculator(
 
     if (
         isinstance(calculator_meta, str)
-        and (calculator_meta in map(str, MLFF) or calculator_meta in MLFF)
+        and (
+            calculator_meta in map(str, MLFF)
+            or calculator_meta in {m.value for m in MLFF}
+        )
     ) or isinstance(calculator_meta, MLFF):
         calculator_name = MLFF(calculator_meta)
 
@@ -339,49 +342,47 @@ def ase_calculator(
                     except ImportError:
                         pass
 
-                import matgl
+                warnings.warn(
+                    "The default M3GNet, CHGNet, and MatPES models in matgl have been"
+                    "retrained on a newer 2025.2 version of the MatPES dataset. "
+                    "To use the older MPtrj-trained M3GNet or CHGNet, or the "
+                    "2025.1 versions of the MatPES models, use atomate2==0.1.3.",
+                    category=UserWarning,
+                    stacklevel=2,
+                )
 
+                import matgl
+                from matgl.ext.ase import PESCalculator
+
+                # matgl >= 4.0 removed the DGL backend; matgl now targets
+                # PyTorch Geometric exclusively and all potentials load through
+                # the single ``matgl.ext.ase.PESCalculator``. Pre-trained weights
+                # use the ``<Architecture>-PES-<Dataset>-<Func>-<Version>`` naming
+                # and live on the ``materialyze`` HF org (resolved from bare names
+                # by ``load_model``), except the CHGNet PyG weights, hosted under
+                # ``BowenD-UCB``. See https://huggingface.co/materialyze.
                 match calculator_name:
                     case MLFF.M3GNet:
-                        path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
-                        matgl.config.BACKEND = "DGL"
+                        path = kwargs.get("path", "M3GNet-PES-MatPES-PBE-2025.2")
                     case MLFF.CHGNet:
-                        path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
-                        matgl.config.BACKEND = "DGL"
-
-                        warnings.warn(
-                            "The CHGNet functionality in atomate2 has been migrated "
-                            "from the `chgnet` package to `matgl` to ensure continuing "
-                            "support. If you want to use the `chgnet` package, "
-                            "`pip install chgnet`",
-                            stacklevel=2,
+                        path = kwargs.get(
+                            "path", "BowenD-UCB/CHGNet-PyG-MatPES-PBE-2025.2.10"
                         )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
-                        path = (
-                            f"{kwargs.pop('architecture', 'TensorNet')}"
-                            f"-{calculator_name.value}"
-                            f"-v{kwargs.pop('version', '2025.1')}"
-                            "-PES"
+                        # ``calculator_name.value`` is e.g. "MatPES-PBE";
+                        # take the suffix to construct the HF repo name.
+                        functional = calculator_name.value.split("-", 1)[-1]
+                        architecture = kwargs.pop("architecture", "TensorNet")
+                        version = kwargs.pop("version", "2025.2")
+                        path = kwargs.get(
+                            "path",
+                            f"{architecture}-PES-MatPES-{functional}-{version}",
                         )
-                        matgl.config.BACKEND = "PYG"
 
                 if default_dtype is not None:
                     matgl.set_default_dtype(default_dtype)
 
-                matgl_calc = getattr(
-                    import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
-                    "PESCalculator",
-                    None,
-                )
-
-                # matgl has removed many of the old models,
-                # need to hard code paths to previous models
-                if "path" not in kwargs:
-                    base_matgl_url = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models/"
-                    matgl.config.PRETRAINED_MODELS_BASE_URL = base_matgl_url
-                    matgl.utils.io.PRETRAINED_MODELS_BASE_URL = base_matgl_url
-
-                calculator = matgl_calc(matgl.load_model(path), **kwargs)
+                calculator = PESCalculator(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
                 from mace.calculators import MACECalculator, mace_mp
@@ -432,9 +433,11 @@ def ase_calculator(
 
                 calculator = getattr(
                     NequIPCalculator,
-                    "from_compiled_model"
-                    if hasattr(NequIPCalculator, "from_compiled_model")
-                    else "from_deployed_model",
+                    (
+                        "from_compiled_model"
+                        if hasattr(NequIPCalculator, "from_compiled_model")
+                        else "from_deployed_model"
+                    ),
                 )(**kwargs)
 
             case MLFF.FAIRChem:
