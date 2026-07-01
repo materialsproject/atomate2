@@ -10,11 +10,13 @@ import pytest
 ts = pytest.importorskip("torch_sim")
 
 from jobflow import Flow, run_locally
+from numpy.testing import assert_allclose
 
 from atomate2.common.jobs.phonons import (
     generate_phonon_displacements,
     get_supercell_size,
 )
+from atomate2.common.schemas.phonons import PhononBSDOSDoc
 from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
 from atomate2.torchsim.flows.phonons import PhononMaker
 from atomate2.torchsim.schema import TorchSimModelType
@@ -142,7 +144,7 @@ def test_torchsim_output_schema_compatibility(si_diamond: Structure, tmp_path) -
 
 @pytest.mark.parametrize("socket", [True, False])
 def test_torchsim_phonon_maker_integration(
-    si_diamond: Structure, tmp_path, socket: bool
+    si_structure: Structure, tmp_path, test_dir, socket: bool
 ) -> None:
     """Test that TorchSim makers can be used within PhononMaker.
 
@@ -150,34 +152,35 @@ def test_torchsim_phonon_maker_integration(
     can be used as bulk_relax_maker and static_energy_maker within PhononMaker,
     ensuring proper schema compatibility for phonon workflow integration.
     """
-    relax_maker = TorchSimOptimizeMaker(
-        model_type=TorchSimModelType.LENNARD_JONES,
-        model_path="",
-        optimizer=ts.Optimizer.fire,
-        model_kwargs={"sigma": 2.0, "epsilon": 0.01, "compute_stress": True},
-        max_steps=100,
-        init_kwargs={"cell_filter": ts.CellFilter.unit},
-    )
+    model_path = f"{test_dir}/forcefields/mace/MACE.model"
 
+    relax_maker = TorchSimOptimizeMaker(
+        optimizer=ts.Optimizer.fire,
+        model_type=TorchSimModelType.MACE,
+        model_path=model_path,
+        model_kwargs={"compute_stress": True},
+        init_kwargs={"cell_filter": ts.CellFilter.frechet},
+        convergence_fn_kwargs={"force_tol": 1e-3, "include_cell_forces": True},
+        fix_symmetry=True,
+    )
     static_maker = TorchSimStaticMaker(
-        model_type=TorchSimModelType.LENNARD_JONES,
-        model_path="",
-        model_kwargs={"sigma": 2.0, "epsilon": 0.01, "compute_stress": True},
+        model_type=TorchSimModelType.MACE,
+        model_path=model_path,
+        model_kwargs={"compute_stress": True},
     )
 
     phonon_maker = PhononMaker(
         bulk_relax_maker=relax_maker,
         static_energy_maker=static_maker,
         phonon_displacement_maker=static_maker,
-        use_symmetrized_structure="primitive",  # required for non-seekpath kpath
         create_thermal_displacements=False,
         store_force_constants=False,
-        kpath_scheme="setyawan_curtarolo",  # avoid seekpath dependency
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         socket=socket,
     )
 
     # Create the phonon flow
-    flow = phonon_maker.make(si_diamond)
+    flow = phonon_maker.make(si_structure)
 
     # Verify flow is created successfully
     assert isinstance(flow, Flow)
@@ -189,4 +192,38 @@ def test_torchsim_phonon_maker_integration(
     assert "torchsim static" in job_names, f"Expected static job, got {job_names}"
 
     # Run the flow locally to verify end-to-end execution
-    run_locally(flow, create_folders=True, ensure_success=True, root_dir=tmp_path)
+    response = run_locally(
+        flow, create_folders=True, ensure_success=True, root_dir=tmp_path
+    )
+
+    ph_bs_dos_doc = response[flow[-1].uuid][1].output
+    assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
+
+    assert len(ph_bs_dos_doc.uuids.displacements_uuids) == 4
+    assert ph_bs_dos_doc.uuids.born_run_uuid is None
+    assert ph_bs_dos_doc.uuids.optimization_run_uuid is not None
+
+    assert ph_bs_dos_doc.total_dft_energy == pytest.approx(
+        -0.03557529307227024, abs=0.001
+    )
+    assert_allclose(ph_bs_dos_doc.temperatures, [0, 100, 200, 300, 400])
+    assert_allclose(
+        ph_bs_dos_doc.free_energies,
+        [658.667573, -2745.918517, -8014.387019, -14157.326384, -20879.141527],
+        atol=0.01,
+    )
+    assert_allclose(
+        ph_bs_dos_doc.entropies,
+        [0.0, 46.424251, 57.7688424, 64.642411, 69.562367],
+        atol=0.01,
+    )
+    assert_allclose(
+        ph_bs_dos_doc.heat_capacities,
+        [0.0, 15.704769, 16.819223, 17.055503, 17.140707],
+        atol=0.01,
+    )
+    assert_allclose(
+        ph_bs_dos_doc.internal_energies,
+        [658.667573, 1896.506663, 3539.381508, 5235.397079, 6945.805332],
+        atol=0.01,
+    )
