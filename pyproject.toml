@@ -63,7 +63,7 @@ ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 
 torchsim = [
-    "torch-sim-atomistic==0.6.0; python_version >= '3.12'"
+    "torch-sim-atomistic[symmetry]==0.6.0; python_version >= '3.12'"
 ]
 jdftx = ["pymatgen==2026.5.4"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
