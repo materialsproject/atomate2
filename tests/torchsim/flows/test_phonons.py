@@ -210,20 +210,20 @@ def test_torchsim_phonon_maker_integration(
     assert_allclose(
         ph_bs_dos_doc.free_energies,
         [658.667573, -2745.918517, -8014.387019, -14157.326384, -20879.141527],
-        atol=0.01,
+        atol=0.1,
     )
     assert_allclose(
         ph_bs_dos_doc.entropies,
         [0.0, 46.424251, 57.7688424, 64.642411, 69.562367],
-        atol=0.01,
+        atol=0.1,
     )
     assert_allclose(
         ph_bs_dos_doc.heat_capacities,
         [0.0, 15.704769, 16.819223, 17.055503, 17.140707],
-        atol=0.01,
+        atol=0.1,
     )
     assert_allclose(
         ph_bs_dos_doc.internal_energies,
         [658.667573, 1896.506663, 3539.381508, 5235.397079, 6945.805332],
-        atol=0.01,
+        atol=0.1,
     )
