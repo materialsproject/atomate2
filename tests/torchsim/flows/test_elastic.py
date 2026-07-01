@@ -31,7 +31,7 @@ def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir, socket: bool):
         model_path=model_path,
         model_kwargs={"compute_stress": True},
         init_kwargs={"cell_filter": ts.CellFilter.frechet},
-        convergence_fn_kwargs={"force_tol": 1e-5},
+        convergence_fn_kwargs={"force_tol": 1e-5, "include_cell_forces": True},
         fix_symmetry=True,
     )
     elastic_relax_maker = TorchSimOptimizeMaker(
@@ -56,8 +56,10 @@ def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir, socket: bool):
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     elastic_output = responses[flow[-1].uuid][1].output
     assert isinstance(elastic_output, ElasticDocument)
-    assert elastic_output.derived_properties.k_voigt == pytest.approx(7.64806, abs=0.01)
+    assert elastic_output.derived_properties.k_voigt == pytest.approx(
+        9.7005429, abs=0.01
+    )
     assert elastic_output.derived_properties.g_voigt == pytest.approx(
-        0.201104, abs=0.01
+        0.002005039, abs=0.01
     )
     assert elastic_output.chemsys == "Si"
