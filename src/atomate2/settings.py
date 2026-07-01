@@ -201,6 +201,7 @@ class Atomate2Settings(BaseSettings):
     ABINIT_MPIRUN_CMD: str | None = Field(None, description="Mpirun command.")
     ABINIT_CMD: str = Field("abinit", description="Abinit command.")
     ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
+    ABINIT_MRGDV_CMD: str = Field("mrgdv", description="Mrgdv command.")
     ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")
     ABINIT_COPY_DEPS: bool = Field(
         default=False,
@@ -216,6 +217,21 @@ class Atomate2Settings(BaseSettings):
     )
     ABINIT_MAX_RESTARTS: int = Field(
         5, description="Maximum number of restarts of a job."
+    )
+    ABINIT_FILES_TO_DEL: list = Field(
+        ["*WFK*", "*1WF*", "*EVK*", "*EIG*", "*DEN*", "*OUT*", "*POT*", "*EBANDS*"],
+        description="Extension of the files deleted by \
+        'abinit.files.del_gzip_files'. \
+        An empty list should be provided to avoid removing any files.",
+    )
+    ABINIT_HANDLE_UNSUCCESSFUL: str = Field(
+        "error",
+        description="Four-way toggle on what to do if the job looks OK but is actually"
+        " unconverged (either electronic or ionic). "
+        " - 'stop_children': mark job as COMPLETED, but stop children only. "
+        " - 'stop_flow': mark job as COMPLETED, but stop all jobs. "
+        " - 'continue': do nothing, continue with workflow as normal. "
+        " - 'error': throw an error (default).",
     )
 
     ASE_FORCEFIELD_USE_EMMET_MODELS: bool = Field(
