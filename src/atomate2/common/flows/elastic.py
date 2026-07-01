@@ -74,7 +74,10 @@ class BaseElasticMaker(Maker, ABC):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
     socket : bool
-        If True use the socket-io (batch-mode) interface to increase performance.
+        If True, uses the socket-io interface to run all deformations in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all structure relaxations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
 
     name: str = "elastic"

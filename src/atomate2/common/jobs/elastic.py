@@ -116,7 +116,9 @@ def run_elastic_deformations(
     Run elastic deformations.
 
     Note, this job will replace itself with N relaxation calculations,
-    or a single socket calculation for all deformations.
+    or a single batched calculation using the socket interface to run all
+    deformations simultaneously. This results in lower overhead as well as
+    parallel relaxation of the deformations for TorchSim.
 
     Parameters
     ----------
@@ -127,11 +129,15 @@ def run_elastic_deformations(
     prev_dir : str or Path or None
         A previous directory to use for copying outputs.
     prev_dir_argname: str or None
-        argument name for the prev_dir variable
-    elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
-        A VaspMaker or a ForceFieldMaker to use to generate the elastic relaxation jobs.
+        Argument name for the prev_dir variable.
+    elastic_relax_maker : .BaseVaspMaker, .ForceFieldRelaxMaker, or
+        .TorchSimOptimizeMaker
+        A VaspMaker, ForceFieldMaker, or TorchSimMaker to use to generate the elastic
+        relaxation jobs.
     socket : bool
-        If True use the socket-io (batch-mode) interface to increase performance.
+        If True, uses the socket-io interface to run all deformations in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all structure relaxations.
         Note: socket=True is not supported for BaseVaspMaker.
     """
     num_deformations = len(deformations)

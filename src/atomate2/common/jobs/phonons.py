@@ -265,26 +265,31 @@ def run_phonon_displacements(
     Run phonon displacements.
 
     Note, this job will replace itself with N displacement calculations,
-    or a single socket calculation for all displacements.
+    or a single batched calculation using the socket interface to run all
+    displacements simultaneously. This results in lower overhead as well as
+    parallel evaluation of the displacements for TorchSim.
 
     Parameters
     ----------
     displacements: Sequence
-        All displacements to calculate
+        All displacements to calculate.
     structure: Structure object
         Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
-        supercell matrix for meta data
-    phonon_maker : .BaseVaspMaker, .AseRelaxMaker,
+        Supercell matrix for metadata.
+    phonon_maker : .BaseVaspMaker, .AseRelaxMaker, .TorchSimStaticMaker,
         .ForceFieldRelaxMaker, or .BaseAimsMaker
-        A maker to use to generate dispacement calculations.
+        A maker to use to generate displacement calculations.
         NB: this should be a static maker.
     prev_dir: str or Path
-        The previous working directory
+        The previous working directory.
     prev_dir_argname: str
-        argument name for the prev_dir variable
+        Argument name for the prev_dir variable.
     socket: bool
-        If True use the socket-io (batch-mode) interface to increase performance
+        If True, uses the socket-io interface to run all displacements in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all static structure evaluations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
     phonon_jobs = []
     outputs: dict[str, list] = {

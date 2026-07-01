@@ -136,7 +136,10 @@ class BasePhononMaker(Maker, ABC):
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
-        If True, use the socket/batch for the calculation
+        If True, uses the socket-io interface to run all displacements in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all static structure evaluations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
 
     name: str = "phonon"

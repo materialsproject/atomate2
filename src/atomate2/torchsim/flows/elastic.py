@@ -58,6 +58,9 @@ class ElasticMaker(BaseElasticMaker):
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
+    socket: bool
+        If True, the deformed structures will be computed in batches, which should
+        increase performance.
     """
 
     name: str = "elastic"
@@ -70,6 +73,7 @@ class ElasticMaker(BaseElasticMaker):
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+    socket: bool = True
 
     @property
     def prev_calc_dir_argname(self) -> str | None:
