@@ -1,0 +1,6 @@
+check\_class\_name
+==================
+
+.. currentmodule:: atomate2.common.utils
+
+.. autofunction:: check_class_name

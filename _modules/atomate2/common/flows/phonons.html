@@ -559,6 +559,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/atomate2.common.utils.html">atomate2.common.utils</a><input aria-label="Toggle navigation of atomate2.common.utils" class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.check_class_name.html">check_class_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
@@ -1419,6 +1420,7 @@
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.aims.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAimsMaker</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.forcefields.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">,</span> <span class="n">ForceFieldStaticMaker</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.torchsim.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">TorchSimOptimizeMaker</span><span class="p">,</span> <span class="n">TorchSimStaticMaker</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
 
 <span class="n">SUPPORTED_CODES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">&quot;vasp&quot;</span><span class="p">,</span> <span class="s2">&quot;aims&quot;</span><span class="p">,</span> <span class="s2">&quot;forcefields&quot;</span><span class="p">,</span> <span class="s2">&quot;ase&quot;</span><span class="p">,</span> <span class="s2">&quot;torchsim&quot;</span><span class="p">))</span>
@@ -1493,13 +1495,16 @@
 <span class="sd">        A maker to perform a tight relaxation on the bulk.</span>
 <span class="sd">        Set to ``None`` to skip the</span>
 <span class="sd">        bulk relaxation</span>
-<span class="sd">    static_energy_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None</span>
+<span class="sd">    static_energy_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker,</span>
+<span class="sd">        .TorchSimStaticMaker, or None</span>
 <span class="sd">        A maker to perform the computation of the DFT energy on the bulk.</span>
 <span class="sd">        Set to ``None`` to skip the</span>
 <span class="sd">        static energy computation</span>
-<span class="sd">    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker, or None</span>
+<span class="sd">    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker,</span>
+<span class="sd">        .TorchSimStaticMaker, or None</span>
 <span class="sd">        Maker to compute the BORN charges.</span>
-<span class="sd">    phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker</span>
+<span class="sd">    phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker,</span>
+<span class="sd">        .TorchSimStaticMaker</span>
 <span class="sd">        Maker used to compute the forces for a supercell.</span>
 <span class="sd">    generate_frequencies_eigenvectors_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.</span>
@@ -1526,7 +1531,10 @@
 <span class="sd">    store_force_constants: bool</span>
 <span class="sd">        if True, force constants will be stored</span>
 <span class="sd">    socket: bool</span>
-<span class="sd">        If True, use the socket/batch for the calculation</span>
+<span class="sd">        If True, uses the socket-io interface to run all displacements in a single</span>
+<span class="sd">        job, reducing overhead. In the specific case of TorchSim, this enables batching</span>
+<span class="sd">        of all static structure evaluations.</span>
+<span class="sd">        Note: socket=True is not supported for BaseVaspMaker.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;phonon&quot;</span>
@@ -1539,14 +1547,26 @@
     <span class="n">allow_orthorhombic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">get_supercell_size_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">use_symmetrized_structure</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;conventional&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">bulk_relax_maker</span><span class="p">:</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">BaseAimsMaker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">static_energy_maker</span><span class="p">:</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">BaseAimsMaker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">bulk_relax_maker</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">ForceFieldRelaxMaker</span>
+        <span class="o">|</span> <span class="n">BaseVaspMaker</span>
+        <span class="o">|</span> <span class="n">BaseAimsMaker</span>
+        <span class="o">|</span> <span class="n">TorchSimOptimizeMaker</span>
+        <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">static_energy_maker</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">ForceFieldRelaxMaker</span>
+        <span class="o">|</span> <span class="n">BaseVaspMaker</span>
+        <span class="o">|</span> <span class="n">BaseAimsMaker</span>
+        <span class="o">|</span> <span class="n">TorchSimStaticMaker</span>
+        <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">born_maker</span><span class="p">:</span> <span class="n">ForceFieldStaticMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">TorchSimStaticMaker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
         <span class="kc">None</span>
     <span class="p">)</span>
-    <span class="n">born_maker</span><span class="p">:</span> <span class="n">ForceFieldStaticMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">phonon_displacement_maker</span><span class="p">:</span> <span class="n">ForceFieldStaticMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">BaseAimsMaker</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="kc">None</span>
-    <span class="p">)</span>
+    <span class="n">phonon_displacement_maker</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">ForceFieldStaticMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">BaseAimsMaker</span> <span class="o">|</span> <span class="n">TorchSimStaticMaker</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">create_thermal_displacements</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">generate_frequencies_eigenvectors_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span>
@@ -1825,7 +1845,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=fd825880"></script>
+</div><script src="../../../../_static/documentation_options.js?v=59fadc99"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

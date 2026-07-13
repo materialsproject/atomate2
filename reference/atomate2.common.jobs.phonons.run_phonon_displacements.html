@@ -560,6 +560,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="atomate2.common.utils.html">atomate2.common.utils</a><input aria-label="Toggle navigation of atomate2.common.utils" class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.check_class_name.html">check_class_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
@@ -1407,19 +1408,24 @@
 <span class="sig-prename descclassname"><span class="pre">atomate2.common.jobs.phonons.</span></span><span class="sig-name descname"><span class="pre">run_phonon_displacements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">displacements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supercell_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phonon_maker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_dir_argname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">socket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/common/jobs/phonons.html#run_phonon_displacements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.common.jobs.phonons.run_phonon_displacements" title="Link to this definition">¶</a></dt>
 <dd><p>Run phonon displacements.</p>
 <p>Note, this job will replace itself with N displacement calculations,
-or a single socket calculation for all displacements.</p>
+or a single batched calculation using the socket interface to run all
+displacements simultaneously. This results in lower overhead as well as
+parallel evaluation of the displacements for TorchSim.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>displacements</strong> (<em>Sequence</em>) – All displacements to calculate</p></li>
+<li><p><strong>displacements</strong> (<em>Sequence</em>) – All displacements to calculate.</p></li>
 <li><p><strong>structure</strong> (<em>Structure object</em>) – Fully optimized structure used for phonon computations.</p></li>
-<li><p><strong>supercell_matrix</strong> (<em>Matrix3D</em>) – supercell matrix for meta data</p></li>
-<li><p><strong>phonon_maker</strong> (<em>.BaseVaspMaker</em><em>, </em><em>.AseRelaxMaker</em><em>,</em>) – .ForceFieldRelaxMaker, or .BaseAimsMaker
-A maker to use to generate dispacement calculations.
+<li><p><strong>supercell_matrix</strong> (<em>Matrix3D</em>) – Supercell matrix for metadata.</p></li>
+<li><p><strong>phonon_maker</strong> (<em>.BaseVaspMaker</em><em>, </em><em>.AseRelaxMaker</em><em>, </em><em>.TorchSimStaticMaker</em><em>,</em>) – .ForceFieldRelaxMaker, or .BaseAimsMaker
+A maker to use to generate displacement calculations.
 NB: this should be a static maker.</p></li>
-<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em>) – The previous working directory</p></li>
-<li><p><strong>prev_dir_argname</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – argument name for the prev_dir variable</p></li>
-<li><p><strong>socket</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True use the socket-io (batch-mode) interface to increase performance</p></li>
+<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em>) – The previous working directory.</p></li>
+<li><p><strong>prev_dir_argname</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Argument name for the prev_dir variable.</p></li>
+<li><p><strong>socket</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, uses the socket-io interface to run all displacements in a single
+job, reducing overhead. In the specific case of TorchSim, this enables batching
+of all static structure evaluations.
+Note: socket=True is not supported for BaseVaspMaker.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1504,7 +1510,7 @@ NB: this should be a static maker.</p></li>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=fd825880"></script>
+</div><script src="../_static/documentation_options.js?v=59fadc99"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

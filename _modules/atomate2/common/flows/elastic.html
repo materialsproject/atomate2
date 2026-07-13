@@ -559,6 +559,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/atomate2.common.utils.html">atomate2.common.utils</a><input aria-label="Toggle navigation of atomate2.common.utils" class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.check_class_name.html">check_class_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
@@ -1416,6 +1417,7 @@
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.aims.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAimsMaker</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.forcefields.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForceFieldRelaxMaker</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.torchsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">TorchSimOptimizeMaker</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
 
 
@@ -1466,20 +1468,32 @@
 <span class="sd">        Keyword arguments passed to :obj:`fit_elastic_tensor`.</span>
 <span class="sd">    task_document_kwargs : dict</span>
 <span class="sd">        Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.</span>
+<span class="sd">    socket : bool</span>
+<span class="sd">        If True, uses the socket-io interface to run all deformations in a single</span>
+<span class="sd">        job, reducing overhead. In the specific case of TorchSim, this enables batching</span>
+<span class="sd">        of all structure relaxations.</span>
+<span class="sd">        Note: socket=True is not supported for BaseVaspMaker.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;elastic&quot;</span>
     <span class="n">order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">sym_reduce</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">symprec</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">SYMPREC</span>
-    <span class="n">bulk_relax_maker</span><span class="p">:</span> <span class="n">BaseAimsMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">elastic_relax_maker</span><span class="p">:</span> <span class="n">BaseAimsMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="kc">None</span>  <span class="c1"># constant volume optimization</span>
-    <span class="p">)</span>
+    <span class="n">bulk_relax_maker</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">BaseAimsMaker</span>
+        <span class="o">|</span> <span class="n">BaseVaspMaker</span>
+        <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span>
+        <span class="o">|</span> <span class="n">TorchSimOptimizeMaker</span>
+        <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">elastic_relax_maker</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">BaseAimsMaker</span> <span class="o">|</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">|</span> <span class="n">TorchSimOptimizeMaker</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># constant volume optimization</span>
     <span class="n">max_failed_deformations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">generate_elastic_deformations_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">fit_elastic_tensor_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">task_document_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">socket</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="BaseElasticMaker.make">
 <a class="viewcode-back" href="../../../../reference/atomate2.common.flows.elastic.BaseElasticMaker.html#atomate2.common.flows.elastic.BaseElasticMaker.make">[docs]</a>
@@ -1487,7 +1501,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">structure</span><span class="p">:</span> <span class="n">Structure</span><span class="p">,</span>
         <span class="n">prev_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">equilibrium_stress</span><span class="p">:</span> <span class="n">Matrix3D</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">equilibrium_stress</span><span class="p">:</span> <span class="n">Matrix3D</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">conventional</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1531,15 +1545,16 @@
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_elastic_deformations_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">vasp_deformation_calcs</span> <span class="o">=</span> <span class="n">run_elastic_deformations</span><span class="p">(</span>
+        <span class="n">deformation_calcs</span> <span class="o">=</span> <span class="n">run_elastic_deformations</span><span class="p">(</span>
             <span class="n">structure</span><span class="p">,</span>
             <span class="n">deformations</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
             <span class="n">elastic_relax_maker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">elastic_relax_maker</span><span class="p">,</span>
             <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">,</span>
+            <span class="n">socket</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">fit_tensor</span> <span class="o">=</span> <span class="n">fit_elastic_tensor</span><span class="p">(</span>
             <span class="n">structure</span><span class="p">,</span>
-            <span class="n">vasp_deformation_calcs</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+            <span class="n">deformation_calcs</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
             <span class="n">equilibrium_stress</span><span class="o">=</span><span class="n">equilibrium_stress</span><span class="p">,</span>
             <span class="n">order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">,</span>
             <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sym_reduce</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -1552,7 +1567,7 @@
         <span class="c1"># allow some of the deformations to fail</span>
         <span class="n">fit_tensor</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">on_missing_references</span> <span class="o">=</span> <span class="n">OnMissing</span><span class="o">.</span><span class="n">NONE</span>
 
-        <span class="n">jobs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">deformations</span><span class="p">,</span> <span class="n">vasp_deformation_calcs</span><span class="p">,</span> <span class="n">fit_tensor</span><span class="p">]</span>
+        <span class="n">jobs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">deformations</span><span class="p">,</span> <span class="n">deformation_calcs</span><span class="p">,</span> <span class="n">fit_tensor</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">Flow</span><span class="p">(</span>
             <span class="n">jobs</span><span class="o">=</span><span class="n">jobs</span><span class="p">,</span>
@@ -1621,7 +1636,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=fd825880"></script>
+</div><script src="../../../../_static/documentation_options.js?v=59fadc99"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

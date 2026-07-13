@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="get_supercell_matrix" href="atomate2.common.utils.get_supercell_matrix.html"><link rel="prev" title="TransformTask" href="atomate2.common.schemas.transform.TransformTask.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="check_class_name" href="atomate2.common.utils.check_class_name.html"><link rel="prev" title="TransformTask" href="atomate2.common.schemas.transform.TransformTask.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>atomate2.common.utils - atomate2</title>
@@ -560,6 +560,7 @@
 </ul>
 </li>
 <li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">atomate2.common.utils</a><input aria-label="Toggle navigation of atomate2.common.utils" checked="" class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.check_class_name.html">check_class_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
@@ -1407,19 +1408,22 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="atomate2.common.utils.get_supercell_matrix.html#atomate2.common.utils.get_supercell_matrix" title="atomate2.common.utils.get_supercell_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_supercell_matrix</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="atomate2.common.utils.check_class_name.html#atomate2.common.utils.check_class_name" title="atomate2.common.utils.check_class_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_class_name</span></code></a></p></td>
+<td><p>Check if an object's class name matches an allowed list.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="atomate2.common.utils.get_supercell_matrix.html#atomate2.common.utils.get_supercell_matrix" title="atomate2.common.utils.get_supercell_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_supercell_matrix</span></code></a></p></td>
 <td><p>Determine supercell size with given min_length and max_length.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="atomate2.common.utils.get_transformations.html#atomate2.common.utils.get_transformations" title="atomate2.common.utils.get_transformations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transformations</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="atomate2.common.utils.get_transformations.html#atomate2.common.utils.get_transformations" title="atomate2.common.utils.get_transformations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_transformations</span></code></a></p></td>
 <td><p>Get instantiated transformation objects from their names and parameters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="atomate2.common.utils.parse_additional_json.html#atomate2.common.utils.parse_additional_json" title="atomate2.common.utils.parse_additional_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_additional_json</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="atomate2.common.utils.parse_additional_json.html#atomate2.common.utils.parse_additional_json" title="atomate2.common.utils.parse_additional_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_additional_json</span></code></a></p></td>
 <td><p>Parse additional JSON files in the directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="atomate2.common.utils.parse_custodian.html#atomate2.common.utils.parse_custodian" title="atomate2.common.utils.parse_custodian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_custodian</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="atomate2.common.utils.parse_custodian.html#atomate2.common.utils.parse_custodian" title="atomate2.common.utils.parse_custodian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_custodian</span></code></a></p></td>
 <td><p>Parse custodian.json file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="atomate2.common.utils.parse_transformations.html#atomate2.common.utils.parse_transformations" title="atomate2.common.utils.parse_transformations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_transformations</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="atomate2.common.utils.parse_transformations.html#atomate2.common.utils.parse_transformations" title="atomate2.common.utils.parse_transformations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_transformations</span></code></a></p></td>
 <td><p>Parse transformations.json file.</p></td>
 </tr>
 </tbody>
@@ -1442,12 +1446,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="atomate2.common.utils.get_supercell_matrix.html">
+          <a class="next-page" href="atomate2.common.utils.check_class_name.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">get_supercell_matrix</div>
+                <div class="title">check_class_name</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1492,7 +1496,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=fd825880"></script>
+</div><script src="../_static/documentation_options.js?v=59fadc99"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

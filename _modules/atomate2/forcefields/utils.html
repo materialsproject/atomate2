@@ -559,6 +559,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../reference/atomate2.common.utils.html">atomate2.common.utils</a><input aria-label="Toggle navigation of atomate2.common.utils" class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../reference/atomate2.common.utils.check_class_name.html">check_class_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
@@ -1704,7 +1705,10 @@
 
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-        <span class="ow">and</span> <span class="p">(</span><span class="n">calculator_meta</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">MLFF</span><span class="p">)</span> <span class="ow">or</span> <span class="n">calculator_meta</span> <span class="ow">in</span> <span class="n">MLFF</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">calculator_meta</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">MLFF</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">calculator_meta</span> <span class="ow">in</span> <span class="p">{</span><span class="n">m</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">MLFF</span><span class="p">}</span>
+        <span class="p">)</span>
     <span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="n">MLFF</span><span class="p">):</span>
         <span class="n">calculator_name</span> <span class="o">=</span> <span class="n">MLFF</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
 
@@ -1749,23 +1753,22 @@
                 <span class="p">)</span>
 
                 <span class="kn">import</span><span class="w"> </span><span class="nn">matgl</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">matgl.ext.ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">PESCalculator</span>
 
-                <span class="c1"># matgl &gt;= 3.0 dropped the legacy MP-2021.2.8 / MPtrj weights and</span>
-                <span class="c1"># the GitHub `pretrained_models/` fallback. All pre-trained</span>
-                <span class="c1"># weights now live on the `materialyze` HF org with the</span>
-                <span class="c1"># ``&lt;Architecture&gt;-PES-&lt;Dataset&gt;-&lt;Func&gt;-&lt;Version&gt;`` naming.</span>
-                <span class="c1"># See https://huggingface.co/materialyze for the canonical list.</span>
+                <span class="c1"># matgl &gt;= 4.0 removed the DGL backend; matgl now targets</span>
+                <span class="c1"># PyTorch Geometric exclusively and all potentials load through</span>
+                <span class="c1"># the single ``matgl.ext.ase.PESCalculator``. Pre-trained weights</span>
+                <span class="c1"># use the ``&lt;Architecture&gt;-PES-&lt;Dataset&gt;-&lt;Func&gt;-&lt;Version&gt;`` naming</span>
+                <span class="c1"># and live on the ``materialyze`` HF org (resolved from bare names</span>
+                <span class="c1"># by ``load_model``), except the CHGNet PyG weights, hosted under</span>
+                <span class="c1"># ``BowenD-UCB``. See https://huggingface.co/materialyze.</span>
                 <span class="k">match</span> <span class="n">calculator_name</span><span class="p">:</span>
                     <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">M3GNet</span><span class="p">:</span>
-                        <span class="c1"># Only the MatPES-trained PyG M3GNet potential is</span>
-                        <span class="c1"># distributed on HF for matgl 3.x.</span>
                         <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;M3GNet-PES-MatPES-PBE-2025.2&quot;</span><span class="p">)</span>
-                        <span class="n">backend</span> <span class="o">=</span> <span class="s2">&quot;PYG&quot;</span>
                     <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">CHGNet</span><span class="p">:</span>
-                        <span class="c1"># The MatPES-trained CHGNet weights remain DGL-backed.</span>
-                        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;CHGNet-PES-MatPES-PBE-2025.2.10&quot;</span><span class="p">)</span>
-                        <span class="n">backend</span> <span class="o">=</span> <span class="s2">&quot;DGL&quot;</span>
-
+                        <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;BowenD-UCB/CHGNet-PyG-MatPES-PBE-2025.2.10&quot;</span>
+                        <span class="p">)</span>
                     <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_R2SCAN</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_PBE</span><span class="p">:</span>
                         <span class="c1"># ``calculator_name.value`` is e.g. &quot;MatPES-PBE&quot;;</span>
                         <span class="c1"># take the suffix to construct the HF repo name.</span>
@@ -1776,20 +1779,11 @@
                             <span class="s2">&quot;path&quot;</span><span class="p">,</span>
                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">architecture</span><span class="si">}</span><span class="s2">-PES-MatPES-</span><span class="si">{</span><span class="n">functional</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="p">)</span>
-                        <span class="n">backend</span> <span class="o">=</span> <span class="s2">&quot;PYG&quot;</span>
-
-                <span class="n">_set_matgl_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">default_dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">matgl</span><span class="o">.</span><span class="n">set_default_dtype</span><span class="p">(</span><span class="n">default_dtype</span><span class="p">)</span>
 
-                <span class="n">matgl_calc</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
-                    <span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;matgl.ext._ase_</span><span class="si">{</span><span class="n">matgl</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">BACKEND</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;PESCalculator&quot;</span><span class="p">,</span>
-                    <span class="kc">None</span><span class="p">,</span>
-                <span class="p">)</span>
-
-                <span class="n">calculator</span> <span class="o">=</span> <span class="n">matgl_calc</span><span class="p">(</span><span class="n">matgl</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">calculator</span> <span class="o">=</span> <span class="n">PESCalculator</span><span class="p">(</span><span class="n">matgl</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
             <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MACE</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MACE_MP_0</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MACE_MPA_0</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MACE_MP_0B3</span><span class="p">:</span>
                 <span class="kn">from</span><span class="w"> </span><span class="nn">mace.calculators</span><span class="w"> </span><span class="kn">import</span> <span class="n">MACECalculator</span><span class="p">,</span> <span class="n">mace_mp</span>
@@ -1840,9 +1834,11 @@
 
                 <span class="n">calculator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
                     <span class="n">NequIPCalculator</span><span class="p">,</span>
-                    <span class="s2">&quot;from_compiled_model&quot;</span>
-                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">NequIPCalculator</span><span class="p">,</span> <span class="s2">&quot;from_compiled_model&quot;</span><span class="p">)</span>
-                    <span class="k">else</span> <span class="s2">&quot;from_deployed_model&quot;</span><span class="p">,</span>
+                    <span class="p">(</span>
+                        <span class="s2">&quot;from_compiled_model&quot;</span>
+                        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">NequIPCalculator</span><span class="p">,</span> <span class="s2">&quot;from_compiled_model&quot;</span><span class="p">)</span>
+                        <span class="k">else</span> <span class="s2">&quot;from_deployed_model&quot;</span>
+                    <span class="p">),</span>
                 <span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
             <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">FAIRChem</span><span class="p">:</span>
@@ -1891,37 +1887,6 @@
         <span class="n">module</span><span class="p">,</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">calculator_meta</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="n">klass</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">MontyDecoder</span><span class="p">()</span><span class="o">.</span><span class="n">process_decoded</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_set_matgl_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Switch the active matgl backend, reloading dependent submodules.</span>
-
-<span class="sd">    matgl reads ``matgl.config.BACKEND`` once when ``matgl.models`` /</span>
-<span class="sd">    ``matgl.apps.pes`` are first imported, and the conditional imports inside</span>
-<span class="sd">    those packages decide which backend-specific classes (e.g.</span>
-<span class="sd">    ``matgl.models.CHGNet``) are exposed. Mutating ``matgl.config.BACKEND``</span>
-<span class="sd">    after those modules have been loaded does not re-run the imports, so a</span>
-<span class="sd">    second forcefield call requesting a different backend in the same Python</span>
-<span class="sd">    process raises ``AttributeError: module &#39;matgl.models&#39; has no attribute</span>
-<span class="sd">    &#39;CHGNet&#39;`` when ``matgl.load_model`` looks up the class.</span>
-
-<span class="sd">    Reload the affected submodules so subsequent loads pick the correct</span>
-<span class="sd">    backend-specific implementations. No-op if the backend is already set.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-
-    <span class="kn">import</span><span class="w"> </span><span class="nn">matgl</span>
-
-    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="n">matgl</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">BACKEND</span><span class="p">:</span>
-        <span class="k">return</span>
-
-    <span class="n">matgl</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">BACKEND</span> <span class="o">=</span> <span class="n">backend</span>
-    <span class="c1"># Submodules that read BACKEND at import time and need to be re-evaluated</span>
-    <span class="c1"># so that backend-specific classes/functions get re-bound.</span>
-    <span class="k">for</span> <span class="n">modname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;matgl.models&quot;</span><span class="p">,</span> <span class="s2">&quot;matgl.apps.pes&quot;</span><span class="p">,</span> <span class="s2">&quot;matgl.apps&quot;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">modname</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-            <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">modname</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="revert_default_dtype">
@@ -2044,7 +2009,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=fd825880"></script>
+</div><script src="../../../_static/documentation_options.js?v=59fadc99"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

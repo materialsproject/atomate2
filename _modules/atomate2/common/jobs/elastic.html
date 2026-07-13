@@ -559,6 +559,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/atomate2.common.utils.html">atomate2.common.utils</a><input aria-label="Toggle navigation of atomate2.common.utils" class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.check_class_name.html">check_class_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
@@ -1410,6 +1411,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.analysis.elastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_strain_states</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.schemas.elastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticDocument</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_class_name</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -1418,7 +1421,7 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.forcefields.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForceFieldRelaxMaker</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.torchsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">TorchSimOptimizeMaker</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -1501,14 +1504,19 @@
     <span class="n">structure</span><span class="p">:</span> <span class="n">Structure</span><span class="p">,</span>
     <span class="n">deformations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Deformation</span><span class="p">],</span>
     <span class="n">prev_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">prev_dir_argname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">elastic_relax_maker</span><span class="p">:</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prev_dir_argname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">elastic_relax_maker</span><span class="p">:</span> <span class="n">BaseVaspMaker</span>
+    <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span>
+    <span class="o">|</span> <span class="n">TorchSimOptimizeMaker</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">socket</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run elastic deformations.</span>
 
-<span class="sd">    Note, this job will replace itself with N relaxation calculations, where N is</span>
-<span class="sd">    the number of deformations.</span>
+<span class="sd">    Note, this job will replace itself with N relaxation calculations,</span>
+<span class="sd">    or a single batched calculation using the socket interface to run all</span>
+<span class="sd">    deformations simultaneously. This results in lower overhead as well as</span>
+<span class="sd">    parallel relaxation of the deformations for TorchSim.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1518,46 +1526,81 @@
 <span class="sd">        The deformations to apply.</span>
 <span class="sd">    prev_dir : str or Path or None</span>
 <span class="sd">        A previous directory to use for copying outputs.</span>
-<span class="sd">    prev_dir_argname: str</span>
-<span class="sd">        argument name for the prev_dir variable</span>
-<span class="sd">    elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker</span>
-<span class="sd">        A VaspMaker or a ForceFieldMaker to use to generate the elastic relaxation jobs.</span>
+<span class="sd">    prev_dir_argname: str or None</span>
+<span class="sd">        Argument name for the prev_dir variable.</span>
+<span class="sd">    elastic_relax_maker : .BaseVaspMaker, .ForceFieldRelaxMaker, or</span>
+<span class="sd">        .TorchSimOptimizeMaker</span>
+<span class="sd">        A VaspMaker, ForceFieldMaker, or TorchSimMaker to use to generate the elastic</span>
+<span class="sd">        relaxation jobs.</span>
+<span class="sd">    socket : bool</span>
+<span class="sd">        If True, uses the socket-io interface to run all deformations in a single</span>
+<span class="sd">        job, reducing overhead. In the specific case of TorchSim, this enables batching</span>
+<span class="sd">        of all structure relaxations.</span>
+<span class="sd">        Note: socket=True is not supported for BaseVaspMaker.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">relaxations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_deformations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">deformations</span><span class="p">)</span>
+    <span class="n">elastic_jobs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">deformation</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deformations</span><span class="p">):</span>
-        <span class="c1"># deform the structure</span>
+
+    <span class="k">if</span> <span class="n">socket</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elastic_relax_maker</span><span class="p">,</span> <span class="n">BaseVaspMaker</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;socket=True is not supported for BaseVaspMaker.&quot;</span><span class="p">)</span>
+
+    <span class="n">deformed_structures</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">deformation</span> <span class="ow">in</span> <span class="n">deformations</span><span class="p">:</span>
         <span class="n">dst</span> <span class="o">=</span> <span class="n">DeformStructureTransformation</span><span class="p">(</span><span class="n">deformation</span><span class="o">=</span><span class="n">deformation</span><span class="p">)</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">TransformedStructure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">transformations</span><span class="o">=</span><span class="p">[</span><span class="n">dst</span><span class="p">])</span>
-        <span class="n">deformed_structure</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">final_structure</span>
+        <span class="n">deformed_structures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">final_structure</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-            <span class="c1"># write details of the transformation to the transformations.json file</span>
-            <span class="c1"># this file will automatically get added to the task document and allow</span>
-            <span class="c1"># the elastic builder to reconstruct the elastic document; note the &quot;:&quot; is</span>
-            <span class="c1"># automatically converted to a &quot;.&quot; in the filename.</span>
+            <span class="c1"># Write details of the transformation to the transformations.json file</span>
             <span class="n">elastic_relax_maker</span><span class="o">.</span><span class="n">write_additional_data</span><span class="p">[</span><span class="s2">&quot;transformations:json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts</span>
 
-        <span class="n">elastic_job_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">prev_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">prev_dir_argname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">elastic_job_kwargs</span><span class="p">[</span><span class="n">prev_dir_argname</span><span class="p">]</span> <span class="o">=</span> <span class="n">prev_dir</span>
-        <span class="c1"># create the job</span>
-        <span class="n">relax_job</span> <span class="o">=</span> <span class="n">elastic_relax_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">deformed_structure</span><span class="p">,</span> <span class="o">**</span><span class="n">elastic_job_kwargs</span><span class="p">)</span>
-        <span class="n">relax_job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">deformations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">relaxations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relax_job</span><span class="p">)</span>
+    <span class="n">elastic_job_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">prev_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">prev_dir_argname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">elastic_job_kwargs</span><span class="p">[</span><span class="n">prev_dir_argname</span><span class="p">]</span> <span class="o">=</span> <span class="n">prev_dir</span>
 
-        <span class="c1"># extract the outputs we want</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">,</span>
-            <span class="s2">&quot;deformation&quot;</span><span class="p">:</span> <span class="n">deformation</span><span class="p">,</span>
-            <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-            <span class="s2">&quot;job_dir&quot;</span><span class="p">:</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
-        <span class="p">}</span>
+    <span class="k">if</span> <span class="n">socket</span><span class="p">:</span>
+        <span class="n">batched_job</span> <span class="o">=</span> <span class="n">elastic_relax_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+            <span class="n">deformed_structures</span><span class="p">,</span> <span class="o">**</span><span class="n">elastic_job_kwargs</span>
+        <span class="p">)</span>
+        <span class="n">batched_job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="s2">&quot; batched_socket&quot;</span><span class="p">)</span>
+        <span class="n">elastic_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batched_job</span><span class="p">)</span>
 
-        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">deformation</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deformations</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">check_class_name</span><span class="p">(</span><span class="n">elastic_relax_maker</span><span class="p">,</span> <span class="s2">&quot;TorchSimOptimizeMaker&quot;</span><span class="p">):</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="n">batched_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                    <span class="s2">&quot;deformation&quot;</span><span class="p">:</span> <span class="n">deformation</span><span class="p">,</span>
+                    <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="n">batched_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                    <span class="s2">&quot;job_dir&quot;</span><span class="p">:</span> <span class="n">batched_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="n">batched_job</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">,</span>
+                    <span class="s2">&quot;deformation&quot;</span><span class="p">:</span> <span class="n">deformation</span><span class="p">,</span>
+                    <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="n">batched_job</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                    <span class="s2">&quot;job_dir&quot;</span><span class="p">:</span> <span class="n">batched_job</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 
-    <span class="n">relax_flow</span> <span class="o">=</span> <span class="n">Flow</span><span class="p">(</span><span class="n">relaxations</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">replace</span><span class="o">=</span><span class="n">relax_flow</span><span class="p">)</span></div>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">deformed_structure</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deformed_structures</span><span class="p">):</span>
+            <span class="n">relax_job</span> <span class="o">=</span> <span class="n">elastic_relax_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+                <span class="n">deformed_structure</span><span class="p">,</span> <span class="o">**</span><span class="n">elastic_job_kwargs</span>
+            <span class="p">)</span>
+            <span class="n">relax_job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_deformations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">elastic_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relax_job</span><span class="p">)</span>
+
+            <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">,</span>
+                <span class="s2">&quot;deformation&quot;</span><span class="p">:</span> <span class="n">deformations</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                <span class="s2">&quot;uuid&quot;</span><span class="p">:</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                <span class="s2">&quot;job_dir&quot;</span><span class="p">:</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="n">elastic_flow</span> <span class="o">=</span> <span class="n">Flow</span><span class="p">(</span><span class="n">elastic_jobs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">replace</span><span class="o">=</span><span class="n">elastic_flow</span><span class="p">)</span></div>
 
 
 
@@ -1621,7 +1664,7 @@
             <span class="n">failed_uuids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">])</span>
             <span class="k">continue</span>
 
-        <span class="n">stresses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Stress</span><span class="p">(</span><span class="n">stress_sign_factor</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;stress&quot;</span><span class="p">])))</span>
+        <span class="n">stresses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Stress</span><span class="p">(</span><span class="n">stress_sign_factor</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;stress&quot;</span><span class="p">])))</span>
         <span class="n">deformations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Deformation</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;deformation&quot;</span><span class="p">]))</span>
         <span class="n">uuids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;uuid&quot;</span><span class="p">])</span>
         <span class="n">job_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;job_dir&quot;</span><span class="p">])</span>
@@ -1694,7 +1737,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=fd825880"></script>
+</div><script src="../../../../_static/documentation_options.js?v=59fadc99"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
