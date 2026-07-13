@@ -9,12 +9,14 @@ simulations of magnetic materials.
     (materialsproject/pymatgen#4595, merged 2026-03-02, first released in
     pymatgen 2026.3.23). atomate2's
     :class:`~atomate2.common.flows.exchange.ExchangeMaker` still needs them, so
-    this is a verbatim copy of the file's final pre-removal state (pymatgen
+    this started as a copy of the file's final pre-removal state (pymatgen
     commit ``8785afd0d801``, the last commit to touch it, released as
-    pymatgen 2025.10.7). The original author is Nathan C. Frey (``ncfrey``);
-    ``HeisenbergMapper``, on which this depends, is still shipped by pymatgen.
+    pymatgen 2025.10.7) and has since been adapted to the reworked
+    ``HeisenbergModel`` API: per-ordering ``site_labels`` and the ``igraph``
+    interaction graph replace the old ``unique_site_ids`` dict and
+    ``_get_j_exc`` lookup. The original author is Nathan C. Frey (``ncfrey``).
     It is excluded from ruff (see ``[tool.ruff] extend-exclude`` in
-    ``pyproject.toml``) so it stays a faithful copy of the upstream source.
+    ``pyproject.toml``).
 
 This module depends on a compiled vampire executable available in the PATH.
 Please download at https://vampire.york.ac.uk/download/ and
@@ -37,7 +39,6 @@ import pandas as pd
 from monty.dev import requires
 from monty.json import MSONable
 
-from pymatgen.analysis.magnetism.heisenberg import HeisenbergMapper
 from atomate2.vampire.schemas.vampire_output import VampireOutput
 
 __author__ = "ncfrey"
@@ -57,12 +58,12 @@ class VampireCaller:
     information to compute the critical temperature with classical Monte Carlo.
 
     Attributes:
-            sgraph (StructureGraph): Ground state graph.
-            unique_site_ids (dict): Maps each site to its unique identifier
-            nn_interactions (dict): {i: j} pairs of NN interactions
-                between unique sites.
-            ex_params (dict): Exchange parameter values (meV/atom)
-            mft_t (float): Mean field theory estimate of critical T
+            structure (Structure): Ground state structure (magnetic ions only).
+            site_labels (list[int]): Parent sublattice id of each site in the
+                ground state structure.
+            igraph (StructureGraph): Ground state graph with the fitted J_ij
+                exchange values (meV) as edge weights.
+            javg (float): <J> average exchange parameter estimate (meV).
             mat_name (str): Formula unit label for input files
             mat_id_dict (dict): Maps sites to material id # for vampire
                 indexing.
@@ -75,8 +76,6 @@ class VampireCaller:
     )
     def __init__(
         self,
-        ordered_structures=None,
-        energies=None,
         mc_box_size=4.0,
         equil_timesteps=2000,
         mc_timesteps=4000,
@@ -91,8 +90,6 @@ class VampireCaller:
         * temp_increment (int): Temp step size, defaults to 25 K.
 
         Args:
-            ordered_structures (list): Structure objects with magmoms.
-            energies (list): Energies of each relaxed magnetic structure.
             mc_box_size (float): x=y=z dimensions (nm) of MC simulation box
             equil_timesteps (int): number of MC steps for equilibrating
             mc_timesteps (int): number of MC steps for averaging
@@ -117,21 +114,12 @@ class VampireCaller:
         else:
             self.user_input_settings = user_input_settings
 
-        # Get exchange parameters and set instance variables
-        if not hm:
-            hmapper = HeisenbergMapper(ordered_structures, energies, cutoff=3.0, tol=0.02)
-
-            hm = hmapper.get_heisenberg_model()
-
         # Attributes from HeisenbergModel
-        self.hm = hm
-        self.structure = hm.structures[0]  # ground state
-        self.sgraph = hm.sgraphs[0]  # ground state graph
-        self.unique_site_ids = hm.unique_site_ids
-        self.nn_interactions = hm.nn_interactions
-        self.dists = hm.dists
-        self.tol = hm.tol
-        self.ex_params = hm.ex_params
+        if hm is None:
+            raise ValueError("A fitted HeisenbergModel (hm=...) is required.")
+        self.structure = hm.structures[0]  # ground state (magnetic ions only)
+        self.site_labels = hm.site_labels[0]  # site -> parent sublattice id
+        self.igraph = hm.igraph  # ground state graph, J_ij edge weights in meV
         self.javg = hm.javg
 
         # Full structure name before reducing to only magnetic ions
@@ -173,70 +161,35 @@ class VampireCaller:
         mat_name = self.mat_name
         magmoms = structure.site_properties["magmom"]
 
-        # Maps sites to material id for vampire inputs
-        mat_id_dict = {}
+        # A vampire material is a (sublattice, spin direction) group: one mat
+        # per sublattice, two if it hosts both spin-up and spin-down sites.
+        mat_ids = {}  # (sublattice id, spin sign) -> material id (1-indexed)
+        mat_id_dict = {}  # site -> material id, for vampire inputs
+        for site, (sub_id, magmom) in enumerate(zip(self.site_labels, magmoms, strict=True)):
+            group = (sub_id, magmom > 0)
+            mat_ids.setdefault(group, len(mat_ids) + 1)
+            mat_id_dict[site] = mat_ids[group]
 
-        n_mats = 0
-        for key in self.unique_site_ids:
-            spin_up, spin_down = False, False
-            n_mats += 1  # at least 1 mat for each unique site
-
-            # Check which spin sublattices exist for this site id
-            for site in key:
-                if magmoms[site] > 0:
-                    spin_up = True
-                if magmoms[site] < 0:
-                    spin_down = True
-
-            # Assign material id for each site
-            for site in key:
-                if spin_up and not spin_down:
-                    mat_id_dict[site] = n_mats
-                if spin_down and not spin_up:
-                    mat_id_dict[site] = n_mats
-                if spin_up and spin_down:
-                    # Check if spin up or down shows up first
-                    m0 = magmoms[key[0]]
-                    if magmoms[site] > 0 and m0 > 0:
-                        mat_id_dict[site] = n_mats
-                    if magmoms[site] < 0 and m0 < 0:
-                        mat_id_dict[site] = n_mats
-                    if magmoms[site] > 0 > m0:
-                        mat_id_dict[site] = n_mats + 1
-                    if magmoms[site] < 0 < m0:
-                        mat_id_dict[site] = n_mats + 1
-
-            # Increment index if two sublattices
-            if spin_up and spin_down:
-                n_mats += 1
-
+        n_mats = len(mat_ids)
         mat_file = [f"material:num-materials={n_mats}"]
 
-        for key in self.unique_site_ids:
-            i = self.unique_site_ids[key]  # unique site id
+        # One representative site per material for the element and moment
+        reps = {}
+        for site, mat_id in mat_id_dict.items():
+            reps.setdefault(mat_id, site)
 
-            for site in key:
-                mat_id = mat_id_dict[site]
+        for mat_id, site in sorted(reps.items()):
+            atom = structure[site].species.reduced_formula
+            spin = 1 if magmoms[site] > 0 else -1
 
+            mat_file += [f"material[{mat_id}]:material-element={atom}"]
+            mat_file += [
+                f"material[{mat_id}]:damping-constant=1.0",
+                f"material[{mat_id}]:uniaxial-anisotropy-constant=1.0e-24",
                 # Only positive magmoms allowed
-                m_magnitude = abs(magmoms[site])
-
-                if magmoms[site] > 0:
-                    spin = 1
-                elif magmoms[site] < 0:
-                    spin = -1
-                else:
-                    spin = 0
-
-                atom = structure[i].species.reduced_formula
-
-                mat_file += [f"material[{mat_id}]:material-element={atom}"]
-                mat_file += [
-                    f"material[{mat_id}]:damping-constant=1.0",
-                    f"material[{mat_id}]:uniaxial-anisotropy-constant=1.0e-24",  # xx - do we need this?
-                    f"material[{mat_id}]:atomic-spin-moment={m_magnitude:.2f} !muB",
-                    f"material[{mat_id}]:initial-spin-direction=0,0,{spin}",
-                ]
+                f"material[{mat_id}]:atomic-spin-moment={abs(magmoms[site]):.2f} !muB",
+                f"material[{mat_id}]:initial-spin-direction=0,0,{spin}",
+            ]
 
         mat_file = "\n".join(mat_file)
         mat_file_name = f"{mat_name}.mat"
@@ -346,29 +299,24 @@ class VampireCaller:
             mat_id = self.mat_id_dict[site] - 1
             ucf += [f"{site} {r[0]:.10f} {r[1]:.10f} {r[2]:.10f} {mat_id} 0 0"]
 
-        # J_ij exchange interaction matrix
-        sgraph = self.sgraph
+        # J_ij exchange interaction matrix; the interaction graph carries the
+        # fitted J_ij (meV) of every bond as an edge weight.
+        igraph = self.igraph
         n_inter = 0
-        for idx in range(len(sgraph.graph.nodes)):
-            n_inter += sgraph.get_coordination_of_site(idx)
+        for idx in range(len(igraph.graph.nodes)):
+            n_inter += igraph.get_coordination_of_site(idx)
 
         ucf += ["# Interactions"]
         ucf += [f"{n_inter} isotropic"]
 
         iid = 0  # counts number of interaction
-        for idx in range(len(sgraph.graph.nodes)):
-            connections = sgraph.get_connected_sites(idx)
-            for c in connections:
-                jimage = c[1]  # relative integer coordinates of atom j
-                dx = jimage[0]
-                dy = jimage[1]
-                dz = jimage[2]
-                j = c[2]  # index of neighbor
-                dist = round(c[-1], 2)
+        for idx in range(len(igraph.graph.nodes)):
+            for conn in igraph.get_connected_sites(idx):
+                dx, dy, dz = conn.jimage  # relative integer coordinates of atom j
+                j = conn.index  # index of neighbor
 
-                # Look up J_ij between the sites
-                # if case: Just use <J> estimate
-                j_exc = self.hm.javg if self.avg is True else self.hm._get_j_exc(idx, j, dist)
+                # Just use the <J> estimate, or the fitted per-bond value
+                j_exc = self.javg if self.avg is True else conn.weight
 
                 # Convert J_ij from meV to Joules
                 j_exc *= 1.6021766e-22
