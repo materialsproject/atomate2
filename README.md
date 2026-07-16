@@ -90,6 +90,25 @@ atomate2 workflows can be run using the [jobflow-remote] or [FireWorks] software
 Atomate2 is a Python 3.10+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
+### SIESTA workflows
+
+This build adds SIESTA workflows under `atomate2.siesta`. Install with the `siesta`
+extra so all SIESTA-specific dependencies are pulled in:
+
+```bash
+# from PyPI
+pip install atomate2[siesta]
+
+# or from a local clone (editable / development)
+git clone https://github.com/materialsproject/atomate2.git
+cd atomate2
+pip install -e ".[siesta]"
+```
+
+The `[siesta]` extra installs `sisl`, `pyfiglet`, `questionary`, `rich`, `colorama`,
+`seaborn`, and `atomate2[ase,phonons]` (ASE + phonopy/seekpath). Without it, importing
+`atomate2.siesta` fails with a `ModuleNotFoundError` (e.g. `No module named 'sisl'`).
+
 ## Tutorials
 
 The documentation includes comprehensive tutorials and reference information to get you

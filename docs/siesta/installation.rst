@@ -12,13 +12,28 @@ You can install `atomate2siesta` directly from its Git repository using `pip`. R
 
    pip install atomate2[siesta]
 
-or
+or, to install from a local clone in editable / development mode:
 
 .. code-block:: bash
 
    git clone https://github.com/materialsproject/atomate2.git
-   cd atomate2siesta
-   pip install .
+   cd atomate2
+   pip install -e ".[siesta]"
+
+.. important::
+   Always include the ``[siesta]`` extra. Installing the base package
+   (``pip install .`` / ``pip install -e .``) does **not** pull in the
+   SIESTA-specific dependencies, and importing ``atomate2.siesta`` will then fail
+   with a ``ModuleNotFoundError`` such as ``No module named 'sisl'`` or
+   ``No module named 'pyfiglet'``. The ``[siesta]`` extra installs:
+
+   - ``sisl>=0.16.2`` — SIESTA structure / FDF handling
+   - ``pyfiglet`` — CLI banner
+   - ``questionary>=2.0.0`` — interactive CLI prompts
+   - ``rich`` — formatted terminal output
+   - ``colorama``
+   - ``seaborn`` — plotting
+   - ``atomate2[ase, phonons]`` — ASE + phonopy / seekpath for phonon workflows
 
 .. note::
    you can use `hash -r` command if cli not working
