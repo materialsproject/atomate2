@@ -130,6 +130,17 @@ To build the translated (Persian/Farsi) site:
 sphinx-build -b html -D language=fa docs docs/_build/html-fa
 ```
 
+The full build autodocs every atomate2 code, so it needs their optional
+dependencies (e.g. `abipy`, `pymatgen-io-aims`) — without them Sphinx emits
+import warnings for those API pages (harmless, but slow and noisy). For a fast,
+quiet build of just the SIESTA docs — English or Persian — set `SIESTA_DOCS_ONLY=1`
+to skip the `reference/` API autodoc:
+
+```bash
+SIESTA_DOCS_ONLY=1 sphinx-build -b html docs docs/_build/html                    # English
+SIESTA_DOCS_ONLY=1 sphinx-build -b html -D language=fa docs docs/_build/html-fa  # Persian
+```
+
 ## Tutorials
 
 The documentation includes comprehensive tutorials and reference information to get you

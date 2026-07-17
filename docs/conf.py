@@ -50,7 +50,15 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["Thumbs.db", ".DS_Store", "test*.py"]
+exclude_patterns = ["Thumbs.db", ".DS_Store", "test*.py", "siesta/locale"]
+
+# Fast SIESTA-focused builds: set SIESTA_DOCS_ONLY=1 to skip the full-atomate2
+# API autodoc under reference/ (1000+ pages that import optional deps such as
+# abipy and pymatgen-io-aims, which are slow and noisy when not installed). The
+# SIESTA narrative docs -- including the Persian (fa) translations -- then build
+# in seconds. Do not use this for a production/full-site build.
+if os.environ.get("SIESTA_DOCS_ONLY"):
+    exclude_patterns += ["reference"]
 
 myst_heading_anchors = 2  # enable headings as link targets
 myst_enable_extensions = [
