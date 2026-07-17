@@ -4,10 +4,6 @@ Rerunning Failed Jobs in Jobflow-Remote
 
 Complete guide to handling failed jobs using ``jf`` CLI commands with project-specific execution.
 
-.. contents:: Table of Contents
-   :local:
-   :depth: 2
-
 Overview
 ========
 

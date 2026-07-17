@@ -4,10 +4,6 @@ Recipe Book: One-Line Workflows
 
 The **Recipe Book** is the fastest and easiest way to set up atomate2siesta workflows. It provides high-level "recipes" that transform complex multi-step calculations into simple one-liners.
 
-.. contents:: Quick Navigation
-   :local:
-   :depth: 2
-
 Overview
 ========
 

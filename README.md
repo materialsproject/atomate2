@@ -109,6 +109,27 @@ The `[siesta]` extra installs `sisl`, `pyfiglet`, `questionary`, `rich`, `colora
 `seaborn`, and `atomate2[ase,phonons]` (ASE + phonopy/seekpath). Without it, importing
 `atomate2.siesta` fails with a `ModuleNotFoundError` (e.g. `No module named 'sisl'`).
 
+### Building the documentation
+
+The docs are built with [Sphinx](https://www.sphinx-doc.org/). The doc dependencies are
+a [PEP 735](https://peps.python.org/pep-0735/) `dependency-group` (not an extra), so
+install them with `--group`, then build the HTML site (there is no `Makefile` — invoke
+`sphinx-build` directly):
+
+```bash
+pip install -e . --group docs
+sphinx-build -b html docs docs/_build/html
+```
+
+Open `docs/_build/html/index.html` in a browser. The SIESTA pages are under
+**User Guide → Codes → SIESTA**.
+
+To build the translated (Persian/Farsi) site:
+
+```bash
+sphinx-build -b html -D language=fa docs docs/_build/html-fa
+```
+
 ## Tutorials
 
 The documentation includes comprehensive tutorials and reference information to get you

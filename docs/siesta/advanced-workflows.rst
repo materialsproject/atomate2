@@ -12,10 +12,6 @@ Overview
 This page demonstrates how to construct sophisticated workflows by combining multiple
 calculation types, using advanced features, and optimizing for production use.
 
-.. contents::
-   :local:
-   :depth: 2
-
 ----
 
 Multi-Property Workflows

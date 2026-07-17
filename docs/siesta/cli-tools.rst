@@ -4,10 +4,6 @@ CLI Tools Overview
 
 atomate2siesta provides a comprehensive suite of command-line interface (CLI) tools for workflow generation, database management, cluster setup, and HPC job submission.
 
-.. contents:: Quick Navigation
-   :local:
-   :depth: 2
-
 Overview
 ========
 

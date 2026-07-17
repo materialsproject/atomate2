@@ -3,10 +3,6 @@ Troubleshooting Guide
 
 This guide helps you resolve common issues when using atomate2siesta.
 
-.. contents:: Quick Navigation
-   :local:
-   :depth: 2
-
 Installation Issues
 -------------------
 

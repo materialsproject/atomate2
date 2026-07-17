@@ -4,10 +4,6 @@ Default Values Reference
 
 This page documents all default values used by atomate2siesta. Understanding these defaults helps you make informed decisions about when to use them and when to customize.
 
-.. contents:: Quick Navigation
-   :local:
-   :depth: 2
-
 Overview
 ========
 
