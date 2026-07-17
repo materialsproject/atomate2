@@ -124,22 +124,28 @@ sphinx-build -b html docs docs/_build/html
 Open `docs/_build/html/index.html` in a browser. The SIESTA pages are under
 **User Guide → Codes → SIESTA**.
 
-To build the translated (Persian/Farsi) site:
+The SIESTA docs carry a language switcher (English ⇄ فارسی). It expects the
+Persian build to live under the English site's `fa/` subdirectory, so build
+English first, then Persian **into `<english-out>/fa`** (a sibling `html-fa/`
+dir will make the switcher links 404):
 
 ```bash
-sphinx-build -b html -D language=fa docs docs/_build/html-fa
+sphinx-build -b html docs docs/_build/html                 # English, at the root
+sphinx-build -b html -D language=fa docs docs/_build/html/fa   # Persian, nested under fa/
 ```
 
 The full build autodocs every atomate2 code, so it needs their optional
 dependencies (e.g. `abipy`, `pymatgen-io-aims`) — without them Sphinx emits
 import warnings for those API pages (harmless, but slow and noisy). For a fast,
-quiet build of just the SIESTA docs — English or Persian — set `SIESTA_DOCS_ONLY=1`
-to skip the `reference/` API autodoc:
+quiet build of just the SIESTA docs, set `SIESTA_DOCS_ONLY=1` to skip the
+`reference/` API autodoc:
 
 ```bash
-SIESTA_DOCS_ONLY=1 sphinx-build -b html docs docs/_build/html                    # English
-SIESTA_DOCS_ONLY=1 sphinx-build -b html -D language=fa docs docs/_build/html-fa  # Persian
+SIESTA_DOCS_ONLY=1 sphinx-build -b html docs docs/_build/html            # English
+SIESTA_DOCS_ONLY=1 sphinx-build -b html -D language=fa docs docs/_build/html/fa  # Persian
 ```
+
+Then open `docs/_build/html/index.html` (Persian at `docs/_build/html/fa/…`).
 
 ## Tutorials
 
