@@ -50,7 +50,17 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["Thumbs.db", ".DS_Store", "test*.py", "siesta/locale"]
+exclude_patterns = [
+    "Thumbs.db",
+    ".DS_Store",
+    "test*.py",
+    "siesta/locale",
+    # docs/siesta/tutorials/tutorials is a symlink to the repo-root tutorials/
+    # source tree (notebooks + raw sources); it is not Sphinx-ready docs, so keep
+    # it out of the build. The rendered tutorials live in siesta/tutorials-md and
+    # siesta/tutorials-auto.
+    "siesta/tutorials/tutorials",
+]
 
 # Fast SIESTA-focused builds: set SIESTA_DOCS_ONLY=1 to skip the full-atomate2
 # API autodoc under reference/ (1000+ pages that import optional deps such as
