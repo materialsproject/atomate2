@@ -26,10 +26,9 @@ from atomate2.siesta.run import run_siesta_socket
 from atomate2.siesta.run import should_stop_children
 from atomate2.siesta.schemas.task import SiestaTaskDoc
 
-# from atomate2.common.files import gzip_output_folder
-from atomate2.common.files import (
-    gzip_output_folder,
-)  # Moved from atomate2.common to consolidate Siesta-specific file utilities
+from atomate2.siesta.files import (
+    gzip_output_folder,  # SIESTA-specific variant (exclude_files + subfolder)
+)
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure

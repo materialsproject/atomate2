@@ -26,7 +26,7 @@ from atomate2.siesta.run import (
     run_optical_input,
 )
 from atomate2.siesta.schemas.task import SiestaTaskDoc
-from atomate2.common.files import gzip_output_folder
+from atomate2.siesta.files import gzip_output_folder
 
 
 from atomate2.siesta.utils.logo import print_fancy_logo

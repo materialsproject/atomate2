@@ -385,3 +385,61 @@ def extract_siesta_timing(dir_name: str | Path) -> float | None:
                 continue
 
     return None
+
+
+def gzip_output_folder(
+    directory: str | Path,
+    setting: bool | str,
+    files_list: list[str] | None = None,
+    exclude_files: list[str] | None = None,
+    move_to_subfolder: bool = True,
+    subfolder_name: str = "siesta_compressed",
+) -> None:
+    """
+    Zip the content of the SIESTA output folder based on the code setting.
+
+    SIESTA-specific variant of :func:`atomate2.common.files.gzip_output_folder`
+    that additionally supports excluding files from compression and moving the
+    compressed files into a subfolder to keep the job directory tidy.
+
+    Parameters
+    ----------
+    directory : str or Path
+        Directory in which to gzip files.
+    setting : bool or str
+        The setting determining which files to zip. If True all the files in
+        the directory will be zipped (except those in ``exclude_files``), if
+        "atomate" only the files in ``files_list``, if False no file will be
+        zipped.
+    files_list : list of str or None
+        List of files to be zipped in case setting is "atomate".
+    exclude_files : list of str or None
+        List of files to exclude from compression (always excluded regardless
+        of setting).
+    move_to_subfolder : bool
+        If True, move compressed files to a subfolder (default: True).
+    subfolder_name : str
+        Name of the subfolder for compressed files.
+    """
+    from atomate2.common.files import gzip_files
+
+    if setting == "atomate":
+        gzip_files(
+            directory=directory,
+            include_files=files_list,
+            exclude_files=exclude_files,
+            allow_missing=True,
+            force=True,
+        )
+    elif setting:
+        gzip_files(directory=directory, exclude_files=exclude_files, force=True)
+
+    # Move gzipped files to a subfolder to keep the job directory tidy
+    if move_to_subfolder and setting:
+        directory = Path(directory)
+        subfolder = directory / subfolder_name
+        subfolder.mkdir(exist_ok=True)
+
+        for gz_file in directory.glob("*.gz"):
+            if gz_file.is_file():
+                shutil.move(str(gz_file), str(subfolder / gz_file.name))
