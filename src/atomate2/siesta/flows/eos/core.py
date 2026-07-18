@@ -1059,9 +1059,11 @@ def plot_eos_parameter_timing(
             basis_labels.append(basis)
 
     positions = np.arange(len(basis_labels))
-    bp = ax2.boxplot(
-        basis_time_data, positions=positions, labels=basis_labels, patch_artist=True
-    )
+    bp = ax2.boxplot(basis_time_data, positions=positions, patch_artist=True)
+    # Set tick labels explicitly: the boxplot "labels" kwarg was renamed to
+    # "tick_labels" in matplotlib 3.9 and removed in later versions.
+    ax2.set_xticks(positions)
+    ax2.set_xticklabels(basis_labels)
 
     # Color boxes
     for patch, basis in zip(bp["boxes"], basis_labels):
