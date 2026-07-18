@@ -27,6 +27,31 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def get_siesta_run_env() -> dict[str, str]:
+    """
+    Build the environment for launching SIESTA.
+
+    Lua-driven runs (FLOOK builds: NEB, Lua relaxation/convergence scripts)
+    need the flos Lua library on ``LUA_PATH``; SIESTA's embedded interpreter
+    only searches the standard Lua locations. Derive ``LUA_PATH`` from
+    ``SETTINGS.FLOS_PATH`` when it is configured and ``LUA_PATH`` is not
+    already set in the environment.
+    """
+    env = dict(os.environ)
+    if SETTINGS.FLOS_PATH:
+        flos = SETTINGS.FLOS_PATH
+        flos_patterns = f"{flos}/?.lua;{flos}/?/init.lua"
+        existing = env.get("LUA_PATH")
+        # Prepend so the configured FLOS_PATH wins over any (possibly stale)
+        # LUA_PATH from the user's shell profile; keep existing entries as
+        # fallback and terminate with ';;' to append Lua's default paths.
+        env["LUA_PATH"] = (
+            f"{flos_patterns};{existing}" if existing else f"{flos_patterns};;"
+        )
+        logger.info(f"Setting LUA_PATH from FLOS_PATH: {env['LUA_PATH']}")
+    return env
+
+
 def run_siesta(
     siesta_cmd: str = None,
 ) -> None:
@@ -44,19 +69,12 @@ def run_siesta(
 
     siesta_cmd = expandvars(siesta_cmd)
     logger.info(f"Running command: {siesta_cmd}")
-    # return_code = subprocess.call(["/bin/bash", "-c", siesta_cmd], env=os.environ)
-    # Redirect stdout and stderr to /dev/null to suppress output
-    # with open(os.devnull, 'w') as devnull:
-    #     return_code = subprocess.call(
-    #         ["/bin/bash", "-c", siesta_cmd],
-    #         env=os.environ,
-    #         capture_output=True,
-    #         stdout=devnull,
-    #         stderr=devnull
-    #     )
-    # Capture stdout and stderr without displaying
+
     result = subprocess.run(
-        ["/bin/bash", "-c", siesta_cmd], env=os.environ, capture_output=True, text=True
+        ["/bin/bash", "-c", siesta_cmd],
+        env=get_siesta_run_env(),
+        capture_output=True,
+        text=True,
     )
     # Optionally log the output for debugging
     if result.stdout:

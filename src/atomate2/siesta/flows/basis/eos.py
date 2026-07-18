@@ -1350,6 +1350,9 @@ def plot_basis_functions(
 
         # Overlap
         overlap = phi_a * phi_b
+        # np.trapz was renamed to np.trapezoid in numpy 2.0
+        trapezoid = getattr(np, "trapezoid", None) or np.trapz
+        overlap_integral = trapezoid(overlap, r)
 
         ax3.fill_between(
             r,
@@ -1357,7 +1360,7 @@ def plot_basis_functions(
             overlap,
             alpha=0.4,
             color=colors[i],
-            label=f"ES={es:.3f} (overlap integral ∝ {np.trapz(overlap, r):.2f})",
+            label=f"ES={es:.3f} (overlap integral ∝ {overlap_integral:.2f})",
         )
 
     ax3.set_xlabel("r (bohr)", fontsize=12, fontweight="bold")

@@ -113,12 +113,17 @@ class SiestaJob(Job):
         directory = Path(directory)
         logger.info(f"Running SIESTA in {directory}")
 
+        # Environment with LUA_PATH derived from FLOS_PATH when needed
+        # (Lua-driven runs: NEB, Lua relaxation scripts)
+        from atomate2.siesta.run import get_siesta_run_env
+
         # Start SIESTA process
         # Return Popen for monitoring support
         process = subprocess.Popen(
             self.siesta_cmd,
             shell=True,
             cwd=directory,
+            env=get_siesta_run_env(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
