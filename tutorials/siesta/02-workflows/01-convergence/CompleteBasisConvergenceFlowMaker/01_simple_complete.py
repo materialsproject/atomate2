@@ -3,14 +3,14 @@
 
 from jobflow import run_locally
 from pymatgen.core import Structure
-from atomate2.siesta.flows.basis import CompleteBasisConvergenceMaker
+from atomate2.siesta.flows.basis import CompleteBasisConvergenceFlowMaker
 
 # Load structure
 structure = Structure.from_file("../../../00-structures/MgO_mp-1265_primitive.cif")
 
 # Create complete basis convergence workflow
 # Tests: 2 basis sizes × 2 energy_shifts × 2 split_norms = 8 calculations
-maker = CompleteBasisConvergenceMaker(
+maker = CompleteBasisConvergenceFlowMaker(
     basis_sizes=["DZ", "DZP"],  # Test 2 basis sizes
     energy_shifts=[0.01, 0.02],  # Test 2 energy shifts (Ry)
     split_norms=[0.15, 0.20],  # Test 2 split norms

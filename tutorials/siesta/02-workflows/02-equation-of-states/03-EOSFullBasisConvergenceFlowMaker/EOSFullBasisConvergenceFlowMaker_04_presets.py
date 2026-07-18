@@ -43,7 +43,7 @@ print("Full Basis Convergence with Tier Presets")
 print("=" * 50)
 
 # Step 1: Get the tier preset configuration
-preset_name = "bulk_semiconductor"
+preset_name = "relax_bulk_semiconductor"
 preset = get_tier_preset(preset_name)
 
 print(f"\nUsing preset: {preset_name}")
@@ -105,7 +105,7 @@ print("=" * 50)
 presets_to_show = [
     "relax_standard",
     "relax_high_accuracy",
-    "bulk_semiconductor",
+    "relax_bulk_semiconductor",
     "bulk_metal",
 ]
 

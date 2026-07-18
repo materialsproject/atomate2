@@ -80,7 +80,7 @@ print(f"Bulk atoms: {surface_info['bulk']}")
 # ============================================================================
 # Gas-phase maker for O₂, H₂O, H₂ references
 gas_relax_maker = RelaxMaker()
-gas_relax_maker = apply_tier_preset(gas_relax_maker, "electrocatalysis_gas_phase_dirty")
+gas_relax_maker = apply_tier_preset(gas_relax_maker, "electrocatalysis_gas_phase")
 gas_phase_maker = GasPhaseMoleculeMaker(relax_maker=gas_relax_maker)
 
 # Static maker for clean surface (if energy not provided)

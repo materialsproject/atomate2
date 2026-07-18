@@ -13,10 +13,12 @@ unit_cell = Structure(
 
 slab = unit_cell.make_supercell([2, 2, 1])
 
-b_indices = [i for i, site in enumerate(slab) if site.specie.symbol == "B"]
-defect_slab = create_vacancy_with_ghost(slab, b_indices[0])
+# Use a nitrogen vacancy: N has an automatic chemical-potential reference
+# (elemental boron does not - it would need explicit chemical_potentials)
+n_indices = [i for i, site in enumerate(slab) if site.specie.symbol == "N"]
+defect_slab = create_vacancy_with_ghost(slab, n_indices[0])
 
-print(f"V_B^+1 in hBN 2×2×1 supercell ({len(slab)} atoms)")
+print(f"V_N^+1 in hBN 2×2×1 supercell ({len(slab)} atoms)")
 
 # Slab2D: Anisotropic dielectric screening for 2D materials
 # In-plane (ε∥): stronger screening due to π-electrons
@@ -43,8 +45,8 @@ maker.host_static_maker = apply_tier_preset(maker.host_static_maker, "defect_dir
 flow = maker.make(
     defect_slab,
     slab,
-    slab[b_indices[0]].frac_coords.tolist(),
-    "B",
+    slab[n_indices[0]].frac_coords.tolist(),
+    "N",
 )
 
 print("Running workflow...")

@@ -34,17 +34,15 @@ print("\nMethod 3: Add new parameters via powerup")
 # Create basic maker
 maker3 = SiestaEosFlowMaker(
     dry_run=True,
-    user_params={
-        "PAO.BasisSize": "DZP",
-    },
 )
 
 workflow3 = maker3.make(structure)
 
-# Add mesh cutoff and other parameters via powerup
+# Add basis, mesh cutoff and other parameters via powerup
 workflow3 = update_user_siesta_settings(
     workflow3,
     {
+        "PAO.BasisSize": "DZP",  # Add new parameter
         "Mesh.cutoff": "400 Ry",  # Add new parameter
         "a2s_kpts": [6, 6, 6],  # Add new parameter
         # "XC.functional": "GGA",  # Add new parameter

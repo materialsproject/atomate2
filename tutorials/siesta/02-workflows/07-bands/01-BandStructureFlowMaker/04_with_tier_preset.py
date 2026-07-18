@@ -33,8 +33,8 @@ scf_maker = StaticMaker.scf(use_custodian=True)
 bands_maker = BandStructureMaker.bandstructure_calculation(use_custodian=True)
 
 # Apply tier preset to all makers
-# Options: basic_dirty, basic, intermediate, advanced, expert
-TIER = "intermediate"
+# Options (presets): relax_dirty, relax_standard, band_structure, relax_high_accuracy
+TIER = "band_structure"
 
 relax_maker = apply_tier_preset(relax_maker, TIER)
 scf_maker = apply_tier_preset(scf_maker, TIER)

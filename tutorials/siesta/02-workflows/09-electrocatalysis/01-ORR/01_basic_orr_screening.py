@@ -16,7 +16,7 @@ Expected results for Pt(111):
 Spin handling:
 - O₂: Triplet state (S=1), spin-polarized calculation, 2.0 μB
 - H₂O, H₂: Singlet (S=0), non-spin-polarized
-- Automatic spin detection via electrocatalysis_gas_phase_dirty preset
+- Automatic spin detection via electrocatalysis_gas_phase preset
 
 Diffuse orbitals for surfaces:
 - Surface atoms automatically detected (outermost atomic layer at vacuum)
@@ -107,7 +107,7 @@ slab_maker = apply_tier_preset(
 # Gas-phase reference calculations (O₂, H₂O, H₂)
 # Uses spin-polarized DFT for O₂ (triplet), non-polarized for H₂O/H₂
 gas_relax_maker = RelaxMaker()
-gas_relax_maker = apply_tier_preset(gas_relax_maker, "electrocatalysis_gas_phase_dirty")
+gas_relax_maker = apply_tier_preset(gas_relax_maker, "electrocatalysis_gas_phase")
 gas_phase_maker = GasPhaseMoleculeMaker(relax_maker=gas_relax_maker)
 
 # Adsorption calculations (slab+adsorbate and gas-phase molecules)

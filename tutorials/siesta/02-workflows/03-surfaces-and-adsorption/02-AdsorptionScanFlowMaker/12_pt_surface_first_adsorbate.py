@@ -77,7 +77,7 @@ print(f"Saved slab structure to {output_dir / 'pt111_slab.cif'}")
 
 # Also save the PAO.BasisSizes for reuse
 with open(output_dir / "pao_basissizes.txt", "w") as f:
-    f.write(pao_basissizes)
+    json.dump(pao_basissizes, f, indent=2)
 print(f"Saved PAO.BasisSizes to {output_dir / 'pao_basissizes.txt'}")
 
 # ============================================================================
@@ -91,7 +91,7 @@ slab_maker = apply_tier_preset(
 )
 
 adsorbate_maker = RelaxMaker.fixed_cell_relaxation()
-adsorbate_maker = apply_tier_preset(adsorbate_maker, "electrocatalysis_gas_phase_dirty")
+adsorbate_maker = apply_tier_preset(adsorbate_maker, "electrocatalysis_gas_phase")
 
 # ============================================================================
 # First adsorbate: O atom

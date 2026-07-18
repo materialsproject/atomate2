@@ -27,7 +27,7 @@ MODE = 4  # Change to 1, 2, 3, or 4
 
 # Structure
 structure = Structure.from_file(
-    "../../../../tutorials/00-structures/interface_relaxed.cif"
+    "../../../00-structures/interface_relaxed.cif"
 )
 
 # ============================================================================

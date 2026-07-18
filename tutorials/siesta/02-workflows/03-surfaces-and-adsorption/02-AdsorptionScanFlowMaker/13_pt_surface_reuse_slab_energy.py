@@ -102,8 +102,8 @@ print(f"Loaded slab energy: {slab_energy:.6f} eV")
 basissizes_file = source_dir / "pao_basissizes.txt"
 if basissizes_file.exists():
     with open(basissizes_file) as f:
-        pao_basissizes = f.read().strip()
-    print(f"Loaded PAO.BasisSizes: {pao_basissizes[:50]}...")
+        pao_basissizes = json.load(f)
+    print(f"Loaded PAO.BasisSizes for {len(pao_basissizes)} species")
 else:
     # Generate PAO.BasisSizes using apply_diffuse_basis_to_surface
     from atomate2.siesta.sets.utils import apply_diffuse_basis_to_surface
@@ -131,7 +131,7 @@ slab_maker = apply_tier_preset(
 )
 
 adsorbate_maker = RelaxMaker.fixed_cell_relaxation()
-adsorbate_maker = apply_tier_preset(adsorbate_maker, "electrocatalysis_gas_phase_dirty")
+adsorbate_maker = apply_tier_preset(adsorbate_maker, "electrocatalysis_gas_phase")
 
 # ============================================================================
 # Define additional adsorbates

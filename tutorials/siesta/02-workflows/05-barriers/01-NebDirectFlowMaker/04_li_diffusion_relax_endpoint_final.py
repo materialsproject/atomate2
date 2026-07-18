@@ -17,7 +17,7 @@ NEW in v1.0.0: relax_endpoints now accepts:
 from jobflow import run_locally
 from pymatgen.core import Structure
 
-from atomate2.siesta.flows.defects import NebDirectFlowMaker
+from atomate2.siesta.flows.neb import NebDirectFlowMaker
 from atomate2.siesta.jobs.core import LuaMaker, RelaxMaker
 
 # Load initial and final structures

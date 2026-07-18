@@ -94,7 +94,7 @@ presets_to_show = [
     "relax_high_accuracy",
     "2d_semiconductor",
     "2d_metal",
-    "bulk_semiconductor",
+    "relax_bulk_semiconductor",
 ]
 
 for preset_name in presets_to_show:
