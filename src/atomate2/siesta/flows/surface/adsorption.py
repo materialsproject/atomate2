@@ -389,6 +389,11 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
     name: str = "adsorption_scan"
     slab_static_maker: StaticMaker = field(default_factory=StaticMaker)
     adsorbate_static_maker: StaticMaker = field(default_factory=StaticMaker)
+    # Precalculated reference energies (eV). When provided, the corresponding
+    # static calculation is skipped and the given energy is used directly -
+    # enables multi-adsorbate screening with a single slab calculation.
+    precalc_slab_energy: float | None = None
+    precalc_adsorbate_energy: float | None = None
     grid_size: tuple[int, int] = (4, 4)
     height: float = 2.0
     heights: list[float] | None = None  # NEW: Explicit list of heights to scan
@@ -484,8 +489,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         total_sites = self.grid_size[0] * self.grid_size[1]
         total_sites_with_heights = total_sites * n_heights  # 3D grid (x, y, z)
         total_jobs = (
-            1  # slab energy
-            + 1  # adsorbate energy
+            (1 if self.precalc_slab_energy is None else 0)  # slab energy
+            + (1 if self.precalc_adsorbate_energy is None else 0)  # adsorbate energy
             + 1  # generate sites
             + total_sites_with_heights * 2  # each (x,y,z) site: calc + extract
             + 1  # analysis
@@ -521,30 +526,45 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
                 rotation_axis=self.rotation_axis,
             )
 
-        # 1. Calculate clean slab energy
-        job_counter["current"] += 1
-        logger.info(
-            f"[{job_counter['current']}/{job_counter['total']}] Creating clean slab energy calculation..."
-        )
-        slab_job = self.slab_static_maker.make(slab, prev_dir=prev_dir)
-        slab_job.name = (
-            f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_slab"
-        )
-        jobs.append(slab_job)
-
-        # 2. Calculate isolated adsorbate energy
-        job_counter["current"] += 1
-        logger.info(
-            f"[{job_counter['current']}/{job_counter['total']}] Creating adsorbate energy calculation..."
-        )
-        # Convert Molecule to Structure if needed (molecules need a box for SIESTA)
-        if isinstance(adsorbate, Molecule):
-            adsorbate_struct = molecule_to_structure_in_box(adsorbate, box_size=20.0)
-            ads_job = self.adsorbate_static_maker.make(adsorbate_struct)
+        # 1. Calculate clean slab energy (skipped when a precalculated energy
+        #    is provided, e.g. reused from a previous adsorbate scan)
+        slab_job = None
+        if self.precalc_slab_energy is None:
+            job_counter["current"] += 1
+            logger.info(
+                f"[{job_counter['current']}/{job_counter['total']}] Creating clean slab energy calculation..."
+            )
+            slab_job = self.slab_static_maker.make(slab, prev_dir=prev_dir)
+            slab_job.name = (
+                f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_slab"
+            )
+            jobs.append(slab_job)
         else:
-            ads_job = self.adsorbate_static_maker.make(adsorbate)
-        ads_job.name = f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_adsorbate"
-        jobs.append(ads_job)
+            logger.info(
+                "Reusing precalculated slab energy - skipping slab calculation"
+            )
+
+        # 2. Calculate isolated adsorbate energy (skipped when precalculated)
+        ads_job = None
+        if self.precalc_adsorbate_energy is None:
+            job_counter["current"] += 1
+            logger.info(
+                f"[{job_counter['current']}/{job_counter['total']}] Creating adsorbate energy calculation..."
+            )
+            # Convert Molecule to Structure if needed (molecules need a box for SIESTA)
+            if isinstance(adsorbate, Molecule):
+                adsorbate_struct = molecule_to_structure_in_box(
+                    adsorbate, box_size=20.0
+                )
+                ads_job = self.adsorbate_static_maker.make(adsorbate_struct)
+            else:
+                ads_job = self.adsorbate_static_maker.make(adsorbate)
+            ads_job.name = f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_adsorbate"
+            jobs.append(ads_job)
+        else:
+            logger.info(
+                "Reusing precalculated adsorbate energy - skipping adsorbate calculation"
+            )
 
         # 3. Generate adsorption sites
         job_counter["current"] += 1
@@ -787,13 +807,26 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         for site_job in site_calc_jobs:
             site_energies.append(site_job.output)
 
+        # Reference energies: either from the static jobs or precalculated
+        # values (plain floats or jobflow OutputReferences from another flow)
+        slab_energy = (
+            self.precalc_slab_energy
+            if slab_job is None
+            else slab_job.output.output.energy
+        )
+        adsorbate_energy = (
+            self.precalc_adsorbate_energy
+            if ads_job is None
+            else ads_job.output.output.energy
+        )
+
         # Create analysis job that creates all files in its directory
         analysis_job = _consolidated_analysis(
             slab=slab,
             adsorbate=adsorbate,
             site_energies=site_energies,
-            slab_energy=slab_job.output.output.energy,
-            adsorbate_energy=ads_job.output.output.energy,
+            slab_energy=slab_energy,
+            adsorbate_energy=adsorbate_energy,
             grid_size=self.grid_size,
             heights=heights,
             miller_indices=self.miller_indices,

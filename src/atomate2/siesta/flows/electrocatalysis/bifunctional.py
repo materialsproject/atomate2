@@ -582,12 +582,12 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         from copy import deepcopy
 
         constrained_relax_maker = deepcopy(self.adsorption_relax_maker)
-        # Add constraints to user_params
-        if constrained_relax_maker.user_params is None:
-            constrained_relax_maker.user_params = {}
-        constrained_relax_maker.user_params[
-            "%block Geometry.Constraints"
-        ] = constraints_block
+        # Add constraints to the input set generator's user parameters
+        # (makers keep their FDF parameters on input_set_generator)
+        generator = constrained_relax_maker.input_set_generator
+        if generator.user_params is None:
+            generator.user_params = {}
+        generator.user_params["%block Geometry.Constraints"] = constraints_block
 
         ads_maker = AdsorptionScanFlowMaker(
             grid_size=self.grid_size,
