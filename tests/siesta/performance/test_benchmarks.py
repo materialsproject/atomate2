@@ -14,6 +14,10 @@ from atomate2.siesta.sets.core import StaticSetGenerator
 from atomate2.siesta.sets.tiers import apply_tier_preset
 from atomate2.siesta.dataclass.registry import get_modules_for_tier
 
+# The benchmark fixture comes from the optional pytest-benchmark plugin;
+# skip this module cleanly when it is not installed.
+pytest.importorskip("pytest_benchmark")
+
 
 @pytest.fixture
 def simple_structure():
