@@ -215,7 +215,8 @@ def calculate_reaction_free_energies(
         Pressure in Pascal (default: 101325 Pa = 1 atm).
     ph : float
         pH of electrolyte (default: 0.0 for acidic).
-        Used for pH correction: ΔG_pH = -k_B T ln(10) × pH ≈ -0.059 eV × pH at 298 K.
+        Used for pH correction on proton-consuming steps:
+        ΔG_pH = +k_B T ln(10) × pH ≈ +0.059 eV × pH at 298 K (SHE scale).
     potential : float
         Electrode potential vs. SHE in Volts (default: 0.0 V).
         Modifies (H⁺ + e⁻) chemical potential: μ(H⁺ + e⁻) = ½μ(H₂) - eU.
@@ -246,7 +247,9 @@ def calculate_reaction_free_energies(
         - ΔE: DFT energy difference
         - ΔZPE: Zero-point energy correction
         - -TΔS: Entropy correction
-        - ΔG_pH: pH correction (-0.059 eV × pH at 298 K)
+        - ΔG_pH: pH correction (+0.059 eV × pH at 298 K for steps consuming
+          H⁺ + e⁻; μ(H⁺) decreases with pH, so reduction steps become harder
+          in alkaline media on the SHE scale)
         - -eU: Electrode potential contribution
 
     3. **Overpotential** (for ORR):
@@ -305,8 +308,10 @@ def calculate_reaction_free_energies(
     cumulative_G = [0.0]  # Start at ΔG = 0 for clean surface
 
     # pH correction (affects all proton-coupled steps)
-    # ΔG_pH = -k_B T ln(10) × pH
-    ph_correction = -KB * temperature * np.log(10) * ph  # eV
+    # μ(H⁺) = μ°(H⁺) - k_B T ln(10) × pH, so a step CONSUMING (H⁺ + e⁻)
+    # becomes harder at higher pH: ΔG_pH = +k_B T ln(10) × pH per pair
+    # (≈ +0.059 eV × pH at 298 K, SHE scale; on the RHE scale pH cancels)
+    ph_correction = KB * temperature * np.log(10) * ph  # eV
 
     for i, step in enumerate(pathway_steps):
         # Get number of electrons and protons transferred
@@ -355,8 +360,10 @@ def calculate_reaction_free_energies(
         if species and species in corrections:
             dG += corrections[species]
 
-        # Proton-electron pair corrections (CHE model)
-        # μ(H⁺ + e⁻) = ½μ(H₂) - eU + ΔG_pH
+        # Proton-electron pair corrections (CHE model) for steps consuming
+        # n_e × (H⁺ + e⁻): subtract the pair chemical potential
+        # μ(H⁺ + e⁻) = ½μ(H₂) - eU - k_B T ln(10) × pH,
+        # so dG gains -½μ(H₂), the potential term, and +0.059 eV × pH
         if n_e > 0:
             # Subtract H₂ reference
             if "H2" in gas_phase_energies:
