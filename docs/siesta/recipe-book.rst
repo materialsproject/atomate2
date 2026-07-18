@@ -63,7 +63,9 @@ That's it! This automatically:
 All Recipes
 ===============
 
-The Recipe Book is organized into **6 categories**:
+The Recipe Book is organized into **8 categories** (30 recipes total), all exported as
+``RecipeBook.<name>()`` static methods and as module-level functions from
+``atomate2.siesta.recipes``:
 
 Complete Workflows (2 recipes)
 --------------------------------
@@ -75,11 +77,35 @@ Complete Workflows (2 recipes)
    * - Recipe
      - Description
    * - ``complete_material_study()``
-     - Full characterization: electronic + mechanical + thermal
+     - Complete material characterization: electronic + mechanical + thermal
    * - ``quick_characterization()``
-     - Fast essential properties (1-2 hours)
+     - Quick material characterization (fast essential properties)
 
-Electronic Properties (9 recipes)
+Application Studies (6 recipes)
+---------------------------------
+
+High-level, material-class wrappers around ``complete_material_study()`` with tuned defaults.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 60
+
+   * - Recipe
+     - Description
+   * - ``battery_cathode_screening()``
+     - Battery cathode material screening workflow
+   * - ``thermoelectric_analysis()``
+     - Thermoelectric material characterization
+   * - ``high_temperature_ceramic()``
+     - High-temperature ceramic characterization
+   * - ``magnetic_material_study()``
+     - Magnetic material characterization
+   * - ``semiconductor_device_study()``
+     - Semiconductor device characterization
+   * - ``structural_phase_transition()``
+     - Phase transition characterization
+
+Electronic Properties (3 recipes)
 -----------------------------------
 
 .. list-table::
@@ -88,26 +114,14 @@ Electronic Properties (9 recipes)
 
    * - Recipe
      - Description
+   * - ``electronic_properties()``
+     - Complete electronic structure: relaxation + bands + DOS
    * - ``band_structure_workflow()``
-     - Relaxation + band structure calculation
-   * - ``band_structure_uniform()``
-     - Uniform k-point band structure
-   * - ``band_structure_line_mode()``
-     - Line-mode band structure (publication quality)
+     - Band structure calculation workflow
    * - ``dos_workflow()``
-     - Density of states calculation
-   * - ``projected_dos()``
-     - Element/orbital-projected DOS
-   * - ``band_structure_and_dos()``
-     - Combined bands + DOS
-   * - ``optical_properties()``
-     - Optical absorption, dielectric function
-   * - ``electronic_structure_metals()``
-     - Optimized for metallic systems
-   * - ``electronic_structure_insulators()``
-     - Optimized for insulators/semiconductors
+     - Density of states calculation workflow
 
-Mechanical Properties (6 recipes)
+Mechanical Properties (3 recipes)
 -----------------------------------
 
 .. list-table::
@@ -116,20 +130,14 @@ Mechanical Properties (6 recipes)
 
    * - Recipe
      - Description
+   * - ``mechanical_properties()``
+     - Complete mechanical properties workflow
    * - ``elastic_constants_workflow()``
-     - Full elastic tensor
-   * - ``elastic_moduli()``
-     - Bulk/shear/Young's moduli
-   * - ``bulk_modulus_quick()``
-     - Fast bulk modulus estimate
-   * - ``equation_of_state()``
-     - EOS fitting with multiple models
-   * - ``stress_strain_curve()``
-     - Uniaxial stress-strain
-   * - ``hardness_estimation()``
-     - Vickers hardness prediction
+     - Elastic constants (full elastic tensor) workflow
+   * - ``eos_workflow()``
+     - Equation of state (EOS) and bulk modulus workflow
 
-Thermal Properties (8 recipes)
+Thermal Properties (4 recipes)
 --------------------------------
 
 .. list-table::
@@ -138,24 +146,16 @@ Thermal Properties (8 recipes)
 
    * - Recipe
      - Description
+   * - ``thermal_properties()``
+     - Complete thermal properties workflow
    * - ``phonon_workflow()``
-     - Phonon calculation with automatic plotting
-   * - ``phonon_with_custom_params()``
-     - Separate relaxation/force parameters
-   * - ``gruneisen_parameters()``
-     - Grüneisen parameters and mode analysis
-   * - ``thermal_expansion()``
-     - Temperature-dependent thermal expansion
+     - Phonon calculation workflow (automatic plotting)
    * - ``qha_workflow()``
-     - Quasi-harmonic approximation
-   * - ``thermodynamic_properties()``
-     - Cp, Cv, entropy, free energy
-   * - ``debye_temperature()``
-     - Debye temperature estimation
-   * - ``thermal_conductivity()``
-     - Lattice thermal conductivity (Grüneisen-based)
+     - Quasi-harmonic approximation workflow
+   * - ``gruneisen_workflow()``
+     - Grüneisen parameter calculation workflow
 
-Surface & Catalysis (7 recipes)
+Surface & Catalysis (3 recipes)
 ---------------------------------
 
 .. list-table::
@@ -165,21 +165,13 @@ Surface & Catalysis (7 recipes)
    * - Recipe
      - Description
    * - ``surface_energy_workflow()``
-     - Multi-termination surface energies
-   * - ``surface_stability()``
-     - Wulff construction and shapes
-   * - ``adsorption_site_scanning()``
-     - Grid-based site scanning
-   * - ``adsorption_energy()``
-     - Single adsorbate binding energy
-   * - ``reaction_barrier_neb()``
-     - Nudged elastic band transition states
-   * - ``surface_phase_diagram()``
-     - Temperature/pressure stability
-   * - ``catalysis_workflow()``
-     - Complete catalytic cycle analysis
+     - Surface energy calculation workflow
+   * - ``adsorption_scanning_workflow()``
+     - Adsorption site scanning workflow
+   * - ``catalysis_study()``
+     - Complete catalysis study workflow
 
-Convergence Testing (7 recipes)
+Convergence Testing (4 recipes)
 ---------------------------------
 
 .. list-table::
@@ -188,20 +180,34 @@ Convergence Testing (7 recipes)
 
    * - Recipe
      - Description
+   * - ``convergence_suite()``
+     - Complete convergence testing suite
    * - ``kpoints_convergence()``
-     - K-point mesh convergence
-   * - ``mesh_cutoff_convergence()``
-     - Real-space grid convergence
+     - K-points convergence testing
    * - ``basis_convergence()``
-     - Basis size convergence (SZ → DZ → DZP → TZP)
-   * - ``pao_energy_shift_convergence()``
-     - Energy shift parameter tuning
-   * - ``full_convergence_study()``
-     - All parameters (comprehensive)
-   * - ``accuracy_vs_cost()``
-     - Pareto frontier analysis
-   * - ``recommended_parameters()``
-     - Automatic optimal parameter suggestion
+     - Basis parameter convergence testing
+   * - ``complete_convergence()``
+     - Ultra-thorough convergence testing
+
+Defects (5 recipes)
+---------------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 60
+
+   * - Recipe
+     - Description
+   * - ``complete_defect_study()``
+     - Complete defect study: all vacancies, antisites, and interstitials
+   * - ``vacancy_study()``
+     - Generate all symmetry-unique vacancy defects
+   * - ``substitution_study()``
+     - Generate substitutional dopant defects
+   * - ``antisite_study()``
+     - Generate all antisite defects (atom swapping)
+   * - ``interstitial_study()``
+     - Generate interstitial defects at high-symmetry sites
 
 Code Reduction Examples
 ========================
@@ -276,8 +282,8 @@ Example 2: Phonon Calculation (high reduction)
 
 .. code-block:: python
 
-   from atomate2.siesta.jobs.phonopy import SiestaPhononFlowMaker
-   from atomate2.siesta.jobs.core import RelaxMaker
+   from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
+   from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
    from jobflow import run_locally
    from pymatgen.core import Structure
 
@@ -319,7 +325,7 @@ Example 2: Phonon Calculation (high reduction)
    from jobflow import run_locally
 
    structure = Structure.from_file("Si.cif")
-   flow = RecipeBook.phonon_with_custom_params(structure)  # ONE LINE!
+   flow = RecipeBook.phonon_workflow(structure)  # ONE LINE!
    results = run_locally(flow, create_folders=True)
 
 **Result**: 45 lines → 1 line (high reduction)
@@ -559,12 +565,13 @@ Implementation Details
 
 **Modules**:
 
-* ``complete.py`` - Complete workflow recipes (2 recipes)
-* ``electronic.py`` - Electronic properties (9 recipes)
-* ``mechanical.py`` - Mechanical properties (6 recipes)
-* ``thermal.py`` - Thermal properties (8 recipes)
-* ``catalysis.py`` - Surface and catalysis (7 recipes)
-* ``convergence.py`` - Convergence testing (7 recipes)
+* ``complete.py`` - Complete workflows + application studies (8 recipes)
+* ``electronic.py`` - Electronic properties (3 recipes)
+* ``mechanical.py`` - Mechanical properties (3 recipes)
+* ``thermal.py`` - Thermal properties (4 recipes)
+* ``catalysis.py`` - Surface and catalysis (3 recipes)
+* ``convergence.py`` - Convergence testing (4 recipes)
+* ``defect.py`` - Point defects (5 recipes)
 
 **Testing**: comprehensive test coverage (fully passing)
 
@@ -596,7 +603,7 @@ Status
 
    **Status**: ✅ Production-ready with 100% documentation coverage
 
-   * recipes across 6 categories
+   * 30 recipes across 8 categories
    * comprehensive tutorials
    * comprehensive tests (fully passing)
    * ~75% code coverage

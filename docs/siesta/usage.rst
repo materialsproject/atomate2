@@ -122,7 +122,7 @@ Common Workflows
 
 .. code-block:: python
 
-   from atomate2.siesta.jobs.core import SiestaPhononFlowMaker
+   from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
 
    # Create phonon maker with automatic plotting
    phonon_maker = SiestaPhononFlowMaker(

@@ -384,7 +384,7 @@ Common Calculation Types
    maker = BandStructureMaker()
 
    # Phonons
-   from atomate2.siesta.jobs.core import SiestaPhononFlowMaker
+   from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
    maker = SiestaPhononFlowMaker(min_length=12.0)
 
    # Surface energy

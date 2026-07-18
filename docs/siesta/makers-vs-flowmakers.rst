@@ -65,9 +65,9 @@ These perform a single calculation and return one result:
 .. code-block:: python
 
    from atomate2.siesta.jobs.core import (
-       StaticMaker,      # Single SCF calculation
-       RelaxMaker,       # Single relaxation
-       BandsMaker,       # Single band structure calculation
+       StaticMaker,          # Single SCF calculation
+       RelaxMaker,           # Single relaxation
+       BandStructureMaker,   # Single band structure calculation
    )
 
 **Multi-Step FlowMakers** (``*FlowMaker``)

@@ -717,8 +717,9 @@ Combining Multiple Parameters
            # Spin polarization
            "Spin": "polarized",
 
-           # van der Waals
-           "vdw": "DRSLL",
+           # van der Waals (vdW-DF functional, Dion et al. DRSLL)
+           "XC.functional": "VDW",
+           "XC.authors": "DRSLL",
        }
    )
 

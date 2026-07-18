@@ -42,7 +42,7 @@ The tier system provides:
 
 ✅ **33 dataclass modules** organized by complexity and priority
 
-✅ **32 material-specific presets** across 10 categories for common calculations
+✅ **39 material-specific presets** across 10 categories for common calculations
 
 ✅ **< 25ms overhead** for full module set (performance-tested)
 
@@ -271,7 +271,7 @@ Material-Specific Presets
    Tier presets reorganized into modular package structure for better maintainability.
    All functionality remains backward compatible.
 
-32 pre-configured presets organized into 10 categories:
+39 pre-configured presets organized into 10 categories:
 
 **New Organization** (November 2025):
 
@@ -286,16 +286,16 @@ package for better maintainability:
    ├── defaults.py              # TIER_DEFAULTS
    ├── categories.py            # TIER_CATEGORIES
    └── presets/
-       ├── 2d.py                # 8 presets (2D materials)
+       ├── two_dimension.py     # 9 presets (2D materials)
        ├── structural.py        # 5 presets (bulk relaxation)
-       ├── surface.py           # 3 presets (surfaces & adsorption)
-       ├── molecular.py         # 1 preset (gas phase)
+       ├── surface.py           # 4 presets (surfaces & adsorption)
+       ├── molecular.py         # 2 presets (gas phase, adsorbate screening)
        ├── magnetic.py          # 2 presets (spin-polarized)
        ├── phonon.py            # 3 presets (vibrational)
-       ├── optical.py           # 1 preset (optical properties)
-       ├── electronic.py        # 1 preset (band structure)
+       ├── optical.py           # 2 presets (optical + band structure)
        ├── performance.py       # 3 presets (HPC optimization)
-       └── defects.py           # 5 presets (point defects)
+       ├── defect.py            # 5 presets (point defects)
+       └── electrocatalysis.py  # 4 presets (ORR/OER/HER)
 
 All imports remain backward compatible. See project documentation for migration details.
 
@@ -346,7 +346,7 @@ Tight convergence:
 
 **Use for**: Publication-quality results, benchmarking
 
-Surface Presets (3 total)
+Surface Presets (4 total)
 --------------------------
 
 ``surface_metal``
@@ -434,7 +434,7 @@ Tight forces for accurate phonons:
 
 **Use for**: Publication-quality phonon dispersions
 
-Optical Presets (1 total)
+Optical Presets (2 total)
 --------------------------
 
 ``optical_response``
@@ -449,11 +449,11 @@ Optical absorption and dielectric properties:
 
 **Use for**: Optical properties, absorption spectra
 
-Electronic Presets (1 total)
------------------------------
+Band Structure Preset
+---------------------------
 
-``band_structure``
-^^^^^^^^^^^^^^^^^^
+``band_structure`` (defined in ``optical.py``, alongside ``optical_response``):
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Electronic band structure and DOS:
 
@@ -987,7 +987,7 @@ The CLI automatically categorizes presets based on naming patterns:
      - Example
    * - ``2d_*``
      - 2d
-     - ``2d_metal_rough``
+     - ``2d_metal_rough_auto``
    * - ``surface_*``
      - surface
      - ``surface_metal``

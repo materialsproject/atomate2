@@ -376,7 +376,7 @@ Configuration File
 Tier System Defaults
 =====================
 
-The tier system provides 18 material-specific presets organized in 7 categories. Each preset overrides certain defaults for specific use cases.
+The tier system provides 39 material-specific presets organized in 10 categories. Each preset overrides certain defaults for specific use cases.
 
 **Default Tier**: No tier applied unless specified with ``apply_tier_preset()``
 

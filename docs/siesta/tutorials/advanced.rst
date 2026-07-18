@@ -37,7 +37,7 @@ Tutorial 16: Phonon Calculations ⭐ NEW
 
 .. code-block:: python
 
-   from atomate2.siesta.jobs.core import SiestaPhononFlowMaker
+   from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
    from pymatgen.core import Structure
 
    structure = Structure.from_file("Si.cif")

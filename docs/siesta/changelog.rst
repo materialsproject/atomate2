@@ -9,6 +9,34 @@ This page documents major releases of atomate2siesta.
 Unreleased (Development)
 =========================
 
+New Features
+------------
+
+* **Electrocatalysis Workflows**: Added ``ORRFlowMaker``, ``OERFlowMaker``, ``HERFlowMaker``,
+  and ``BifunctionalFlowMaker`` (``atomate2.siesta.flows.electrocatalysis``) with computational
+  hydrogen electrode (CHE) thermodynamics, overpotential analysis, and automatic free-energy
+  diagrams. New tier presets ``electrocatalysis_dirty/basic/intermediate/gas_phase``.
+* **Surface Energy Convergence**: Added ``SurfaceEnergyConvergenceFlowMaker``
+  (``atomate2.siesta.flows.surface``) with layers/vacuum/both convergence modes, symmetric
+  slabs, termination selection, chemical-potential handling, and diffuse-basis support.
+* **Defect Band Structure, PDOS & Spin**: ``DefectFlowMaker`` now supports per-defect band
+  structure and PDOS (``include_bandstructure``, ``include_pdos``, ``bands_fdf_params``,
+  ``pdos_fdf_params``), auto-applies ``Spin = polarized`` to defect and host calculations,
+  and validates defect/host energies before finalizing. All 5 defect presets set
+  ``Spin = polarized``.
+* **Surface-Aware Defect Generators**: Added ``SurfaceVacancyGenerator``,
+  ``SurfaceInterstitialGenerator``, and ``SurfaceSubstitutionGenerator`` for slab surfaces
+  (layer detection, in-plane symmetry) — for 2D materials and catalysis.
+* **Adsorption Slab-Energy Reuse**: ``AdsorptionScanFlowMaker`` gained ``precalc_slab_energy``
+  so multi-adsorbate screening reuses a single slab calculation.
+* **Heterostructures**: Added ``InterfaceFlowMaker`` (2D interface construction, lattice
+  matching, interlayer-distance optimization, binding energy).
+* **Cluster Profiles & Auto Resource Allocation**: Added ``ClusterProfile`` and
+  ``atomate2siesta-cluster profile list/show/create``; user-mode (no-sudo) MongoDB and Squid
+  installs, ``--use-docker`` build-offline, and ``atomate2siesta-database status``.
+* **Ghost Atom I/O**: Added ``read_cif_with_ghost()`` / ``read_siesta_with_ghost()`` and
+  ghost-aware CIF round-tripping for defect calculations.
+
 Bug Fixes
 ---------
 

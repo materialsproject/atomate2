@@ -17,7 +17,7 @@ Why atomate2siesta?
 
 ⚙️ **Flexible Parameter Management**
    - **Tier-based architecture**: 4 complexity levels with automatic module activation
-   - **14 material-specific presets**: Optimized settings for metals, semiconductors, surfaces
+   - **39 material-specific presets**: Optimized settings for metals, semiconductors, surfaces
    - **Powerups system**: Dynamic parameter modification without recreation
 
 📊 **Rich Analysis & Visualization**
@@ -104,7 +104,7 @@ Built on MaterialsProject/custodian library with:
    * Zero configuration for simple cases
    * Full control when needed
 
-**24+ Dataclass Modules**
+**33 Dataclass Modules**
    Organized by functionality:
 
    * ``BasisSetsAndProjectors`` - PAO basis configuration
@@ -202,8 +202,8 @@ Dynamic workflow customization without recreating makers:
    * Remote job submission and monitoring
 
 **Testing & Quality**
-   * 750 comprehensive tests (mock-based for speed)
-   * 44% code coverage
+   * 2,110 tests (mock-based for speed)
+   * 58–60% code coverage
    * 100% test pass rate
    * 17-second full test suite execution
    * Critical infrastructure: parser (39%), file_client (86%), schemas (97%)
@@ -218,7 +218,7 @@ Dynamic workflow customization without recreating makers:
    * Comprehensive docstrings
 
 **Documentation**
-   * 22 comprehensive tutorials (basics → advanced)
+   * 75+ tutorials (basics → advanced)
    * Complete API reference
    * Comprehensive feature documentation
 
@@ -249,7 +249,7 @@ Recent Enhancements (2025)
    Grid-based adsorption energy mapping with molecule orientation control and automatic visualization.
 
 ** Tier-Based Architecture
-   Complete module registry with automatic initialization and 14 material-specific presets.
+   Complete module registry with automatic initialization and 39 material-specific presets.
 
 ** QHA Thermodynamics
    Quasi-harmonic approximation for finite-temperature properties using phonon calculations.
@@ -339,7 +339,7 @@ Getting Started
 **Next Steps**
    * :doc:`installation` - Complete installation guide
    * :doc:`usage` - Common usage patterns
-   * :doc:`tutorials/index` - 22 comprehensive tutorials
+   * :doc:`tutorials/index` - 75+ tutorials
    * :doc:`features` - Detailed feature documentation
 
 ----

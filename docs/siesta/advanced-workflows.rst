@@ -109,7 +109,7 @@ Test parameters, then use converged values for production:
    ).make(structure)
 
    cutoff_conv = MeshCutoffConvergenceFlowMaker(
-       cutoffs=[200, 300, 400, 500],
+       mesh_cutoffs=[200, 300, 400, 500],
    ).make(structure)
 
    # 2. Review convergence plots and text files
@@ -384,7 +384,7 @@ Quasi-harmonic approximation for thermal expansion:
 .. code-block:: python
 
    from atomate2.siesta.flows.eos import EOSMaker
-   from atomate2.siesta.jobs.core import SiestaPhononFlowMaker
+   from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
 
    # 1. EOS to get volume range
    eos = EOSMaker(number_of_frames=5).make(structure)
@@ -767,6 +767,97 @@ Automatic Retry Logic
 
    # If fails, use looser (custodian handles automatic retry)
    # Custodian will progressively relax SCF parameters
+
+----
+
+Electrocatalysis Workflows
+==========================
+
+ORR, OER, and HER workflows apply the computational hydrogen electrode (CHE) model to
+compute reaction free-energy diagrams and overpotentials automatically.
+
+.. code-block:: python
+
+   from atomate2.siesta.flows.electrocatalysis import (
+       ORRFlowMaker,            # Oxygen reduction reaction (4 electron)
+       OERFlowMaker,            # Oxygen evolution reaction (4 electron)
+       HERFlowMaker,            # Hydrogen evolution reaction
+       BifunctionalFlowMaker,   # Combined ORR/OER bifunctional gap
+   )
+
+   # Screen a catalyst surface; overpotential + free-energy diagram are produced automatically
+   flow = ORRFlowMaker().make(slab_structure)
+
+Outputs include free-energy diagrams, overpotential summaries, and (for
+``BifunctionalFlowMaker``) the ORR/OER bifunctional gap. The tier presets
+``electrocatalysis_dirty/basic/intermediate/gas_phase`` tune cost vs. accuracy.
+
+**See**: ``tutorials/siesta/02-workflows/09-electrocatalysis``
+
+----
+
+Defect Workflows
+================
+
+``DefectFlowMaker`` automates vacancy, substitution, antisite, and interstitial defect
+calculations, including charge states, chemical potentials, and finite-size corrections.
+
+.. code-block:: python
+
+   from atomate2.siesta.flows.defects import DefectFlowMaker
+
+   maker = DefectFlowMaker(
+       include_bandstructure=True,   # per-defect band structure (auto k-path)
+       include_pdos=True,            # per-defect PDOS for defect-level analysis
+   )
+   flow = DefectFlowMaker.from_pristine_structure(bulk_structure)
+
+Defect and host calculations are automatically spin-polarized (``Spin = polarized``) and can
+emit band structure + PDOS for defect-level analysis. Surface-aware generators
+(``SurfaceVacancyGenerator``, ``SurfaceInterstitialGenerator``,
+``SurfaceSubstitutionGenerator``) target slab surfaces for 2D-material and catalysis studies.
+
+**See**: ``tutorials/siesta/02-workflows/08-defects``
+
+----
+
+Surface Energy Convergence
+==========================
+
+``SurfaceEnergyConvergenceFlowMaker`` systematically converges surface energy against slab
+thickness and/or vacuum thickness, using symmetric slabs with optional termination selection
+and chemical-potential handling for non-stoichiometric surfaces.
+
+.. code-block:: python
+
+   from atomate2.siesta.flows.surface import (
+       SurfaceEnergyConvergenceFlowMaker,   # convergence modes: layers / vacuum / both
+       MultiSurfaceEnergyFlowMaker,         # compare multiple Miller surfaces
+       AdsorptionScanFlowMaker,             # grid-based adsorption site scanning
+   )
+
+   flow = SurfaceEnergyConvergenceFlowMaker().make(bulk_structure)
+
+``AdsorptionScanFlowMaker`` supports slab-energy reuse (``precalc_slab_energy``) so
+multi-adsorbate screening runs a single slab calculation instead of one per adsorbate.
+
+**See**: ``tutorials/siesta/02-workflows/03-surfaces-and-adsorption``
+
+----
+
+Heterostructure Workflows
+=========================
+
+``InterfaceFlowMaker`` builds 2D heterostructure interfaces (lattice matching via strain or
+supercell mode), optimizes the interlayer distance, and computes the binding energy.
+
+.. code-block:: python
+
+   from atomate2.siesta.flows.heterostructures.interface import InterfaceFlowMaker
+
+   flow = InterfaceFlowMaker().make(bottom_layer, top_layer)
+
+**See**: ``tutorials/siesta/02-workflows/10-heterostructures``
 
 ----
 

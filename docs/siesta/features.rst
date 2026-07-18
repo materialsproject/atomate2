@@ -637,7 +637,7 @@ Example Usage
 
 .. code-block:: python
 
-   from atomate2.siesta.jobs.core import SiestaPhononFlowMaker
+   from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
    from pymatgen.core import Structure
 
    structure = Structure.from_file("Si.cif")
@@ -899,12 +899,12 @@ Direct Tier Usage
        }
    )
 
-Material-Specific Presets (32 Total)
+Material-Specific Presets (39 Total)
 -------------------------------------
 
 Pre-configured tier + parameter combinations across 10 categories:
 
-**2D Materials (8 presets)**:
+**2D Materials (9 presets)**:
 
 * ``2d_insulator`` - 2D insulators (h-BN, silicene oxide) with z-vacuum
 * ``2d_magnetic`` - 2D magnetic materials (CrI3, VSe2)
@@ -913,7 +913,8 @@ Pre-configured tier + parameter combinations across 10 categories:
 * ``2d_optical`` - 2D materials for optical properties
 * ``2d_screening`` - Fast 2D material screening
 * ``2d_semiconductor`` - 2D semiconductors (TMDs, h-BN)
-* ``2d_vdw`` - 2D materials with van der Waals corrections
+* ``2d_vdw`` - 2D materials with van der Waals corrections (Grimme D3)
+* ``2d_vdw_dirty`` - Fast 2D van der Waals screening
 
 **Structural (5 presets)**:
 
@@ -923,11 +924,17 @@ Pre-configured tier + parameter combinations across 10 categories:
 * ``relax_bulk_metal`` - Bulk metallic systems with electronic temperature
 * ``relax_bulk_semiconductor`` - Bulk semiconductor systems
 
-**Surface (3 presets)**:
+**Surface (4 presets)**:
 
-* ``adsorbate_screening`` - Fast adsorbate screening (basic tier)
+* ``surface_dirty`` - Fast surface testing (basic tier)
+* ``surface_basic`` - Basic surface calculations
 * ``surface_metal`` - Metallic surfaces (MP smearing, tight SCF)
 * ``surface_semiconductor`` - Semiconductor surfaces (dipole corrections)
+
+**Molecular (2 presets)**:
+
+* ``molecule_gas_phase`` - Isolated molecules in gas phase
+* ``adsorbate_screening`` - Fast adsorbate screening (basic tier)
 
 **Magnetic (2 presets)**:
 
@@ -940,6 +947,17 @@ Pre-configured tier + parameter combinations across 10 categories:
 * ``phonon_standard`` - Standard phonon calculations (advanced tier)
 * ``phonon_high_accuracy`` - High-accuracy phonons (tight forces)
 
+**Optical (2 presets)**:
+
+* ``optical_response`` - Optical absorption and dielectric properties
+* ``band_structure`` - Electronic band structure and DOS (advanced tier)
+
+**Performance (3 presets)**:
+
+* ``convergence_test`` - All modules for comprehensive testing (expert tier)
+* ``large_system`` - Linear-scaling for systems >100 atoms (expert tier)
+* ``parallel_hpc`` - MPI optimization for HPC (expert tier)
+
 **Defects (5 presets)**:
 
 * ``defect_dirty`` - Quick defect screening (basic tier)
@@ -948,23 +966,12 @@ Pre-configured tier + parameter combinations across 10 categories:
 * ``defect_metal`` - Defects in metallic systems
 * ``defect_oxide`` - Defects in oxide materials
 
-**Electronic (1 preset)**:
+**Electrocatalysis (4 presets)**:
 
-* ``band_structure`` - Electronic band structure and DOS (advanced tier)
-
-**Optical (1 preset)**:
-
-* ``optical_response`` - Optical absorption and dielectric properties
-
-**Molecular (1 preset)**:
-
-* ``molecule_gas_phase`` - Isolated molecules in gas phase
-
-**Performance (3 presets)**:
-
-* ``convergence_test`` - All modules for comprehensive testing (expert tier)
-* ``large_system`` - Linear-scaling for systems >100 atoms (expert tier)
-* ``parallel_hpc`` - MPI optimization for HPC (expert tier)
+* ``electrocatalysis_dirty`` - Fast electrocatalysis screening (SZ basis, may converge poorly)
+* ``electrocatalysis_basic`` - Reliable electrocatalysis (DZ basis)
+* ``electrocatalysis_intermediate`` - Publication-quality (DZP + vdW)
+* ``electrocatalysis_gas_phase`` - Gas-phase reference molecules (O₂, H₂O, H₂)
 
 Preset Application
 ------------------
