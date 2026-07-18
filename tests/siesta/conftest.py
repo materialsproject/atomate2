@@ -53,6 +53,39 @@ def packaged_pseudos():
         shutil.rmtree(tmpdir, ignore_errors=True)
 
 
+@pytest.fixture(scope="session", autouse=True)
+def flos_neb_template():
+    """Provide a stub flos NEB template when FLOS_PATH is not configured.
+
+    generate_neb_band() copies <FLOS_PATH>/examples/neb.lua and rewrites its
+    n_images value; the NEB tests exercise that image-generation and
+    rewriting logic, not flos itself. When no flos installation is
+    configured, point SETTINGS.FLOS_PATH at a temporary directory containing
+    a minimal template that provides the rewritten pattern. A real
+    FLOS_PATH from the user's config or environment always takes precedence.
+    """
+    from atomate2.siesta import SETTINGS
+
+    if SETTINGS.FLOS_PATH:
+        yield
+        return
+
+    tmpdir = tempfile.mkdtemp(prefix="flos_stub_")
+    examples = Path(tmpdir) / "examples"
+    examples.mkdir()
+    (examples / "neb.lua").write_text(
+        "-- Test stub for the flos examples/neb.lua template.\n"
+        "-- Only the pattern rewritten by atomate2siesta is required here.\n"
+        "local n_images = 6\n"
+    )
+    SETTINGS.FLOS_PATH = tmpdir
+    try:
+        yield
+    finally:
+        SETTINGS.FLOS_PATH = None
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
 @pytest.fixture
 def si_structure():
     """
