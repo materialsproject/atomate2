@@ -108,11 +108,18 @@ def _create_neb_lua_script(n_intermediate_images: int):
         )
 
     flos_path = Path(flos_path)
-    neb_template = flos_path / "examples" / "neb.lua"
+    # Older flos releases ship the template as examples/neb.lua; current flos
+    # renamed it to examples/neb_simple.lua. Accept either.
+    template_candidates = [
+        flos_path / "examples" / "neb.lua",
+        flos_path / "examples" / "neb_simple.lua",
+    ]
+    neb_template = next((path for path in template_candidates if path.exists()), None)
 
-    if not neb_template.exists():
+    if neb_template is None:
+        candidates = " or ".join(str(path) for path in template_candidates)
         raise FileNotFoundError(
-            f"NEB template not found at {neb_template}. "
+            f"NEB template not found at {candidates}. "
             f"Please ensure FLOS is properly installed at {flos_path}"
         )
 
