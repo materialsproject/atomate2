@@ -18,6 +18,8 @@ def complete_defect_study(
     supercell_matrix: list[list[int]] | None = None,
     charge_states: list[int] | None = None,
     epsilon_static: float | None = None,
+    chemical_potentials: dict[str, float] | None = None,
+    auto_calculate_chemical_potentials: bool = False,
     dopants: list[str] | None = None,
     interstitial_species: list[str] | None = None,
     auto_params: bool = True,
@@ -111,6 +113,8 @@ def complete_defect_study(
         supercell_matrix=supercell_matrix,
         charge_states=charge_states,
         epsilon_static=epsilon_static,
+        chemical_potentials=chemical_potentials,
+        auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
     all_flows.extend(vacancy_flows)
@@ -125,6 +129,8 @@ def complete_defect_study(
         supercell_matrix=supercell_matrix,
         charge_states=charge_states,
         epsilon_static=epsilon_static,
+        chemical_potentials=chemical_potentials,
+        auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
     all_flows.extend(substitution_flows)
@@ -141,6 +147,8 @@ def complete_defect_study(
                 supercell_matrix=supercell_matrix,
                 charge_states=charge_states,
                 epsilon_static=epsilon_static,
+                chemical_potentials=chemical_potentials,
+                auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
                 dry_run=dry_run,
             )
             all_flows.extend(interstitial_flows)
@@ -157,6 +165,8 @@ def vacancy_study(
     supercell_matrix: list[list[int]] | None = None,
     charge_states: list[int] | None = None,
     epsilon_static: float | None = None,
+    chemical_potentials: dict[str, float] | None = None,
+    auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
     use_custodian: bool = True,
     dry_run: bool = False,
@@ -219,6 +229,8 @@ def vacancy_study(
         supercell_matrix=supercell_matrix,
         charge_states=charge_states,
         epsilon_static=epsilon_static,
+        chemical_potentials=chemical_potentials,
+        auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
 
@@ -233,6 +245,8 @@ def substitution_study(
     supercell_matrix: list[list[int]] | None = None,
     charge_states: list[int] | None = None,
     epsilon_static: float | None = None,
+    chemical_potentials: dict[str, float] | None = None,
+    auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
     use_custodian: bool = True,
     dry_run: bool = False,
@@ -320,6 +334,8 @@ def substitution_study(
             supercell_matrix=supercell_matrix,
             charge_states=charge_states,
             epsilon_static=epsilon_static,
+            chemical_potentials=chemical_potentials,
+            auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
             dry_run=dry_run,
         )
         all_flows.extend(flows)
@@ -334,6 +350,8 @@ def antisite_study(
     supercell_matrix: list[list[int]] | None = None,
     charge_states: list[int] | None = None,
     epsilon_static: float | None = None,
+    chemical_potentials: dict[str, float] | None = None,
+    auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
     use_custodian: bool = True,
     dry_run: bool = False,
@@ -397,6 +415,8 @@ def antisite_study(
         supercell_matrix=supercell_matrix,
         charge_states=charge_states,
         epsilon_static=epsilon_static,
+        chemical_potentials=chemical_potentials,
+        auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
 
@@ -410,6 +430,8 @@ def interstitial_study(
     supercell_matrix: list[list[int]] | None = None,
     charge_states: list[int] | None = None,
     epsilon_static: float | None = None,
+    chemical_potentials: dict[str, float] | None = None,
+    auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
     use_custodian: bool = True,
     dry_run: bool = False,
@@ -492,6 +514,8 @@ def interstitial_study(
             supercell_matrix=supercell_matrix,
             charge_states=charge_states,
             epsilon_static=epsilon_static,
+            chemical_potentials=chemical_potentials,
+            auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
             dry_run=dry_run,
         )
         all_flows.extend(flows)

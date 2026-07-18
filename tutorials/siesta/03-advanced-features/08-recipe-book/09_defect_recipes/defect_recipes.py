@@ -44,6 +44,7 @@ flows = RecipeBook.complete_defect_study(
     mgo,
     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
     charge_states=[0],
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
@@ -68,6 +69,7 @@ vacancy_flows = RecipeBook.vacancy_study(
     mgo,
     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
     charge_states=[0, +2],  # Neutral and charged vacancies
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
@@ -91,6 +93,7 @@ substitution_flows = RecipeBook.substitution_study(
     dopants="Li",  # Can also be a list: ["Li", "Na", "K"]
     species="Mg",
     charge_states=[-1, 0],  # Li+ on Mg2+ site is an acceptor
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
@@ -113,6 +116,7 @@ antisite_flows = RecipeBook.antisite_study(
     mgo,
     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
     charge_states=[0],
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
@@ -135,6 +139,7 @@ interstitial_flows = RecipeBook.interstitial_study(
     mgo,
     species="Li",  # Can also be a list: ["Li", "H"]
     charge_states=[0, +1],
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
@@ -157,6 +162,7 @@ all_flows = RecipeBook.complete_defect_study(
     mgo,
     interstitial_species=["Li"],  # Add interstitials
     charge_states=[0],
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
@@ -183,6 +189,7 @@ multi_dopant_flows = RecipeBook.substitution_study(
     dopants=["Li", "Na", "K"],
     species="Mg",
     charge_states=[-1, 0],
+    auto_calculate_chemical_potentials=True,
     dry_run=True,
 )
 
