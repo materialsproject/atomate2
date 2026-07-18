@@ -1,8 +1,56 @@
 """Shared pytest fixtures for atomate2siesta tests."""
 
+import os
+import shutil
+import tarfile
+import tempfile
+
 import pytest
 from pathlib import Path
 from pymatgen.core import Structure, Lattice
+
+
+@pytest.fixture(scope="session", autouse=True)
+def packaged_pseudos():
+    """Provide the packaged pseudopotentials when none are configured.
+
+    Several tests generate real SIESTA inputs (dry-run mode) and need a valid
+    pseudopotential directory; without one, input generation aborts and the
+    tests fail (or pass vacuously). If the environment does not already set
+    SIESTA_PP_PATH, extract the standard scalar-relativistic PBE PseudoDojo
+    set shipped with the package into a session-scoped temporary directory
+    and point SIESTA_PP_PATH at it. A user-configured pseudo_path still takes
+    precedence in the lookup chain, so this only fills the gap.
+    """
+    if os.environ.get("SIESTA_PP_PATH"):
+        yield
+        return
+
+    try:
+        import atomate2.siesta.pseudos as pseudos_pkg
+
+        tarball = Path(pseudos_pkg.__file__).parent / "nc-sr-04_pbe_standard_psml.tgz"
+    except ImportError:
+        tarball = None
+
+    if tarball is None or not tarball.exists():
+        # Package does not ship pseudos in this installation; leave the
+        # environment untouched (affected tests keep their current behavior).
+        yield
+        return
+
+    tmpdir = tempfile.mkdtemp(prefix="siesta_pp_")
+    with tarfile.open(tarball) as tf:
+        try:
+            tf.extractall(tmpdir, filter="data")
+        except TypeError:  # Python without the tarfile filter parameter
+            tf.extractall(tmpdir)
+    os.environ["SIESTA_PP_PATH"] = tmpdir
+    try:
+        yield
+    finally:
+        os.environ.pop("SIESTA_PP_PATH", None)
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
 
 @pytest.fixture
