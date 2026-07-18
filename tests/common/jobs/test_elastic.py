@@ -191,3 +191,61 @@ def test_fit_elastic_tensor(clean_dir, si_structure, caplog):
         "666666 fraction of deformation calculations have failed, "
         "maximum fraction allowed: 0.01" in caplog.text
     )
+
+
+def _si_structure():
+    from pymatgen.core import Lattice, Structure
+
+    return Structure(
+        Lattice.cubic(5.43),
+        ["Si", "Si"],
+        [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]],
+    )
+
+
+def test_generate_deformations_insufficient_rank():
+    """Strains that do not span all six Voigt directions are rejected."""
+    with pytest.raises(ValueError, match="matrix rank < 6"):
+        generate_elastic_deformations.original(
+            _si_structure(),
+            order=2,
+            strain_states=[(1, 0, 0, 0, 0, 0), (0, 1, 0, 0, 0, 0)],
+            sym_reduce=False,
+        )
+
+
+def test_generate_deformations_insufficient_magnitudes_order3():
+    """An order-3 fit needs at least 3 distinct non-zero magnitudes per state."""
+    with pytest.raises(ValueError, match="at least 3 distinct"):
+        generate_elastic_deformations.original(
+            _si_structure(),
+            order=3,
+            strain_magnitudes=[-0.01, 0.01],
+            sym_reduce=False,
+        )
+
+
+def test_generate_deformations_order2_two_magnitudes_ok():
+    """An order-2 fit with 2 magnitudes per state passes validation."""
+    deformations = generate_elastic_deformations.original(
+        _si_structure(),
+        order=2,
+        strain_magnitudes=[-0.01, 0.01],
+        sym_reduce=False,
+    )
+    assert len(deformations) == 12  # 6 states x 2 magnitudes
+
+
+def test_generate_deformations_order3_few_states_warns(caplog):
+    """An order-3 fit with fewer than 14 strain states warns but proceeds."""
+    from atomate2.common.analysis.elastic import get_default_strain_states
+
+    deformations = generate_elastic_deformations.original(
+        _si_structure(),
+        order=3,
+        strain_states=get_default_strain_states(2),  # only 6 states
+        strain_magnitudes=[-0.01, -0.005, 0.005, 0.01],
+        sym_reduce=False,
+    )
+    assert len(deformations) == 24
+    assert "the generic 3rd-order expansion requires 14" in caplog.text
