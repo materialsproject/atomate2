@@ -10,7 +10,7 @@ from rich.table import Table
 console = Console()
 
 
-def discover_flowmakers():
+def discover_flowmakers() -> dict:
     """
     Automatically discover all FlowMaker classes.
 
@@ -68,7 +68,7 @@ def discover_flowmakers():
                 try:
                     sig = inspect.signature(obj.__init__)
                     params = sig.parameters
-                except Exception:
+                except Exception:  # noqa: BLE001 tolerate any introspection failure
                     params = {}
 
                 flowmakers[name] = {
@@ -83,7 +83,7 @@ def discover_flowmakers():
     return flowmakers
 
 
-def discover_makers():
+def discover_makers() -> dict:
     """
     Automatically discover all single-job Maker classes.
 
@@ -111,7 +111,7 @@ def discover_makers():
             try:
                 sig = inspect.signature(obj.__init__)
                 params = sig.parameters
-            except Exception:
+            except Exception:  # noqa: BLE001 tolerate any introspection failure
                 params = {}
 
             # Find classmethod constructors
@@ -136,7 +136,7 @@ def discover_makers():
                                 and return_type.__name__ == name
                             ) or (isinstance(return_type, str) and return_type == name):
                                 classmethods.append(method_name)
-                except Exception:
+                except Exception:  # noqa: BLE001, S110 best-effort classmethod probe
                     pass
 
             makers[name] = {
@@ -152,7 +152,7 @@ def discover_makers():
     return makers
 
 
-def get_workflow_name_mapping():
+def get_workflow_name_mapping() -> tuple:
     """
     Map friendly workflow names to FlowMaker classes.
 
@@ -210,7 +210,7 @@ def get_workflow_name_mapping():
     return name_mapping, flowmakers
 
 
-def show_workflow_details(workflow_name: str, full: bool = False):
+def show_workflow_details(workflow_name: str, full: bool = False) -> None:
     """
     Display detailed information about a specific workflow.
 
@@ -226,7 +226,7 @@ def show_workflow_details(workflow_name: str, full: bool = False):
         Can be friendly name ('phonon') or real class name ('SiestaPhononFlowMaker' or 'BandStructureMaker')
     full : bool, optional
         If True, display full docstring in Rich panel (default: False)
-    """
+    """  # noqa: E501
     name_mapping, all_flowmakers = get_workflow_name_mapping()
     all_makers = discover_makers()
 
@@ -468,14 +468,16 @@ def show_workflow_details(workflow_name: str, full: bool = False):
                     # Single classmethod
                     method_name = classmethods[0]
                     console.print(
-                        f"[cyan]job = {class_name}.{method_name}(dry_run=True).make(structure)[/cyan]"
+                        f"[cyan]job = {class_name}.{method_name}(dry_run=True)"
+                        f".make(structure)[/cyan]"
                     )
                 else:
                     # Multiple classmethods - show all options
                     console.print("[cyan]# Available classmethods:[/cyan]")
                     for method_name in classmethods:
                         console.print(
-                            f"[cyan]job = {class_name}.{method_name}(dry_run=True).make(structure)[/cyan]"
+                            f"[cyan]job = {class_name}.{method_name}(dry_run=True)"
+                            f".make(structure)[/cyan]"
                         )
                     console.print()
                     console.print("[dim]# Use one of the above methods[/dim]")
@@ -511,7 +513,7 @@ def show_workflow_details(workflow_name: str, full: bool = False):
     console.print()
 
 
-def list_all_flowmakers():
+def list_all_flowmakers() -> None:
     """List all discovered FlowMaker classes."""
     _, flowmakers = get_workflow_name_mapping()
 

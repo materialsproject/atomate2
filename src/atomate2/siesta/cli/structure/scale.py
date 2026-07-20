@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: EXE001
 """CLI for scaling lattice parameters.
 
 This module provides the `scale` subcommand for atomate2siesta-structure.
@@ -73,18 +74,18 @@ console = Console()
     help="Number of steps in series (default: 11)",
 )
 def scale(
-    structure_file,
-    factor,
-    abc,
-    volume,
-    strain,
-    output,
-    format,
-    series,
-    min_factor,
-    max_factor,
-    steps,
-):
+    structure_file: str,
+    factor: float | None,
+    abc: tuple[float, float, float] | None,
+    volume: float | None,
+    strain: float | None,
+    output: str | None,
+    format: str,  # noqa: A002 Click option name mirrors the CLI --format flag
+    series: bool,
+    min_factor: float | None,
+    max_factor: float | None,
+    steps: int,
+) -> None:
     """Scale lattice parameters of a structure.
 
     Supports uniform scaling, anisotropic scaling, volume-based scaling,
@@ -119,16 +120,17 @@ def scale(
     )
     if options_count == 0:
         console.print(
-            "[red]Error: Must specify one of --factor, --abc, --volume, --strain, or --series[/red]"
+            "[red]Error: Must specify one of --factor, --abc, --volume, "
+            "--strain, or --series[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
     if options_count > 1:
         console.print("[red]Error: Only specify one scaling method[/red]")
-        raise click.Abort()
+        raise click.Abort
 
     if series and (min_factor is None or max_factor is None):
         console.print("[red]Error: --series requires --min and --max[/red]")
-        raise click.Abort()
+        raise click.Abort
 
     try:
         # Load structure
@@ -180,7 +182,8 @@ def scale(
 
                 if i == 0 or i == steps - 1 or (i + 1) % 5 == 0:
                     console.print(
-                        f"  [{i + 1:2d}/{steps}] {output_file}: V = {scaled_structure.volume:.3f} Å³"
+                        f"  [{i + 1:2d}/{steps}] {output_file}: "
+                        f"V = {scaled_structure.volume:.3f} Å³"
                     )
 
             console.print(f"\n[green]✓ Generated {steps} scaled structures[/green]")
@@ -205,13 +208,19 @@ def scale(
                 from pymatgen.core import Lattice
 
                 scaled_structure.lattice = Lattice(new_lattice)
-                scale_type = f"Anisotropic scaling: a={abc[0]:.4f}, b={abc[1]:.4f}, c={abc[2]:.4f}"
+                scale_type = (
+                    f"Anisotropic scaling: a={abc[0]:.4f}, "
+                    f"b={abc[1]:.4f}, c={abc[2]:.4f}"
+                )
 
             elif volume is not None:
                 # Volume-based scaling
                 scaled_structure.scale_lattice(volume)
                 scale_factor = (volume / structure.volume) ** (1 / 3)
-                scale_type = f"Volume scaling: target = {volume:.3f} Å³ (factor = {scale_factor:.4f})"
+                scale_type = (
+                    f"Volume scaling: target = {volume:.3f} Å³ "
+                    f"(factor = {scale_factor:.4f})"
+                )
 
             elif strain is not None:
                 # Strain-based scaling
@@ -239,7 +248,7 @@ def scale(
             scaled_params = scaled_structure.lattice.parameters
 
             for i, label in enumerate(
-                ["a (Å)", "b (Å)", "c (Å)", "α (°)", "β (°)", "γ (°)"]
+                ["a (Å)", "b (Å)", "c (Å)", "α (°)", "β (°)", "γ (°)"]  # noqa: RUF001
             ):
                 orig = orig_params[i]
                 scaled = scaled_params[i]
@@ -287,7 +296,7 @@ def scale(
 
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

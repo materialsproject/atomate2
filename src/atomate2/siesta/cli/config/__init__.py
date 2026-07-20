@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+"""CLI for Atomate2 SIESTA configuration."""
+
+from __future__ import annotations
+
 import os
 from pathlib import Path
 
@@ -12,51 +15,57 @@ console = Console()
 
 
 def ensure_config_file(
-    file_name,
-    config_dir,
-    siesta_cmd,
-    siesta_pp_path,
-    flos_path,
-    optical_input_cmd,
-    optical_cmd,
-    show_banner,
-    parameter_evolution="summary",
-):
+    file_name: str,
+    config_dir: str,
+    siesta_cmd: str,
+    siesta_pp_path: str,
+    flos_path: str,
+    optical_input_cmd: str,
+    optical_cmd: str,
+    show_banner: bool,
+    parameter_evolution: str = "summary",
+) -> Path | None:
     """Create the default .atomate2siesta-local.yaml file if it doesn't exist."""
     try:
         config_path = Path(config_dir) / file_name
         if not config_path.exists():
-            config_content = f"""SIESTA_CMD: "{siesta_cmd}"
-SIESTA_PP_PATH: "{siesta_pp_path}"
-FLOS_PATH: "{flos_path}"
-OPTICAL_INPUT_CMD: "{optical_input_cmd}"
-OPTICAL_CMD: "{optical_cmd}"
-SIESTA_SHOW_BANNER: {show_banner}
-SIESTA_SHOW_PARAMETER_EVOLUTION: "{parameter_evolution}"  # Options: none, user, diff, summary, full
-"""
+            config_content = (
+                f'SIESTA_CMD: "{siesta_cmd}"\n'
+                f'SIESTA_PP_PATH: "{siesta_pp_path}"\n'
+                f'FLOS_PATH: "{flos_path}"\n'
+                f'OPTICAL_INPUT_CMD: "{optical_input_cmd}"\n'
+                f'OPTICAL_CMD: "{optical_cmd}"\n'
+                f"SIESTA_SHOW_BANNER: {show_banner}\n"
+                f'SIESTA_SHOW_PARAMETER_EVOLUTION: "{parameter_evolution}"'
+                "  # Options: none, user, diff, summary, full\n"
+            )
             os.makedirs(config_dir, exist_ok=True)
             with open(config_path, "w") as f:
                 f.write(config_content)
             console.print(
                 Panel(
-                    f"Created default config file at: [bold cyan]{config_path}[/bold cyan]",
+                    f"Created default config file at: "
+                    f"[bold cyan]{config_path}[/bold cyan]",
                     style="green",
                 )
             )
         else:
             console.print(
-                f"[yellow]Config file already exists at:[/yellow] [bold cyan]{config_path}[/bold cyan]"
+                f"[yellow]Config file already exists at:[/yellow] "
+                f"[bold cyan]{config_path}[/bold cyan]"
             )
             # return
-            raise FileExistsError(f"Config file already exists at: {config_path}")
-        return config_path
-    except Exception as e:
+            raise FileExistsError(  # noqa: TRY301 intentional friendly re-raise
+                f"Config file already exists at: {config_path}"
+            )
+        return config_path  # noqa: TRY300 preserve original control flow
+    except Exception as e:  # noqa: BLE001 friendly error handler
         console.print(f"[red]Error creating config file:[/red] {e}")
         return None
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """CLI for Atomate2 SIESTA configuration."""
     console.print(
         "[bold magenta]Atomate2 SIESTA Configuration CLI[/bold magenta]", style="bold"
@@ -92,17 +101,26 @@ def cli():
 @click.option(
     "--optical-input-cmd",
     default=None,
-    help="Command for optical input (if not specified, auto-generated based on --use-srun)",
+    help=(
+        "Command for optical input "
+        "(if not specified, auto-generated based on --use-srun)"
+    ),
 )
 @click.option(
     "--optical-cmd",
     default=None,
-    help="Command for optical calculation (if not specified, auto-generated based on --use-srun)",
+    help=(
+        "Command for optical calculation "
+        "(if not specified, auto-generated based on --use-srun)"
+    ),
 )
 @click.option(
     "--use-srun/--no-use-srun",
     default=False,
-    help="Use 'srun' prefix for cluster/MPI execution (required for SLURM systems). Default: False",
+    help=(
+        "Use 'srun' prefix for cluster/MPI execution "
+        "(required for SLURM systems). Default: False"
+    ),
 )
 @click.option(
     "--show-banner/--no-show-banner",
@@ -118,17 +136,17 @@ def cli():
     help="Parameter evolution display level (default: summary)",
 )
 def create(
-    file_name,
-    output_dir,
-    siesta_cmd,
-    siesta_pp_path,
-    flos_path,
-    optical_input_cmd,
-    optical_cmd,
-    use_srun,
-    show_banner,
-    parameter_evolution,
-):
+    file_name: str,
+    output_dir: str | None,
+    siesta_cmd: str | None,
+    siesta_pp_path: str | None,
+    flos_path: str | None,
+    optical_input_cmd: str | None,
+    optical_cmd: str | None,
+    use_srun: bool,
+    show_banner: bool,
+    parameter_evolution: str,
+) -> None:
     """Create an Atomate2 SIESTA configuration file in the specified directory."""
     try:
         # Set default output_dir to current working directory if not provided
@@ -144,7 +162,8 @@ def create(
         if siesta_pp_path is None:
             siesta_pp_path = str(home_dir / ".siesta" / "pseudos")
             console.print(
-                f"[dim]Auto-detected pseudopotential path:[/dim] [cyan]{siesta_pp_path}[/cyan]"
+                f"[dim]Auto-detected pseudopotential path:[/dim] "
+                f"[cyan]{siesta_pp_path}[/cyan]"
             )
 
         if flos_path is None:
@@ -184,11 +203,13 @@ def create(
         # Display configuration mode
         if use_srun:
             console.print(
-                "[green]✓ Using SLURM mode (srun)[/green] - Suitable for cluster environments"
+                "[green]✓ Using SLURM mode (srun)[/green] "
+                "- Suitable for cluster environments"
             )
         else:
             console.print(
-                "[yellow]Using direct mode (no srun)[/yellow] - Suitable for local/workstation use"
+                "[yellow]Using direct mode (no srun)[/yellow] "
+                "- Suitable for local/workstation use"
             )
 
         # Create config file with provided or default parameters
@@ -206,7 +227,8 @@ def create(
         if config_path:
             console.print(
                 Panel(
-                    f"Created SIESTA configuration file at: [bold cyan]{config_path}[/bold cyan]",
+                    f"Created SIESTA configuration file at: "
+                    f"[bold cyan]{config_path}[/bold cyan]",
                     style="green",
                 )
             )
@@ -219,13 +241,13 @@ def create(
                     style="green",
                 )
             )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error handler
         console.print(f"[red]Error in create_siesta_config:[/red] {e}")
 
 
 @cli.command()
 @click.argument("file_path")
-def set(file_path):
+def set(file_path: str) -> None:  # noqa: A001 Click subcommand name
     """Set the ATOMATE2_CONFIG_FILE environment variable for the current session."""
     try:
         console.print(
@@ -244,14 +266,16 @@ def set(file_path):
         # Check if the config file exists
         if not config_path.exists():
             console.print(
-                f"[red]Error: Config file '[bold]{config_path}[/bold]' does not exist.[/red]"
+                f"[red]Error: Config file '[bold]{config_path}[/bold]' "
+                f"does not exist.[/red]"
             )
             return
 
         # Check file permissions
         if not os.access(config_path, os.R_OK):
             console.print(
-                f"[red]Error: Config file '[bold]{config_path}[/bold]' is not readable. Check permissions.[/red]"
+                f"[red]Error: Config file '[bold]{config_path}[/bold]' "
+                f"is not readable. Check permissions.[/red]"
             )
             return
 
@@ -265,13 +289,13 @@ def set(file_path):
                 style="green",
             )
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error handler
         console.print(f"[red]Error in set_config:[/red] {e}")
 
 
 @cli.command()
-def status():
-    """Check the current configuration status and ATOMATE2_CONFIG_FILE environment variable."""
+def status() -> None:
+    """Check the current configuration status and ATOMATE2_CONFIG_FILE environment variable."""  # noqa: E501
     from rich.table import Table
 
     console.print("\n[bold cyan]Configuration Status[/bold cyan]\n")
@@ -393,7 +417,7 @@ def status():
 
         from atomate2.siesta import SETTINGS
 
-        def check_command_exists(cmd_string):
+        def check_command_exists(cmd_string: str) -> str:
             """Check if the main executable in a command string exists."""
             if not cmd_string:
                 return "-"
@@ -538,7 +562,7 @@ def status():
         )
 
         console.print(settings_table)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error handler
         console.print(f"[red]Could not load current settings: {e}[/red]")
 
     # Check database configuration
@@ -632,7 +656,11 @@ def status():
 
             client.close()
 
-        except (ConnectionFailure, ServerSelectionTimeoutError, Exception):
+        except (
+            ConnectionFailure,
+            ServerSelectionTimeoutError,
+            Exception,  # noqa: BLE001 friendly connection-test handler
+        ):
             # Clean error message without traceback
             db_table.add_row(
                 "Connection",
@@ -758,7 +786,7 @@ def status():
                     Text("-", style="dim"),
                 )
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly error handler
             jf_table.add_row(
                 "Parse Error",
                 str(e)[:30],
@@ -789,10 +817,12 @@ def status():
     console.print("  [bold]Configuration:[/bold]")
     console.print("    • Create config: [cyan]atomate2siesta-config create[/cyan]")
     console.print(
-        "    • Create config in home: [cyan]atomate2siesta-config create --output-dir ~[/cyan]"
+        "    • Create config in home: "
+        "[cyan]atomate2siesta-config create --output-dir ~[/cyan]"
     )
     console.print(
-        '    • Set environment: [cyan]export ATOMATE2_CONFIG_FILE="path/to/config.yaml"[/cyan]'
+        "    • Set environment: "
+        '[cyan]export ATOMATE2_CONFIG_FILE="path/to/config.yaml"[/cyan]'
     )
     console.print("    • Check status: [cyan]atomate2siesta-config status[/cyan]")
     console.print("\n  [bold]Database:[/bold]")
@@ -808,7 +838,8 @@ def status():
     if not jobflow_file:
         console.print("\n  [bold yellow]⚠ Note:[/bold yellow]")
         console.print(
-            "    [dim]No jobflow.yaml found. Calculations will only save to database if[/dim]"
+            "    [dim]No jobflow.yaml found. Calculations will only save "
+            "to database if[/dim]"
         )
         console.print(
             "    [dim]you explicitly define a JobStore in your Python scripts.[/dim]"
@@ -864,8 +895,10 @@ results = run_locally(job, create_folders=True)
     is_flag=True,
     help="Show what would be added without modifying files",
 )
-def persist(config_path, shell, dry_run):
-    """Add ATOMATE2_CONFIG_FILE export to your shell configuration file (.zshrc/.bashrc).
+def persist(config_path: str | None, shell: str, dry_run: bool) -> None:
+    (
+        """Add ATOMATE2_CONFIG_FILE export to your shell configuration file """
+        """(.zshrc/.bashrc).
 
     This command helps you persist the configuration across shell sessions by adding
     the export statement to your shell's configuration file.
@@ -884,6 +917,7 @@ def persist(config_path, shell, dry_run):
         # Specify shell type explicitly
         atomate2siesta-config persist --shell zsh
     """
+    )
     from rich.prompt import Confirm
 
     console.print("\n[bold cyan]Persist Configuration to Shell Profile[/bold cyan]\n")
@@ -921,7 +955,8 @@ def persist(config_path, shell, dry_run):
                     "  [cyan]atomate2siesta-config create --output-dir ~[/cyan]"
                 )
                 console.print(
-                    "  [cyan]atomate2siesta-config persist ~/.atomate2siesta.yaml[/cyan]"
+                    "  [cyan]atomate2siesta-config persist "
+                    "~/.atomate2siesta.yaml[/cyan]"
                 )
                 return
 
@@ -930,7 +965,8 @@ def persist(config_path, shell, dry_run):
         console.print(f"[red]✗ Config file does not exist: {config_file}[/red]")
         console.print("\nCreate it first with:")
         console.print(
-            f"  [cyan]atomate2siesta-config create --output-dir {config_file.parent}[/cyan]"
+            f"  [cyan]atomate2siesta-config create --output-dir "
+            f"{config_file.parent}[/cyan]"
         )
         return
 
@@ -1053,7 +1089,7 @@ def persist(config_path, shell, dry_run):
         console.print("  3. Verify with:")
         console.print("     [cyan]atomate2siesta-config status[/cyan]")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error handler
         console.print(f"\n[red]✗ Failed to modify {shell_file}: {e}[/red]")
         console.print("\nTo add manually, run:")
         console.print(f"  [cyan]echo '{marker_comment}' >> {shell_file}[/cyan]")

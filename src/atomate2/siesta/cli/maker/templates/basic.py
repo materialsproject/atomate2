@@ -10,7 +10,7 @@ from atomate2.siesta.cli.maker.templates.base import WorkflowTemplate
 class RelaxTemplate(WorkflowTemplate):
     """Template for structure relaxation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="relax",
             description="Structure relaxation to find equilibrium geometry",
@@ -80,7 +80,7 @@ print("  - siesta.fdf (input parameters)")
 class StaticTemplate(WorkflowTemplate):
     """Template for static (single-point) calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="static",
             description="Single-point energy calculation",
@@ -142,7 +142,7 @@ print("  - siesta.fdf (input parameters)")
 class BandsTemplate(WorkflowTemplate):
     """Template for band structure calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="bands",
             description="Electronic band structure calculation with automatic k-path",
@@ -205,7 +205,7 @@ print("  - band_structure.png (automatic plot)")
 class DOSTemplate(WorkflowTemplate):
     """Template for density of states calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="dos",
             description="Density of states (DOS) calculation",
@@ -300,7 +300,7 @@ print("  - job_dos_*/siesta.PDOS* (projected DOS)")
 class PDOSTemplate(WorkflowTemplate):
     """Template for projected density of states (PDOS) calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="pdos",
             description="Projected density of states (PDOS) calculation",
@@ -361,7 +361,7 @@ print("  - siesta.PDOS* (orbital-resolved DOS)")
 class OpticalTemplate(WorkflowTemplate):
     """Template for optical properties calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="optical",
             description="Optical properties (absorption, dielectric function)",

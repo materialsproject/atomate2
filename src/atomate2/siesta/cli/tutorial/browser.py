@@ -32,7 +32,8 @@ def get_tutorials_dir() -> Path:
         # For now, raise an error with helpful message
         msg = (
             f"Tutorials directory not found at {tutorials_dir}\n"
-            "Please ensure atomate2siesta is installed from source with tutorials included."
+            "Please ensure atomate2siesta is installed from source "
+            "with tutorials included."
         )
         raise FileNotFoundError(msg)
 
@@ -206,7 +207,7 @@ def copy_tutorial(tutorial: dict[str, Any], dest: Path) -> None:
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def tutorials(ctx):
+def tutorials(ctx: click.Context) -> None:
     """Browse and manage atomate2siesta tutorials.
 
     Interactive tutorial browser with rich terminal UI.
@@ -219,7 +220,7 @@ def tutorials(ctx):
       atomate2siesta-tutorials search phonon # Search tutorials
       atomate2siesta-tutorials show relaxation # Show specific tutorial
       atomate2siesta-tutorials copy relaxation # Copy tutorial files
-    """
+    """  # noqa: D301
     if ctx.invoked_subcommand is None:
         # Interactive mode
         browse_interactive()
@@ -234,7 +235,7 @@ def list_tutorials() -> None:
 
 @tutorials.command()
 @click.argument("query", required=False)
-def search(query: str | None):
+def search(query: str | None) -> None:
     """Search tutorials by name or keywords.
 
     \b
@@ -242,7 +243,7 @@ def search(query: str | None):
       atomate2siesta-tutorials search phonon
       atomate2siesta-tutorials search relaxation
       atomate2siesta-tutorials search "band structure"
-    """
+    """  # noqa: D301
     structure = discover_tutorials()
 
     if not query:
@@ -253,7 +254,7 @@ def search(query: str | None):
     query_lower = query.lower()
     results = []
 
-    for category, tutorials in structure.items():
+    for tutorials in structure.values():
         for tutorial in tutorials:
             # Search in title, name, and path
             searchable = (
@@ -281,19 +282,19 @@ def search(query: str | None):
 
 @tutorials.command()
 @click.argument("tutorial_name")
-def show(tutorial_name: str):
+def show(tutorial_name: str) -> None:
     """Display a specific tutorial's README.
 
     \b
     Examples:
       atomate2siesta-tutorials show 01-relaxation
       atomate2siesta-tutorials show phonons
-    """
+    """  # noqa: D301
     structure = discover_tutorials()
 
     # Find tutorial (fuzzy match)
     found = None
-    for category, tutorials in structure.items():
+    for tutorials in structure.values():
         for tutorial in tutorials:
             if (
                 tutorial["name"] == tutorial_name
@@ -318,19 +319,19 @@ def show(tutorial_name: str):
 @click.option(
     "-o", "--output", type=click.Path(), help="Output directory (default: current dir)"
 )
-def copy(tutorial_name: str, output: str | None):
+def copy(tutorial_name: str, output: str | None) -> None:
     """Copy tutorial files to current or specified directory.
 
     \b
     Examples:
       atomate2siesta-tutorials copy 01-relaxation
       atomate2siesta-tutorials copy phonon -o my-phonon-calc
-    """
+    """  # noqa: D301
     structure = discover_tutorials()
 
     # Find tutorial
     found = None
-    for category, tutorials in structure.items():
+    for tutorials in structure.values():
         for tutorial in tutorials:
             if (
                 tutorial["name"] == tutorial_name
@@ -348,16 +349,13 @@ def copy(tutorial_name: str, output: str | None):
         return
 
     # Determine destination
-    if output:
-        dest = Path(output)
-    else:
-        dest = Path.cwd() / tutorial["name"]
+    dest = Path(output) if output else Path.cwd() / tutorial["name"]
 
     console.print(f"[cyan]Copying tutorial to: {dest}[/cyan]\n")
     copy_tutorial(found, dest)
 
 
-def browse_interactive():
+def browse_interactive() -> None:
     """Interactive tutorial browser."""
     try:
         import questionary
@@ -381,7 +379,8 @@ def browse_interactive():
         console.print(
             Panel.fit(
                 "[bold cyan]Atomate2-SIESTA Tutorial Browser[/bold cyan]\n"
-                f"Browse {sum(len(t) for t in structure.values())} tutorials interactively",
+                f"Browse {sum(len(t) for t in structure.values())} "
+                "tutorials interactively",
                 border_style="cyan",
             )
         )
@@ -513,7 +512,7 @@ def search_interactive(structure: dict[str, list[dict[str, Any]]]) -> None:
     query_lower = query.lower()
     results = []
 
-    for category, tutorials in structure.items():
+    for tutorials in structure.values():
         for tutorial in tutorials:
             searchable = (
                 f"{tutorial['title']} {tutorial['name']} {tutorial['rel_path']}".lower()

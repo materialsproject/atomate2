@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """CLI for generating surface slabs.
 
 This module provides the `slab` subcommand for atomate2siesta-structure.
@@ -118,26 +117,26 @@ console = Console()
     "Uses vdW gap detection to ensure complete layers with no extra atoms.",
 )
 def slab(
-    structure_file,
-    miller,
-    layers,
-    vacuum,
-    min_slab_size,
-    termination,
-    list_terminations,
-    all_terminations,
-    all_surfaces,
-    max_index,
-    symmetric,
-    center_slab,
-    in_unit_planes,
-    primitive,
-    orthogonal,
-    output,
-    format,
-    show_layers,
-    vdw_layers,
-):
+    structure_file: str,
+    miller: str | None,
+    layers: int,
+    vacuum: float,
+    min_slab_size: float | None,
+    termination: int | None,
+    list_terminations: bool,
+    all_terminations: bool,
+    all_surfaces: bool,
+    max_index: int,
+    symmetric: bool,
+    center_slab: bool,
+    in_unit_planes: bool,
+    primitive: bool,
+    orthogonal: bool,
+    output: str | None,
+    format: str,  # noqa: A002 Click --format option name
+    show_layers: bool,
+    vdw_layers: int | None,
+) -> None:
     """Generate surface slabs for adsorption and catalysis studies.
 
     Supports Miller index specification, termination discovery, vacuum control,
@@ -177,15 +176,16 @@ def slab(
             )
     elif not miller and not all_surfaces:
         console.print(
-            "[red]Error: Must specify either --miller, --all-surfaces, or --vdw-layers[/red]"
+            "[red]Error: Must specify either --miller, --all-surfaces, "
+            "or --vdw-layers[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
 
     if termination is not None and all_terminations:
         console.print(
             "[red]Error: Cannot use both --termination and --all-terminations[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
 
     # When using --layers (not --min-slab-size), automatically enable in_unit_planes
     # so that layers are counted correctly instead of being treated as Angstroms
@@ -198,7 +198,8 @@ def slab(
         # Load structure
         structure = Structure.from_file(structure_file)
         console.print(
-            f"\n[cyan]Loaded bulk structure: {structure.composition.reduced_formula}[/cyan]"
+            f"\n[cyan]Loaded bulk structure: "
+            f"{structure.composition.reduced_formula}[/cyan]"
         )
         console.print(f"  Formula: {structure.composition.formula}")
         console.print(f"  Sites: {structure.num_sites}")
@@ -210,7 +211,8 @@ def slab(
         # Handle --vdw-layers for layered materials (MoS2, graphene, etc.)
         if vdw_layers is not None:
             console.print(
-                f"\n[yellow]Generating {vdw_layers} vdW layers for layered material[/yellow]"
+                f"\n[yellow]Generating {vdw_layers} vdW layers "
+                f"for layered material[/yellow]"
             )
             slab_struct = _generate_vdw_slab(structure, vdw_layers, vacuum)
 
@@ -219,7 +221,7 @@ def slab(
                     "[red]Error: Could not detect vdW layers. "
                     "Structure may not be a layered material.[/red]"
                 )
-                raise click.Abort()
+                raise click.Abort  # noqa: TRY301
 
             # Display info
             coords = slab_struct.cart_coords
@@ -249,7 +251,8 @@ def slab(
         if all_surfaces:
             # Generate all symmetry-unique surfaces
             console.print(
-                f"\n[yellow]Generating all surfaces up to Miller index {max_index}[/yellow]"
+                f"\n[yellow]Generating all surfaces up to Miller index "
+                f"{max_index}[/yellow]"
             )
 
             indices = get_symmetrically_distinct_miller_indices(structure, max_index)
@@ -268,7 +271,8 @@ def slab(
                     d_hkl = structure.lattice.d_hkl(hkl)
                     effective_vacuum = vacuum_angstrom / d_hkl
                     console.print(
-                        f"  d_hkl = {d_hkl:.3f} Å, vacuum = {effective_vacuum:.1f} planes ({vacuum_angstrom:.1f} Å)"
+                        f"  d_hkl = {d_hkl:.3f} Å, vacuum = "
+                        f"{effective_vacuum:.1f} planes ({vacuum_angstrom:.1f} Å)"
                     )
 
                 # Generate slab
@@ -299,7 +303,10 @@ def slab(
                     from pathlib import Path
 
                     input_path = Path(structure_file)
-                    output_file = f"slab_{miller_h}{miller_k}{miller_l}_{input_path.stem}.{format}"
+                    output_file = (
+                        f"slab_{miller_h}{miller_k}{miller_l}_"
+                        f"{input_path.stem}.{format}"
+                    )
 
                     _save_structure(slab_struct, output_file, format)
                     console.print(f"  Saved: {output_file}")
@@ -314,7 +321,7 @@ def slab(
         hkl = tuple(int(x) for x in miller.split(","))
         if len(hkl) != 3:
             console.print("[red]Error: Miller indices must be h,k,l (3 values)[/red]")
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301
 
         console.print(
             f"\n[yellow]Generating ({hkl[0]},{hkl[1]},{hkl[2]}) surface[/yellow]"
@@ -386,7 +393,7 @@ def slab(
                     f"[red]Error: Termination {termination} not found. "
                     f"Available: 0-{len(slabs) - 1}[/red]"
                 )
-                raise click.Abort()
+                raise click.Abort  # noqa: TRY301
             slabs_to_generate = [(termination, slabs[termination])]
         else:
             # Generate first termination by default
@@ -396,7 +403,7 @@ def slab(
         for idx, slab_struct in slabs_to_generate:
             # Orthogonalize if requested
             if orthogonal:
-                slab_struct = slab_struct.get_orthogonal_c_slab()
+                slab_struct = slab_struct.get_orthogonal_c_slab()  # noqa: PLW2901
 
             # Display slab information
             _display_slab_info(slab_struct, structure, hkl, idx, show_layers)
@@ -410,9 +417,15 @@ def slab(
                 input_path = Path(structure_file)
                 miller_h, miller_k, miller_l = hkl
                 if all_terminations or len(slabs_to_generate) > 1:
-                    output_file = f"slab_{miller_h}{miller_k}{miller_l}_term{idx}_{input_path.stem}.{format}"
+                    output_file = (
+                        f"slab_{miller_h}{miller_k}{miller_l}_term{idx}_"
+                        f"{input_path.stem}.{format}"
+                    )
                 else:
-                    output_file = f"slab_{miller_h}{miller_k}{miller_l}_{input_path.stem}.{format}"
+                    output_file = (
+                        f"slab_{miller_h}{miller_k}{miller_l}_"
+                        f"{input_path.stem}.{format}"
+                    )
 
             # Save structure
             _save_structure(slab_struct, output_file, format)
@@ -431,31 +444,31 @@ def slab(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
-def _save_structure(structure, filename, format):
+def _save_structure(structure: Structure, filename: str, fmt: str) -> None:
     """Save structure to file."""
-    if format == "cif":
+    if fmt == "cif":
         structure.to(filename=filename, fmt="cif")
-    elif format == "poscar":
+    elif fmt == "poscar":
         structure.to(filename=filename, fmt="poscar")
-    elif format == "xsf":
+    elif fmt == "xsf":
         from pymatgen.io.xcrysden import XSF
 
         xsf = XSF(structure)
         with open(filename, "w") as f:
             f.write(xsf.to_str())
-    elif format == "json":
+    elif fmt == "json":
         structure.to(filename=filename, fmt="json")
-    elif format == "fdf":
+    elif fmt == "fdf":
         # Convert to sisl geometry and write FDF
         import sisl
 
         geom = sisl.get_sile(structure).read_geometry()
         with sisl.get_sile(filename, "w") as fdf:
             fdf.write_geometry(geom)
-    elif format == "XV":
+    elif fmt == "XV":
         # Convert to sisl geometry and write XV
         import sisl
 
@@ -463,7 +476,11 @@ def _save_structure(structure, filename, format):
         geom.write(filename)
 
 
-def _display_terminations(slabs, bulk_structure, hkl):
+def _display_terminations(
+    slabs: list,
+    bulk_structure: Structure,  # noqa: ARG001 kept for signature parity
+    hkl: tuple,
+) -> None:
     """Display all possible terminations."""
     console.print(
         f"\n[cyan]Available Terminations for ({hkl[0]},{hkl[1]},{hkl[2]}):[/cyan]"
@@ -483,7 +500,7 @@ def _display_terminations(slabs, bulk_structure, hkl):
 
         # Get surface termination info
         surface_sites = _get_surface_sites(slab)
-        top_species = ", ".join(sorted(set(str(s.specie) for s in surface_sites[:3])))
+        top_species = ", ".join(sorted({str(s.specie) for s in surface_sites[:3]}))
 
         table.add_row(
             str(idx),
@@ -498,7 +515,13 @@ def _display_terminations(slabs, bulk_structure, hkl):
     console.print("[dim]Use --all-terminations to generate all[/dim]")
 
 
-def _display_slab_info(slab, bulk, hkl, term_idx, show_layers):
+def _display_slab_info(
+    slab: Structure,
+    bulk: Structure,
+    hkl: tuple,  # noqa: ARG001 kept for signature parity
+    term_idx: int,
+    show_layers: bool,
+) -> None:
     """Display detailed slab information."""
     console.print(f"\n[yellow]Slab Information (Termination {term_idx}):[/yellow]")
 
@@ -551,7 +574,7 @@ def _display_slab_info(slab, bulk, hkl, term_idx, show_layers):
         _display_layer_info(slab)
 
 
-def _get_surface_sites(slab):
+def _get_surface_sites(slab: Structure) -> list:
     """Get sites at the top surface."""
     coords = slab.cart_coords
     max_z = coords[:, 2].max()
@@ -560,7 +583,7 @@ def _get_surface_sites(slab):
     return [slab[i] for i in surface_indices]
 
 
-def _display_layer_info(slab):
+def _display_layer_info(slab: Structure) -> None:
     """Display layer-by-layer information."""
     console.print("\n[cyan]Layer Information:[/cyan]")
 
@@ -588,7 +611,7 @@ def _display_layer_info(slab):
         z = unique_z[i]
         layer_indices = [j for j, zz in enumerate(z_coords) if abs(zz - z) < 0.5]
         layer_sites = [slab[j] for j in layer_indices]
-        species = ", ".join(sorted(set(str(s.specie) for s in layer_sites)))
+        species = ", ".join(sorted({str(s.specie) for s in layer_sites}))
 
         table.add_row(str(i), f"{z:.3f}", str(len(layer_indices)), species)
 
@@ -600,14 +623,16 @@ def _display_layer_info(slab):
             z = unique_z[i]
             layer_indices = [j for j, zz in enumerate(z_coords) if abs(zz - z) < 0.5]
             layer_sites = [slab[j] for j in layer_indices]
-            species = ", ".join(sorted(set(str(s.specie) for s in layer_sites)))
+            species = ", ".join(sorted({str(s.specie) for s in layer_sites}))
 
             table.add_row(str(i), f"{z:.3f}", str(len(layer_indices)), species)
 
     console.print(table)
 
 
-def _generate_vdw_slab(bulk, n_layers, vacuum):
+def _generate_vdw_slab(
+    bulk: Structure, n_layers: int, vacuum: float
+) -> Structure | None:
     """Generate slab for layered vdW materials with complete layers only.
 
     This function detects vdW gaps in the bulk structure and creates slabs
@@ -643,7 +668,8 @@ def _generate_vdw_slab(bulk, n_layers, vacuum):
     vdw_gap = gaps[0][0]
     if vdw_gap < 2.5:
         console.print(
-            f"[yellow]Warning: Largest gap ({vdw_gap:.2f} Å) may not be a vdW gap[/yellow]"
+            f"[yellow]Warning: Largest gap ({vdw_gap:.2f} Å) "
+            f"may not be a vdW gap[/yellow]"
         )
 
     # Replicate bulk enough times to have enough layers
@@ -712,8 +738,7 @@ def _generate_vdw_slab(bulk, n_layers, vacuum):
             new_z = z + z_shift
             new_coords.append([xy[0], xy[1], new_z])
 
-    slab = Structure(new_lattice, new_species, new_coords, coords_are_cartesian=True)
-    return slab
+    return Structure(new_lattice, new_species, new_coords, coords_are_cartesian=True)
 
 
 if __name__ == "__main__":

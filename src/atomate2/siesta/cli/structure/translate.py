@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: EXE001
 """CLI for translating atomic positions.
 
 This module provides the `translate` subcommand for atomate2siesta-structure.
@@ -67,17 +68,17 @@ console = Console()
     help="Show first few atomic positions before/after translation",
 )
 def translate(
-    structure_file,
-    vector,
-    fractional,
-    element,
-    center,
-    wrap,
-    no_wrap,
-    output,
-    format,
-    show_before_after,
-):
+    structure_file: str,
+    vector: tuple[float, float, float] | None,
+    fractional: tuple[float, float, float] | None,
+    element: str | None,
+    center: bool,
+    wrap: bool,
+    no_wrap: bool,
+    output: str | None,
+    format: str,  # noqa: A002 Click option name mirrors the CLI --format flag
+    show_before_after: bool,
+) -> None:
     """Translate atomic positions for alignment, centering, or interface building.
 
     Supports Cartesian and fractional translations, element-selective shifts,
@@ -102,7 +103,8 @@ def translate(
         atomate2siesta-structure translate Si.cif --vector 0 0 5 --no-wrap
 
         # Show position changes
-        atomate2siesta-structure translate Si.cif --fractional 0 0 0.1 --show-before-after
+        atomate2siesta-structure translate Si.cif --fractional 0 0 0.1 \
+--show-before-after
     """
     # Handle wrap/no-wrap options
     if no_wrap:
@@ -119,10 +121,10 @@ def translate(
             "[red]Error: Must specify one translation method:\n"
             "  --vector, --fractional, or --center[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
     if sum(methods) > 1:
         console.print("[red]Error: Only specify one translation method[/red]")
-        raise click.Abort()
+        raise click.Abort
 
     try:
         # Load structure
@@ -140,7 +142,7 @@ def translate(
                 console.print(
                     f"[red]Error: No {element} atoms found in structure[/red]"
                 )
-                raise click.Abort()
+                raise click.Abort  # noqa: TRY301 intentional early exit within try
 
         # Store original positions for comparison
         if show_before_after:
@@ -196,14 +198,20 @@ def translate(
                 translated_structure.translate_sites(
                     indices=indices, vector=vector, frac_coords=False
                 )
-                translation_description = f"Translated {element} atoms: [{vector[0]:.3f}, {vector[1]:.3f}, {vector[2]:.3f}] Å"
+                translation_description = (
+                    f"Translated {element} atoms: "
+                    f"[{vector[0]:.3f}, {vector[1]:.3f}, {vector[2]:.3f}] Å"
+                )
             else:
                 translated_structure.translate_sites(
                     indices=range(len(translated_structure)),
                     vector=vector,
                     frac_coords=False,
                 )
-                translation_description = f"Cartesian translation: [{vector[0]:.3f}, {vector[1]:.3f}, {vector[2]:.3f}] Å"
+                translation_description = (
+                    f"Cartesian translation: "
+                    f"[{vector[0]:.3f}, {vector[1]:.3f}, {vector[2]:.3f}] Å"
+                )
 
             display_vector = (
                 f"Δ(cart) = [{vector[0]:.3f}, {vector[1]:.3f}, {vector[2]:.3f}] Å"
@@ -220,16 +228,27 @@ def translate(
                 translated_structure.translate_sites(
                     indices=indices, vector=fractional, frac_coords=True
                 )
-                translation_description = f"Translated {element} atoms: [{fractional[0]:.4f}, {fractional[1]:.4f}, {fractional[2]:.4f}] (frac)"
+                translation_description = (
+                    f"Translated {element} atoms: "
+                    f"[{fractional[0]:.4f}, {fractional[1]:.4f}, "
+                    f"{fractional[2]:.4f}] (frac)"
+                )
             else:
                 translated_structure.translate_sites(
                     indices=range(len(translated_structure)),
                     vector=fractional,
                     frac_coords=True,
                 )
-                translation_description = f"Fractional translation: [{fractional[0]:.4f}, {fractional[1]:.4f}, {fractional[2]:.4f}]"
+                translation_description = (
+                    f"Fractional translation: "
+                    f"[{fractional[0]:.4f}, {fractional[1]:.4f}, "
+                    f"{fractional[2]:.4f}]"
+                )
 
-            display_vector = f"Δ(frac) = [{fractional[0]:.4f}, {fractional[1]:.4f}, {fractional[2]:.4f}]"
+            display_vector = (
+                f"Δ(frac) = [{fractional[0]:.4f}, "
+                f"{fractional[1]:.4f}, {fractional[2]:.4f}]"
+            )
 
         # Apply wrapping if requested
         if wrap:
@@ -325,7 +344,7 @@ def translate(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

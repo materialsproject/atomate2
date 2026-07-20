@@ -20,8 +20,8 @@ console = Console()
     help="Jobflow-remote project name (matches jf -p PROJECTNAME pattern)",
 )
 @click.pass_context
-def cli(ctx, project_name):
-    """Atomate2-SIESTA jobflow-remote management tools.
+def cli(ctx: click.Context, project_name: str) -> None:
+    r"""Atomate2-SIESTA jobflow-remote management tools.
 
     Manage HPC workflow submission, job inspection, parameter tuning,
     and resource allocation for SIESTA calculations via jobflow-remote.
@@ -64,8 +64,8 @@ cli.add_command(download)
 # Create job command group
 @cli.group()
 @click.pass_context
-def job(ctx):
-    """Inspect, modify, and tune jobflow-remote jobs.
+def job(ctx: click.Context) -> None:
+    r"""Inspect, modify, and tune jobflow-remote jobs.
 
     View job details, edit SIESTA FDF parameters, and update
     SLURM/PBS resource allocations directly in MongoDB.

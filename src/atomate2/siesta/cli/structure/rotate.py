@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: EXE001
 """CLI for rotating structures.
 
 This module provides the `rotate` subcommand for atomate2siesta-structure.
@@ -45,7 +46,7 @@ console = Console()
     "--euler",
     type=float,
     nargs=3,
-    help="Euler angles (α, β, γ) in degrees (ZXZ convention)",
+    help="Euler angles (α, β, γ) in degrees (ZXZ convention)",  # noqa: RUF001 physics symbols
 )
 @click.option(
     "--rotate-cell",
@@ -76,19 +77,19 @@ console = Console()
     help="Show angles between lattice vectors before/after",
 )
 def rotate(
-    structure_file,
-    axis,
-    angle,
-    align_to_x,
-    align_to_y,
-    align_to_z,
-    euler,
-    rotate_cell,
-    rotate_atoms_only,
-    output,
-    format,
-    show_angles,
-):
+    structure_file: str,
+    axis: str | None,
+    angle: float | None,
+    align_to_x: str | None,
+    align_to_y: str | None,
+    align_to_z: str | None,
+    euler: tuple[float, float, float] | None,
+    rotate_cell: bool,
+    rotate_atoms_only: bool,
+    output: str | None,
+    format: str,  # noqa: A002 Click option name mirrors the CLI --format flag
+    show_angles: bool,
+) -> None:
     """Rotate structures for alignment, surface cuts, or reorientation.
 
     Supports axis-angle rotation, Euler angles, and alignment of crystallographic
@@ -124,14 +125,15 @@ def rotate(
             "[red]Error: Must specify one rotation method:\n"
             "  --axis/--angle, --align-to-x/y/z, or --euler[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
     if sum(methods) > 1:
         console.print("[red]Error: Only specify one rotation method[/red]")
-        raise click.Abort()
+        raise click.Abort
 
     if rotate_atoms_only and not rotate_cell:
         console.print(
-            "[yellow]Warning: Both --rotate-atoms-only and --rotate-cell=False specified. "
+            "[yellow]Warning: Both --rotate-atoms-only and "
+            "--rotate-cell=False specified. "
             "Using --rotate-atoms-only.[/yellow]"
         )
 
@@ -156,7 +158,9 @@ def rotate(
             # Axis-angle rotation
             import numpy as np
             from pymatgen.core.operations import SymmOp
-            from scipy.spatial.transform import Rotation as R
+            from scipy.spatial.transform import (
+                Rotation as R,  # noqa: N817 conventional alias
+            )
 
             axis_map = {"x": [1, 0, 0], "y": [0, 1, 0], "z": [0, 0, 1]}
             rotation_axis = axis_map[axis]
@@ -209,7 +213,9 @@ def rotate(
                 target_name = "z"
 
             import numpy as np
-            from scipy.spatial.transform import Rotation as R
+            from scipy.spatial.transform import (
+                Rotation as R,  # noqa: N817 conventional alias
+            )
 
             # Convert Miller indices to Cartesian
             lattice = rotated_structure.lattice
@@ -247,13 +253,18 @@ def rotate(
 
             symm_op = SymmOp.from_rotation_and_translation(rotation_matrix)
             rotated_structure.apply_operation(symm_op)
-            rotation_description = f"Alignment: [{','.join(str(int(h)) for h in hkl)}] → {target_name}-axis"
+            rotation_description = (
+                f"Alignment: [{','.join(str(int(h)) for h in hkl)}] "
+                f"→ {target_name}-axis"
+            )
 
         elif euler is not None:
             # Euler angle rotation (ZXZ convention)
             import numpy as np
             from pymatgen.core.operations import SymmOp
-            from scipy.spatial.transform import Rotation as R
+            from scipy.spatial.transform import (
+                Rotation as R,  # noqa: N817 conventional alias
+            )
 
             alpha, beta, gamma = euler
             rot = R.from_euler("ZXZ", [alpha, beta, gamma], degrees=True)
@@ -275,12 +286,16 @@ def rotate(
                     coords_are_cartesian=True,
                     site_properties=rotated_structure.site_properties,
                 )
-                rotation_description = f"Euler angles (ZXZ): α={alpha:.1f}°, β={beta:.1f}°, γ={gamma:.1f}° (atoms only)"
+                rotation_description = (
+                    f"Euler angles (ZXZ): α={alpha:.1f}°, "  # noqa: RUF001 physics symbols
+                    f"β={beta:.1f}°, γ={gamma:.1f}° (atoms only)"  # noqa: RUF001
+                )
             else:
                 symm_op = SymmOp.from_rotation_and_translation(rotation_matrix)
                 rotated_structure.apply_operation(symm_op)
                 rotation_description = (
-                    f"Euler angles (ZXZ): α={alpha:.1f}°, β={beta:.1f}°, γ={gamma:.1f}°"
+                    f"Euler angles (ZXZ): α={alpha:.1f}°, "  # noqa: RUF001 physics symbols
+                    f"β={beta:.1f}°, γ={gamma:.1f}°"  # noqa: RUF001 physics symbols
                 )
 
         # Display rotation information
@@ -312,7 +327,7 @@ def rotate(
 
         # Angles (only if changed significantly)
         if show_angles or not rotate_cell:
-            for i, label in enumerate(["α (°)", "β (°)", "γ (°)"]):
+            for i, label in enumerate(["α (°)", "β (°)", "γ (°)"]):  # noqa: RUF001
                 orig = orig_params[i + 3]
                 rot = rot_params[i + 3]
                 change = rot - orig
@@ -339,7 +354,8 @@ def rotate(
         # Additional info for atom-only rotation
         if rotate_atoms_only:
             console.print(
-                "\n[dim]Note: Atoms rotated, cell unchanged (fractional coordinates modified)[/dim]"
+                "\n[dim]Note: Atoms rotated, cell unchanged "
+                "(fractional coordinates modified)[/dim]"
             )
 
         # Save structure
@@ -368,7 +384,8 @@ def rotate(
         # Usage tips
         if axis and angle:
             console.print(
-                "\n[dim]Tip: Use --show-angles to see angle changes between lattice vectors[/dim]"
+                "\n[dim]Tip: Use --show-angles to see angle changes "
+                "between lattice vectors[/dim]"
             )
         if not show_angles and rotate_cell:
             console.print("[dim]Tip: Use --rotate-atoms-only to keep cell fixed[/dim]")
@@ -378,7 +395,7 @@ def rotate(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

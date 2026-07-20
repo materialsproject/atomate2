@@ -51,8 +51,9 @@ def parse_fdf_file(fdf_path: str | Path) -> dict[str, Any]:
     block_lines: list[str] = []
 
     with open(fdf_path) as f:
-        for line in f:
+        for raw_line in f:
             # Remove inline comments
+            line = raw_line
             if "#" in line:
                 line = line[: line.index("#")]
 
@@ -188,7 +189,7 @@ def format_as_cli_params(params: dict[str, Any]) -> list[str]:
             # Block parameters - convert to dict format for fdf_arguments
             formatted_value = "{" + f'"{key}": {value}' + "}"
             cli_params.append(f"--param 'fdf_arguments={formatted_value}'")
-        elif isinstance(value, str) or isinstance(value, bool):
+        elif isinstance(value, (str, bool)):
             cli_params.append(f'--param "{key}={value}"')
         else:
             cli_params.append(f'--param "{key}={value}"')
@@ -219,8 +220,7 @@ def format_as_yaml(params: dict[str, Any]) -> str:
         if isinstance(value, list):
             # Block parameters
             lines.append(f"{key}:")
-            for line in value:
-                lines.append(f"  - {line}")
+            lines.extend(f"  - {item}" for item in value)
         elif isinstance(value, str):
             lines.append(f'{key}: "{value}"')
         elif isinstance(value, bool):
@@ -313,11 +313,11 @@ def format_as_maker_code(params: dict[str, Any]) -> str:
 )
 def extract(
     fdf_file: str,
-    format: str,
+    format: str,  # noqa: A002 Click maps the --format option to this name
     output: str | None,
-    filter: tuple[str],
+    filter: tuple[str],  # noqa: A002 Click maps the --filter option to this name
     exclude_blocks: bool,
-):
+) -> None:
     """Extract parameters from SIESTA FDF file.
 
     Parse a SIESTA FDF file and extract all parameters in various formats:
@@ -351,7 +351,7 @@ def extract(
     \b
         # Save to file
         atomate2siesta-inputs extract siesta.fdf --format yaml -o params.yaml
-    """
+    """  # noqa: D301
     try:
         # Parse FDF file
         console.print(f"[cyan]Parsing FDF file:[/cyan] {fdf_file}")
@@ -364,7 +364,7 @@ def extract(
                 pattern_re = re.compile(pattern.replace("*", ".*"))
                 for key, value in params.items():
                     if pattern_re.match(key):
-                        filtered_params[key] = value
+                        filtered_params[key] = value  # noqa: PERF403 accumulate across patterns
             params = filtered_params
 
         # Exclude blocks if requested
@@ -372,7 +372,7 @@ def extract(
             params = {k: v for k, v in params.items() if not isinstance(v, list)}
 
         # Count parameters
-        n_params = len([k for k in params.keys() if not k.startswith("_")])
+        n_params = len([k for k in params if not k.startswith("_")])
         n_blocks = len([v for v in params.values() if isinstance(v, list)])
 
         console.print(
@@ -499,11 +499,11 @@ def extract(
 
     except FileNotFoundError as e:
         console.print(f"[red]Error:[/red] {e}")
-        raise click.Abort()
+        raise click.Abort from e
     except Exception as e:
         console.print(f"[red]Error parsing FDF file:[/red] {e}")
         console.print("[yellow]Make sure the file is a valid SIESTA FDF file.[/yellow]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

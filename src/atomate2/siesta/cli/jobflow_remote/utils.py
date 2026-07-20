@@ -7,10 +7,14 @@ configurations, YAML files, and other common operations.
 from __future__ import annotations
 
 from datetime import datetime
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import yaml
 from rich.console import Console
+
+if TYPE_CHECKING:
+    from pathlib import Path
+    from typing import TextIO
 
 console = Console()
 
@@ -25,7 +29,8 @@ def _backup_config(config_path: Path) -> Path:
     -------
         Path to the backup file
     """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # local-time timestamp intended for the backup filename suffix
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
     backup_path = (
         config_path.parent
         / f"{config_path.stem}.backup_{timestamp}{config_path.suffix}"
@@ -71,7 +76,9 @@ def _load_yaml_config(config_path: Path) -> dict:
         return yaml.safe_load(f)
 
 
-def _save_yaml_config(config_path: Path, config_data: dict, add_comments: bool = False):
+def _save_yaml_config(
+    config_path: Path, config_data: dict, add_comments: bool = False
+) -> None:
     """Save dictionary to YAML configuration file.
 
     Args:
@@ -87,7 +94,7 @@ def _save_yaml_config(config_path: Path, config_data: dict, add_comments: bool =
             yaml.dump(config_data, f, default_flow_style=False, sort_keys=False)
 
 
-def _write_yaml_with_comments(file_handle, config_data: dict):
+def _write_yaml_with_comments(file_handle: TextIO, config_data: dict) -> None:
     """Write YAML configuration with inline comments.
 
     Args:
@@ -104,7 +111,9 @@ def _write_yaml_with_comments(file_handle, config_data: dict):
                 "type": "Worker type: 'local' for testing, 'remote' for HPC",
                 "scheduler_type": "Scheduler: 'shell', 'slurm', 'pbs', 'sge', 'lsf'",
                 "work_dir": "Directory where jobs will run on the worker",
-                "pre_run": "Commands to run before job execution (e.g., activate environment)",
+                "pre_run": (
+                    "Commands to run before job execution (e.g., activate environment)"
+                ),
                 "timeout_execute": "Timeout in seconds for job execution",
                 "host": "Remote host address (for remote workers)",
                 "user": "Username for remote connection",
@@ -152,13 +161,15 @@ def _write_yaml_with_comments(file_handle, config_data: dict):
         },
     }
 
-    def write_dict(data, indent=0, comment_path=None):
+    def write_dict(
+        data: dict, indent: int = 0, comment_path: list | None = None
+    ) -> None:
         """Recursively write dictionary with comments."""
         if comment_path is None:
             comment_path = []
 
         for key, value in data.items():
-            current_path = comment_path + [key]
+            current_path = [*comment_path, key]
 
             # Get comment for this key
             comment = _get_comment(comments, current_path)
@@ -185,8 +196,9 @@ def _write_yaml_with_comments(file_handle, config_data: dict):
                     file_handle.write(f"{'  ' * indent}{key}:  # {comment}\n")
                 else:
                     file_handle.write(f"{'  ' * indent}{key}:\n")
-                for item in value:
-                    file_handle.write(f"{'  ' * (indent + 1)}- {item}\n")
+                file_handle.writelines(
+                    f"{'  ' * (indent + 1)}- {item}\n" for item in value
+                )
             elif comment:
                 file_handle.write(f"{'  ' * indent}{key}: {value}  # {comment}\n")
             else:

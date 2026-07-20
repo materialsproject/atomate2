@@ -4,12 +4,21 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import click
 from rich.console import Console
 from rich.table import Table
 
 from atomate2.siesta.cli.maker.templates import TEMPLATES
+
+# Docstrings deliberately use scientific symbols (Greek letters, the
+# multiplication sign) that ruff flags as ambiguous unicode.
+# ruff: noqa: RUF002
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any
 
 console = Console()
 
@@ -21,7 +30,7 @@ console = Console()
     help="Interactive mode with guided prompts",
 )
 @click.pass_context
-def cli(ctx, interactive):
+def cli(ctx: click.Context, interactive: bool) -> None:
     """Generate ready-to-run atomate2siesta workflow scripts."""
     # Show the welcome banner here (gated on the setting) instead of at import
     # time, so importing the library has no stdout side effects.
@@ -38,7 +47,7 @@ def cli(ctx, interactive):
         click.echo(ctx.get_help())
 
 
-def run_interactive_mode():
+def run_interactive_mode() -> None:
     """Run interactive mode with questionary prompts."""
     try:
         import questionary
@@ -357,7 +366,8 @@ def run_interactive_mode():
 
     elif workflow_type == "neb":
         console.print(
-            "\n[yellow]Note:[/yellow] NEB requires two structure files (initial and final)"
+            "\n[yellow]Note:[/yellow] NEB requires two structure files "
+            "(initial and final)"
         )
         final_structure = questionary.path(
             "Final structure file:",
@@ -390,7 +400,7 @@ def run_interactive_mode():
         ).ask()
         workflow_options["kpath_density"] = int(kpath_density) if kpath_density else 20
 
-    elif workflow_type == "gruneisen" or workflow_type == "qha":
+    elif workflow_type in {"gruneisen", "qha"}:
         min_length = questionary.text(
             "Minimum supercell length (Å):",
             default="10.0",
@@ -470,7 +480,7 @@ def run_interactive_mode():
         struct = Structure.from_file(structure_file)
         formula = struct.composition.reduced_formula
         default_output = f"{workflow_type}_{formula}.py"
-    except Exception:
+    except Exception:  # noqa: BLE001 any parse error falls back to a generic name
         default_output = f"{workflow_type}_workflow.py"
 
     output = questionary.text(
@@ -479,10 +489,7 @@ def run_interactive_mode():
         style=custom_style,
     ).ask()
 
-    if output is None:
-        output = default_output
-    else:
-        output = output.strip()
+    output = default_output if output is None else output.strip()
 
     # Build options dictionary
     options = {
@@ -500,13 +507,13 @@ def run_interactive_mode():
 
     try:
         generate_workflow_script(workflow_type, structure_file, options)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 surface any failure as a friendly message
         console.print(f"\n[red]Error generating workflow:[/red] {e}")
         sys.exit(1)
 
 
 # Common options decorator
-def common_options(func):
+def common_options(func: Callable) -> Callable:
     """Add common options to all workflow commands."""
     func = click.option(
         "-o",
@@ -533,11 +540,10 @@ def common_options(func):
         default="default",
         help="Jobflow-remote worker name (requires --remote)",
     )(func)
-    func = click.argument("structure_file", type=click.Path(exists=True))(func)
-    return func
+    return click.argument("structure_file", type=click.Path(exists=True))(func)
 
 
-def database_options(func):
+def database_options(func: Callable) -> Callable:
     """Add MongoDB database-configuration options.
 
     Only applied to commands that actually build a database config into the
@@ -565,16 +571,17 @@ def database_options(func):
         default="atomate2siesta",
         help="MongoDB database name (requires --database)",
     )(func)
-    func = click.option(
+    return click.option(
         "--db-collection",
         default="tasks",
         help="MongoDB collection name (requires --database)",
     )(func)
-    return func
 
 
-def generate_workflow_script(workflow_type, structure_file, options):
-    """Common logic for generating workflow scripts."""
+def generate_workflow_script(
+    workflow_type: str, structure_file: str, options: dict[str, Any]
+) -> None:
+    """Run the shared logic for generating workflow scripts."""
     # Build database config if database flag is set
     if options.get("database"):
         options["db_config"] = {
@@ -683,19 +690,19 @@ def generate_workflow_script(workflow_type, structure_file, options):
     help="Cell relaxation type",
 )
 def relax(
-    structure_file,
-    output,
-    preset,
-    dry_run,
-    remote,
-    worker,
-    database,
-    db_host,
-    db_port,
-    db_name,
-    db_collection,
-    cell_type,
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    database: bool,
+    db_host: str,
+    db_port: int,
+    db_name: str,
+    db_collection: str,
+    cell_type: str,
+) -> None:
     """Generate structure relaxation workflow.
 
     Performs atomic position optimization (fixed-cell) or full structural relaxation
@@ -735,7 +742,14 @@ def relax(
 
 @cli.command()
 @common_options
-def static(structure_file, output, preset, dry_run, remote, worker):
+def static(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+) -> None:
     """Generate static (single-point energy) calculation workflow.
 
     Performs a single SCF calculation at fixed atomic positions without any geometry
@@ -771,7 +785,15 @@ def static(structure_file, output, preset, dry_run, remote, worker):
     default=20,
     help="K-path density (k-points per Å⁻¹)",
 )
-def bands(structure_file, output, preset, dry_run, remote, worker, kpath_density):
+def bands(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    kpath_density: int,
+) -> None:
     """Generate electronic band structure calculation workflow.
 
     Computes electronic band structure along high-symmetry k-point paths in the
@@ -807,7 +829,14 @@ def bands(structure_file, output, preset, dry_run, remote, worker, kpath_density
 
 @cli.command()
 @common_options
-def dos(structure_file, output, preset, dry_run, remote, worker):
+def dos(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+) -> None:
     """Generate total density of states (DOS) workflow.
 
     Computes the total electronic density of states - the number of electronic
@@ -840,7 +869,14 @@ def dos(structure_file, output, preset, dry_run, remote, worker):
 
 @cli.command()
 @common_options
-def pdos(structure_file, output, preset, dry_run, remote, worker):
+def pdos(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+) -> None:
     """Generate projected density of states (PDOS) workflow.
 
     Computes orbital- and atom-resolved density of states, showing the contribution
@@ -873,7 +909,14 @@ def pdos(structure_file, output, preset, dry_run, remote, worker):
 
 @cli.command()
 @common_options
-def optical(structure_file, output, preset, dry_run, remote, worker):
+def optical(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+) -> None:
     """Generate optical properties calculation workflow.
 
     Computes frequency-dependent optical properties including dielectric function,
@@ -935,17 +978,17 @@ def optical(structure_file, output, preset, dry_run, remote, worker):
     help="Use separate relax/force parameters",
 )
 def phonon(
-    structure_file,
-    output,
-    preset,
-    dry_run,
-    remote,
-    worker,
-    supercell,
-    min_length,
-    displacement,
-    custom_params,
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    supercell: tuple[int, ...] | None,
+    min_length: float,
+    displacement: float,
+    custom_params: bool,
+) -> None:
     """Generate phonon (lattice dynamics) calculation workflow.
 
     Computes vibrational properties using the finite displacement method with
@@ -999,8 +1042,15 @@ def phonon(
     help="Atomic displacement (Å)",
 )
 def gruneisen(
-    structure_file, output, preset, dry_run, remote, worker, min_length, displacement
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    min_length: float,
+    displacement: float,
+) -> None:
     """Generate Grüneisen parameters and thermal expansion workflow.
 
     Computes mode-dependent Grüneisen parameters (γ) which describe how phonon
@@ -1019,7 +1069,8 @@ def gruneisen(
       • Mode-resolved Grüneisen parameters γ(q,j) for each phonon mode
       • Volume dependence of phonon frequencies
       • Thermal expansion predictions
-      • 6 publication-quality plots (dispersion, DOS, mesh, thermal, parameters, heatmap)
+      • 6 publication-quality plots (dispersion, DOS, mesh, thermal,
+        parameters, heatmap)
 
     Typical workflow: relax → gruneisen (analyze volume-dependent vibrations)
 
@@ -1052,8 +1103,15 @@ def gruneisen(
     help="Atomic displacement (Å)",
 )
 def qha(
-    structure_file, output, preset, dry_run, remote, worker, min_length, displacement
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    min_length: float,
+    displacement: float,
+) -> None:
     """Generate quasi-harmonic approximation (QHA) workflow.
 
     Computes temperature-dependent thermodynamic properties by combining phonon
@@ -1107,15 +1165,15 @@ def qha(
     help="Strain range (±fraction)",
 )
 def eos(
-    structure_file,
-    output,
-    preset,
-    dry_run,
-    remote,
-    worker,
-    number_of_frames,
-    strain_range,
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    number_of_frames: int,
+    strain_range: float,
+) -> None:
     """Generate equation of state (EOS) workflow.
 
     Computes energy vs volume relationship by performing calculations at multiple
@@ -1161,7 +1219,15 @@ def eos(
     default=0.005,
     help="Strain magnitude",
 )
-def elastic(structure_file, output, preset, dry_run, remote, worker, strain_magnitude):
+def elastic(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    strain_magnitude: float,
+) -> None:
     """Generate elastic constants (elastic tensor) workflow.
 
     Computes the full elastic tensor (C_ij) by applying small deformations to the
@@ -1186,7 +1252,8 @@ def elastic(structure_file, output, preset, dry_run, remote, worker, strain_magn
       • Derived mechanical properties
       • Eigenvalues (stability check)
 
-    Typical workflow: relax → elastic (compute mechanical properties of optimized structure)
+    Typical workflow: relax → elastic (compute mechanical properties of
+    optimized structure)
     """
     options = {
         "output": output,
@@ -1201,7 +1268,14 @@ def elastic(structure_file, output, preset, dry_run, remote, worker, strain_magn
 
 @cli.command(name="bulk-modulus")
 @common_options
-def bulk_modulus(structure_file, output, preset, dry_run, remote, worker):
+def bulk_modulus(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+) -> None:
     """Generate bulk modulus calculation workflow (quick EOS variant).
 
     Performs a streamlined equation of state calculation optimized for rapid bulk
@@ -1253,16 +1327,16 @@ def bulk_modulus(structure_file, output, preset, dry_run, remote, worker):
     help="Relax slab structures before energy calculation",
 )
 def surface(
-    structure_file,
-    output,
-    preset,
-    dry_run,
-    remote,
-    worker,
-    slab_directory,
-    miller_indices,
-    relax_slabs,
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    slab_directory: str,
+    miller_indices: str,
+    relax_slabs: bool,
+) -> None:
     """Generate surface energy calculation workflow.
 
     Computes surface formation energy for a specific Miller index by comparing the
@@ -1327,17 +1401,17 @@ def surface(
     help="Path to adsorbate molecule file (XYZ, CIF, etc.)",
 )
 def adsorption(
-    structure_file,
-    output,
-    preset,
-    dry_run,
-    remote,
-    worker,
-    grid_size,
-    height,
-    miller_indices,
-    adsorbate,
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    grid_size: tuple[int, int],
+    height: float,
+    miller_indices: str,
+    adsorbate: str | None,
+) -> None:
     """Generate adsorption site scanning workflow to find the best adsorption site.
 
     Systematically scans multiple grid positions on the surface to identify the most
@@ -1388,7 +1462,15 @@ def adsorption(
     "--miller-list",
     help="List of Miller indices (e.g., '(1,0,0),(1,1,0),(1,1,1)')",
 )
-def multi_surface(structure_file, output, preset, dry_run, remote, worker, miller_list):
+def multi_surface(
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    miller_list: str | None,
+) -> None:
     """Generate multiple surface energy comparison workflow.
 
     Computes surface energies for multiple Miller indices simultaneously, enabling
@@ -1452,8 +1534,16 @@ def multi_surface(structure_file, output, preset, dry_run, remote, worker, mille
     help="Adsorbate molecule file (XYZ, CIF, etc.)",
 )
 def adsorption_optimize(
-    structure_file, output, preset, dry_run, remote, worker, site, height, adsorbate
-):
+    structure_file: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    site: tuple[float, float],
+    height: float,
+    adsorbate: str | None,
+) -> None:
     """Generate adsorption geometry optimization workflow at a KNOWN site.
 
     Performs detailed structural relaxation of an adsorbate at a specific,
@@ -1545,17 +1635,17 @@ def adsorption_optimize(
     help="Interpolation method for generating images",
 )
 def neb(
-    initial_structure,
-    final_structure,
-    output,
-    preset,
-    dry_run,
-    remote,
-    worker,
-    number_of_images,
-    relax_endpoints,
-    interpolation,
-):
+    initial_structure: str,
+    final_structure: str,
+    output: str | None,
+    preset: str | None,
+    dry_run: bool,
+    remote: bool,
+    worker: str,
+    number_of_images: int,
+    relax_endpoints: bool,
+    interpolation: str,
+) -> None:
     """Generate nudged elastic band (NEB) workflow for transition state search.
 
     Finds the minimum energy path (MEP) and transition state between two known
@@ -1605,8 +1695,8 @@ def neb(
     generate_workflow_script("neb", initial_structure, options)
 
 
-@cli.command()
-def list():
+@cli.command(name="list")
+def list_templates() -> None:
     """List all available workflow templates."""
     console.print("\n[bold]Available Workflow Templates[/bold]\n")
 
@@ -1621,7 +1711,8 @@ def list():
     console.print(table)
 
     console.print(
-        "\n[bold]Usage:[/bold] atomate2siesta-maker [WORKFLOW] [STRUCTURE_FILE] [OPTIONS]"
+        "\n[bold]Usage:[/bold] atomate2siesta-maker "
+        "[WORKFLOW] [STRUCTURE_FILE] [OPTIONS]"
     )
     console.print("[bold]Examples:[/bold]")
     console.print("  atomate2siesta-maker relax Si.cif")

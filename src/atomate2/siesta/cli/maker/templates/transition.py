@@ -10,7 +10,7 @@ from atomate2.siesta.cli.maker.templates.base import WorkflowTemplate
 class NebTemplate(WorkflowTemplate):
     """Template for NEB (Nudged Elastic Band) calculations."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="neb",
             description="Nudged elastic band calculation for transition state search",
@@ -139,7 +139,7 @@ print("  - Visualize path: ase gui neb_trajectory.xyz")
 print("  - Analyze transition state structure")
 """
 
-    def validate_inputs(self, structure_file: str, options: dict[str, Any]):
+    def validate_inputs(self, structure_file: str, options: dict[str, Any]) -> None:
         """Validate NEB-specific inputs."""
         super().validate_inputs(structure_file, options)
 
@@ -167,5 +167,6 @@ print("  - Analyze transition state structure")
             import warnings
 
             warnings.warn(
-                f"Large number of images ({n_images}) may be computationally expensive"
+                f"Large number of images ({n_images}) may be computationally expensive",
+                stacklevel=2,
             )

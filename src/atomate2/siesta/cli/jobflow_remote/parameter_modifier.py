@@ -31,13 +31,13 @@ def get_all_registered_fdf_parameters() -> dict[str, str]:
     _ensure_dataclasses_registered()
 
     # Access the global FDF registry
-    registry = FDFDataclass._FDF_REGISTRY
+    registry = FDFDataclass._FDF_REGISTRY  # noqa: SLF001 global FDF registry access
 
     # Return copy of registry
     return dict(registry)
 
 
-def _ensure_dataclasses_registered():
+def _ensure_dataclasses_registered() -> None:
     """Ensure all dataclass modules are loaded and registered.
 
     This creates dummy instances to trigger __post_init__ registration.
@@ -120,9 +120,9 @@ def _ensure_dataclasses_registered():
         ]
 
         # Mark as done
-        _ensure_dataclasses_registered._done = True
+        _ensure_dataclasses_registered._done = True  # noqa: SLF001 function-attr cache
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly warning on partial registration
         console.print(
             f"[yellow]Warning:[/yellow] Could not load all dataclass modules: {e}"
         )
@@ -148,7 +148,7 @@ def find_parameter_case_variants(param: str) -> list[str]:
 
     # Find similar (for suggestions)
     similar = []
-    for registered_param in registry.keys():
+    for registered_param in registry:
         # Check if it's similar (ignore dots, dashes, underscores)
         normalized_param = (
             param_lower.replace(".", "").replace("-", "").replace("_", "")
@@ -209,11 +209,12 @@ def parse_parameter_string(param_str: str) -> tuple[str, Any] | None:
                 # If it fails, treat as string
                 value = value_str
 
-        return (key, value)
-
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error message on parse failure
         console.print(f"[red]Error parsing value:[/red] {e}")
         return None
+
+    else:
+        return (key, value)
 
 
 def parse_multiple_parameters(param_strings: list[str]) -> dict[str, Any]:
@@ -260,7 +261,7 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
     # Check if parameter is registered (case-insensitive)
     if key_lower not in registered_params:
         # Special cases for atomate2siesta internal parameters
-        if key.startswith("a2s_") or key.startswith("atomate2siesta_"):
+        if key.startswith(("a2s_", "atomate2siesta_")):
             # Internal parameter - allow it
             return (True, "")
 
@@ -288,11 +289,13 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
         if similar:
             return (
                 False,
-                f"Parameter '{key}' not registered. Did you mean one of: {', '.join(similar)}?",
+                f"Parameter '{key}' not registered. "
+                f"Did you mean one of: {', '.join(similar)}?",
             )
         # Not registered but don't block - SIESTA will validate
         console.print(
-            f"[yellow]Warning:[/yellow] Parameter '{key}' is not in the dataclass registry.\n"
+            f"[yellow]Warning:[/yellow] Parameter '{key}' is not in the "
+            f"dataclass registry.\n"
             f"It will be passed to SIESTA, which will validate it."
         )
         return (True, "")
@@ -300,11 +303,12 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
     # Check for case mismatches (e.g., spin vs Spin)
     # Get the registered parameter name from FDFDataclass
     handler = FDFDataclass.get_handler(key)
-    if handler:
+    if handler:  # noqa: SIM102 placeholder kept for documented case-mismatch check
         # Check if exact case matches
         # Since registry stores lowercase, we check if the original key would be handled
         if not FDFDataclass.handles_fdf_param(key):
-            # Case doesn't match - this shouldn't happen if registry works, but check anyway
+            # Case doesn't match - this shouldn't happen if registry works,
+            # but check anyway
             pass
 
     # Validate specific parameter types
@@ -318,13 +322,13 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
 
     elif key in ["Mesh.Cutoff", "MeshCutoff"]:
         # Should be string with units or float
-        if isinstance(value, str):
-            if not any(unit in value for unit in ["Ry", "eV", "Ha", "meV"]):
-                return (
-                    False,
-                    "Mesh.Cutoff should include units (Ry, eV, Ha, meV). "
-                    "Example: '300 Ry'",
-                )
+        if isinstance(value, str) and not any(
+            unit in value for unit in ["Ry", "eV", "Ha", "meV"]
+        ):
+            return (
+                False,
+                "Mesh.Cutoff should include units (Ry, eV, Ha, meV). Example: '300 Ry'",
+            )
 
     elif key == "XC.functional":
         valid_xc = ["LDA", "GGA", "VDW"]
@@ -403,7 +407,8 @@ def merge_parameters(
                 del merged[key]
             else:
                 console.print(
-                    f"[yellow]Warning:[/yellow] Cannot remove '{key}' - not found in parameters"
+                    f"[yellow]Warning:[/yellow] Cannot remove '{key}' - "
+                    f"not found in parameters"
                 )
 
     return merged

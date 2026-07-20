@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 CLI tool to browse and search the Recipe Book (one-line workflow recipes).
 
@@ -30,7 +29,9 @@ RECIPES = {
         "recipes": [
             {
                 "name": "complete_material_study",
-                "description": "Full characterization (electronic + mechanical + thermal)",
+                "description": (
+                    "Full characterization (electronic + mechanical + thermal)"
+                ),
                 "runtime": "6-12 hours",
                 "code_reduction": get_code_reduction_percentage(
                     "complete_material_study"
@@ -343,14 +344,14 @@ RECIPES = {
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def cli(ctx):
+def cli(ctx: click.Context) -> None:
     """Browse and search the Recipe Book."""
     if ctx.invoked_subcommand is None:
         list_all()
 
 
 @cli.command()
-def list():
+def list() -> None:  # noqa: A001 Click command name must be "list"
     """List all recipes by category.
 
     Display all recipes organized into 6 categories:
@@ -367,7 +368,7 @@ def list():
 
 @cli.command()
 @click.argument("category")
-def category(category):
+def category(category: str) -> None:
     """Show recipes for a specific category.
 
     Available categories:
@@ -388,7 +389,7 @@ def category(category):
 
 @cli.command()
 @click.argument("recipe_name")
-def show(recipe_name):
+def show(recipe_name: str) -> None:
     """Show detailed information for a specific recipe.
 
     Display recipe details including:
@@ -409,7 +410,7 @@ def show(recipe_name):
 
 @cli.command()
 @click.argument("keyword")
-def search(keyword):
+def search(keyword: str) -> None:
     """Search recipes by keyword or property.
 
     Search across recipe names, descriptions, and property types.
@@ -425,7 +426,7 @@ def search(keyword):
 
 
 @cli.command()
-def examples():
+def examples() -> None:
     """Show usage examples.
 
     Display common Recipe Book usage patterns:
@@ -443,7 +444,7 @@ def examples():
 
 
 @cli.command()
-def stats():
+def stats() -> None:
     """Show Recipe Book statistics.
 
     Display statistics about the Recipe Book:
@@ -461,7 +462,7 @@ def stats():
 
 @cli.command()
 @click.argument("recipe_name")
-def demo(recipe_name):
+def demo(recipe_name: str) -> None:
     """Show before/after code demonstration for a recipe.
 
     Display side-by-side demonstration showing:
@@ -486,7 +487,7 @@ def demo(recipe_name):
 @click.option(
     "--detailed", is_flag=True, help="Show computational estimates (rough heuristics)"
 )
-def analyze(structure_file, detailed):
+def analyze(structure_file: str, detailed: bool) -> None:
     """Analyze structure and get recommended SIESTA parameters.
 
     Analyzes a crystal structure and provides:
@@ -509,7 +510,7 @@ def analyze(structure_file, detailed):
     analyze_structure(structure_file, detailed)
 
 
-def list_all():
+def list_all() -> None:
     """List all recipes by category."""
     console.print("\n[bold cyan]Recipe Book: One-Line Workflows[/bold cyan]")
     console.print(
@@ -517,7 +518,7 @@ def list_all():
     )
 
     total_recipes = 0
-    for cat_id, cat_data in RECIPES.items():
+    for cat_data in RECIPES.values():
         count = len(cat_data["recipes"])
         total_recipes += count
 
@@ -542,7 +543,7 @@ def list_all():
     console.print("[dim]Use: atomate2siesta-recipe show <name> for details[/dim]\n")
 
 
-def show_category(category_id):
+def show_category(category_id: str) -> None:
     """Show recipes in a specific category."""
     if category_id not in RECIPES:
         console.print(f"[red]Category '{category_id}' not found[/red]")
@@ -562,13 +563,13 @@ def show_category(category_id):
         console.print()
 
 
-def show_recipe_details(recipe_name):
+def show_recipe_details(recipe_name: str) -> None:
     """Show detailed information for a recipe."""
     # Find the recipe
     recipe = None
     category_name = None
 
-    for cat_id, cat_data in RECIPES.items():
+    for cat_data in RECIPES.values():
         for r in cat_data["recipes"]:
             if r["name"] == recipe_name:
                 recipe = r
@@ -625,12 +626,12 @@ results = run_locally(flow, create_folders=True)"""
     console.print()
 
 
-def search_recipes(keyword):
+def search_recipes(keyword: str) -> None:
     """Search recipes by keyword."""
     keyword_lower = keyword.lower()
     results = []
 
-    for cat_id, cat_data in RECIPES.items():
+    for cat_data in RECIPES.values():
         for recipe in cat_data["recipes"]:
             # Search in name, description, and properties
             if (
@@ -638,7 +639,7 @@ def search_recipes(keyword):
                 or keyword_lower in recipe["description"].lower()
                 or any(keyword_lower in prop for prop in recipe["properties"])
             ):
-                results.append((recipe, cat_data["name"]))
+                results.append((recipe, cat_data["name"]))  # noqa: PERF401
 
     if not results:
         console.print(f"[yellow]No recipes found matching '{keyword}'[/yellow]\n")
@@ -660,7 +661,7 @@ def search_recipes(keyword):
     console.print()
 
 
-def show_examples():
+def show_examples() -> None:
     """Show usage examples."""
     console.print("\n[bold cyan]Recipe Book Examples[/bold cyan]\n")
 
@@ -696,7 +697,7 @@ def show_examples():
     console.print()
 
 
-def show_stats():
+def show_stats() -> None:
     """Show Recipe Book statistics."""
     console.print("\n[bold cyan]Recipe Book Statistics[/bold cyan]\n")
 
@@ -709,7 +710,7 @@ def show_stats():
     total_recipes = 0
     all_reductions = []
 
-    for cat_id, cat_data in RECIPES.items():
+    for cat_data in RECIPES.values():
         count = len(cat_data["recipes"])
         total_recipes += count
 
@@ -751,7 +752,7 @@ def show_stats():
     console.print()
 
 
-def show_code_comparison(recipe_name):
+def show_code_comparison(recipe_name: str) -> None:
     """Show detailed before/after code comparison."""
     try:
         comparison = get_detailed_comparison(recipe_name)
@@ -801,7 +802,8 @@ def show_code_comparison(recipe_name):
     # Summary
     console.print("[bold]Summary:[/bold]")
     console.print(
-        f"  • [green]{comparison['reduction']}% less code[/green] ({comparison['before'] - comparison['after']} lines saved)"
+        f"  • [green]{comparison['reduction']}% less code[/green] "
+        f"({comparison['before'] - comparison['after']} lines saved)"
     )
     console.print("  • Same functionality, much simpler")
     console.print("  • Automatic parameter optimization")
@@ -809,7 +811,7 @@ def show_code_comparison(recipe_name):
     console.print()
 
 
-def analyze_structure(structure_file, detailed):
+def analyze_structure(structure_file: str, detailed: bool) -> None:
     """Analyze structure and recommend parameters."""
     try:
         from pymatgen.core import Structure
@@ -819,7 +821,7 @@ def analyze_structure(structure_file, detailed):
         # Load structure
         try:
             structure = Structure.from_file(structure_file)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly error for any file-load failure
             console.print(f"[red]Error loading structure file: {e}[/red]\n")
             return
 
@@ -832,7 +834,8 @@ def analyze_structure(structure_file, detailed):
             "  • Use [cyan]atomate2siesta-recipe list[/cyan] to see available workflows"
         )
         console.print(
-            "  • Run [cyan]atomate2siesta-recipe show <recipe_name>[/cyan] for usage examples"
+            "  • Run [cyan]atomate2siesta-recipe show <recipe_name>[/cyan] "
+            "for usage examples"
         )
         console.print(
             "  • Generate workflow: [cyan]atomate2siesta-maker --interactive[/cyan]"

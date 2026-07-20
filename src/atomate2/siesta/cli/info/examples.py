@@ -5,7 +5,7 @@ from rich.console import Console
 console = Console()
 
 
-def show_examples():
+def show_examples() -> None:
     """Show quick start examples."""
     console.print("\n[bold cyan]Quick Start Examples[/bold cyan]\n")
 
@@ -18,7 +18,8 @@ def show_examples():
 
     # Example 2: Interactive mode
     console.print(
-        "[bold yellow]2. Interactive workflow generation (zero memorization!)[/bold yellow]"
+        "[bold yellow]2. Interactive workflow generation "
+        "(zero memorization!)[/bold yellow]"
     )
     console.print("[dim]# Guided step-by-step prompts for any workflow[/dim]")
     console.print("[green]$ atomate2siesta-maker --interactive[/green]")

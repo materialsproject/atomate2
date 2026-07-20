@@ -6,7 +6,7 @@ from rich.panel import Panel
 console = Console()
 
 
-def show_version():
+def show_version() -> None:
     """Show version information."""
     try:
         import atomate2

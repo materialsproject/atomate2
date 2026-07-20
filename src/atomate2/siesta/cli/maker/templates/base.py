@@ -79,7 +79,8 @@ class WorkflowTemplate(ABC):
         str
             Header docstring
         """
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Local wall-clock timestamp for the generated script header.
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
 
         header = f'''#!/usr/bin/env python
 """
@@ -378,7 +379,8 @@ print("\\nGenerated files:")
         # Subclasses can add specific validation
         self._validate_specific(options)
 
-    def _validate_specific(self, options: dict[str, Any]) -> None:
+    # Optional hook: subclasses may override; the base is intentionally a no-op.
+    def _validate_specific(self, options: dict[str, Any]) -> None:  # noqa: B027
         """Template-specific validation (override in subclasses).
 
         Parameters

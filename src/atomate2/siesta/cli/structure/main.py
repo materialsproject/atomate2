@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# ruff: noqa: EXE001
 """
 Main CLI group for structure manipulation tools.
 
@@ -28,7 +29,7 @@ from atomate2.siesta.cli.structure.vacuum import vacuum as vacuum_command
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """Structure manipulation and conversion tools for SIESTA.
 
     Convert between different structure formats (sisl, ASE, pymatgen),

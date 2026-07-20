@@ -103,7 +103,7 @@ def run_ssh_command(
 
     # Use sshpass if password is provided
     if password:
-        ssh_cmd = ["sshpass", "-p", password] + ssh_cmd
+        ssh_cmd = ["sshpass", "-p", password, *ssh_cmd]
 
     try:
         result = subprocess.run(
@@ -111,8 +111,9 @@ def run_ssh_command(
             capture_output=True,
             text=True,
             timeout=timeout,
+            check=False,
         )
-        return result.returncode, result.stdout, result.stderr
+        return result.returncode, result.stdout, result.stderr  # noqa: TRY300
     except subprocess.TimeoutExpired:
         return 1, "", f"Command timed out after {timeout} seconds"
     except FileNotFoundError as e:
@@ -193,7 +194,7 @@ def run_ssh_command_with_tunnel(
 
     # Use sshpass if password is provided
     if password:
-        ssh_cmd = ["sshpass", "-p", password] + ssh_cmd
+        ssh_cmd = ["sshpass", "-p", password, *ssh_cmd]
 
     try:
         result = subprocess.run(
@@ -201,8 +202,9 @@ def run_ssh_command_with_tunnel(
             capture_output=True,
             text=True,
             timeout=timeout,
+            check=False,
         )
-        return result.returncode, result.stdout, result.stderr
+        return result.returncode, result.stdout, result.stderr  # noqa: TRY300
     except subprocess.TimeoutExpired:
         return 1, "", f"Command timed out after {timeout} seconds"
     except FileNotFoundError as e:
@@ -273,17 +275,19 @@ def create_ssh_tunnel(
 
     # Start the tunnel
     try:
-        result = subprocess.run(ssh_cmd, capture_output=True, text=True, timeout=10)
+        result = subprocess.run(
+            ssh_cmd, capture_output=True, text=True, timeout=10, check=False
+        )
         if result.returncode != 0:
             console.print(f"[red]Failed to create SSH tunnel: {result.stderr}[/red]")
             return None
 
         console.print(f"[green]✓ SSH tunnel created on port {port}[/green]")
-        return True
+        return True  # noqa: TRY300
     except subprocess.TimeoutExpired:
         console.print("[red]SSH tunnel creation timed out[/red]")
         return None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error report for any tunnel failure
         console.print(f"[red]Error creating SSH tunnel: {e}[/red]")
         return None
 
@@ -300,15 +304,22 @@ def cleanup_ssh_tunnel(port: int) -> None:
         # Find and kill SSH process using the port (both -D and -R tunnels)
         for pattern in [f"ssh.*-D.*{port}", f"ssh.*-R.*{port}"]:
             result = subprocess.run(
-                ["pgrep", "-f", pattern], capture_output=True, text=True
+                ["pgrep", "-f", pattern],  # noqa: S607 pgrep resolved via PATH
+                capture_output=True,
+                text=True,
+                check=False,
             )
             if result.stdout:
                 pids = result.stdout.strip().split("\n")
                 for pid in pids:
                     if pid:
-                        subprocess.run(["kill", pid], capture_output=True)
+                        subprocess.run(
+                            ["kill", pid],  # noqa: S607 kill resolved via PATH
+                            capture_output=True,
+                            check=False,
+                        )
         console.print(f"[green]✓ SSH tunnel cleaned up (port {port})[/green]")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 best-effort cleanup, report and continue
         console.print(f"[yellow]Warning: Could not cleanup tunnel: {e}[/yellow]")
 
 
@@ -378,7 +389,9 @@ def create_ssh_reverse_tunnel(
 
     # Start the reverse tunnel
     try:
-        result = subprocess.run(ssh_cmd, capture_output=True, text=True, timeout=10)
+        result = subprocess.run(
+            ssh_cmd, capture_output=True, text=True, timeout=10, check=False
+        )
         if result.returncode != 0:
             console.print(
                 f"[red]Failed to create reverse tunnel: {result.stderr}[/red]"
@@ -388,14 +401,15 @@ def create_ssh_reverse_tunnel(
             return None
 
         console.print(
-            f"[green]✓ Reverse SSH tunnel created (remote port {port} → local port {port})[/green]"
+            f"[green]✓ Reverse SSH tunnel created "
+            f"(remote port {port} → local port {port})[/green]"
         )
-        return True
+        return True  # noqa: TRY300
     except subprocess.TimeoutExpired:
         console.print("[red]Reverse tunnel creation timed out[/red]")
         cleanup_ssh_tunnel(port)
         return None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error report for any tunnel failure
         console.print(f"[red]Error creating reverse tunnel: {e}[/red]")
         cleanup_ssh_tunnel(port)
         return None

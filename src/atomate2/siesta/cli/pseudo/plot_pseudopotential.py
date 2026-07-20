@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""Plotting utilities for XML-based PSML pseudopotential files."""
+
+from __future__ import annotations
+
 import os
 from xml.etree import ElementTree as ET
 
@@ -9,10 +13,11 @@ import seaborn as sns
 from scipy.interpolate import interp1d
 
 
-def parse_psml(file_path):
+def parse_psml(file_path: str) -> tuple:
     """Parse the XML-based PSML file with namespace handling."""
     try:
-        tree = ET.parse(file_path)
+        # Trusted local PSML files bundled with the package, not untrusted input.
+        tree = ET.parse(file_path)  # noqa: S314
         root = tree.getroot()
         ns = {"psml": "http://esl.cecam.org/PSML/ns/1.1"}
         click.echo("Successfully parsed XML-based PSML file")
@@ -32,11 +37,11 @@ def parse_psml(file_path):
         grid = root.find(".//psml:grid", namespaces=ns)
         if grid is None:
             click.echo("No <grid> element found in PSML file")
-            raise ValueError("No <grid> element found in PSML file")
+            raise ValueError("No <grid> element found in PSML file")  # noqa: TRY301
         grid_data = grid.find("psml:grid-data", namespaces=ns)
         if grid_data is None:
             click.echo("No <grid-data> element found in <grid>")
-            raise ValueError("No <grid-data> element found in <grid>")
+            raise ValueError("No <grid-data> element found in <grid>")  # noqa: TRY301
         radial_grid = np.array([float(x) for x in grid_data.text.split() if x.strip()])
         click.echo(f"Extracted radial grid with {len(radial_grid)} points")
 
@@ -50,9 +55,9 @@ def parse_psml(file_path):
                 try:
                     n = int(shell.get("n"))
                     l_str = shell.get("l")
-                    l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)
+                    l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)  # noqa: E741
                     if l == -1:
-                        raise ValueError(f"Invalid l value: {l_str}")
+                        raise ValueError(f"Invalid l value: {l_str}")  # noqa: TRY301
                     occ = float(shell.get("occupation"))
                     valence_config.append(
                         {"n": n, "l": l, "occupation": occ, "l_str": l_str}
@@ -74,9 +79,9 @@ def parse_psml(file_path):
             for proj in projectors.findall("psml:proj", namespaces=ns):
                 try:
                     l_str = proj.get("l")
-                    l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)
+                    l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)  # noqa: E741
                     if l == -1:
-                        raise ValueError(f"Invalid l value: {l_str}")
+                        raise ValueError(f"Invalid l value: {l_str}")  # noqa: TRY301
                     seq = int(proj.get("seq", 1)) - 1  # seq starts at 1
                     n = (
                         l_to_n[l][seq]
@@ -88,7 +93,8 @@ def parse_psml(file_path):
                     radfunc = proj.find("psml:radfunc/psml:data", namespaces=ns)
                     if radfunc is None:
                         click.echo(
-                            f"Skipping projector l={l_str} due to missing <radfunc><data>"
+                            f"Skipping projector l={l_str} due to missing "
+                            f"<radfunc><data>"
                         )
                         continue
                     data = np.array(
@@ -102,7 +108,8 @@ def parse_psml(file_path):
                         )
                         data = interpolator(x_new)
                         click.echo(
-                            f"Interpolated projector l={l_str} from {len(data)} to {len(radial_grid)} points"
+                            f"Interpolated projector l={l_str} from {len(data)} "
+                            f"to {len(radial_grid)} points"
                         )
                     wavefunctions.append({"n": n, "l": l, "l_str": l_str, "data": data})
                 except (ValueError, TypeError, IndexError) as e:
@@ -127,7 +134,8 @@ def parse_psml(file_path):
                         )
                         data = interpolator(x_new)
                         click.echo(
-                            f"Interpolated local potential from {len(data)} to {len(radial_grid)} points"
+                            f"Interpolated local potential from {len(data)} "
+                            f"to {len(radial_grid)} points"
                         )
                     potentials.append({"l": None, "data": data})
                 except ValueError as e:
@@ -137,9 +145,9 @@ def parse_psml(file_path):
             for slps in semilocal.findall("psml:slps", namespaces=ns):
                 try:
                     l_str = slps.get("l")
-                    l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)
+                    l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)  # noqa: E741
                     if l == -1:
-                        raise ValueError(f"Invalid l value: {l_str}")
+                        raise ValueError(f"Invalid l value: {l_str}")  # noqa: TRY301
                     n = slps.get("n")
                     if n is not None:
                         n = int(n)
@@ -150,7 +158,8 @@ def parse_psml(file_path):
                     radfunc = slps.find("psml:radfunc/psml:data", namespaces=ns)
                     if radfunc is None:
                         click.echo(
-                            f"Skipping semilocal potential l={l_str} due to missing <radfunc><data>"
+                            f"Skipping semilocal potential l={l_str} due to "
+                            f"missing <radfunc><data>"
                         )
                         continue
                     data = np.array(
@@ -164,7 +173,8 @@ def parse_psml(file_path):
                         )
                         data = interpolator(x_new)
                         click.echo(
-                            f"Interpolated semilocal potential l={l_str} from {len(data)} to {len(radial_grid)} points"
+                            f"Interpolated semilocal potential l={l_str} from "
+                            f"{len(data)} to {len(radial_grid)} points"
                         )
                     potentials.append({"n": n, "l": l, "l_str": l_str, "data": data})
                 except (ValueError, TypeError) as e:
@@ -173,22 +183,26 @@ def parse_psml(file_path):
                     )
         click.echo(f"Extracted {len(potentials)} potentials")
 
-        return radial_grid, valence_config, wavefunctions, potentials, element_name
-
     except ET.ParseError as e:
-        raise ValueError(f"Failed to parse PSML file as XML: {e}")
+        raise ValueError(f"Failed to parse PSML file as XML: {e}") from e
     except Exception as e:
-        raise ValueError(f"Error processing PSML file: {e}")
+        raise ValueError(f"Error processing PSML file: {e}") from e
+    else:
+        return radial_grid, valence_config, wavefunctions, potentials, element_name
 
 
 def plot_wavefunctions(
-    radial_grid, wavefunctions, output_file, element_name, r_max=None
-):
+    radial_grid: np.ndarray,
+    wavefunctions: list[dict],
+    output_file: str,
+    element_name: str,
+    r_max: float | None = None,
+) -> None:
     """Plot radial wavefunctions (projectors) for different n, l values."""
     plt.figure(figsize=(10, 6))
     sns.set_style("whitegrid")
     colors = sns.color_palette("husl", len(wavefunctions))
-    for wf, color in zip(wavefunctions, colors):
+    for wf, color in zip(wavefunctions, colors, strict=False):
         label = f"{wf['n']}{['s', 'p', 'd', 'f'][wf['l']]}"
         plt.plot(radial_grid, wf["data"], label=label, linewidth=2, color=color)
 
@@ -205,13 +219,19 @@ def plot_wavefunctions(
     plt.close()
 
 
-def plot_potentials(radial_grid, potentials, output_file, element_name, r_max=None):
+def plot_potentials(
+    radial_grid: np.ndarray,
+    potentials: list[dict],
+    output_file: str,
+    element_name: str,
+    r_max: float | None = None,
+) -> None:
     """Plot local and semilocal potentials in a polar plot."""
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection="polar")
     colors = sns.color_palette("husl", len(potentials))
 
-    for pot, color in zip(potentials, colors):
+    for pot, color in zip(potentials, colors, strict=False):
         label = (
             f"{pot['n']}{['s', 'p', 'd', 'f'][pot['l']]}"
             if pot["l"] is not None
@@ -234,7 +254,13 @@ def plot_potentials(radial_grid, potentials, output_file, element_name, r_max=No
     plt.close()
 
 
-def plot_3d_potential(radial_grid, potentials, output_file, element_name, r_max=None):
+def plot_3d_potential(
+    radial_grid: np.ndarray,
+    potentials: list[dict],
+    output_file: str,
+    element_name: str,
+    r_max: float | None = None,
+) -> None:
     """Create a 3D surface plot of the local potential."""
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection="3d")
@@ -270,10 +296,12 @@ def plot_3d_potential(radial_grid, potentials, output_file, element_name, r_max=
     plt.close()
 
 
-def plot_occupation_map(valence_config, output_file, element_name):
+def plot_occupation_map(
+    valence_config: list[dict], output_file: str, element_name: str
+) -> None:
     """Create a heatmap of valence electron occupations."""
-    n_values = sorted(set(conf["n"] for conf in valence_config))
-    l_values = sorted(set(conf["l"] for conf in valence_config))
+    n_values = sorted({conf["n"] for conf in valence_config})
+    l_values = sorted({conf["l"] for conf in valence_config})
 
     occ_matrix = np.zeros((len(n_values), len(l_values)))
     for conf in valence_config:
@@ -297,11 +325,17 @@ def plot_occupation_map(valence_config, output_file, element_name):
     plt.close()
 
 
-def plot_density(radial_grid, wavefunctions, output_file, element_name, r_max=None):
+def plot_density(
+    radial_grid: np.ndarray,
+    wavefunctions: list[dict],
+    output_file: str,
+    element_name: str,
+    r_max: float | None = None,
+) -> None:
     """Create a density plot of wavefunction (projector) magnitudes."""
     plt.figure(figsize=(10, 6))
     colors = sns.color_palette("husl", len(wavefunctions))
-    for wf, color in zip(wavefunctions, colors):
+    for wf, color in zip(wavefunctions, colors, strict=False):
         density = wf["data"] ** 2
         label = f"{wf['n']}{['s', 'p', 'd', 'f'][wf['l']]} Density"
         plt.fill_between(radial_grid, density, alpha=0.5, label=label, color=color)
@@ -335,9 +369,17 @@ def plot_density(radial_grid, wavefunctions, output_file, element_name, r_max=No
 @click.option(
     "--r-plot",
     type=float,
-    help="Maximum radial distance (bohr) for wavefunctions, potentials, and density plots",
+    help=(
+        "Maximum radial distance (bohr) for wavefunctions, potentials, and "
+        "density plots"
+    ),
 )
-def plot_pseudopotential(psml_file, plot_type, output_dir, r_plot):
+def plot_pseudopotential(
+    psml_file: str,
+    plot_type: str,
+    output_dir: str,
+    r_plot: float | None,
+) -> None:
     """Generate plots from an XML-based PSML pseudopotential file."""
     try:
         (
@@ -349,7 +391,7 @@ def plot_pseudopotential(psml_file, plot_type, output_dir, r_plot):
         ) = parse_psml(psml_file)
 
         if not radial_grid.size:
-            raise ValueError("No radial grid data found in the file")
+            raise ValueError("No radial grid data found in the file")  # noqa: TRY301
         if not potentials:
             click.echo("Warning: No potentials found, some plots may be skipped")
 
@@ -364,7 +406,8 @@ def plot_pseudopotential(psml_file, plot_type, output_dir, r_plot):
                 )
             else:
                 click.echo(
-                    "Warning: No wavefunctions (projectors) found, skipping wavefunctions plot"
+                    "Warning: No wavefunctions (projectors) found, skipping "
+                    "wavefunctions plot"
                 )
         if plot_type in ["potentials", "all"]:
             if potentials:
@@ -410,17 +453,18 @@ def plot_pseudopotential(psml_file, plot_type, output_dir, r_plot):
                 )
             else:
                 click.echo(
-                    "Warning: No wavefunctions (projectors) found, skipping density plot"
+                    "Warning: No wavefunctions (projectors) found, skipping "
+                    "density plot"
                 )
 
         click.echo(f"Plots generated in {output_dir}")
 
     except ValueError as e:
         click.echo(f"Error: {e}")
-        raise click.Abort()
+        raise click.Abort from e
     except Exception as e:
         click.echo(f"Unexpected error: {e}")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from rich.table import Table
 console = Console()
 
 
-def show_cli_tools():
+def show_cli_tools() -> None:
     """Display all CLI tools."""
     console.print("\n[bold cyan]Available CLI Tools[/bold cyan]\n")
 

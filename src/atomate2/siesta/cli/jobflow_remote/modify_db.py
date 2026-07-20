@@ -44,7 +44,8 @@ console = Console()
 @click.option(
     "--remove",
     "-r",
-    help="Parameter(s) to remove. Use comma to separate multiple keys (e.g., 'Key1,Key2,Key3').",
+    help="Parameter(s) to remove. Use comma to separate multiple keys "
+    "(e.g., 'Key1,Key2,Key3').",
 )
 @click.option(
     "--backup",
@@ -54,14 +55,14 @@ console = Console()
 )
 @click.pass_context
 def modify_db(
-    ctx,
+    ctx: click.Context,
     job_id: str,
     param: tuple[str],
     remove: str | None,
     force: bool,
     backup: bool,
-):
-    """Modify job FDF parameters directly in database (RISKY).
+) -> None:
+    r"""Modify job FDF parameters directly in database (RISKY).
 
     ⚠️  WARNING: This command modifies jobs DIRECTLY in the MongoDB database!
 
@@ -119,20 +120,20 @@ def modify_db(
             "  • Data corruption\n"
             "  • Loss of reproducibility\n"
             "  • Broken workflow tracking\n\n"
-            "[bold yellow]SAFER ALTERNATIVE:[/bold yellow] Use 'job recreate' to create a new flow.",
+            "[bold yellow]SAFER ALTERNATIVE:[/bold yellow] "
+            "Use 'job recreate' to create a new flow.",
             title="⚠️  WARNING",
             border_style="red",
         )
     )
     console.print()
 
-    if not force:
-        if not Confirm.ask(
-            "[bold red]Do you understand the risks and wish to proceed?[/bold red]",
-            default=False,
-        ):
-            console.print("[yellow]Operation cancelled[/yellow]")
-            return
+    if not force and not Confirm.ask(
+        "[bold red]Do you understand the risks and wish to proceed?[/bold red]",
+        default=False,
+    ):
+        console.print("[yellow]Operation cancelled[/yellow]")
+        return
 
     # Check if modifications specified
     if not param and not remove:
@@ -149,7 +150,7 @@ def modify_db(
             f"  atomate2siesta-jobflow-remote -p {project_name} job modify-db {job_id} "
             '--remove "Slab.DipoleCorrection"'
         )
-        raise click.Abort()
+        raise click.Abort
 
     # Parse parameter modifications
     console.print("[bold]Parsing parameter modifications...[/bold]")
@@ -162,7 +163,7 @@ def modify_db(
 
     if not new_params and not remove_keys:
         console.print("[red]Error:[/red] No valid parameters parsed")
-        raise click.Abort()
+        raise click.Abort
 
     if remove_keys:
         console.print(f"[cyan]Parameters to remove:[/cyan] {', '.join(remove_keys)}")
@@ -171,7 +172,7 @@ def modify_db(
     console.print("[bold]Validating parameters...[/bold]")
     if not validate_all_parameters(new_params):
         console.print("\n[red]Parameter validation failed[/red]")
-        raise click.Abort()
+        raise click.Abort
 
     console.print("[green]✓[/green] All parameters valid\n")
 
@@ -184,7 +185,7 @@ def modify_db(
             "[red]Error:[/red] Could not retrieve job from database. "
             "Is pymongo installed?"
         )
-        raise click.Abort()
+        raise click.Abort
 
     # Extract original FDF parameters
     original_params = extract_fdf_parameters(job_doc) or {}
@@ -240,20 +241,23 @@ def modify_db(
                     "[bold green]✓ Database modified successfully[/bold green]\n\n"
                     f"Job {job_id} parameters have been updated.\n\n"
                     "[bold]Next steps:[/bold]\n"
-                    "  • Verify parameters: [cyan]job inspect {job_id} --full[/cyan]\n"
-                    f"  • Rerun job: [cyan]jf -p {project_name} job rerun {job_id}[/cyan]\n"
-                    "  • Monitor execution: [cyan]jf -p {project_name} job info {job_id}[/cyan]",
+                    "  • Verify parameters: "
+                    "[cyan]job inspect {job_id} --full[/cyan]\n"
+                    "  • Rerun job: "
+                    f"[cyan]jf -p {project_name} job rerun {job_id}[/cyan]\n"
+                    "  • Monitor execution: "
+                    "[cyan]jf -p {project_name} job info {job_id}[/cyan]",
                     title="Success",
                     border_style="green",
                 )
             )
         else:
             console.print("[red]✗ Database modification failed[/red]")
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301 intentional abort in-place
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error during modification:[/red] {e}")
-        raise click.Abort()
+        raise click.Abort from None
 
 
 def _modify_job_in_database(
@@ -309,7 +313,7 @@ def _modify_job_in_database(
 
             # Create backup document with timestamp to avoid _id conflicts
             backup_doc = job_doc.copy()
-            backup_doc["_backup_timestamp"] = datetime.datetime.utcnow()
+            backup_doc["_backup_timestamp"] = datetime.datetime.utcnow()  # noqa: DTZ003 preserve naive UTC
             backup_doc["_original_id"] = job_doc["_id"]
 
             # Remove original _id to avoid duplicate key error
@@ -318,21 +322,20 @@ def _modify_job_in_database(
 
             backup_collection.insert_one(backup_doc)
             console.print(
-                f"[green]✓[/green] Backup created in collection '{collection_name}_backup'"
+                "[green]✓[/green] Backup created in collection "
+                f"'{collection_name}_backup'"
             )
 
         # Update job document with new parameters
-        # Based on inspection, the path is: job.function.@bound.input_set_generator.user_params
+        # Based on inspection, the path is:
+        # job.function.@bound.input_set_generator.user_params
 
-        query = {}
-        if job_id.isdigit():
-            # jobflow-remote stores db_id as STRING, not int
-            query = {"db_id": str(job_id)}
-        else:
-            query = {"uuid": job_id}
+        # jobflow-remote stores db_id as STRING, not int
+        query = {"db_id": str(job_id)} if job_id.isdigit() else {"uuid": job_id}
 
         # Filter parameters: separate FDF params from atomate2siesta internal params
-        # Internal params should NOT go in user_params (they cause deserialization errors)
+        # Internal params should NOT go in user_params
+        # (they cause deserialization errors)
         internal_params = {
             "tier",
             "xc",
@@ -343,8 +346,8 @@ def _modify_job_in_database(
         }
 
         # Split params into FDF and internal
-        # Note: a2s_ parameters (like a2s_kpts, a2s_magnetic_ordering) are VALID user params!
-        # Only skip the truly internal ones in the internal_params set
+        # Note: a2s_ parameters (like a2s_kpts, a2s_magnetic_ordering) are
+        # VALID user params! Only skip the truly internal ones in internal_params
         fdf_params = {}
         for key, value in new_params.items():
             # Skip internal atomate2siesta parameters
@@ -378,7 +381,8 @@ def _modify_job_in_database(
 
         if not merged_fdf_params and not remove_keys:
             console.print(
-                "[yellow]Warning:[/yellow] No FDF parameters to update (only internal params)"
+                "[yellow]Warning:[/yellow] No FDF parameters to update "
+                "(only internal params)"
             )
             return False
 
@@ -423,8 +427,8 @@ def _modify_job_in_database(
             else:
                 console.print("[red]✗[/red] @bound not in function")
 
-        return False
+        return False  # noqa: TRY300 trailing return after in-try diagnostics
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Database error:[/red] {e}")
         return False

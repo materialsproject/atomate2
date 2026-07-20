@@ -10,10 +10,11 @@ from atomate2.siesta.cli.maker.templates.base import WorkflowTemplate
 class EOSTemplate(WorkflowTemplate):
     """Template for equation of state calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="eos",
-            description="Equation of state (EOS) for bulk modulus and equilibrium volume",
+            description="Equation of state (EOS) for bulk modulus "
+            "and equilibrium volume",
             runtime_estimate="15-30 minutes",
             output_files=[
                 "eos_plot.png",
@@ -47,7 +48,7 @@ maker = SiestaEosFlowMaker(
     number_of_frames={number_of_frames},  # Volume sampling points
     linear_strain=(-{strain_range}, {strain_range}),  # ±{int(strain_range * 100)}% volume variation
 )
-"""
+"""  # noqa: E501
 
         if preset:
             maker_code += f"""
@@ -78,7 +79,7 @@ print("  - Ground state energy E₀")
 class ElasticTemplate(WorkflowTemplate):
     """Template for elastic constants calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="elastic",
             description="Elastic constants and mechanical properties",
@@ -140,13 +141,13 @@ print("  - Bulk modulus B")
 print("  - Shear modulus G")
 print("  - Young's modulus E")
 print("  - Poisson's ratio ν")
-"""
+"""  # noqa: RUF001 physics notation in the generated script
 
 
 class BulkModulusTemplate(WorkflowTemplate):
     """Template for bulk modulus calculation (simplified EOS)."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="bulk-modulus",
             description="Quick bulk modulus calculation from EOS",

@@ -1,5 +1,6 @@
-#!/usr/bin/env python
 """CLI for testing and managing atomate2siesta database connections."""
+
+from __future__ import annotations
 
 import click
 from rich import box
@@ -12,7 +13,9 @@ from rich.text import Text
 console = Console()
 
 
-def test_mongodb_connection(host, port, database, collection_name):
+def test_mongodb_connection(
+    host: str, port: int, database: str, collection_name: str
+) -> tuple:
     """Test connection to MongoDB database.
 
     Parameters
@@ -45,7 +48,7 @@ def test_mongodb_connection(host, port, database, collection_name):
         db = client[database]
         collection = db[collection_name]
 
-        return True, client, db, collection, None
+        return True, client, db, collection, None  # noqa: TRY300
 
     except (ConnectionFailure, ServerSelectionTimeoutError) as e:
         return False, None, None, None, f"Connection failed: {e}"
@@ -57,11 +60,13 @@ def test_mongodb_connection(host, port, database, collection_name):
             None,
             "pymongo not installed. Run: pip install pymongo",
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         return False, None, None, None, f"Unexpected error: {e}"
 
 
-def test_maggma_store(host, port, database, collection_name):
+def test_maggma_store(
+    host: str, port: int, database: str, collection_name: str
+) -> tuple:
     """Test Maggma MongoStore connection.
 
     Parameters
@@ -92,17 +97,17 @@ def test_maggma_store(host, port, database, collection_name):
         with store:
             store.connect()
 
-        return True, store, None
+        return True, store, None  # noqa: TRY300
 
     except ImportError:
         return False, None, "maggma not installed. Run: pip install maggma"
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         return False, None, f"Store connection failed: {e}"
 
 
 @click.group()
 @click.version_option("0.1.0")
-def cli():
+def cli() -> None:
     """Command-line interface for atomate2siesta database testing."""
 
 
@@ -117,7 +122,7 @@ def cli():
     help="Database name (default: atomate2siesta)",
 )
 @click.option("--collection", default="tasks", help="Collection name (default: tasks)")
-def test(host, port, database, collection):
+def test(host: str, port: int, database: str, collection: str) -> None:
     """Test MongoDB connection and display database statistics."""
     console.print(
         Panel(
@@ -153,17 +158,22 @@ def test(host, port, database, collection):
         if doc_count == 0 and num_collections == 0:
             console.print(
                 Panel(
-                    f"[bold yellow]⚠ Database '{database}' is NOT set up[/bold yellow]\n\n"
-                    f"The database '{database}' does not exist or has no collections.\n\n"
+                    f"[bold yellow]⚠ Database '{database}' is NOT set up"
+                    f"[/bold yellow]\n\n"
+                    f"The database '{database}' does not exist or has no "
+                    f"collections.\n\n"
                     f"[bold cyan]To create the database structure:[/bold cyan]\n"
-                    f"  → Run: [white]atomate2siesta-database create --create-indexes[/white]\n\n"
+                    f"  → Run: [white]atomate2siesta-database create --create-indexes"
+                    f"[/white]\n\n"
                     f"[bold cyan]Alternative - Run calculations directly:[/bold cyan]\n"
                     f"  1. Configure database storage (see config command)\n"
                     f"  2. Run SIESTA calculations with database store\n"
                     f"  3. Database and collection will be created automatically\n\n"
                     f"[bold cyan]For help:[/bold cyan]\n"
-                    f"  → [white]atomate2siesta-database config[/white]  (show setup examples)\n"
-                    f"  → [white]atomate2siesta-database create --help[/white]  (create options)",
+                    f"  → [white]atomate2siesta-database config[/white]  "
+                    f"(show setup examples)\n"
+                    f"  → [white]atomate2siesta-database create --help[/white]  "
+                    f"(create options)",
                     style="yellow",
                     title="Database Not Found",
                 )
@@ -171,15 +181,19 @@ def test(host, port, database, collection):
         elif doc_count == 0:
             console.print(
                 Panel(
-                    f"[bold green]✓ Database '{database}' is set up correctly![/bold green]\n\n"
-                    f"[white]Database has {num_collections} collection(s) with indexes ready.[/white]\n"
-                    f"[white]Collection '{collection}' exists but has no calculation results yet.[/white]\n\n"
+                    f"[bold green]✓ Database '{database}' is set up correctly!"
+                    f"[/bold green]\n\n"
+                    f"[white]Database has {num_collections} collection(s) with "
+                    f"indexes ready.[/white]\n"
+                    f"[white]Collection '{collection}' exists but has no "
+                    f"calculation results yet.[/white]\n\n"
                     f"[bold cyan]Everything is ready! Next steps:[/bold cyan]\n"
                     f"  1. Run SIESTA calculations with database storage\n"
                     f"  2. Results will be automatically stored in '{collection}'\n"
                     f"  3. Use 'list' and 'query' commands to view results\n\n"
                     f"[bold cyan]Need help getting started?[/bold cyan]\n"
-                    f"  → [white]atomate2siesta-database config[/white]  (setup examples)\n"
+                    f"  → [white]atomate2siesta-database config[/white]  "
+                    f"(setup examples)\n"
                     f"  → See tutorial: [white]tutorials/13-database-storage/[/white]",
                     style="green",
                     title="Database Ready",
@@ -188,7 +202,8 @@ def test(host, port, database, collection):
         else:
             console.print(
                 Panel(
-                    f"[bold green]✓ Database '{database}' is set up and populated[/bold green]\n\n"
+                    f"[bold green]✓ Database '{database}' is set up and populated"
+                    f"[/bold green]\n\n"
                     f"Collection '{collection}' has {doc_count} documents",
                     style="green",
                     title="Database Status",
@@ -215,14 +230,14 @@ def test(host, port, database, collection):
 
         # Test Maggma store
         console.print("\n[yellow]Testing Maggma store...[/yellow]")
-        success, store, error = test_maggma_store(host, port, database, collection)
+        success, _store, error = test_maggma_store(host, port, database, collection)
 
         if success:
             console.print("[green]✓ Maggma store connection successful[/green]")
         else:
             console.print(f"[red]✗ Maggma store failed:[/red] {error}")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error getting database stats:[/red] {e}")
     finally:
         if client:
@@ -246,9 +261,11 @@ def test(host, port, database, collection):
     type=int,
     help="Maximum number of documents to display (default: 10)",
 )
-def list(host, port, database, collection, limit):
+def list(  # noqa: A001 Click command name must stay `list`
+    host: str, port: int, database: str, collection: str, limit: int
+) -> None:
     """List recent documents in the database."""
-    success, client, db, coll, error = test_mongodb_connection(
+    success, client, _db, coll, error = test_mongodb_connection(
         host, port, database, collection
     )
 
@@ -280,7 +297,8 @@ def list(host, port, database, collection, limit):
 
         # Create table
         table = Table(
-            title=f"Recent Documents (showing {min(limit, len(documents))} of {doc_count})",
+            title=f"Recent Documents (showing "
+            f"{min(limit, len(documents))} of {doc_count})",
             box=box.ROUNDED,
         )
         table.add_column("UUID", style="cyan", overflow="fold")
@@ -315,7 +333,7 @@ def list(host, port, database, collection, limit):
 
         console.print(table)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error querying database:[/red] {e}")
     finally:
         if client:
@@ -355,29 +373,30 @@ def list(host, port, database, collection, limit):
     help="Show N most recent calculations (sorted by completion time)",
 )
 def query(
-    host,
-    port,
-    database,
-    collection,
-    formula,
-    state,
-    calc_type,
-    energy_min,
-    energy_max,
-    export,
-    output_file,
-    latest,
-):
+    host: str,
+    port: int,
+    database: str,
+    collection: str,
+    formula: str | None,
+    state: str | None,
+    calc_type: str | None,
+    energy_min: float | None,
+    energy_max: float | None,
+    export: str | None,
+    output_file: str,
+    latest: int | None,
+) -> None:
     """Query documents with various filters and export options."""
     # Check if at least one query option is provided (unless --latest is used)
     if not latest and not any([formula, state, calc_type, energy_min, energy_max]):
         console.print(
             "[red]Error: At least one query option must be provided[/red]\n"
-            "Use --formula, --state, --calc-type, --energy-min, --energy-max, or --latest"
+            "Use --formula, --state, --calc-type, --energy-min, "
+            "--energy-max, or --latest"
         )
         return
 
-    success, client, db, coll, error = test_mongodb_connection(
+    success, client, _db, coll, error = test_mongodb_connection(
         host, port, database, collection
     )
 
@@ -448,17 +467,21 @@ def query(
 
         # Limit display to reasonable number (but export all)
         # If --latest is used, show all requested documents
-        DISPLAY_LIMIT = latest or 50
+        DISPLAY_LIMIT = latest or 50  # noqa: N806 local display-limit constant
         display_docs = documents[:DISPLAY_LIMIT]
 
         if len(documents) > DISPLAY_LIMIT and not latest:
             console.print(
-                f"[yellow]Displaying first {DISPLAY_LIMIT} of {len(documents)} documents[/yellow]"
+                f"[yellow]Displaying first {DISPLAY_LIMIT} of "
+                f"{len(documents)} documents[/yellow]"
             )
             console.print("[dim]Use --export to save all results to file[/dim]\n")
 
         # Create detailed table and collect data for export
-        table_title = f"Query Results (showing {min(len(documents), DISPLAY_LIMIT)} of {len(documents)})"
+        table_title = (
+            f"Query Results (showing {min(len(documents), DISPLAY_LIMIT)} "
+            f"of {len(documents)})"
+        )
         table = Table(title=table_title, box=box.ROUNDED)
         table.add_column("UUID", style="cyan", overflow="fold", width=12)
         table.add_column("Formula", style="green", width=10)
@@ -502,9 +525,10 @@ def query(
 
             # Extract k-points (now stored directly in input)
             kpts = input_data.get("kpts", "N/A")
-            # Use type() instead of isinstance to avoid shadowing from function name 'list'
+            # Use type() instead of isinstance to avoid shadowing from
+            # function name 'list'
             if type(kpts).__name__ == "list" and len(kpts) == 3:
-                kpts = f"{kpts[0]}×{kpts[1]}×{kpts[2]}"
+                kpts = f"{kpts[0]}×{kpts[1]}×{kpts[2]}"  # noqa: RUF001 k-point separator
 
             # Get basis size (now stored directly in input)
             basis = input_data.get("basis_size", "N/A")
@@ -578,9 +602,10 @@ def query(
 
                 # Extract k-points (now stored directly in input)
                 kpts = input_data.get("kpts", "N/A")
-                # Use type() instead of isinstance to avoid shadowing from function name 'list'
+                # Use type() instead of isinstance to avoid shadowing from
+                # function name 'list'
                 if type(kpts).__name__ == "list" and len(kpts) == 3:
-                    kpts = f"{kpts[0]}×{kpts[1]}×{kpts[2]}"
+                    kpts = f"{kpts[0]}×{kpts[1]}×{kpts[2]}"  # noqa: RUF001 k-point separator
 
                 # Get basis size (now stored directly in input)
                 basis = input_data.get("basis_size", "N/A")
@@ -624,7 +649,8 @@ def query(
                         writer.writeheader()
                         writer.writerows(export_data)
                     console.print(
-                        f"\n[green]✓ Exported {len(export_data)} documents to {filename}[/green]"
+                        f"\n[green]✓ Exported {len(export_data)} documents "
+                        f"to {filename}[/green]"
                     )
 
                 elif export == "json":
@@ -634,13 +660,14 @@ def query(
                     with open(filename, "w") as jsonfile:
                         json.dump(export_data, jsonfile, indent=2)
                     console.print(
-                        f"\n[green]✓ Exported {len(export_data)} documents to {filename}[/green]"
+                        f"\n[green]✓ Exported {len(export_data)} documents "
+                        f"to {filename}[/green]"
                     )
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(f"[red]Error exporting data:[/red] {e}")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error querying database:[/red] {e}")
     finally:
         if client:
@@ -657,7 +684,7 @@ def query(
     default="atomate2siesta",
     help="Database name (default: atomate2siesta)",
 )
-def stats(host, port, database):
+def stats(host: str, port: int, database: str) -> None:
     """Display comprehensive database statistics."""
     success, client, db, _, error = test_mongodb_connection(
         host, port, database, "tasks"
@@ -734,7 +761,7 @@ def stats(host, port, database):
 
         console.print(info_table)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error getting statistics:[/red] {e}")
     finally:
         if client:
@@ -763,7 +790,15 @@ def stats(host, port, database):
     is_flag=True,
     help="Drop the entire database (EXTREMELY DANGEROUS)",
 )
-def clear(host, port, database, collection, force, drop_collection, drop_database):
+def clear(
+    host: str,
+    port: int,
+    database: str,
+    collection: str,
+    force: bool,
+    drop_collection: bool,
+    drop_database: bool,
+) -> None:
     """Clear documents, drop collection, or drop database (USE WITH CAUTION)."""
     # Check for conflicting options
     if drop_database and drop_collection:
@@ -790,11 +825,14 @@ def clear(host, port, database, collection, force, drop_collection, drop_databas
 
             console.print(
                 Panel(
-                    f"[bold red]DANGER: This will DELETE THE ENTIRE DATABASE![/bold red]\n\n"
+                    f"[bold red]DANGER: This will DELETE THE ENTIRE DATABASE!"
+                    f"[/bold red]\n\n"
                     f"Database: {database}\n"
                     f"Collections: {num_collections}\n"
-                    f"Total Size: {db_stats.get('dataSize', 0) / 1024 / 1024:.2f} MB\n\n"
-                    f"[yellow]All collections and all data will be permanently lost![/yellow]",
+                    f"Total Size: "
+                    f"{db_stats.get('dataSize', 0) / 1024 / 1024:.2f} MB\n\n"
+                    f"[yellow]All collections and all data will be permanently "
+                    f"lost![/yellow]",
                     style="red",
                     title="⚠️  EXTREME CAUTION  ⚠️",
                 )
@@ -809,19 +847,22 @@ def clear(host, port, database, collection, force, drop_collection, drop_databas
 
                 if confirmation != database:
                     console.print(
-                        "[yellow]Database name doesn't match. Operation cancelled.[/yellow]"
+                        "[yellow]Database name doesn't match. "
+                        "Operation cancelled.[/yellow]"
                     )
                     return
 
                 if not click.confirm(
-                    f"Are you ABSOLUTELY SURE you want to delete database '{database}'?",
+                    f"Are you ABSOLUTELY SURE you want to delete "
+                    f"database '{database}'?",
                     abort=True,
                 ):
                     return
 
             client.drop_database(database)
             console.print(
-                f"\n[green]✓ Dropped database '{database}' and all its collections[/green]"
+                f"\n[green]✓ Dropped database '{database}' and all its "
+                f"collections[/green]"
             )
 
         # Option 2: Drop collection (including indexes and all documents)
@@ -838,27 +879,29 @@ def clear(host, port, database, collection, force, drop_collection, drop_databas
 
             console.print(
                 Panel(
-                    f"[bold red]WARNING: This will DROP THE ENTIRE COLLECTION![/bold red]\n\n"
+                    f"[bold red]WARNING: This will DROP THE ENTIRE COLLECTION!"
+                    f"[/bold red]\n\n"
                     f"Database: {database}\n"
                     f"Collection: {collection}\n"
                     f"Documents: {doc_count}\n"
                     f"Indexes: {num_indexes}\n\n"
-                    f"[yellow]The collection and all its indexes will be deleted![/yellow]",
+                    f"[yellow]The collection and all its indexes will be "
+                    f"deleted![/yellow]",
                     style="red",
                     title="Collection Deletion",
                 )
             )
 
-            if not force:
-                if not click.confirm(
-                    f"Are you sure you want to drop collection '{collection}'?",
-                    abort=True,
-                ):
-                    return
+            if not force and not click.confirm(
+                f"Are you sure you want to drop collection '{collection}'?",
+                abort=True,
+            ):
+                return
 
             coll.drop()
             console.print(
-                f"[green]✓ Dropped collection '{collection}' (including all documents and indexes)[/green]"
+                f"[green]✓ Dropped collection '{collection}' "
+                f"(including all documents and indexes)[/green]"
             )
 
         # Option 3: Clear documents only (default behavior)
@@ -867,7 +910,8 @@ def clear(host, port, database, collection, force, drop_collection, drop_databas
 
             console.print(
                 Panel(
-                    f"[bold red]WARNING: This will delete all {doc_count} documents![/bold red]\n"
+                    f"[bold red]WARNING: This will delete all {doc_count} "
+                    f"documents![/bold red]\n"
                     f"Database: {database}\n"
                     f"Collection: {collection}\n\n"
                     f"[yellow]Indexes will be preserved.[/yellow]",
@@ -875,21 +919,21 @@ def clear(host, port, database, collection, force, drop_collection, drop_databas
                 )
             )
 
-            if not force:
-                if not click.confirm(
-                    "Are you sure you want to delete all documents?", abort=True
-                ):
-                    return
+            if not force and not click.confirm(
+                "Are you sure you want to delete all documents?", abort=True
+            ):
+                return
 
             result = coll.delete_many({})
             console.print(
-                f"[green]✓ Deleted {result.deleted_count} documents from '{collection}'[/green]"
+                f"[green]✓ Deleted {result.deleted_count} documents "
+                f"from '{collection}'[/green]"
             )
             console.print("[cyan]Collection and indexes are preserved[/cyan]")
 
     except click.exceptions.Abort:
         console.print("[yellow]Operation cancelled by user[/yellow]")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error during operation:[/red] {e}")
         import traceback
 
@@ -915,7 +959,9 @@ def clear(host, port, database, collection, force, drop_collection, drop_databas
     is_flag=True,
     help="Create recommended indexes for better query performance",
 )
-def create(host, port, database, collection, create_indexes):
+def create(
+    host: str, port: int, database: str, collection: str, create_indexes: bool
+) -> None:
     """Create database and collection with optional indexes."""
     console.print(
         Panel(
@@ -949,7 +995,8 @@ def create(host, port, database, collection, create_indexes):
         if collection in existing_collections:
             doc_count = coll.count_documents({})
             console.print(
-                f"\n[yellow]⚠ Collection '{collection}' already exists with {doc_count} documents[/yellow]"
+                f"\n[yellow]⚠ Collection '{collection}' already exists with "
+                f"{doc_count} documents[/yellow]"
             )
 
             if not click.confirm(
@@ -975,7 +1022,7 @@ def create(host, port, database, collection, create_indexes):
                 coll.create_index("uuid", unique=True)
                 indexes_created.append("uuid (unique)")
                 console.print("[green]  ✓ Created index on 'uuid' (unique)[/green]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(
                     f"[yellow]  ⚠ Index on 'uuid' may already exist: {e}[/yellow]"
                 )
@@ -985,7 +1032,7 @@ def create(host, port, database, collection, create_indexes):
                 coll.create_index("formula")
                 indexes_created.append("formula")
                 console.print("[green]  ✓ Created index on 'formula'[/green]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(
                     f"[yellow]  ⚠ Index on 'formula' may already exist: {e}[/yellow]"
                 )
@@ -995,9 +1042,10 @@ def create(host, port, database, collection, create_indexes):
                 coll.create_index("formula_pretty")
                 indexes_created.append("formula_pretty")
                 console.print("[green]  ✓ Created index on 'formula_pretty'[/green]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(
-                    f"[yellow]  ⚠ Index on 'formula_pretty' may already exist: {e}[/yellow]"
+                    f"[yellow]  ⚠ Index on 'formula_pretty' may already "
+                    f"exist: {e}[/yellow]"
                 )
 
             # Index on state for filtering successful/failed calculations
@@ -1005,7 +1053,7 @@ def create(host, port, database, collection, create_indexes):
                 coll.create_index("state")
                 indexes_created.append("state")
                 console.print("[green]  ✓ Created index on 'state'[/green]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(
                     f"[yellow]  ⚠ Index on 'state' may already exist: {e}[/yellow]"
                 )
@@ -1015,9 +1063,10 @@ def create(host, port, database, collection, create_indexes):
                 coll.create_index("output.energy")
                 indexes_created.append("output.energy")
                 console.print("[green]  ✓ Created index on 'output.energy'[/green]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(
-                    f"[yellow]  ⚠ Index on 'output.energy' may already exist: {e}[/yellow]"
+                    f"[yellow]  ⚠ Index on 'output.energy' may already "
+                    f"exist: {e}[/yellow]"
                 )
 
             # Index on completed_at for time-based queries
@@ -1025,9 +1074,10 @@ def create(host, port, database, collection, create_indexes):
                 coll.create_index("completed_at")
                 indexes_created.append("completed_at")
                 console.print("[green]  ✓ Created index on 'completed_at'[/green]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(
-                    f"[yellow]  ⚠ Index on 'completed_at' may already exist: {e}[/yellow]"
+                    f"[yellow]  ⚠ Index on 'completed_at' may already "
+                    f"exist: {e}[/yellow]"
                 )
 
         # Get final statistics
@@ -1071,7 +1121,7 @@ def create(host, port, database, collection, create_indexes):
             )
         )
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error creating database structure:[/red] {e}")
         import traceback
 
@@ -1097,7 +1147,7 @@ def create(host, port, database, collection, create_indexes):
     help="Database name (default: atomate2siesta)",
 )
 @click.option("--force", is_flag=True, help="Overwrite existing ~/.jobflow.yaml file")
-def config(generate, host, port, database, force):
+def config(generate: bool, host: str, port: int, database: str, force: bool) -> None:
     """Show example database configuration files or generate ~/.jobflow.yaml."""
     # If --generate flag is used, create the file
     if generate:
@@ -1149,7 +1199,8 @@ JOB_STORE:
 
             console.print(
                 Panel(
-                    f"[bold green]✓ Successfully created jobflow configuration![/bold green]\n\n"
+                    f"[bold green]✓ Successfully created jobflow configuration!"
+                    f"[/bold green]\n\n"
                     f"[white]File location:[/white] [cyan]{jobflow_path}[/cyan]\n"
                     f"[white]Database:[/white] {database}\n"
                     f"[white]Host:[/white] {host}:{port}\n\n"
@@ -1157,10 +1208,12 @@ JOB_STORE:
                     f"1. Verify database is running:\n"
                     f"   [white]atomate2siesta-database test[/white]\n\n"
                     f"2. Create database structure (if needed):\n"
-                    f"   [white]atomate2siesta-database create --create-indexes[/white]\n\n"
+                    f"   [white]atomate2siesta-database create --create-indexes"
+                    f"[/white]\n\n"
                     f"3. Run calculations:\n"
                     f"   Results will be automatically stored in MongoDB!\n\n"
-                    f"[yellow]Note:[/yellow] Jobflow automatically loads this file on import.",
+                    f"[yellow]Note:[/yellow] Jobflow automatically loads this "
+                    f"file on import.",
                     style="green",
                     title="Configuration Created",
                 )
@@ -1176,9 +1229,9 @@ JOB_STORE:
                 )
             )
 
-            return
+            return  # noqa: TRY300
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error handler
             console.print(f"[red]Error creating file:[/red] {e}")
             import traceback
 
@@ -1330,7 +1383,13 @@ results = run_locally(job, create_folders=True, store=store)
     default=None,
     help="Custom installation directory for local install (default: ~/.local/mongodb)",
 )
-def setup(check_only, start_service, stop_service, local, install_dir):
+def setup(
+    check_only: bool,
+    start_service: bool,
+    stop_service: bool,
+    local: bool,
+    install_dir: str | None,
+) -> None:
     """Install and configure MongoDB on local machine.
 
     This command helps you install MongoDB Community Edition on your local
@@ -1393,7 +1452,10 @@ def setup(check_only, start_service, stop_service, local, install_dir):
             # Local installation - use stop script
             try:
                 result = subprocess.run(
-                    [str(stop_script)], capture_output=True, text=True
+                    [str(stop_script)],
+                    capture_output=True,
+                    text=True,
+                    check=False,
                 )
                 if result.returncode == 0:
                     console.print(
@@ -1414,6 +1476,7 @@ def setup(check_only, start_service, stop_service, local, install_dir):
                             ],
                             capture_output=True,
                             text=True,
+                            check=False,
                         )
                         if result.returncode == 0:
                             console.print("[green]✓ MongoDB stopped[/green]")
@@ -1421,40 +1484,43 @@ def setup(check_only, start_service, stop_service, local, install_dir):
                             console.print(
                                 f"[red]✗ Failed to stop: {result.stderr}[/red]"
                             )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(f"[red]✗ Error: {e}[/red]")
 
         elif os_type == "darwin":
             # macOS - use brew services
             try:
                 result = subprocess.run(
-                    ["brew", "services", "stop", "mongodb-community"],
+                    ["brew", "services", "stop", "mongodb-community"],  # noqa: S607
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
                 if result.returncode == 0:
                     console.print("[green]✓ MongoDB stopped (Homebrew)[/green]")
                 else:
                     console.print(f"[red]✗ Failed: {result.stderr}[/red]")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(f"[red]✗ Error: {e}[/red]")
 
         elif os_type == "linux":
             # Linux - use systemctl
             try:
                 result = subprocess.run(
-                    ["sudo", "systemctl", "stop", "mongod"],
+                    ["sudo", "systemctl", "stop", "mongod"],  # noqa: S607
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
                 if result.returncode == 0:
                     console.print("[green]✓ MongoDB stopped (systemd)[/green]")
                 else:
                     console.print(f"[yellow]{result.stderr}[/yellow]")
                     console.print(
-                        "[dim]Note: You may need sudo privileges to stop system MongoDB[/dim]"
+                        "[dim]Note: You may need sudo privileges to stop "
+                        "system MongoDB[/dim]"
                     )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error handler
                 console.print(f"[red]✗ Error: {e}[/red]")
 
         else:
@@ -1464,7 +1530,10 @@ def setup(check_only, start_service, stop_service, local, install_dir):
 
         # Show status after stopping
         console.print("\n[yellow]Checking MongoDB status...[/yellow]")
-        subprocess.run(["atomate2siesta-database", "status"], check=False)
+        subprocess.run(
+            ["atomate2siesta-database", "status"],  # noqa: S607
+            check=False,
+        )
 
         return
 
@@ -1473,7 +1542,11 @@ def setup(check_only, start_service, stop_service, local, install_dir):
 
     try:
         result = subprocess.run(
-            ["mongod", "--version"], capture_output=True, text=True, timeout=5
+            ["mongod", "--version"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -1521,7 +1594,8 @@ def setup(check_only, start_service, stop_service, local, install_dir):
         from pathlib import Path
 
         console.print(
-            "\n[bold cyan]Installing MongoDB in User Mode (No Root Required)[/bold cyan]\n"
+            "\n[bold cyan]Installing MongoDB in User Mode "
+            "(No Root Required)[/bold cyan]\n"
         )
 
         console.print(
@@ -1531,7 +1605,8 @@ def setup(check_only, start_service, stop_service, local, install_dir):
                 "   Downloads MongoDB binaries automatically\n"
                 "   Uses MongoDB Community 7.0.5 from fastdl.mongodb.org\n\n"
                 "[cyan]2. Manual:[/cyan]\n"
-                "   Download from: [blue]https://www.mongodb.com/try/download/community[/blue]\n"
+                "   Download from: "
+                "[blue]https://www.mongodb.com/try/download/community[/blue]\n"
                 "   Extract to custom location with --install-dir\n\n"
                 "[dim]This installer uses automatic method[/dim]",
                 style="blue",
@@ -1573,7 +1648,10 @@ def setup(check_only, start_service, stop_service, local, install_dir):
                 mongo_file = "mongodb-macos-x86_64-7.0.5.tgz"
         elif os_type == "linux":
             # Linux
-            mongo_url = "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-7.0.5.tgz"
+            mongo_url = (
+                "https://fastdl.mongodb.org/linux/"
+                "mongodb-linux-x86_64-ubuntu2204-7.0.5.tgz"
+            )
             mongo_file = "mongodb-linux-x86_64-ubuntu2204-7.0.5.tgz"
         else:
             console.print(
@@ -1590,19 +1668,23 @@ def setup(check_only, start_service, stop_service, local, install_dir):
 
         try:
             # Download with progress
-            def reporthook(blocknum, blocksize, totalsize):
+            def reporthook(blocknum: int, blocksize: int, totalsize: int) -> None:
                 readsofar = blocknum * blocksize
                 if totalsize > 0:
                     percent = readsofar * 100 / totalsize
-                    s = f"\r[cyan]Progress:[/cyan] {percent:.1f}% ({readsofar // (1024 * 1024)} MB / {totalsize // (1024 * 1024)} MB)"
+                    s = (
+                        f"\r[cyan]Progress:[/cyan] {percent:.1f}% "
+                        f"({readsofar // (1024 * 1024)} MB / "
+                        f"{totalsize // (1024 * 1024)} MB)"
+                    )
                     console.print(s, end="")
                     if readsofar >= totalsize:
                         console.print()
 
-            urllib.request.urlretrieve(mongo_url, download_path, reporthook)
+            urllib.request.urlretrieve(mongo_url, download_path, reporthook)  # noqa: S310
             console.print("[green]✓ Download complete[/green]")
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error handler
             console.print(f"\n[red]✗ Download failed: {e}[/red]")
             sys.exit(1)
 
@@ -1610,7 +1692,7 @@ def setup(check_only, start_service, stop_service, local, install_dir):
         console.print("\n[yellow]Extracting MongoDB binaries...[/yellow]")
         try:
             with tarfile.open(download_path, "r:gz") as tar:
-                tar.extractall(mongo_dir)
+                tar.extractall(mongo_dir)  # noqa: S202
 
             # Find extracted directory (e.g., mongodb-macos-arm64-7.0.5)
             extracted_dirs = [
@@ -1637,7 +1719,7 @@ def setup(check_only, start_service, stop_service, local, install_dir):
 
             console.print("[green]✓ MongoDB binaries extracted[/green]")
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error handler
             console.print(f"[red]✗ Extraction failed: {e}[/red]")
             sys.exit(1)
 
@@ -1715,7 +1797,8 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
         # Show installation summary
         console.print(
             Panel(
-                f"[bold green]✓ MongoDB installed successfully in user mode![/bold green]\n\n"
+                f"[bold green]✓ MongoDB installed successfully in user mode!"
+                f"[/bold green]\n\n"
                 f"[bold cyan]Installation Directory:[/bold cyan]\n"
                 f"  MongoDB: [white]{mongo_dir}[/white]\n"
                 f"  Binaries: [white]{bin_dir}[/white]\n"
@@ -1727,7 +1810,8 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
                 f"  OR\n"
                 f"  [white]{bin_dir}/mongod --config {config_file} --fork[/white]\n\n"
                 f"[bold cyan]Check Status:[/bold cyan]\n"
-                f"  [white]{status_script}[/white]  [dim](shows process, port, and logs)[/dim]\n"
+                f"  [white]{status_script}[/white]  "
+                f"[dim](shows process, port, and logs)[/dim]\n"
                 f"  OR\n"
                 f"  [white]ps aux | grep mongod[/white]\n"
                 f"  OR (check port):\n"
@@ -1771,7 +1855,11 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
 
         # Check if Homebrew is installed
         try:
-            subprocess.run(["brew", "--version"], capture_output=True, check=True)
+            subprocess.run(
+                ["brew", "--version"],  # noqa: S607
+                capture_output=True,
+                check=True,
+            )
             console.print("[green]✓ Homebrew is installed[/green]")
         except (FileNotFoundError, subprocess.CalledProcessError):
             console.print(
@@ -1791,7 +1879,9 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
         console.print("\n[yellow]Adding MongoDB Homebrew tap...[/yellow]")
         try:
             subprocess.run(
-                ["brew", "tap", "mongodb/brew"], capture_output=True, check=True
+                ["brew", "tap", "mongodb/brew"],  # noqa: S607
+                capture_output=True,
+                check=True,
             )
             console.print("[green]✓ MongoDB tap added[/green]")
         except subprocess.CalledProcessError as e:
@@ -1803,9 +1893,10 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
 
         try:
             result = subprocess.run(
-                ["brew", "install", "mongodb-community"],
+                ["brew", "install", "mongodb-community"],  # noqa: S607
                 capture_output=False,  # Show output to user
                 text=True,
+                check=False,
             )
 
             if result.returncode == 0:
@@ -1814,7 +1905,7 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
                 console.print("\n[red]✗ Installation failed[/red]")
                 sys.exit(1)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error handler
             console.print(f"\n[red]✗ Installation error: {e}[/red]")
             sys.exit(1)
 
@@ -1823,7 +1914,7 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
             console.print("\n[yellow]Starting MongoDB service...[/yellow]")
             try:
                 subprocess.run(
-                    ["brew", "services", "start", "mongodb-community"],
+                    ["brew", "services", "start", "mongodb-community"],  # noqa: S607
                     capture_output=True,
                     check=True,
                 )
@@ -1877,7 +1968,8 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
             else:
                 console.print(
                     Panel(
-                        "[bold yellow]⚠ Unsupported Linux distribution[/bold yellow]\n\n"
+                        "[bold yellow]⚠ Unsupported Linux distribution"
+                        "[/bold yellow]\n\n"
                         "This tool supports Ubuntu/Debian and RedHat/CentOS/Fedora.\n\n"
                         "[bold cyan]Manual installation:[/bold cyan]\n"
                         "Visit: [blue]https://www.mongodb.com/docs/manual/installation/[/blue]",
@@ -1893,17 +1985,23 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
         if distro == "ubuntu":
             console.print(
                 Panel(
-                    "[bold yellow]MongoDB Installation on Ubuntu/Debian[/bold yellow]\n\n"
-                    "This requires root/sudo access. The following commands will be executed:\n\n"
+                    "[bold yellow]MongoDB Installation on Ubuntu/Debian"
+                    "[/bold yellow]\n\n"
+                    "This requires root/sudo access. The following commands "
+                    "will be executed:\n\n"
                     "1. Import MongoDB GPG key\n"
                     "2. Add MongoDB repository\n"
                     "3. Update package database\n"
                     "4. Install MongoDB Community Edition\n\n"
                     "[bold cyan]Manual installation steps:[/bold cyan]\n"
                     "[white]# Import GPG key\n"
-                    "wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -\n\n"
+                    "wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc "
+                    "| sudo apt-key add -\n\n"
                     "# Add repository\n"
-                    'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -sc)/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list\n\n'
+                    'echo "deb [ arch=amd64,arm64 ] '
+                    "https://repo.mongodb.org/apt/ubuntu "
+                    '$(lsb_release -sc)/mongodb-org/7.0 multiverse" | sudo tee '
+                    "/etc/apt/sources.list.d/mongodb-org-7.0.list\n\n"
                     "# Install\n"
                     "sudo apt-get update\n"
                     "sudo apt-get install -y mongodb-org[/white]",
@@ -1925,11 +2023,15 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
 
             commands = [
                 (
-                    "wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -",
+                    "wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc "
+                    "| sudo apt-key add -",
                     "Importing GPG key",
                 ),
                 (
-                    'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -sc)/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list',
+                    'echo "deb [ arch=amd64,arm64 ] '
+                    "https://repo.mongodb.org/apt/ubuntu "
+                    '$(lsb_release -sc)/mongodb-org/7.0 multiverse" | sudo tee '
+                    "/etc/apt/sources.list.d/mongodb-org-7.0.list",
                     "Adding repository",
                 ),
                 ("sudo apt-get update", "Updating package database"),
@@ -1938,7 +2040,13 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
 
             for cmd, description in commands:
                 console.print(f"[cyan]{description}...[/cyan]")
-                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                result = subprocess.run(  # noqa: S602 shell pipeline for apt install
+                    cmd,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
                 if result.returncode != 0:
                     console.print(f"[red]✗ Failed: {result.stderr}[/red]")
                     sys.exit(1)
@@ -1950,14 +2058,18 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
             if start_service:
                 console.print("\n[yellow]Starting MongoDB service...[/yellow]")
                 result = subprocess.run(
-                    ["sudo", "systemctl", "start", "mongod"], capture_output=True
+                    ["sudo", "systemctl", "start", "mongod"],  # noqa: S607
+                    capture_output=True,
+                    check=False,
                 )
                 if result.returncode == 0:
                     console.print("[green]✓ MongoDB service started[/green]")
 
                     # Enable on boot
                     subprocess.run(
-                        ["sudo", "systemctl", "enable", "mongod"], capture_output=True
+                        ["sudo", "systemctl", "enable", "mongod"],  # noqa: S607
+                        capture_output=True,
+                        check=False,
                     )
                     console.print("[green]✓ MongoDB enabled on boot[/green]")
                 else:
@@ -1993,7 +2105,8 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
         elif distro == "rhel":
             console.print(
                 Panel(
-                    "[bold yellow]MongoDB Installation on RedHat/CentOS/Fedora[/bold yellow]\n\n"
+                    "[bold yellow]MongoDB Installation on RedHat/CentOS/Fedora"
+                    "[/bold yellow]\n\n"
                     "[bold cyan]Manual installation recommended:[/bold cyan]\n\n"
                     "Visit: [blue]https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-red-hat/[/blue]\n\n"
                     "[bold]Quick steps:[/bold]\n"
@@ -2008,7 +2121,8 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
         # Windows or other OS
         console.print(
             Panel(
-                f"[bold yellow]⚠ Unsupported operating system: {os_type}[/bold yellow]\n\n"
+                f"[bold yellow]⚠ Unsupported operating system: {os_type}"
+                f"[/bold yellow]\n\n"
                 "This tool supports macOS and Linux.\n\n"
                 "[bold cyan]For Windows:[/bold cyan]\n"
                 "1. Download MongoDB Community Edition:\n"
@@ -2027,7 +2141,7 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
 @click.option(
     "--port", default=27017, type=int, help="MongoDB port to check (default: 27017)"
 )
-def status(port):
+def status(port: int) -> None:
     """Check if MongoDB is running and show process information.
 
     This command checks:
@@ -2056,7 +2170,11 @@ def status(port):
     console.print("\n[yellow]Checking for MongoDB process...[/yellow]")
     try:
         result = subprocess.run(
-            ["ps", "aux"], capture_output=True, text=True, timeout=5
+            ["ps", "aux"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
         mongod_lines = [
             line
@@ -2090,20 +2208,25 @@ def status(port):
                 "  Local install: [cyan]~/.local/mongodb/start-mongodb.sh[/cyan]"
             )
             console.print(
-                "  System install (macOS): [cyan]brew services start mongodb-community[/cyan]"
+                "  System install (macOS): "
+                "[cyan]brew services start mongodb-community[/cyan]"
             )
             console.print(
                 "  System install (Linux): [cyan]sudo systemctl start mongod[/cyan]"
             )
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error checking process: {e}[/red]")
 
     # Check port usage
     console.print(f"\n[yellow]Checking port {port}...[/yellow]")
     try:
         result = subprocess.run(
-            ["lsof", "-i", f":{port}"], capture_output=True, text=True, timeout=5
+            ["lsof", "-i", f":{port}"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
 
         if result.returncode == 0 and result.stdout.strip():
@@ -2121,14 +2244,14 @@ def status(port):
         console.print(
             "[yellow]'lsof' command not found (install lsof package)[/yellow]"
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error checking port: {e}[/red]")
 
     # Test actual connection
     console.print(
         f"\n[yellow]Testing MongoDB connection on localhost:{port}...[/yellow]"
     )
-    success, client, db, coll, error = test_mongodb_connection(
+    success, client, _db, _coll, error = test_mongodb_connection(
         "localhost", port, "admin", "test"
     )
 
@@ -2139,14 +2262,15 @@ def status(port):
         try:
             server_info = client.server_info()
             console.print(
-                f"\n[cyan]MongoDB Version:[/cyan] {server_info.get('version', 'Unknown')}"
+                f"\n[cyan]MongoDB Version:[/cyan] "
+                f"{server_info.get('version', 'Unknown')}"
             )
 
             # Get database list
             db_names = client.list_database_names()
             console.print(f"[cyan]Databases:[/cyan] {', '.join(db_names)}")
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error handler
             console.print(f"[yellow]Could not retrieve server info: {e}[/yellow]")
         finally:
             client.close()
@@ -2156,7 +2280,8 @@ def status(port):
                 "[bold green]✓ MongoDB is running and accessible![/bold green]\n\n"
                 "[bold cyan]Next steps:[/bold cyan]\n"
                 "  • Test database: [white]atomate2siesta-database test[/white]\n"
-                "  • Create database: [white]atomate2siesta-database create --create-indexes[/white]\n"
+                "  • Create database: "
+                "[white]atomate2siesta-database create --create-indexes[/white]\n"
                 "  • View data: [white]atomate2siesta-database list[/white]",
                 style="green",
                 title="MongoDB Active",
@@ -2167,7 +2292,8 @@ def status(port):
 
         console.print(
             Panel(
-                "[bold yellow]MongoDB may not be running or accessible[/bold yellow]\n\n"
+                "[bold yellow]MongoDB may not be running or accessible"
+                "[/bold yellow]\n\n"
                 "[bold cyan]Troubleshooting:[/bold cyan]\n"
                 "1. Check if MongoDB is running:\n"
                 "   [white]ps aux | grep mongod[/white]\n\n"
@@ -2177,7 +2303,8 @@ def status(port):
                 "   Linux: [white]sudo systemctl start mongod[/white]\n\n"
                 "3. Check logs:\n"
                 "   Local: [white]tail -f ~/.local/mongodb/log/mongod.log[/white]\n"
-                "   macOS: [white]tail -f /opt/homebrew/var/log/mongodb/mongod.log[/white]\n"
+                "   macOS: "
+                "[white]tail -f /opt/homebrew/var/log/mongodb/mongod.log[/white]\n"
                 "   Linux: [white]tail -f /var/log/mongodb/mongod.log[/white]\n\n"
                 "4. Verify port is correct (default: 27017)",
                 style="yellow",
@@ -2187,7 +2314,7 @@ def status(port):
 
 
 @cli.command()
-def info():
+def info() -> None:
     """Show information about database CLI commands and usage.
 
     This command displays comprehensive information about all available
@@ -2329,11 +2456,14 @@ def info():
 
     remote_panel = Panel(
         "# Test remote connection\n"
-        "[cyan]atomate2siesta-database test --host cluster.edu --port 27017 --database mydb[/cyan]\n\n"
+        "[cyan]atomate2siesta-database test --host cluster.edu "
+        "--port 27017 --database mydb[/cyan]\n\n"
         "# Create on remote server\n"
-        "[cyan]atomate2siesta-database create --host cluster.edu --create-indexes[/cyan]\n\n"
+        "[cyan]atomate2siesta-database create --host cluster.edu "
+        "--create-indexes[/cyan]\n\n"
         "# Generate config for remote database\n"
-        "[cyan]atomate2siesta-database config --generate --host cluster.edu --port 27017[/cyan]\n\n"
+        "[cyan]atomate2siesta-database config --generate --host cluster.edu "
+        "--port 27017[/cyan]\n\n"
         "# Query remote database\n"
         "[cyan]atomate2siesta-database list --host cluster.edu --database mydb[/cyan]",
         style="green",

@@ -1,17 +1,25 @@
 #!/usr/bin/env python
+"""CLI of siesta-pseudos inspired by abips.py.
+
+Script to download and install pseudopotential tables from the web or use
+local files.
 """
-CLI of siesta-pseudos inspired by abips.py Script to download and install pseudopotential tables from the web or use local files.
-"""
+
+from __future__ import annotations
 
 import os
 import shutil
 import tarfile
+from typing import TYPE_CHECKING
 
 import click
 import requests
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
+
+if TYPE_CHECKING:
+    import numpy as np
 
 # Import plotting functions from same package
 from atomate2.siesta.cli.pseudo.plot_pseudopotential import (
@@ -884,7 +892,7 @@ PSEUDOS = {
 PSEUDO_DIR = os.path.expanduser("~/.siesta/pseudos")
 
 
-def get_local_pseudo_path(pseudo_name):
+def get_local_pseudo_path(pseudo_name: str) -> str | None:
     """Get the path to a local pseudopotential file in the project directory."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     # Pseudopotential archives are bundled with the package under
@@ -897,10 +905,15 @@ def get_local_pseudo_path(pseudo_name):
 
     if os.path.exists(pseudos_dir):
         # console.print(f"[cyan]DEBUG: pseudos directory found at {pseudos_dir}[/cyan]")
-        # console.print(f"[cyan]DEBUG: Contents of pseudos directory: {os.listdir(pseudos_dir)}[/cyan]")
+        # console.print(
+        #     f"[cyan]DEBUG: Contents of pseudos directory: "
+        #     f"{os.listdir(pseudos_dir)}[/cyan]"
+        # )
         pass
     else:
-        # console.print(f"[red]DEBUG: pseudos directory not found at {pseudos_dir}[/red]")
+        # console.print(
+        #     f"[red]DEBUG: pseudos directory not found at {pseudos_dir}[/red]"
+        # )
         pass
 
     if os.path.exists(local_file):
@@ -910,7 +923,9 @@ def get_local_pseudo_path(pseudo_name):
     return None
 
 
-def download_and_extract_pseudo(pseudo_file_name, pseudo_name, local_only=False):
+def download_and_extract_pseudo(
+    pseudo_file_name: str, pseudo_name: str, local_only: bool = False
+) -> None:
     """Download or use local pseudo and extract it."""
     pseudo_folder = os.path.join(PSEUDO_DIR, pseudo_name)
     os.makedirs(pseudo_folder, exist_ok=True)
@@ -925,7 +940,8 @@ def download_and_extract_pseudo(pseudo_file_name, pseudo_name, local_only=False)
         shutil.copy(local_pseudo_path, local_path)
     elif local_only:
         console.print(
-            f"[red]Local file for {pseudo_name} not found and --local-only specified.[/red]"
+            f"[red]Local file for {pseudo_name} not found and --local-only "
+            f"specified.[/red]"
         )
         return
     else:
@@ -935,14 +951,16 @@ def download_and_extract_pseudo(pseudo_file_name, pseudo_name, local_only=False)
         headers = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
         url = PSEUDOS[pseudo_name].get("url", f"{BASE_URL}{pseudo_file_name}")
         console.print(f"[blue]Downloading {pseudo_file_name} from {url}...[/blue]")
-        response = requests.get(url, headers=headers, stream=True)
+        # No timeout: preserve existing streaming-download behavior unchanged.
+        response = requests.get(url, headers=headers, stream=True)  # noqa: S113
 
         if response.status_code == 200:
             with open(local_path, "wb") as f:
                 f.write(response.content)
         else:
             console.print(
-                f"[red]Failed to download {pseudo_file_name}. Status code: {response.status_code}[/red]"
+                f"[red]Failed to download {pseudo_file_name}. "
+                f"Status code: {response.status_code}[/red]"
             )
             return
 
@@ -960,12 +978,12 @@ def download_and_extract_pseudo(pseudo_file_name, pseudo_name, local_only=False)
 
 @click.group()
 @click.version_option("0.1.0")
-def cli():
+def cli() -> None:
     """Command-line interface for Siesta pseudopotential management."""
 
 
 @cli.command()
-def available():
+def available() -> None:
     """Show available pseudopotential repositories with installation status."""
     console.print(
         "[bold magenta]List of available pseudopotential repositories:[/bold magenta]"
@@ -1001,11 +1019,12 @@ def available():
 
 
 @cli.command()
-def list():
+def list() -> None:  # noqa: A001 - Click command name must remain "list"
     """List pseudopotential repos with installation status."""
     if not os.path.exists(PSEUDO_DIR):
         console.print(
-            f"[red]Could not find any pseudopotential repository installed in: {PSEUDO_DIR}[/red]"
+            f"[red]Could not find any pseudopotential repository installed "
+            f"in: {PSEUDO_DIR}[/red]"
         )
         return
 
@@ -1027,7 +1046,10 @@ def list():
         installed_text = Text(
             is_installed, style="green" if is_installed == "True" else "red"
         )
-        # console.print(f"[cyan]DEBUG: Checking {pseudo_folder_path}: {'exists' if is_installed == 'True' else 'does not exist'}[/cyan]")
+        # console.print(
+        #     f"[cyan]DEBUG: Checking {pseudo_folder_path}: "
+        #     f"{'exists' if is_installed == 'True' else 'does not exist'}[/cyan]"
+        # )
         table.add_row(
             "ONCVPSP",
             "NC",
@@ -1052,7 +1074,7 @@ def list():
 @click.option(
     "--all", "install_all", is_flag=True, help="Install all available pseudopotentials."
 )
-def install(pseudo_name, local_only, install_all):
+def install(pseudo_name: str | None, local_only: bool, install_all: bool) -> None:
     """Install pseudopotential repositories by name(s).
 
     Examples
@@ -1063,7 +1085,8 @@ def install(pseudo_name, local_only, install_all):
     if install_all:
         # Install all available pseudopotentials
         console.print(
-            f"[cyan]Installing all {len(PSEUDOS)} available pseudopotentials...[/cyan]\n"
+            f"[cyan]Installing all {len(PSEUDOS)} available "
+            f"pseudopotentials...[/cyan]\n"
         )
 
         success_count = 0
@@ -1079,7 +1102,7 @@ def install(pseudo_name, local_only, install_all):
                 )
                 success_count += 1
                 console.print(f"[green]✓ Successfully installed {name}[/green]\n")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - continue on per-item failure
                 failed_count += 1
                 console.print(f"[red]✗ Failed to install {name}: {e}[/red]\n")
 
@@ -1099,7 +1122,8 @@ def install(pseudo_name, local_only, install_all):
             )
         else:
             console.print(
-                f"[red]Pseudo '{pseudo_name}' not found. Use [bold]avail[/bold] command to get repo names.[/red]"
+                f"[red]Pseudo '{pseudo_name}' not found. Use [bold]avail[/bold] "
+                f"command to get repo names.[/red]"
             )
     else:
         console.print(
@@ -1116,7 +1140,7 @@ def install(pseudo_name, local_only, install_all):
 @click.option(
     "--all", "uninstall_all", is_flag=True, help="Uninstall all pseudopotentials."
 )
-def uninstall(pseudo_name, force, uninstall_all):
+def uninstall(pseudo_name: str | None, force: bool, uninstall_all: bool) -> None:
     """Uninstall pseudopotential repositories by name(s).
 
     \b
@@ -1124,7 +1148,7 @@ def uninstall(pseudo_name, force, uninstall_all):
         atomate2siesta-pseudos uninstall ONCVPSP-PBE-SR-PDv0.4-Standard
         atomate2siesta-pseudos uninstall --all
         atomate2siesta-pseudos uninstall --all --force
-    """
+    """  # noqa: D301 - Click no-rewrap marker needs a non-raw backspace escape
     if uninstall_all:
         # Get list of installed pseudos
         installed = []
@@ -1148,7 +1172,8 @@ def uninstall(pseudo_name, force, uninstall_all):
 
         if not force:
             click.confirm(
-                f"\nAre you sure you want to uninstall ALL {len(installed)} pseudopotentials?",
+                f"\nAre you sure you want to uninstall ALL {len(installed)} "
+                f"pseudopotentials?",
                 abort=True,
             )
 
@@ -1160,11 +1185,12 @@ def uninstall(pseudo_name, force, uninstall_all):
                 shutil.rmtree(pseudo_folder)
                 console.print(f"[green]✓ Uninstalled {name}[/green]")
                 success_count += 1
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - continue on per-item failure
                 console.print(f"[red]✗ Failed to uninstall {name}: {e}[/red]")
 
         console.print(
-            f"\n[bold green]Uninstalled {success_count}/{len(installed)} pseudopotentials.[/bold green]"
+            f"\n[bold green]Uninstalled {success_count}/{len(installed)} "
+            f"pseudopotentials.[/bold green]"
         )
         return
 
@@ -1182,14 +1208,16 @@ def uninstall(pseudo_name, force, uninstall_all):
 
     if pseudo_name not in PSEUDOS:
         console.print(
-            f"[red]Pseudo '{pseudo_name}' not found. Use [bold]available[/bold] command to get repo names.[/red]"
+            f"[red]Pseudo '{pseudo_name}' not found. Use [bold]available[/bold] "
+            f"command to get repo names.[/red]"
         )
         return
 
     pseudo_folder = os.path.join(PSEUDO_DIR, pseudo_name)
     if not os.path.exists(pseudo_folder):
         console.print(
-            f"[yellow]Pseudopotential '{pseudo_name}' is not installed at {pseudo_folder}.[/yellow]"
+            f"[yellow]Pseudopotential '{pseudo_name}' is not installed at "
+            f"{pseudo_folder}.[/yellow]"
         )
         return
 
@@ -1202,16 +1230,17 @@ def uninstall(pseudo_name, force, uninstall_all):
     try:
         shutil.rmtree(pseudo_folder)
         console.print(
-            f"[green]Successfully uninstalled '{pseudo_name}' from {pseudo_folder}.[/green]"
+            f"[green]Successfully uninstalled '{pseudo_name}' from "
+            f"{pseudo_folder}.[/green]"
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - report failure to the user and return
         console.print(f"[red]Failed to uninstall '{pseudo_name}': {e}[/red]")
 
 
 @cli.command()
 @click.argument("pseudo_name")
 @click.argument("element", required=False)
-def show(pseudo_name, element):
+def show(pseudo_name: str, element: str | None) -> None:
     """Show info on pseudopotential table(s).
 
     If ELEMENT is provided, show detailed shell information from PSML file.
@@ -1232,15 +1261,18 @@ def show(pseudo_name, element):
         f"[bold yellow]Information about:[/bold yellow] [green]{pseudo_name}[/green]\n"
     )
     console.print(
-        f"[yellow]XC Functional:[/yellow] [green]{PSEUDOS[pseudo_name]['xc_name']}[/green]"
+        f"[yellow]XC Functional:[/yellow] "
+        f"[green]{PSEUDOS[pseudo_name]['xc_name']}[/green]"
     )
     console.print(
-        f"[yellow]Relativity Type:[/yellow] [green]{PSEUDOS[pseudo_name]['relativity_type']}[/green]"
+        f"[yellow]Relativity Type:[/yellow] "
+        f"[green]{PSEUDOS[pseudo_name]['relativity_type']}[/green]"
     )
 
     if is_installed == "True":
         console.print(
-            f"[yellow]The Pseudo Installed Path:[/yellow] [green]{PSEUDO_DIR}/{pseudo_name}[/green]"
+            f"[yellow]The Pseudo Installed Path:[/yellow] "
+            f"[green]{PSEUDO_DIR}/{pseudo_name}[/green]"
         )
     console.print(f"[yellow]Installed:[/yellow] {is_installed}")
 
@@ -1248,14 +1280,16 @@ def show(pseudo_name, element):
     if element:
         if is_installed != "True":
             console.print(
-                f"\n[red]Cannot show shell info: Pseudo not installed. Run [bold]install {pseudo_name}[/bold] first.[/red]"
+                f"\n[red]Cannot show shell info: Pseudo not installed. Run "
+                f"[bold]install {pseudo_name}[/bold] first.[/red]"
             )
             return
 
         psml_file = os.path.join(pseudo_folder_path, f"{element}.psml")
         if not os.path.exists(psml_file):
             console.print(
-                f"\n[red]PSML file for element '{element}' not found at {psml_file}.[/red]"
+                f"\n[red]PSML file for element '{element}' not found at "
+                f"{psml_file}.[/red]"
             )
             return
 
@@ -1292,14 +1326,14 @@ def show(pseudo_name, element):
 
             console.print(table)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - report read error to the user
             console.print(f"\n[red]Error reading PSML file: {e}[/red]")
 
 
 @cli.command()
 @click.argument("element")
-def element(element):
-    """Find all pseudos in the installed tables for the given element (symbol or znucl)."""
+def element(element: str) -> None:
+    """Find all pseudos in the installed tables for the given element (symbol or znucl)."""  # noqa: E501 - Click renders help wrapped; wording preserved verbatim
     # pseudos_found = [name for name in PSEUDOS if element.lower() in name.lower()]
     pseudos_found = [
         name for name, data in PSEUDOS.items() if element in data["elements"]
@@ -1321,7 +1355,9 @@ def element(element):
 # def mkff(pseudos):
 #     """Compute form factors for pseudos and show them."""
 #     if pseudos:
-#         console.print(f"[blue]Computing form factors for: {', '.join(pseudos)}[/blue]")
+#         console.print(
+#             f"[blue]Computing form factors for: {', '.join(pseudos)}[/blue]"
+#         )
 #         # Call a function or external tool to process the pseudos
 #     else:
 #         console.print("[red]Please provide at least one pseudo name.[/red]")
@@ -1346,7 +1382,11 @@ def element(element):
     "--rc-method",
     type=click.Choice(["psml", "scaled", "hydrogenic", "fixed"]),
     default="psml",
-    help="Method to determine cutoff radii: psml (from wavefunction decay), scaled (by atomic radius), hydrogenic (n²/Z scaling), fixed (standard values)",
+    help=(
+        "Method to determine cutoff radii: psml (from wavefunction decay), "
+        "scaled (by atomic radius), hydrogenic (n²/Z scaling), fixed "
+        "(standard values)"
+    ),
 )
 @click.option(
     "--rc-threshold",
@@ -1360,26 +1400,35 @@ def element(element):
     help="Output file for basis block (default: stdout)",
 )
 def basis(
-    pseudo_name, element, basis_size, n_shells, rc_method, rc_threshold, output_file
-):
+    pseudo_name: str,
+    element: str,
+    basis_size: str,
+    n_shells: int,
+    rc_method: str,
+    rc_threshold: float,
+    output_file: str | None,
+) -> None:
     """Generate PAO.Basis block from PSML pseudopotential file.
 
     Examples
     --------
         atomate2siesta-pseudos basis ONCVPSP-PBEsol-FR-PDv0.4-Standard Si
         atomate2siesta-pseudos basis ONCVPSP-PBE-SR-PDv0.4-Standard Fe --basis-size TZP
-        atomate2siesta-pseudos basis ONCVPSP-PBE-SR-PDv0.4-Standard O --output-file O.basis
+        atomate2siesta-pseudos basis ONCVPSP-PBE-SR-PDv0.4-Standard O
+        --output-file O.basis
     """
     if pseudo_name not in PSEUDOS:
         console.print(
-            f"[red]Pseudo '{pseudo_name}' not found. Use [bold]avail[/bold] command to get repo names.[/red]"
+            f"[red]Pseudo '{pseudo_name}' not found. Use [bold]avail[/bold] "
+            f"command to get repo names.[/red]"
         )
         return
 
     pseudo_folder = os.path.join(PSEUDO_DIR, pseudo_name)
     if not os.path.exists(pseudo_folder):
         console.print(
-            f"[red]Pseudopotential '{pseudo_name}' is not installed at {pseudo_folder}. Run [bold]install {pseudo_name}[/bold] first.[/red]"
+            f"[red]Pseudopotential '{pseudo_name}' is not installed at "
+            f"{pseudo_folder}. Run [bold]install {pseudo_name}[/bold] first.[/red]"
         )
         return
 
@@ -1422,13 +1471,19 @@ def basis(
 
     except ValueError as e:
         console.print(f"[red]Error: {e}[/red]")
-        raise click.Abort()
+        raise click.Abort from e
     except Exception as e:
         console.print(f"[red]Unexpected error: {e}[/red]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
-def extract_rc_from_psml(radial_grid, wavefunctions, n, ang_mom, threshold=0.05):
+def extract_rc_from_psml(
+    radial_grid: np.ndarray,
+    wavefunctions: list[dict],
+    n: int,
+    ang_mom: int,
+    threshold: float = 0.05,
+) -> float | None:
     """Extract cutoff radius from PSML wavefunction decay.
 
     Args:
@@ -1455,14 +1510,13 @@ def extract_rc_from_psml(radial_grid, wavefunctions, n, ang_mom, threshold=0.05)
             cutoff_idx = np.where(psi_abs > threshold * max_psi)[0]
 
             if len(cutoff_idx) > 0:
-                rc = radial_grid[cutoff_idx[-1]]
-                return rc
+                return radial_grid[cutoff_idx[-1]]
 
     # Fallback if no wavefunction found
     return None
 
 
-def get_rc_scaled_by_element(element, ang_mom):
+def get_rc_scaled_by_element(element: str, ang_mom: int) -> float:
     """Scale rc by element's atomic radius (periodic trends).
 
     Args:
@@ -1496,12 +1550,12 @@ def get_rc_scaled_by_element(element, ang_mom):
 
         return rc_ref.get(ang_mom, 5.00) * scale
 
-    except Exception:
+    except Exception:  # noqa: BLE001 - fall back to fixed cutoff radii on any error
         # Fallback to fixed values
         return {0: 5.00, 1: 6.00, 2: 5.50, 3: 5.00}.get(ang_mom, 5.00)
 
 
-def get_rc_hydrogenic(element, n, ang_mom):
+def get_rc_hydrogenic(element: str, n: int, ang_mom: int) -> float:
     """Calculate rc using hydrogenic (n²/Z_eff) scaling.
 
     Args:
@@ -1517,21 +1571,21 @@ def get_rc_hydrogenic(element, n, ang_mom):
 
     try:
         el = Element(element)
-        Z = el.Z
+        Z = el.Z  # noqa: N806 - physics symbol (nuclear charge)
 
         # Slater's effective nuclear charge approximation
         # Simple estimate: Z_eff ≈ Z - (number of inner electrons)
         if Z <= 2:
-            Z_eff = Z
+            Z_eff = Z  # noqa: N806 - physics symbol (effective nuclear charge)
         elif Z <= 10:
-            Z_eff = Z - 2  # Shield 1s electrons
+            Z_eff = Z - 2  # noqa: N806 Shield 1s electrons
         elif Z <= 18:
-            Z_eff = Z - 10  # Shield 1s + 2s2p electrons
+            Z_eff = Z - 10  # noqa: N806 Shield 1s + 2s2p electrons
         else:
-            Z_eff = Z - 18  # Shield up to 3s3p
+            Z_eff = Z - 18  # noqa: N806 Shield up to 3s3p
 
         # Ensure Z_eff is reasonable
-        Z_eff = max(Z_eff, 2.0)
+        Z_eff = max(Z_eff, 2.0)  # noqa: N806 - physics symbol
 
         # Hydrogenic radius: r ~ n²/Z_eff (in atomic units)
         # Base scaling for n=3, Z_eff=6 → rc ~ 4.5 bohr
@@ -1542,21 +1596,21 @@ def get_rc_hydrogenic(element, n, ang_mom):
 
         return rc_base * l_factor.get(ang_mom, 1.0)
 
-    except Exception:
+    except Exception:  # noqa: BLE001 - fall back to fixed cutoff radii on any error
         # Fallback to fixed values
         return {0: 5.00, 1: 6.00, 2: 5.50, 3: 5.00}.get(ang_mom, 5.00)
 
 
 def generate_pao_basis_block(
-    element,
-    valence_config,
-    basis_size,
-    num_n_shells=1,
-    rc_method="psml",
-    rc_threshold=0.05,
-    radial_grid=None,
-    wavefunctions=None,
-):
+    element: str,
+    valence_config: list[dict],
+    basis_size: str,
+    num_n_shells: int = 1,
+    rc_method: str = "psml",
+    rc_threshold: float = 0.05,
+    radial_grid: np.ndarray | None = None,
+    wavefunctions: list[dict] | None = None,
+) -> str:
     """Generate PAO.Basis block for SIESTA from valence configuration.
 
     Args:
@@ -1672,7 +1726,8 @@ def generate_pao_basis_block(
             shell_name = f"{n_val}{l_names.get(ang_mom, '?')}"
             shell_type = " (excited)" if shell_idx > 0 else ""
             lines.append(
-                f"  n={n_val} {ang_mom} {n_zeta_base}  # {shell_name} orbital{shell_type}"
+                f"  n={n_val} {ang_mom} {n_zeta_base}  # {shell_name} "
+                f"orbital{shell_type}"
             )
             lines.append(f"    {rc_values}  # rc(izeta=1..Nzeta) (Bohr)")
 
@@ -1739,20 +1794,31 @@ def generate_pao_basis_block(
 @click.option(
     "--r-plot",
     type=float,
-    help="Maximum radial distance (bohr) for wavefunctions, potentials, and density plots",
+    help=(
+        "Maximum radial distance (bohr) for wavefunctions, potentials, and "
+        "density plots"
+    ),
 )
-def plot(pseudo_name, element, plot_type, output_dir, r_plot):
+def plot(
+    pseudo_name: str,
+    element: str,
+    plot_type: str,
+    output_dir: str,
+    r_plot: float | None,
+) -> None:
     """Generate plots for a specified element in a pseudopotential repository."""
     if pseudo_name not in PSEUDOS:
         console.print(
-            f"[red]Pseudo '{pseudo_name}' not found. Use [bold]avail[/bold] command to get repo names.[/red]"
+            f"[red]Pseudo '{pseudo_name}' not found. Use [bold]avail[/bold] "
+            f"command to get repo names.[/red]"
         )
         return
 
     pseudo_folder = os.path.join(PSEUDO_DIR, pseudo_name)
     if not os.path.exists(pseudo_folder):
         console.print(
-            f"[red]Pseudopotential '{pseudo_name}' is not installed at {pseudo_folder}. Run [bold]install {pseudo_name}[/bold] first.[/red]"
+            f"[red]Pseudopotential '{pseudo_name}' is not installed at "
+            f"{pseudo_folder}. Run [bold]install {pseudo_name}[/bold] first.[/red]"
         )
         return
 
@@ -1777,102 +1843,107 @@ def plot(pseudo_name, element, plot_type, output_dir, r_plot):
             return
         if not potentials:
             console.print(
-                "[yellow]Warning: No potentials found, some plots may be skipped.[/yellow]"
+                "[yellow]Warning: No potentials found, some plots may be "
+                "skipped.[/yellow]"
             )
 
         os.makedirs(output_dir, exist_ok=True)
 
         if plot_type in ["wavefunctions", "all"]:
             if wavefunctions:
+                wf_png = os.path.join(output_dir, f"{element_name}_wavefunctions.png")
                 plot_wavefunctions(
                     radial_grid,
                     wavefunctions,
-                    os.path.join(output_dir, f"{element_name}_wavefunctions.png"),
+                    wf_png,
                     element_name,
                     r_max=r_plot,
                 )
-                console.print(
-                    f"[green]Generated wavefunctions plot: {os.path.join(output_dir, f'{element_name}_wavefunctions.png')}[/green]"
-                )
+                console.print(f"[green]Generated wavefunctions plot: {wf_png}[/green]")
             else:
                 console.print(
-                    "[yellow]Warning: No wavefunctions (projectors) found, skipping wavefunctions plot.[/yellow]"
+                    "[yellow]Warning: No wavefunctions (projectors) found, "
+                    "skipping wavefunctions plot.[/yellow]"
                 )
 
         if plot_type in ["potentials", "all"]:
             if potentials:
+                pot_png = os.path.join(output_dir, f"{element_name}_potentials.png")
                 plot_potentials(
                     radial_grid,
                     potentials,
-                    os.path.join(output_dir, f"{element_name}_potentials.png"),
+                    pot_png,
                     element_name,
                     r_max=r_plot,
                 )
-                console.print(
-                    f"[green]Generated potentials plot: {os.path.join(output_dir, f'{element_name}_potentials.png')}[/green]"
-                )
+                console.print(f"[green]Generated potentials plot: {pot_png}[/green]")
             else:
                 console.print(
-                    "[yellow]Warning: No potentials found, skipping potentials plot.[/yellow]"
+                    "[yellow]Warning: No potentials found, skipping "
+                    "potentials plot.[/yellow]"
                 )
 
         if plot_type in ["3d-potential", "all"]:
             if potentials:
+                pot3d_png = os.path.join(output_dir, f"{element_name}_3d_potential.png")
                 plot_3d_potential(
                     radial_grid,
                     potentials,
-                    os.path.join(output_dir, f"{element_name}_3d_potential.png"),
+                    pot3d_png,
                     element_name,
                     r_max=r_plot,
                 )
                 console.print(
-                    f"[green]Generated 3D potential plot: {os.path.join(output_dir, f'{element_name}_3d_potential.png')}[/green]"
+                    f"[green]Generated 3D potential plot: {pot3d_png}[/green]"
                 )
             else:
                 console.print(
-                    "[yellow]Warning: No potentials found, skipping 3D potential plot.[/yellow]"
+                    "[yellow]Warning: No potentials found, skipping 3D "
+                    "potential plot.[/yellow]"
                 )
 
         if plot_type in ["occupation", "all"]:
             if valence_config:
+                occ_png = os.path.join(output_dir, f"{element_name}_occupation_map.png")
                 plot_occupation_map(
                     valence_config,
-                    os.path.join(output_dir, f"{element_name}_occupation_map.png"),
+                    occ_png,
                     element_name,
                 )
                 console.print(
-                    f"[green]Generated occupation map plot: {os.path.join(output_dir, f'{element_name}_occupation_map.png')}[/green]"
+                    f"[green]Generated occupation map plot: {occ_png}[/green]"
                 )
             else:
                 console.print(
-                    "[yellow]Warning: No valence configuration found, skipping occupation plot.[/yellow]"
+                    "[yellow]Warning: No valence configuration found, skipping "
+                    "occupation plot.[/yellow]"
                 )
 
         if plot_type in ["density", "all"]:
             if wavefunctions:
+                den_png = os.path.join(output_dir, f"{element_name}_density.png")
                 plot_density(
                     radial_grid,
                     wavefunctions,
-                    os.path.join(output_dir, f"{element_name}_density.png"),
+                    den_png,
                     element_name,
                     r_max=r_plot,
                 )
-                console.print(
-                    f"[green]Generated density plot: {os.path.join(output_dir, f'{element_name}_density.png')}[/green]"
-                )
+                console.print(f"[green]Generated density plot: {den_png}[/green]")
             else:
                 console.print(
-                    "[yellow]Warning: No wavefunctions (projectors) found, skipping density plot.[/yellow]"
+                    "[yellow]Warning: No wavefunctions (projectors) found, "
+                    "skipping density plot.[/yellow]"
                 )
 
         console.print(f"[green]Plots generated in {output_dir}[/green]")
 
     except ValueError as e:
         console.print(f"[red]Error: {e}[/red]")
-        raise click.Abort()
+        raise click.Abort from e
     except Exception as e:
         console.print(f"[red]Unexpected error: {e}[/red]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from rich.table import Table
 console = Console()
 
 
-def show_workflows():
+def show_workflows() -> None:
     """
     Display all workflow types.
 
@@ -70,14 +70,13 @@ def show_workflows():
 
         for maker_name, description, runtime in makers:
             # Get description from FlowMaker if not provided
-            if description is None and maker_name in flowmakers:
-                description = flowmakers[maker_name].get(
-                    "description", "No description"
-                )
-                if len(description) > 50:
-                    description = description[:47] + "..."
+            desc = description
+            if desc is None and maker_name in flowmakers:
+                desc = flowmakers[maker_name].get("description", "No description")
+                if len(desc) > 50:
+                    desc = desc[:47] + "..."
 
-            table.add_row(maker_name, description or "No description", runtime)
+            table.add_row(maker_name, desc or "No description", runtime)
 
         console.print(table)
         console.print()
@@ -86,5 +85,6 @@ def show_workflows():
         "[dim]Use 'atomate2siesta-info workflows <name>' for detailed information[/dim]"
     )
     console.print(
-        "[dim]Use 'atomate2siesta-info workflows --list-all' to see all FlowMakers[/dim]\n"
+        "[dim]Use 'atomate2siesta-info workflows --list-all' "
+        "to see all FlowMakers[/dim]\n"
     )

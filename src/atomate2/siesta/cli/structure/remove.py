@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """CLI for removing atoms from structures.
 
 This module provides the `remove` subcommand for atomate2siesta-structure.
@@ -60,17 +59,18 @@ console = Console()
     help="Show which atoms were removed",
 )
 def remove(
-    structure_file,
-    element,
-    sites,
-    near,
-    radius,
-    fractional,
-    output,
-    format,
-    show_removed,
-):
-    """Remove atoms from a structure (vacancies, cleanup, surface modifications).
+    structure_file: str,
+    element: str | None,
+    sites: str | None,
+    near: str | None,
+    radius: float | None,
+    fractional: bool,
+    output: str | None,
+    format: str,  # noqa: A002 Click --format option name
+    show_removed: bool,
+) -> None:
+    (
+        """Remove atoms from a structure (vacancies, cleanup, surface modifications).
 
     Remove atoms by element, site index, or proximity to a point. Useful for
     creating vacancies, removing adsorbates, or cleaning up structures.
@@ -87,22 +87,25 @@ def remove(
         atomate2siesta-structure remove structure.cif --near 0,0,5.0 --radius 2.5
 
         # Remove atoms near fractional coordinate
-        atomate2siesta-structure remove structure.cif --near 0.5,0.5,0.5 --radius 2.0 --fractional
+        atomate2siesta-structure remove structure.cif --near 0.5,0.5,0.5 """
+        """--radius 2.0 --fractional
 
         # Show what was removed
         atomate2siesta-structure remove structure.cif --element O --show-removed
     """
+    )
     try:
         # Validate options
         if not any([element, sites, near]):
             console.print(
-                "[red]Error: Must specify at least one of --element, --sites, or --near[/red]"
+                "[red]Error: Must specify at least one of "
+                "--element, --sites, or --near[/red]"
             )
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301 intentional control-flow abort
 
         if near and not radius:
             console.print("[red]Error: --near requires --radius[/red]")
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301 intentional control-flow abort
 
         # Load structure
         structure = Structure.from_file(structure_file)
@@ -126,11 +129,12 @@ def remove(
                 ]
                 sites_to_remove.update(element_indices)
                 console.print(
-                    f"[yellow]Found {len(element_indices)} {elem.symbol} atoms to remove[/yellow]"
+                    f"[yellow]Found {len(element_indices)} {elem.symbol} "
+                    f"atoms to remove[/yellow]"
                 )
             except Exception as e:
                 console.print(f"[red]Error: Invalid element symbol: {e}[/red]")
-                raise click.Abort()
+                raise click.Abort from e
 
         # By site indices
         if sites:
@@ -140,16 +144,17 @@ def remove(
                 for idx in site_indices:
                     if idx < 0 or idx >= structure.num_sites:
                         console.print(
-                            f"[red]Error: Site index {idx} out of range (0-{structure.num_sites - 1})[/red]"
+                            f"[red]Error: Site index {idx} out of range "
+                            f"(0-{structure.num_sites - 1})[/red]"
                         )
-                        raise click.Abort()
+                        raise click.Abort
                 sites_to_remove.update(site_indices)
                 console.print(
                     f"[yellow]Adding {len(site_indices)} sites by index[/yellow]"
                 )
             except ValueError:
                 console.print("[red]Error: Invalid site indices format[/red]")
-                raise click.Abort()
+                raise click.Abort from None
 
         # By proximity
         if near:
@@ -157,7 +162,7 @@ def remove(
                 coords = [float(x) for x in near.split(",")]
                 if len(coords) != 3:
                     console.print("[red]Error: --near must be x,y,z (3 values)[/red]")
-                    raise click.Abort()
+                    raise click.Abort
 
                 if fractional:
                     # Convert to Cartesian
@@ -175,16 +180,17 @@ def remove(
                 sites_to_remove.update(near_indices)
                 coord_type = "fractional" if fractional else "Cartesian"
                 console.print(
-                    f"[yellow]Found {len(near_indices)} atoms within {radius:.2f} Å of {coord_type} {coords}[/yellow]"
+                    f"[yellow]Found {len(near_indices)} atoms within "
+                    f"{radius:.2f} Å of {coord_type} {coords}[/yellow]"
                 )
 
             except ValueError:
                 console.print("[red]Error: Invalid coordinates format[/red]")
-                raise click.Abort()
+                raise click.Abort from None
 
         if not sites_to_remove:
             console.print("[yellow]Warning: No atoms match removal criteria[/yellow]")
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301 intentional control-flow abort
 
         console.print(
             f"\n[yellow]Total atoms to remove: {len(sites_to_remove)}[/yellow]"
@@ -226,10 +232,14 @@ def remove(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
-def _save_structure(structure, filename, format):
+def _save_structure(
+    structure: Structure,
+    filename: str,
+    format: str,  # noqa: A002 param mirrors --format option
+) -> None:
     """Save structure to file."""
     if format == "cif":
         from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
@@ -258,7 +268,11 @@ def _save_structure(structure, filename, format):
         geom.write(filename)
 
 
-def _display_removal_info(original, new_structure, n_removed):
+def _display_removal_info(
+    original: Structure,
+    new_structure: Structure,
+    n_removed: int,
+) -> None:
     """Display removal information."""
     console.print("\n[yellow]Removal Summary:[/yellow]")
 
@@ -281,13 +295,17 @@ def _display_removal_info(original, new_structure, n_removed):
     table.add_row(
         "Remaining",
         "—",
-        f"{new_structure.num_sites} ({100 * new_structure.num_sites / original.num_sites:.1f}%)",
+        f"{new_structure.num_sites} "
+        f"({100 * new_structure.num_sites / original.num_sites:.1f}%)",
     )
 
     console.print(table)
 
 
-def _display_removed_sites(structure, removed_indices):
+def _display_removed_sites(
+    structure: Structure,
+    removed_indices: list,
+) -> None:
     """Display removed sites."""
     console.print("\n[cyan]Atoms to be Removed:[/cyan]")
 

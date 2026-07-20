@@ -23,18 +23,18 @@ def load_structure(file_path: str) -> Structure:
     return Structure.from_file(file_path)
 
 
-def save_structure(structure: Structure, filename: str, format: str) -> None:
+def save_structure(structure: Structure, filename: str, fmt: str) -> None:
     """Save structure to file."""
     from ase import Atoms
     from ase.io import write as ase_write
 
-    if format == "cif":
+    if fmt == "cif":
         from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
 
         write_cif_with_ghost(structure, filename)
-    elif format == "poscar":
+    elif fmt == "poscar":
         structure.to(filename=filename, fmt="poscar")
-    elif format == "xsf":
+    elif fmt == "xsf":
         atoms = Atoms(
             symbols=[str(site.specie) for site in structure],
             positions=structure.cart_coords,
@@ -42,20 +42,20 @@ def save_structure(structure: Structure, filename: str, format: str) -> None:
             pbc=True,
         )
         ase_write(filename, atoms, format="xsf")
-    elif format == "json":
+    elif fmt == "json":
         structure.to(filename=filename, fmt="json")
-    elif format in ["fdf", "XV"]:
+    elif fmt in ["fdf", "XV"]:
         import sisl
 
         geom = sisl.Geometry.new(structure)
-        if format == "fdf":
+        if fmt == "fdf":
             geom.write(filename)
         else:  # XV
             geom.write(
                 filename.replace(".xv", ".XV") if ".xv" in filename else filename
             )
     else:
-        raise ValueError(f"Unsupported format: {format}")
+        raise ValueError(f"Unsupported format: {fmt}")
 
 
 def show_structure_comparison(original: Structure, modified: Structure) -> None:
@@ -150,7 +150,7 @@ def standardize(
     symprec: float,
     angle_tolerance: float,
     output: str | None,
-    format: str,
+    format: str,  # noqa: A002 Click option name mirrors the CLI --format flag
     show_before_after: bool,
 ) -> None:
     """Standardize crystal structure to conventional or primitive cell.
@@ -246,14 +246,15 @@ def standardize(
         save_structure(standardized, output, format)
 
         console.print(
-            f"\n[bold green]✓ Successfully standardized to {mode_name} cell![/bold green]"
+            f"\n[bold green]✓ Successfully standardized to "
+            f"{mode_name} cell![/bold green]"
         )
         console.print(f"  Output: {output}\n")
 
         # Show summary
         _show_summary(original_structure, standardized, mode_name)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print(f"\n[bold red]Error:[/bold red] {e}")
         import traceback
 
@@ -261,7 +262,11 @@ def standardize(
         sys.exit(1)
 
 
-def _show_summary(original: Structure, standardized: Structure, mode: str) -> None:
+def _show_summary(
+    original: Structure,
+    standardized: Structure,
+    mode: str,  # noqa: ARG001 kept for signature symmetry
+) -> None:
     """Show summary of standardization."""
     table = Table(title="Standardization Summary", show_header=True)
     table.add_column("Property", style="cyan")
@@ -275,7 +280,7 @@ def _show_summary(original: Structure, standardized: Structure, mode: str) -> No
         "Sites",
         str(original.num_sites),
         str(standardized.num_sites),
-        f"×{site_multiplier:.2f}",
+        f"×{site_multiplier:.2f}",  # noqa: RUF001
     )
 
     # Volume
@@ -284,7 +289,7 @@ def _show_summary(original: Structure, standardized: Structure, mode: str) -> No
         "Volume (Ų)",
         f"{original.volume:.2f}",
         f"{standardized.volume:.2f}",
-        f"×{vol_multiplier:.2f}",
+        f"×{vol_multiplier:.2f}",  # noqa: RUF001
     )
 
     # Lattice parameters

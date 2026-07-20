@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# ruff: noqa: EXE001
 """
 Structure information CLI tool.
 
@@ -80,7 +81,7 @@ def analyze_magnetic_properties(structure: Structure) -> dict[str, Any]:
 
     # Analyze magnetic moments
     n_magnetic = sum(1 for m in magmoms if abs(m) > 1e-6)
-    unique_moments = sorted(set(round(m, 3) for m in magmoms if abs(m) > 1e-6))
+    unique_moments = sorted({round(m, 3) for m in magmoms if abs(m) > 1e-6})
 
     # Determine magnetic ordering
     if n_magnetic == 0:
@@ -141,7 +142,7 @@ def main(
     magnetic: bool,
     sites: bool,
     max_sites: int,
-):
+) -> None:
     """Display comprehensive information about a structure file.
 
     Supports CIF, XSF, XV, FDF, POSCAR formats.
@@ -172,7 +173,7 @@ def main(
         conventional = sga.get_conventional_standard_structure()
         try:
             primitive = sga.get_primitive_standard_structure()
-        except Exception:
+        except Exception:  # noqa: BLE001 fall back to input structure on any failure
             primitive = structure
 
         # Create header panel
@@ -209,9 +210,9 @@ def main(
         table_lattice.add_row("a", f"{lattice.a:.6f} Å")
         table_lattice.add_row("b", f"{lattice.b:.6f} Å")
         table_lattice.add_row("c", f"{lattice.c:.6f} Å")
-        table_lattice.add_row("α", f"{lattice.alpha:.4f}°")
+        table_lattice.add_row("α", f"{lattice.alpha:.4f}°")  # noqa: RUF001
         table_lattice.add_row("β", f"{lattice.beta:.4f}°")
-        table_lattice.add_row("γ", f"{lattice.gamma:.4f}°")
+        table_lattice.add_row("γ", f"{lattice.gamma:.4f}°")  # noqa: RUF001
         table_lattice.add_row("Volume", f"{lattice.volume:.6f} Ų")
 
         console.print(table_lattice)
@@ -276,18 +277,19 @@ def main(
                     zip(structure, mag_info["magmoms"], strict=False)
                 ):
                     moment_val: float = float(moment)
-                    if abs(moment_val) > 1e-6:  # Only show magnetic sites
-                        if shown_count < 20:
-                            table_moments.add_row(
-                                str(i + 1),
-                                site.specie.symbol,
-                                f"{moment_val:+.3f}",
-                            )
-                            shown_count += 1
+                    # Only show magnetic sites
+                    if abs(moment_val) > 1e-6 and shown_count < 20:
+                        table_moments.add_row(
+                            str(i + 1),
+                            site.specie.symbol,
+                            f"{moment_val:+.3f}",
+                        )
+                        shown_count += 1
 
                 if mag_info["n_magnetic_sites"] > 20:
                     console.print(
-                        f"[yellow]Showing first 20 of {mag_info['n_magnetic_sites']} magnetic sites[/yellow]"
+                        f"[yellow]Showing first 20 of "
+                        f"{mag_info['n_magnetic_sites']} magnetic sites[/yellow]"
                     )
 
                 console.print(table_moments)
@@ -342,7 +344,8 @@ def main(
 
         # Summary info
         console.print(
-            f"[dim]Symmetry analysis parameters: symprec={symprec} Å, angle_tolerance={angle_tolerance}°[/dim]"
+            f"[dim]Symmetry analysis parameters: symprec={symprec} Å, "
+            f"angle_tolerance={angle_tolerance}°[/dim]"
         )
 
     except Exception as e:

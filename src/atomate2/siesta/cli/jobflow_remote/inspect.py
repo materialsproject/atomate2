@@ -45,14 +45,14 @@ console = Console()
 )
 @click.pass_context
 def inspect(
-    ctx,
+    ctx: click.Context,
     job_id: str,
     full: bool,
     fdf_only: bool,
     show_all_defaults: bool,
     show_actual_fdf: bool,
-):
-    """Inspect job details and SIESTA FDF parameters.
+) -> None:
+    r"""Inspect job details and SIESTA FDF parameters.
 
     This command provides read-only inspection of job information stored
     in the jobflow-remote database. It can display:
@@ -79,7 +79,8 @@ def inspect(
     project_name = ctx.obj.get("project_name", "atomate2siesta")
 
     console.print(
-        f"\n[bold cyan]Inspecting job {job_id} in project '{project_name}'[/bold cyan]\n"
+        f"\n[bold cyan]Inspecting job {job_id} "
+        f"in project '{project_name}'[/bold cyan]\n"
     )
 
     # Get basic job info from jf CLI
@@ -87,7 +88,7 @@ def inspect(
 
     if not job_info:
         console.print("[red]Failed to retrieve job information[/red]")
-        raise click.Abort()
+        raise click.Abort
 
     # Get detailed job document from MongoDB if requested
     fdf_params = None
@@ -105,7 +106,8 @@ def inspect(
                 tier_level = fdf_params["tier"]
         else:
             console.print(
-                "\n[yellow]Warning:[/yellow] Could not retrieve FDF parameters from database"
+                "\n[yellow]Warning:[/yellow] Could not retrieve FDF "
+                "parameters from database"
             )
             console.print("[yellow]Hint:[/yellow] Install pymongo: pip install pymongo")
 
@@ -121,7 +123,10 @@ def inspect(
             console.print(
                 Panel(
                     syntax,
-                    title=f"[bold yellow]SIESTA FDF Parameters (Job {job_id})[/bold yellow]",
+                    title=(
+                        f"[bold yellow]SIESTA FDF Parameters (Job {job_id})"
+                        "[/bold yellow]"
+                    ),
                     border_style="yellow",
                 )
             )
@@ -139,16 +144,22 @@ def inspect(
         console.print("\n")
         console.print(
             Panel.fit(
-                "[bold cyan]ℹ️  Parameter Display Explanation[/bold cyan]\n\n"
-                "The parameters shown above are [bold]user-configurable parameters[/bold] from the job definition.\n"
-                "The actual generated [bold]siesta.fdf[/bold] file contains many more parameters:\n\n"
+                # Information-source glyph is intentional console decoration.
+                "[bold cyan]ℹ️  Parameter Display Explanation[/bold cyan]\n\n"  # noqa: RUF001
+                "The parameters shown above are [bold]user-configurable "
+                "parameters[/bold] from the job definition.\n"
+                "The actual generated [bold]siesta.fdf[/bold] file "
+                "contains many more parameters:\n\n"
                 "  • SIESTA defaults (marked with '# SIESTA DEFAULT VALUE')\n"
                 "  • Tier preset contributions (from dataclass modules)\n"
                 "  • Auto-generated blocks (k-points, structure, etc.)\n\n"
                 "[bold]Options to see more:[/bold]\n"
-                "  • [cyan]--show-all-defaults[/cyan] - Show what tier preset contributes\n"
-                "  • [cyan]--show-actual-fdf[/cyan] - Show the actual generated FDF file\n\n"
-                "[dim]The parameters shown above are the ones you can modify with 'job recreate'.[/dim]",
+                "  • [cyan]--show-all-defaults[/cyan] - Show what tier "
+                "preset contributes\n"
+                "  • [cyan]--show-actual-fdf[/cyan] - Show the actual "
+                "generated FDF file\n\n"
+                "[dim]The parameters shown above are the ones you can "
+                "modify with 'job recreate'.[/dim]",
                 title="Understanding FDF Parameters",
                 border_style="cyan",
             )
@@ -203,14 +214,19 @@ def _display_tier_defaults(tier_level: str) -> None:
         console.print(
             Panel(
                 syntax,
-                title=f"[bold yellow]Tier '{tier_level}' Default Parameters[/bold yellow]",
-                subtitle=f"[dim]{len(tier_defaults)} parameters from dataclass modules[/dim]",
+                title=(
+                    f"[bold yellow]Tier '{tier_level}' Default Parameters[/bold yellow]"
+                ),
+                subtitle=(
+                    f"[dim]{len(tier_defaults)} parameters from dataclass modules[/dim]"
+                ),
                 border_style="yellow",
             )
         )
 
         console.print(
-            "\n[dim]These are the default parameters that the tier preset contributes.[/dim]"
+            "\n[dim]These are the default parameters that the tier "
+            "preset contributes.[/dim]"
         )
         console.print(
             "[dim]User parameters (shown above) override these defaults.[/dim]"
@@ -244,7 +260,10 @@ def _display_actual_fdf(project_name: str, job_doc: dict, job_id: str) -> None:
         console.print(
             Panel(
                 syntax,
-                title=f"[bold green]Actual Generated siesta.fdf (Job {job_id})[/bold green]",
+                title=(
+                    f"[bold green]Actual Generated siesta.fdf "
+                    f"(Job {job_id})[/bold green]"
+                ),
                 subtitle=f"[dim]From: {run_dir}[/dim]",
                 border_style="green",
             )
@@ -256,5 +275,6 @@ def _display_actual_fdf(project_name: str, job_doc: dict, job_id: str) -> None:
     else:
         console.print("[yellow]Could not retrieve actual FDF file[/yellow]")
         console.print(
-            "[dim]The job may not have run yet, or the run directory is not accessible.[/dim]"
+            "[dim]The job may not have run yet, or the run directory "
+            "is not accessible.[/dim]"
         )

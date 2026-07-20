@@ -8,7 +8,7 @@ from rich.table import Table
 console = Console()
 
 
-def show_overview():
+def show_overview() -> None:
     """Display complete overview."""
     console.print()
 

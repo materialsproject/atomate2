@@ -26,7 +26,7 @@ console = Console()
     is_flag=True,
     help="Install development version from GitHub",
 )
-def install(dev):
+def install(dev: bool) -> None:
     """Install jobflow-remote package.
 
     This command installs jobflow-remote using pip. By default, it installs
@@ -130,7 +130,15 @@ def install(dev):
     default=True,
     help="Create backup before updating (default: True)",
 )
-def setup(project_name, worker_name, database, host, port, update, backup):
+def setup(
+    project_name: str,
+    worker_name: str,
+    database: str,
+    host: str,
+    port: int,
+    update: bool,
+    backup: bool,
+) -> None:
     """Generate or update jobflow-remote project configuration.
 
     This is a convenience wrapper around the jobflow-remote command:
@@ -160,7 +168,8 @@ def setup(project_name, worker_name, database, host, port, update, backup):
         atomate2siesta-jobflow-remote setup --update --no-backup --database mydb
 
         # Custom project name and worker
-        atomate2siesta-jobflow-remote setup --project-name my_project --worker-name hpc_worker
+        atomate2siesta-jobflow-remote setup --project-name my_project \
+            --worker-name hpc_worker
     """
     # Determine config file path
     config_path = Path.home() / ".jfremote" / f"{project_name}.yaml"
@@ -172,7 +181,8 @@ def setup(project_name, worker_name, database, host, port, update, backup):
                 f"[bold red]✗ Configuration file not found: {config_path}[/bold red]\n"
             )
             console.print(
-                "Generate it first with: [cyan]atomate2siesta-jobflow-remote setup[/cyan]"
+                "Generate it first with: "
+                "[cyan]atomate2siesta-jobflow-remote setup[/cyan]"
             )
             sys.exit(1)
 
@@ -188,7 +198,7 @@ def setup(project_name, worker_name, database, host, port, update, backup):
         # Load existing configuration
         try:
             config = _load_yaml_config(config_path)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error reporting
             console.print("[bold red]✗ Failed to load configuration![/bold red]")
             console.print(f"[red]Error: {e}[/red]")
             sys.exit(1)
@@ -215,9 +225,7 @@ def setup(project_name, worker_name, database, host, port, update, backup):
 
         # Update additional stores if they exist
         if "additional_stores" in config["jobstore"]:
-            for store_name, store_config in config["jobstore"][
-                "additional_stores"
-            ].items():
+            for store_config in config["jobstore"]["additional_stores"].values():
                 if isinstance(store_config, dict):
                     store_config["database"] = database
                     store_config["host"] = host
@@ -229,7 +237,7 @@ def setup(project_name, worker_name, database, host, port, update, backup):
             console.print(
                 "[bold green]✓ Configuration updated successfully![/bold green]\n"
             )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 friendly CLI error reporting
             console.print("[bold red]✗ Failed to save configuration![/bold red]")
             console.print(f"[red]Error: {e}[/red]")
             if backup:
@@ -292,7 +300,7 @@ def setup(project_name, worker_name, database, host, port, update, backup):
 
     try:
         subprocess.run(
-            ["jf", "project", "generate", project_name],
+            ["jf", "project", "generate", project_name],  # noqa: S607 jf on PATH
             capture_output=True,
             text=True,
             check=True,
@@ -360,7 +368,7 @@ def setup(project_name, worker_name, database, host, port, update, backup):
 
 
 @click.command()
-def test():
+def test() -> None:
     """Submit a test job to verify jobflow-remote setup.
 
     This command submits a simple test job to verify that jobflow-remote
@@ -419,7 +427,7 @@ def test():
             "Install it first with: [cyan]atomate2siesta-jobflow-remote install[/cyan]"
         )
         sys.exit(1)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print("\n[bold red]✗ Test job submission failed![/bold red]")
         console.print(f"\n[red]Error: {e}[/red]\n")
         console.print("Make sure jobflow-remote is properly configured:")
@@ -433,7 +441,7 @@ def test():
     "--project-name",
     help="Show details for a specific project",
 )
-def info(project_name):
+def info(project_name: str) -> None:
     """Show information about jobflow-remote setup.
 
     This command displays information about the current jobflow-remote
@@ -507,7 +515,7 @@ def info(project_name):
                         str(config_file),
                         f"{num_workers} ({worker_names})" if num_workers > 0 else "0",
                     )
-                except Exception:
+                except Exception:  # noqa: BLE001 friendly CLI error reporting
                     projects_table.add_row(
                         project, str(config_file), "[red]Error loading[/red]"
                     )
@@ -529,12 +537,12 @@ def info(project_name):
                             for worker_name, worker_config in config["workers"].items():
                                 console.print(f"  • {worker_name}")
                                 if isinstance(worker_config, dict):
-                                    console.print(
-                                        f"    - Type: {worker_config.get('type', 'N/A')}"
+                                    wtype = worker_config.get("type", "N/A")
+                                    scheduler = worker_config.get(
+                                        "scheduler_type", "N/A"
                                     )
-                                    console.print(
-                                        f"    - Scheduler: {worker_config.get('scheduler_type', 'N/A')}"
-                                    )
+                                    console.print(f"    - Type: {wtype}")
+                                    console.print(f"    - Scheduler: {scheduler}")
                                     if worker_config.get("host"):
                                         console.print(
                                             f"    - Host: {worker_config.get('host')}"
@@ -561,7 +569,7 @@ def info(project_name):
                             console.print(f"    - Port: {store.get('port', 27017)}")
 
                         console.print()
-                    except Exception as e:
+                    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
                         console.print(
                             f"[red]Error loading project details: {e}[/red]\n"
                         )
@@ -655,7 +663,7 @@ def info(project_name):
 
 
 @click.command()
-def runner():
+def runner() -> None:
     """Show runner management commands.
 
     This command displays common runner management commands for controlling
@@ -788,7 +796,14 @@ def runner():
     default=True,
     help="Create backup before updating (default: True)",
 )
-def update(project_name, database, host, port, add_comments, backup):
+def update(
+    project_name: str,
+    database: str | None,
+    host: str | None,
+    port: int | None,
+    add_comments: bool,
+    backup: bool,
+) -> None:
     """Update existing jobflow-remote project configuration.
 
     This command allows you to update specific settings in an existing
@@ -799,7 +814,8 @@ def update(project_name, database, host, port, add_comments, backup):
     Examples
     --------
         # Update MongoDB settings
-        atomate2siesta-jobflow-remote update --database mydb --host localhost --port 27017
+        atomate2siesta-jobflow-remote update --database mydb --host localhost \
+            --port 27017
 
         # Add descriptive comments to all configuration entries
         atomate2siesta-jobflow-remote update --add-comments
@@ -835,7 +851,7 @@ def update(project_name, database, host, port, add_comments, backup):
     # Load existing configuration
     try:
         config = _load_yaml_config(config_path)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print("[bold red]✗ Failed to load configuration![/bold red]")
         console.print(f"[red]Error: {e}[/red]")
         sys.exit(1)
@@ -906,7 +922,7 @@ def update(project_name, database, host, port, add_comments, backup):
         console.print(
             "[bold green]✓ Configuration updated successfully![/bold green]\n"
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print("[bold red]✗ Failed to save configuration![/bold red]")
         console.print(f"[red]Error: {e}[/red]")
         if backup:
@@ -924,7 +940,10 @@ def update(project_name, database, host, port, add_comments, backup):
             update_text += "\n"
 
         if add_comments:
-            update_text += "[bold green]✓ Descriptive comments added to all configuration entries[/bold green]\n"
+            update_text += (
+                "[bold green]✓ Descriptive comments added to all "
+                "configuration entries[/bold green]\n"
+            )
 
         update_panel = Panel(
             update_text,
@@ -950,7 +969,8 @@ def update(project_name, database, host, port, add_comments, backup):
         console.print(next_steps)
     else:
         console.print(
-            "[yellow]No updates were made. Use --help to see available options.[/yellow]\n"
+            "[yellow]No updates were made. "
+            "Use --help to see available options.[/yellow]\n"
         )
 
 
@@ -983,7 +1003,14 @@ def update(project_name, database, host, port, add_comments, backup):
     help="Resume interrupted downloads (default: enabled)",
 )
 @click.pass_context
-def download(ctx, flow_id, job_id, output_dir, files, resume):
+def download(
+    ctx: click.Context,
+    flow_id: int | None,
+    job_id: str | None,
+    output_dir: str,
+    files: str | None,  # noqa: ARG001 reserved CLI option, not yet used
+    resume: bool,
+) -> None:
     """Download job outputs from a flow or single job.
 
     This command downloads output files using jobflow-remote. It creates
@@ -1047,7 +1074,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
             # Get all jobs from flow using jf flow info
             console.print("[cyan]Getting flow information...[/cyan]")
             result = subprocess.run(
-                ["jf", "-p", project, "flow", "info", str(flow_id)],
+                # jf resolved from PATH (jobflow-remote CLI)
+                ["jf", "-p", project, "flow", "info", str(flow_id)],  # noqa: S607
                 capture_output=True,
                 text=True,
                 check=True,
@@ -1085,7 +1113,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
             console.print("[cyan]Getting job information...[/cyan]")
             # Verify job exists
             result = subprocess.run(
-                ["jf", "-p", project, "job", "info", job_id],
+                # jf resolved from PATH (jobflow-remote CLI)
+                ["jf", "-p", project, "job", "info", job_id],  # noqa: S607
                 capture_output=True,
                 text=True,
                 check=True,
@@ -1109,7 +1138,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
         failed_jobs = []
 
         # Temporarily disable progress bar for debugging
-        # from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+        # from rich.progress import Progress, SpinnerColumn, TextColumn,
+        # BarColumn, TaskProgressColumn
 
         # with Progress(
         #     SpinnerColumn(),
@@ -1163,7 +1193,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
 
                 if not remote_folder_name:
                     console.print(
-                        "  [yellow]Could not get remote folder name, using db_id[/yellow]"
+                        "  [yellow]Could not get remote folder name, "
+                        "using db_id[/yellow]"
                     )
                     remote_folder_name = f"job_{db_id}"
 
@@ -1232,7 +1263,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
                     rsync_cmd.extend(
                         [
                             "--partial",  # Keep partially transferred files
-                            "--partial-dir=.rsync-partial",  # Store partial files in subdirectory
+                            # Store partial files in subdirectory
+                            "--partial-dir=.rsync-partial",
                             "--progress",  # Show progress
                         ]
                     )
@@ -1253,7 +1285,7 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
                 console.print("  [red]✗ Failed to download[/red]")
                 console.print(f"  [red]Error: {e.stderr}[/red]\n")
                 failed_jobs.append((db_id, job_name))
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly CLI error reporting
                 console.print(f"  [red]✗ Failed: {type(e).__name__}: {e}[/red]\n")
                 failed_jobs.append((db_id, job_name))
 
@@ -1276,9 +1308,9 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
             f.write("# Workflow Download Summary\n\n")
             f.write(f"**Project**: {project}\n")
             f.write(f"**Flow ID**: {flow_id}\n")
-            f.write(
-                f"**Download Date**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-            )
+            # local time intentional for human-readable summary
+            download_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
+            f.write(f"**Download Date**: {download_date}\n")
             f.write(f"**Total Jobs**: {len(jobs_info)}\n")
             f.write(f"**Successfully Downloaded**: {success_count}\n")
             f.write(f"**Failed**: {len(failed_jobs)}\n\n")
@@ -1296,7 +1328,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
 
             f.write("## Job Details\n\n")
             f.write(
-                "| DB ID | Job Name | Status | Local Directory | Remote Path (Cluster) |\n"
+                "| DB ID | Job Name | Status | Local Directory "
+                "| Remote Path (Cluster) |\n"
             )
             f.write(
                 "|-------|----------|--------|-----------------|----------------------|\n"
@@ -1312,7 +1345,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
                     else "✗ Failed"
                 )
                 f.write(
-                    f"| {db_id} | {job_name} | {status} | `{local_folder}/` | `{remote_path}` |\n"
+                    f"| {db_id} | {job_name} | {status} "
+                    f"| `{local_folder}/` | `{remote_path}` |\n"
                 )
 
             if failed_jobs:
@@ -1321,7 +1355,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
                 for db_id, name in failed_jobs:
                     f.write(f"- **Job {db_id}**: {name}\n")
                 f.write(
-                    "\n**Tip**: Check if these jobs completed successfully on the cluster.\n"
+                    "\n**Tip**: Check if these jobs completed "
+                    "successfully on the cluster.\n"
                 )
 
             f.write("\n## How to Use These Files\n\n")
@@ -1348,7 +1383,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
 
             f.write("---\n")
             f.write(
-                f"*Downloaded using `atomate2siesta-jobflow-remote download -p {project} -f {flow_id}`*\n"
+                "*Downloaded using `atomate2siesta-jobflow-remote download "
+                f"-p {project} -f {flow_id}`*\n"
             )
 
         console.print(f"[green]✓ Summary saved to: {summary_file}[/green]\n")
@@ -1365,7 +1401,7 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
         console.print("\n[bold red]✗ Error parsing flow data[/bold red]")
         console.print(f"[red]{e}[/red]\n")
         sys.exit(1)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print("\n[bold red]✗ Unexpected error[/bold red]")
         console.print(f"[red]{e}[/red]\n")
         sys.exit(1)

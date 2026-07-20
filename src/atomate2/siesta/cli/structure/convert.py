@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""CLI for converting structure files between SIESTA FDF/XV, CIF, and XSF formats."""
+
 import json
 import pickle
 from pathlib import Path
@@ -29,7 +31,7 @@ class NumpyEncoder(json.JSONEncoder):
         default: Converts NumPy types to Python types.
     """
 
-    def default(self, obj):
+    def default(self, obj: object) -> object:
         """Convert NumPy types to Python types for JSON serialization.
 
         Args:
@@ -52,7 +54,10 @@ class NumpyEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def print_species_info(species_dict, species_Z_dict):
+def print_species_info(
+    species_dict: dict,
+    species_Z_dict: dict,  # noqa: N803 SIESTA atomic-number symbol Z
+) -> None:
     """Display species information in a formatted table using rich.
 
     Args:
@@ -70,7 +75,12 @@ def print_species_info(species_dict, species_Z_dict):
     console.print(species_table)
 
 
-def print_atom_info(atom_species, tags, species_labels, species_Z):
+def print_atom_info(
+    atom_species: np.ndarray,
+    tags: list,
+    species_labels: list,
+    species_Z: list,  # noqa: N803 SIESTA atomic-number symbol Z
+) -> None:
     """Display atom-related information in rich panels.
 
     Args:
@@ -104,18 +114,19 @@ def print_atom_info(atom_species, tags, species_labels, species_Z):
 
 
 def print_structure_info(
-    structure_ase,
-    structure_ase_no_ghost,
-    structure_pymatgen,
-    structure_pymatgen_no_ghost,
-):
+    structure_ase: Atoms,
+    structure_ase_no_ghost: Atoms,
+    structure_pymatgen: Structure,
+    structure_pymatgen_no_ghost: Structure,
+) -> None:
     """Display structure information for ASE and pymatgen objects in rich panels.
 
     Args:
         structure_ase (ase.Atoms): ASE structure with all atoms.
         structure_ase_no_ghost (ase.Atoms): ASE structure without ghost atoms.
         structure_pymatgen (pymatgen.core.Structure): Pymatgen structure with all atoms.
-        structure_pymatgen_no_ghost (pymatgen.core.Structure): Pymatgen structure without ghost atoms.
+        structure_pymatgen_no_ghost (pymatgen.core.Structure): Pymatgen structure
+            without ghost atoms.
     """
     console.print(
         Panel(
@@ -161,28 +172,32 @@ def print_structure_info(
     )
     console.print(
         Panel(
-            f"ASE Atoms (no ghost) species_dict: {structure_ase_no_ghost.info.get('species_dict')}",
+            f"ASE Atoms (no ghost) species_dict: "
+            f"{structure_ase_no_ghost.info.get('species_dict')}",
             title="ASE (No Ghost) Species Dict",
             border_style="green",
         )
     )
     console.print(
         Panel(
-            f"ASE Atoms (no ghost) species_Z_dict: {structure_ase_no_ghost.info.get('species_Z_dict')}",
+            f"ASE Atoms (no ghost) species_Z_dict: "
+            f"{structure_ase_no_ghost.info.get('species_Z_dict')}",
             title="ASE (No Ghost) Species Z Dict",
             border_style="yellow",
         )
     )
     console.print(
         Panel(
-            f"ASE Atoms (no ghost) species_labels: {structure_ase_no_ghost.info.get('species_labels')}",
+            f"ASE Atoms (no ghost) species_labels: "
+            f"{structure_ase_no_ghost.info.get('species_labels')}",
             title="ASE (No Ghost) Species Labels",
             border_style="cyan",
         )
     )
     console.print(
         Panel(
-            f"ASE Atoms (no ghost) species_Z: {structure_ase_no_ghost.info.get('species_Z')}",
+            f"ASE Atoms (no ghost) species_Z: "
+            f"{structure_ase_no_ghost.info.get('species_Z')}",
             title="ASE (No Ghost) Species Z",
             border_style="magenta",
         )
@@ -210,7 +225,8 @@ def print_structure_info(
     )
     console.print(
         Panel(
-            f"Pymatgen (no ghost) site properties: {structure_pymatgen_no_ghost.site_properties}",
+            f"Pymatgen (no ghost) site properties: "
+            f"{structure_pymatgen_no_ghost.site_properties}",
             title="Pymatgen (No Ghost) Site Properties",
             border_style="green",
         )
@@ -253,23 +269,25 @@ def print_structure_info(
     help="Prefix for output file names (default: structure)",
 )
 def main(
-    input_file,
-    write_xsf,
-    write_cif,
-    write_json,
-    write_sisl_pickle,
-    write_ase_pickle,
-    write_pymatgen_pickle,
-    write_fdf,
-    write_fdf_no_ghost,
-    output_prefix,
-):
+    input_file: str,
+    write_xsf: bool,
+    write_cif: bool,
+    write_json: bool,
+    write_sisl_pickle: bool,
+    write_ase_pickle: bool,
+    write_pymatgen_pickle: bool,
+    write_fdf: bool,
+    write_fdf_no_ghost: bool,
+    output_prefix: str,
+) -> None:
     """
-    Convert structure files between different formats (SIESTA FDF/XV, CIF, XSF) with automatic format detection.
+    Convert structure files between SIESTA FDF/XV, CIF, and XSF formats.
 
-    This script automatically detects the input file format from its extension (.fdf, .xv/.XV, .cif, .xsf),
-    reads the structure, converts it to ASE and Pymatgen formats, removes ghost species (those with negative
-    atomic numbers or '_ghost' in the label), and saves the results to specified output files with a user-defined prefix.
+    This script automatically detects the input file format from its extension
+    (.fdf, .xv/.XV, .cif, .xsf), reads the structure, converts it to ASE and
+    Pymatgen formats, removes ghost species (those with negative atomic numbers
+    or '_ghost' in the label), and saves the results to specified output files
+    with a user-defined prefix.
 
     Supported input formats:
         - .fdf: SIESTA FDF file (with ChemicalSpeciesLabel block)
@@ -279,14 +297,21 @@ def main(
 
     Args:
         input_file (str): Path to structure file (.fdf, .xv, .XV, .cif, or .xsf).
-        write_xsf (bool): If True, write ASE structure (no ghost) to <output_prefix>_no_ghost.xsf.
-        write_cif (bool): If True, write pymatgen structure (no ghost) to <output_prefix>_no_ghost.cif.
+        write_xsf (bool): If True, write ASE structure (no ghost) to
+            <output_prefix>_no_ghost.xsf.
+        write_cif (bool): If True, write pymatgen structure (no ghost) to
+            <output_prefix>_no_ghost.cif.
         write_json (bool): If True, write structure data to <output_prefix>_data.json.
-        write_sisl_pickle (bool): If True, write sisl structure to <output_prefix>_sisl.pkl.
-        write_ase_pickle (bool): If True, write ASE structures to <output_prefix>_ase.pkl and <output_prefix>_ase_no_ghost.pkl.
-        write_pymatgen_pickle (bool): If True, write pymatgen structures to <output_prefix>_pymatgen.pkl and <output_prefix>_pymatgen_no_ghost.pkl.
-        write_fdf (bool): If True, write sisl structure (with ghost) to <output_prefix>.fdf.
-        write_fdf_no_ghost (bool): If True, write sisl structure (no ghost) to <output_prefix>_no_ghost.fdf.
+        write_sisl_pickle (bool): If True, write sisl structure to
+            <output_prefix>_sisl.pkl.
+        write_ase_pickle (bool): If True, write ASE structures to
+            <output_prefix>_ase.pkl and <output_prefix>_ase_no_ghost.pkl.
+        write_pymatgen_pickle (bool): If True, write pymatgen structures to
+            <output_prefix>_pymatgen.pkl and <output_prefix>_pymatgen_no_ghost.pkl.
+        write_fdf (bool): If True, write sisl structure (with ghost) to
+            <output_prefix>.fdf.
+        write_fdf_no_ghost (bool): If True, write sisl structure (no ghost) to
+            <output_prefix>_no_ghost.fdf.
         output_prefix (str): Prefix for output file names (default: 'structure').
 
         One can use pickle to read the different pickle objects:
@@ -299,22 +324,26 @@ def main(
 
     Raises
     ------
-        ValueError: If reading geometry, unsupported format, or converting structures fails.
+        ValueError: If reading geometry, unsupported format, or converting
+            structures fails.
         IOError: If writing to any output file fails.
 
     Examples
     --------
         Convert SIESTA FDF to all formats (automatic detection):
-        $ atomate2siesta-structure convert siesta.fdf --write-xsf --write-cif --write-json
+        $ atomate2siesta-structure convert siesta.fdf --write-xsf --write-cif \
+            --write-json
 
         Convert XV file to CIF (automatic detection):
         $ atomate2siesta-structure convert siesta.XV --write-cif --output-prefix mgo
 
         Convert CIF to SIESTA FDF (automatic detection):
-        $ atomate2siesta-structure convert structure.cif --write-fdf --output-prefix siesta_input
+        $ atomate2siesta-structure convert structure.cif --write-fdf \
+            --output-prefix siesta_input
 
         Convert XSF to multiple formats:
-        $ atomate2siesta-structure convert structure.xsf --write-cif --write-fdf --write-json
+        $ atomate2siesta-structure convert structure.xsf --write-cif --write-fdf \
+            --write-json
     """
     # Automatic format detection based on file extension
     input_path = Path(input_file)
@@ -324,19 +353,19 @@ def main(
 
     # Read geometry based on detected format
     try:
-        if file_ext in [".xv"]:
+        if file_ext == ".xv":
             # SIESTA XV file (restart geometry)
             console.print("[cyan]Detected: SIESTA XV file[/cyan]")
             structure_sisl = sisl.get_sile(input_file).read_geometry()
             file_type = "XV file"
 
-        elif file_ext in [".fdf"]:
+        elif file_ext == ".fdf":
             # SIESTA FDF file
             console.print("[cyan]Detected: SIESTA FDF file[/cyan]")
             structure_sisl = sisl.get_sile(input_file).read_geometry()
             file_type = "FDF file"
 
-        elif file_ext in [".cif"]:
+        elif file_ext == ".cif":
             # CIF file - read using pymatgen, then convert to sisl
             console.print("[cyan]Detected: CIF file[/cyan]")
             structure_pmg = Structure.from_file(input_file)
@@ -350,7 +379,7 @@ def main(
             )
             file_type = "CIF file"
 
-        elif file_ext in [".xsf"]:
+        elif file_ext == ".xsf":
             # XSF file - read using ASE, then convert to sisl
             console.print("[cyan]Detected: XSF file[/cyan]")
             structure_ase_temp = ase_read(input_file)
@@ -365,7 +394,7 @@ def main(
 
         else:
             # Unsupported format
-            raise ValueError(
+            raise ValueError(  # noqa: TRY301 raised then reported to the user
                 f"Unsupported file format: {file_ext}\n"
                 f"Supported formats: .fdf, .xv, .XV, .cif, .xsf"
             )
@@ -378,7 +407,7 @@ def main(
         )
         raise ValueError(
             f"Error reading geometry from {file_type} ({input_file}): {e!s}"
-        )
+        ) from e
 
     # Write sisl structure to pickle if requested
     if write_sisl_pickle:
@@ -390,26 +419,27 @@ def main(
             )
         except Exception as e:
             console.print(f"[red]Error writing sisl structure to pickle: {e!s}[/red]")
-            raise OSError(f"Error writing sisl structure to pickle: {e!s}")
+            raise OSError(f"Error writing sisl structure to pickle: {e!s}") from e
 
     # Write sisl structure to FDF if requested
     if write_fdf:
         try:
             structure_sisl.write(f"{output_prefix}.fdf")
             console.print(
-                f"[green]Wrote sisl structure (with ghost) to {output_prefix}.fdf[/green]"
+                f"[green]Wrote sisl structure (with ghost) to "
+                f"{output_prefix}.fdf[/green]"
             )
         except Exception as e:
             console.print(f"[red]Error writing sisl structure to FDF: {e!s}[/red]")
-            raise OSError(f"Error writing sisl structure to FDF: {e!s}")
+            raise OSError(f"Error writing sisl structure to FDF: {e!s}") from e
 
     # Get species labels from the ChemicalSpeciesLabel block
     # Note: ChemicalSpeciesLabel is only in SIESTA FDF files
     # Determine the FDF file path based on input file format
-    if file_ext in [".xv"]:
+    if file_ext == ".xv":
         # Input is an XV file, try to find the corresponding FDF file
         fdf_file = str(input_path.with_suffix(".fdf"))
-    elif file_ext in [".fdf"]:
+    elif file_ext == ".fdf":
         # Input is already an FDF file
         fdf_file = input_file
     else:
@@ -426,7 +456,7 @@ def main(
 
     # Try to read species information from FDF file
     species_dict = {}
-    species_Z_dict = {}
+    species_Z_dict = {}  # noqa: N806 SIESTA atomic-number symbol Z
     species_block = None
 
     # Only try to read FDF file if it's a SIESTA format
@@ -435,16 +465,16 @@ def main(
             sile = sisl.get_sile(fdf_file)
             sile.read()
             # Access the species information (ChemicalSpeciesLabel block)
-            species_block = sile.get(
-                "ChemicalSpeciesLabel"
-            )  # Returns a list of strings, e.g., ['1 12 Mg', '2 8 O', '3 -8 O_ghost', '4 8 O_surface']
+            # Returns a list of strings, e.g.,
+            # ['1 12 Mg', '2 8 O', '3 -8 O_ghost', '4 8 O_surface']
+            species_block = sile.get("ChemicalSpeciesLabel")
 
             for entry in species_block:
                 # Split the string, e.g., '1 12 Mg' -> ['1', '12', 'Mg']
                 parts = entry.strip().split()
                 if len(parts) >= 3:
                     index = int(parts[0])  # Species index (1-based in .fdf)
-                    Z = int(parts[1])  # Atomic number (e.g., 12, -8)
+                    Z = int(parts[1])  # noqa: N806 SIESTA atomic-number symbol Z
                     label = parts[2]  # Species label (e.g., Mg, O_ghost, O_surface)
                     species_dict[index] = label
                     species_Z_dict[index] = Z
@@ -459,7 +489,8 @@ def main(
                 f"[yellow]Warning: Could not read FDF file '{fdf_file}': {e!s}[/yellow]"
             )
             console.print(
-                "[yellow]Falling back to extracting species information from geometry[/yellow]"
+                "[yellow]Falling back to extracting species information "
+                "from geometry[/yellow]"
             )
             fdf_file = None  # Mark as unavailable for fallback logic
 
@@ -472,16 +503,13 @@ def main(
         unique_atoms = structure_sisl.atoms.atom
         for i, atom in enumerate(unique_atoms):
             species_idx = i + 1  # 1-based indexing
-            Z = atom.Z  # Atomic number
+            Z = atom.Z  # noqa: N806 SIESTA atomic-number symbol Z
             try:
                 element = Element.from_Z(Z)
                 label = element.symbol
             except (ValueError, KeyError):
                 # Handle ghost atoms or invalid Z
-                if Z < 0:
-                    label = f"Ghost_{abs(Z)}"
-                else:
-                    label = f"X_{Z}"
+                label = f"Ghost_{abs(Z)}" if Z < 0 else f"X_{Z}"
 
             species_dict[species_idx] = label
             species_Z_dict[species_idx] = Z
@@ -494,18 +522,18 @@ def main(
         species_block = []
         for idx in sorted(species_dict.keys()):
             label = species_dict[idx]
-            Z = species_Z_dict[idx]
+            Z = species_Z_dict[idx]  # noqa: N806 SIESTA atomic-number symbol Z
             species_block.append(f"{idx} {Z} {label}")
 
     # Assign tags and collect species labels and Z values
     tags = []
     species_labels = []  # Store per-atom species labels
-    species_Z = []  # Store per-atom Z values
+    species_Z = []  # noqa: N806 SIESTA atomic-number symbol Z
     for specie_idx in atom_species:
         # Adjust for 0-based indexing (sisl returns 0-based, .fdf uses 1-based)
         fdf_index = specie_idx + 1 if specie_idx < len(species_dict) else specie_idx
         species_label = species_dict.get(fdf_index, "")
-        Z = species_Z_dict.get(fdf_index, 0)
+        Z = species_Z_dict.get(fdf_index, 0)  # noqa: N806 SIESTA atomic-number symbol
         species_labels.append(species_label)
         species_Z.append(Z)
         tags.append(int(specie_idx))  # Tag is 0-based species index
@@ -531,7 +559,7 @@ def main(
             )
         except Exception as e:
             console.print(f"[red]Error writing ASE structure to pickle: {e!s}[/red]")
-            raise OSError(f"Error writing ASE structure to pickle: {e!s}")
+            raise OSError(f"Error writing ASE structure to pickle: {e!s}") from e
 
     # Convert to pymatgen Structure for Atomate2
     try:
@@ -540,7 +568,9 @@ def main(
         console.print(
             f"[red]Error converting ASE Atoms to pymatgen Structure: {e!s}[/red]"
         )
-        raise ValueError(f"Error converting ASE Atoms to pymatgen Structure: {e!s}")
+        raise ValueError(
+            f"Error converting ASE Atoms to pymatgen Structure: {e!s}"
+        ) from e
     # Add tags, species labels, and Z as site properties for pymatgen
     structure_pymatgen.add_site_property("tags", tags)
     structure_pymatgen.add_site_property("species_label", species_labels)
@@ -552,13 +582,14 @@ def main(
             with open(f"{output_prefix}_pymatgen.pkl", "wb") as f:
                 pickle.dump(structure_pymatgen, f)
             console.print(
-                f"[green]Wrote pymatgen structure to {output_prefix}_pymatgen.pkl[/green]"
+                f"[green]Wrote pymatgen structure to "
+                f"{output_prefix}_pymatgen.pkl[/green]"
             )
         except Exception as e:
             console.print(
                 f"[red]Error writing pymatgen structure to pickle: {e!s}[/red]"
             )
-            raise OSError(f"Error writing pymatgen structure to pickle: {e!s}")
+            raise OSError(f"Error writing pymatgen structure to pickle: {e!s}") from e
 
     # Create new ASE Atoms object without ghost species
     non_ghost_indices = [
@@ -572,7 +603,9 @@ def main(
     ]
     tags_no_ghost = [tags[i] for i in non_ghost_indices]
     species_labels_no_ghost = [species_labels[i] for i in non_ghost_indices]
-    species_Z_no_ghost = [species_Z[i] for i in non_ghost_indices]
+    species_Z_no_ghost = [  # noqa: N806 SIESTA atomic-number symbol Z
+        species_Z[i] for i in non_ghost_indices
+    ]
 
     structure_ase_no_ghost = Atoms(
         symbols=symbols_no_ghost,
@@ -602,13 +635,13 @@ def main(
             unique_labels = sorted(
                 set(species_labels_no_ghost)
             )  # e.g., ['Mg', 'O', 'O_surface']
-            species_Z_map = {
+            species_Z_map = {  # noqa: N806 SIESTA atomic-number symbol Z
                 label: species_Z_no_ghost[species_labels_no_ghost.index(label)]
                 for label in unique_labels
             }
             atoms = []
             for label in species_labels_no_ghost:
-                Z = species_Z_map[label]
+                Z = species_Z_map[label]  # noqa: N806 SIESTA atomic-number symbol Z
                 atoms.append(sisl.Atom(Z=Z, tag=label))
             structure_sisl_no_ghost = sisl.Geometry(
                 xyz=xyz, atoms=sisl.Atoms(atoms=atoms, na=len(xyz)), lattice=cell
@@ -616,13 +649,16 @@ def main(
             # Write to FDF
             structure_sisl_no_ghost.write(f"{output_prefix}_no_ghost.fdf")
             console.print(
-                f"[green]Wrote sisl structure (no ghost) to {output_prefix}_no_ghost.fdf[/green]"
+                f"[green]Wrote sisl structure (no ghost) to "
+                f"{output_prefix}_no_ghost.fdf[/green]"
             )
         except Exception as e:
             console.print(
                 f"[red]Error writing sisl structure (no ghost) to FDF: {e!s}[/red]"
             )
-            raise OSError(f"Error writing sisl structure (no ghost) to FDF: {e!s}")
+            raise OSError(
+                f"Error writing sisl structure (no ghost) to FDF: {e!s}"
+            ) from e
 
     # Write ASE (no ghost) structure to pickle if requested
     if write_ase_pickle:
@@ -630,13 +666,16 @@ def main(
             with open(f"{output_prefix}_ase_no_ghost.pkl", "wb") as f:
                 pickle.dump(structure_ase_no_ghost, f)
             console.print(
-                f"[green]Wrote ASE structure (no ghost) to {output_prefix}_ase_no_ghost.pkl[/green]"
+                f"[green]Wrote ASE structure (no ghost) to "
+                f"{output_prefix}_ase_no_ghost.pkl[/green]"
             )
         except Exception as e:
             console.print(
                 f"[red]Error writing ASE structure (no ghost) to pickle: {e!s}[/red]"
             )
-            raise OSError(f"Error writing ASE structure (no ghost) to pickle: {e!s}")
+            raise OSError(
+                f"Error writing ASE structure (no ghost) to pickle: {e!s}"
+            ) from e
 
     # Convert ASE Atoms (no ghost) to pymatgen Structure
     try:
@@ -645,11 +684,12 @@ def main(
         )
     except Exception as e:
         console.print(
-            f"[red]Error converting ASE Atoms (no ghost) to pymatgen Structure: {e!s}[/red]"
+            f"[red]Error converting ASE Atoms (no ghost) to pymatgen "
+            f"Structure: {e!s}[/red]"
         )
         raise ValueError(
             f"Error converting ASE Atoms (no ghost) to pymatgen Structure: {e!s}"
-        )
+        ) from e
     # Add site properties for pymatgen
     structure_pymatgen_no_ghost.add_site_property("tags", tags_no_ghost)
     structure_pymatgen_no_ghost.add_site_property(
@@ -663,48 +703,54 @@ def main(
             with open(f"{output_prefix}_pymatgen_no_ghost.pkl", "wb") as f:
                 pickle.dump(structure_pymatgen_no_ghost, f)
             console.print(
-                f"[green]Wrote pymatgen structure (no ghost) to {output_prefix}_pymatgen_no_ghost.pkl[/green]"
+                f"[green]Wrote pymatgen structure (no ghost) to "
+                f"{output_prefix}_pymatgen_no_ghost.pkl[/green]"
             )
         except Exception as e:
             console.print(
-                f"[red]Error writing pymatgen structure (no ghost) to pickle: {e!s}[/red]"
+                f"[red]Error writing pymatgen structure (no ghost) to "
+                f"pickle: {e!s}[/red]"
             )
             raise OSError(
                 f"Error writing pymatgen structure (no ghost) to pickle: {e!s}"
-            )
+            ) from e
 
     # Write to XSF file using ASE if requested
     if write_xsf:
         try:
             structure_ase_no_ghost.write(f"{output_prefix}_no_ghost.xsf")
             console.print(
-                f"[green]Wrote ASE structure (no ghost) to {output_prefix}_no_ghost.xsf[/green]"
+                f"[green]Wrote ASE structure (no ghost) to "
+                f"{output_prefix}_no_ghost.xsf[/green]"
             )
         except Exception as e:
             console.print(f"[red]Error writing XSF file: {e!s}[/red]")
-            raise OSError(f"Error writing XSF file: {e!s}")
+            raise OSError(f"Error writing XSF file: {e!s}") from e
 
     # Write to CIF file using pymatgen if requested
     if write_cif:
         try:
             structure_pymatgen_no_ghost.to_file(f"{output_prefix}_no_ghost.cif")
             console.print(
-                f"[green]Wrote pymatgen structure (no ghost) to {output_prefix}_no_ghost.cif[/green]"
+                f"[green]Wrote pymatgen structure (no ghost) to "
+                f"{output_prefix}_no_ghost.cif[/green]"
             )
         except Exception as e:
             console.print(f"[red]Error writing CIF file: {e!s}[/red]")
-            raise OSError(f"Error writing CIF file: {e!s}")
+            raise OSError(f"Error writing CIF file: {e!s}") from e
 
     # Prepare data for JSON
     json_data = {
         "sisl": {
             "lattice": structure_sisl.cell.tolist(),  # Convert NumPy array to list
             "coordinates": structure_sisl.xyz.tolist(),  # Atomic coordinates
-            "species_indices": structure_sisl.atoms.species.tolist(),  # 0-based species indices
+            # 0-based species indices
+            "species_indices": structure_sisl.atoms.species.tolist(),
             "chemical_species_label": species_block,  # Raw ChemicalSpeciesLabel block
         },
         "ase": {
-            "positions": structure_ase.get_positions().tolist(),  # Convert NumPy array to list
+            # Convert NumPy array to list
+            "positions": structure_ase.get_positions().tolist(),
             "chemical_symbols": structure_ase.get_chemical_symbols(),
             "tags": structure_ase.get_tags().tolist(),  # Convert NumPy array to list
             "species_dict": structure_ase.info.get("species_dict"),
@@ -814,7 +860,7 @@ def main(
             console.print(f"[green]Data saved to {json_file}[/green]")
         except Exception as e:
             console.print(f"[red]Error writing to {json_file}: {e!s}[/red]")
-            raise OSError(f"Error writing to {json_file}: {e!s}")
+            raise OSError(f"Error writing to {json_file}: {e!s}") from e
 
     # Display structure information
     print_structure_info(

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Code reduction calculation for Recipe Book.
 
@@ -396,7 +395,9 @@ RECIPE_TEMPLATES = {
     "gruneisen_parameters": "RecipeBook.gruneisen_workflow(structure)",
     "qha_workflow": "RecipeBook.qha_workflow(structure)",
     "surface_energy_workflow": "RecipeBook.surface_energy_workflow(bulk_structure)",
-    "adsorption_site_scanning": "RecipeBook.adsorption_scanning_workflow(slab, adsorbate)",
+    "adsorption_site_scanning": (
+        "RecipeBook.adsorption_scanning_workflow(slab, adsorbate)"
+    ),
     "kpoints_convergence": "RecipeBook.kpoints_convergence(structure)",
 }
 

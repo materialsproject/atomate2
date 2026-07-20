@@ -38,14 +38,15 @@ def get_project_config(project_name: str) -> dict[str, Any] | None:
             style="bold",
         )
         console.print(
-            f"\n[yellow]Hint:[/yellow] Run 'atomate2siesta-jobflow-remote -p {project_name} setup' first"
+            "\n[yellow]Hint:[/yellow] Run "
+            f"'atomate2siesta-jobflow-remote -p {project_name} setup' first"
         )
         return None
 
     try:
         with open(config_file) as f:
             return yaml.safe_load(f)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error loading config:[/red] {e}")
         return None
 
@@ -63,8 +64,9 @@ def get_job_info_from_jf(project_name: str, job_id: str) -> dict[str, Any] | Non
     """
     try:
         # Use jf job info command to get job details
+        # jf: jobflow-remote CLI, intentionally invoked by name from PATH
         result = subprocess.run(
-            ["jf", "-p", project_name, "job", "info", job_id, "-v"],
+            ["jf", "-p", project_name, "job", "info", job_id, "-v"],  # noqa: S607
             capture_output=True,
             text=True,
             check=True,
@@ -83,8 +85,8 @@ def get_job_info_from_jf(project_name: str, job_id: str) -> dict[str, Any] | Non
             "uuid": None,
         }
 
-        for line in output_lines:
-            line = line.strip()
+        for raw_line in output_lines:
+            line = raw_line.strip()
             if line.startswith("Name:"):
                 job_info["name"] = line.split("Name:", 1)[1].strip()
             elif line.startswith("State:"):
@@ -96,7 +98,7 @@ def get_job_info_from_jf(project_name: str, job_id: str) -> dict[str, Any] | Non
             elif line.startswith("UUID:"):
                 job_info["uuid"] = line.split("UUID:", 1)[1].strip()
 
-        return job_info
+        return job_info  # noqa: TRY300 direct return after parsing loop
 
     except subprocess.CalledProcessError as e:
         console.print(f"[red]Error getting job info:[/red] {e.stderr}")
@@ -174,7 +176,7 @@ def get_job_details_from_db(project_name: str, job_id: str) -> dict[str, Any] | 
                     job_doc = collection.find_one(query)
                     if job_doc:
                         break
-                except Exception:
+                except Exception:  # noqa: S112, BLE001 try next query strategy
                     continue
 
             # Also try _id as ObjectId if nothing found
@@ -184,7 +186,7 @@ def get_job_details_from_db(project_name: str, job_id: str) -> dict[str, Any] | 
 
                     query = {"_id": ObjectId(job_id)}
                     job_doc = collection.find_one(query)
-                except Exception:
+                except Exception:  # noqa: S110, BLE001 optional ObjectId lookup
                     pass
         else:
             # Try UUID search
@@ -207,9 +209,9 @@ def get_job_details_from_db(project_name: str, job_id: str) -> dict[str, Any] | 
 
             return None
 
-        return job_doc
+        return job_doc  # noqa: TRY300 direct return after query strategies
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[red]Error querying database:[/red] {e}")
         return None
 
@@ -263,10 +265,13 @@ def extract_fdf_parameters(job_doc: dict[str, Any]) -> dict[str, Any] | None:
 
                 # Get other important parameters
                 for key in ["kpts", "mesh_cutoff", "xc", "tier"]:
-                    if input_gen.get(key):
-                        # Skip if already in user_params with a2s_ prefix
-                        if f"a2s_{key}" not in fdf_params and key not in fdf_params:
-                            fdf_params[key] = input_gen[key]
+                    # Skip if already in user_params with a2s_ prefix
+                    if (
+                        input_gen.get(key)
+                        and f"a2s_{key}" not in fdf_params
+                        and key not in fdf_params
+                    ):
+                        fdf_params[key] = input_gen[key]
 
         # Method 3: Check stored_data (if parameters were stored separately)
         if job_doc.get("stored_data"):
@@ -277,9 +282,9 @@ def extract_fdf_parameters(job_doc: dict[str, Any]) -> dict[str, Any] | None:
                 if "fdf_arguments" in stored:
                     fdf_params.update(stored["fdf_arguments"])
 
-        return fdf_params or None
+        return fdf_params or None  # noqa: TRY300 direct return after extraction
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(
             f"[yellow]Warning:[/yellow] Could not extract FDF parameters: {e}"
         )
@@ -332,7 +337,7 @@ def get_tier_defaults(tier: str) -> dict[str, Any]:
         finally:
             sys.stdout = old_stdout
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         import traceback
 
         console.print(f"[yellow]Warning:[/yellow] Could not get tier defaults: {e}")
@@ -403,11 +408,12 @@ def get_actual_fdf_file(project_name: str, job_doc: dict[str, Any]) -> str | Non
         # All methods failed
         console.print(f"[yellow]Could not access FDF file at:[/yellow] {fdf_path}")
         console.print(
-            "[dim]File may be on remote system not accessible via SSH or jobflow-remote[/dim]"
+            "[dim]File may be on remote system not accessible via SSH "
+            "or jobflow-remote[/dim]"
         )
-        return None
+        return None  # noqa: TRY300 direct return after fallback attempts
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[yellow]Warning:[/yellow] Could not read FDF file: {e}")
         return None
 
@@ -431,16 +437,20 @@ def _fetch_via_ssh(host: str, user: str, remote_path: str) -> str | None:
         ssh_command = f"ssh {user}@{host} cat {remote_path}"
 
         result = subprocess.run(
-            ssh_command.split(), capture_output=True, text=True, timeout=10
+            ssh_command.split(),
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
         )
 
         if result.returncode == 0:
             console.print("[green]✓[/green] Retrieved via SSH")
             return result.stdout
         console.print(f"[dim]SSH access failed: {result.stderr[:100]}[/dim]")
-        return None
+        return None  # noqa: TRY300 direct return on non-zero exit
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[dim]SSH method failed: {e}[/dim]")
         return None
 
@@ -482,7 +492,9 @@ def _fetch_via_jf_download(project_name: str, job_doc: dict[str, Any]) -> str | 
                 tmpdir,
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=30, check=False
+            )
 
             if result.returncode == 0:
                 # Check if file was downloaded
@@ -493,9 +505,9 @@ def _fetch_via_jf_download(project_name: str, job_doc: dict[str, Any]) -> str | 
             else:
                 console.print(f"[dim]jf download failed: {result.stderr[:100]}[/dim]")
 
-        return None
+        return None  # noqa: TRY300 direct return after download attempt
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error handler
         console.print(f"[dim]jobflow-remote download failed: {e}[/dim]")
         return None
 
@@ -527,8 +539,8 @@ def extract_job_resources(job_doc: dict[str, Any]) -> dict[str, Any] | None:
         )
         if resources and isinstance(resources, dict):
             return dict(resources)
-        return None
-    except Exception:
+        return None  # noqa: TRY300 direct return after resource lookup
+    except Exception:  # noqa: BLE001 resources are optional
         return None
 
 

@@ -7,7 +7,7 @@ from rich.table import Table
 console = Console()
 
 
-def show_features():
+def show_features() -> None:
     """Display major features."""
     console.print("\n[bold cyan]Major Features[/bold cyan]\n")
 

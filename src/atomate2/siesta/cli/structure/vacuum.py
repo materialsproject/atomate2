@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: EXE001
 """CLI for adding/removing vacuum in structures.
 
 This module provides the `vacuum` subcommand for atomate2siesta-structure.
@@ -51,14 +52,14 @@ console = Console()
     help="Show atomic layer positions before/after",
 )
 def vacuum(
-    structure_file,
-    thickness,
-    direction,
-    center,
-    output,
-    format,
-    show_layers,
-):
+    structure_file: str,
+    thickness: float,
+    direction: str,
+    center: bool,
+    output: str | None,
+    format: str,  # noqa: A002 Click option name mirrors the CLI --format flag
+    show_layers: bool,
+) -> None:
     """Add or adjust vacuum in structures (slabs, 2D materials, molecules).
 
     Useful for preparing surface slabs, 2D materials, and isolated molecules
@@ -99,7 +100,8 @@ def vacuum(
         new_cell_length = current_cell_length + thickness
 
         console.print(
-            f"\n[yellow]Adding {thickness:.3f} Å vacuum in {dir_label} direction[/yellow]"
+            f"\n[yellow]Adding {thickness:.3f} Å vacuum in "
+            f"{dir_label} direction[/yellow]"
         )
 
         if show_layers:
@@ -214,12 +216,17 @@ def vacuum(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 def _display_vacuum_info(
-    orig_struct, vacuum_struct, dir_idx, dir_label, vacuum_thickness, centered
-):
+    orig_struct: Structure,
+    vacuum_struct: Structure,
+    dir_idx: int,
+    dir_label: str,
+    vacuum_thickness: float,  # noqa: ARG001 kept for signature symmetry
+    centered: bool,
+) -> None:
     """Display comparison of structures before/after vacuum addition."""
     console.print("\n[yellow]Structure Comparison:[/yellow]")
 
@@ -274,7 +281,7 @@ def _display_vacuum_info(
         console.print(f"\n[cyan]Structure centered in {dir_label} direction[/cyan]")
 
 
-def _display_layer_positions(structure, dir_idx, label):
+def _display_layer_positions(structure: Structure, dir_idx: int, label: str) -> None:
     """Display atomic layer positions."""
     console.print(f"\n[cyan]Layer Positions ({label}):[/cyan]")
 

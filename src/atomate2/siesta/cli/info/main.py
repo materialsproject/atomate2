@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Main CLI entry point for atomate2siesta-info.
 
@@ -9,6 +8,8 @@ This tool provides an overview of:
 - Quick start examples
 - Version information
 """
+
+from __future__ import annotations
 
 import click
 
@@ -22,20 +23,20 @@ from atomate2.siesta.cli.info.workflows import show_workflows
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def cli(ctx):
+def cli(ctx: click.Context) -> None:
     """Display atomate2siesta information and capabilities."""
     if ctx.invoked_subcommand is None:
         show_overview()
 
 
 @cli.command()
-def overview():
+def overview() -> None:
     """Show complete overview of atomate2siesta."""
     show_overview()
 
 
 @cli.command()
-def tools():
+def tools() -> None:
     """List all available CLI tools."""
     show_cli_tools()
 
@@ -44,7 +45,7 @@ def tools():
 @click.argument("workflow_name", required=False)
 @click.option("--list-all", is_flag=True, help="List all discovered FlowMaker classes")
 @click.option("--full", is_flag=True, help="Show full documentation in Rich panel")
-def workflows(workflow_name, list_all, full):
+def workflows(workflow_name: str | None, list_all: bool, full: bool) -> None:
     """
     Show workflow information.
 
@@ -54,7 +55,7 @@ def workflows(workflow_name, list_all, full):
       atomate2siesta-info workflows phonon                 # Show phonon workflow details
       atomate2siesta-info workflows SiestaEosFlowMaker --full  # Show full docstring in Rich panel
       atomate2siesta-info workflows --list-all             # List all FlowMaker classes
-    """
+    """  # noqa: D301, E501
     if list_all:
         from atomate2.siesta.cli.info.workflow_details import list_all_flowmakers
 
@@ -68,19 +69,19 @@ def workflows(workflow_name, list_all, full):
 
 
 @cli.command()
-def features():
+def features() -> None:
     """List all major features."""
     show_features()
 
 
 @cli.command()
-def examples():
+def examples() -> None:
     """Show quick start examples."""
     show_examples()
 
 
 @cli.command()
-def version():
+def version() -> None:
     """Show version information."""
     show_version()
 

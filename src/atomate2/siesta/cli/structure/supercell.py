@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """CLI for generating supercells.
 
 This module provides the `supercell` subcommand for atomate2siesta-structure.
@@ -11,6 +10,8 @@ from pymatgen.core import Structure
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+
+# ruff: noqa: RUF001, RUF002, RUF003 -- intentional × (MULTIPLICATION SIGN) in UI text
 
 console = Console()
 
@@ -57,15 +58,15 @@ console = Console()
     help="Show memory/time estimates for phonon/NEB calculations",
 )
 def supercell(
-    structure_file,
-    matrix,
-    min_length,
-    min_atoms,
-    output,
-    format,
-    preserve_magmom,
-    show_estimate,
-):
+    structure_file: str,
+    matrix: tuple[int, ...] | None,
+    min_length: float | None,
+    min_atoms: int | None,
+    output: str | None,
+    format: str,  # noqa: A002 matches Click --format option name
+    preserve_magmom: bool,
+    show_estimate: bool,
+) -> None:
     """Generate supercells for phonon, defect, or surface calculations.
 
     Supports diagonal supercells (nx×ny×nz), minimum length specification,
@@ -95,14 +96,16 @@ def supercell(
     )
     if options_count == 0:
         console.print(
-            "[red]Error: Must specify one of --matrix, --min-length, or --min-atoms[/red]"
+            "[red]Error: Must specify one of "
+            "--matrix, --min-length, or --min-atoms[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
     if options_count > 1:
         console.print(
-            "[red]Error: Only specify one supercell method (--matrix, --min-length, or --min-atoms)[/red]"
+            "[red]Error: Only specify one supercell method "
+            "(--matrix, --min-length, or --min-atoms)[/red]"
         )
-        raise click.Abort()
+        raise click.Abort
 
     try:
         # Load structure
@@ -231,12 +234,14 @@ def supercell(
             # Typical DFT: ~100 MB per atom for wavefunctions
             memory_estimate = n_atoms * 0.1  # GB
 
+            phonon_hours = phonon_time_estimate / 60
+
             estimate_text = f"""
 [bold]Computational Estimates:[/bold]
 
 [cyan]Phonon Calculation (Finite Differences):[/cyan]
   • Displacements: {n_displacements} (3 directions × 2 per atom)
-  • Estimated time: ~{phonon_time_estimate:.0f} minutes ({phonon_time_estimate / 60:.1f} hours)
+  • Estimated time: ~{phonon_time_estimate:.0f} minutes ({phonon_hours:.1f} hours)
     (assuming ~5 min per force calculation)
   • Memory: ~{memory_estimate:.1f} GB (rough estimate)
 
@@ -279,7 +284,8 @@ def supercell(
         # Verification tip
         if has_magmom and preserve_magmom:
             console.print(
-                "[dim]  Magnetic moments preserved ✓ (magmom site property propagated)[/dim]"
+                "[dim]  Magnetic moments preserved ✓ "
+                "(magmom site property propagated)[/dim]"
             )
 
     except Exception as e:
@@ -287,7 +293,7 @@ def supercell(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
 if __name__ == "__main__":

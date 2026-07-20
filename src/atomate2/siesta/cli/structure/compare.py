@@ -2,6 +2,7 @@
 
 This module provides the `compare` command for comparing two crystal structures.
 """
+# ruff: noqa: RUF002 docstring uses intentional Greek crystallographic symbols
 
 from __future__ import annotations
 
@@ -117,7 +118,7 @@ def compare(
         if calculate_rmsd:
             _calculate_rmsd(s1, s2, tolerance)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print(f"\n[bold red]Error:[/bold red] {e}")
         sys.exit(1)
 
@@ -193,11 +194,11 @@ def _compare_lattice(s1: Structure, s2: Structure, tolerance: float) -> None:
             match,
         )
 
-    # Lattice angles (α, β, γ)
+    # Lattice angles (α, β, γ)  # noqa: RUF003
     for param, val1, val2 in [
-        ("α (°)", lattice1.alpha, lattice2.alpha),
+        ("α (°)", lattice1.alpha, lattice2.alpha),  # noqa: RUF001
         ("β (°)", lattice1.beta, lattice2.beta),
-        ("γ (°)", lattice1.gamma, lattice2.gamma),
+        ("γ (°)", lattice1.gamma, lattice2.gamma),  # noqa: RUF001
     ]:
         diff = abs(val1 - val2)
         match = "✓" if diff < tolerance else "✗"
@@ -272,13 +273,17 @@ def _compare_sites(
     cart_coords1 = s1.cart_coords
     cart_coords2 = s2.cart_coords
 
-    for i, (site1, frac1, cart1) in enumerate(zip(s1, frac_coords1, cart_coords1)):
+    for i, (site1, frac1, cart1) in enumerate(
+        zip(s1, frac_coords1, cart_coords1, strict=False)
+    ):
         # Find closest site in structure 2
         min_dist = float("inf")
         best_match = None
         best_match_idx = None
 
-        for j, (site2, frac2, cart2) in enumerate(zip(s2, frac_coords2, cart_coords2)):
+        for j, (site2, frac2, _cart2) in enumerate(
+            zip(s2, frac_coords2, cart_coords2, strict=False)
+        ):
             if site1.specie != site2.specie:
                 continue
 
@@ -335,7 +340,7 @@ def _compare_sites(
         detail_table.add_column("Distance (Å)", style="magenta", justify="right")
         detail_table.add_column("Match", style="green", justify="center")
 
-        for i, site1, frac1, cart1, match_idx, dist, is_match in all_site_matches:
+        for i, site1, frac1, _cart1, match_idx, dist, is_match in all_site_matches:
             if match_idx is not None:
                 frac2 = frac_coords2[match_idx]
                 frac2_str = f"({frac2[0]:.4f}, {frac2[1]:.4f}, {frac2[2]:.4f})"
@@ -373,7 +378,8 @@ def _compare_sites(
         for i, site, match in unmatched_sites[:10]:  # Show first 10
             if match:
                 console.print(
-                    f"  Site {i} ({site.specie}): closest match at {match[1]:.4f} Å (exceeds tolerance)"
+                    f"  Site {i} ({site.specie}): closest match at "
+                    f"{match[1]:.4f} Å (exceeds tolerance)"
                 )
             else:
                 console.print(f"  Site {i} ({site.specie}): no matching element found")
@@ -418,7 +424,8 @@ def _calculate_rmsd(s1: Structure, s2: Structure, tolerance: float) -> None:
 
         if len(matched_coords1) == 0:
             console.print(
-                "[yellow]Warning: No matching sites found. Cannot calculate RMSD.[/yellow]\n"
+                "[yellow]Warning: No matching sites found. "
+                "Cannot calculate RMSD.[/yellow]\n"
             )
             return
 
@@ -449,14 +456,16 @@ def _calculate_rmsd(s1: Structure, s2: Structure, tolerance: float) -> None:
 
         if rmsd < tolerance:
             console.print(
-                f"[bold green]✓ Structures are similar (RMSD < {tolerance} Å)[/bold green]\n"
+                f"[bold green]✓ Structures are similar "
+                f"(RMSD < {tolerance} Å)[/bold green]\n"
             )
         else:
             console.print(
-                f"[bold yellow]⚠ Structures differ (RMSD = {rmsd:.6f} Å > {tolerance} Å)[/bold yellow]\n"
+                f"[bold yellow]⚠ Structures differ "
+                f"(RMSD = {rmsd:.6f} Å > {tolerance} Å)[/bold yellow]\n"
             )
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly warning, RMSD is best-effort
         console.print(f"[yellow]Warning: RMSD calculation failed: {e}[/yellow]\n")
 
 

@@ -35,10 +35,14 @@ def is_squid_installed() -> bool:
     # Check for system squid
     try:
         result = subprocess.run(
-            ["which", "squid"], capture_output=True, text=True, timeout=5
+            ["which", "squid"],  # noqa: S607 which resolved via PATH
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
-        return result.returncode == 0
-    except Exception:
+        return result.returncode == 0  # noqa: TRY300
+    except Exception:  # noqa: BLE001 treat any failure as "not installed"
         return False
 
 
@@ -57,10 +61,13 @@ def is_squid_running(port: int = 9999) -> bool:
     """
     try:
         result = subprocess.run(
-            ["lsof", "-i", f":{port}"], capture_output=True, text=True
+            ["lsof", "-i", f":{port}"],  # noqa: S607 lsof resolved via PATH
+            capture_output=True,
+            text=True,
+            check=False,
         )
         return "squid" in result.stdout.lower()
-    except Exception:
+    except Exception:  # noqa: BLE001 treat any failure as "not running"
         return False
 
 
@@ -82,13 +89,16 @@ def is_proxy_running(port: int = 8080) -> bool:
     """
     try:
         result = subprocess.run(
-            ["lsof", "-i", f":{port}"], capture_output=True, text=True
+            ["lsof", "-i", f":{port}"],  # noqa: S607 lsof resolved via PATH
+            capture_output=True,
+            text=True,
+            check=False,
         )
         # Check for common proxy applications
         proxy_apps = ["squid", "proxy", "privoxy", "tinyproxy"]
         stdout_lower = result.stdout.lower()
         return any(app in stdout_lower for app in proxy_apps) or result.returncode == 0
-    except Exception:
+    except Exception:  # noqa: BLE001 treat any failure as "not running"
         return False
 
 
@@ -124,7 +134,10 @@ def start_squid(port: int = 9999, remove_old_config: bool = False) -> bool:
     # Check if port is already in use
     try:
         port_check = subprocess.run(
-            ["lsof", "-i", f":{port}"], capture_output=True, text=True
+            ["lsof", "-i", f":{port}"],  # noqa: S607 lsof resolved via PATH
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if port_check.returncode == 0:
             # Port is in use
@@ -139,7 +152,7 @@ def start_squid(port: int = 9999, remove_old_config: bool = False) -> bool:
                 console.print("\n[cyan]Looks like an SSH tunnel. To remove it:[/cyan]")
                 console.print(f"  [cyan]kill $(lsof -t -i:{port})[/cyan]")
             return False
-    except Exception:
+    except Exception:  # noqa: S110,BLE001 lsof may be unavailable; ignore
         pass  # lsof might not be available on all systems
 
     # Create simple HTTP proxy config (no SSL/TLS needed)
@@ -176,7 +189,7 @@ http_access deny all
         try:
             os.remove(config_file)
             console.print("[dim]Removed old squid configuration[/dim]")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 non-fatal: warn and recreate config
             console.print(f"[yellow]Warning: Could not remove old config: {e}[/yellow]")
         # Create new config
         with open(config_file, "w") as f:
@@ -199,24 +212,30 @@ http_access deny all
                         if len(parts) >= 2:
                             existing_port = int(parts[-1])
                         break
-        except Exception:
+        except Exception:  # noqa: S110,BLE001 best-effort port detection; ignore
             pass
 
         if existing_port and existing_port != port:
             # Port mismatch - warn and suggest --remove
             console.print(
-                f"[yellow]⚠ Config file exists with different port ({existing_port})[/yellow]"
+                f"[yellow]⚠ Config file exists with different port "
+                f"({existing_port})[/yellow]"
             )
             console.print(
-                f"[yellow]  You requested port {port}, but config has port {existing_port}[/yellow]"
+                f"[yellow]  You requested port {port}, "
+                f"but config has port {existing_port}[/yellow]"
             )
             console.print(f"[yellow]  Location: {config_file}[/yellow]")
             console.print("\n[yellow]Options:[/yellow]")
             console.print(
-                f"  1. Use existing config:  [cyan]atomate2siesta-cluster squid start --port {existing_port}[/cyan]"
+                f"  1. Use existing config:  "
+                f"[cyan]atomate2siesta-cluster squid start "
+                f"--port {existing_port}[/cyan]"
             )
             console.print(
-                f"  2. Recreate with new port: [cyan]atomate2siesta-cluster squid start --port {port} --remove[/cyan]"
+                f"  2. Recreate with new port: "
+                f"[cyan]atomate2siesta-cluster squid start "
+                f"--port {port} --remove[/cyan]"
             )
             return False
         # Use existing config (port matches or couldn't detect)
@@ -240,7 +259,10 @@ http_access deny all
             installation_type = "system"
 
         result = subprocess.run(
-            [squid_cmd, "-f", config_file], capture_output=True, text=True
+            [squid_cmd, "-f", config_file],
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if result.returncode != 0:
             console.print(f"[red]✗ Failed to start squid: {result.stderr}[/red]")
@@ -257,9 +279,9 @@ http_access deny all
             console.print(f"[dim]Config file: {config_file}[/dim]")
             return True
         console.print("[red]✗ Squid started but not responding[/red]")
-        return False
+        return False  # noqa: TRY300
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error report on any startup failure
         console.print(f"[red]✗ Error starting squid: {e}[/red]")
         return False
 
@@ -277,14 +299,14 @@ def stop_squid() -> bool:
 
         # Check for locally compiled squid first
         local_squid_binary = Path.home() / ".local" / "squid" / "sbin" / "squid"
-        if local_squid_binary.exists():
-            squid_cmd = str(local_squid_binary)
-        else:
-            squid_cmd = "squid"
+        squid_cmd = str(local_squid_binary) if local_squid_binary.exists() else "squid"
 
         # Try graceful shutdown first
         result = subprocess.run(
-            [squid_cmd, "-k", "shutdown"], capture_output=True, text=True
+            [squid_cmd, "-k", "shutdown"],
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -292,15 +314,20 @@ def stop_squid() -> bool:
             return True
 
         # If that doesn't work, kill it
-        result = subprocess.run(["killall", "squid"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["killall", "squid"],  # noqa: S607 killall resolved via PATH
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
         if result.returncode == 0:
             console.print("[green]✓ Squid killed[/green]")
             return True
         console.print("[yellow]Squid may not be running[/yellow]")
-        return False
+        return False  # noqa: TRY300
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly error report on any stop failure
         console.print(f"[red]✗ Error stopping squid: {e}[/red]")
         return False
 
@@ -316,9 +343,10 @@ def detect_running_squid_port() -> int | None:
     try:
         # Use lsof to find squid process and its listening port
         result = subprocess.run(
-            ["lsof", "-i", "-P", "-n", "-a", "-c", "squid"],
+            ["lsof", "-i", "-P", "-n", "-a", "-c", "squid"],  # noqa: S607 lsof via PATH
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if result.returncode == 0 and result.stdout:
@@ -338,8 +366,8 @@ def detect_running_squid_port() -> int | None:
                                 return 9999
                             if port_str == "squid-http":
                                 return 3129
-        return None
-    except Exception:
+        return None  # noqa: TRY300
+    except Exception:  # noqa: BLE001 treat any detection failure as "not found"
         return None
 
 
@@ -365,14 +393,13 @@ def get_squid_status(port: int = 9999) -> dict:
     if not running_on_requested_port:
         actual_port = detect_running_squid_port()
 
-    status = {
+    return {
         "installed": installed,
         "running": running_on_requested_port,
         "port": port,
         "actual_port": actual_port,
         "proxy_url": f"http://127.0.0.1:{port}" if running_on_requested_port else None,
     }
-    return status
 
 
 def detect_proxy_on_remote(
@@ -408,7 +435,7 @@ def detect_proxy_on_remote(
         "tr ' ' '\\n' | grep -i http | head -1"
     )
 
-    returncode, stdout, stderr = run_ssh_command(
+    returncode, stdout, _stderr = run_ssh_command(
         host, user, proxy_check_cmd, password, identity_file, use_ssh_config
     )
 
@@ -495,7 +522,8 @@ trusted-host = pypi.org
     # Create ~/.config/pip directory and pip.conf
     pip_conf_cmd = (
         f"mkdir -p ~/.config/pip && "
-        f"cat > ~/.config/pip/pip.conf << 'PIPCONF_EOF'\n{pip_conf_content}\nPIPCONF_EOF"
+        f"cat > ~/.config/pip/pip.conf << 'PIPCONF_EOF'\n"
+        f"{pip_conf_content}\nPIPCONF_EOF"
     )
     returncode, stdout, stderr = run_ssh_command(
         host, user, pip_conf_cmd, password, identity_file, use_ssh_config
@@ -629,7 +657,8 @@ def show_proxy_error_help(proxy_url: str | None) -> None:
     """
     console.print("\n[red]❌ Internet connection failed![/red]")
     console.print(
-        "\n[yellow]This cluster appears to require a proxy for internet access.[/yellow]"
+        "\n[yellow]This cluster appears to require "
+        "a proxy for internet access.[/yellow]"
     )
 
     console.print("\n[bold]Solutions:[/bold]")
@@ -651,8 +680,10 @@ def show_proxy_error_help(proxy_url: str | None) -> None:
 
     if proxy_url:
         console.print(
-            f"[yellow]Note: You used proxy {proxy_url}, but it may be incorrect.[/yellow]"
+            f"[yellow]Note: You used proxy {proxy_url}, "
+            f"but it may be incorrect.[/yellow]"
         )
         console.print(
-            "[yellow]      Please verify the proxy URL with your administrator.[/yellow]"
+            "[yellow]      Please verify the proxy URL "
+            "with your administrator.[/yellow]"
         )

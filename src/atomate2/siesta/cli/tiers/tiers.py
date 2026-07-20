@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 CLI tool to display available material-specific presets and their configurations.
 
@@ -32,19 +31,17 @@ except ImportError:
 
 
 # Automatically build category mapping from preset names
-def build_category_map():
+def build_category_map() -> dict:
     """Automatically categorize presets based on their names."""
     categories = {}
 
-    for preset_name in TIER_PRESETS.keys():
+    for preset_name in TIER_PRESETS:
         # Determine category from preset name prefix
         if preset_name.startswith("2d_"):
             category = "2d"
         elif preset_name.startswith("surface_") or preset_name == "adsorbate_screening":
             category = "surface"
-        elif preset_name.startswith("molecular_") or preset_name.startswith(
-            "molecule_"
-        ):
+        elif preset_name.startswith(("molecular_", "molecule_")):
             category = "molecular"
         elif preset_name.startswith("magnetic_"):
             category = "magnetic"
@@ -74,7 +71,7 @@ CATEGORY_MAP = build_category_map()
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-def cli(ctx):
+def cli(ctx: click.Context) -> None:
     """Display material-specific presets and tier configurations.
 
     Explore 27 presets across 9 categories (2d, surface, magnetic, etc.)
@@ -85,14 +82,14 @@ def cli(ctx):
 
 
 @cli.command()
-def list():
+def list() -> None:  # noqa: A001 Click command name must be "list"
     """List all tier presets by category."""
     show_list()
 
 
 @cli.command()
 @click.argument("preset_name")
-def show(preset_name):
+def show(preset_name: str) -> None:
     """Show detailed information for a specific preset."""
     if preset_name not in TIER_PRESETS:
         console.print(f"[red]Error: Preset '{preset_name}' not found[/red]")
@@ -106,12 +103,13 @@ def show(preset_name):
 
 @cli.command()
 @click.argument("category_name")
-def category(category_name):
+def category(category_name: str) -> None:
     """Show presets for a specific category."""
     if category_name not in CATEGORY_MAP:
         console.print(f"[red]Error: Category '{category_name}' not found[/red]")
         console.print(
-            f"\n[dim]Available categories: {', '.join(sorted(CATEGORY_MAP.keys()))}[/dim]"
+            f"\n[dim]Available categories: "
+            f"{', '.join(sorted(CATEGORY_MAP.keys()))}[/dim]"
         )
         return
 
@@ -123,7 +121,7 @@ def category(category_name):
 @click.option(
     "--tier", "-t", help="Filter by tier level (basic/intermediate/advanced/expert)"
 )
-def search(category, tier):
+def search(category: str, tier: str) -> None:
     """Search presets by category or tier."""
     results = []
 
@@ -166,18 +164,18 @@ def search(category, tier):
 
 
 @cli.command()
-def examples():
+def examples() -> None:
     """Show usage examples."""
     show_examples()
 
 
 @cli.command()
-def defaults():
+def defaults() -> None:
     """Show tier-level default parameters."""
     show_tier_defaults()
 
 
-def show_list():
+def show_list() -> None:
     """Display all tier presets organized by category."""
     console.print()
 
@@ -222,12 +220,13 @@ def show_list():
 
     console.print(f"[dim]Total: {len(TIER_PRESETS)} presets[/dim]")
     console.print(
-        "[dim]Use: atomate2siesta-presets show <name> for details and usage examples[/dim]"
+        "[dim]Use: atomate2siesta-presets show <name> "
+        "for details and usage examples[/dim]"
     )
     console.print("[dim]Tip: Customize with override_params={'kpts': [6,6,6]}[/dim]\n")
 
 
-def show_preset_details(preset_name):
+def show_preset_details(preset_name: str) -> None:
     """Display detailed information for a preset."""
     preset = TIER_PRESETS[preset_name]
 
@@ -295,7 +294,7 @@ def show_preset_details(preset_name):
     console.print()
 
 
-def show_category(category_name):
+def show_category(category_name: str) -> None:
     """Display all presets in a category."""
     presets_in_category = CATEGORY_MAP[category_name]
     existing_presets = [p for p in presets_in_category if p in TIER_PRESETS]
@@ -331,7 +330,7 @@ def show_category(category_name):
     console.print("[dim]Tip: Customize with override_params={'kpts': [6,6,6]}[/dim]\n")
 
 
-def show_examples():
+def show_examples() -> None:
     """Show usage examples."""
     console.print("\n[bold cyan]Usage Examples[/bold cyan]\n")
 
@@ -370,7 +369,7 @@ def show_examples():
     console.print()
 
 
-def show_tier_defaults():
+def show_tier_defaults() -> None:
     """Display tier-level default parameters."""
     console.print()
 
@@ -386,7 +385,8 @@ def show_tier_defaults():
     header = Panel(
         "[bold cyan]Tier-Level Defaults[/bold cyan]\n"
         f"[dim]Base parameter sets for the {num_tiers} {tier_word}[/dim]\n\n"
-        "These defaults are used as starting points that can be overridden by specific presets.",
+        "These defaults are used as starting points that can be "
+        "overridden by specific presets.",
         border_style="cyan",
         box=box.DOUBLE,
     )

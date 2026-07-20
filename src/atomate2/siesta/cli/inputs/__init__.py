@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+"""CLI for exploring atomate2 SIESTA input dataclasses."""
+
+from __future__ import annotations
+
 import inspect
 import re
 from dataclasses import fields
@@ -102,8 +105,8 @@ DATA_CLASSES = {
 }
 
 
-def format_default_value(value):
-    """Helper function to format default values for display."""
+def format_default_value(value: object) -> str:
+    """Format default values for display."""
     if value is None:
         return "None"
     if callable(value):
@@ -112,7 +115,7 @@ def format_default_value(value):
             if isinstance(result, (list, dict)) and not result:
                 return str(result)
             return str(result)
-        except Exception:
+        except Exception:  # noqa: BLE001 default factories may raise anything
             return "<callable>"
     elif isinstance(value, (list, dict)) and not value:
         return str(value)
@@ -120,14 +123,14 @@ def format_default_value(value):
         return str(value)
 
 
-def get_class_docstring(cls):
+def get_class_docstring(cls: type) -> str:
     """Extract the docstring of a class, if available."""
     doc = inspect.getdoc(cls)
     return doc or "No docstring available."
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """Command-line interface for SIESTA input file operations.
 
     Provides tools for:
@@ -138,7 +141,7 @@ def cli():
 
 
 @cli.command(name="list")
-def list_classes():
+def list_classes() -> None:
     """List all available data classes."""
     console.print(
         Panel(
@@ -159,7 +162,7 @@ def list_classes():
 @click.option("-c", "--complete", is_flag=True, help="Show complete detailed info.")
 @click.option("-s", "--siesta", is_flag=True, help="Show SIESTA keywords info.")
 @click.option("-u", "--unit", is_flag=True, help="Show unit of keywords.")
-def show(class_name, complete, siesta, unit):
+def show(class_name: str, complete: bool, siesta: bool, unit: bool) -> None:
     """Show detailed information about a specific data class."""
     if class_name not in DATA_CLASSES:
         console.print(f"[red]Error: Data class '{class_name}' not found.[/red]")
@@ -241,8 +244,8 @@ def show(class_name, complete, siesta, unit):
 @click.option(
     "-r", "--restrict", is_flag=True, help="Restrict search to exact word matches."
 )
-def search(keyword, restrict):
-    """Search for data class attributes by keyword in name, type, default, description, or SIESTA keyword."""
+def search(keyword: str, restrict: bool) -> None:
+    """Search for data class attributes by keyword in name, type, default, description, or SIESTA keyword."""  # noqa: E501
     keyword = keyword.lower()
     keyword_pattern = rf"\b{re.escape(keyword)}\b" if restrict else keyword
     matches = []

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """CLI for stacking layers to create heterostructures and multilayers.
 
 This module provides the `stack` subcommand for atomate2siesta-structure.
@@ -32,7 +31,8 @@ console = Console()
 @click.option(
     "--repetitions",
     type=str,
-    help="Repeat pattern as comma-separated integers (e.g., '2,3' for 2x structure1 + 3x structure2)",
+    help="Repeat pattern as comma-separated integers "
+    "(e.g., '2,3' for 2x structure1 + 3x structure2)",
 )
 @click.option(
     "--center",
@@ -58,16 +58,16 @@ console = Console()
     help="Show layer information after stacking",
 )
 def stack(
-    structure1,
-    structure2,
-    direction,
-    spacing,
-    repetitions,
-    center,
-    output,
-    format,
-    show_layers,
-):
+    structure1: str,
+    structure2: str | None,
+    direction: str,
+    spacing: float,
+    repetitions: str | None,
+    center: bool,
+    output: str | None,
+    format: str,  # noqa: A002 Click --format option name
+    show_layers: bool,
+) -> None:
     """Stack layers to create heterostructures and multilayers.
 
     Create vertical stacks of 2D materials, slabs, or molecules with controlled
@@ -95,7 +95,8 @@ def stack(
         # Load first structure
         struct1 = Structure.from_file(structure1)
         console.print(
-            f"\n[cyan]Loaded first structure: {struct1.composition.reduced_formula}[/cyan]"
+            f"\n[cyan]Loaded first structure: "
+            f"{struct1.composition.reduced_formula}[/cyan]"
         )
         console.print(f"  Formula: {struct1.composition.formula}")
         console.print(f"  Sites: {struct1.num_sites}")
@@ -105,7 +106,8 @@ def stack(
             # Heterostructure mode
             struct2 = Structure.from_file(structure2)
             console.print(
-                f"\n[cyan]Loaded second structure: {struct2.composition.reduced_formula}[/cyan]"
+                f"\n[cyan]Loaded second structure: "
+                f"{struct2.composition.reduced_formula}[/cyan]"
             )
             console.print(f"  Formula: {struct2.composition.formula}")
             console.print(f"  Sites: {struct2.num_sites}")
@@ -120,7 +122,8 @@ def stack(
             reps = [int(x) for x in repetitions.split(",")]
             if mode == "multilayer" and len(reps) > 1:
                 console.print(
-                    "[yellow]Warning: Only one repetition value needed for multilayer. Using first value.[/yellow]"
+                    "[yellow]Warning: Only one repetition value needed "
+                    "for multilayer. Using first value.[/yellow]"
                 )
                 reps = [reps[0]]
             elif mode == "heterostructure" and len(reps) == 1:
@@ -128,9 +131,10 @@ def stack(
                 reps = [reps[0], reps[0]]
             elif mode == "heterostructure" and len(reps) != 2:
                 console.print(
-                    "[red]Error: Heterostructure requires 1 or 2 repetition values[/red]"
+                    "[red]Error: Heterostructure requires 1 or 2 "
+                    "repetition values[/red]"
                 )
-                raise click.Abort()
+                raise click.Abort  # noqa: TRY301
         # Default repetitions
         elif mode == "multilayer":
             reps = [2]  # Default bilayer
@@ -184,10 +188,16 @@ def stack(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
-def _stack_multilayer(structure, n_layers, dir_idx, spacing, center):
+def _stack_multilayer(
+    structure: Structure,
+    n_layers: int,
+    dir_idx: int,
+    spacing: float,
+    center: bool,
+) -> Structure:
     """Stack multiple copies of the same structure."""
     if n_layers < 2:
         console.print("[yellow]Warning: Using at least 2 layers[/yellow]")
@@ -203,10 +213,8 @@ def _stack_multilayer(structure, n_layers, dir_idx, spacing, center):
     current_cell_length = structure.lattice.abc[dir_idx]
 
     # Determine new cell length (add extra vacuum if centering)
-    if center:
-        new_cell_length = total_thickness + 2 * spacing  # Add vacuum on both sides
-    else:
-        new_cell_length = total_thickness
+    # Add vacuum on both sides when centering
+    new_cell_length = total_thickness + 2 * spacing if center else total_thickness
 
     # Create new lattice
     from pymatgen.core import Lattice, Structure
@@ -221,10 +229,7 @@ def _stack_multilayer(structure, n_layers, dir_idx, spacing, center):
     all_coords = []
 
     # Calculate base offset (if centering)
-    if center:
-        base_offset = spacing
-    else:
-        base_offset = 0.0
+    base_offset = spacing if center else 0.0
 
     # Stack layers
     for i in range(n_layers):
@@ -237,17 +242,23 @@ def _stack_multilayer(structure, n_layers, dir_idx, spacing, center):
             all_coords.append(cart_coord)
 
     # Create stacked structure
-    stacked = Structure(
+    return Structure(
         new_lattice,
         all_species,
         all_coords,
         coords_are_cartesian=True,
     )
 
-    return stacked
 
-
-def _stack_heterostructure(struct1, struct2, n1, n2, dir_idx, spacing, center):
+def _stack_heterostructure(
+    struct1: Structure,
+    struct2: Structure,
+    n1: int,
+    n2: int,
+    dir_idx: int,
+    spacing: float,
+    center: bool,
+) -> Structure:
     """Stack two different structures with repetition pattern."""
     # Get thicknesses
     coords1 = struct1.cart_coords
@@ -269,10 +280,10 @@ def _stack_heterostructure(struct1, struct2, n1, n2, dir_idx, spacing, center):
 
     # Check if lattices are compatible (within 5%)
     lattice_mismatch = False
-    for a1, a2 in zip(abc1_plane, abc2_plane):
+    for a1, a2 in zip(abc1_plane, abc2_plane, strict=False):
         if abs(a1 - a2) / max(a1, a2) > 0.05:
             lattice_mismatch = True
-    for ang1, ang2 in zip(angles1_plane, angles2_plane):
+    for ang1, ang2 in zip(angles1_plane, angles2_plane, strict=False):
         if abs(ang1 - ang2) > 5.0:
             lattice_mismatch = True
 
@@ -306,7 +317,7 @@ def _stack_heterostructure(struct1, struct2, n1, n2, dir_idx, spacing, center):
     current_offset = base_offset
 
     # Add layers from struct1
-    for i in range(n1):
+    for _ in range(n1):
         for site in struct1:
             all_species.append(site.species)
             cart_coord = site.coords.copy()
@@ -317,7 +328,7 @@ def _stack_heterostructure(struct1, struct2, n1, n2, dir_idx, spacing, center):
     # Subtract last spacing, add layers from struct2
     current_offset -= spacing
 
-    for i in range(n2):
+    for _ in range(n2):
         for site in struct2:
             all_species.append(site.species)
             cart_coord = site.coords.copy()
@@ -326,40 +337,38 @@ def _stack_heterostructure(struct1, struct2, n1, n2, dir_idx, spacing, center):
         current_offset += thickness2 + spacing
 
     # Create stacked structure
-    stacked = Structure(
+    return Structure(
         new_lattice,
         all_species,
         all_coords,
         coords_are_cartesian=True,
     )
 
-    return stacked
 
-
-def _save_structure(structure, filename, format):
+def _save_structure(structure: Structure, filename: str, fmt: str) -> None:
     """Save structure to file."""
-    if format == "cif":
+    if fmt == "cif":
         from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
 
         write_cif_with_ghost(structure, filename)
-    elif format == "poscar":
+    elif fmt == "poscar":
         structure.to(filename=filename, fmt="poscar")
-    elif format == "xsf":
+    elif fmt == "xsf":
         from pymatgen.io.xcrysden import XSF
 
         xsf = XSF(structure)
         with open(filename, "w") as f:
             f.write(xsf.to_str())
-    elif format == "json":
+    elif fmt == "json":
         structure.to(filename=filename, fmt="json")
-    elif format == "fdf":
+    elif fmt == "fdf":
         # Convert to sisl geometry and write FDF
         import sisl
 
         geom = sisl.get_sile(structure).read_geometry()
         with sisl.get_sile(filename, "w") as fdf:
             fdf.write_geometry(geom)
-    elif format == "XV":
+    elif fmt == "XV":
         # Convert to sisl geometry and write XV
         import sisl
 
@@ -367,7 +376,15 @@ def _save_structure(structure, filename, format):
         geom.write(filename)
 
 
-def _display_stack_info(struct1, struct2, stacked, dir_idx, dir_label, mode, reps):
+def _display_stack_info(
+    struct1: Structure,
+    struct2: Structure | None,
+    stacked: Structure,
+    dir_idx: int,
+    dir_label: str,  # noqa: ARG001 kept for signature parity
+    mode: str,
+    reps: list,
+) -> None:
     """Display information about the stacked structure."""
     console.print("\n[yellow]Stacking Summary:[/yellow]")
 
@@ -431,11 +448,12 @@ def _display_stack_info(struct1, struct2, stacked, dir_idx, dir_label, mode, rep
         console.print(f"\n[cyan]Total layers: {reps[0]}[/cyan]")
     else:
         console.print(
-            f"\n[cyan]Total layers: {reps[0]} (structure 1) + {reps[1]} (structure 2) = {reps[0] + reps[1]}[/cyan]"
+            f"\n[cyan]Total layers: {reps[0]} (structure 1) + "
+            f"{reps[1]} (structure 2) = {reps[0] + reps[1]}[/cyan]"
         )
 
 
-def _display_layer_info(structure, dir_idx):
+def _display_layer_info(structure: Structure, dir_idx: int) -> None:
     """Display layer-by-layer information."""
     console.print("\n[cyan]Layer Information:[/cyan]")
 
@@ -462,7 +480,7 @@ def _display_layer_info(structure, dir_idx):
         z = unique_z[i]
         layer_indices = [j for j, zz in enumerate(z_coords) if abs(zz - z) < 0.5]
         layer_sites = [structure[j] for j in layer_indices]
-        species = ", ".join(sorted(set(str(s.specie) for s in layer_sites)))
+        species = ", ".join(sorted({str(s.specie) for s in layer_sites}))
 
         table.add_row(str(i), f"{z:.3f}", str(len(layer_indices)), species)
 
@@ -474,7 +492,7 @@ def _display_layer_info(structure, dir_idx):
             z = unique_z[i]
             layer_indices = [j for j, zz in enumerate(z_coords) if abs(zz - z) < 0.5]
             layer_sites = [structure[j] for j in layer_indices]
-            species = ", ".join(sorted(set(str(s.specie) for s in layer_sites)))
+            species = ", ".join(sorted({str(s.specie) for s in layer_sites}))
 
             table.add_row(str(i), f"{z:.3f}", str(len(layer_indices)), species)
 

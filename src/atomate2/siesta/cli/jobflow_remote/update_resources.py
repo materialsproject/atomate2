@@ -58,7 +58,7 @@ MODIFIABLE_STATES = {"READY", "WAITING", "PAUSED", "REMOTE_ERROR", "FAILED"}
 )
 @click.pass_context
 def update_resources(
-    ctx,
+    ctx: click.Context,
     job_id: str,
     nodes: int | None,
     ntasks_per_node: int | None,
@@ -73,8 +73,8 @@ def update_resources(
     cluster_profile: str | None,
     force: bool,
     backup: bool,
-):
-    """Update SLURM/PBS resources for a pending job.
+) -> None:
+    r"""Update SLURM/PBS resources for a pending job.
 
     Modifies the job's resource allocation (nodes, cores, memory, walltime,
     partition, etc.) directly in MongoDB. Only works for jobs in READY,
@@ -121,10 +121,11 @@ def update_resources(
             "Use --help to see available options."
         )
         console.print(
-            f"\n[yellow]Example:[/yellow] atomate2siesta-jobflow-remote -p {project_name} "
+            f"\n[yellow]Example:[/yellow] atomate2siesta-jobflow-remote "
+            f"-p {project_name} "
             f'job update-resources {job_id} --time "24:00:00" --nodes 2'
         )
-        raise click.Abort()
+        raise click.Abort
 
     # Fetch job from database
     console.print("[bold]Fetching job details...[/bold]")
@@ -134,16 +135,17 @@ def update_resources(
             "[red]Error:[/red] Could not retrieve job from database. "
             "Is pymongo installed?"
         )
-        raise click.Abort()
+        raise click.Abort
 
     # Check job state
     state = extract_job_state(job_doc)
     if state and state not in MODIFIABLE_STATES:
         console.print(
             f"[red]Error:[/red] Job {job_id} is in state [bold]{state}[/bold]. "
-            f"Resources can only be updated for jobs in: {', '.join(sorted(MODIFIABLE_STATES))}"
+            f"Resources can only be updated for jobs in: "
+            f"{', '.join(sorted(MODIFIABLE_STATES))}"
         )
-        raise click.Abort()
+        raise click.Abort
 
     console.print(
         f"[green]>[/green] Job {job_id} — state: [bold]{state or 'UNKNOWN'}[/bold]"
@@ -159,7 +161,7 @@ def update_resources(
     if auto_allocate:
         new_resources = _build_auto_resources(job_doc, cluster_profile)
         if new_resources is None:
-            raise click.Abort()
+            raise click.Abort
     else:
         new_resources = {}
 
@@ -185,10 +187,11 @@ def update_resources(
     console.print()
 
     # Confirm
-    if not force:
-        if not Confirm.ask("[bold]Apply these resource changes?[/bold]", default=True):
-            console.print("[yellow]Operation cancelled[/yellow]")
-            return
+    if not force and not Confirm.ask(
+        "[bold]Apply these resource changes?[/bold]", default=True
+    ):
+        console.print("[yellow]Operation cancelled[/yellow]")
+        return
 
     # Perform update
     console.print("\n[bold]Updating resources in database...[/bold]")
@@ -206,14 +209,15 @@ def update_resources(
             Panel.fit(
                 f"[bold green]Resources updated for job {job_id}[/bold green]\n\n"
                 "[bold]Next steps:[/bold]\n"
-                f"  - Inspect: [cyan]atomate2siesta-jobflow-remote -p {project_name} job inspect {job_id} --full[/cyan]\n"
+                f"  - Inspect: [cyan]atomate2siesta-jobflow-remote -p {project_name} "
+                f"job inspect {job_id} --full[/cyan]\n"
                 f"  - Rerun:   [cyan]jf -p {project_name} job rerun {job_id}[/cyan]",
                 border_style="green",
             )
         )
     else:
         console.print("[red]Failed to update resources[/red]")
-        raise click.Abort()
+        raise click.Abort
 
 
 def _build_auto_resources(
@@ -301,7 +305,7 @@ def _extract_atom_count_from_doc(job_doc: dict[str, Any]) -> int | None:
 
         # Check function_kwargs for structure-like objects
         function_kwargs = job_data.get("function_kwargs", {})
-        for _key, value in function_kwargs.items():
+        for value in function_kwargs.values():
             if isinstance(value, dict):
                 # pymatgen Structure serialized as dict
                 if "lattice" in value and "sites" in value:
@@ -320,11 +324,11 @@ def _extract_atom_count_from_doc(job_doc: dict[str, Any]) -> int | None:
                 if "num_sites" in arg:
                     return arg["num_sites"]
 
+    except Exception:  # noqa: BLE001 friendly fallback on any doc-parsing error
+        return None
+    else:
         # Check @bound maker for prev_dir pattern (structure may be in output ref)
         # In this case we can't get atom count — return None
-        return None
-
-    except Exception:
         return None
 
 
@@ -450,7 +454,8 @@ def _update_resources_in_db(
         if create_backup:
             backup_collection = db[f"{collection_name}_backup"]
             backup_doc = job_doc.copy()
-            backup_doc["_backup_timestamp"] = datetime.datetime.utcnow()
+            # Preserve naive UTC timestamp as historically stored in MongoDB
+            backup_doc["_backup_timestamp"] = datetime.datetime.utcnow()  # noqa: DTZ003
             backup_doc["_backup_type"] = "update_resources"
             backup_doc["_original_id"] = job_doc["_id"]
             if "_id" in backup_doc:
@@ -461,10 +466,7 @@ def _update_resources_in_db(
             )
 
         # Build query
-        if job_id.isdigit():
-            query = {"db_id": str(job_id)}
-        else:
-            query = {"uuid": job_id}
+        query = {"db_id": str(job_id)} if job_id.isdigit() else {"uuid": job_id}
 
         # Update resources at BOTH paths:
         # 1. Top-level "resources" — what jobflow-remote runner actually reads
@@ -492,8 +494,9 @@ def _update_resources_in_db(
             console.print(
                 "[yellow]Note:[/yellow] Resources may already match the target values"
             )
-        return False
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly report of any database error
         console.print(f"[red]Database error:[/red] {e}")
+        return False
+    else:
         return False

@@ -10,7 +10,7 @@ from atomate2.siesta.cli.maker.templates.base import WorkflowTemplate
 class SurfaceTemplate(WorkflowTemplate):
     """Template for surface energy calculations."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="surface",
             description="Surface energy calculation for all terminations",
@@ -98,7 +98,7 @@ print("  - Visualize surfaces: ase gui slab_structures/*.cif")
 print("  - Use most stable slab for adsorption studies")
 """
 
-    def validate_inputs(self, structure_file: str, options: dict[str, Any]):
+    def validate_inputs(self, structure_file: str, options: dict[str, Any]) -> None:
         """Validate surface-specific inputs."""
         super().validate_inputs(structure_file, options)
 
@@ -111,14 +111,15 @@ print("  - Use most stable slab for adsorption studies")
 
             warnings.warn(
                 f"Slab directory '{slab_dir}' does not exist yet. "
-                "Make sure to generate slabs before running this workflow."
+                "Make sure to generate slabs before running this workflow.",
+                stacklevel=2,
             )
 
 
 class AdsorptionTemplate(WorkflowTemplate):
     """Template for adsorption site scanning."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="adsorption",
             description="Adsorption site scanning on surfaces",
@@ -286,15 +287,14 @@ print("  - Optimize geometry at best site")
 print("  - Calculate reaction barriers with NEB")
 """
 
-    def validate_inputs(self, structure_file: str, options: dict[str, Any]):
+    def validate_inputs(self, structure_file: str, options: dict[str, Any]) -> None:
         """Validate adsorption-specific inputs."""
         super().validate_inputs(structure_file, options)
 
         # Validate grid size
         grid = options.get("grid_size", (3, 3))
-        if isinstance(grid, tuple):
-            if grid[0] < 1 or grid[1] < 1:
-                raise ValueError(f"Grid size must be positive, got {grid}")
+        if isinstance(grid, tuple) and (grid[0] < 1 or grid[1] < 1):
+            raise ValueError(f"Grid size must be positive, got {grid}")
 
         # Check adsorbate file if specified
         adsorbate = options.get("adsorbate")
@@ -308,7 +308,7 @@ print("  - Calculate reaction barriers with NEB")
 class MultiSurfaceTemplate(WorkflowTemplate):
     """Template for multiple surface energy calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="multi-surface",
             description="Calculate surface energies for multiple Miller indices",
@@ -366,7 +366,7 @@ print("  - slab_structures/*.cif (all slab geometries)")
 class AdsorptionOptimizationTemplate(WorkflowTemplate):
     """Template for adsorption optimization at best site."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="adsorption-optimize",
             description="Optimize adsorption geometry at best site from scan",
@@ -390,7 +390,10 @@ from pymatgen.core import Structure
         if options.get("adsorbate"):
             imports += "from pymatgen.core import Molecule\n"
 
-        imports += "from atomate2.siesta.flows.surface import AdsorptionOptimizationFlowMaker\n"
+        imports += (
+            "from atomate2.siesta.flows.surface import "
+            "AdsorptionOptimizationFlowMaker\n"
+        )
 
         return imports
 

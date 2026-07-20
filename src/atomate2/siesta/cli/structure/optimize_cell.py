@@ -22,18 +22,18 @@ def load_structure(file_path: str) -> Structure:
     return Structure.from_file(file_path)
 
 
-def save_structure(structure: Structure, filename: str, format: str) -> None:
+def save_structure(structure: Structure, filename: str, fmt: str) -> None:
     """Save structure to file."""
     from ase import Atoms
     from ase.io import write as ase_write
 
-    if format == "cif":
+    if fmt == "cif":
         from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
 
         write_cif_with_ghost(structure, filename)
-    elif format == "poscar":
+    elif fmt == "poscar":
         structure.to(filename=filename, fmt="poscar")
-    elif format == "xsf":
+    elif fmt == "xsf":
         atoms = Atoms(
             symbols=[str(site.specie) for site in structure],
             positions=structure.cart_coords,
@@ -41,20 +41,20 @@ def save_structure(structure: Structure, filename: str, format: str) -> None:
             pbc=True,
         )
         ase_write(filename, atoms, format="xsf")
-    elif format == "json":
+    elif fmt == "json":
         structure.to(filename=filename, fmt="json")
-    elif format in ["fdf", "XV"]:
+    elif fmt in ["fdf", "XV"]:
         import sisl
 
         geom = sisl.Geometry.new(structure)
-        if format == "fdf":
+        if fmt == "fdf":
             geom.write(filename)
         else:  # XV
             geom.write(
                 filename.replace(".xv", ".XV") if ".xv" in filename else filename
             )
     else:
-        raise ValueError(f"Unsupported format: {format}")
+        raise ValueError(f"Unsupported format: {fmt}")
 
 
 def show_structure_comparison(original: Structure, modified: Structure) -> None:
@@ -136,7 +136,7 @@ def optimize_cell(
     orthogonalize: bool,
     max_atoms: int,
     output: str | None,
-    format: str,
+    format: str,  # noqa: A002 Click option name mirrors the CLI --format flag
     show_before_after: bool,
 ) -> None:
     """Optimize cell shape for periodic calculations.
@@ -154,7 +154,8 @@ def optimize_cell(
         atomate2siesta-structure optimize-cell structure.cif --orthogonalize
 
         # Orthogonalize with custom max atoms
-        atomate2siesta-structure optimize-cell structure.cif --orthogonalize --max-atoms 500
+        atomate2siesta-structure optimize-cell structure.cif --orthogonalize \
+--max-atoms 500
     """
     try:
         # Validate options
@@ -178,8 +179,8 @@ def optimize_cell(
         console.print(f"  Sites: {structure.num_sites}")
         console.print(f"  Volume: {structure.volume:.2f} ų")
         console.print(
-            f"  Original angles: α={structure.lattice.alpha:.2f}°, "
-            f"β={structure.lattice.beta:.2f}°, γ={structure.lattice.gamma:.2f}°\n"
+            f"  Original angles: α={structure.lattice.alpha:.2f}°, "  # noqa: RUF001
+            f"β={structure.lattice.beta:.2f}°, γ={structure.lattice.gamma:.2f}°\n"  # noqa: RUF001
         )
 
         # Perform optimization
@@ -238,7 +239,7 @@ def optimize_cell(
                     console.print(f"  Found supercell: {optimized.num_sites} atoms")
                     console.print(f"  Orthogonality score: {best_score:.2f}")
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 friendly fallback to original cell
                 console.print(
                     f"[yellow]Warning: Orthogonalization failed: {e}[/yellow]"
                 )
@@ -248,8 +249,8 @@ def optimize_cell(
         console.print(f"  New sites: {optimized.num_sites}")
         console.print(f"  New volume: {optimized.volume:.2f} ų")
         console.print(
-            f"  New angles: α={optimized.lattice.alpha:.2f}°, "
-            f"β={optimized.lattice.beta:.2f}°, γ={optimized.lattice.gamma:.2f}°\n"
+            f"  New angles: α={optimized.lattice.alpha:.2f}°, "  # noqa: RUF001
+            f"β={optimized.lattice.beta:.2f}°, γ={optimized.lattice.gamma:.2f}°\n"  # noqa: RUF001
         )
 
         # Show comparison
@@ -277,7 +278,7 @@ def optimize_cell(
         # Show summary
         _show_summary(original_structure, optimized, mode_name)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 friendly CLI error reporting
         console.print(f"\n[bold red]Error:[/bold red] {e}")
         import traceback
 
@@ -299,7 +300,7 @@ def _show_summary(original: Structure, optimized: Structure, mode: str) -> None:
         "Sites",
         str(original.num_sites),
         str(optimized.num_sites),
-        f"×{site_multiplier:.2f}",
+        f"×{site_multiplier:.2f}",  # noqa: RUF001
     )
 
     # Volume
@@ -308,7 +309,7 @@ def _show_summary(original: Structure, optimized: Structure, mode: str) -> None:
         "Volume (Ų)",
         f"{original.volume:.2f}",
         f"{optimized.volume:.2f}",
-        f"×{vol_multiplier:.2f}",
+        f"×{vol_multiplier:.2f}",  # noqa: RUF001
     )
 
     # Lattice parameters

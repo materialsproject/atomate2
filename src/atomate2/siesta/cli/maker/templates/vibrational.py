@@ -10,7 +10,7 @@ from atomate2.siesta.cli.maker.templates.base import WorkflowTemplate
 class PhononTemplate(WorkflowTemplate):
     """Template for phonon calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="phonon",
             description="Phonon calculation with automatic plotting",
@@ -101,7 +101,10 @@ maker = SiestaPhononMaker(
                 if len(parts) == 3:
                     a, b, c = [int(x.strip()) for x in parts]
                     maker_code += "    # Supercell\n"
-                    maker_code += f"    supercell_matrix=[[{a}, 0, 0], [0, {b}, 0], [0, 0, {c}]],\n"
+                    maker_code += (
+                        f"    supercell_matrix=[[{a}, 0, 0], "
+                        f"[0, {b}, 0], [0, 0, {c}]],\n"
+                    )
         else:
             maker_code += "    # Supercell (auto-generated)\n"
             maker_code += f"    min_length={min_length},\n"
@@ -158,7 +161,7 @@ print("  - phonon_summary.txt (comprehensive summary)")
 class GruneisenTemplate(WorkflowTemplate):
     """Template for Grüneisen parameters calculation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="gruneisen",
             description="Grüneisen parameters and thermal expansion",
@@ -233,7 +236,7 @@ print("  - thermal_expansion.png (thermal expansion vs T)")
 class QHATemplate(WorkflowTemplate):
     """Template for quasi-harmonic approximation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="qha",
             description="Quasi-harmonic approximation (QHA) for thermal properties",
@@ -310,4 +313,4 @@ print("  - Gibbs free energy G(T)")
 print("  - Thermal expansion α(T)")
 print("  - Heat capacity Cp(T)")
 print("  - Bulk modulus B(T)")
-"""
+"""  # noqa: RUF001 physics notation in the generated script

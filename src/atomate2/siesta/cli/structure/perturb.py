@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """CLI for perturbing structures with random displacements.
 
 This module provides the `perturb` subcommand for atomate2siesta-structure.
@@ -66,16 +65,16 @@ KB = 8.617333262e-5
     help="Show displacement statistics",
 )
 def perturb(
-    structure_file,
-    amplitude,
-    temperature,
-    n_configs,
-    element,
-    seed,
-    output,
-    format,
-    show_stats,
-):
+    structure_file: str,
+    amplitude: float | None,
+    temperature: float | None,
+    n_configs: int,
+    element: str | None,
+    seed: int | None,
+    output: str | None,
+    format: str,  # noqa: A002 Click --format option name
+    show_stats: bool,
+) -> None:
     """Perturb atomic positions with random displacements.
 
     Generate perturbed structures for MD initialization, transition state search,
@@ -108,18 +107,18 @@ def perturb(
             console.print(
                 "[red]Error: Must specify either --amplitude or --temperature[/red]"
             )
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301 intentional control-flow abort
 
         if amplitude and temperature:
             console.print(
                 "[red]Error: Cannot use both --amplitude and --temperature[/red]"
             )
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301 intentional control-flow abort
 
         # Set random seed if provided
         if seed is not None:
             random.seed(seed)
-            np.random.seed(seed)
+            np.random.seed(seed)  # noqa: NPY002 legacy RNG kept for reproducibility
             console.print(f"[dim]Using random seed: {seed}[/dim]")
 
         # Load structure
@@ -145,13 +144,14 @@ def perturb(
                     console.print(
                         f"[yellow]Warning: No {elem.symbol} atoms found[/yellow]"
                     )
-                    raise click.Abort()
+                    raise click.Abort  # noqa: TRY301 intentional control-flow abort
                 console.print(
-                    f"\n[yellow]Perturbing only {elem.symbol} atoms ({len(perturb_indices)} sites)[/yellow]"
+                    f"\n[yellow]Perturbing only {elem.symbol} atoms "
+                    f"({len(perturb_indices)} sites)[/yellow]"
                 )
             except Exception as e:
                 console.print(f"[red]Error: Invalid element symbol: {e}[/red]")
-                raise click.Abort()
+                raise click.Abort from e
         else:
             perturb_indices = list(range(structure.num_sites))
             console.print(
@@ -174,7 +174,7 @@ def perturb(
         configs = []
         all_displacements = []
 
-        for config_num in range(n_configs):
+        for _config_num in range(n_configs):
             # Create copy of structure
             perturbed = structure.copy()
 
@@ -187,11 +187,11 @@ def perturb(
                 if mode == "uniform":
                     # Uniform random displacement in spherical coordinates
                     # Random direction (uniform on sphere)
-                    theta = np.random.uniform(0, 2 * np.pi)
-                    phi = np.arccos(np.random.uniform(-1, 1))
+                    theta = np.random.uniform(0, 2 * np.pi)  # noqa: NPY002
+                    phi = np.arccos(np.random.uniform(-1, 1))  # noqa: NPY002
 
                     # Random magnitude (uniform in amplitude)
-                    r = np.random.uniform(0, amplitude)
+                    r = np.random.uniform(0, amplitude)  # noqa: NPY002
 
                     # Convert to Cartesian
                     dx = r * np.sin(phi) * np.cos(theta)
@@ -213,9 +213,9 @@ def perturb(
                     )  # Approximate scaling
 
                     # Gaussian displacements in each direction
-                    dx = np.random.normal(0, sigma)
-                    dy = np.random.normal(0, sigma)
-                    dz = np.random.normal(0, sigma)
+                    dx = np.random.normal(0, sigma)  # noqa: NPY002
+                    dy = np.random.normal(0, sigma)  # noqa: NPY002
+                    dz = np.random.normal(0, sigma)  # noqa: NPY002
 
                 displacement = np.array([dx, dy, dz])
                 displacements.append(np.linalg.norm(displacement))
@@ -258,9 +258,15 @@ def perturb(
                 if output:
                     output_file = f"{output}_{i + 1}.{format}"
                 elif mode == "uniform":
-                    output_file = f"perturbed_amp{amplitude:.2f}_{input_path.stem}_config{i + 1}.{format}"
+                    output_file = (
+                        f"perturbed_amp{amplitude:.2f}_{input_path.stem}"
+                        f"_config{i + 1}.{format}"
+                    )
                 else:
-                    output_file = f"perturbed_T{temperature:.0f}K_{input_path.stem}_config{i + 1}.{format}"
+                    output_file = (
+                        f"perturbed_T{temperature:.0f}K_{input_path.stem}"
+                        f"_config{i + 1}.{format}"
+                    )
 
                 _save_structure(config, output_file, format)
                 saved_files.append(output_file)
@@ -278,10 +284,14 @@ def perturb(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
-def _save_structure(structure, filename, format):
+def _save_structure(
+    structure: Structure,
+    filename: str,
+    format: str,  # noqa: A002 param mirrors --format option
+) -> None:
     """Save structure to file."""
     if format == "cif":
         from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
@@ -310,7 +320,12 @@ def _save_structure(structure, filename, format):
         geom.write(filename)
 
 
-def _display_perturbation_info(original, perturbed, displacements, mode):
+def _display_perturbation_info(
+    _original: Structure,
+    _perturbed: Structure,
+    displacements: list,
+    mode: str,
+) -> None:
     """Display perturbation information."""
     console.print("\n[yellow]Perturbation Summary:[/yellow]")
 
@@ -336,7 +351,11 @@ def _display_perturbation_info(original, perturbed, displacements, mode):
     console.print(table)
 
 
-def _display_displacement_stats(all_displacements, n_configs, mode):
+def _display_displacement_stats(
+    all_displacements: list,
+    n_configs: int,
+    _mode: str,
+) -> None:
     """Display detailed displacement statistics."""
     console.print("\n[cyan]Displacement Statistics (all configurations):[/cyan]")
 

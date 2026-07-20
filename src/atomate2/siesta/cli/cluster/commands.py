@@ -40,7 +40,7 @@ console = Console()
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """Command-line interface for remote cluster setup."""
 
 
@@ -102,7 +102,10 @@ def cli():
 @click.option(
     "--ssh-tunnel",
     is_flag=True,
-    help="Create SSH tunnel for internet access on air-gapped clusters (uses local machine as proxy)",
+    help=(
+        "Create SSH tunnel for internet access on air-gapped clusters (uses local "
+        "machine as proxy)"
+    ),
 )
 @click.option(
     "--tunnel-port",
@@ -122,7 +125,10 @@ def cli():
 @click.option(
     "--add-proxy-to-bashrc",
     is_flag=True,
-    help="Add proxy environment variables to remote ~/.bashrc (works with --use-squid, --ssh-tunnel, or --proxy)",
+    help=(
+        "Add proxy environment variables to remote ~/.bashrc (works with --use-squid, "
+        "--ssh-tunnel, or --proxy)"
+    ),
 )
 def setup(
     host: str,
@@ -141,7 +147,7 @@ def setup(
     use_squid: bool,
     keep_squid_running: bool,
     add_proxy_to_bashrc: bool,
-):
+) -> None:
     """Set up conda environment on remote cluster for jobflow-remote.
 
     This command SSHs to a remote cluster, creates a conda environment in $HOME,
@@ -175,7 +181,7 @@ def setup(
 
         # Verbose mode to see detailed output
         atomate2siesta-cluster setup --host mycluster --ssh-config --verbose
-    """
+    """  # noqa: E501
     console.print("\n[bold cyan]Remote Cluster Setup for atomate2siesta[/bold cyan]\n")
 
     # Handle SSH config mode
@@ -203,7 +209,8 @@ def setup(
     if not identity_file and not password and not ssh_config:
         console.print("[yellow]Warning: No authentication method specified.[/yellow]")
         console.print(
-            "[yellow]Assuming SSH keys are configured (e.g., ssh-agent or ~/.ssh/config).[/yellow]\n"
+            "[yellow]Assuming SSH keys are configured (e.g., ssh-agent or "
+            "~/.ssh/config).[/yellow]\n"
         )
 
     # Initialize proxy_url
@@ -236,7 +243,8 @@ def setup(
             console.print("\n[yellow]Install squid first:[/yellow]")
             console.print("  [cyan]atomate2siesta-cluster squid install[/cyan]")
             console.print(
-                "  [cyan]atomate2siesta-cluster squid install --local --compile[/cyan]  (no sudo)"
+                "  [cyan]atomate2siesta-cluster squid install --local --compile[/cyan] "
+                " (no sudo)"
             )
             console.print("\nOr manually:")
             console.print("  macOS:  [cyan]brew install squid[/cyan]")
@@ -257,29 +265,35 @@ def setup(
                 reverse_tunnel_created = True
                 proxy_url = f"http://127.0.0.1:{tunnel_port}"
                 console.print(
-                    f"[green]✓ Remote cluster can now access squid via {proxy_url}[/green]"
+                    f"[green]✓ Remote cluster can now access squid via "
+                    f"{proxy_url}[/green]"
                 )
                 console.print(
-                    "[dim]Note: Traffic flows: Remote → SSH tunnel → Your Mac → Internet[/dim]"
+                    "[dim]Note: Traffic flows: Remote → SSH tunnel → Your Mac → "
+                    "Internet[/dim]"
                 )
                 console.print(
                     "[dim]Using persistent tunnel for all commands (SquidMan fix)[/dim]"
                 )
                 if keep_squid_running:
                     console.print(
-                        "[dim]Squid and tunnel will keep running after setup completes[/dim]\n"
+                        "[dim]Squid and tunnel will keep running after setup "
+                        "completes[/dim]\n"
                     )
                 else:
                     console.print(
-                        "[dim]Squid and tunnel will be stopped after setup completes[/dim]\n"
+                        "[dim]Squid and tunnel will be stopped after setup "
+                        "completes[/dim]\n"
                     )
             else:
                 console.print("[red]✗ Failed to create reverse SSH tunnel![/red]")
                 console.print(
-                    "[yellow]This cluster's SSH server doesn't allow remote port forwarding (-R)[/yellow]"
+                    "[yellow]This cluster's SSH server doesn't allow remote port "
+                    "forwarding (-R)[/yellow]"
                 )
                 console.print(
-                    "[yellow]This is common on HPC clusters for security reasons.[/yellow]\n"
+                    "[yellow]This is common on HPC clusters for security "
+                    "reasons.[/yellow]\n"
                 )
 
                 # Stop squid since we're giving up
@@ -311,13 +325,16 @@ def setup(
                     "  3. [bold]Use cluster's local conda installation[/bold]"
                 )
                 console.print(
-                    "     If available: [cyan]module load conda[/cyan] or [cyan]module load miniconda[/cyan]\n"
+                    "     If available: [cyan]module load conda[/cyan] or [cyan]module "
+                    "load miniconda[/cyan]\n"
                 )
                 console.print(
-                    "[dim]Note: SSH SOCKS proxy (ssh -D) won't help here because it creates"
+                    "[dim]Note: SSH SOCKS proxy (ssh -D) won't help here because it "
+                    "creates"
                 )
                 console.print(
-                    "the proxy on YOUR machine, not the cluster. The cluster can't access it.[/dim]"
+                    "the proxy on YOUR machine, not the cluster. The cluster can't "
+                    "access it.[/dim]"
                 )
                 sys.exit(1)
         else:
@@ -326,17 +343,20 @@ def setup(
             console.print("  • Check if port is already in use")
             console.print("  • Try a different port with --tunnel-port <port>")
             console.print(
-                "  • Check squid status: [cyan]atomate2siesta-cluster squid status[/cyan]"
+                "  • Check squid status: [cyan]atomate2siesta-cluster squid "
+                "status[/cyan]"
             )
             sys.exit(1)
 
-    # Handle SSH tunnel for air-gapped clusters (only if not already created in fallback)
+    # Handle SSH tunnel for air-gapped clusters (only if not already created in
+    # fallback)
     if ssh_tunnel and not tunnel_created:
         console.print(
             "[yellow]⚠ --ssh-tunnel option is not supported on this cluster[/yellow]\n"
         )
         console.print(
-            "[dim]This option requires reverse port forwarding (-R) which this cluster blocks.[/dim]\n"
+            "[dim]This option requires reverse port forwarding (-R) which this cluster "
+            "blocks.[/dim]\n"
         )
         console.print("[yellow]Your options:[/yellow]")
         console.print("  1. [bold]Check if cluster has direct internet access[/bold]")
@@ -350,7 +370,7 @@ def setup(
         sys.exit(1)
 
     # Handle proxy configuration (if not already set by squid/tunnel)
-    if not ssh_tunnel and not use_squid:
+    if not ssh_tunnel and not use_squid:  # noqa: SIM102
         if auto_proxy and not proxy_url:
             console.print("[cyan]Attempting to auto-detect proxy...[/cyan]")
             detected_proxy = detect_proxy_on_remote(
@@ -412,7 +432,8 @@ def setup(
 
         # Step 2: Check if conda is available
         task = progress.add_task("[cyan]Checking for conda installation...", total=None)
-        # Use 'conda --version' instead of 'which conda' because conda is often a shell function
+        # Use 'conda --version' instead of 'which conda' because conda is often a shell
+        # function
         # and 'which' would return the function definition instead of the path
         returncode, stdout, stderr = run_ssh_command(
             host, user, "conda --version 2>&1", ssh_password, identity_file, ssh_config
@@ -425,7 +446,8 @@ def setup(
             # Check if we have proxy configured (--use-squid or --ssh-tunnel)
             if use_squid or ssh_tunnel:
                 console.print(
-                    "[yellow]No problem! We'll install it using the configured proxy.[/yellow]"
+                    "[yellow]No problem! We'll install it using the configured "
+                    "proxy.[/yellow]"
                 )
 
                 # Show correct proxy URL based on type
@@ -449,7 +471,7 @@ def setup(
                     else
                         echo 'NO_CURL'
                     fi
-                    """
+                    """  # noqa: E501
                 else:
                     # For HTTP proxy (squid/reverse tunnel), use http_proxy env var
                     proxy_test_cmd = f"""
@@ -460,9 +482,9 @@ def setup(
                     else
                         timeout 10 curl -I --silent --max-time 5 https://www.google.com >/dev/null 2>&1 && echo 'WORKS' || echo 'FAILED'
                     fi
-                    """
+                    """  # noqa: E501
 
-                returncode_proxy, stdout_proxy, stderr_proxy = run_ssh_command(
+                _returncode_proxy, stdout_proxy, _stderr_proxy = run_ssh_command(
                     host, user, proxy_test_cmd, ssh_password, identity_file, ssh_config
                 )
 
@@ -481,7 +503,7 @@ def setup(
                         source $HOME/miniconda3/bin/activate
                         conda init bash
                         echo "Conda installed successfully"
-                        """
+                        """  # noqa: E501
                     else:
                         # For HTTP proxy, use http_proxy env vars
                         install_cmd = f"""
@@ -499,7 +521,7 @@ def setup(
                         SpinnerColumn(),
                         TextColumn("[progress.description]{task.description}"),
                         console=console,
-                    ) as progress:
+                    ) as progress:  # noqa: PLW2901
                         task = progress.add_task(
                             "[cyan]Installing Miniconda...", total=None
                         )
@@ -525,18 +547,22 @@ def setup(
                             "[bold green]✓ Conda installed successfully![/bold green]"
                         )
                         console.print(
-                            "\n[yellow]⚠ Important: You need to log out and back in for conda to be available in PATH[/yellow]"
+                            "\n[yellow]⚠ Important: You need to log out and back in "
+                            "for conda to be available in PATH[/yellow]"
                         )
                         console.print(
-                            "[yellow]Then run this command again to continue setup:[/yellow]"
+                            "[yellow]Then run this command again to continue "
+                            "setup:[/yellow]"
                         )
                         if use_squid:
                             console.print(
-                                f"  [cyan]atomate2siesta-cluster setup --host {host} --ssh-config --use-squid[/cyan]"
+                                f"  [cyan]atomate2siesta-cluster setup --host {host} "
+                                f"--ssh-config --use-squid[/cyan]"
                             )
                         else:
                             console.print(
-                                f"  [cyan]atomate2siesta-cluster setup --host {host} --ssh-config --ssh-tunnel[/cyan]"
+                                f"  [cyan]atomate2siesta-cluster setup --host {host} "
+                                f"--ssh-config --ssh-tunnel[/cyan]"
                             )
                         sys.exit(0)
                     else:
@@ -550,14 +576,16 @@ def setup(
                     )
                     console.print("\n[bold]Please check:[/bold]")
                     console.print(
-                        "  1. Squid is running: [cyan]atomate2siesta-cluster squid status[/cyan]"
+                        "  1. Squid is running: [cyan]atomate2siesta-cluster squid "
+                        "status[/cyan]"
                     )
                     console.print("  2. Reverse tunnel is active")
                     sys.exit(1)
 
             # No proxy configured, show manual instructions
             console.print(
-                "[yellow]You need to install Miniconda in your HOME directory first.[/yellow]"
+                "[yellow]You need to install Miniconda in your HOME directory "
+                "first.[/yellow]"
             )
 
             # Check internet connectivity to provide appropriate instructions
@@ -572,8 +600,8 @@ def setup(
                     echo 'NO'
                 fi
             fi
-            """
-            returncode_net, stdout_net, stderr_net = run_ssh_command(
+            """  # noqa: E501
+            _returncode_net, stdout_net, _stderr_net = run_ssh_command(
                 host, user, internet_check_cmd, ssh_password, identity_file, ssh_config
             )
             has_internet = stdout_net.strip() == "YES"
@@ -585,27 +613,32 @@ def setup(
                     "  [cyan]wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh[/cyan]"
                 )
                 console.print(
-                    "  [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3[/cyan]"
+                    "  [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p "
+                    "$HOME/miniconda3[/cyan]"
                 )
                 console.print("  [cyan]source $HOME/miniconda3/bin/activate[/cyan]")
                 console.print("  [cyan]conda init bash[/cyan]")
                 console.print(
-                    "\n[dim]Then log out and back in, and run this setup command again.[/dim]"
+                    "\n[dim]Then log out and back in, and run this setup command "
+                    "again.[/dim]"
                 )
             else:
                 console.print(
                     "\n[red]✗ Cluster is air-gapped (no internet access)[/red]"
                 )
                 console.print(
-                    "\n[bold yellow]⚠ Special installation required for air-gapped clusters[/bold yellow]"
+                    "\n[bold yellow]⚠ Special installation required for air-gapped "
+                    "clusters[/bold yellow]"
                 )
                 console.print("\n[bold]Option 1: SSH SOCKS Tunnel (Recommended)[/bold]")
                 console.print(
-                    "  [dim]Step 1:[/dim] On your [bold]LOCAL machine[/bold], create SSH SOCKS tunnel:"
+                    "  [dim]Step 1:[/dim] On your [bold]LOCAL machine[/bold], create "
+                    "SSH SOCKS tunnel:"
                 )
                 console.print(f"    [cyan]ssh -D 9999 -N -f {host}[/cyan]")
                 console.print(
-                    "\n  [dim]Step 2:[/dim] On the [bold]CLUSTER[/bold] (via another SSH session):"
+                    "\n  [dim]Step 2:[/dim] On the [bold]CLUSTER[/bold] (via another "
+                    "SSH session):"
                 )
                 console.print(
                     "    [cyan]export http_proxy=http://127.0.0.1:9999[/cyan]"
@@ -617,18 +650,21 @@ def setup(
                     "    [cyan]wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh[/cyan]"
                 )
                 console.print(
-                    "    [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3[/cyan]"
+                    "    [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p "
+                    "$HOME/miniconda3[/cyan]"
                 )
                 console.print("    [cyan]source $HOME/miniconda3/bin/activate[/cyan]")
                 console.print("    [cyan]conda init bash[/cyan]")
                 console.print("\n  [dim]Step 3:[/dim] Log out and back in")
                 console.print("\n  [dim]Step 4:[/dim] Run setup with SSH tunnel:")
                 console.print(
-                    f"    [cyan]atomate2siesta-cluster setup --host {host} --ssh-config --ssh-tunnel[/cyan]"
+                    f"    [cyan]atomate2siesta-cluster setup --host {host} "
+                    f"--ssh-config --ssh-tunnel[/cyan]"
                 )
                 console.print("\n[bold]Option 2: Squid Proxy (using port 9999)[/bold]")
                 console.print(
-                    "  [dim]Step 1:[/dim] On your [bold]LOCAL machine[/bold], install and start Squid:"
+                    "  [dim]Step 1:[/dim] On your [bold]LOCAL machine[/bold], install "
+                    "and start Squid:"
                 )
                 console.print("    [cyan]atomate2siesta-cluster squid install[/cyan]")
                 console.print(
@@ -644,7 +680,8 @@ def setup(
                     "    [dim](maps local squid:9999 → cluster port:9999)[/dim]"
                 )
                 console.print(
-                    "\n  [dim]Step 3:[/dim] On the [bold]CLUSTER[/bold] (via another SSH session), install conda using proxy:"
+                    "\n  [dim]Step 3:[/dim] On the [bold]CLUSTER[/bold] (via another "
+                    "SSH session), install conda using proxy:"
                 )
                 console.print(
                     "    [cyan]export http_proxy=http://127.0.0.1:9999[/cyan]"
@@ -656,7 +693,8 @@ def setup(
                     "    [cyan]wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh[/cyan]"
                 )
                 console.print(
-                    "    [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3[/cyan]"
+                    "    [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p "
+                    "$HOME/miniconda3[/cyan]"
                 )
                 console.print("    [cyan]source $HOME/miniconda3/bin/activate[/cyan]")
                 console.print("    [cyan]conda init bash[/cyan]")
@@ -664,20 +702,25 @@ def setup(
                     "\n  [dim]Step 4:[/dim] Add proxy to ~/.bashrc (persistent):"
                 )
                 console.print(
-                    "    [cyan]echo 'export http_proxy=http://127.0.0.1:9999' >> ~/.bashrc[/cyan]"
+                    "    [cyan]echo 'export http_proxy=http://127.0.0.1:9999' >> "
+                    "~/.bashrc[/cyan]"
                 )
                 console.print(
-                    "    [cyan]echo 'export https_proxy=http://127.0.0.1:9999' >> ~/.bashrc[/cyan]"
+                    "    [cyan]echo 'export https_proxy=http://127.0.0.1:9999' >> "
+                    "~/.bashrc[/cyan]"
                 )
                 console.print(
-                    "\n  [dim]Step 5:[/dim] Log out and back in, then run setup with Squid:"
+                    "\n  [dim]Step 5:[/dim] Log out and back in, then run setup with "
+                    "Squid:"
                 )
                 console.print(
-                    f"    [cyan]atomate2siesta-cluster setup --host {host} --ssh-config --use-squid[/cyan]"
+                    f"    [cyan]atomate2siesta-cluster setup --host {host} "
+                    f"--ssh-config --use-squid[/cyan]"
                 )
                 console.print("\n[bold]Option 3: Transfer Miniconda Installer[/bold]")
                 console.print(
-                    "  [dim]Step 1:[/dim] On your [bold]LOCAL machine[/bold], download installer:"
+                    "  [dim]Step 1:[/dim] On your [bold]LOCAL machine[/bold], download "
+                    "installer:"
                 )
                 console.print(
                     "    [cyan]wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh[/cyan]"
@@ -690,7 +733,8 @@ def setup(
                     "\n  [dim]Step 3:[/dim] On the [bold]CLUSTER[/bold], install:"
                 )
                 console.print(
-                    "    [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3[/cyan]"
+                    "    [cyan]bash Miniconda3-latest-Linux-x86_64.sh -b -p "
+                    "$HOME/miniconda3[/cyan]"
                 )
                 console.print("    [cyan]source $HOME/miniconda3/bin/activate[/cyan]")
                 console.print("    [cyan]conda init bash[/cyan]")
@@ -698,44 +742,55 @@ def setup(
                     "\n  [dim]Step 4:[/dim] Log out and back in, then run setup:"
                 )
                 console.print(
-                    f"    [cyan]atomate2siesta-cluster setup --host {host} --ssh-config --ssh-tunnel[/cyan]"
+                    f"    [cyan]atomate2siesta-cluster setup --host {host} "
+                    f"--ssh-config --ssh-tunnel[/cyan]"
                 )
                 console.print(
-                    "\n[bold]Option 4: Build Offline Environment (Complete Solution)[/bold]"
+                    "\n[bold]Option 4: Build Offline Environment (Complete "
+                    "Solution)[/bold]"
                 )
                 console.print(
-                    "  [dim]Skip conda installation completely! Build full environment locally:[/dim]"
+                    "  [dim]Skip conda installation completely! Build full environment "
+                    "locally:[/dim]"
                 )
                 console.print(
-                    "    [cyan]atomate2siesta-cluster build-offline --install-siesta[/cyan]"
+                    "    [cyan]atomate2siesta-cluster build-offline "
+                    "--install-siesta[/cyan]"
                 )
                 console.print(f"    [cyan]scp atomate2siesta.tar.gz {host}:~/[/cyan]")
                 console.print(
-                    "\n  [dim]Then on cluster, unpack and use directly (no setup command needed!):[/dim]"
+                    "\n  [dim]Then on cluster, unpack and use directly (no setup "
+                    "command needed!):[/dim]"
                 )
                 console.print(
                     "    [cyan]mkdir -p ~/miniconda3/envs/atomate2siesta[/cyan]"
                 )
                 console.print(
-                    "    [cyan]tar -xzf atomate2siesta.tar.gz -C ~/miniconda3/envs/atomate2siesta[/cyan]"
+                    "    [cyan]tar -xzf atomate2siesta.tar.gz -C "
+                    "~/miniconda3/envs/atomate2siesta[/cyan]"
                 )
                 console.print(
-                    "    [cyan]source ~/miniconda3/envs/atomate2siesta/bin/activate[/cyan]"
+                    "    [cyan]source "
+                    "~/miniconda3/envs/atomate2siesta/bin/activate[/cyan]"
                 )
                 console.print("    [cyan]conda-unpack[/cyan]")
 
             console.print("\n[bold cyan]Recommendation:[/bold cyan]")
             console.print(
-                "  • [bold]Option 1 (SSH Tunnel)[/bold] - Easiest, works for conda + package installation"
+                "  • [bold]Option 1 (SSH Tunnel)[/bold] - Easiest, works for conda + "
+                "package installation"
             )
             console.print(
-                "  • [bold]Option 2 (Squid)[/bold] - More persistent, good for multiple setups"
+                "  • [bold]Option 2 (Squid)[/bold] - More persistent, good for "
+                "multiple setups"
             )
             console.print(
-                "  • [bold]Option 4 (Build Offline)[/bold] - Most reliable, includes everything pre-built"
+                "  • [bold]Option 4 (Build Offline)[/bold] - Most reliable, includes "
+                "everything pre-built"
             )
             console.print(
-                f"\n[dim]Run [cyan]atomate2siesta-cluster status --host {host} --ssh-config[/cyan] to verify installation[/dim]"
+                f"\n[dim]Run [cyan]atomate2siesta-cluster status --host {host} "
+                f"--ssh-config[/cyan] to verify installation[/dim]"
             )
             sys.exit(1)
 
@@ -775,7 +830,8 @@ def setup(
             check_python_cmd = (
                 f"source $(conda info --base)/etc/profile.d/conda.sh && "
                 f"conda activate {env_name} && "
-                f"python -c 'import sys; print(f\"{{sys.version_info.major}}.{{sys.version_info.minor}}\")'"
+                f"python -c 'import sys; "
+                f'print(f"{{sys.version_info.major}}.{{sys.version_info.minor}}")\''
             )
 
             returncode, stdout, stderr = run_ssh_command(
@@ -786,7 +842,8 @@ def setup(
                 progress.update(task, completed=True)
                 progress.stop()
                 console.print(
-                    "[red]✗ Failed to check Python version in existing environment[/red]"
+                    "[red]✗ Failed to check Python version in existing "
+                    "environment[/red]"
                 )
                 if not Confirm.ask("Remove existing environment and recreate?"):
                     console.print("[yellow]Setup cancelled.[/yellow]")
@@ -801,10 +858,12 @@ def setup(
                 if existing_py_version != python_version:
                     progress.stop()
                     console.print(
-                        f"[yellow]⚠ Python version mismatch: found {existing_py_version}, want {python_version}[/yellow]"
+                        f"[yellow]⚠ Python version mismatch: found "
+                        f"{existing_py_version}, want {python_version}[/yellow]"
                     )
                     if not Confirm.ask(
-                        f"Remove existing environment and recreate with Python {python_version}?"
+                        f"Remove existing environment and recreate with Python "
+                        f"{python_version}?"
                     ):
                         console.print("[yellow]Setup cancelled.[/yellow]")
                         sys.exit(0)
@@ -873,7 +932,7 @@ def setup(
                 f"source $(conda info --base)/etc/profile.d/conda.sh && "
                 f"conda activate {env_name} 2>/dev/null && echo 'EXISTS'"
             )
-            returncode_verify, stdout_verify, _ = run_ssh_command(
+            _returncode_verify, stdout_verify, _ = run_ssh_command(
                 host, user, verify_cmd, ssh_password, identity_file, ssh_config
             )
 
@@ -898,7 +957,8 @@ def setup(
                         and "Set INTEL compilers" not in line
                     )
                     console.print(
-                        "\n[bold red]✗ Failed to remove existing environment![/bold red]"
+                        "\n[bold red]✗ Failed to remove existing environment![/bold "
+                        "red]"
                     )
                     if clean_stderr.strip():
                         console.print(f"[red]Error: {clean_stderr}[/red]")
@@ -927,7 +987,8 @@ def setup(
             else:
                 create_cmd = f"conda create -n {env_name} python={python_version} -y"
 
-            # Note: We already have a persistent background tunnel (created with -f flag)
+            # Note: We already have a persistent background tunnel (created with -f
+            # flag)
             # Just use regular run_ssh_command - the existing tunnel handles proxy
             returncode, stdout, stderr = run_ssh_command(
                 host, user, create_cmd, ssh_password, identity_file, ssh_config
@@ -950,7 +1011,8 @@ def setup(
             show_verbose_output(stdout, stderr, verbose)
         else:
             console.print(
-                f"[green]✓ Using existing environment '{env_name}' with Python {python_version}[/green]"
+                f"[green]✓ Using existing environment '{env_name}' with Python "
+                f"{python_version}[/green]"
             )
 
         # Step 5: Install jobflow-remote
@@ -1093,7 +1155,8 @@ def setup(
                     f'conda install -y -c conda-forge "siesta=*=*mpich*"'
                 )
 
-            # Note: We already have a persistent background tunnel (created with -f flag)
+            # Note: We already have a persistent background tunnel (created with -f
+            # flag)
             # Just use regular run_ssh_command - the existing tunnel handles proxy
             returncode, stdout, stderr = run_ssh_command(
                 host,
@@ -1116,7 +1179,8 @@ def setup(
                     show_proxy_error_help(proxy_url)
                 else:
                     console.print(
-                        "\n[yellow]Note: You can install SIESTA manually later with:[/yellow]"
+                        "\n[yellow]Note: You can install SIESTA manually later "
+                        "with:[/yellow]"
                     )
                     console.print(f"  conda activate {env_name}")
                     console.print('  conda install -c conda-forge "siesta=*=*mpich*"')
@@ -1283,7 +1347,8 @@ ELASTIC_FITTING_METHOD: finite_difference
         installed_msg += " (including SIESTA)"
     installed_msg += "."
 
-    # Cleanup squid and reverse tunnel if they were started (unless user wants to keep them running)
+    # Cleanup squid and reverse tunnel if they were started (unless user wants to keep
+    # them running)
     if squid_started and not keep_squid_running:
         console.print()
         console.print("[cyan]Stopping Squid HTTP proxy and reverse tunnel...[/cyan]")
@@ -1398,7 +1463,7 @@ def status(
     env_name: str,
     use_squid: bool,
     squid_port: int,
-):
+) -> None:
     """Check status of remote cluster environment.
 
     This command checks:
@@ -1424,7 +1489,7 @@ def status(
 
         # Test if squid proxy is working (requires SSH tunnel + squid running locally)
         atomate2siesta-cluster status --host mn5-glogin1 --ssh-config --use-squid --squid-port 9999
-    """
+    """  # noqa: E501
     console.print("\n[bold cyan]Checking Remote Cluster Status[/bold cyan]\n")
 
     # Handle SSH config mode
@@ -1513,7 +1578,7 @@ def status(
         # Not found
         echo "CONDA_NOT_FOUND"
         exit 1
-        """
+        """  # noqa: E501
 
         returncode, stdout, stderr = run_ssh_command(
             host, user, conda_check_cmd, ssh_password, identity_file, ssh_config
@@ -1539,7 +1604,8 @@ def status(
                 progress.console.print(f"[dim]  Found: module load {module_name}[/dim]")
             progress.console.print("\n[yellow]  Why this won't work:[/yellow]")
             progress.console.print(
-                "    • Module conda is [bold]system-wide[/bold] (read-only, can't install packages)"
+                "    • Module conda is [bold]system-wide[/bold] (read-only, can't "
+                "install packages)"
             )
             progress.console.print(
                 "    • [bold]Not persistent[/bold] - need 'module load' every session"
@@ -1614,7 +1680,7 @@ def status(
             task = progress.add_task(
                 f"[cyan]Checking environment '{env_name}'...", total=None
             )
-            returncode, stdout_env, stderr = run_ssh_command(
+            returncode, _stdout_env, stderr = run_ssh_command(
                 host,
                 user,
                 f"conda env list | grep -w {env_name}",
@@ -1638,7 +1704,8 @@ def status(
                 check_cmd = (
                     f"source $(conda info --base)/etc/profile.d/conda.sh && "
                     f"conda activate {env_name} && "
-                    f"pip list | grep -E '(jobflow-remote|atomate2siesta|maggma|monty|pydantic)'"
+                    f"pip list | grep -E "
+                    f"'(jobflow-remote|atomate2siesta|maggma|monty|pydantic)'"
                 )
 
                 returncode, packages_stdout, stderr = run_ssh_command(
@@ -1693,7 +1760,7 @@ def status(
                 echo 'NO'
             fi
         fi
-        """
+        """  # noqa: E501
         returncode, stdout_direct, stderr = run_ssh_command(
             host, user, direct_access_cmd, ssh_password, identity_file, ssh_config
         )
@@ -1747,7 +1814,7 @@ def status(
                 else
                     echo 'NO_TOOLS'
                 fi
-                """
+                """  # noqa: E501
             else:
                 squid_vars_set = False
                 # Test with temporary proxy settings
@@ -1771,7 +1838,7 @@ def status(
                 else
                     echo 'NO_TOOLS'
                 fi
-                """
+                """  # noqa: E501
 
             returncode, stdout_squid, stderr = run_ssh_command(
                 host, user, squid_test_cmd, ssh_password, identity_file, ssh_config
@@ -1779,7 +1846,10 @@ def status(
             squid_works = "PROXY_WORKS" in stdout_squid
 
         # Check .condarc for proxy
-        condarc_cmd = "test -f ~/.condarc && grep -A2 'proxy_servers' ~/.condarc || echo 'No proxy in .condarc'"
+        condarc_cmd = (
+            "test -f ~/.condarc && grep -A2 'proxy_servers' ~/.condarc || echo 'No "
+            "proxy in .condarc'"
+        )
         returncode, stdout_condarc, stderr = run_ssh_command(
             host, user, condarc_cmd, ssh_password, identity_file, ssh_config
         )
@@ -1851,16 +1921,19 @@ def status(
     # Special handling for --use-squid flag
     if use_squid:
         console.print(
-            f"[dim]Testing with squid proxy on port {squid_port} (default: 9999, use --squid-port to change)[/dim]\n"
+            f"[dim]Testing with squid proxy on port {squid_port} (default: 9999, use "
+            f"--squid-port to change)[/dim]\n"
         )
 
         if squid_works and squid_vars_set:
             # Perfect: proxy works AND vars are already configured
             console.print(
-                "[bold green]✓ Squid proxy is fully configured and working![/bold green]"
+                "[bold green]✓ Squid proxy is fully configured and working![/bold "
+                "green]"
             )
             console.print(
-                f"[bold green]Proxy variables are set: http_proxy=http://127.0.0.1:{squid_port}[/bold green]"
+                f"[bold green]Proxy variables are set: "
+                f"http_proxy=http://127.0.0.1:{squid_port}[/bold green]"
             )
             console.print(
                 "[bold green]Internet is accessible through proxy[/bold green]"
@@ -1880,11 +1953,13 @@ def status(
         elif squid_works and not squid_vars_set:
             # Proxy works in test but vars not configured permanently
             console.print(
-                "[yellow]⚠ Squid proxy works, but environment variables NOT configured![/yellow]"
+                "[yellow]⚠ Squid proxy works, but environment variables NOT "
+                "configured![/yellow]"
             )
             console.print("[dim]Test succeeded with temporary proxy settings[/dim]")
             console.print(
-                "[dim]But http_proxy/https_proxy are not set in your environment[/dim]\n"
+                "[dim]But http_proxy/https_proxy are not set in your "
+                "environment[/dim]\n"
             )
             console.print("[bold red]ACTION REQUIRED ON THE CLUSTER:[/bold red]")
             console.print(
@@ -1896,14 +1971,17 @@ def status(
                 "  [bold]Step 2: Add to ~/.bashrc (recommended - permanent)[/bold]"
             )
             console.print(
-                f"    [cyan]echo 'export http_proxy=http://127.0.0.1:{squid_port}' >> ~/.bashrc[/cyan]"
+                f"    [cyan]echo 'export http_proxy=http://127.0.0.1:{squid_port}' >> "
+                f"~/.bashrc[/cyan]"
             )
             console.print(
-                f"    [cyan]echo 'export https_proxy=http://127.0.0.1:{squid_port}' >> ~/.bashrc[/cyan]"
+                f"    [cyan]echo 'export https_proxy=http://127.0.0.1:{squid_port}' >> "
+                f"~/.bashrc[/cyan]"
             )
             console.print("    [cyan]source ~/.bashrc[/cyan]\n")
             console.print(
-                "  [bold]OR Step 2: Export now (temporary - only for current session)[/bold]"
+                "  [bold]OR Step 2: Export now (temporary - only for current "
+                "session)[/bold]"
             )
             console.print(
                 f"    [cyan]export http_proxy=http://127.0.0.1:{squid_port}[/cyan]"
@@ -1920,21 +1998,25 @@ def status(
             console.print("[red]✗ Squid proxy is not working![/red]")
             if not squid_vars_set:
                 console.print(
-                    "[yellow]Note: Proxy environment variables are also not configured[/yellow]\n"
+                    "[yellow]Note: Proxy environment variables are also not "
+                    "configured[/yellow]\n"
                 )
             console.print("\n[bold]Troubleshooting steps:[/bold]")
             console.print(
                 "  1. Check if squid is running on your [bold]LOCAL[/bold] machine:"
             )
             console.print(
-                f"     [cyan]atomate2siesta-cluster squid status --port {squid_port}[/cyan]"
+                f"     [cyan]atomate2siesta-cluster squid status --port "
+                f"{squid_port}[/cyan]"
             )
             console.print("     If not running, start it:")
             console.print(
-                f"     [cyan]atomate2siesta-cluster squid start --port {squid_port}[/cyan]\n"
+                f"     [cyan]atomate2siesta-cluster squid start --port "
+                f"{squid_port}[/cyan]\n"
             )
             console.print(
-                "  2. Check if SSH reverse tunnel is active on your [bold]LOCAL[/bold] machine:"
+                "  2. Check if SSH reverse tunnel is active on your [bold]LOCAL[/bold] "
+                "machine:"
             )
             console.print(f"     [cyan]lsof -i :{squid_port}[/cyan]")
             console.print(
@@ -1945,7 +2027,8 @@ def status(
                 f"     [cyan]ssh -R {squid_port}:localhost:{squid_port} {host}[/cyan]"
             )
             console.print(
-                f"     [dim](maps local squid:{squid_port} → remote port:{squid_port})[/dim]"
+                f"     [dim](maps local squid:{squid_port} → remote "
+                f"port:{squid_port})[/dim]"
             )
             console.print("     [dim]Keep this terminal open![/dim]\n")
             console.print("  4. Configure proxy on cluster (in a different terminal):")
@@ -1958,47 +2041,57 @@ def status(
             )
             console.print("     Or add to ~/.bashrc for persistence:")
             console.print(
-                f"     [cyan]echo 'export http_proxy=http://127.0.0.1:{squid_port}' >> ~/.bashrc[/cyan]"
+                f"     [cyan]echo 'export http_proxy=http://127.0.0.1:{squid_port}' >> "
+                f"~/.bashrc[/cyan]"
             )
             console.print(
-                f"     [cyan]echo 'export https_proxy=http://127.0.0.1:{squid_port}' >> ~/.bashrc[/cyan]"
+                f"     [cyan]echo 'export https_proxy=http://127.0.0.1:{squid_port}' "
+                f">> ~/.bashrc[/cyan]"
             )
             console.print("     [cyan]source ~/.bashrc[/cyan]\n")
             console.print("  5. Verify the complete chain:")
             console.print(
-                f"     • Local squid: [cyan]atomate2siesta-cluster squid status --port {squid_port}[/cyan]"
+                f"     • Local squid: [cyan]atomate2siesta-cluster squid status --port "
+                f"{squid_port}[/cyan]"
             )
             console.print(
-                f"     • SSH tunnel: [cyan]lsof -i :{squid_port}[/cyan] (on local machine)"
+                f"     • SSH tunnel: [cyan]lsof -i :{squid_port}[/cyan] (on local "
+                f"machine)"
             )
             console.print(
                 f"     • Cluster proxy: [cyan]echo $http_proxy[/cyan] (should show http://127.0.0.1:{squid_port})"
             )
             console.print(
-                "     • Internet test: [cyan]wget --spider https://www.google.com[/cyan] (on cluster)"
+                "     • Internet test: [cyan]wget --spider "
+                "https://www.google.com[/cyan] (on cluster)"
             )
             console.print(
-                "\n  [dim]Tip: Using the same port ({squid_port}) for both local squid and remote access keeps it simple![/dim]"
+                "\n  [dim]Tip: Using the same port ({squid_port}) for both local squid "
+                "and remote access keeps it simple![/dim]"
             )
     elif has_direct_access:
         console.print("[green]✓ Cluster has direct internet access[/green]")
         if conda_found:
             console.print(
-                "[dim]Package installation should work without proxy configuration[/dim]"
+                "[dim]Package installation should work without proxy "
+                "configuration[/dim]"
             )
         else:
             console.print(
-                "[yellow]Install conda first, then run atomate2siesta-cluster setup[/yellow]"
+                "[yellow]Install conda first, then run atomate2siesta-cluster "
+                "setup[/yellow]"
             )
     elif has_proxy_env or "proxy_servers" in stdout_condarc:
         console.print("[yellow]⚠ Proxy configured but direct access blocked[/yellow]")
         if conda_found:
             console.print(
-                "[dim]Package installation will use proxy - test with: conda search python[/dim]"
+                "[dim]Package installation will use proxy - test with: conda search "
+                "python[/dim]"
             )
         else:
             console.print(
-                "[yellow]Install conda first, then run atomate2siesta-cluster setup with proxy flags[/yellow]"
+                "[yellow]Install conda first, then run atomate2siesta-cluster setup "
+                "with proxy flags[/yellow]"
             )
     else:
         console.print("[red]⚠ No internet access detected![/red]")
@@ -2006,7 +2099,8 @@ def status(
 
         if not conda_found:
             console.print(
-                "\n[bold yellow]⚠ IMPORTANT: You need to install your own conda first![/bold yellow]"
+                "\n[bold yellow]⚠ IMPORTANT: You need to install your own conda "
+                "first![/bold yellow]"
             )
             console.print(
                 "  (Module conda is read-only and won't work for package installation)"
@@ -2104,7 +2198,7 @@ def status(
 
 
 @cli.command()
-def info():
+def info() -> None:
     """Show information about cluster setup.
 
     This command displays usage information, examples, and common workflows.
@@ -2183,13 +2277,15 @@ def info():
 
     examples_panel = Panel(
         "# NEW! Set up SSH access (easiest way):\n"
-        "[cyan]atomate2siesta-cluster ssh-setup add --alias mycluster --hostname cluster.edu --user myuser --generate-key --copy-id[/cyan]\n\n"
+        "[cyan]atomate2siesta-cluster ssh-setup add --alias mycluster --hostname "
+        "cluster.edu --user myuser --generate-key --copy-id[/cyan]\n\n"
         "# Check your SSH configuration:\n"
         "[cyan]atomate2siesta-cluster ssh-setup status[/cyan]\n\n"
         "# Test SSH connection:\n"
         "[cyan]atomate2siesta-cluster ssh-setup test mycluster[/cyan]\n\n"
         "# Set up cluster with SSH config (RECOMMENDED):\n"
-        "[cyan]atomate2siesta-cluster setup --host mycluster --ssh-config --install-siesta[/cyan]\n\n"
+        "[cyan]atomate2siesta-cluster setup --host mycluster --ssh-config "
+        "--install-siesta[/cyan]\n\n"
         "# Check status:\n"
         "[cyan]atomate2siesta-cluster status --host mycluster --ssh-config[/cyan]\n\n"
         "# Air-gapped cluster with squid proxy:\n"
@@ -2214,12 +2310,14 @@ def info():
         "       --hostname cluster.university.edu \\\n"
         "       --user myuser \\\n"
         "       --generate-key --copy-id[/cyan]\n\n"
-        "   [dim]This generates SSH keys, creates config, and enables passwordless login![/dim]\n\n"
+        "   [dim]This generates SSH keys, creates config, and enables passwordless "
+        "login![/dim]\n\n"
         "2. Check your SSH setup:\n"
         "   [cyan]atomate2siesta-cluster ssh-setup status[/cyan]\n"
         "   [cyan]atomate2siesta-cluster ssh-setup test mycluster[/cyan]\n\n"
         "3. Set up cluster environment:\n"
-        "   [cyan]atomate2siesta-cluster setup --host mycluster --ssh-config --install-siesta[/cyan]\n\n"
+        "   [cyan]atomate2siesta-cluster setup --host mycluster --ssh-config "
+        "--install-siesta[/cyan]\n\n"
         "4. SSH to cluster and configure jobflow-remote:\n"
         "   [cyan]ssh mycluster[/cyan]\n"
         "   [cyan]conda activate atomate2siesta[/cyan]\n"
@@ -2243,7 +2341,7 @@ def _build_offline_docker(
     env_name: str,
     python_version: str,
     install_siesta: bool,
-):
+) -> None:
     """Build offline environment using Docker for Linux compatibility."""
     import os
     import subprocess
@@ -2253,7 +2351,11 @@ def _build_offline_docker(
     console.print("[cyan]Checking Docker installation...[/cyan]")
     try:
         result = subprocess.run(
-            ["docker", "--version"], capture_output=True, text=True, timeout=5
+            ["docker", "--version"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
         if result.returncode != 0:
             console.print("[red]✗ Docker not found![/red]")
@@ -2267,7 +2369,7 @@ def _build_offline_docker(
             console.print("  Linux:   https://docs.docker.com/engine/install/")
             sys.exit(1)
         console.print(f"[green]✓ Docker found:[/green] {result.stdout.strip()}\n")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         console.print(f"[red]✗ Docker check failed: {e}[/red]")
         sys.exit(1)
 
@@ -2275,7 +2377,11 @@ def _build_offline_docker(
     console.print("[cyan]Checking Docker daemon...[/cyan]")
     try:
         result = subprocess.run(
-            ["docker", "info"], capture_output=True, text=True, timeout=10
+            ["docker", "info"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
         )
         if result.returncode != 0:
             console.print("[red]✗ Docker daemon is not running![/red]")
@@ -2284,7 +2390,7 @@ def _build_offline_docker(
             )
             sys.exit(1)
         console.print("[green]✓ Docker daemon is running[/green]\n")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         console.print(f"[red]✗ Docker daemon check failed: {e}[/red]")
         sys.exit(1)
 
@@ -2318,7 +2424,7 @@ conda run -n {env_name} pip install 'atomate2[siesta]'
             build_script += f"""
 echo "Installing SIESTA..."
 conda run -n {env_name} conda install -y -c conda-forge 'siesta=*=*mpich*' || echo "Warning: SIESTA installation failed"
-"""
+"""  # noqa: E501
 
         # Add conda-pack step
         build_script += f"""
@@ -2333,7 +2439,7 @@ ls -lh /output/{output}
         script_path = os.path.join(tmpdir, "build.sh")
         with open(script_path, "w") as f:
             f.write(build_script)
-        os.chmod(script_path, 0o755)
+        os.chmod(script_path, 0o755)  # noqa: S103
 
         # Get absolute path for output directory
         output_dir = os.path.abspath(os.path.dirname(output) or ".")
@@ -2410,12 +2516,12 @@ ls -lh /output/{output}
         except KeyboardInterrupt:
             console.print("\n[yellow]Build interrupted by user[/yellow]")
             sys.exit(1)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             console.print(f"\n[red]✗ Docker build error: {e}[/red]")
             sys.exit(1)
 
 
-def _show_offline_next_steps(output: str, env_name: str):
+def _show_offline_next_steps(output: str, env_name: str) -> None:
     """Show next steps for using the offline environment."""
     next_steps = Panel(
         "[bold]Next Steps:[/bold]\n\n"
@@ -2429,9 +2535,10 @@ def _show_offline_next_steps(output: str, env_name: str):
         f"   [cyan]source ~/miniconda3/envs/{env_name}/bin/activate[/cyan]\n"
         f"   [cyan]conda-unpack[/cyan]\n\n"
         f"4. Verify installation:\n"
-        f"   [cyan]python -c \"import jobflow_remote; import atomate2.siesta; print('Success!')\"[/cyan]\n\n"
+        f"   [cyan]python -c \"import jobflow_remote; import atomate2.siesta; print('Success!')\"[/cyan]\n\n"  # noqa: E501
         f"[bold]Or use automated transfer:[/bold]\n"
-        f"   [cyan]atomate2siesta-cluster setup --host cluster --ssh-config --offline {output}[/cyan]",
+        f"   [cyan]atomate2siesta-cluster setup --host cluster --ssh-config --offline "
+        f"{output}[/cyan]",
         title="📦 Offline Environment Ready",
         style="green",
     )
@@ -2463,7 +2570,10 @@ def _show_offline_next_steps(output: str, env_name: str):
 @click.option(
     "--use-docker",
     is_flag=True,
-    help="Build inside Docker container for Linux compatibility (recommended for macOS/Windows)",
+    help=(
+        "Build inside Docker container for Linux compatibility (recommended for "
+        "macOS/Windows)"
+    ),
 )
 def build_offline(
     output: str,
@@ -2471,7 +2581,7 @@ def build_offline(
     python_version: str,
     install_siesta: bool,
     use_docker: bool,
-):
+) -> None:
     """Build offline conda environment for air-gapped clusters.
 
     This command builds a complete conda environment locally, packs it using
@@ -2557,14 +2667,17 @@ def build_offline(
     if current_system != "Linux" or current_arch != "x86_64":
         console.print(
             Panel.fit(
-                "[bold red]❌ ARCHITECTURE MISMATCH - BUILD WILL FAIL ON CLUSTER![/bold red]\n\n"
+                "[bold red]❌ ARCHITECTURE MISMATCH - BUILD WILL FAIL ON "
+                "CLUSTER![/bold red]\n\n"
                 f"[bold]Your System:[/bold]     {current_system} {current_arch}\n"
                 f"[bold]Target Cluster:[/bold]  Linux x86_64\n\n"
-                "[bold yellow]The Python binaries you build here CANNOT run on the cluster![/bold yellow]\n"
+                "[bold yellow]The Python binaries you build here CANNOT run on the "
+                "cluster![/bold yellow]\n"
                 "[dim]You will get: 'cannot execute binary file' errors[/dim]\n\n"
                 "[bold cyan]Solutions:[/bold cyan]\n"
                 "  1. [green]Use Docker (recommended):[/green]\n"
-                f"     [cyan]atomate2siesta-cluster build-offline --use-docker -o {output}[/cyan]\n\n"
+                f"     [cyan]atomate2siesta-cluster build-offline --use-docker -o "
+                f"{output}[/cyan]\n\n"
                 "  2. [yellow]Build on a Linux x86_64 machine[/yellow]\n\n"
                 "  3. [yellow]Use a cloud Linux instance or VM[/yellow]",
                 style="bold red",
@@ -2588,7 +2701,12 @@ def build_offline(
     ) as progress:
         # Step 1: Check if conda is available
         task = progress.add_task("[cyan]Checking for conda...", total=None)
-        result = subprocess.run(["which", "conda"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["which", "conda"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         if result.returncode != 0:
             progress.stop()
             console.print("[red]✗ conda not found![/red]")
@@ -2601,9 +2719,10 @@ def build_offline(
         # Step 2: Check if conda-pack is installed in base environment
         task = progress.add_task("[cyan]Checking for conda-pack...", total=None)
         result = subprocess.run(
-            ["conda", "list", "-n", "base", "conda-pack"],
+            ["conda", "list", "-n", "base", "conda-pack"],  # noqa: S607
             capture_output=True,
             text=True,
+            check=False,
         )
         if "conda-pack" not in result.stdout:
             progress.stop()
@@ -2611,13 +2730,15 @@ def build_offline(
                 "[yellow]Installing conda-pack in base environment...[/yellow]"
             )
             console.print(
-                "[dim]conda-pack is required for packing environments (conda-only tool)[/dim]"
+                "[dim]conda-pack is required for packing environments (conda-only "
+                "tool)[/dim]"
             )
             console.print(
-                "[dim]This is normal and only happens once - it will be installed to your base environment[/dim]\n"
+                "[dim]This is normal and only happens once - it will be installed to "
+                "your base environment[/dim]\n"
             )
             result = subprocess.run(
-                [
+                [  # noqa: S607
                     "conda",
                     "install",
                     "-n",
@@ -2629,6 +2750,7 @@ def build_offline(
                 ],
                 capture_output=False,  # Show installation progress to user
                 text=True,
+                check=False,
             )
             if result.returncode != 0:
                 console.print("[red]✗ Failed to install conda-pack![/red]")
@@ -2641,7 +2763,7 @@ def build_offline(
                 sys.exit(1)
             console.print("\n[green]✓ conda-pack installed successfully[/green]\n")
             # Restart progress after installation
-            progress = Progress(
+            progress = Progress(  # noqa: PLW2901
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 console=console,
@@ -2656,9 +2778,10 @@ def build_offline(
             f"[cyan]Creating conda environment '{env_name}'...", total=None
         )
         result = subprocess.run(
-            ["conda", "create", "-n", env_name, f"python={python_version}", "-y"],
+            ["conda", "create", "-n", env_name, f"python={python_version}", "-y"],  # noqa: S607
             capture_output=True,
             text=True,
+            check=False,
         )
         if result.returncode != 0:
             progress.stop()
@@ -2674,9 +2797,10 @@ def build_offline(
             "  [dim]Repository: https://pypi.org/project/jobflow-remote/[/dim]"
         )
         result = subprocess.run(
-            ["conda", "run", "-n", env_name, "pip", "install", "jobflow-remote"],
+            ["conda", "run", "-n", env_name, "pip", "install", "jobflow-remote"],  # noqa: S607
             capture_output=True,
             text=True,
+            check=False,
         )
         if result.returncode != 0:
             progress.stop()
@@ -2691,9 +2815,10 @@ def build_offline(
         console.print("  [dim]Package: atomate2[siesta] (PyPI)[/dim]")
 
         result = subprocess.run(
-            ["conda", "run", "-n", env_name, "pip", "install", "atomate2[siesta]"],
+            ["conda", "run", "-n", env_name, "pip", "install", "atomate2[siesta]"],  # noqa: S607
             capture_output=True,
             text=True,
+            check=False,
         )
         if result.returncode != 0:
             progress.stop()
@@ -2713,7 +2838,7 @@ def build_offline(
                 "[cyan]Installing SIESTA from conda-forge...", total=None
             )
             result = subprocess.run(
-                [
+                [  # noqa: S607
                     "conda",
                     "run",
                     "-n",
@@ -2727,6 +2852,7 @@ def build_offline(
                 ],
                 capture_output=True,
                 text=True,
+                check=False,
             )
             if result.returncode != 0:
                 progress.stop()
@@ -2742,7 +2868,7 @@ def build_offline(
             f"[cyan]Packing environment to {output}...", total=None
         )
         result = subprocess.run(
-            [
+            [  # noqa: S607
                 "conda",
                 "run",
                 "-n",
@@ -2757,6 +2883,7 @@ def build_offline(
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
         if result.returncode != 0:
             progress.stop()
@@ -2782,7 +2909,9 @@ def build_offline(
     # Cleanup option
     if Confirm.ask(f"\nRemove local environment '{env_name}'? (keeps {output})"):
         subprocess.run(
-            ["conda", "env", "remove", "-n", env_name, "-y"], capture_output=True
+            ["conda", "env", "remove", "-n", env_name, "-y"],  # noqa: S607
+            capture_output=True,
+            check=False,
         )
         console.print(f"[green]✓ Removed local environment '{env_name}'[/green]")
 
@@ -2820,8 +2949,13 @@ def build_offline(
     help="Compile squid from source (no sudo required, takes ~10 min)",
 )
 def squid(
-    action: str, port: int, remove: bool, local: bool, install_dir: str, compile: bool
-):
+    action: str,
+    port: int,
+    remove: bool,
+    local: bool,
+    install_dir: str,
+    compile: bool,  # noqa: A002
+) -> None:
     """Manage Squid HTTP proxy for air-gapped clusters.
 
     Squid provides an HTTP/HTTPS proxy that conda and pip can use, allowing
@@ -2860,7 +2994,7 @@ def squid(
       $ export http_proxy=http://127.0.0.1:9999
       $ export https_proxy=http://127.0.0.1:9999
       $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    """
+    """  # noqa: D301,E501
     console.print(
         Panel.fit(
             f"[bold]Squid HTTP Proxy Manager[/bold]\nAction: {action}",
@@ -2887,7 +3021,8 @@ def squid(
             # If --compile flag, compile from source
             if compile:
                 console.print(
-                    "[bold yellow]Compiling Squid from source (takes ~10 minutes)[/bold yellow]\n"
+                    "[bold yellow]Compiling Squid from source (takes ~10 "
+                    "minutes)[/bold yellow]\n"
                 )
 
                 # Set installation directory
@@ -2917,19 +3052,25 @@ def squid(
 
                 try:
 
-                    def reporthook(blocknum, blocksize, totalsize):
+                    def reporthook(
+                        blocknum: int, blocksize: int, totalsize: int
+                    ) -> None:
                         readsofar = blocknum * blocksize
                         if totalsize > 0:
                             percent = readsofar * 100 / totalsize
-                            s = f"\r[cyan]Progress:[/cyan] {percent:.1f}% ({readsofar // (1024 * 1024)} MB / {totalsize // (1024 * 1024)} MB)"
+                            s = (
+                                f"\r[cyan]Progress:[/cyan] {percent:.1f}% "
+                                f"({readsofar // (1024 * 1024)} MB / "
+                                f"{totalsize // (1024 * 1024)} MB)"
+                            )
                             console.print(s, end="")
                             if readsofar >= totalsize:
                                 console.print()
 
-                    urllib.request.urlretrieve(squid_url, download_path, reporthook)
+                    urllib.request.urlretrieve(squid_url, download_path, reporthook)  # noqa: S310
                     console.print("[green]✓ Download complete[/green]")
 
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     console.print(f"\n[red]✗ Download failed: {e}[/red]")
                     console.print(
                         "\n[yellow]Alternative: Download manually from:[/yellow]"
@@ -2941,9 +3082,9 @@ def squid(
                 console.print("\n[yellow]Extracting source code...[/yellow]")
                 try:
                     with tarfile.open(download_path, "r:gz") as tar:
-                        tar.extractall(build_dir)
+                        tar.extractall(build_dir)  # noqa: S202
                     console.print("[green]✓ Extraction complete[/green]")
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     console.print(f"[red]✗ Extraction failed: {e}[/red]")
                     sys.exit(1)
 
@@ -2961,26 +3102,33 @@ def squid(
                 for tool in required_tools:
                     try:
                         result = subprocess.run(
-                            ["which", tool], capture_output=True, text=True, timeout=5
+                            ["which", tool],  # noqa: S607
+                            capture_output=True,
+                            text=True,
+                            timeout=5,
+                            check=False,
                         )
                         if result.returncode == 0:
                             console.print(f"  [green]✓ {tool}[/green]")
                         else:
                             missing_tools.append(tool)
                             console.print(f"  [red]✗ {tool} not found[/red]")
-                    except Exception:
+                    except Exception:  # noqa: BLE001
                         missing_tools.append(tool)
                         console.print(f"  [red]✗ {tool} not found[/red]")
 
                 if missing_tools:
                     console.print(
                         Panel(
-                            f"[bold red]Missing build tools: {', '.join(missing_tools)}[/bold red]\n\n"
+                            f"[bold red]Missing build tools: {', '.join(missing_tools)}[/bold red]\n\n"  # noqa: E501
                             "[bold]You need these tools to compile squid:[/bold]\n"
-                            "  Ubuntu/Debian: [white]sudo apt-get install build-essential[/white]\n"
-                            "  RHEL/CentOS:   [white]sudo yum groupinstall 'Development Tools'[/white]\n"
+                            "  Ubuntu/Debian: [white]sudo apt-get install "
+                            "build-essential[/white]\n"
+                            "  RHEL/CentOS:   [white]sudo yum groupinstall "
+                            "'Development Tools'[/white]\n"
                             "  On HPC: [white]module load gcc[/white]\n\n"
-                            "[bold yellow]Alternative: Use SSH tunneling instead (no compilation needed)[/bold yellow]\n"
+                            "[bold yellow]Alternative: Use SSH tunneling instead (no "
+                            "compilation needed)[/bold yellow]\n"
                             "  [white]ssh -R 9999:localhost:9999 cluster-host[/white]",
                             style="red",
                             title="Build Dependencies Required",
@@ -3010,6 +3158,7 @@ def squid(
                         capture_output=True,
                         text=True,
                         timeout=300,  # 5 minutes
+                        check=False,
                     )
 
                     if result.returncode != 0:
@@ -3024,7 +3173,7 @@ def squid(
                 except subprocess.TimeoutExpired:
                     console.print("[red]✗ Configuration timed out[/red]")
                     sys.exit(1)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     console.print(f"[red]✗ Configuration error: {e}[/red]")
                     sys.exit(1)
 
@@ -3042,11 +3191,12 @@ def squid(
 
                 try:
                     result = subprocess.run(
-                        ["make", f"-j{n_cores}"],
+                        ["make", f"-j{n_cores}"],  # noqa: S607
                         cwd=src_dir,
                         capture_output=True,
                         text=True,
                         timeout=1200,  # 20 minutes
+                        check=False,
                     )
 
                     if result.returncode != 0:
@@ -3061,7 +3211,7 @@ def squid(
                 except subprocess.TimeoutExpired:
                     console.print("[red]✗ Compilation timed out[/red]")
                     sys.exit(1)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     console.print(f"[red]✗ Compilation error: {e}[/red]")
                     sys.exit(1)
 
@@ -3072,11 +3222,12 @@ def squid(
 
                 try:
                     result = subprocess.run(
-                        ["make", "install"],
+                        ["make", "install"],  # noqa: S607
                         cwd=src_dir,
                         capture_output=True,
                         text=True,
                         timeout=300,
+                        check=False,
                     )
 
                     if result.returncode != 0:
@@ -3088,7 +3239,7 @@ def squid(
 
                     console.print("[green]✓ Installation complete[/green]")
 
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     console.print(f"[red]✗ Installation error: {e}[/red]")
                     sys.exit(1)
 
@@ -3097,7 +3248,7 @@ def squid(
                 try:
                     shutil.rmtree(build_dir)
                     console.print("[green]✓ Build directory removed[/green]")
-                except Exception:
+                except Exception:  # noqa: BLE001
                     console.print("[yellow]⚠ Could not remove build directory[/yellow]")
 
                 # Now continue with config creation (squid is in squid_dir/sbin/squid)
@@ -3163,7 +3314,7 @@ refresh_pattern ^ftp:     1440  20%  10080
 refresh_pattern ^gopher:  1440   0%   1440
 refresh_pattern -i (/cgi-bin/|\\?) 0 0% 0
 refresh_pattern .         0    20%  4320
-"""
+"""  # noqa: E501
 
                 with open(squid_config_file, "w") as f:
                     f.write(config_content)
@@ -3230,7 +3381,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 # Show summary
                 console.print(
                     Panel(
-                        f"[bold green]✓ Squid compiled and installed successfully![/bold green]\n\n"
+                        f"[bold green]✓ Squid compiled and installed "
+                        f"successfully![/bold green]\n\n"
                         f"[bold cyan]Installation:[/bold cyan]\n"
                         f"  Squid:  [white]{squid_dir}[/white]\n"
                         f"  Binary: [white]{squid_binary}[/white]\n"
@@ -3246,7 +3398,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                         f'  [white]export PATH="{bin_dir}:$PATH"[/white]\n\n'
                         f"[bold cyan]Use with SSH Tunnel:[/bold cyan]\n"
                         f"  Local:  [white]{start_script}[/white]\n"
-                        f"  Then:   [white]ssh -R {port}:localhost:{port} cluster-host[/white]\n"
+                        f"  Then:   [white]ssh -R {port}:localhost:{port} "
+                        f"cluster-host[/white]\n"
                         f"  Cluster:\n"
                         f"    [white]export http_proxy=http://127.0.0.1:{port}[/white]\n"
                         f"    [white]export https_proxy=http://127.0.0.1:{port}[/white]",
@@ -3260,9 +3413,13 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             # Check if squid binary exists anywhere (non-compile mode)
             try:
                 squid_check = subprocess.run(
-                    ["which", "squid"], capture_output=True, text=True, timeout=5
+                    ["which", "squid"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=False,
                 )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 console.print(f"[red]Error checking for squid: {e}[/red]")
                 squid_check = subprocess.CompletedProcess(args=[], returncode=1)
 
@@ -3270,15 +3427,18 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 console.print(
                     Panel(
                         "[bold yellow]Squid binary not found in PATH[/bold yellow]\n\n"
-                        "[bold green]NEW! You can now compile squid from source (no sudo):[/bold green]\n"
-                        "  [white]atomate2siesta-cluster squid install --local --compile[/white]\n"
+                        "[bold green]NEW! You can now compile squid from source (no "
+                        "sudo):[/bold green]\n"
+                        "  [white]atomate2siesta-cluster squid install --local "
+                        "--compile[/white]\n"
                         "  Takes ~10 minutes, requires gcc/g++/make\n"
                         "  Perfect for HPC where you can't install packages!\n\n"
                         "[bold cyan]Alternative Options:[/bold cyan]\n\n"
                         "[cyan]1. Check for squid module (HPC)[/cyan]\n"
                         "  [white]module avail squid[/white]\n"
                         "  [white]module load squid[/white]\n"
-                        "  Then retry: [white]atomate2siesta-cluster squid install --local[/white]\n\n"
+                        "  Then retry: [white]atomate2siesta-cluster squid install "
+                        "--local[/white]\n\n"
                         "[cyan]2. SSH tunneling (easiest, no proxy needed!)[/cyan]\n"
                         "  [white]ssh -R 9999:localhost:9999 cluster-host[/white]\n"
                         "  See: [white]atomate2siesta-cluster setup --help[/white]\n\n"
@@ -3295,12 +3455,16 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             console.print("[green]✓ Found squid binary in PATH[/green]")
             try:
                 result = subprocess.run(
-                    ["squid", "-v"], capture_output=True, text=True, timeout=5
+                    ["squid", "-v"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=False,
                 )
                 if result.returncode == 0:
                     version = result.stdout.split("\n")[0]
                     console.print(f"[dim]{version}[/dim]\n")
-            except Exception:
+            except Exception:  # noqa: BLE001
                 console.print("[yellow]Could not get squid version[/yellow]\n")
 
             # Set installation directory
@@ -3460,7 +3624,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                     f"  [white]lsof -i :{port}[/white]\n\n"
                     f"[bold cyan]Use with SSH Tunnel:[/bold cyan]\n"
                     f"  On LOCAL: [white]{start_script}[/white]\n"
-                    f"  Then: [white]ssh -R {port}:localhost:{port} cluster-host[/white]\n"
+                    f"  Then: [white]ssh -R {port}:localhost:{port} "
+                    f"cluster-host[/white]\n"
                     f"  On CLUSTER:\n"
                     f"    [white]export http_proxy=http://127.0.0.1:{port}[/white]\n"
                     f"    [white]export https_proxy=http://127.0.0.1:{port}[/white]\n\n"
@@ -3478,7 +3643,12 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
         # Check if already installed (system-wide)
         if is_squid_installed():
             console.print("[green]✓ Squid is already installed[/green]")
-            result = subprocess.run(["squid", "-v"], capture_output=True, text=True)
+            result = subprocess.run(
+                ["squid", "-v"],  # noqa: S607
+                capture_output=True,
+                text=True,
+                check=False,
+            )
             if result.returncode == 0:
                 version = result.stdout.split("\n")[0]
                 console.print(f"[dim]{version}[/dim]")
@@ -3494,9 +3664,10 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             console.print("\nRunning: [cyan]brew install squid[/cyan]\n")
 
             result = subprocess.run(
-                ["brew", "install", "squid"],
+                ["brew", "install", "squid"],  # noqa: S607
                 capture_output=False,  # Show output to user
                 text=True,
+                check=False,
             )
 
             if result.returncode == 0:
@@ -3506,7 +3677,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                     "  1. Start squid: [cyan]atomate2siesta-cluster squid start[/cyan]"
                 )
                 console.print(
-                    "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup --host <host> --use-squid[/cyan]"
+                    "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup --host "
+                    "<host> --use-squid[/cyan]"
                 )
             else:
                 console.print("\n[red]✗ Failed to install squid[/red]")
@@ -3519,25 +3691,37 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             # Check if apt-get is available (Ubuntu/Debian)
             try:
                 apt_check = subprocess.run(
-                    ["which", "apt-get"], capture_output=True, text=True, timeout=5
+                    ["which", "apt-get"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=False,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 apt_check = subprocess.CompletedProcess(args=[], returncode=1)
 
             # Check if yum is available (CentOS/RHEL)
             try:
                 yum_check = subprocess.run(
-                    ["which", "yum"], capture_output=True, text=True, timeout=5
+                    ["which", "yum"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=False,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 yum_check = subprocess.CompletedProcess(args=[], returncode=1)
 
             # Check if dnf is available (Fedora/RHEL 8+)
             try:
                 dnf_check = subprocess.run(
-                    ["which", "dnf"], capture_output=True, text=True, timeout=5
+                    ["which", "dnf"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=False,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 dnf_check = subprocess.CompletedProcess(args=[], returncode=1)
 
             if apt_check.returncode == 0:
@@ -3546,36 +3730,42 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                     "[cyan]Detected apt package manager (Ubuntu/Debian)[/cyan]"
                 )
                 console.print(
-                    "\nRunning: [cyan]sudo apt-get update && sudo apt-get install -y squid[/cyan]\n"
+                    "\nRunning: [cyan]sudo apt-get update && sudo apt-get install -y "
+                    "squid[/cyan]\n"
                 )
 
                 # Update package list first
                 update_result = subprocess.run(
-                    ["sudo", "apt-get", "update"],
+                    ["sudo", "apt-get", "update"],  # noqa: S607
                     capture_output=False,  # Show output to user
                     text=True,
+                    check=False,
                 )
 
                 if update_result.returncode != 0:
                     console.print(
-                        "\n[yellow]⚠ Warning: apt-get update failed, continuing anyway...[/yellow]\n"
+                        "\n[yellow]⚠ Warning: apt-get update failed, continuing "
+                        "anyway...[/yellow]\n"
                     )
 
                 # Install squid
                 result = subprocess.run(
-                    ["sudo", "apt-get", "install", "-y", "squid"],
+                    ["sudo", "apt-get", "install", "-y", "squid"],  # noqa: S607
                     capture_output=False,  # Show output to user
                     text=True,
+                    check=False,
                 )
 
                 if result.returncode == 0:
                     console.print("\n[green]✓ Squid installed successfully![/green]")
                     console.print("\n[bold]Next steps:[/bold]")
                     console.print(
-                        "  1. Start squid: [cyan]atomate2siesta-cluster squid start[/cyan]"
+                        "  1. Start squid: [cyan]atomate2siesta-cluster squid "
+                        "start[/cyan]"
                     )
                     console.print(
-                        "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup --host <host> --use-squid[/cyan]"
+                        "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup "
+                        "--host <host> --use-squid[/cyan]"
                     )
                 else:
                     console.print("\n[red]✗ Failed to install squid[/red]")
@@ -3590,19 +3780,22 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 console.print("\nRunning: [cyan]sudo yum install -y squid[/cyan]\n")
 
                 result = subprocess.run(
-                    ["sudo", "yum", "install", "-y", "squid"],
+                    ["sudo", "yum", "install", "-y", "squid"],  # noqa: S607
                     capture_output=False,  # Show output to user
                     text=True,
+                    check=False,
                 )
 
                 if result.returncode == 0:
                     console.print("\n[green]✓ Squid installed successfully![/green]")
                     console.print("\n[bold]Next steps:[/bold]")
                     console.print(
-                        "  1. Start squid: [cyan]atomate2siesta-cluster squid start[/cyan]"
+                        "  1. Start squid: [cyan]atomate2siesta-cluster squid "
+                        "start[/cyan]"
                     )
                     console.print(
-                        "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup --host <host> --use-squid[/cyan]"
+                        "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup "
+                        "--host <host> --use-squid[/cyan]"
                     )
                 else:
                     console.print("\n[red]✗ Failed to install squid[/red]")
@@ -3617,19 +3810,22 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 console.print("\nRunning: [cyan]sudo dnf install -y squid[/cyan]\n")
 
                 result = subprocess.run(
-                    ["sudo", "dnf", "install", "-y", "squid"],
+                    ["sudo", "dnf", "install", "-y", "squid"],  # noqa: S607
                     capture_output=False,  # Show output to user
                     text=True,
+                    check=False,
                 )
 
                 if result.returncode == 0:
                     console.print("\n[green]✓ Squid installed successfully![/green]")
                     console.print("\n[bold]Next steps:[/bold]")
                     console.print(
-                        "  1. Start squid: [cyan]atomate2siesta-cluster squid start[/cyan]"
+                        "  1. Start squid: [cyan]atomate2siesta-cluster squid "
+                        "start[/cyan]"
                     )
                     console.print(
-                        "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup --host <host> --use-squid[/cyan]"
+                        "  2. Run cluster setup: [cyan]atomate2siesta-cluster setup "
+                        "--host <host> --use-squid[/cyan]"
                     )
                 else:
                     console.print("\n[red]✗ Failed to install squid[/red]")
@@ -3664,7 +3860,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             console.print(f"  [cyan]http://127.0.0.1:{port}[/cyan]\n")
             console.print("[bold]Use with cluster setup:[/bold]")
             console.print(
-                "  [cyan]atomate2siesta-cluster setup --host <host> --use-squid[/cyan]\n"
+                "  [cyan]atomate2siesta-cluster setup --host <host> "
+                "--use-squid[/cyan]\n"
             )
             console.print("[bold]Or set environment variables:[/bold]")
             console.print(f"  [cyan]export http_proxy=http://127.0.0.1:{port}[/cyan]")
@@ -3675,7 +3872,10 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             # Check if squid is already running on any port
             try:
                 result = subprocess.run(
-                    ["pgrep", "-l", "squid"], capture_output=True, text=True
+                    ["pgrep", "-l", "squid"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    check=False,
                 )
                 if result.returncode == 0 and result.stdout.strip():
                     console.print("\n[yellow]⚠ Squid is already running![/yellow]")
@@ -3683,9 +3883,10 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
 
                     # Try to detect which port it's on
                     lsof_result = subprocess.run(
-                        ["lsof", "-i", "-P", "-n", "-sTCP:LISTEN"],
+                        ["lsof", "-i", "-P", "-n", "-sTCP:LISTEN"],  # noqa: S607
                         capture_output=True,
                         text=True,
+                        check=False,
                     )
                     if "squid" in lsof_result.stdout:
                         for line in lsof_result.stdout.split("\n"):
@@ -3706,7 +3907,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                     )
                     console.print("  3. Then start on your desired port:")
                     console.print(
-                        f"     [cyan]atomate2siesta-cluster squid start --port {port}[/cyan]"
+                        f"     [cyan]atomate2siesta-cluster squid start --port "
+                        f"{port}[/cyan]"
                     )
                 else:
                     # Squid not running, different error
@@ -3715,10 +3917,11 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                     console.print(f"    [cyan]lsof -i :{port}[/cyan]")
                     console.print("  • Try a different port:")
                     console.print(
-                        "    [cyan]atomate2siesta-cluster squid start --port <number>[/cyan]"
+                        "    [cyan]atomate2siesta-cluster squid start --port "
+                        "<number>[/cyan]"
                     )
                     console.print("  • Check squid logs for errors")
-            except Exception:
+            except Exception:  # noqa: BLE001
                 # Fallback if pgrep/lsof not available
                 console.print("\n[yellow]Troubleshooting:[/yellow]")
                 console.print("  • Stop any running squid:")
@@ -3727,7 +3930,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 console.print(f"    [cyan]lsof -i :{port}[/cyan]")
                 console.print("  • Try a different port:")
                 console.print(
-                    "    [cyan]atomate2siesta-cluster squid start --port <number>[/cyan]"
+                    "    [cyan]atomate2siesta-cluster squid start --port "
+                    "<number>[/cyan]"
                 )
             sys.exit(1)
 
@@ -3762,7 +3966,11 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             # Get system squid path
             try:
                 result = subprocess.run(
-                    ["which", "squid"], capture_output=True, text=True, timeout=5
+                    ["which", "squid"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=False,
                 )
                 if result.returncode == 0:
                     installation_type = "System"
@@ -3770,7 +3978,7 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 else:
                     installation_type = "System"
                     squid_binary_path = "Unknown"
-            except Exception:
+            except Exception:  # noqa: BLE001
                 installation_type = "System"
                 squid_binary_path = "Unknown"
         else:
@@ -3791,10 +3999,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             status_table.add_row("Installed", "[red]✗ No[/red]")
 
         # Show running status - always show actual running port
-        actual_running_port = (
-            status_info["actual_port"]
-            if status_info["actual_port"]
-            else (status_info["port"] if status_info["running"] else None)
+        actual_running_port = status_info["actual_port"] or (
+            status_info["port"] if status_info["running"] else None
         )
 
         if actual_running_port:
@@ -3831,14 +4037,19 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
         if not actual_running_port:
             try:
                 lsof_result = subprocess.run(
-                    ["lsof", "-i", f":{port}"], capture_output=True, text=True
+                    ["lsof", "-i", f":{port}"],  # noqa: S607
+                    capture_output=True,
+                    text=True,
+                    check=False,
                 )
                 if lsof_result.returncode == 0 and lsof_result.stdout.strip():
                     port_in_use_by_other = True
                     console.print(
-                        f"[yellow]⚠ Port {port} is in use by another process:[/yellow]\n"
+                        f"[yellow]⚠ Port {port} is in use by another "
+                        f"process:[/yellow]\n"
                     )
-                    # Show the processes using the port (deduplicate PIDs since lsof shows IPv4 + IPv6)
+                    # Show the processes using the port (deduplicate PIDs since lsof
+                    # shows IPv4 + IPv6)
                     lines = lsof_result.stdout.strip().split("\n")
                     seen_pids = set()
                     pids = []  # Store all PIDs for later use
@@ -3862,16 +4073,17 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                                 # Show full command for this PID
                                 try:
                                     ps_result = subprocess.run(
-                                        ["ps", "-p", pid, "-o", "command="],
+                                        ["ps", "-p", pid, "-o", "command="],  # noqa: S607
                                         capture_output=True,
                                         text=True,
+                                        check=False,
                                     )
                                     if ps_result.returncode == 0:
                                         full_cmd = ps_result.stdout.strip()
                                         console.print(
                                             f"  [dim]Command: {full_cmd}[/dim]\n"
                                         )
-                                except Exception:
+                                except Exception:  # noqa: BLE001,S110
                                     pass
 
                     console.print("[bold]What is this?[/bold]")
@@ -3880,20 +4092,22 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                             "  • [yellow]SSH SOCKS proxy tunnel[/yellow] (ssh -D)"
                         )
                         console.print(
-                            "  • Created by: [cyan]atomate2siesta-cluster setup --ssh-tunnel[/cyan]"
+                            "  • Created by: [cyan]atomate2siesta-cluster setup "
+                            "--ssh-tunnel[/cyan]"
                         )
                         console.print("\n[bold]To use squid instead:[/bold]")
                         # Show all PIDs if multiple SSH tunnels
                         if len(pids) > 1:
                             console.print(
-                                f"  1. Kill the SSH tunnels: [cyan]kill {' '.join(pids)}[/cyan]"
+                                f"  1. Kill the SSH tunnels: [cyan]kill {' '.join(pids)}[/cyan]"  # noqa: E501
                             )
                         else:
                             console.print(
                                 f"  1. Kill the SSH tunnel: [cyan]kill {pids[0]}[/cyan]"
                             )
                         console.print(
-                            "  2. Start squid: [cyan]atomate2siesta-cluster squid start[/cyan]"
+                            "  2. Start squid: [cyan]atomate2siesta-cluster squid "
+                            "start[/cyan]"
                         )
                     else:
                         console.print(
@@ -3908,9 +4122,10 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                         else:
                             console.print(f"  1. Kill it: [cyan]kill {pids[0]}[/cyan]")
                         console.print(
-                            "  2. Use different port: [cyan]atomate2siesta-cluster squid start --port <other-port>[/cyan]"
+                            "  2. Use different port: [cyan]atomate2siesta-cluster "
+                            "squid start --port <other-port>[/cyan]"
                         )
-            except Exception:
+            except Exception:  # noqa: BLE001,S110
                 pass
 
         if not status_info["installed"]:
@@ -3927,7 +4142,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             )
             console.print("\n[dim]Use with SSH reverse tunnel:[/dim]")
             console.print(
-                f"  [cyan]ssh -R {actual_running_port}:localhost:{actual_running_port} cluster-host[/cyan]"
+                f"  [cyan]ssh -R {actual_running_port}:localhost:{actual_running_port} "
+                f"cluster-host[/cyan]"
             )
         elif not actual_running_port and not port_in_use_by_other:
             console.print("[yellow]Squid is not running and port is free.[/yellow]")
@@ -3935,7 +4151,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 "\nStart with: [cyan]atomate2siesta-cluster squid start[/cyan]"
             )
             console.print(
-                "Or start on specific port: [cyan]atomate2siesta-cluster squid start --port 9999[/cyan]"
+                "Or start on specific port: [cyan]atomate2siesta-cluster squid start "
+                "--port 9999[/cyan]"
             )
 
     elif action == "restart":
@@ -3982,7 +4199,7 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                                     f"[dim]Current port: {current_port}[/dim]"
                                 )
                             break
-            except Exception:
+            except Exception:  # noqa: BLE001,S110
                 pass
 
         # Remove the entire directory
@@ -3990,9 +4207,10 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             shutil.rmtree(config_dir)
             console.print("\n[green]✓ Configuration directory removed[/green]")
             console.print(
-                "\n[dim]Next time you run 'squid start', fresh config will be created[/dim]"
+                "\n[dim]Next time you run 'squid start', fresh config will be "
+                "created[/dim]"
             )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             console.print(f"\n[red]✗ Failed to remove directory: {e}[/red]")
             sys.exit(1)
 
@@ -4014,7 +4232,8 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 "\n[cyan]Note:[/cyan] This only removes locally compiled squid."
             )
             console.print(
-                "[dim]System squid (installed via package manager) is not affected.[/dim]"
+                "[dim]System squid (installed via package manager) is not "
+                "affected.[/dim]"
             )
             sys.exit(0)
 
@@ -4035,14 +4254,14 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
         # Calculate directory size
         total_size = 0
         try:
-            for dirpath, dirnames, filenames in os.walk(local_squid_dir):
+            for dirpath, _dirnames, filenames in os.walk(local_squid_dir):
                 for filename in filenames:
                     filepath = os.path.join(dirpath, filename)
                     if os.path.exists(filepath):
                         total_size += os.path.getsize(filepath)
             size_mb = total_size / (1024 * 1024)
             console.print(f"[dim]Size: {size_mb:.1f} MB[/dim]")
-        except Exception:
+        except Exception:  # noqa: BLE001,S110
             pass
 
         # List contents
@@ -4051,7 +4270,7 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
             subdirs = [d.name for d in local_squid_dir.iterdir() if d.is_dir()]
             for subdir in sorted(subdirs):
                 console.print(f"  • {subdir}/")
-        except Exception:
+        except Exception:  # noqa: BLE001,S110
             pass
 
         # Confirmation
@@ -4070,7 +4289,7 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
         try:
             shutil.rmtree(local_squid_dir)
             console.print("[green]✓ Local squid installation removed[/green]")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             console.print(f"[red]✗ Failed to remove directory: {e}[/red]")
             sys.exit(1)
 
@@ -4089,19 +4308,20 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
                 try:
                     shutil.rmtree(squid_config_dir)
                     console.print("[green]✓ Configuration directory removed[/green]")
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     console.print(f"[yellow]⚠️  Could not remove config: {e}[/yellow]")
             else:
                 console.print("[dim]Configuration directory kept[/dim]")
 
         console.print("\n[green]✓ Uninstallation complete[/green]")
         console.print(
-            "\n[cyan]To reinstall:[/cyan] [dim]atomate2siesta-cluster squid install --local --compile[/dim]"
+            "\n[cyan]To reinstall:[/cyan] [dim]atomate2siesta-cluster squid install "
+            "--local --compile[/dim]"
         )
 
 
 @cli.group()
-def ssh_setup():
+def ssh_setup() -> None:
     """Manage SSH keys and config for cluster access.
 
     \b
@@ -4109,7 +4329,7 @@ def ssh_setup():
       add     - Add new SSH config entry
       status  - Show SSH keys and config entries
       test    - Test SSH connections
-    """
+    """  # noqa: D301
 
 
 @ssh_setup.command()
@@ -4161,7 +4381,7 @@ def add(
     generate_key: bool,
     copy_id: bool,
     overwrite: bool,
-):
+) -> None:
     """Add new SSH config entry for cluster access.
 
     This command helps you set up passwordless SSH access to remote clusters by:
@@ -4179,7 +4399,7 @@ def add(
     After setup, you can connect with:
       $ ssh mycluster
       $ atomate2siesta-cluster setup --host mycluster --ssh-config
-    """
+    """  # noqa: D301,E501
     from pathlib import Path
 
     console.print("\n[bold cyan]SSH Configuration Setup[/bold cyan]\n")
@@ -4226,7 +4446,7 @@ def add(
 
             # Generate SSH key
             result = subprocess.run(
-                [
+                [  # noqa: S607
                     "ssh-keygen",
                     "-t",
                     "rsa",
@@ -4241,6 +4461,7 @@ def add(
                 ],
                 capture_output=True,
                 text=True,
+                check=False,
             )
 
             if result.returncode == 0:
@@ -4360,9 +4581,10 @@ Host {alias}
         console.print("[dim]You may be prompted for your password[/dim]\n")
 
         result = subprocess.run(
-            ["ssh-copy-id", "-i", str(pub_key_path), f"{user}@{hostname}"],
+            ["ssh-copy-id", "-i", str(pub_key_path), f"{user}@{hostname}"],  # noqa: S607
             capture_output=False,  # Show output to user
             text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -4384,9 +4606,10 @@ Host {alias}
         console.print(f"\n[cyan]Testing connection to {alias}...[/cyan]")
 
         result = subprocess.run(
-            ["ssh", "-o", "ConnectTimeout=10", alias, "echo", "Connection successful!"],
+            ["ssh", "-o", "ConnectTimeout=10", alias, "echo", "Connection successful!"],  # noqa: S607
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -4424,7 +4647,7 @@ Host {alias}
     is_flag=True,
     help="Show detailed information",
 )
-def ssh_status(verbose: bool):
+def ssh_status(verbose: bool) -> None:
     """Show SSH keys, config entries, and connection status.
 
     Displays information about your SSH setup including:
@@ -4436,7 +4659,7 @@ def ssh_status(verbose: bool):
     Common Usage:
       $ atomate2siesta-cluster ssh-setup status
       $ atomate2siesta-cluster ssh-setup status -v    # Verbose mode
-    """
+    """  # noqa: D301
     import os
     from pathlib import Path
 
@@ -4484,9 +4707,10 @@ def ssh_status(verbose: bool):
             # Get key type from file
             try:
                 result = subprocess.run(
-                    ["ssh-keygen", "-l", "-f", str(private_key)],
+                    ["ssh-keygen", "-l", "-f", str(private_key)],  # noqa: S607
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
                 if result.returncode == 0:
                     # Parse output: "2048 SHA256:... user@host (RSA)"
@@ -4499,7 +4723,7 @@ def ssh_status(verbose: bool):
                         type_str = "Unknown"
                 else:
                     type_str = "Unknown"
-            except Exception:
+            except Exception:  # noqa: BLE001
                 type_str = "Unknown"
 
             keys_table.add_row(str(private_key), type_str, size_str, pub_status)
@@ -4510,7 +4734,8 @@ def ssh_status(verbose: bool):
     else:
         console.print("[yellow]No SSH keys found in ~/.ssh/[/yellow]")
         console.print(
-            "\n[dim]Generate a key: [cyan]atomate2siesta-cluster ssh-setup add --alias myhost --hostname host.edu --generate-key[/cyan][/dim]\n"
+            "\n[dim]Generate a key: [cyan]atomate2siesta-cluster ssh-setup add --alias "
+            "myhost --hostname host.edu --generate-key[/cyan][/dim]\n"
         )
 
     # Step 3: Check SSH agent
@@ -4523,7 +4748,12 @@ def ssh_status(verbose: bool):
             console.print(f"[dim]  Socket: {ssh_auth_sock}[/dim]")
 
         # List loaded keys
-        result = subprocess.run(["ssh-add", "-l"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["ssh-add", "-l"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
         if result.returncode == 0:
             loaded_keys = result.stdout.strip().split("\n")
@@ -4548,7 +4778,8 @@ def ssh_status(verbose: bool):
     if not config_path.exists():
         console.print("[yellow]✗ ~/.ssh/config does not exist[/yellow]")
         console.print(
-            "\n[dim]Create one: [cyan]atomate2siesta-cluster ssh-setup add --alias myhost --hostname host.edu[/cyan][/dim]\n"
+            "\n[dim]Create one: [cyan]atomate2siesta-cluster ssh-setup add --alias "
+            "myhost --hostname host.edu[/cyan][/dim]\n"
         )
     else:
         # Parse SSH config file
@@ -4557,7 +4788,7 @@ def ssh_status(verbose: bool):
 
         with open(config_path) as f:
             for line in f:
-                line = line.strip()
+                line = line.strip()  # noqa: PLW2901
                 if line.startswith("Host ") and not line.startswith("Host *"):
                     if current_entry:
                         config_entries.append(current_entry)
@@ -4571,7 +4802,7 @@ def ssh_status(verbose: bool):
                         if len(parts) == 2:
                             key, value = parts
                             details_dict = current_entry["details"]
-                            assert isinstance(details_dict, dict)
+                            assert isinstance(details_dict, dict)  # noqa: S101
                             details_dict[key.lower()] = value
 
             # Add last entry
@@ -4591,7 +4822,7 @@ def ssh_status(verbose: bool):
                 alias = entry["alias"]
                 details = entry["details"]
                 # Type cast for mypy
-                assert isinstance(details, dict)
+                assert isinstance(details, dict)  # noqa: S101
                 hostname = details.get("hostname", "-")
                 user = details.get("user", "-")
                 port = details.get("port", "22")
@@ -4611,13 +4842,14 @@ def ssh_status(verbose: bool):
             console.print("[bold]Usage:[/bold]")
             console.print(f"  Connect: [cyan]ssh {config_entries[0]['alias']}[/cyan]")
             console.print(
-                f"  Test: [cyan]atomate2siesta-cluster ssh-setup test {config_entries[0]['alias']}[/cyan]"
+                f"  Test: [cyan]atomate2siesta-cluster ssh-setup test {config_entries[0]['alias']}[/cyan]"  # noqa: E501
             )
             console.print()
         else:
             console.print("[yellow]No host entries found in ~/.ssh/config[/yellow]")
             console.print(
-                "\n[dim]Add one: [cyan]atomate2siesta-cluster ssh-setup add --alias myhost --hostname host.edu[/cyan][/dim]\n"
+                "\n[dim]Add one: [cyan]atomate2siesta-cluster ssh-setup add --alias "
+                "myhost --hostname host.edu[/cyan][/dim]\n"
             )
 
 
@@ -4629,14 +4861,14 @@ def ssh_status(verbose: bool):
     is_flag=True,
     help="Test all configured hosts",
 )
-def test(alias: str | None, all: bool):
+def test(alias: str | None, all: bool) -> None:  # noqa: A002
     """Test SSH connection to configured hosts.
 
     \b
     Common Usage:
       $ atomate2siesta-cluster ssh-setup test mycluster
       $ atomate2siesta-cluster ssh-setup test --all    # Test all hosts
-    """
+    """  # noqa: D301
     from pathlib import Path
 
     console.print("\n[bold cyan]SSH Connection Test[/bold cyan]\n")
@@ -4654,7 +4886,7 @@ def test(alias: str | None, all: bool):
 
     with open(config_path) as f:
         for line in f:
-            line = line.strip()
+            line = line.strip()  # noqa: PLW2901
             if line.startswith("Host ") and not line.startswith("Host *"):
                 if current_entry:
                     config_entries.append(current_entry)
@@ -4697,7 +4929,8 @@ def test(alias: str | None, all: bool):
         for entry in config_entries:
             console.print(f"  - {entry['alias']}")
         console.print(
-            "\n[dim]Example: [cyan]atomate2siesta-cluster ssh-setup test mycluster[/cyan][/dim]"
+            "\n[dim]Example: [cyan]atomate2siesta-cluster ssh-setup test "
+            "mycluster[/cyan][/dim]"
         )
         sys.exit(1)
 
@@ -4718,7 +4951,7 @@ def test(alias: str | None, all: bool):
 
         start_time = time.time()
         result = subprocess.run(
-            [
+            [  # noqa: S607
                 "ssh",
                 "-o",
                 "ConnectTimeout=10",
@@ -4730,6 +4963,7 @@ def test(alias: str | None, all: bool):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
         elapsed = time.time() - start_time
 
@@ -4755,7 +4989,7 @@ def test(alias: str | None, all: bool):
 
 
 @cli.group()
-def profile():
+def profile() -> None:
     """Manage cluster hardware profiles for auto_allocate_resources().
 
     \b
@@ -4767,11 +5001,11 @@ def profile():
       list     List all predefined profiles
       show     Show detailed profile information
       create   Interactive profile builder
-    """
+    """  # noqa: D301
 
 
 @profile.command("list")
-def profile_list():
+def profile_list() -> None:
     """List all predefined cluster profiles."""
     from atomate2.siesta.cluster_profiles import ClusterProfile
 
@@ -4822,7 +5056,7 @@ def profile_list():
 
 @profile.command("show")
 @click.argument("name")
-def profile_show(name: str):
+def profile_show(name: str) -> None:
     """Show detailed information for a specific profile.
 
     NAME is the profile name (e.g. mn5, agustina, generic).
@@ -4885,7 +5119,7 @@ def profile_show(name: str):
 
 
 @profile.command("create")
-def profile_create():
+def profile_create() -> None:
     """Interactively create a custom cluster profile and print the Python code."""
     try:
         import questionary

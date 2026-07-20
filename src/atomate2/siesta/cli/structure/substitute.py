@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """CLI for atomic substitution in structures.
 
 This module provides the `substitute` subcommand for atomate2siesta-structure.
@@ -63,16 +62,16 @@ console = Console()
     help="Show which atoms were substituted",
 )
 def substitute(
-    structure_file,
-    replace,
-    fraction,
-    sites,
-    n_configs,
-    seed,
-    output,
-    format,
-    show_changes,
-):
+    structure_file: str,
+    replace: str,
+    fraction: float | None,
+    sites: str | None,
+    n_configs: int,
+    seed: int | None,
+    output: str | None,
+    format: str,  # noqa: A002 Click --format option name
+    show_changes: bool,
+) -> None:
     """Substitute atoms in a structure (doping, alloying, element replacement).
 
     Replace specific elements or sites with different elements. Supports complete
@@ -84,24 +83,28 @@ def substitute(
         atomate2siesta-structure substitute structure.cif --replace Fe:Co
 
         # Random 25% substitution of Fe with Co
-        atomate2siesta-structure substitute structure.cif --replace Fe:Co --fraction 0.25
+        atomate2siesta-structure substitute structure.cif \
+            --replace Fe:Co --fraction 0.25
 
         # Replace specific sites
         atomate2siesta-structure substitute structure.cif --replace Fe:Co --sites 0,2,4
 
         # Generate 10 random configurations
-        atomate2siesta-structure substitute structure.cif --replace Fe:Co --fraction 0.5 --n-configs 10
+        atomate2siesta-structure substitute structure.cif \
+            --replace Fe:Co --fraction 0.5 --n-configs 10
 
         # With reproducible random seed
-        atomate2siesta-structure substitute structure.cif --replace Fe:Co --fraction 0.3 --seed 42
+        atomate2siesta-structure substitute structure.cif \
+            --replace Fe:Co --fraction 0.3 --seed 42
     """
     try:
         # Parse replacement
         if ":" not in replace:
             console.print(
-                "[red]Error: --replace must be in format 'OLD:NEW' (e.g., 'Fe:Co')[/red]"
+                "[red]Error: --replace must be in format 'OLD:NEW' "
+                "(e.g., 'Fe:Co')[/red]"
             )
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301
 
         old_element_str, new_element_str = replace.split(":")
 
@@ -110,16 +113,16 @@ def substitute(
             new_element = Element(new_element_str)
         except Exception as e:
             console.print(f"[red]Error: Invalid element symbol: {e}[/red]")
-            raise click.Abort()
+            raise click.Abort from e
 
         # Validate options
         if fraction is not None and sites is not None:
             console.print("[red]Error: Cannot use both --fraction and --sites[/red]")
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301
 
         if fraction is not None and (fraction < 0.0 or fraction > 1.0):
             console.print("[red]Error: --fraction must be between 0.0 and 1.0[/red]")
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301
 
         # Load structure
         structure = Structure.from_file(structure_file)
@@ -138,12 +141,14 @@ def substitute(
 
         if not old_element_indices:
             console.print(
-                f"[yellow]Warning: No {old_element.symbol} atoms found in structure[/yellow]"
+                f"[yellow]Warning: No {old_element.symbol} atoms "
+                f"found in structure[/yellow]"
             )
-            raise click.Abort()
+            raise click.Abort  # noqa: TRY301
 
         console.print(
-            f"\n[yellow]Found {len(old_element_indices)} {old_element.symbol} atoms[/yellow]"
+            f"\n[yellow]Found {len(old_element_indices)} "
+            f"{old_element.symbol} atoms[/yellow]"
         )
 
         # Determine which sites to substitute
@@ -155,17 +160,20 @@ def substitute(
                 for idx in site_indices:
                     if idx < 0 or idx >= structure.num_sites:
                         console.print(
-                            f"[red]Error: Site index {idx} out of range (0-{structure.num_sites - 1})[/red]"
+                            f"[red]Error: Site index {idx} out of range "
+                            f"(0-{structure.num_sites - 1})[/red]"
                         )
-                        raise click.Abort()
+                        raise click.Abort
                     if structure[idx].specie.symbol != old_element.symbol:
                         console.print(
-                            f"[yellow]Warning: Site {idx} is {structure[idx].specie.symbol}, not {old_element.symbol}[/yellow]"
+                            f"[yellow]Warning: Site {idx} is "
+                            f"{structure[idx].specie.symbol}, "
+                            f"not {old_element.symbol}[/yellow]"
                         )
                 substitution_mode = "site-specific"
             except ValueError:
                 console.print("[red]Error: Invalid site indices format[/red]")
-                raise click.Abort()
+                raise click.Abort from None
         elif fraction is not None:
             # Random partial substitution
             substitution_mode = "random"
@@ -181,7 +189,7 @@ def substitute(
 
         # Generate configurations
         configs = []
-        for config_num in range(n_configs):
+        for _ in range(n_configs):
             # Create copy of structure
             new_structure = structure.copy()
 
@@ -222,7 +230,10 @@ def substitute(
                 from pathlib import Path
 
                 input_path = Path(structure_file)
-                output = f"substituted_{old_element.symbol}_to_{new_element.symbol}_{input_path.stem}.{format}"
+                output = (
+                    f"substituted_{old_element.symbol}_to_"
+                    f"{new_element.symbol}_{input_path.stem}.{format}"
+                )
 
             _save_structure(configs[0][0], output, format)
             console.print(
@@ -239,7 +250,10 @@ def substitute(
                 if output:
                     output_file = f"{output}_{i + 1}.{format}"
                 else:
-                    output_file = f"substituted_{old_element.symbol}_to_{new_element.symbol}_{input_path.stem}_config{i + 1}.{format}"
+                    output_file = (
+                        f"substituted_{old_element.symbol}_to_"
+                        f"{new_element.symbol}_{input_path.stem}_config{i + 1}.{format}"
+                    )
 
                 _save_structure(config_struct, output_file, format)
                 saved_files.append(output_file)
@@ -255,32 +269,32 @@ def substitute(
         import traceback
 
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
-        raise click.Abort()
+        raise click.Abort from e
 
 
-def _save_structure(structure, filename, format):
+def _save_structure(structure: Structure, filename: str, fmt: str) -> None:
     """Save structure to file."""
-    if format == "cif":
+    if fmt == "cif":
         from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
 
         write_cif_with_ghost(structure, filename)
-    elif format == "poscar":
+    elif fmt == "poscar":
         structure.to(filename=filename, fmt="poscar")
-    elif format == "xsf":
+    elif fmt == "xsf":
         from pymatgen.io.xcrysden import XSF
 
         xsf = XSF(structure)
         with open(filename, "w") as f:
             f.write(xsf.to_str())
-    elif format == "json":
+    elif fmt == "json":
         structure.to(filename=filename, fmt="json")
-    elif format == "fdf":
+    elif fmt == "fdf":
         import sisl
 
         geom = sisl.get_sile(structure).read_geometry()
         with sisl.get_sile(filename, "w") as fdf:
             fdf.write_geometry(geom)
-    elif format == "XV":
+    elif fmt == "XV":
         import sisl
 
         geom = sisl.get_sile(structure).read_geometry()
@@ -288,8 +302,13 @@ def _save_structure(structure, filename, format):
 
 
 def _display_substitution_info(
-    original, substituted, old_elem, new_elem, substituted_sites, mode
-):
+    original: Structure,
+    substituted: Structure,
+    old_elem: Element,
+    new_elem: Element,
+    substituted_sites: list,
+    mode: str,
+) -> None:
     """Display substitution information."""
     console.print("\n[yellow]Substitution Summary:[/yellow]")
 
@@ -330,7 +349,12 @@ def _display_substitution_info(
     console.print(table)
 
 
-def _display_changes(structure, substituted_sites, old_elem, new_elem):
+def _display_changes(
+    structure: Structure,
+    substituted_sites: list,
+    old_elem: Element,
+    new_elem: Element,
+) -> None:
     """Display which atoms were changed."""
     console.print("\n[cyan]Substituted Sites:[/cyan]")
 
