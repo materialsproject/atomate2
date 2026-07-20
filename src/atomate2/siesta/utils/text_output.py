@@ -10,7 +10,8 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any
+    from types import TracebackType
+    from typing import Any, TextIO
 
 
 def get_standard_header(
@@ -90,7 +91,7 @@ def get_standard_footer(
 
         version = atomate2.siesta.__version__
         footer.append(f"atomate2siesta version: {version}")
-    except Exception:
+    except Exception:  # noqa: BLE001  version lookup is best-effort
         footer.append("atomate2siesta version: unknown")
 
     # Additional information
@@ -164,7 +165,7 @@ def get_section_header(
 
 
 class TextFileWriter:
-    """
+    r"""
     Context manager for writing text files with consistent formatting.
 
     This class provides a convenient way to write text files with standard
@@ -186,8 +187,8 @@ class TextFileWriter:
     Example
     -------
     >>> with TextFileWriter("results.txt", "Analysis Results") as f:
-    ...     f.write("Result 1: 42\\n")
-    ...     f.write("Result 2: 3.14\\n")
+    ...     f.write("Result 1: 42\n")
+    ...     f.write("Result 2: 3.14\n")
     """
 
     def __init__(
@@ -197,7 +198,7 @@ class TextFileWriter:
         width: int = 80,
         include_timestamp: bool = True,
         additional_info: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Initialize the TextFileWriter."""
         self.filename = filename
         self.title = title
@@ -206,14 +207,19 @@ class TextFileWriter:
         self.additional_info = additional_info
         self._file = None
 
-    def __enter__(self):
+    def __enter__(self) -> TextIO:
         """Open file and write header."""
         self._file = open(self.filename, "w")
         header = get_standard_header(self.title, self.width)
         self._file.write(header)
         return self._file
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> bool:
         """Write footer and close file."""
         if self._file:
             footer = get_standard_footer(

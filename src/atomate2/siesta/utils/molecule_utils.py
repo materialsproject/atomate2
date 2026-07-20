@@ -66,7 +66,7 @@ def rotate_molecule(
         theta = np.arccos(cos_theta)
 
         # Rodrigues' rotation formula
-        K = np.array(
+        K = np.array(  # noqa: N806
             [
                 [0, -rotation_axis_normal[2], rotation_axis_normal[1]],
                 [rotation_axis_normal[2], 0, -rotation_axis_normal[0]],
@@ -74,26 +74,26 @@ def rotate_molecule(
             ]
         )
         identity_matrix = np.eye(3)
-        R = identity_matrix + np.sin(theta) * K + (1 - np.cos(theta)) * K @ K
+        R = identity_matrix + np.sin(theta) * K + (1 - np.cos(theta)) * K @ K  # noqa: N806
     else:
-        R = np.eye(3)
+        R = np.eye(3)  # noqa: N806
 
     # Apply additional rotation if specified
     if extra_rotation != 0.0:
         theta_extra = np.radians(extra_rotation)
-        K_extra = np.array(
+        K_extra = np.array(  # noqa: N806
             [
                 [0, -rotation_axis[2], rotation_axis[1]],
                 [rotation_axis[2], 0, -rotation_axis[0]],
                 [-rotation_axis[1], rotation_axis[0], 0],
             ]
         )
-        R_extra = (
+        R_extra = (  # noqa: N806
             np.eye(3)
             + np.sin(theta_extra) * K_extra
             + (1 - np.cos(theta_extra)) * K_extra @ K_extra
         )
-        R = R_extra @ R
+        R = R_extra @ R  # noqa: N806
 
     # Apply rotation to molecule
     coords = np.array([site.coords for site in mol.sites])
@@ -166,7 +166,7 @@ def prepare_molecule_with_orientation(
         try:
             ase_mol = ase_molecule(molecule)
             mol = adaptor.get_molecule(ase_mol)
-        except Exception:
+        except Exception:  # noqa: BLE001  fall back to single atom on any build error
             # Fallback: single atom
             mol = Molecule([molecule], [[0, 0, 0]])
     else:
@@ -215,7 +215,8 @@ def molecule_to_structure_in_box(
     """
     Convert Molecule to Structure by placing it in a cubic box.
 
-    This is necessary for SIESTA calculations which require periodic boundary conditions.
+    This is necessary for SIESTA calculations which require periodic boundary
+    conditions.
 
     Parameters
     ----------

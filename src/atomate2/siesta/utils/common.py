@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 console = Console()
 
 
-def print_in_box_rich(settings_dict):
+def print_in_box_rich(settings_dict: dict) -> None:
     """
-    Prints settings in a visually appealing box using the 'rich' library.
+    Print settings in a visually appealing box using the 'rich' library.
 
     Parameters
     ----------
@@ -46,7 +46,7 @@ def print_in_box_rich(settings_dict):
     console.print(Align.center(settings_panel))
 
 
-def print_in_box(text_lines):
+def print_in_box(text_lines: list[str]) -> None:
     """
     Print text lines inside an ASCII box border.
 
@@ -60,19 +60,19 @@ def print_in_box(text_lines):
     max_length = max(len(line) for line in text_lines)
 
     # Print top border
-    print("+" + "-" * (max_length + 2) + "+")
+    print("+" + "-" * (max_length + 2) + "+")  # noqa: T201
 
     # Print each line with side borders
     for line in text_lines:
-        print(f"| {line.ljust(max_length)} |")
+        print(f"| {line.ljust(max_length)} |")  # noqa: T201
 
     # Print bottom border
-    print("+" + "-" * (max_length + 2) + "+")
+    print("+" + "-" * (max_length + 2) + "+")  # noqa: T201
 
 
-def print_docstring_in_box(docstring: str, title: str = "Class Description"):
+def print_docstring_in_box(docstring: str, title: str = "Class Description") -> None:
     """
-    Prints a docstring in a visually appealing box using the 'rich' library.
+    Print a docstring in a visually appealing box using the 'rich' library.
 
     This function takes a docstring and a title, then formats them into a
     centered, styled panel for clear and attractive display in the console.

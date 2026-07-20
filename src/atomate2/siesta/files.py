@@ -7,7 +7,7 @@ import os
 import shutil
 from glob import glob
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
 from rich.console import Console
@@ -109,7 +109,7 @@ def copy_siesta_outputs(
     logger.debug(f"Files to copy (flattened): {all_files_relative}")
 
     # Manually copy each file to flatten directory structure
-    for src_file, dest_name in zip(all_files, all_files_relative):
+    for src_file, dest_name in zip(all_files, all_files_relative, strict=False):
         src_path = src_file if src_file.is_absolute() else Path(src_dir) / src_file
         file_client.copy(src_path, dest_name, src_host=src_host)
 
@@ -129,7 +129,7 @@ def write_siesta_input_set(
     input_set_generator: SiestaInputGenerator,
     directory: str | Path = ".",
     prev_dir: str | Path | None = None,
-    **kwargs,
+    **kwargs,  # noqa: ARG001 kept for documented write_input passthrough API
 ) -> None:
     """Write SIESTA input set.
 
@@ -189,7 +189,9 @@ def cleanup_siesta_outputs(
         file_client.remove(file)
 
 
-def load_siesta_input(dirpath: Path | str, fname: str = "siesta_parameters.json"):
+def load_siesta_input(
+    dirpath: Path | str, fname: str = "siesta_parameters.json"
+) -> Any:
     """Load the SiestaInput object from a given directory.
 
     Parameters
@@ -234,10 +236,7 @@ def read_directly_from_siesta_out(
         If multiple=True and no matches found, value will be None.
     """
     query_info: dict[str, str | list[str] | None]
-    if multiple:
-        query_info = {what: []}
-    else:
-        query_info = {}
+    query_info = {what: []} if multiple else {}
 
     with open(file_path) as file:
         for line in file:
@@ -279,7 +278,8 @@ def copy_file_from_flos(file_name: str, destination_dir: Path | str) -> None:
 
     if not flos_path:
         console.print(
-            "[bold red]EnvironmentError:[/bold red] FLOS_PATH is not set in the SETTINGS.",
+            "[bold red]EnvironmentError:[/bold red] "
+            "FLOS_PATH is not set in the SETTINGS.",
             style="red",
         )
         raise OSError("FLOS_PATH is not configured")
@@ -347,14 +347,16 @@ def extract_siesta_timing(dir_name: str | Path) -> float | None:
 
                 with open_func(timing_file, mode) as f:
                     for line in f:
-                        # Look for: "timer: Total elapsed wall-clock time (sec) =  0.592"
+                        # Look for a line like:
+                        # "timer: Total elapsed wall-clock time (sec) =  0.592"
                         match = re.search(
-                            r"timer:\s+Total elapsed wall-clock time \(sec\)\s+=\s+([\d.]+)",
+                            r"timer:\s+Total elapsed wall-clock time "
+                            r"\(sec\)\s+=\s+([\d.]+)",
                             line,
                         )
                         if match:
                             return float(match.group(1))
-            except Exception:
+            except Exception:  # noqa: BLE001, S112 best-effort timing parse
                 continue
 
     # Fallback: check siesta.out files
@@ -381,7 +383,7 @@ def extract_siesta_timing(dir_name: str | Path) -> float | None:
                         )
                         if match:
                             return float(match.group(1))
-            except Exception:
+            except Exception:  # noqa: BLE001, S112 best-effort timing parse
                 continue
 
     return None

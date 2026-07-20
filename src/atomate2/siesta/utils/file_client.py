@@ -164,7 +164,8 @@ class FileClient:
             return False
         return True
 
-    # def is_file(self, path: Optional[str] | Optional[Path], host: Optional[str] | None = None) -> bool:
+    # def is_file(self, path: Optional[str] | Optional[Path],
+    #             host: Optional[str] | None = None) -> bool:
     def is_file(self, path: str | Path, host: str | None = None) -> bool:
         """
         Whether a path is a file.
@@ -525,9 +526,7 @@ class FileClient:
             _stdin, _stdout, _stderr = ssh.exec_command(f"gunzip -f {path!s}")
 
     def close(self) -> None:
-        """
-        Close all connections.
-        """
+        """Close all connections."""
         logger.info("FileClient.close()")
         for connection in self.connections.values():
             connection["ssh"].close()
@@ -535,9 +534,7 @@ class FileClient:
         self.connections = {}
 
     def __enter__(self) -> FileClient:  # noqa: PYI034
-        """
-        Support for "with" context.
-        """
+        """Support for "with" context."""
         logger.info("FileClient.__enter__()")
         return self
 
@@ -547,9 +544,7 @@ class FileClient:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        """
-        Support for "with" context.
-        """
+        """Support for "with" context."""
         logger.info("FileClient.__exit__()")
         self.close()
 

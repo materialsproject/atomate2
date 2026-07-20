@@ -61,7 +61,7 @@ class ExtendedAtomate2Settings(BaseSettings):
     )
 
     SIESTA_SHOW_BANNER: bool = Field(
-        True,
+        default=True,
         description="Whether to display the welcome banner and logo on module import",
     )
 
@@ -73,23 +73,28 @@ class ExtendedAtomate2Settings(BaseSettings):
             "Control parameter evolution display level:\n"
             "  - 'none': No parameter tracking display\n"
             "  - 'user': Show only initial user-provided parameters\n"
-            "  - 'diff': Show only changes (added/modified by dataclasses and powerups)\n"
+            "  - 'diff': Show only changes "
+            "(added/modified by dataclasses and powerups)\n"
             "  - 'summary': Show initial + changes summary (default)\n"
             "  - 'full': Show all stages with complete final parameter table"
         ),
     )
 
     SIESTA_SHOW_DOCSTRINGS: bool = Field(
-        True,
-        description="Whether to display FlowMaker docstrings in Rich panels when .make() is called",
+        default=True,
+        description=(
+            "Whether to display FlowMaker docstrings in Rich panels "
+            "when .make() is called"
+        ),
     )
 
     SIESTA_ZIP_FILES: bool | Literal["atomate"] = Field(
         "atomate",
         description=(
             "Determine if the files in the folder are being compressed. If True "
-            "all the files are compressed. If 'atomate' only a selection of files related "
-            "to the simulation will be compressed. If False no file is compressed."
+            "all the files are compressed. If 'atomate' only a selection of "
+            "files related to the simulation will be compressed. If False no "
+            "file is compressed."
         ),
     )
 

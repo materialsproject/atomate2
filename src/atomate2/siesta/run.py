@@ -76,6 +76,7 @@ def run_siesta(
         env=get_siesta_run_env(),
         capture_output=True,
         text=True,
+        check=False,
     )
     # Optionally log the output for debugging
     if result.stdout:
@@ -169,60 +170,54 @@ def run_siesta_socket(
         calc.close()
 
 
-def run_vibra(vibra_cmd: str = None):
-    """
-    Function to run the VIBRA command.
-    """
+def run_vibra(vibra_cmd: str = None) -> None:
+    """Run the VIBRA command."""
     logger.info("run_vibra()")
     try:
         if vibra_cmd is None:
             vibra_command = SETTINGS.VIBRA_CMD
-        process = subprocess.run(vibra_command, shell=True, check=True)
+        process = subprocess.run(vibra_command, shell=True, check=True)  # noqa: S602 VIBRA must be run
         if process.returncode == 0:
             logger.info("VIBRA ran successfully!")
         else:
             logger.error("VIBRA returned a non-zero exit code.")
     except subprocess.CalledProcessError as e:
-        logger.error(f"Error running VIBRA: {e}")
-    except Exception as e:
-        logger.error(f"Unexpected error occurred: {e}")
+        logger.error(f"Error running VIBRA: {e}")  # noqa: TRY400 preserve message-only log
+    except Exception as e:  # noqa: BLE001 log-and-continue on any failure
+        logger.error(f"Unexpected error occurred: {e}")  # noqa: TRY400 preserve message-only log
 
 
-def run_optical_input(optical_input_cmd: str = None):
-    """
-    Function to run the Optical_input command.
-    """
+def run_optical_input(optical_input_cmd: str = None) -> None:
+    """Run the Optical_input command."""
     logger.info("run_optical_input()")
     try:
         if optical_input_cmd is None:
             optical_input_command = SETTINGS.OPTICAL_INPUT_CMD
 
-        process = subprocess.run(optical_input_command, shell=True, check=True)
+        process = subprocess.run(optical_input_command, shell=True, check=True)  # noqa: S602 Optical_input must be run
         if process.returncode == 0:
             logger.info("Optical_input ran successfully!")
         else:
             logger.error("Optical_input returned a non-zero exit code.")
     except subprocess.CalledProcessError as e:
-        logger.error(f"Error running Optical_input: {e}")
-    except Exception as e:
-        logger.error(f"Unexpected error occurred: {e}")
+        logger.error(f"Error running Optical_input: {e}")  # noqa: TRY400 preserve message-only log
+    except Exception as e:  # noqa: BLE001 log-and-continue on any failure
+        logger.error(f"Unexpected error occurred: {e}")  # noqa: TRY400 preserve message-only log
 
 
-def run_optical(optical_cmd: str = None):
-    """
-    Function to run the Optical_input command.
-    """
+def run_optical(optical_cmd: str = None) -> None:
+    """Run the Optical_input command."""
     logger.info("run_optical()")
     try:
         if optical_cmd is None:
             optical_command = SETTINGS.OPTICAL_CMD
 
-        process = subprocess.run(optical_command, shell=True, check=True)
+        process = subprocess.run(optical_command, shell=True, check=True)  # noqa: S602 Optical must be run
         if process.returncode == 0:
             logger.info("Optical ran successfully!")
         else:
             logger.error("Optical returned a non-zero exit code.")
     except subprocess.CalledProcessError as e:
-        logger.error(f"Error running Optical: {e}")
-    except Exception as e:
-        logger.error(f"Unexpected error occurred: {e}")
+        logger.error(f"Error running Optical: {e}")  # noqa: TRY400 preserve message-only log
+    except Exception as e:  # noqa: BLE001 log-and-continue on any failure
+        logger.error(f"Unexpected error occurred: {e}")  # noqa: TRY400 preserve message-only log

@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Render a merged Atomate2-Siesta ASCII logo in the terminal."""
+
 import os
 import sys
 
@@ -9,16 +11,17 @@ from rich.panel import Panel
 from rich.text import Text
 
 
-def print_fancy_logo():
+def print_fancy_logo() -> None:
     """
-    Clears the terminal and prints a merged Atomate2-Siesta logo using 'rich'
-    and 'pyfiglet' libraries for styling and layout.
+    Clear the terminal and print a merged Atomate2-Siesta logo.
+
+    Uses the 'rich' and 'pyfiglet' libraries for styling and layout.
     """
     # Initialize a Rich Console
     console = Console()
 
     # Clear the terminal screen before printing
-    os.system("cls" if os.name == "nt" else "clear")
+    os.system("cls" if os.name == "nt" else "clear")  # noqa: S605
 
     # --- Create the merged logo using pyfiglet ---
     font_style = "slant"
@@ -84,5 +87,5 @@ if __name__ == "__main__":
         print_fancy_logo()
     except KeyboardInterrupt:
         # Handle user interruption (Ctrl+C) gracefully
-        print("\n\nLogo display stopped by user.")
+        print("\n\nLogo display stopped by user.")  # noqa: T201
         sys.exit(0)

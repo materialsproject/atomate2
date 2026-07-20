@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Job, Maker
 
 from atomate2.siesta.jobs.base import BaseSiestaMaker
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
+
+    from atomate2.siesta.cluster_profiles import ClusterProfile
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +76,7 @@ def update_user_siesta_settings(
 ) -> Job | Flow | Maker:
     """
     Update the user_params of any SiestaInputGenerator in the flow.
+
     Alternatively, if a Maker is supplied, the user_params of the maker will
     be updated.
     Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
@@ -122,11 +128,12 @@ def update_user_siesta_settings(
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
-def update_fdf_siesta_settings(job, user_settings: dict):
+def update_fdf_siesta_settings(job: Job, user_settings: dict) -> Job:
     """
-    Updates the SIESTA job with user-defined settings. This function will map SIESTA FDF
-    input names (like 'PAO.SplitNorm') to the corresponding class attributes and update
-    them.
+    Update a SIESTA job with user-defined FDF settings.
+
+    Maps SIESTA FDF input names (like 'PAO.SplitNorm') to the corresponding
+    class attributes and updates them.
 
     Args:
         job: The SIESTA job to be updated.
@@ -162,7 +169,7 @@ def add_metadata(
     flow: Job | Flow | Maker,
     metadata: dict[str, Any],
     name_filter: str | None = None,
-    class_filter: Maker | None = None,
+    class_filter: Maker | None = None,  # noqa: ARG001 kept for interface parity
 ) -> Job | Flow | Maker:
     """
     Add metadata to jobs in a Flow, Job, or Maker.
@@ -193,11 +200,12 @@ def add_metadata(
             updated_flow.metadata.update(metadata)
     elif isinstance(updated_flow, Flow):
         for job in updated_flow:
-            if isinstance(job, Job):
-                if name_filter is None or name_filter in job.name:
-                    if job.metadata is None:
-                        job.metadata = {}
-                    job.metadata.update(metadata)
+            if isinstance(job, Job) and (
+                name_filter is None or name_filter in job.name
+            ):
+                if job.metadata is None:
+                    job.metadata = {}
+                job.metadata.update(metadata)
     elif isinstance(updated_flow, Maker):
         # For Makers, we can't add metadata directly, so we just return it
         logger.warning(
@@ -207,7 +215,9 @@ def add_metadata(
     return updated_flow
 
 
-def _read_xsf_to_pymatgen(file_path: str, as_molecule: bool = False):
+def _read_xsf_to_pymatgen(
+    file_path: str, as_molecule: bool = False
+) -> Structure | Molecule:
     """
     Read XSF file and convert to pymatgen Structure or Molecule.
 
@@ -233,8 +243,8 @@ def _read_xsf_to_pymatgen(file_path: str, as_molecule: bool = False):
         atoms = ase_read(file_path, format="xsf")
     except Exception as e:
         error_msg = f"Error reading XSF file {file_path}: {e!s}"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
+        logger.error(error_msg)  # noqa: TRY400 keep plain error log without traceback
+        raise ValueError(error_msg) from e
 
     if as_molecule:
         # Convert to Molecule (non-periodic)
@@ -249,7 +259,9 @@ def _read_xsf_to_pymatgen(file_path: str, as_molecule: bool = False):
     return structure
 
 
-def _read_cif_to_pymatgen(file_path: str, as_molecule: bool = False):
+def _read_cif_to_pymatgen(
+    file_path: str, as_molecule: bool = False
+) -> Structure | Molecule:
     """
     Read CIF file and convert to pymatgen Structure or Molecule.
 
@@ -273,8 +285,8 @@ def _read_cif_to_pymatgen(file_path: str, as_molecule: bool = False):
         structure = Structure.from_file(file_path)
     except Exception as e:
         error_msg = f"Error reading CIF file {file_path}: {e!s}"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
+        logger.error(error_msg)  # noqa: TRY400 keep plain error log without traceback
+        raise ValueError(error_msg) from e
 
     if as_molecule:
         # Convert to Molecule (extract coordinates, remove periodicity)
@@ -293,9 +305,9 @@ def siesta_to_pymatgen(
     remove_ghost: bool = True,
     add_site_properties: bool = True,
     as_molecule: bool = False,
-):
+) -> Structure | Molecule:
     """
-    Convert structure file (SIESTA XV/FDF, XSF, or CIF) to pymatgen Structure or Molecule.
+    Convert a SIESTA/XSF/CIF structure file to a pymatgen Structure or Molecule.
 
     This function reads a structure file in various formats, converts it to
     pymatgen Structure or Molecule format, and optionally removes ghost atoms
@@ -374,9 +386,9 @@ def siesta_to_pymatgen(
     file_ext = Path(file_path).suffix.lower()
 
     # Route to appropriate reader based on file type
-    if file_ext in [".xsf"]:
+    if file_ext == ".xsf":
         return _read_xsf_to_pymatgen(file_path, as_molecule)
-    if file_ext in [".cif"]:
+    if file_ext == ".cif":
         return _read_cif_to_pymatgen(file_path, as_molecule)
     if file_ext in [".fdf", ".xv", ".XV"]:
         # SIESTA format - use original implementation
@@ -396,15 +408,15 @@ def siesta_to_pymatgen(
         structure_sisl = sisl.get_sile(file_path).read_geometry(output=use_xv)
     except Exception as e:
         error_msg = f"Error reading geometry from {file_path}: {e!s}"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
+        logger.error(error_msg)  # noqa: TRY400 keep plain error log without traceback
+        raise ValueError(error_msg) from e
 
     # Get species information from ChemicalSpeciesLabel block
     try:
         sile = sisl.get_sile(file_path)
         sile.read()
         species_block = sile.get("ChemicalSpeciesLabel")
-    except Exception:
+    except Exception:  # noqa: BLE001 species info is optional; degrade gracefully
         species_block = None
         logger.warning(
             "Could not read ChemicalSpeciesLabel block, species info may be incomplete"
@@ -418,13 +430,13 @@ def siesta_to_pymatgen(
 
     # Create dictionaries for species info
     species_dict = {}
-    species_Z_dict = {}
+    species_Z_dict = {}  # noqa: N806 Z is the physical atomic-number symbol
     if species_block:
         for entry in species_block:
             parts = entry.strip().split()
             if len(parts) >= 3:
                 index = int(parts[0])  # Species index (1-based in FDF)
-                Z = int(parts[1])  # Atomic number
+                Z = int(parts[1])  # noqa: N806 Z is the atomic number
                 label = parts[2]  # Species label
                 species_dict[index] = label
                 species_Z_dict[index] = Z
@@ -432,11 +444,13 @@ def siesta_to_pymatgen(
     # Assign tags and collect species info
     tags = []
     species_labels = []
-    species_Z = []
+    species_Z = []  # noqa: N806 Z is the physical atomic-number symbol
     for specie_idx in atom_species:
         fdf_index = specie_idx + 1 if specie_idx < len(species_dict) else specie_idx
         species_label = species_dict.get(fdf_index, "")
-        Z = species_Z_dict.get(fdf_index, structure_sisl.atoms.atom[specie_idx].Z)
+        Z = species_Z_dict.get(  # noqa: N806 Z is the atomic number
+            fdf_index, structure_sisl.atoms.atom[specie_idx].Z
+        )
         species_labels.append(species_label)
         species_Z.append(Z)
         tags.append(int(specie_idx))
@@ -466,7 +480,9 @@ def siesta_to_pymatgen(
             ]
             tags_no_ghost = [tags[i] for i in non_ghost_indices]
             species_labels_no_ghost = [species_labels[i] for i in non_ghost_indices]
-            species_Z_no_ghost = [species_Z[i] for i in non_ghost_indices]
+            species_Z_no_ghost = [  # noqa: N806 Z is the atomic number
+                species_Z[i] for i in non_ghost_indices
+            ]
 
             structure_ase = Atoms(
                 symbols=symbols_no_ghost,
@@ -487,7 +503,7 @@ def siesta_to_pymatgen(
             )
             tags = tags_no_ghost
             species_labels = species_labels_no_ghost
-            species_Z = species_Z_no_ghost
+            species_Z = species_Z_no_ghost  # noqa: N806 Z is the atomic number
 
     # Convert to pymatgen Structure or Molecule
     if as_molecule:
@@ -499,20 +515,21 @@ def siesta_to_pymatgen(
 
         try:
             molecule = Molecule(species=species, coords=coords)
-            logger.info(f"Converted molecule: {molecule.composition.formula}")
-            return molecule
         except Exception as e:
             error_msg = f"Error converting to pymatgen Molecule: {e!s}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+            logger.error(error_msg)  # noqa: TRY400 keep plain error log, no traceback
+            raise ValueError(error_msg) from e
+        else:
+            logger.info(f"Converted molecule: {molecule.composition.formula}")
+            return molecule
     else:
         # Return as Structure (periodic)
         try:
             structure_pymatgen = AseAtomsAdaptor.get_structure(structure_ase)
         except Exception as e:
             error_msg = f"Error converting to pymatgen Structure: {e!s}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+            logger.error(error_msg)  # noqa: TRY400 keep plain error log, no traceback
+            raise ValueError(error_msg) from e
 
         # Add site properties if requested
         if add_site_properties:
@@ -535,9 +552,10 @@ def update_jobflow_resources(
     """
     Update jobflow-remote resources for jobs based on name pattern matching.
 
-    This powerup allows you to set different computational resources (cores, memory, time)
-    for different types of jobs in a workflow based on their names. Useful for
-    heterogeneous workflows where small molecules need fewer resources than large slabs.
+    This powerup allows you to set different computational resources
+    (cores, memory, time) for different types of jobs in a workflow based on
+    their names. Useful for heterogeneous workflows where small molecules need
+    fewer resources than large slabs.
 
     Parameters
     ----------
@@ -652,7 +670,9 @@ def update_jobflow_resources(
                 updated_flow.update_config({"manager_config": {"resources": resources}})
                 if verbose:
                     cores = resources.get("ntasks_per_node", "?")
-                    print(f"  {job_name}: {cores} cores (matched pattern: '{pattern}')")
+                    print(  # noqa: T201 user-facing verbose output
+                        f"  {job_name}: {cores} cores (matched pattern: '{pattern}')"
+                    )
                 matched = True
                 break
 
@@ -663,12 +683,12 @@ def update_jobflow_resources(
             )
             if verbose:
                 cores = default_resources.get("ntasks_per_node", "?")
-                print(f"  {job_name}: {cores} cores (default)")
+                print(f"  {job_name}: {cores} cores (default)")  # noqa: T201
 
     # Handle Flow (recursively process nested flows)
     elif isinstance(updated_flow, Flow):
         if verbose:
-            print("\nUpdating jobflow-remote resources:")
+            print("\nUpdating jobflow-remote resources:")  # noqa: T201
 
         def _process_item(item: Flow | Job) -> None:
             if isinstance(item, Flow):
@@ -686,8 +706,9 @@ def update_jobflow_resources(
                     job.update_config({"manager_config": {"resources": resources}})
                     if verbose:
                         cores = resources.get("ntasks_per_node", "?")
-                        print(
-                            f"  {job_name}: {cores} cores (matched pattern: '{pattern}')"
+                        print(  # noqa: T201 user-facing verbose output
+                            f"  {job_name}: {cores} cores "
+                            f"(matched pattern: '{pattern}')"
                         )
                     matched = True
                     break
@@ -697,7 +718,7 @@ def update_jobflow_resources(
                 job.update_config({"manager_config": {"resources": default_resources}})
                 if verbose:
                     cores = default_resources.get("ntasks_per_node", "?")
-                    print(f"  {job_name}: {cores} cores (default)")
+                    print(f"  {job_name}: {cores} cores (default)")  # noqa: T201
 
         for item in updated_flow.jobs:
             _process_item(item)
@@ -801,12 +822,15 @@ def _estimate_resources_heuristic(num_atoms: int) -> dict[str, Any]:
     return {"ntasks_per_node": cores, "time": "24:00:00", "cpus_per_task": 1}
 
 
-def _estimate_resources(num_atoms: int, profile=None) -> dict[str, Any]:
-    """Estimate HPC resources based on atom count, optionally constrained by a cluster profile.
+def _estimate_resources(
+    num_atoms: int, profile: ClusterProfile | None = None
+) -> dict[str, Any]:
+    """Estimate HPC resources from atom count, optionally capped by a cluster profile.
 
     When *profile* is ``None`` the function returns the same result as
-    before (pure heuristic).  When a :class:`~atomate2.siesta.cluster_profiles.ClusterProfile`
-    is supplied the heuristic output is adjusted:
+    before (pure heuristic).  When a
+    :class:`~atomate2.siesta.cluster_profiles.ClusterProfile` is supplied the
+    heuristic output is adjusted:
 
     * **Core capping** — ``ntasks_per_node`` is capped at ``cores_per_node``.
     * **Multi-node spreading** — if ideal cores exceed a single node, ``nodes``
@@ -909,7 +933,7 @@ def _get_atom_count_from_job(job: Job) -> int | None:
     """
 
     def _is_structure(obj: Any) -> bool:
-        """Check if an object is a pymatgen Structure or Molecule (not an OutputReference)."""
+        """Return True if obj is a pymatgen Structure or Molecule (not a reference)."""
         from jobflow.core.reference import OutputReference
 
         if isinstance(obj, OutputReference):
@@ -922,13 +946,13 @@ def _get_atom_count_from_job(job: Job) -> int | None:
             for arg in job.function_args:
                 if _is_structure(arg):
                     return arg.num_sites
-    except Exception:
+    except Exception:  # noqa: BLE001, S110 best-effort structure inspection
         pass
 
     try:
         # Check keyword args for a Structure (e.g., host_structure=...)
         if hasattr(job, "function_kwargs"):
-            for key, val in job.function_kwargs.items():
+            for val in job.function_kwargs.values():
                 if _is_structure(val):
                     return val.num_sites
             # Also check for explicit n_atoms kwarg (e.g., extract_chemical_potential)
@@ -936,7 +960,7 @@ def _get_atom_count_from_job(job: Job) -> int | None:
                 n = job.function_kwargs["n_atoms"]
                 if isinstance(n, int):
                     return n
-    except Exception:
+    except Exception:  # noqa: BLE001, S110 best-effort structure inspection
         pass
 
     return None
@@ -945,7 +969,7 @@ def _get_atom_count_from_job(job: Job) -> int | None:
 def auto_allocate_resources(
     flow: Flow | Job,
     base_resources: dict[str, Any] | None = None,
-    cluster_profile=None,
+    cluster_profile: ClusterProfile | dict[str, Any] | None = None,
     verbose: bool = True,
 ) -> Flow | Job:
     """Auto-allocate HPC resources based on atom count for each job in a workflow.
@@ -1049,9 +1073,9 @@ def auto_allocate_resources(
     updated_flow = deepcopy(flow)
 
     if verbose:
-        print("\nAuto-allocating HPC resources:")
+        print("\nAuto-allocating HPC resources:")  # noqa: T201
         if profile is not None:
-            print(f"  Cluster profile: {profile.summary()}")
+            print(f"  Cluster profile: {profile.summary()}")  # noqa: T201
 
     # Post-processing jobs that don't run SIESTA (minimal resources)
     _postproc_patterns = ("finalize", "summary", "mu_", "extract_chemical")
@@ -1070,14 +1094,16 @@ def auto_allocate_resources(
             if verbose:
                 cores = merged.get("ntasks_per_node", "?")
                 time_str = merged.get("time", "?")
-                print(f"  {job.name}: {cores} core, {time_str} (post-processing)")
+                print(  # noqa: T201 user-facing verbose output
+                    f"  {job.name}: {cores} core, {time_str} (post-processing)"
+                )
             return
 
         num_atoms = _get_atom_count_from_job(job)
 
         if num_atoms is None:
             if verbose:
-                print(f"  {job.name}: skipped (no structure detected)")
+                print(f"  {job.name}: skipped (no structure detected)")  # noqa: T201
             return
 
         # Get auto-detected resources (profile-aware when available)
@@ -1097,7 +1123,7 @@ def auto_allocate_resources(
             time_val = merged.get("time", "?")
             nodes = merged.get("nodes", 1)
             node_str = f", {nodes} nodes" if nodes > 1 else ""
-            print(
+            print(  # noqa: T201 user-facing verbose output
                 f"  {job.name}: {cores} cores{node_str}, {time_val} ({num_atoms} atoms)"
             )
 
@@ -1114,10 +1140,8 @@ def auto_allocate_resources(
     return updated_flow
 
 
-def write_output_json_local(results):
-    """
-    Writing json local database
-    """
+def write_output_json_local(results: dict[str, Any]) -> None:
+    """Write JSON output to a local database file."""
     import json
     from datetime import datetime
 
@@ -1127,7 +1151,7 @@ def write_output_json_local(results):
 
     # Custom JSON encoder to handle datetime, Element, and other non-serializable types
     class CustomJSONEncoder(json.JSONEncoder):
-        def default(self, obj):
+        def default(self, obj: Any) -> Any:
             if isinstance(obj, datetime):
                 return obj.isoformat()  # Convert datetime to ISO 8601 string
             if isinstance(obj, Element):
