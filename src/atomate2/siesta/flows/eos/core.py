@@ -673,7 +673,7 @@ def collect_eos_parameter_data(
                 )
 
         except Exception as e:
-            logger.error(f"Error extracting EOS for {metadata['label']}: {e}")
+            logger.exception(f"Error extracting EOS for {metadata['label']}: {e}")
             if console:
                 console.print(f"  [red]✗ {metadata['label']}: Error - {e}[/red]")
 
@@ -916,7 +916,7 @@ def plot_eos_parameter_fits_from_data(
                 console.print(f"  ✓ Plotted {label}: {len(volumes)} points")
 
         except Exception as e:
-            logger.error(f"Error plotting curve {i}: {e}")
+            logger.exception(f"Error plotting curve {i}: {e}")
             if console:
                 console.print(f"  [red]✗ Curve {i}: {e}[/red]")
 

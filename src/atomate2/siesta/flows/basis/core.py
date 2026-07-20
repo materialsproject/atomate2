@@ -532,7 +532,7 @@ def collect_eos_basis_data(
                 )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.error(f"Error processing job {job_name}: {e}")
+            logger.exception(f"Error processing job {job_name}: {e}")
             import traceback
 
             logger.debug(traceback.format_exc())
@@ -755,7 +755,7 @@ def plot_eos_overlay(
                                 )
 
         except Exception as e:
-            logger.error(f"Error plotting {job_name}: {e}")
+            logger.exception(f"Error plotting {job_name}: {e}")
             continue
 
     if plotted_count == 0:

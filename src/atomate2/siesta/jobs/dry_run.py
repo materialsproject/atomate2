@@ -102,7 +102,7 @@ def dry_run_save_structure(
             structure.to(filename=str(filename), fmt=output_format)
         logger.info(f"[DRY RUN] Saved {label}: {filename}")
     except Exception as e:
-        logger.error(f"[DRY RUN] Failed to save {label}: {e}")
+        logger.exception(f"[DRY RUN] Failed to save {label}: {e}")
         raise
 
     # Collect structure information
@@ -222,7 +222,7 @@ def dry_run_save_multiple_structures(
                 }
             )
         except Exception as e:
-            logger.error(f"[DRY RUN] Failed to save {label}: {e}")
+            logger.exception(f"[DRY RUN] Failed to save {label}: {e}")
             raise
 
     logger.info(f"[DRY RUN] Saved {len(structure_files)} structures to {output_dir}")

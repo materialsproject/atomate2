@@ -49,7 +49,7 @@ def plot_phonon_band_structure(
         from phonopy import Phonopy
         from phonopy.structure.atoms import PhonopyAtoms
     except ImportError as e:
-        logger.error("matplotlib or phonopy not available for plotting")
+        logger.exception("matplotlib or phonopy not available for plotting")
         raise ImportError("Install matplotlib and phonopy for plotting") from e
 
     logger.info("Plotting phonon band structure")

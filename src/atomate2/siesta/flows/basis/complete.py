@@ -382,10 +382,10 @@ def collect_complete_basis_data(
             )
 
         except Exception as e:
-            logger.error(f"Failed to extract data from {job_name}: {e}")
+            logger.exception(f"Failed to extract data from {job_name}: {e}")
             import traceback
 
-            logger.error(traceback.format_exc())
+            logger.exception(traceback.format_exc())
             continue
 
     logger.info(f"Collected {len(data['energies'])} complete basis results")

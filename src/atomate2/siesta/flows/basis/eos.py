@@ -619,7 +619,7 @@ def collect_basis_params_data(
             )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.error(f"Error processing job {job_name}: {e}")
+            logger.exception(f"Error processing job {job_name}: {e}")
             import traceback
 
             logger.debug(traceback.format_exc())
@@ -2634,10 +2634,10 @@ def collect_eos_basis_data(
                 )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.error(f"Error processing job {job_name} (UUID: {job_uuid}): {e}")
+            logger.exception(f"Error processing job {job_name} (UUID: {job_uuid}): {e}")
             import traceback
 
-            logger.error(traceback.format_exc())
+            logger.exception(traceback.format_exc())
             continue
 
     if not basis_data["basis_sets"]:

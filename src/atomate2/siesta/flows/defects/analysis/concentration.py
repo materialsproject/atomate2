@@ -451,10 +451,10 @@ class DefectConcentrationAnalyzer:
             )
             logger.info(f"Converged Fermi level: {fermi_level:.6f} eV")
         except ValueError as e:
-            logger.error(
+            logger.exception(
                 f"Failed to find Fermi level in range [{ef_min:.3f}, {ef_max:.3f}] eV"
             )
-            logger.error(
+            logger.exception(
                 f"Residual at bounds: f({ef_min:.3f}) = "
                 f"{self.charge_neutrality_residual(ef_min):.2e}, "
                 f"f({ef_max:.3f}) = {self.charge_neutrality_residual(ef_max):.2e}"

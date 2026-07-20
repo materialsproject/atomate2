@@ -305,11 +305,11 @@ def collect_basis_size_data(
             )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.error(f"Error processing job {job_name}: {e}")
+            logger.exception(f"Error processing job {job_name}: {e}")
             import traceback
 
-            logger.error(traceback.format_exc())
-            logger.error(
+            logger.exception(traceback.format_exc())
+            logger.exception(
                 f"Output type: {type(output)}, has energy: {hasattr(output, 'energy')}"
             )
             continue

@@ -119,7 +119,7 @@ def collect_convergence_data(
             )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.error(f"Error processing job {job_name}: {e}")
+            logger.exception(f"Error processing job {job_name}: {e}")
             continue
 
     if not data["energies"]:

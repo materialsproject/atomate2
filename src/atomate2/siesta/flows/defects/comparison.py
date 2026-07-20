@@ -708,7 +708,7 @@ def compare_all_corrections(
             )
 
         except Exception as e:
-            logger.error(f"Failed to apply {scheme_name} correction: {e}")
+            logger.exception(f"Failed to apply {scheme_name} correction: {e}")
             continue
 
     # Calculate statistics

@@ -82,7 +82,7 @@ def plot_gruneisen_band_structure(
         import matplotlib.pyplot as plt
         from pymatgen.phonon.gruneisen import GruneisenPhononBandStructureSymmLine
     except ImportError as e:
-        logger.error("matplotlib or pymatgen not available for plotting")
+        logger.exception("matplotlib or pymatgen not available for plotting")
         raise ImportError("Install matplotlib and pymatgen for plotting") from e
 
     logger.info("Plotting Grüneisen parameter band structure")
