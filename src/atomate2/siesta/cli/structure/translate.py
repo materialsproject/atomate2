@@ -323,7 +323,8 @@ def translate(
             from pymatgen.io.xcrysden import XSF
 
             xsf = XSF(translated_structure)
-            xsf.to_file(output)  # type: ignore[attr-defined]  # pymatgen XSF API (see flagged note)
+            with open(output, "w") as f:
+                f.write(xsf.to_str())
         elif format == "json":
             translated_structure.to(filename=output, fmt="json")
 

@@ -22,7 +22,7 @@ class BandStructureValidator(SiestaOutputValidator):
             **kwargs,
         )
 
-    def get_validation_errors(self, directory: Path | str) -> list[str]:
+    def _get_validation_errors(self, directory: Path | str) -> list[str]:
         """Get validation errors for band structure.
 
         Parameters
@@ -35,7 +35,7 @@ class BandStructureValidator(SiestaOutputValidator):
         list of str
             Validation error messages
         """
-        errors = super().get_validation_errors(directory)  # type: ignore[misc]  # BUG: parent defines _get_validation_errors (underscore); this method/call name is wrong and never invoked by check()
+        errors = super()._get_validation_errors(directory)
 
         # Check for .bands file
         directory = Path(directory)

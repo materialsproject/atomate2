@@ -815,7 +815,7 @@ def build_interface_structure(
         logger.info(f"Rotating top layer by {rotation}° around supercell center")
 
         # Calculate center of top layer supercell in Cartesian coordinates
-        center = top_copy.center_of_mass  # type: ignore[attr-defined]  # see FLAG: Structure lacks center_of_mass
+        center = top_copy.cart_coords.mean(axis=0)
 
         # Rotate each atom around the center
         theta_rad = np.deg2rad(rotation)

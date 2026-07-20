@@ -784,7 +784,7 @@ class SocketIOStaticMaker(BaseSiestaMaker):
             dumpfn(data, filename.replace(":", "."))
 
         # run SIESTA
-        run_siesta_socket(structure, **self.run_aims_kwargs)  # type: ignore[attr-defined]  # attribute does not exist at runtime; every other maker uses run_siesta_kwargs
+        run_siesta_socket(structure, **self.run_siesta_kwargs)
 
         # parse SIESTA outputs
         task_doc = SiestaTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)

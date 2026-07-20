@@ -261,12 +261,7 @@ def _build_auto_resources(
         try:
             from atomate2.siesta.cluster_profiles import ClusterProfile
 
-            # NOTE: iterating a dict yields its str keys, so ``p`` here is a
-            # profile-name string, not a ClusterProfile (see flagged bug below).
-            predefined = {
-                p.name: p  # type: ignore[attr-defined]  # BUG: p is a str key, not ClusterProfile
-                for p in ClusterProfile.list_predefined()
-            }
+            predefined = ClusterProfile.list_predefined()
             if profile_name in predefined:
                 profile = predefined[profile_name]
                 console.print(

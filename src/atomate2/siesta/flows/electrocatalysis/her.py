@@ -123,9 +123,7 @@ def _analyze_her_pathway(
         "delta_G_H": delta_G_H,
         "eta_HER": her_result["eta_HER"],
         "U_equilibrium": her_result["U_equilibrium"],
-        # NOTE: h_ads_doc is a pydantic AdsorptionScanDocument (not subscriptable);
-        # other accesses use `.best_site`. Preserving existing runtime behavior.
-        "h_best_site": h_ads_doc["best_site"],  # type: ignore[index]
+        "h_best_site": h_ads_doc.best_site,
         "temperature": temperature,
         "pressure": pressure,
         "ph": ph,
