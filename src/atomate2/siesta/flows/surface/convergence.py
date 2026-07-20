@@ -13,7 +13,7 @@ from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.utils.common import print_docstring_in_box
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
+    from pymatgen.core import Composition, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -145,7 +145,7 @@ class SurfaceEnergyConvergenceFlowMaker(BaseSiestaFlowMaker):
     symmetrize: bool = False
     convergence_threshold: float = 0.01  # J/m²
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate parameters and apply smart defaults."""
         super().__post_init__()
 
@@ -284,7 +284,7 @@ class SurfaceEnergyConvergenceFlowMaker(BaseSiestaFlowMaker):
         n_layers: int,
         vacuum: float,
         job_counter: int,
-        bulk_composition,
+        bulk_composition: Composition,
     ) -> tuple[Any, dict]:
         """
         Create a slab calculation job with given parameters.
@@ -412,7 +412,7 @@ def analyze_surface_convergence(
         bulk_composition = Composition(bulk_composition)
 
     # At this point bulk_composition is definitely a Composition object
-    assert isinstance(bulk_composition, Composition)
+    assert isinstance(bulk_composition, Composition)  # noqa: S101
 
     miller_str = f"({miller_index[0]} {miller_index[1]} {miller_index[2]})"
 
@@ -568,7 +568,7 @@ def _create_convergence_plots(
         layers = [r["n_layers"] for r in results]
         energies = [r["surface_energy_Jm2"] for r in results]
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
         # Absolute surface energy
         ax1.plot(layers, energies, "o-", linewidth=2, markersize=10, color="#1f77b4")
@@ -616,7 +616,7 @@ def _create_convergence_plots(
         vacuums = [r["vacuum"] for r in results]
         energies = [r["surface_energy_Jm2"] for r in results]
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
         # Absolute surface energy
         ax1.plot(vacuums, energies, "o-", linewidth=2, markersize=10, color="#2ca02c")
@@ -659,8 +659,8 @@ def _create_convergence_plots(
 
     else:  # both
         # Create heatmap of surface energy vs. layers and vacuum
-        layers = sorted(set(r["n_layers"] for r in results))
-        vacuums = sorted(set(r["vacuum"] for r in results))
+        layers = sorted({r["n_layers"] for r in results})
+        vacuums = sorted({r["vacuum"] for r in results})
 
         # Create 2D array
         energy_grid = np.zeros((len(vacuums), len(layers)))
@@ -669,7 +669,7 @@ def _create_convergence_plots(
             j = layers.index(r["n_layers"])
             energy_grid[i, j] = r["surface_energy_Jm2"]
 
-        fig, ax = plt.subplots(1, 1, figsize=(10, 8))
+        _fig, ax = plt.subplots(1, 1, figsize=(10, 8))
 
         im = ax.imshow(
             energy_grid,
@@ -791,7 +791,8 @@ def _write_convergence_summary(
     lines.append("=" * 80)
     lines.append("SURFACE ENERGY CONVERGENCE ANALYSIS")
     lines.append("=" * 80)
-    lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
+    lines.append(f"Generated: {generated_at}")
     lines.append(f"Material: {formula}")
     lines.append(f"Surface: {miller_str}")
     lines.append(f"Convergence mode: {convergence_mode}")
@@ -868,11 +869,11 @@ def _write_convergence_summary(
     else:  # both
         lines.append(f"{'Layers':<8} {'Vacuum':<10} {'Atoms':<8} {'γ (J/m²)':<12}")  # noqa: RUF001
         lines.append("-" * 80)
-        for r in results:
-            lines.append(
-                f"{r['n_layers']:<8} {r['vacuum']:<10.2f} {r['n_atoms']:<8} "
-                f"{r['surface_energy_Jm2']:<12.4f}"
-            )
+        lines.extend(
+            f"{r['n_layers']:<8} {r['vacuum']:<10.2f} {r['n_atoms']:<8} "
+            f"{r['surface_energy_Jm2']:<12.4f}"
+            for r in results
+        )
 
     lines.append("")
 
@@ -938,11 +939,13 @@ def _write_convergence_summary(
         lines.append("• Extend parameter range to achieve convergence")
         if convergence_mode == "layers":
             lines.append(
-                f"• Try more layers (current max: {max(r['n_layers'] for r in results)})"
+                "• Try more layers "
+                f"(current max: {max(r['n_layers'] for r in results)})"
             )
         elif convergence_mode == "vacuum":
             lines.append(
-                f"• Try larger vacuum (current max: {max(r['vacuum'] for r in results):.1f} Å)"
+                "• Try larger vacuum "
+                f"(current max: {max(r['vacuum'] for r in results):.1f} Å)"
             )
 
     lines.append("")

@@ -12,7 +12,7 @@ from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
+    from pymatgen.core import Composition, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ def calculate_multi_surface_energies(
     jobs = []
 
     # Calculate total number of jobs for counter
-    # Calculate total number of jobs for counter (will be updated after generating slabs)
+    # (will be updated after generating slabs)
 
     # 1. Calculate bulk energy
     logger.info("Adding bulk calculation job...")
@@ -182,7 +182,11 @@ def calculate_multi_surface_energies(
             else:
                 # Create SIESTA job for this slab
                 slab_job = slab_maker.make(slab)
-            slab_job.name = f"[{job_counter}_of_?]_slab_{miller_h}{miller_k}{miller_l}_{label}"  # Will update total later
+            # Will update total later
+            slab_job.name = (
+                f"[{job_counter}_of_?]_slab_"
+                f"{miller_h}{miller_k}{miller_l}_{label}"
+            )
             jobs.append(slab_job)
             job_counter += 1
 
@@ -256,7 +260,7 @@ def calculate_multi_surface_energies(
 def analyze_multi_surface_results(
     bulk_job_output: Any,
     all_slab_data: list[dict],
-    bulk_composition,
+    bulk_composition: Composition | dict,
     formula_units_per_cell: int,
 ) -> dict:
     """
@@ -344,7 +348,7 @@ def analyze_multi_surface_results(
     # 3. Write summary file
     logger.info("Creating final summary...")
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
 
     lines = []
     lines.append("=" * 80)
@@ -394,7 +398,8 @@ def analyze_multi_surface_results(
     lines.append("  • Lower γ → More stable surface (energetically favorable)")  # noqa: RUF001
     lines.append("  • Higher γ → Less stable surface (higher energy cost to form)")  # noqa: RUF001
     lines.append(
-        "  • Crystal morphology follows Wulff construction (minimizes total surface energy)"
+        "  • Crystal morphology follows Wulff construction "
+        "(minimizes total surface energy)"
     )
     lines.append("  • Surfaces with lowest γ dominate equilibrium crystal shapes")  # noqa: RUF001
     lines.append("")
@@ -432,8 +437,9 @@ def analyze_multi_surface_results(
         terminations = result["terminations"]
         lowest = min(terminations, key=lambda t: t["surface_energy"])
 
+        hkl_pad = " " * (7 - len(str(miller_h) + str(miller_k) + str(miller_l)))
         lines.append(
-            f"  ({miller_h} {miller_k} {miller_l}){' ' * (7 - len(str(miller_h) + str(miller_k) + str(miller_l)))} "
+            f"  ({miller_h} {miller_k} {miller_l}){hkl_pad} "
             f"{lowest['surface_energy']:>17.4f} "
             f"{lowest['surface_energy_Jm2']:>17.2f}  "
             f"{lowest['termination']:<15} {len(terminations)}"
@@ -454,7 +460,8 @@ def analyze_multi_surface_results(
     lines.append(f"  Surface: ({miller_h} {miller_k} {miller_l})")
     lines.append(f"  Termination: {global_min_term['termination']}")
     lines.append(
-        f"  γ = {global_min_term['surface_energy']:.4f} eV/Ų ({global_min_term['surface_energy_Jm2']:.2f} J/m²)"  # noqa: RUF001
+        f"  γ = {global_min_term['surface_energy']:.4f} eV/Ų "  # noqa: RUF001
+        f"({global_min_term['surface_energy_Jm2']:.2f} J/m²)"
     )
     lines.append("")
 
@@ -682,11 +689,12 @@ class MultiSurfaceEnergyFlowMaker(BaseSiestaFlowMaker):
     bulk_basis: str = "DZ"
     surface_layers: int = 1
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Apply smart defaults for slab k-points if not explicitly set by user.
 
-        If slab_static_maker was created with default_factory (no custom input_set_generator),
-        override the default [4,4,4] k-points with surface-appropriate [2,2,1].
+        If slab_static_maker was created with default_factory (no custom
+        input_set_generator), override the default [4,4,4] k-points with
+        surface-appropriate [2,2,1].
         """
         # CRITICAL: Call parent __post_init__ to propagate custodian/tier settings
         super().__post_init__()
@@ -707,7 +715,8 @@ class MultiSurfaceEnergyFlowMaker(BaseSiestaFlowMaker):
         if current_kpts == [4, 4, 4]:
             logger.info(
                 "Detected default k-points [4,4,4] in slab_static_maker. "
-                "Applying surface-optimized default: [2,2,1] (assumes (001)-type surfaces)."
+                "Applying surface-optimized default: [2,2,1] "
+                "(assumes (001)-type surfaces)."
             )
             # Create new user_params dict with updated k-points
             new_user_params = dict(current_user_params)  # Copy existing params
@@ -759,7 +768,9 @@ class MultiSurfaceEnergyFlowMaker(BaseSiestaFlowMaker):
         return flow
 
 
-def _create_multi_surface_plot(all_results: list[dict], bulk_composition) -> str:
+def _create_multi_surface_plot(
+    all_results: list[dict], bulk_composition: Composition | dict
+) -> str:
     """
     Create comprehensive comparison plots for multi-surface energy results.
 
@@ -811,17 +822,17 @@ def _create_multi_surface_plot(all_results: list[dict], bulk_composition) -> str
         lowest_energies_Jm2.append(lowest["surface_energy_Jm2"])
 
         # Collect all terminations for scatter plot
-        for t in terminations:
-            all_termination_data.append(
-                {
-                    "surface": surface_label,
-                    "hkl": hkl,
-                    "termination": t["termination"],
-                    "energy_eV": t["surface_energy"],
-                    "energy_Jm2": t["surface_energy_Jm2"],
-                    "is_lowest": t["is_lowest"],
-                }
-            )
+        all_termination_data.extend(
+            {
+                "surface": surface_label,
+                "hkl": hkl,
+                "termination": t["termination"],
+                "energy_eV": t["surface_energy"],
+                "energy_Jm2": t["surface_energy_Jm2"],
+                "is_lowest": t["is_lowest"],
+            }
+            for t in terminations
+        )
 
     # Create figure with 2 subplots
     _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
