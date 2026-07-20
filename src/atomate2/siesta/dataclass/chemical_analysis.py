@@ -50,7 +50,7 @@ class ChemicalAnalysis(FDFDataclass):
     # -----------------------------------
 
     charge_mulliken: str | bool = field(
-        default="none",
+        default=False,
         metadata={
             "description": "Enable modern Mulliken charge analysis",
             "SIESTA keyword": "Charge.Mulliken",
@@ -66,7 +66,7 @@ class ChemicalAnalysis(FDFDataclass):
     )
 
     charge_hirshfeld: str | bool = field(
-        default="none",
+        default=False,
         metadata={
             "description": "Enable Hirshfeld population analysis",
             "SIESTA keyword": "Charge.Hirshfeld",
@@ -74,7 +74,7 @@ class ChemicalAnalysis(FDFDataclass):
     )
 
     charge_voronoi: str | bool = field(
-        default="none",
+        default=False,
         metadata={
             "description": "Enable Voronoi population analysis",
             "SIESTA keyword": "Charge.Voronoi",

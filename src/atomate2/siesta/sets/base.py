@@ -399,8 +399,7 @@ class SiestaInputSet(InputSet):
 
         ase_atoms = pymatgen_to_ase(structure=structure)
         # Ensure the latest calculator settings are used
-        # ASE calculator: "energy" passed as the `properties` argument (dynamic)
-        self.siesta_input.write_input(ase_atoms, "energy")  # type: ignore[arg-type]  #'density'
+        self.siesta_input.write_input(ase_atoms, ["energy"])
         siesta_fdf_to_json(
             "siesta.fdf", json_output_path=SIESTA_PARAMS_JSON_FILE_NAME
         )  # "siesta_parameters.json"
