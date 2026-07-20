@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from atomate2.siesta.flows.defects import DefectFlowMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
@@ -14,6 +14,17 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
+
+
+def _ensure_flow_list(result: Flow | list[Flow]) -> list[Flow]:
+    """Normalize a ``from_pristine_structure`` result to a list of flows.
+
+    The maker returns a single combined ``Flow`` when it merges shared host and
+    reference jobs, and a ``list[Flow]`` otherwise. Wrapping the single-flow case
+    lets callers uniformly ``extend``/return without silently flattening the Flow
+    into its constituent jobs (``jobflow.Flow`` is iterable).
+    """
+    return result if isinstance(result, list) else [result]
 
 
 def complete_defect_study(
@@ -120,7 +131,7 @@ def complete_defect_study(
         auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
-    all_flows.extend(cast("list[Flow]", vacancy_flows))
+    all_flows.extend(_ensure_flow_list(vacancy_flows))
     logger.info(f"  → Generated {len(vacancy_flows)} vacancy flows")
 
     # Generate antisite defects (or dopant substitutions)
@@ -136,7 +147,7 @@ def complete_defect_study(
         auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
-    all_flows.extend(cast("list[Flow]", substitution_flows))
+    all_flows.extend(_ensure_flow_list(substitution_flows))
     logger.info(f"  → Generated {len(substitution_flows)} substitution flows")
 
     # Generate interstitial defects (if species provided)
@@ -154,7 +165,7 @@ def complete_defect_study(
                 auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
                 dry_run=dry_run,
             )
-            all_flows.extend(cast("list[Flow]", interstitial_flows))
+            all_flows.extend(_ensure_flow_list(interstitial_flows))
             logger.info(
                 f"  → Generated {len(interstitial_flows)} {species} interstitial flows"
             )
@@ -238,7 +249,7 @@ def vacancy_study(
     )
 
     logger.info(f"Generated {len(flows)} vacancy flows")
-    return cast("list[Flow]", flows)
+    return _ensure_flow_list(flows)
 
 
 def substitution_study(
@@ -341,7 +352,7 @@ def substitution_study(
             auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
             dry_run=dry_run,
         )
-        all_flows.extend(cast("list[Flow]", flows))
+        all_flows.extend(_ensure_flow_list(flows))
         logger.info(f"Generated {len(flows)} {dopant} substitution flows")
 
     logger.info(f"Total substitution flows: {len(all_flows)}")
@@ -424,7 +435,7 @@ def antisite_study(
     )
 
     logger.info(f"Generated {len(flows)} antisite flows")
-    return cast("list[Flow]", flows)
+    return _ensure_flow_list(flows)
 
 
 def interstitial_study(
@@ -521,7 +532,7 @@ def interstitial_study(
             auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
             dry_run=dry_run,
         )
-        all_flows.extend(cast("list[Flow]", flows))
+        all_flows.extend(_ensure_flow_list(flows))
         logger.info(f"Generated {len(flows)} {spec} interstitial flows")
 
     logger.info(f"Total interstitial flows: {len(all_flows)}")
