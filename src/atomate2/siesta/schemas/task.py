@@ -88,16 +88,19 @@ class InputDoc(BaseModel):
                 try:
                     with gzip.open(compressed_file, "rt") as f:
                         siesta_input = json.load(f)
-                except Exception as e:
-                    logger.error(f"Failed to load compressed parameters: {e}")
+                except Exception as e:  # noqa: BLE001  parse fallback
+                    logger.error(  # noqa: TRY400
+                        f"Failed to load compressed parameters: {e}"
+                    )
                     return cls()
             else:
                 # Fall back to parsing the FDF file directly
                 logger.warning("siesta_parameters.json not found, parsing FDF file")
                 fdf_file = Path(calc_doc.dir_name) / "siesta.fdf"
                 if not fdf_file.exists():
-                    logger.error(
-                        f"Neither siesta_parameters.json nor siesta.fdf found in {calc_doc.dir_name}"
+                    logger.error(  # noqa: TRY400
+                        "Neither siesta_parameters.json nor siesta.fdf found "
+                        f"in {calc_doc.dir_name}"
                     )
                     return cls()
 
@@ -141,7 +144,7 @@ class InputDoc(BaseModel):
 
                     if parsed_basis:
                         # Check if all species use the same basis
-                        unique_basis = set(b for _, b in parsed_basis)
+                        unique_basis = {b for _, b in parsed_basis}
                         if len(unique_basis) == 1:
                             # All same - just store the basis name
                             basis_size = unique_basis.pop()
@@ -160,7 +163,7 @@ class InputDoc(BaseModel):
                 try:
                     fdf_params = cls._parse_fdf_file(fdf_file)
                     basis_size = fdf_params.get("PAO.BasisSize")
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001  FDF parse is best-effort
                     logger.warning(f"Failed to parse FDF file: {e}")
 
             # Log if we can't find basis size
@@ -199,8 +202,8 @@ class InputDoc(BaseModel):
             block_name = None
             block_content: list[str] = []
 
-            for line in f:
-                line = line.strip()
+            for raw_line in f:
+                line = raw_line.strip()
 
                 # Skip empty lines and comments
                 if not line or line.startswith("#"):
@@ -310,7 +313,9 @@ class OutputDoc(BaseModel):
     )
     geometry_converged: bool | None = Field(
         None,
-        description="Whether geometry optimization converged (for relaxation calculations)",
+        description=(
+            "Whether geometry optimization converged (for relaxation calculations)"
+        ),
     )
     final_max_force: float | None = Field(
         None,
@@ -456,7 +461,7 @@ class SiestaTaskDoc(StructureMetadata):
         cls,
         dir_name: Path | str,
         additional_fields: dict[str, Any] | None = None,
-        **siesta_calculation_kwargs,
+        **siesta_calculation_kwargs,  # noqa: ARG003  documented passthrough
     ) -> Self:
         """Create a task document from a directory containing SIESTA files.
 
@@ -494,7 +499,9 @@ class SiestaTaskDoc(StructureMetadata):
             try:
                 calc_doc = Calculation.from_siesta_files(dir_name)
             except (OSError, RuntimeError, ValueError) as e:
-                logger.error(f"Cannot read calculation document from {files_name}: {e}")
+                logger.error(  # noqa: TRY400
+                    f"Cannot read calculation document from {files_name}: {e}"
+                )
                 raise RuntimeError(
                     f"Cannot read calculation document from {files_name}"
                 ) from e

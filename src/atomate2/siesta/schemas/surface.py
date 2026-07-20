@@ -10,7 +10,9 @@ class TerminationData(BaseModel):
 
     termination: str = Field(..., description="Termination species or label")
     surface_energy: float = Field(..., description="Surface energy in eV/Å²")
-    surface_energy_Jm2: float = Field(..., description="Surface energy in J/m²")
+    surface_energy_Jm2: float = Field(  # noqa: N815  J/m² unit in the field name
+        ..., description="Surface energy in J/m²"
+    )
     relative_energy: float = Field(
         ..., description="Relative to lowest energy termination (eV/Å²)"
     )

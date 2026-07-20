@@ -1,6 +1,7 @@
-"""
-Schemas for SIESTA calculation objects, including task states, output parsing,
-and the main calculation schema that handles SIESTA outputs.
+"""Schemas for SIESTA calculation objects.
+
+Includes task states, output parsing, and the main calculation schema
+that handles SIESTA outputs.
 """
 
 from __future__ import annotations
@@ -113,7 +114,7 @@ class CalculationOutput(BaseModel):
     def from_siesta_out(
         cls,
         siesta_output: stdoutSileSiesta,
-        siesta_XV: xvSileSiesta,
+        siesta_XV: xvSileSiesta,  # noqa: N803  mirrors the SIESTA .XV filename
         dir_name: Path | str | None = None,
     ) -> Self:
         """
@@ -137,8 +138,8 @@ class CalculationOutput(BaseModel):
         logger.info("CalculationOutput.from_siesta_out()")
         try:
             sisl_structure = siesta_XV.read_geometry()  # final structure
-        except Exception as e:
-            logger.error(f"Cannot read final structure: {e}")
+        except Exception as e:  # noqa: BLE001  partial-output fallback for the DB
+            logger.error(f"Cannot read final structure: {e}")  # noqa: TRY400
             # Return partial output with None structure for database compatibility
             return cls(
                 structure=None,
@@ -193,7 +194,7 @@ class CalculationOutput(BaseModel):
                         f"Extracted band gap from EIG: VBM={vbm:.3f} eV, "
                         f"CBM={cbm:.3f} eV, gap={bandgap:.3f} eV"
                     )
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001  band gap is optional
                     logger.warning(f"Could not parse band gap from {eig_file}: {e}")
 
         # Extract wall time from SIESTA output
@@ -261,9 +262,9 @@ class Calculation(BaseModel):
         dir_name: Path | str,
         # task_name: str,
         siesta_output_file: Path | str = "siesta.out",
-        siesta_MESSAGES_file: Path | str = "MESSAGES",
+        siesta_MESSAGES_file: Path | str = "MESSAGES",  # noqa: N803  SIESTA filename
         siesta_xv_file: Path | str = "siesta.XV",
-    ):
+    ) -> Self:
         """Create an Siesta calculation document from a directory and file paths.
 
         Parameters
@@ -288,7 +289,7 @@ class Calculation(BaseModel):
         dir_name = Path(dir_name)
         siesta_output_file = dir_name / siesta_output_file
         siesta_xv_file = dir_name / siesta_xv_file
-        siesta_MESSAGES_file = dir_name / siesta_MESSAGES_file
+        siesta_MESSAGES_file = dir_name / siesta_MESSAGES_file  # noqa: N806
 
         siesta_output = stdoutSileSiesta(siesta_output_file)
         siesta_xv = xvSileSiesta(siesta_xv_file)
@@ -320,9 +321,9 @@ class Calculation(BaseModel):
         )
 
 
-def check_siesta_messages(messages_file):
+def check_siesta_messages(messages_file: Path | str) -> TaskState:
     """
-    Checks the status of a SIESTA run based on message logs from the MESSAGES file.
+    Check the status of a SIESTA run based on message logs from the MESSAGES file.
 
     Args:
         messages_file (str): Path to the `MESSAGES` file.
@@ -332,9 +333,11 @@ def check_siesta_messages(messages_file):
         TaskState: The overall status of the SIESTA run.
     """
 
-    def read_messages_from_siesta(file_path, keywords):
+    def read_messages_from_siesta(
+        file_path: Path | str, keywords: list[str]
+    ) -> dict[str, list[str]]:
         """
-        Reads a file and extracts messages based on provided keywords.
+        Read a file and extract messages based on provided keywords.
 
         Args:
             file_path (str): Path to the SIESTA messages file.
@@ -371,9 +374,10 @@ def check_siesta_messages(messages_file):
                 return TaskState.FAILED
 
     # Check for fatal errors (ensure the list is not empty)
-    if messages.get("FATAL") or messages.get("ABNORMAL_TERMINATION"):
-        if messages["FATAL"] or messages["ABNORMAL_TERMINATION"]:
-            return TaskState.FAILED
+    if (messages.get("FATAL") or messages.get("ABNORMAL_TERMINATION")) and (
+        messages["FATAL"] or messages["ABNORMAL_TERMINATION"]
+    ):
+        return TaskState.FAILED
 
     # Print only unique WARNING messages
     unique_warnings = list(dict.fromkeys(messages["WARNING"]))  # Remove duplicates

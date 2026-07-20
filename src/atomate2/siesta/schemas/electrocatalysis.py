@@ -42,7 +42,7 @@ class GasPhaseMoleculeDocument(BaseModel):
     formula: str = Field(..., description="Chemical formula")
     total_energy: float = Field(..., description="Total energy (eV)")
     spin_polarized: bool = Field(
-        False, description="Whether spin-polarized DFT was used"
+        default=False, description="Whether spin-polarized DFT was used"
     )
     spin_type: str = Field(
         "non-polarized",
@@ -148,8 +148,12 @@ class ReactionPathwayDocument(BaseModel):
 
     # Energies
     energies: list[float] = Field(..., description="Absolute energies (eV)")
-    delta_E: list[float] = Field(..., description="Energy differences (eV)")
-    delta_G: list[float] = Field(..., description="Free energy differences (eV)")
+    delta_E: list[float] = Field(  # noqa: N815  ΔE physics symbol
+        ..., description="Energy differences (eV)"
+    )
+    delta_G: list[float] = Field(  # noqa: N815  ΔG physics symbol
+        ..., description="Free energy differences (eV)"
+    )
 
     # Overpotentials
     overpotential_orr: float = Field(0.0, description="ORR overpotential (V)")
