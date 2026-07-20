@@ -6,12 +6,13 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, job
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker
 
 if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 
@@ -129,7 +130,7 @@ class GasPhaseMoleculeMaker(BaseSiestaFlowMaker):
     --------
     atomate2.siesta.flows.electrocatalysis.utils.spin_config.get_siesta_spin_config :
         Automatic spin configuration for common molecules
-    """
+    """  # noqa: RUF002
 
     name: str = "gas_phase_molecule"
     relax_maker: BaseSiestaMaker = field(default_factory=RelaxMaker)

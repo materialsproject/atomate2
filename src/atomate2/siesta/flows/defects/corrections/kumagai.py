@@ -15,14 +15,17 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.defects.corrections.base import (
     CorrectionResult,
     CorrectionScheme,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +74,7 @@ class KumagaiCorrection(CorrectionScheme):
     ---------
     Kumagai & Oba, PRB 89, 195205 (2014)
     https://journals.aps.org/prb/abstract/10.1103/PhysRevB.89.195205
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
@@ -80,7 +83,7 @@ class KumagaiCorrection(CorrectionScheme):
         sampling_cutoff_fraction: float = 0.8,
         min_sampling_atoms: int = 20,
         outlier_threshold: float = 2.0,
-    ):
+    ) -> None:
         """
         Initialize Kumagai-Oba correction.
 
@@ -99,7 +102,7 @@ class KumagaiCorrection(CorrectionScheme):
         outlier_threshold : float, optional
             Number of standard deviations for outlier detection.
             Default is 2.0 (exclude atoms with ΔV > 2σ from mean).
-        """
+        """  # noqa: RUF002
         super().__init__(epsilon_static=epsilon_static)
 
         # Madelung constant (default for cubic lattice)
@@ -183,15 +186,15 @@ class KumagaiCorrection(CorrectionScheme):
         self.validate_inputs(defect_structure, host_structure, charge_state)
 
         # Get characteristic length L
-        L = self._get_characteristic_length(defect_structure)
+        L = self._get_characteristic_length(defect_structure)  # noqa: N806
 
         # Calculate lattice term (electrostatic correction)
         q = abs(charge_state)
-        alpha_M = self.madelung_constant
+        alpha_M = self.madelung_constant  # noqa: N806
         epsilon = self.epsilon_static
 
         # Formula in eV (using e^2/(4πε_0) ≈ 14.3996 eV·Å)
-        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å
+        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å  # noqa: N806
         lattice_term = (q**2 * alpha_M * eV_Angstrom) / (2 * epsilon * L)
 
         # Calculate potential alignment correction using atomic-site sampling
@@ -236,7 +239,7 @@ class KumagaiCorrection(CorrectionScheme):
                         )
                         logger.info(
                             f"Mean ΔV (VT) = {plot_data['mean_alignment']:.4f} eV "
-                            f"(q × ΔV = {alignment_energy:.4f} eV)"
+                            f"(q × ΔV = {alignment_energy:.4f} eV)"  # noqa: RUF001
                         )
 
                         # Also plot VH (Hartree potential) if available
@@ -317,7 +320,7 @@ class KumagaiCorrection(CorrectionScheme):
             Characteristic length in Angstroms
         """
         a, b, c = structure.lattice.abc
-        L = (a + b + c) / 3.0
+        L = (a + b + c) / 3.0  # noqa: N806
         return L
 
     def _calculate_atomic_site_alignment(
@@ -414,7 +417,7 @@ class KumagaiCorrection(CorrectionScheme):
         if n_outliers > 0:
             warnings.append(
                 f"Removed {n_outliers} outlier atoms from alignment "
-                f"(threshold: {self.outlier_threshold}σ)"
+                f"(threshold: {self.outlier_threshold}σ)"  # noqa: RUF001
             )
 
         # Calculate average potential difference
@@ -588,7 +591,7 @@ class KumagaiCorrection(CorrectionScheme):
         mad = np.median(np.abs(data - median))
 
         # Convert MAD to equivalent standard deviation
-        # For normal distribution: σ ≈ 1.4826 * MAD
+        # For normal distribution: σ ≈ 1.4826 * MAD  # noqa: RUF003
         sigma_equivalent = 1.4826 * mad
 
         # Identify outliers

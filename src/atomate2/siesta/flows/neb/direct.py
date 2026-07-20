@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.neb.common import generate_neb_band
 from atomate2.siesta.flows.neb.plotting import plot_neb_results
 from atomate2.siesta.jobs.core import LuaMaker, RelaxMaker
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -106,12 +109,10 @@ class NebDirectFlowMaker(BaseSiestaFlowMaker):
 
     name: str = "NEB Direct Workflow"
     relax_endpoints: bool | str = False
-    relax_maker: Maker | None = field(
-        default_factory=lambda: RelaxMaker.fixed_cell_relaxation()
-    )
+    relax_maker: Maker | None = field(default_factory=RelaxMaker.fixed_cell_relaxation)
     relax_initial_maker: Maker | None = None
     relax_final_maker: Maker | None = None
-    neb_maker: Maker | None = field(default_factory=lambda: LuaMaker.neb())
+    neb_maker: Maker | None = field(default_factory=LuaMaker.neb)
     number_of_images: int = 5
     interpolation_method: str = "idpp"
 

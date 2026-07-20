@@ -102,7 +102,7 @@ def plot_gruneisen_band_structure(
     )
 
     # Create dual-panel plot
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=figsize, sharex=True)
+    _fig, (ax1, ax2) = plt.subplots(2, 1, figsize=figsize, sharex=True)
 
     # Extract branch data
     distances = []
@@ -171,7 +171,7 @@ def plot_gruneisen_band_structure(
 
     # Format bottom panel (Grüneisen parameters)
     ax2.set_xlabel("Wave vector", fontsize=12, fontweight="bold")
-    ax2.set_ylabel("Grüneisen parameter γ", fontsize=12, fontweight="bold")
+    ax2.set_ylabel("Grüneisen parameter γ", fontsize=12, fontweight="bold")  # noqa: RUF001
     ax2.set_xlim(distances[0], distances[-1])
     ax2.set_xticks(special_points)
     ax2.set_xticklabels([label.replace("GAMMA", "Γ") for label in labels], fontsize=11)
@@ -182,7 +182,7 @@ def plot_gruneisen_band_structure(
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=-3, vmax=3))
     sm.set_array([])
     cbar = plt.colorbar(sm, ax=ax2, orientation="vertical", pad=0.02, aspect=30)
-    cbar.set_label("Grüneisen parameter γ", fontsize=10, fontweight="bold")
+    cbar.set_label("Grüneisen parameter γ", fontsize=10, fontweight="bold")  # noqa: RUF001
 
     plt.tight_layout()
 
@@ -259,7 +259,7 @@ def plot_gruneisen_vs_frequency(
     gruneisen_values = gruneisen_values[mask]
 
     # Create scatter plot
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
     # Color points by Grüneisen value
     scatter = ax.scatter(
@@ -273,7 +273,7 @@ def plot_gruneisen_vs_frequency(
         linewidths=0.3,
     )
 
-    # Add horizontal line at γ = 0
+    # Add horizontal line at γ = 0  # noqa: RUF003
     ax.axhline(y=0, color="k", linewidth=1.0, linestyle="--", alpha=0.5)
 
     # Calculate and plot average
@@ -284,12 +284,12 @@ def plot_gruneisen_vs_frequency(
         linewidth=2.0,
         linestyle="-",
         alpha=0.7,
-        label=f"Average: γ = {avg_grun:.3f}",
+        label=f"Average: γ = {avg_grun:.3f}",  # noqa: RUF001
     )
 
     # Format plot
     ax.set_xlabel("Frequency (THz)", fontsize=12, fontweight="bold")
-    ax.set_ylabel("Grüneisen parameter γ", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Grüneisen parameter γ", fontsize=12, fontweight="bold")  # noqa: RUF001
     ax.set_title(
         f"Mode Grüneisen Parameters - {formula}",
         fontsize=14,
@@ -299,8 +299,8 @@ def plot_gruneisen_vs_frequency(
     ax.legend(fontsize=11, loc="best", framealpha=0.9)
 
     # Add colorbar
-    cbar = plt.colorbar(scatter, ax=ax, label="Grüneisen parameter γ")
-    cbar.set_label("Grüneisen parameter γ", fontsize=10, fontweight="bold")
+    cbar = plt.colorbar(scatter, ax=ax, label="Grüneisen parameter γ")  # noqa: RUF001
+    cbar.set_label("Grüneisen parameter γ", fontsize=10, fontweight="bold")  # noqa: RUF001
 
     # Add statistics text box
     stats_text = (
@@ -397,9 +397,9 @@ def plot_gruneisen_distribution(
     gruneisen_values = gruneisen_values[mask]
 
     # Create histogram
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
-    counts, bin_edges, patches = ax.hist(
+    _counts, bin_edges, patches = ax.hist(
         gruneisen_values, bins=bins, color="steelblue", alpha=0.7, edgecolor="black"
     )
 
@@ -433,7 +433,7 @@ def plot_gruneisen_distribution(
     ax.axvline(x=0, color="black", linewidth=1.0, linestyle=":", alpha=0.5)
 
     # Format plot
-    ax.set_xlabel("Grüneisen parameter γ", fontsize=12, fontweight="bold")
+    ax.set_xlabel("Grüneisen parameter γ", fontsize=12, fontweight="bold")  # noqa: RUF001
     ax.set_ylabel("Number of modes", fontsize=12, fontweight="bold")
     ax.set_title(
         f"Grüneisen Parameter Distribution - {formula}",
@@ -530,9 +530,9 @@ def write_gruneisen_summary(
             f.write(f"  a = {structure.lattice.a:.6f} Å\n")
             f.write(f"  b = {structure.lattice.b:.6f} Å\n")
             f.write(f"  c = {structure.lattice.c:.6f} Å\n")
-            f.write(f"  α = {structure.lattice.alpha:.3f}°\n")
+            f.write(f"  α = {structure.lattice.alpha:.3f}°\n")  # noqa: RUF001
             f.write(f"  β = {structure.lattice.beta:.3f}°\n")
-            f.write(f"  γ = {structure.lattice.gamma:.3f}°\n")
+            f.write(f"  γ = {structure.lattice.gamma:.3f}°\n")  # noqa: RUF001
             f.write(f"  Volume = {structure.lattice.volume:.6f} Å³\n\n")
         else:
             # Pydantic case: extract from metadata fields
@@ -592,13 +592,13 @@ def write_gruneisen_summary(
         f.write("change with volume:\n\n")
         f.write("    γᵢ = -V/ωᵢ · ∂ωᵢ/∂V\n\n")
         f.write("Physical significance:\n")
-        f.write("  γ > 0: Mode frequency decreases with expansion (typical)\n")
-        f.write("  γ < 0: Mode frequency increases with expansion (unusual)\n")
-        f.write("  γ ≈ 2: Typical for most materials\n")
-        f.write("  γ >> 2: Strong anharmonicity\n\n")
+        f.write("  γ > 0: Mode frequency decreases with expansion (typical)\n")  # noqa: RUF001
+        f.write("  γ < 0: Mode frequency increases with expansion (unusual)\n")  # noqa: RUF001
+        f.write("  γ ≈ 2: Typical for most materials\n")  # noqa: RUF001
+        f.write("  γ >> 2: Strong anharmonicity\n\n")  # noqa: RUF001
 
         if avg_grun is not None:
-            f.write(f"Your material (γ_avg = {avg_grun:.3f}):\n")
+            f.write(f"Your material (γ_avg = {avg_grun:.3f}):\n")  # noqa: RUF001
             if abs(avg_grun) < 0.5:
                 f.write("  → Very weak volume dependence of phonons\n")
             elif 0.5 <= abs(avg_grun) < 1.5:
@@ -616,10 +616,10 @@ def write_gruneisen_summary(
         f.write("THERMAL EXPANSION\n")
         f.write("-" * 80 + "\n")
         f.write("The Grüneisen parameter is directly related to thermal expansion:\n\n")
-        f.write("    α = γ · Cv / (B · V)\n\n")
-        f.write("where α is thermal expansion, Cv is heat capacity,\n")
+        f.write("    α = γ · Cv / (B · V)\n\n")  # noqa: RUF001
+        f.write("where α is thermal expansion, Cv is heat capacity,\n")  # noqa: RUF001
         f.write("B is bulk modulus, and V is volume.\n\n")
-        f.write("Materials with larger γ typically show:\n")
+        f.write("Materials with larger γ typically show:\n")  # noqa: RUF001
         f.write("  • Higher thermal expansion coefficients\n")
         f.write("  • Lower thermal conductivity\n")
         f.write("  • Stronger temperature dependence of elastic properties\n\n")
@@ -632,10 +632,10 @@ def write_gruneisen_summary(
         f.write("1. Volume changes:\n")
         f.write("   • Test ±0.5%, ±1%, ±2% volume changes\n")
         f.write("   • Check linearity of frequency vs volume\n")
-        f.write("   • Criterion: γ converged within 0.05\n\n")
+        f.write("   • Criterion: γ converged within 0.05\n\n")  # noqa: RUF001
         f.write("2. Phonon convergence (for all 3 volumes):\n")
-        f.write("   • Supercell: 2×2×2 minimum, 3×3×3 recommended\n")
-        f.write("   • K-points: Dense mesh (8×8×8 or higher)\n")
+        f.write("   • Supercell: 2×2×2 minimum, 3×3×3 recommended\n")  # noqa: RUF001
+        f.write("   • K-points: Dense mesh (8×8×8 or higher)\n")  # noqa: RUF001
         f.write("   • Force convergence: < 0.001 eV/Å\n")
         f.write("   • Displacement: 0.01 Å\n\n")
         f.write("3. Structure optimization:\n")
@@ -707,7 +707,7 @@ def calculate_thermal_expansion(
     using typical values for the material type, but this is less accurate.
     For quantitative results, always provide the bulk modulus from elastic
     constant calculations.
-    """
+    """  # noqa: RUF002
     try:
         from pymatgen.phonon.gruneisen import GruneisenParameter
     except ImportError as e:
@@ -786,9 +786,9 @@ def calculate_thermal_expansion(
     logger.info(f"Estimated Debye temperature: {debye_temp:.1f} K")
 
     # Calculate heat capacity using Debye model
-    k_B = 8.617333e-5  # eV/K (Boltzmann constant)
+    k_B = 8.617333e-5  # eV/K (Boltzmann constant)  # noqa: N806
 
-    for i, T in enumerate(temperatures):
+    for i, T in enumerate(temperatures):  # noqa: N806
         if T < 1e-6:  # Avoid division by zero
             cv_array[i] = 0
         else:
@@ -813,10 +813,10 @@ def calculate_thermal_expansion(
                     )
                 )
 
-    # Calculate volumetric thermal expansion: α_V = γ · C_V / (B · V)
+    # Calculate volumetric thermal expansion: α_V = γ · C_V / (B · V)  # noqa: RUF003
     alpha_v = avg_gruneisen * cv_array / (bulk_modulus_ev * volume)  # K⁻¹
 
-    # Calculate linear thermal expansion: α_L = α_V / 3
+    # Calculate linear thermal expansion: α_L = α_V / 3  # noqa: RUF003
     alpha_l = alpha_v / 3  # K⁻¹
 
     result = {
@@ -876,10 +876,10 @@ def plot_thermal_expansion(
     alpha_l = np.array(thermal_expansion_data["alpha_l"]) * 1e6  # Convert to 10⁻⁶ K⁻¹
 
     # Create plot
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
-    ax.plot(temps, alpha_v, "r-", linewidth=2.5, label="Volumetric (α_V)", alpha=0.8)
-    ax.plot(temps, alpha_l, "b-", linewidth=2.5, label="Linear (α_L)", alpha=0.8)
+    ax.plot(temps, alpha_v, "r-", linewidth=2.5, label="Volumetric (α_V)", alpha=0.8)  # noqa: RUF001
+    ax.plot(temps, alpha_l, "b-", linewidth=2.5, label="Linear (α_L)", alpha=0.8)  # noqa: RUF001
 
     # Mark room temperature
     idx_300 = np.argmin(np.abs(temps - 300))
@@ -888,14 +888,14 @@ def plot_thermal_expansion(
         alpha_v[idx_300],
         "ro",
         markersize=10,
-        label=f"α_V(300K) = {alpha_v[idx_300]:.2f} × 10⁻⁶ K⁻¹",
+        label=f"α_V(300K) = {alpha_v[idx_300]:.2f} × 10⁻⁶ K⁻¹",  # noqa: RUF001
     )
     ax.plot(
         temps[idx_300],
         alpha_l[idx_300],
         "bo",
         markersize=10,
-        label=f"α_L(300K) = {alpha_l[idx_300]:.2f} × 10⁻⁶ K⁻¹",
+        label=f"α_L(300K) = {alpha_l[idx_300]:.2f} × 10⁻⁶ K⁻¹",  # noqa: RUF001
     )
 
     # Format plot
@@ -915,7 +915,7 @@ def plot_thermal_expansion(
 
     params_text = (
         f"Parameters:\n"
-        f"γ_avg = {avg_grun:.3f}\n"
+        f"γ_avg = {avg_grun:.3f}\n"  # noqa: RUF001
         f"B = {bulk_mod:.1f} GPa\n"
         f"Θ_D ≈ {debye_temp:.0f} K"
     )

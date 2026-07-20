@@ -16,14 +16,13 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Flow
-
 from atomate2.common.flows.gruneisen import BaseGruneisenMaker
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.phonon.phonopy_maker import PhonopyMaker
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
+    from jobflow import Flow
     from pymatgen.core.structure import Structure
 
 

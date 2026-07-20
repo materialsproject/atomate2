@@ -14,20 +14,22 @@ References
 ----------
     - Freysoldt et al., Rev. Mod. Phys. 86, 253 (2014)
     - Van de Walle & Neugebauer, J. Appl. Phys. 95, 3851 (2004)
-"""
+"""  # noqa: RUF002
 
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import job
 from monty.json import MSONable
 from scipy.optimize import brentq
 
-from atomate2.siesta.flows.defects.schemas import DefectDocument
+if TYPE_CHECKING:
+    from atomate2.siesta.flows.defects.schemas import DefectDocument
 
 logger = logging.getLogger(__name__)
 
@@ -299,7 +301,7 @@ class DefectConcentrationAnalyzer:
         if self.effective_density_of_states is None:
             # Standard values for many semiconductors at 300 K
             # N_C, N_V ~ 10^19 cm^-3 (temperature dependent)
-            # More accurate: N_C = 2 × (2π m_e* k_B T / h^2)^(3/2)
+            # More accurate: N_C = 2 × (2π m_e* k_B T / h^2)^(3/2)  # noqa: RUF003
             self.effective_density_of_states = {
                 "N_C": 1e19,  # Conduction band
                 "N_V": 1e19,  # Valence band
@@ -325,20 +327,20 @@ class DefectConcentrationAnalyzer:
         tuple[float, float]
             (electron_concentration, hole_concentration) in cm^-3
         """
-        N_C = self.effective_density_of_states["N_C"]
-        N_V = self.effective_density_of_states["N_V"]
+        N_C = self.effective_density_of_states["N_C"]  # noqa: N806
+        N_V = self.effective_density_of_states["N_V"]  # noqa: N806
 
         # CBM is VBM + bandgap
-        E_C = self.vbm_energy + self.bandgap
-        E_V = self.vbm_energy
+        E_C = self.vbm_energy + self.bandgap  # noqa: N806
+        E_V = self.vbm_energy  # noqa: N806
 
         # Thermal energy
-        kT = K_B * self.temperature
+        kT = K_B * self.temperature  # noqa: N806
 
-        # Electron concentration: n = N_C × exp(-(E_C - E_F) / kT)
+        # Electron concentration: n = N_C × exp(-(E_C - E_F) / kT)  # noqa: RUF003
         n = N_C * np.exp(-(E_C - fermi_level) / kT)
 
-        # Hole concentration: p = N_V × exp(-(E_F - E_V) / kT)
+        # Hole concentration: p = N_V × exp(-(E_F - E_V) / kT)  # noqa: RUF003
         p = N_V * np.exp(-(fermi_level - E_V) / kT)
 
         return n, p
@@ -364,12 +366,12 @@ class DefectConcentrationAnalyzer:
             Defect concentration in cm^-3
         """
         # Formation energy at given Fermi level
-        E_formation = formation_energy_at_zero + charge_state * fermi_level
+        E_formation = formation_energy_at_zero + charge_state * fermi_level  # noqa: N806
 
         # Thermal energy
-        kT = K_B * self.temperature
+        kT = K_B * self.temperature  # noqa: N806
 
-        # Concentration: [D^q] = N_sites × exp(-E_formation / kT)
+        # Concentration: [D^q] = N_sites × exp(-E_formation / kT)  # noqa: RUF003
         concentration = self.n_sites * np.exp(-E_formation / kT)
 
         return concentration
@@ -398,7 +400,7 @@ class DefectConcentrationAnalyzer:
         defect_charge = 0.0
         for doc in self.defect_documents:
             q = doc.charge_state
-            E_formation_0 = doc.corrected_formation_energy
+            E_formation_0 = doc.corrected_formation_energy  # noqa: N806
             concentration = self.calculate_defect_concentration(
                 E_formation_0, q, fermi_level
             )
@@ -506,13 +508,13 @@ class DefectConcentrationAnalyzer:
         defect_concentrations = []
         for doc in self.defect_documents:
             q = doc.charge_state
-            E_formation_0 = doc.corrected_formation_energy
+            E_formation_0 = doc.corrected_formation_energy  # noqa: N806
             concentration = self.calculate_defect_concentration(
                 E_formation_0, q, fermi_level
             )
 
             # Formation energy at this Fermi level
-            E_formation = E_formation_0 + q * fermi_level
+            E_formation = E_formation_0 + q * fermi_level  # noqa: N806
 
             defect_conc = DefectConcentration(
                 defect_name=doc.defect_species or doc.defect_type,
@@ -603,7 +605,7 @@ class DefectConcentrationAnalyzer:
             # Calculate defect concentrations
             for j, doc in enumerate(self.defect_documents):
                 q = doc.charge_state
-                E_formation_0 = doc.corrected_formation_energy
+                E_formation_0 = doc.corrected_formation_energy  # noqa: N806
                 conc = self.calculate_defect_concentration(E_formation_0, q, ef)
                 concentrations[i, j] = conc
 
@@ -701,7 +703,7 @@ class DefectConcentrationAnalyzer:
             # Calculate defect concentrations
             for j, doc in enumerate(self.defect_documents):
                 q = doc.charge_state
-                E_formation_0 = doc.corrected_formation_energy
+                E_formation_0 = doc.corrected_formation_energy  # noqa: N806
                 conc = self.calculate_defect_concentration(
                     E_formation_0, q, fermi_level
                 )
@@ -764,7 +766,7 @@ def plot_brouwer_diagram(
     import matplotlib.pyplot as plt
     from matplotlib import cm
 
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
     # Get colormap
     n_lines = len(data.defect_names)

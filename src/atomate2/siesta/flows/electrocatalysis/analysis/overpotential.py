@@ -36,7 +36,7 @@ U_EQ_CO2RR_C2H4 = 0.08  # V (2CO₂ + 12H⁺ + 12e⁻ → C₂H₄ + 4H₂O)
 
 
 def calculate_orr_overpotential(
-    delta_G: Sequence[float],
+    delta_G: Sequence[float],  # noqa: N803
     method: str = "max_uphill",
 ) -> dict[str, float]:
     """
@@ -125,7 +125,7 @@ def calculate_orr_overpotential(
         }
 
     # Find maximum uphill step (rate-limiting step)
-    max_delta_G = float(np.max(delta_G))
+    max_delta_G = float(np.max(delta_G))  # noqa: N806
     rls_index = int(np.argmax(delta_G))
 
     # Calculate onset potential
@@ -135,10 +135,10 @@ def calculate_orr_overpotential(
     # U_onset = ΔG(U=0) / e = ΔG_max (in eV, e = 1)
     # But we want U_onset = U_eq - η
     # So: η = U_eq - (U_eq - ΔG_max) = ΔG_max
-    U_onset = U_EQ_ORR - max_delta_G
+    U_onset = U_EQ_ORR - max_delta_G  # noqa: N806
 
     # Overpotential (always positive for ORR)
-    eta_ORR = U_EQ_ORR - U_onset
+    eta_ORR = U_EQ_ORR - U_onset  # noqa: N806
 
     logger.info(
         f"ORR overpotential: η = {eta_ORR:.3f} V "
@@ -155,7 +155,7 @@ def calculate_orr_overpotential(
 
 
 def calculate_oer_overpotential(
-    delta_G: Sequence[float],
+    delta_G: Sequence[float],  # noqa: N803
 ) -> dict[str, float]:
     """
     Calculate OER overpotential from free energy profile.
@@ -226,15 +226,15 @@ def calculate_oer_overpotential(
         }
 
     # Find maximum uphill step
-    max_delta_G = float(np.max(delta_G))
+    max_delta_G = float(np.max(delta_G))  # noqa: N806
     rls_index = int(np.argmax(delta_G))
 
     # For OER (oxidation), onset potential is ABOVE equilibrium
     # U_onset = U_eq + ΔG_max
-    U_onset = U_EQ_OER + max_delta_G
+    U_onset = U_EQ_OER + max_delta_G  # noqa: N806
 
     # Overpotential (always positive for OER)
-    eta_OER = U_onset - U_EQ_OER
+    eta_OER = U_onset - U_EQ_OER  # noqa: N806
 
     logger.info(
         f"OER overpotential: η = {eta_OER:.3f} V "
@@ -251,8 +251,8 @@ def calculate_oer_overpotential(
 
 
 def calculate_bifunctional_gap(
-    delta_G_ORR: Sequence[float],
-    delta_G_OER: Sequence[float],
+    delta_G_ORR: Sequence[float],  # noqa: N803
+    delta_G_OER: Sequence[float],  # noqa: N803
 ) -> dict[str, float]:
     """
     Calculate bifunctional overpotential gap for ORR and OER.
@@ -309,12 +309,12 @@ def calculate_bifunctional_gap(
     orr_result = calculate_orr_overpotential(delta_G_ORR)
     oer_result = calculate_oer_overpotential(delta_G_OER)
 
-    eta_ORR = orr_result["eta_ORR"]
-    eta_OER = oer_result["eta_OER"]
+    eta_ORR = orr_result["eta_ORR"]  # noqa: N806
+    eta_OER = oer_result["eta_OER"]  # noqa: N806
     gap = eta_ORR + eta_OER
 
-    U_ORR_onset = orr_result["U_onset"]
-    U_OER_onset = oer_result["U_onset"]
+    U_ORR_onset = orr_result["U_onset"]  # noqa: N806
+    U_OER_onset = oer_result["U_onset"]  # noqa: N806
     voltage_window = U_OER_onset - U_ORR_onset
 
     logger.info(
@@ -334,7 +334,7 @@ def calculate_bifunctional_gap(
 
 
 def calculate_her_overpotential(
-    delta_G_H: float,
+    delta_G_H: float,  # noqa: N803
 ) -> dict[str, float]:
     """
     Calculate HER overpotential from hydrogen binding energy.
@@ -400,7 +400,7 @@ def calculate_her_overpotential(
     0.60  # V
     """
     # HER overpotential is |ΔG_H|
-    eta_HER = abs(delta_G_H)
+    eta_HER = abs(delta_G_H)  # noqa: N806
 
     logger.info(f"HER overpotential: η = {eta_HER:.3f} V (ΔG_H = {delta_G_H:+.3f} eV)")
 

@@ -132,7 +132,7 @@ class BaseSiestaFlowMaker(Maker):
             )
             self._propagate_manager_config()
 
-    def _propagate_dry_run(self):
+    def _propagate_dry_run(self) -> None:
         """
         Enable dry-run for all child makers that support it.
 
@@ -170,7 +170,7 @@ class BaseSiestaFlowMaker(Maker):
                     if hasattr(item, "dry_run"):
                         self._enable_dry_run_for_maker(item, f"{field_name}[{i}]")
 
-    def _enable_dry_run_for_maker(self, maker: Maker, maker_name: str):
+    def _enable_dry_run_for_maker(self, maker: Maker, maker_name: str) -> None:
         """
         Enable dry-run for a specific maker.
 
@@ -193,7 +193,7 @@ class BaseSiestaFlowMaker(Maker):
         if isinstance(maker, BaseSiestaFlowMaker):
             maker._propagate_dry_run()
 
-    def _propagate_custodian(self):
+    def _propagate_custodian(self) -> None:
         """
         Enable custodian for all child makers that support it.
 
@@ -231,7 +231,7 @@ class BaseSiestaFlowMaker(Maker):
                     if hasattr(item, "use_custodian"):
                         self._enable_custodian_for_maker(item, f"{field_name}[{i}]")
 
-    def _enable_custodian_for_maker(self, maker: Maker, maker_name: str):
+    def _enable_custodian_for_maker(self, maker: Maker, maker_name: str) -> None:
         """
         Enable custodian for a specific maker (internal use during __post_init__).
 
@@ -277,7 +277,7 @@ class BaseSiestaFlowMaker(Maker):
             if self.custodian_handlers is not None:
                 maker.custodian_handlers = self.custodian_handlers
 
-    def _propagate_tier(self):
+    def _propagate_tier(self) -> None:
         """
         Set tier for all child makers that support it.
 
@@ -315,7 +315,7 @@ class BaseSiestaFlowMaker(Maker):
                     if hasattr(item, "input_set_generator"):
                         self._set_tier_for_maker(item, f"{field_name}[{i}]")
 
-    def _set_tier_for_maker(self, maker: Maker, maker_name: str):
+    def _set_tier_for_maker(self, maker: Maker, maker_name: str) -> None:
         """
         Set tier for a specific maker's input set generator.
 
@@ -365,7 +365,7 @@ class BaseSiestaFlowMaker(Maker):
         if isinstance(maker, BaseSiestaFlowMaker):
             maker._propagate_tier()
 
-    def _propagate_manager_config(self):
+    def _propagate_manager_config(self) -> None:
         """
         Set manager_config for all child makers that support it.
 
@@ -401,7 +401,7 @@ class BaseSiestaFlowMaker(Maker):
                     if hasattr(item, "manager_config"):
                         self._set_manager_config_for_maker(item, f"{field_name}[{i}]")
 
-    def _set_manager_config_for_maker(self, maker: Maker, maker_name: str):
+    def _set_manager_config_for_maker(self, maker: Maker, maker_name: str) -> None:
         """
         Set manager_config for a specific maker.
 

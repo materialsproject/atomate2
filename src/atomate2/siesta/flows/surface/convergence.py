@@ -4,14 +4,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, job
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.utils.common import print_docstring_in_box
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -452,10 +454,10 @@ def analyze_surface_convergence(
         # Calculate surface energy
         # Factor of 1 for asymmetric slabs, 2 for symmetric
         n_surfaces = 2 if symmetrize else 1
-        gamma_eV_A2 = (
+        gamma_eV_A2 = (  # noqa: N806
             slab_energy - slab_info["n_formula_units"] * bulk_energy_per_formula
         ) / (n_surfaces * slab_info["surface_area"])
-        gamma_Jm2 = gamma_eV_A2 * 16.0218  # Convert to J/m²
+        gamma_Jm2 = gamma_eV_A2 * 16.0218  # Convert to J/m²  # noqa: N806
 
         results.append(
             {
@@ -712,7 +714,7 @@ def _create_convergence_plots(
         plot_files["grid"] = filename
 
         # Also create line plots for each
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
         # Group by vacuum (plot energy vs. layers for each vacuum)
         for vacuum in vacuums:
@@ -801,13 +803,13 @@ def _write_convergence_summary(
     lines.append("THEORETICAL BACKGROUND")
     lines.append("=" * 80)
     lines.append("")
-    lines.append("Surface energy (γ) represents the energy cost per unit area to")
+    lines.append("Surface energy (γ) represents the energy cost per unit area to")  # noqa: RUF001
     lines.append("create a surface by cleaving a bulk crystal:")
     lines.append("")
     if symmetrize:
-        lines.append("  γ = (E_slab - N × E_bulk) / (2A)   [symmetric slab]")
+        lines.append("  γ = (E_slab - N × E_bulk) / (2A)   [symmetric slab]")  # noqa: RUF001
     else:
-        lines.append("  γ = (E_slab - N × E_bulk) / A      [asymmetric slab]")
+        lines.append("  γ = (E_slab - N × E_bulk) / A      [asymmetric slab]")  # noqa: RUF001
     lines.append("")
     lines.append("Convergence with slab thickness ensures the slab interior is")
     lines.append("bulk-like. Convergence with vacuum ensures no interaction between")
@@ -834,7 +836,7 @@ def _write_convergence_summary(
     if convergence_mode == "layers":
         lines.append(
             f"{'Layers':<8} {'Atoms':<8} {'Thickness':<12} "
-            f"{'γ (eV/Å²)':<14} {'γ (J/m²)':<12} {'Δγ (J/m²)':<12}"
+            f"{'γ (eV/Å²)':<14} {'γ (J/m²)':<12} {'Δγ (J/m²)':<12}"  # noqa: RUF001
         )
         lines.append("-" * 80)
         ref_energy = results[-1]["surface_energy_Jm2"]
@@ -850,7 +852,7 @@ def _write_convergence_summary(
     elif convergence_mode == "vacuum":
         lines.append(
             f"{'Vacuum':<10} {'Atoms':<8} "
-            f"{'γ (eV/Å²)':<14} {'γ (J/m²)':<12} {'Δγ (J/m²)':<12}"
+            f"{'γ (eV/Å²)':<14} {'γ (J/m²)':<12} {'Δγ (J/m²)':<12}"  # noqa: RUF001
         )
         lines.append("-" * 80)
         ref_energy = results[-1]["surface_energy_Jm2"]
@@ -864,7 +866,7 @@ def _write_convergence_summary(
             )
 
     else:  # both
-        lines.append(f"{'Layers':<8} {'Vacuum':<10} {'Atoms':<8} {'γ (J/m²)':<12}")
+        lines.append(f"{'Layers':<8} {'Vacuum':<10} {'Atoms':<8} {'γ (J/m²)':<12}")  # noqa: RUF001
         lines.append("-" * 80)
         for r in results:
             lines.append(

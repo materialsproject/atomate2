@@ -8,12 +8,15 @@ DOI: 10.1103/PhysRevB.78.235104
 
 from __future__ import annotations
 
-from pymatgen.core import Structure
+from typing import TYPE_CHECKING
 
 from atomate2.siesta.flows.defects.corrections.base import (
     CorrectionResult,
     CorrectionScheme,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 
 class LanyZungerCorrection(CorrectionScheme):
@@ -41,14 +44,14 @@ class LanyZungerCorrection(CorrectionScheme):
         - Assumes isotropic dielectric
         - Point charge model (less accurate than gaussian)
         - No potential alignment
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
         epsilon_static: float,
         madelung_constant: float | None = None,
         use_axis_average: bool = True,
-    ):
+    ) -> None:
         """
         Initialize Lany-Zunger correction.
 
@@ -134,17 +137,17 @@ class LanyZungerCorrection(CorrectionScheme):
         self.validate_inputs(defect_structure, host_structure, charge_state)
 
         # Get characteristic length L
-        L = self._get_characteristic_length(defect_structure)
+        L = self._get_characteristic_length(defect_structure)  # noqa: N806
 
         # Calculate correction energy
-        # E_corr = (q^2 * α_M) / (2 * ε * L)
+        # E_corr = (q^2 * α_M) / (2 * ε * L)  # noqa: RUF003
         # Note: Convert to eV using eV*Angstrom
         q = abs(charge_state)
-        alpha_M = self.madelung_constant
+        alpha_M = self.madelung_constant  # noqa: N806
         epsilon = self.epsilon_static
 
         # Formula in eV (using e^2/(4πε_0) ≈ 14.3996 eV·Å)
-        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å
+        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å  # noqa: N806
         correction_energy = (q**2 * alpha_M * eV_Angstrom) / (2 * epsilon * L)
 
         # Metadata
@@ -155,7 +158,7 @@ class LanyZungerCorrection(CorrectionScheme):
             "charge_state": charge_state,
             "use_axis_average": self.use_axis_average,
             "volume_angstrom3": defect_structure.volume,
-            "formula": "E_corr = (q^2 * α_M) / (2 * ε * L)",
+            "formula": "E_corr = (q^2 * α_M) / (2 * ε * L)",  # noqa: RUF001
         }
 
         return CorrectionResult(
@@ -184,10 +187,10 @@ class LanyZungerCorrection(CorrectionScheme):
         if self.use_axis_average:
             # Use average of lattice parameters
             a, b, c = structure.lattice.abc
-            L = (a + b + c) / 3.0
+            L = (a + b + c) / 3.0  # noqa: N806
         else:
             # Use cube root of volume
-            L = structure.volume ** (1.0 / 3.0)
+            L = structure.volume ** (1.0 / 3.0)  # noqa: N806
 
         return L
 
@@ -195,7 +198,7 @@ class LanyZungerCorrection(CorrectionScheme):
         self,
         structure: Structure,
         charge_state: int,
-        target_accuracy_eV: float = 0.05,
+        target_accuracy_eV: float = 0.05,  # noqa: N803
     ) -> dict[str, float]:
         """
         Estimate supercell size needed for target accuracy.
@@ -215,7 +218,7 @@ class LanyZungerCorrection(CorrectionScheme):
             Dictionary with current correction and recommended size
         """
         # Current correction
-        L_current = self._get_characteristic_length(structure)
+        L_current = self._get_characteristic_length(structure)  # noqa: N806
         current_corr = (
             abs(charge_state) ** 2
             * self.madelung_constant
@@ -225,8 +228,8 @@ class LanyZungerCorrection(CorrectionScheme):
 
         # Required L for target accuracy
         # If we want correction < target_accuracy_eV:
-        # L > (q^2 * α_M * 14.3996) / (2 * ε * target)
-        L_required = (
+        # L > (q^2 * α_M * 14.3996) / (2 * ε * target)  # noqa: RUF003
+        L_required = (  # noqa: N806
             abs(charge_state) ** 2
             * self.madelung_constant
             * 14.3996

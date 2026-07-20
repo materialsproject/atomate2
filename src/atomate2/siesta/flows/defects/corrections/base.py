@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, Field
-from pymatgen.core import Structure
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 
 class CorrectionResult(BaseModel):
@@ -73,7 +75,7 @@ class CorrectionScheme(ABC):
         epsilon_static: float | None = None,
         epsilon_ionic: float | None = None,
         epsilon_tensor: list[list[float]] | None = None,
-    ):
+    ) -> None:
         """
         Initialize correction scheme.
 

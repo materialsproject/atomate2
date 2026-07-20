@@ -151,10 +151,10 @@ class CorrectionComparisonFlowMaker(Maker):
 
     name: str = "Correction Comparison"
     defect_relax_maker: DefectRelaxMaker = field(
-        default_factory=lambda: DefectRelaxMaker.defect_relax()
+        default_factory=DefectRelaxMaker.defect_relax
     )
     host_static_maker: DefectStaticMaker = field(
-        default_factory=lambda: DefectStaticMaker.defect_scf()
+        default_factory=DefectStaticMaker.defect_scf
     )
     epsilon_static: float = 10.0
     epsilon_parallel: float | None = None
@@ -817,7 +817,9 @@ def generate_comparison_summary(
         lines.append(f"  {'Scheme':<30} {'E_corr (eV)':>12} {'E_formation (eV)':>12}")
         lines.append("  " + "-" * 56)
 
-        for scheme, e_corr, e_f in zip(schemes, corr_energies, form_energies):
+        for scheme, e_corr, e_f in zip(
+            schemes, corr_energies, form_energies, strict=False
+        ):
             # Add annotations for Makov-Payne variants
             annotation = ""
             if scheme.lower() in ["makov-payne", "mp"]:
@@ -840,11 +842,13 @@ def generate_comparison_summary(
             lines.append("")
             lines.append("CORRECTION DETAILS:")
             lines.append("  " + "-" * 66)
-            for scheme, metadata in zip(schemes, comparison_results["metadata"]):
+            for scheme, metadata in zip(
+                schemes, comparison_results["metadata"], strict=False
+            ):
                 lines.append(f"\n  [{scheme}]")
                 if metadata:
                     if "madelung_constant" in metadata:
-                        alpha_M = metadata["madelung_constant"]
+                        alpha_M = metadata["madelung_constant"]  # noqa: N806
                         lines.append(f"    Madelung constant:   {alpha_M:.4f}")
                         if metadata.get("madelung_citation"):
                             lines.append(f"      ({metadata['madelung_citation']})")
@@ -854,7 +858,7 @@ def generate_comparison_summary(
                         )
                     if "gaussian_width_angstrom" in metadata:
                         lines.append(
-                            f"    Gaussian width (σ):    {metadata['gaussian_width_angstrom']:.2f} Å"
+                            f"    Gaussian width (σ):    {metadata['gaussian_width_angstrom']:.2f} Å"  # noqa: RUF001
                         )
                     if "lattice_term_eV" in metadata:
                         lines.append(

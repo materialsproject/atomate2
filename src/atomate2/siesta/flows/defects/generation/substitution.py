@@ -93,7 +93,7 @@ class SiestaSubstitutionGenerator:
         structure: Structure,
         use_symmetry: bool = True,
         symprec: float = 0.1,
-    ):
+    ) -> None:
         """Initialize SiestaSubstitutionGenerator."""
         self.structure = structure
         self.use_symmetry = use_symmetry
@@ -294,7 +294,7 @@ class SiestaSubstitutionGenerator:
         ...     dopants=["Li", "Na"],
         ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
         ... )
-        """
+        """  # noqa: RUF002
         # Convert to lists
         if isinstance(species, str):
             species_list = [species]
@@ -403,7 +403,7 @@ class SiestaSubstitutionGenerator:
 
         logger.info(
             f"Generated {len(defects)} substitutional defect(s) "
-            f"({len(unique_sites)} unique site(s) × {len(dopants_list)} dopant(s) × {len(charge_states)} charge state(s))"
+            f"({len(unique_sites)} unique site(s) × {len(dopants_list)} dopant(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects
@@ -448,7 +448,7 @@ class SiestaSubstitutionGenerator:
         ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
         ...     charge_states=[0, +1, -1],
         ... )
-        """
+        """  # noqa: RUF002
         # Get all unique species in structure
         species_in_structure = list(set(site.specie.symbol for site in self.structure))
 

@@ -79,7 +79,7 @@ class CaptureParameters(MSONable):
         - "calculated": DFT-calculated (future implementation)
     temperature : float
         Temperature in Kelvin
-    """
+    """  # noqa: RUF002
 
     sigma_n: float
     sigma_p: float
@@ -124,7 +124,7 @@ class CaptureParameters(MSONable):
         -------
         CaptureParameters
             Default capture parameters
-        """
+        """  # noqa: RUF002
         return cls(
             sigma_n=1e-15,
             sigma_p=1e-15,
@@ -404,7 +404,7 @@ class SRHAnalyzer:
         bandgap: float,
         effective_mass_electron: float = 1.0,
         effective_mass_hole: float = 1.0,
-    ):
+    ) -> None:
         self.formation_diagram = formation_diagram
         self.bandgap = bandgap
         self.m_e_eff = effective_mass_electron
@@ -437,8 +437,8 @@ class SRHAnalyzer:
         prefactor = 2.0 * (2.0 * np.pi * K_B * Q_E * temperature / (H_BAR**2)) ** 1.5
 
         # Convert from m⁻³ to cm⁻³
-        N_c = prefactor * (self.m_e_eff * M_E) ** 1.5 * 1e-6
-        N_v = prefactor * (self.m_h_eff * M_E) ** 1.5 * 1e-6
+        N_c = prefactor * (self.m_e_eff * M_E) ** 1.5 * 1e-6  # noqa: N806
+        N_v = prefactor * (self.m_h_eff * M_E) ** 1.5 * 1e-6  # noqa: N806
 
         # Intrinsic concentration
         n_i = np.sqrt(N_c * N_v) * np.exp(-self.bandgap / (2.0 * K_B * temperature))
@@ -498,15 +498,15 @@ class SRHAnalyzer:
         -------
         SRHLifetimes
             Carrier lifetime data
-        """
-        T = capture_params.temperature
+        """  # noqa: RUF002
+        T = capture_params.temperature  # noqa: N806
 
         # Thermal velocities (cm/s)
         v_th_n = self.calculate_thermal_velocity(T, self.m_e_eff)
         v_th_p = self.calculate_thermal_velocity(T, self.m_h_eff)
 
         # SRH lifetimes (seconds)
-        # τ = 1 / (σ * v_th * N_T)
+        # τ = 1 / (σ * v_th * N_T)  # noqa: RUF003
         tau_n0 = 1.0 / (capture_params.sigma_n * v_th_n * defect_concentration)
         tau_p0 = 1.0 / (capture_params.sigma_p * v_th_p * defect_concentration)
 
@@ -554,7 +554,7 @@ class SRHAnalyzer:
         n_i = self.calculate_intrinsic_carrier_concentration(temperature)
 
         # Intrinsic level (mid-gap)
-        E_i = self.bandgap / 2.0
+        E_i = self.bandgap / 2.0  # noqa: N806
 
         # Electron and hole concentrations when E_F = E_T
         # n_1 = n_i * exp((E_T - E_i) / k_B T)
@@ -598,7 +598,7 @@ class SRHAnalyzer:
         SRHAnalysisResult
             Complete SRH analysis results
         """
-        T = concentration_result.temperature
+        T = concentration_result.temperature  # noqa: N806
         n = concentration_result.electron_concentration
         p = concentration_result.hole_concentration
         n_i = self.calculate_intrinsic_carrier_concentration(T)
@@ -623,9 +623,9 @@ class SRHAnalyzer:
 
             # Get defect level (use CTL or mid-gap as fallback)
             if defect_name in defect_levels:
-                E_T = defect_levels[defect_name]
+                E_T = defect_levels[defect_name]  # noqa: N806
             else:
-                E_T = self.bandgap / 2.0
+                E_T = self.bandgap / 2.0  # noqa: N806
                 logger.warning(f"No CTL found for {defect_name}, using mid-gap level")
 
             # Get capture parameters
@@ -737,7 +737,7 @@ def plot_srh_lifetimes(
     except (ValueError, OverflowError) as e:
         logger.warning(f"Could not create SRH lifetime plot: {e}")
         # Create a simple placeholder plot
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
         ax.text(
             0.5,
             0.5,
@@ -829,7 +829,7 @@ def plot_srh_recombination_rates(
     except (ValueError, OverflowError) as e:
         logger.warning(f"Could not create SRH recombination rate plot: {e}")
         # Create a simple placeholder plot
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
         ax.text(
             0.5,
             0.5,
@@ -901,7 +901,7 @@ def write_srh_summary(
         f.write("CALCULATION PARAMETERS\n")
         f.write("-" * 80 + "\n")
         f.write(f"Temperature:                    {srh_result.temperature:>10.2f} K\n")
-        K_B = 8.617333e-5  # eV/K
+        K_B = 8.617333e-5  # eV/K  # noqa: N806
         thermal_energy = K_B * srh_result.temperature
         f.write(f"Thermal energy (kT):            {thermal_energy:>10.6f} eV\n")
         f.write(f"Band gap:                       {srh_result.bandgap:>10.3f} eV\n")
@@ -971,10 +971,10 @@ def write_srh_summary(
             f.write("\n")
             f.write("  Capture cross-sections:\n")
             f.write(
-                f"    σ_n (electron):          {dr.lifetimes.capture_params.sigma_n:>10.3e} cm²\n"
+                f"    σ_n (electron):          {dr.lifetimes.capture_params.sigma_n:>10.3e} cm²\n"  # noqa: RUF001
             )
             f.write(
-                f"    σ_p (hole):              {dr.lifetimes.capture_params.sigma_p:>10.3e} cm²\n"
+                f"    σ_p (hole):              {dr.lifetimes.capture_params.sigma_p:>10.3e} cm²\n"  # noqa: RUF001
             )
             f.write(
                 f"    Method:                  {dr.lifetimes.capture_params.method}\n"

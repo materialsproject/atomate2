@@ -21,12 +21,10 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from jobflow.core.flow import Flow
 from jobflow.core.job import job
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker
@@ -35,6 +33,10 @@ from atomate2.siesta.utils.common import console, print_docstring_in_box
 from atomate2.siesta.utils.verbosity import VerbosityLevel
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Molecule, Structure
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 logger = logging.getLogger(__name__)
@@ -209,7 +211,7 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
         VerbosityLevel.INFO
     )  # Default to show info messages
     name: str = "Different basis scf"
-    static_maker: BaseSiestaMaker = field(default_factory=lambda: StaticMaker())
+    static_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
 
     def make(
         self,
@@ -582,7 +584,7 @@ def plot_eos_basis_comparison(
     logger.info(f"Plotting data for {len(basis_sets)} basis sets")
 
     # Create figure with subplots
-    fig, axes = plt.subplots(3, 1, figsize=(12, 10))
+    _fig, axes = plt.subplots(3, 1, figsize=(12, 10))
 
     # Plot 1: Equilibrium Volume
     ax1 = axes[0]
@@ -647,7 +649,7 @@ def plot_eos_overlay(
     colors = ["blue", "red", "green", "purple", "orange", "brown", "pink", "gray"]
     markers = ["o", "s", "^", "v", "D", "p", "*", "h"]
 
-    fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+    _fig, ax = plt.subplots(1, 1, figsize=(12, 8))
 
     plotted_count = 0
 
@@ -855,7 +857,7 @@ def write_eos_basis_summary(
         f.write("-" * 80 + "\n")
         f.write(
             f"{'Basis Set':<12} {'a (Å)':<12} {'b (Å)':<12} {'c (Å)':<12} "
-            f"{'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"
+            f"{'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
         )
         f.write("-" * 80 + "\n")
 

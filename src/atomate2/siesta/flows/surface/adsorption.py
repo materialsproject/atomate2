@@ -546,7 +546,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         )
         logger.info(
             f"Creating workflow with {total_jobs} total jobs "
-            f"({total_sites} xy sites × {n_heights} heights = {total_sites_with_heights} total calculations)"
+            f"({total_sites} xy sites × {n_heights} heights = {total_sites_with_heights} total calculations)"  # noqa: RUF001
         )
 
         # Global counter for progress tracking
@@ -622,7 +622,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         job_counter["current"] += 1
         logger.info(
             f"[{job_counter['current']}/{job_counter['total']}] "
-            f"Generating {self.grid_size[0]}×{self.grid_size[1]} adsorption sites..."
+            f"Generating {self.grid_size[0]}×{self.grid_size[1]} adsorption sites..."  # noqa: RUF001
         )
         sites_job = generate_adsorption_sites(grid_size=self.grid_size)
         sites_job.name = f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_generate_sites"

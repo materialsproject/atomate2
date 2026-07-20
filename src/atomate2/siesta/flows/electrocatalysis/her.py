@@ -89,7 +89,7 @@ def _analyze_her_pathway(
     # Extract best H adsorption site energy
     h_best_energy = h_ads_doc.best_site.total_energy
 
-    # Calculate ΔG_H* = G(H*) - G(*) - 0.5 × G(H₂)
+    # Calculate ΔG_H* = G(H*) - G(*) - 0.5 × G(H₂)  # noqa: RUF003
     # G(H*) = E(surface + H) + corrections
     # G(*) = E(clean surface)
     # G(H₂) = E(H₂ gas) + corrections
@@ -100,19 +100,19 @@ def _analyze_her_pathway(
     )
 
     # ΔG_H* calculation
-    delta_G_H = (
+    delta_G_H = (  # noqa: N806
         h_best_energy  # E(H*)
         - clean_surface_energy  # E(*)
-        - 0.5 * h2_gas_energy  # -0.5 × E(H₂)
-        - 0.5 * corrections.get("H2", 0.0)  # -0.5 × correction(H₂)
+        - 0.5 * h2_gas_energy  # -0.5 × E(H₂)  # noqa: RUF003
+        - 0.5 * corrections.get("H2", 0.0)  # -0.5 × correction(H₂)  # noqa: RUF003
         + corrections.get("H*", 0.0)  # correction(H*)
     )
 
     # pH correction (affects all proton transfers)
-    # ΔG_pH = -k_B T ln(10) × pH
-    KB = 8.617333262e-5  # eV/K
+    # ΔG_pH = -k_B T ln(10) × pH  # noqa: RUF003
+    KB = 8.617333262e-5  # eV/K  # noqa: N806
     ph_correction = -KB * temperature * 2.303 * ph  # ln(10) ≈ 2.303
-    delta_G_H += ph_correction
+    delta_G_H += ph_correction  # noqa: N806
 
     # Calculate HER overpotential
     her_result = calculate_her_overpotential(delta_G_H)

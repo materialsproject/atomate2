@@ -14,12 +14,13 @@ All job-level dry-runs use these reusable functions to maintain consistency.
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import job
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -194,7 +195,9 @@ def dry_run_save_multiple_structures(
 
     structure_files = []
 
-    for i, (structure, metadata) in enumerate(zip(structures, metadata_list)):
+    for i, (structure, metadata) in enumerate(
+        zip(structures, metadata_list, strict=False)
+    ):
         label = f"{label_prefix}_{i:03d}"
         filename = output_dir / f"{label}.{output_format}"
 

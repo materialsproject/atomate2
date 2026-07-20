@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from jobflow import Flow
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
@@ -15,6 +13,10 @@ from atomate2.siesta.powerups import update_user_siesta_settings
 from atomate2.siesta.sets.core import SiestaInputGenerator
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Molecule, Structure
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 
@@ -39,7 +41,7 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
     """
 
     name: str = "Different basis scf"
-    static_maker: BaseSiestaMaker = field(default_factory=lambda: StaticMaker())
+    static_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
     strategy: str = "standard"
 
     def _get_basis_sizes(self) -> list[str]:
@@ -189,7 +191,7 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
 # These classes are deprecated. Use DifferentBasisSCF with strategy parameter instead.
 
 
-def DifferentBasisSCFAdvance(*args, **kwargs):
+def DifferentBasisSCFAdvance(*args, **kwargs):  # noqa: N802
     """
     Deprecated: Use DifferentBasisSCF(strategy="advanced") instead.
 
@@ -207,7 +209,7 @@ def DifferentBasisSCFAdvance(*args, **kwargs):
     return DifferentBasisSCFFlowMaker(*args, **kwargs)
 
 
-def DifferentBasisSCFOld(*args, **kwargs):
+def DifferentBasisSCFOld(*args, **kwargs):  # noqa: N802
     """
     Deprecated: Use DifferentBasisSCF(strategy="legacy") instead.
 

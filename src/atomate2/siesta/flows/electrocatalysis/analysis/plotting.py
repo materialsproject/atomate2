@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 def plot_free_energy_diagram(
     step_labels: Sequence[str],
-    cumulative_G: Sequence[float],
-    delta_G: Sequence[float],
+    cumulative_G: Sequence[float],  # noqa: N803
+    delta_G: Sequence[float],  # noqa: N803
     pathway_type: str = "ORR",
     filename: str | Path = "free_energy_diagram.png",
     show_values: bool = True,
@@ -68,7 +68,7 @@ def plot_free_energy_diagram(
     >>> delta_G = [0.45, 1.20, 0.80, 0.60, 1.87]
     >>> plot_free_energy_diagram(step_labels, cumulative_G, delta_G, "ORR")
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
     # Ensure step_labels includes initial state
     # cumulative_G has n+1 elements (initial state + n steps)
@@ -108,7 +108,7 @@ def plot_free_energy_diagram(
         # Arrow showing ΔG
         mid_x = x_coords[i] + 0.9
         mid_y = (cumulative_G[i] + cumulative_G[i + 1]) / 2
-        dG = delta_G[i]
+        dG = delta_G[i]  # noqa: N806
 
         # Color arrows by uphill/downhill
         arrow_color = "red" if dG > 0 else "green"
@@ -183,8 +183,8 @@ def plot_overpotential_summary(
     pathway_type: str,
     overpotential: float,
     rls_label: str,
-    rls_delta_G: float,
-    U_onset: float,
+    rls_delta_G: float,  # noqa: N803
+    U_onset: float,  # noqa: N803
     filename: str | Path = "overpotential_summary.png",
     figsize: tuple[float, float] = (8, 6),
 ):
@@ -215,7 +215,7 @@ def plot_overpotential_summary(
     Path
         Path to saved plot.
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
     # Performance rating colors
     if pathway_type == "ORR":
@@ -317,8 +317,8 @@ def plot_overpotential_summary(
 
 
 def plot_bifunctional_comparison(
-    eta_ORR: float,
-    eta_OER: float,
+    eta_ORR: float,  # noqa: N803
+    eta_OER: float,  # noqa: N803
     gap: float,
     filename: str | Path = "bifunctional_comparison.png",
     figsize: tuple[float, float] = (10, 6),
@@ -346,7 +346,7 @@ def plot_bifunctional_comparison(
     Path
         Path to saved plot.
     """
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
+    _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
     # Left plot: Individual overpotentials
     reactions = ["ORR", "OER"]
@@ -363,7 +363,7 @@ def plot_bifunctional_comparison(
     )
 
     # Add value labels
-    for bar, eta in zip(bars, overpotentials):
+    for bar, eta in zip(bars, overpotentials, strict=False):
         height = bar.get_height()
         ax1.text(
             bar.get_x() + bar.get_width() / 2.0,
@@ -468,9 +468,9 @@ def write_analysis_summary(
     surface_name: str,
     overpotential: float,
     rls_label: str,
-    rls_delta_G: float,
+    rls_delta_G: float,  # noqa: N803
     step_labels: Sequence[str],
-    delta_G: Sequence[float],
+    delta_G: Sequence[float],  # noqa: N803
     filename: str | Path = "analysis_summary.txt",
     dry_run: bool = False,
 ):
@@ -573,7 +573,7 @@ def write_analysis_summary(
         f.write("COMPUTATIONAL METHODOLOGY\n")
         f.write("-" * 70 + "\n\n")
         f.write("Computational Hydrogen Electrode (CHE) Model:\n")
-        f.write("  - μ(H⁺ + e⁻) = ½μ(H₂) - eU - k_B T ln(10) × pH\n")
+        f.write("  - μ(H⁺ + e⁻) = ½μ(H₂) - eU - k_B T ln(10) × pH\n")  # noqa: RUF001
         f.write("  - Free energies calculated at T = 298.15 K, p = 1 atm\n")
         f.write("  - Zero-point energy (ZPE) and entropy corrections included\n\n")
 
@@ -630,7 +630,7 @@ def write_analysis_summary(
         f.write("FREE ENERGY PATHWAY\n")
         f.write("-" * 70 + "\n\n")
 
-        for i, (label, dG) in enumerate(zip(step_labels, delta_G)):
+        for i, (label, dG) in enumerate(zip(step_labels, delta_G, strict=False)):  # noqa: N806
             arrow = "↑" if dG > 0 else "↓"
             f.write(f"Step {i + 1}: {label:20s} ΔG = {dG:+.3f} eV {arrow}\n")
 

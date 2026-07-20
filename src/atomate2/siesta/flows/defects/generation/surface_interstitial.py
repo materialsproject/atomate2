@@ -158,7 +158,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
         interstitial_offset: float = 1.5,
         interstitial_site_type: str = "ontop",
         min_dist_from_atoms: float = 1.0,
-    ):
+    ) -> None:
         """Initialize SurfaceInterstitialGenerator."""
         # Initialize parent (surface layer detection)
         super().__init__(
@@ -297,7 +297,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
         ...     interstitial_species="H",  # Add H
         ...     charge_states=[0, -1],
         ... )
-        """
+        """  # noqa: RUF002
         if interstitial_species is None:
             raise ValueError("interstitial_species must be specified")
 
@@ -481,7 +481,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
 
         logger.info(
             f"Generated {len(defects)} surface interstitial defect(s) "
-            f"({len(surface_sites)} unique site(s) × {len(charge_states)} charge state(s))"
+            f"({len(surface_sites)} unique site(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects

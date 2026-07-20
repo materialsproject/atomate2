@@ -5,8 +5,7 @@ from __future__ import annotations
 import logging
 import shutil
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from ase.calculators.singlepoint import SinglePointCalculator
@@ -18,6 +17,9 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.neb.plotting import plot_ase_neb_results
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +68,7 @@ class PerImageLBFGS:
     >>> # Each iteration:
     >>> new_positions = opt.step(neb_forces, current_positions)
     >>> # Update NEB images with new positions
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
@@ -74,7 +76,7 @@ class PerImageLBFGS:
         alpha: float = 1.0 / 75.0,
         maxstep: float = 0.2,
         memory: int = 20,
-    ):
+    ) -> None:
         """Initialize per-image LBFGS optimizer."""
         self.n_images = n_images
         self.n_intermediate = n_images - 2  # Exclude fixed endpoints
@@ -243,7 +245,7 @@ class PerImageLBFGS:
         s_history = opt_state["s_history"]
         y_history = opt_state["y_history"]
         rho_history = opt_state["rho_history"]
-        H0 = opt_state["H0"]
+        H0 = opt_state["H0"]  # noqa: N806
 
         m = len(s_history)  # Number of stored corrections
 
@@ -329,7 +331,7 @@ class PerImageBFGS:
         n_images: int,
         alpha: float = 1.0 / 75.0,
         maxstep: float = 0.2,
-    ):
+    ) -> None:
         """Initialize per-image BFGS optimizer."""
         self.n_images = n_images
         self.n_intermediate = n_images - 2  # Exclude fixed endpoints
@@ -422,12 +424,12 @@ class PerImageBFGS:
                 ys = np.dot(y, s)
                 if ys > 1e-10:
                     # BFGS inverse Hessian update formula
-                    H = opt_state["H"]
-                    Hy = H @ y
-                    yHy = np.dot(y, Hy)
+                    H = opt_state["H"]  # noqa: N806
+                    Hy = H @ y  # noqa: N806
+                    yHy = np.dot(y, Hy)  # noqa: N806
 
                     # Sherman-Morrison-Woodbury formula for BFGS
-                    # H_{k+1} = (I - ρ s y^T) H_k (I - ρ y s^T) + ρ s s^T
+                    # H_{k+1} = (I - ρ s y^T) H_k (I - ρ y s^T) + ρ s s^T  # noqa: RUF003
                     rho = 1.0 / ys
 
                     # More numerically stable form
@@ -619,12 +621,10 @@ class AseNebFlowMaker(BaseSiestaFlowMaker):
 
     name: str = "ASE NEB Workflow"
     relax_endpoints: bool | str = False
-    relax_maker: Maker | None = field(
-        default_factory=lambda: RelaxMaker.fixed_cell_relaxation()
-    )
+    relax_maker: Maker | None = field(default_factory=RelaxMaker.fixed_cell_relaxation)
     relax_initial_maker: Maker | None = None
     relax_final_maker: Maker | None = None
-    static_maker: Maker | None = field(default_factory=lambda: StaticMaker())
+    static_maker: Maker | None = field(default_factory=StaticMaker)
     number_of_images: int = 5
     optimizer: str = (
         "PER_IMAGE_LBFGS"  # Per-image LBFGS like Lua FLOS (best convergence)
@@ -993,7 +993,9 @@ def ase_neb_optimization_all_iterations(
                 )
 
         # Calculate forces for each image
-        for i, (folder, structure) in enumerate(zip(image_folders, current_structures)):
+        for i, (folder, structure) in enumerate(
+            zip(image_folders, current_structures, strict=False)
+        ):
             is_endpoint = i == 0 or i == n_images - 1
 
             # Optimization: Skip endpoint calculations after first iteration
@@ -1048,7 +1050,7 @@ def ase_neb_optimization_all_iterations(
                 "Image Energies and SIESTA Forces (DFT forces from electronic structure):\n"
             )
             f.write("-" * 80 + "\n")
-            for i, (e, flist) in enumerate(zip(energies, forces_list)):
+            for i, (e, flist) in enumerate(zip(energies, forces_list, strict=False)):
                 max_f = np.max(np.linalg.norm(flist, axis=1))
                 endpoint_marker = (
                     " (endpoint - fixed)" if (i == 0 or i == n_images - 1) else ""
@@ -1068,7 +1070,7 @@ def ase_neb_optimization_all_iterations(
         if iteration == start_iteration or neb is None:
             # First iteration: create new NEB object
             images = [AseAtomsAdaptor.get_atoms(s) for s in current_structures]
-            for img, energy, force in zip(images, energies, forces_list):
+            for img, energy, force in zip(images, energies, forces_list, strict=False):
                 # Apply force sign correction if needed
                 final_force = -np.array(force) if negate_forces else force
                 img.calc = SinglePointCalculator(img, energy=energy, forces=final_force)
@@ -1084,7 +1086,7 @@ def ase_neb_optimization_all_iterations(
 
             # Update energies and forces with new SIESTA results
             for i, (img, energy, force) in enumerate(
-                zip(neb.images, energies, forces_list)
+                zip(neb.images, energies, forces_list, strict=False)
             ):
                 # Apply force sign correction if needed
                 final_force = -np.array(force) if negate_forces else force
@@ -1326,7 +1328,9 @@ def ase_neb_optimization_all_iterations(
             # Per-image optimizers: pass NEB forces and positions, get back updated positions
             new_positions = opt.step(neb_forces, positions_before)
             # Update NEB images with new positions
-            for i, (img, new_pos) in enumerate(zip(neb.images, new_positions)):
+            for i, (img, new_pos) in enumerate(
+                zip(neb.images, new_positions, strict=False)
+            ):
                 if i > 0 and i < n_images - 1:  # Only update intermediate images
                     img.set_positions(new_pos)
         elif optimizer.upper() == "FIRE":
@@ -1341,7 +1345,9 @@ def ase_neb_optimization_all_iterations(
         max_change = max(
             [
                 np.max(np.linalg.norm(after - before, axis=1))
-                for before, after in zip(positions_before, positions_after)
+                for before, after in zip(
+                    positions_before, positions_after, strict=False
+                )
             ]
         )
         logger.info(
@@ -1480,7 +1486,7 @@ def generate_neb_images_ase(
 
     # Save images to disk for inspection
     logger.info(f"Saving {len(structures)} NEB images to disk")
-    for i, (img, struct) in enumerate(zip(images, structures)):
+    for i, (img, struct) in enumerate(zip(images, structures, strict=False)):
         # Save as XYZ (easy to visualize)
         write(f"image_{i}.xyz", img)
         # Save as CIF (pymatgen format)
@@ -1559,7 +1565,9 @@ def ase_neb_iteration_persistent(
     # Get base directory to return to after each calculation
     base_dir = Path.cwd()
 
-    for i, (folder, structure) in enumerate(zip(image_folders, structures)):
+    for i, (folder, structure) in enumerate(
+        zip(image_folders, structures, strict=False)
+    ):
         # Optimization: Skip endpoint calculations after first iteration
         is_endpoint = i == 0 or i == n_images - 1
 
@@ -1709,7 +1717,7 @@ def _compute_neb_step_persistent(
         images = [AseAtomsAdaptor.get_atoms(s) for s in structures]
 
         # Attach energies and forces
-        for img, energy, force in zip(images, energies, forces):
+        for img, energy, force in zip(images, energies, forces, strict=False):
             img.calc = SinglePointCalculator(img, energy=energy, forces=force)
 
         # Create NEB object
@@ -1726,14 +1734,14 @@ def _compute_neb_step_persistent(
         logger.info("✓ Restored NEB object from previous iteration")
 
         # Update positions (structures may have changed from optimization)
-        for img, structure in zip(neb.images, structures):
+        for img, structure in zip(neb.images, structures, strict=False):
             # Update atomic positions in-place (preserves Atoms object identity)
             new_atoms = AseAtomsAdaptor.get_atoms(structure)
             img.set_positions(new_atoms.get_positions())
             img.set_cell(new_atoms.get_cell())
 
         # Update energies and forces with new SIESTA results
-        for img, energy, force in zip(neb.images, energies, forces):
+        for img, energy, force in zip(neb.images, energies, forces, strict=False):
             img.calc = SinglePointCalculator(img, energy=energy, forces=force)
 
     # Get NEB forces (includes spring forces)
@@ -2008,7 +2016,7 @@ def compute_neb_step(
     images = [AseAtomsAdaptor.get_atoms(s) for s in structures]
 
     # Attach energies and forces to ASE atoms
-    for img, energy, force in zip(images, energies, forces):
+    for img, energy, force in zip(images, energies, forces, strict=False):
         img.calc = None  # Remove any existing calculator
         img.set_calculator(SinglePointCalculator(img, energy=energy, forces=force))
 

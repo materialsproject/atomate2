@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Maker, job
@@ -16,6 +15,8 @@ from atomate2.siesta.jobs.core import RelaxMaker
 from atomate2.siesta.powerups import update_user_siesta_settings
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core import Structure
 
     from atomate2.common.jobs.eos import EOSPostProcessor  # noqa: F401
@@ -129,7 +130,7 @@ class SiestaEosFlowMaker(BaseSiestaFlowMaker, CommonEosMaker):
         default_factory=lambda: RelaxMaker.variable_cell_relaxation({})
     )
     eos_relax_maker: Maker | None = field(
-        default_factory=lambda: RelaxMaker.fixed_cell_relaxation()
+        default_factory=RelaxMaker.fixed_cell_relaxation
     )
     # number_of_frames: int = 7
 
@@ -260,7 +261,7 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     ...     number_of_frames=7,
     ... )
     >>> flow = maker.make(structure)
-    """
+    """  # noqa: RUF002
 
     name: str = "EOS Full Basis Convergence"
     basis_sizes: list[str] = None
@@ -328,14 +329,14 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             )
             console.print(f"  Basis sizes: {', '.join(self.basis_sizes)}")
             console.print(
-                f"  Testing {len(self.basis_sizes)} × {len(self.energy_shifts)} × {len(self.split_norms)} = "
+                f"  Testing {len(self.basis_sizes)} × {len(self.energy_shifts)} × {len(self.split_norms)} = "  # noqa: RUF001
                 f"{n_total} EOS workflows"
             )
             console.print(
-                f"  {n_total} × {self.number_of_frames} = {n_total * self.number_of_frames} total calculations"
+                f"  {n_total} × {self.number_of_frames} = {n_total * self.number_of_frames} total calculations"  # noqa: RUF001
             )
 
-        # Create EOS jobs for each basis size × parameter combination
+        # Create EOS jobs for each basis size × parameter combination  # noqa: RUF003
         eos_jobs = []
         job_metadata = []
 
@@ -496,7 +497,9 @@ def collect_eos_parameter_data(
     all_energies = []
     run_times = []  # Total wall time for each EOS workflow
 
-    for idx, (output, metadata) in enumerate(zip(eos_outputs, job_metadata)):
+    for idx, (output, metadata) in enumerate(
+        zip(eos_outputs, job_metadata, strict=False)
+    ):
         try:
             # Debug: print what we received
             if console:
@@ -792,7 +795,7 @@ def plot_eos_parameter_fits_from_data(
     labels_list = data.get("labels", [])
 
     # Create figure
-    fig, ax = plt.subplots(figsize=(14, 9))
+    _fig, ax = plt.subplots(figsize=(14, 9))
 
     # Get V0 and E0 values for fitting
     v0_values = data.get("v0_values", [])
@@ -818,6 +821,7 @@ def plot_eos_parameter_fits_from_data(
             e0_values,
             energy_shifts,
             split_norms,
+            strict=False,
         )
     ):
         try:
@@ -1019,7 +1023,7 @@ def plot_eos_parameter_timing(
     energy_shifts_valid = energy_shifts[valid_mask]
     _split_norms_valid = split_norms[valid_mask]
     run_times_valid = run_times[valid_mask]
-    _labels_valid = [label for label, v in zip(labels, valid_mask) if v]
+    _labels_valid = [label for label, v in zip(labels, valid_mask, strict=False) if v]
 
     unique_basis = sorted(
         set(basis_sizes_valid),
@@ -1031,7 +1035,7 @@ def plot_eos_parameter_timing(
     )
 
     # Create figure with 2 subplots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+    _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
     # Color map for basis sizes
     colors = plt.cm.Set1(np.linspace(0, 1, len(unique_basis)))
@@ -1070,7 +1074,7 @@ def plot_eos_parameter_timing(
     ax2.set_xticklabels(basis_labels)
 
     # Color boxes
-    for patch, basis in zip(bp["boxes"], basis_labels):
+    for patch, basis in zip(bp["boxes"], basis_labels, strict=False):
         patch.set_facecolor(basis_colors[basis])
         patch.set_alpha(0.7)
 
@@ -1158,7 +1162,7 @@ def write_eos_parameter_summary(
 
         f.write(
             f"Tested {len(unique_basis)} basis sizes with {len(np.unique(energy_shifts))} "
-            f"EnergyShift × {len(np.unique(split_norms))} SplitNorm values\n"
+            f"EnergyShift × {len(np.unique(split_norms))} SplitNorm values\n"  # noqa: RUF001
         )
         f.write(f"Total EOS calculations: {len(v0_values)}\n\n")
 
@@ -1222,7 +1226,7 @@ def write_eos_parameter_summary(
             f.write("-" * 120 + "\n")
             f.write(
                 f"{'Basis Set':<12} {'V₀ (Ų)':<12} {'E₀ (eV)':<15} {'B₀ (GPa)':<12} "
-                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} {'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"
+                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} {'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
             )
             f.write("-" * 120 + "\n")
         else:
@@ -1359,7 +1363,7 @@ def write_eos_parameter_summary(
         f.write("  Poor:      > 2.0% variation (need higher basis quality)\n\n")
 
         # Assessment
-        def assess_convergence(pct):
+        def assess_convergence(pct) -> str:
             if pct < 0.5:
                 return "Excellent ✓"
             if pct < 1.0:

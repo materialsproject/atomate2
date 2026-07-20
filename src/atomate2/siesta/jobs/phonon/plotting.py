@@ -133,7 +133,7 @@ def plot_phonon_band_structure(
             special_points.append(current_distance)
 
         # Plot band structure
-        fig, ax = plt.subplots(figsize=figsize)
+        _fig, ax = plt.subplots(figsize=figsize)
 
         bands_array = np.array(bands)
         for band_idx in range(bands_array.shape[1]):
@@ -241,7 +241,7 @@ def plot_phonon_dos(
     dos = dos_dict["total_dos"]
 
     # Plot DOS
-    fig, ax = plt.subplots(figsize=figsize)
+    _fig, ax = plt.subplots(figsize=figsize)
 
     ax.plot(frequencies, dos, "b-", linewidth=2)
     ax.fill_between(frequencies, 0, dos, alpha=0.3)
@@ -315,7 +315,7 @@ def plot_thermal_properties(
     free_energy = thermal["free_energy"]
 
     # Create 3-panel plot
-    fig, axes = plt.subplots(3, 1, figsize=figsize)
+    _fig, axes = plt.subplots(3, 1, figsize=figsize)
 
     # Heat capacity
     axes[0].plot(temps, cv, "r-", linewidth=2)
@@ -399,9 +399,9 @@ def write_phonon_summary(
         f.write(f"  a = {structure.lattice.a:.6f} Å\n")
         f.write(f"  b = {structure.lattice.b:.6f} Å\n")
         f.write(f"  c = {structure.lattice.c:.6f} Å\n")
-        f.write(f"  α = {structure.lattice.alpha:.3f}°\n")
+        f.write(f"  α = {structure.lattice.alpha:.3f}°\n")  # noqa: RUF001
         f.write(f"  β = {structure.lattice.beta:.3f}°\n")
-        f.write(f"  γ = {structure.lattice.gamma:.3f}°\n")
+        f.write(f"  γ = {structure.lattice.gamma:.3f}°\n")  # noqa: RUF001
         f.write(f"  Volume = {structure.lattice.volume:.6f} Å³\n\n")
 
         # Calculation parameters
@@ -473,13 +473,13 @@ def write_phonon_summary(
         f.write("-" * 80 + "\n")
         f.write("For production calculations, verify convergence of:\n\n")
         f.write("1. Supercell size:\n")
-        f.write("   - Test different supercell sizes (2×2×2, 3×3×3, 4×4×4)\n")
+        f.write("   - Test different supercell sizes (2×2×2, 3×3×3, 4×4×4)\n")  # noqa: RUF001
         f.write("   - Criterion: Frequencies converged within 0.03 THz (1 cm⁻¹)\n\n")
         f.write("2. Displacement distance:\n")
         f.write("   - Test: 0.005, 0.01, 0.02 Å\n")
         f.write("   - Check linearity of force-displacement relation\n\n")
         f.write("3. SIESTA parameters:\n")
-        f.write("   - K-points: Dense mesh (8×8×8 or higher)\n")
+        f.write("   - K-points: Dense mesh (8×8×8 or higher)\n")  # noqa: RUF001
         f.write("   - Mesh cutoff: 400-500 Ry for accurate forces\n")
         f.write("   - Basis: DZP minimum, TZP for high accuracy\n\n")
 

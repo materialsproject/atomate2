@@ -23,14 +23,17 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.defects.corrections.base import (
     CorrectionResult,
     CorrectionScheme,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +124,7 @@ class DielectricProfile:
         z_coords = np.linspace(0, cell_length_z, 200)
 
         # Gaussian transition from bulk to vacuum
-        # ε(z) = 1 + (ε_bulk - 1) * exp(-(z - z_center)² / (2σ²))
+        # ε(z) = 1 + (ε_bulk - 1) * exp(-(z - z_center)² / (2σ²))  # noqa: RUF003
         z_from_center = np.abs(z_coords - slab_center)
 
         # Adjust for periodic boundary (consider images)
@@ -321,7 +324,7 @@ class Slab2DCorrection(CorrectionScheme):
         gaussian_sigma: float | None = None,
         alignment_cutoff: float = 0.8,
         vacuum_threshold: float = 6.0,
-    ):
+    ) -> None:
         """Initialize 2D slab correction."""
         self.epsilon_parallel = epsilon_parallel
 
@@ -510,7 +513,7 @@ class Slab2DCorrection(CorrectionScheme):
         # E_lat ≈ q² / (2 * ε_avg * L_⊥) * f_2d
 
         q = abs(charge)
-        L_perp = slab_info["slab_thickness"]
+        L_perp = slab_info["slab_thickness"]  # noqa: N806
 
         # Average dielectric constant (weighted)
         epsilon_avg = (2 * self.epsilon_parallel + self.epsilon_perpendicular) / 3
@@ -520,7 +523,7 @@ class Slab2DCorrection(CorrectionScheme):
         f_2d = 1.2  # Approximate factor for 2D geometry
 
         # Conversion constant e²/(4πε₀) ≈ 14.3996 eV·Å
-        eV_Angstrom = 14.3996
+        eV_Angstrom = 14.3996  # noqa: N806
 
         lattice_term = (q**2 * eV_Angstrom * f_2d) / (2 * epsilon_avg * L_perp)
 
@@ -616,10 +619,10 @@ class Slab2DCorrection(CorrectionScheme):
                 "Could not identify vacuum regions for potential alignment. "
                 "Slab may be too thick or vacuum too small. Using full average."
             )
-            delta_V = np.mean(pot_diff)
+            delta_V = np.mean(pot_diff)  # noqa: N806
         else:
             # Average potential difference in vacuum regions
-            delta_V = np.mean(pot_diff[vacuum_mask])
+            delta_V = np.mean(pot_diff[vacuum_mask])  # noqa: N806
 
         alignment_energy = charge * delta_V
 

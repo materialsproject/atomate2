@@ -324,7 +324,7 @@ def calculate_charge_transition_levels(
         raise ValueError("charge_states and formation_energies must have same length")
 
     # Sort by charge state
-    sorted_data = sorted(zip(charge_states, formation_energies))
+    sorted_data = sorted(zip(charge_states, formation_energies, strict=False))
     charge_states_sorted = [d[0] for d in sorted_data]
     energies_sorted = [d[1] for d in sorted_data]
 
@@ -334,8 +334,8 @@ def calculate_charge_transition_levels(
     for i in range(n - 1):
         q1 = charge_states_sorted[i]
         q2 = charge_states_sorted[i + 1]
-        E1 = energies_sorted[i]
-        E2 = energies_sorted[i + 1]
+        E1 = energies_sorted[i]  # noqa: N806
+        E2 = energies_sorted[i + 1]  # noqa: N806
 
         # ε(q1/q2) = [E_formation(q2, 0) - E_formation(q1, 0)] / (q1 - q2)
         if q1 == q2:
@@ -403,10 +403,10 @@ def plot_formation_energy_diagram(
     """
     # Set Fermi range
     if fermi_range is None:
-        E_F_min = diagram.vbm_energy
-        E_F_max = diagram.vbm_energy + diagram.bandgap
+        E_F_min = diagram.vbm_energy  # noqa: N806
+        E_F_max = diagram.vbm_energy + diagram.bandgap  # noqa: N806
     else:
-        E_F_min, E_F_max = fermi_range
+        E_F_min, E_F_max = fermi_range  # noqa: N806
 
     # Create figure
     fig, ax = plt.subplots(figsize=figsize)
@@ -418,12 +418,14 @@ def plot_formation_energy_diagram(
     linestyles = {0: "-", 1: "--", 2: "-.", 3: ":", -1: "--", -2: "-.", -3: ":"}
 
     # Plot each defect
-    for defect, base_color in zip(diagram.defects, colors):
+    for defect, base_color in zip(diagram.defects, colors, strict=False):
         # For each charge state, plot E_formation(E_F) = E_formation(0) + q·E_F
-        E_F_range = np.linspace(E_F_min, E_F_max, 100)
+        E_F_range = np.linspace(E_F_min, E_F_max, 100)  # noqa: N806
 
-        for q, E_formation_0 in zip(defect.charge_states, defect.formation_energies):
-            E_formation = E_formation_0 + q * E_F_range
+        for q, E_formation_0 in zip(  # noqa: N806
+            defect.charge_states, defect.formation_energies, strict=False
+        ):
+            E_formation = E_formation_0 + q * E_F_range  # noqa: N806
 
             # Color based on charge: positive = red, negative = blue, neutral = base_color
             if q > 0:
@@ -477,13 +479,13 @@ def plot_formation_energy_diagram(
     # Shade stable regions (optional)
     if show_stable_regions:
         # Find convex hull for each defect to determine stable charge states
-        for defect, base_color in zip(diagram.defects, colors):
-            E_F_range = np.linspace(E_F_min, E_F_max, 1000)
+        for defect, base_color in zip(diagram.defects, colors, strict=False):
+            E_F_range = np.linspace(E_F_min, E_F_max, 1000)  # noqa: N806
 
             # Calculate E_formation for all charge states at each E_F
-            E_formation_matrix = np.zeros((len(defect.charge_states), len(E_F_range)))
-            for i, (q, E_formation_0) in enumerate(
-                zip(defect.charge_states, defect.formation_energies)
+            E_formation_matrix = np.zeros((len(defect.charge_states), len(E_F_range)))  # noqa: N806
+            for i, (q, E_formation_0) in enumerate(  # noqa: N806
+                zip(defect.charge_states, defect.formation_energies, strict=False)
             ):
                 E_formation_matrix[i] = E_formation_0 + q * E_F_range
 
@@ -507,8 +509,8 @@ def plot_formation_energy_diagram(
                 else:
                     shade_color = base_color
 
-                E_F_left = E_F_range[prev_transition]
-                E_F_right = E_F_range[trans_idx]
+                E_F_left = E_F_range[prev_transition]  # noqa: N806
+                E_F_right = E_F_range[trans_idx]  # noqa: N806
 
                 rect = Rectangle(
                     (E_F_left, ax.get_ylim()[0]),
@@ -533,8 +535,8 @@ def plot_formation_energy_diagram(
             else:
                 shade_color = base_color
 
-            E_F_left = E_F_range[prev_transition]
-            E_F_right = E_F_range[-1]
+            E_F_left = E_F_range[prev_transition]  # noqa: N806
+            E_F_right = E_F_range[-1]  # noqa: N806
             rect = Rectangle(
                 (E_F_left, ax.get_ylim()[0]),
                 E_F_right - E_F_left,
@@ -632,10 +634,10 @@ def plot_formation_energy_diagram_plotly(
 
     # Set Fermi range
     if fermi_range is None:
-        E_F_min = diagram.vbm_energy
-        E_F_max = diagram.vbm_energy + diagram.bandgap
+        E_F_min = diagram.vbm_energy  # noqa: N806
+        E_F_max = diagram.vbm_energy + diagram.bandgap  # noqa: N806
     else:
-        E_F_min, E_F_max = fermi_range
+        E_F_min, E_F_max = fermi_range  # noqa: N806
 
     # Create figure
     fig = go.Figure()
@@ -649,13 +651,15 @@ def plot_formation_energy_diagram_plotly(
     dash_styles = {0: "solid", 1: "dash", 2: "dot", 3: "dashdot"}
 
     # Fermi level array
-    E_F_range = np.linspace(E_F_min, E_F_max, 200)
+    E_F_range = np.linspace(E_F_min, E_F_max, 200)  # noqa: N806
 
     # Plot each defect and charge state
     for defect_idx, defect in enumerate(diagram.defects):
-        for q, E_formation_0 in zip(defect.charge_states, defect.formation_energies):
+        for q, E_formation_0 in zip(  # noqa: N806
+            defect.charge_states, defect.formation_energies, strict=False
+        ):
             # Calculate formation energy vs Fermi level
-            E_formation = E_formation_0 + q * E_F_range
+            E_formation = E_formation_0 + q * E_F_range  # noqa: N806
 
             # Select color based on charge
             if q > 0:
@@ -678,7 +682,7 @@ def plot_formation_energy_diagram_plotly(
                 f"E_formation = {formation:.3f} eV<br>"
                 f"Formation energy at E_F=0: {E_formation_0:.3f} eV<br>"
                 f"Charge state: {q:+d}"
-                for ef, formation in zip(E_F_range, E_formation)
+                for ef, formation in zip(E_F_range, E_formation, strict=False)
             ]
 
             # Add trace
@@ -848,11 +852,13 @@ def export_formation_energy_json(
         }
 
         # Calculate formation energies across Fermi level range
-        E_F_range = np.linspace(
+        E_F_range = np.linspace(  # noqa: N806
             diagram.vbm_energy, diagram.vbm_energy + diagram.bandgap, 100
         )
-        for q, E_formation_0 in zip(defect.charge_states, defect.formation_energies):
-            E_formation = E_formation_0 + q * E_F_range
+        for q, E_formation_0 in zip(  # noqa: N806
+            defect.charge_states, defect.formation_energies, strict=False
+        ):
+            E_formation = E_formation_0 + q * E_F_range  # noqa: N806
             defect_data["formation_energy_vs_fermi"][f"q={q:+d}"] = {
                 "fermi_levels": E_F_range.tolist(),
                 "formation_energies": E_formation.tolist(),
@@ -1104,7 +1110,7 @@ def write_defect_summary(
             metadata = defect_doc.correction_metadata
             f.write(f"Scheme:              {defect_doc.correction_scheme}\n")
             if "madelung_constant" in metadata:
-                alpha_M = metadata["madelung_constant"]
+                alpha_M = metadata["madelung_constant"]  # noqa: N806
                 f.write(f"Madelung constant:   {alpha_M:.4f}")
                 if metadata.get("madelung_citation"):
                     f.write(f" ({metadata['madelung_citation']})")
@@ -1115,7 +1121,7 @@ def write_defect_summary(
                 )
             if "gaussian_width_angstrom" in metadata:
                 f.write(
-                    f"Gaussian width (σ):    {metadata['gaussian_width_angstrom']:.2f} Å\n"
+                    f"Gaussian width (σ):    {metadata['gaussian_width_angstrom']:.2f} Å\n"  # noqa: RUF001
                 )
             if "lattice_term_eV" in metadata:
                 f.write(f"Lattice term:        {metadata['lattice_term_eV']:.4f} eV\n")
@@ -1138,7 +1144,7 @@ def write_defect_summary(
         if defect_type == "vacancy":
             f.write("For vacancy defects:\n")
             f.write(
-                "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"
+                "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
             )
             f.write("Where:\n")
             f.write("  E_defect = Total energy of defect supercell\n")
@@ -1150,7 +1156,7 @@ def write_defect_summary(
         elif defect_type == "substitution":
             f.write("For substitution defects:\n")
             f.write(
-                "  E_formation = E_defect - E_host + (μ_removed - μ_added) + q × E_F + E_corr\n\n"
+                "  E_formation = E_defect - E_host + (μ_removed - μ_added) + q × E_F + E_corr\n\n"  # noqa: RUF001
             )
             f.write("Where:\n")
             f.write("  E_defect  = Total energy of defect supercell\n")
@@ -1163,7 +1169,7 @@ def write_defect_summary(
         elif defect_type == "interstitial":
             f.write("For interstitial defects:\n")
             f.write(
-                "  E_formation = E_defect - E_host - μ_added + q × E_F + E_corr\n\n"
+                "  E_formation = E_defect - E_host - μ_added + q × E_F + E_corr\n\n"  # noqa: RUF001
             )
             f.write("Where:\n")
             f.write("  E_defect = Total energy of defect supercell\n")
@@ -1178,7 +1184,7 @@ def write_defect_summary(
         f.write("NOTES\n")
         f.write("-" * 80 + "\n")
         f.write("• Formation energy at E_F = 0 (referenced to VBM)\n")
-        f.write("• For charged defects: E_formation(E_F) = E_formation(0) + q × E_F\n")
+        f.write("• For charged defects: E_formation(E_F) = E_formation(0) + q × E_F\n")  # noqa: RUF001
         if defect_type == "vacancy" and "ghost" in str(
             defect_doc.defect_structure.site_properties.get("ghost_tags", [])
         ):
@@ -1443,7 +1449,7 @@ def write_combined_defect_summary(
 
                         metadata = doc.correction_metadata
                         if "madelung_constant" in metadata:
-                            alpha_M = metadata["madelung_constant"]
+                            alpha_M = metadata["madelung_constant"]  # noqa: N806
                             f.write(f"  Madelung constant: {alpha_M:.4f}")
                             if metadata.get("madelung_citation"):
                                 f.write(f" ({metadata['madelung_citation']})")
@@ -1454,7 +1460,7 @@ def write_combined_defect_summary(
                             )
                         if "gaussian_width_angstrom" in metadata:
                             f.write(
-                                f"  Gaussian width (σ): {metadata['gaussian_width_angstrom']:.2f} Å\n"
+                                f"  Gaussian width (σ): {metadata['gaussian_width_angstrom']:.2f} Å\n"  # noqa: RUF001
                             )
                         if "lattice_term" in metadata:
                             f.write(
@@ -1473,7 +1479,7 @@ def write_combined_defect_summary(
             if defect_type == "vacancy":
                 f.write("For vacancy defects:\n")
                 f.write(
-                    "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"
+                    "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
                 )
                 f.write("Where:\n")
                 f.write("  E_defect = Total energy of defect supercell\n")
@@ -1485,7 +1491,7 @@ def write_combined_defect_summary(
             elif defect_type == "substitution":
                 f.write("For substitution defects:\n")
                 f.write(
-                    "  E_formation = E_defect - E_host + (μ_removed - μ_added) + q × E_F + E_corr\n\n"
+                    "  E_formation = E_defect - E_host + (μ_removed - μ_added) + q × E_F + E_corr\n\n"  # noqa: RUF001
                 )
                 f.write("Where:\n")
                 f.write("  E_defect  = Total energy of defect supercell\n")
@@ -1498,7 +1504,7 @@ def write_combined_defect_summary(
             elif defect_type == "interstitial":
                 f.write("For interstitial defects:\n")
                 f.write(
-                    "  E_formation = E_defect - E_host - μ_added + q × E_F + E_corr\n\n"
+                    "  E_formation = E_defect - E_host - μ_added + q × E_F + E_corr\n\n"  # noqa: RUF001
                 )
                 f.write("Where:\n")
                 f.write("  E_defect = Total energy of defect supercell\n")
@@ -1514,7 +1520,7 @@ def write_combined_defect_summary(
             f.write("-" * 80 + "\n")
             f.write("• Formation energies shown at E_F = 0 (referenced to VBM)\n")
             f.write(
-                "• For charged defects: E_formation(E_F) = E_formation(0) + q × E_F\n"
+                "• For charged defects: E_formation(E_F) = E_formation(0) + q × E_F\n"  # noqa: RUF001
             )
             if defect_type == "vacancy":
                 f.write("• Vacancy calculated with ghost atoms (SIESTA-specific)\n")

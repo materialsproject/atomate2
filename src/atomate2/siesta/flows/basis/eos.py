@@ -22,19 +22,21 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
 from jobflow.core.flow import Flow
 from jobflow.core.job import job
 from pymatgen.analysis.eos import EOS
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.powerups import update_user_siesta_settings
 from atomate2.siesta.utils.common import console, print_docstring_in_box
 from atomate2.siesta.utils.verbosity import VerbosityLevel
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -613,7 +615,7 @@ def collect_basis_params_data(
 
             logger.debug(
                 f"{job_name}: E={energy:.6f} eV, ES={energy_shift}, SN={split_norm}, "
-                f"max_F={max_force:.6f} eV/Å, max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"
+                f"max_F={max_force:.6f} eV/Å, max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"  # noqa: RUF001
             )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
@@ -808,7 +810,7 @@ def plot_basis_params_convergence(
     # Add text labels showing max force and max stress
     for i in range(len(energies)):
         # Display force (top) and stress (bottom)
-        label_text = f"F:{max_forces[i]:.2f}\nσ:{max_stresses[i]:.2f}"
+        label_text = f"F:{max_forces[i]:.2f}\nσ:{max_stresses[i]:.2f}"  # noqa: RUF001
         ax4.annotate(
             label_text,
             xy=(energy_shifts[i], split_norms[i]),
@@ -826,7 +828,7 @@ def plot_basis_params_convergence(
     ax4.set_xlabel("PAO.EnergyShift (Ry)", fontsize=12, fontweight="bold")
     ax4.set_ylabel("PAO.SplitNorm", fontsize=12, fontweight="bold")
     ax4.set_title(
-        "Basis Quality Map\n(F: max force eV/Å, σ: max stress GPa)",
+        "Basis Quality Map\n(F: max force eV/Å, σ: max stress GPa)",  # noqa: RUF001
         fontsize=13,
         fontweight="bold",
     )
@@ -865,7 +867,7 @@ def plot_basis_params_convergence(
     individual_files["combined"] = output_file
 
     # Individual Plot 1: Energy vs EnergyShift
-    fig1, ax1 = plt.subplots(figsize=(10, 7))
+    _fig1, ax1 = plt.subplots(figsize=(10, 7))
     colors = cm.viridis(np.linspace(0, 1, len(unique_norms)))
     for i, norm in enumerate(unique_norms):
         mask = split_norms == norm
@@ -894,7 +896,7 @@ def plot_basis_params_convergence(
     individual_files["energy_vs_shift"] = file1
 
     # Individual Plot 2: Energy vs SplitNorm
-    fig2, ax2 = plt.subplots(figsize=(10, 7))
+    _fig2, ax2 = plt.subplots(figsize=(10, 7))
     colors = cm.plasma(np.linspace(0, 1, len(unique_shifts)))
     for i, shift in enumerate(unique_shifts):
         mask = energy_shifts == shift
@@ -921,7 +923,7 @@ def plot_basis_params_convergence(
     individual_files["energy_vs_norm"] = file2
 
     # Individual Plot 3: 2D Energy Heatmap
-    fig3, ax3 = plt.subplots(figsize=(10, 8))
+    _fig3, ax3 = plt.subplots(figsize=(10, 8))
     shift_grid, norm_grid = np.meshgrid(unique_shifts, unique_norms)
     energy_grid = np.zeros_like(shift_grid)
     for i in range(len(energies)):
@@ -973,7 +975,7 @@ def plot_basis_params_convergence(
         linewidths=1.5,
     )
     for i in range(len(energies)):
-        label_text = f"F:{max_forces[i]:.2f}\nσ:{max_stresses[i]:.2f}"
+        label_text = f"F:{max_forces[i]:.2f}\nσ:{max_stresses[i]:.2f}"  # noqa: RUF001
         ax4.annotate(
             label_text,
             xy=(energy_shifts[i], split_norms[i]),
@@ -989,7 +991,7 @@ def plot_basis_params_convergence(
     ax4.set_xlabel("PAO.EnergyShift (Ry)", fontsize=12, fontweight="bold")
     ax4.set_ylabel("PAO.SplitNorm", fontsize=12, fontweight="bold")
     ax4.set_title(
-        "Basis Quality Map\n(F: max force eV/Å, σ: max stress GPa)",
+        "Basis Quality Map\n(F: max force eV/Å, σ: max stress GPa)",  # noqa: RUF001
         fontsize=13,
         fontweight="bold",
     )
@@ -1014,7 +1016,7 @@ def plot_basis_params_convergence(
         logger.info("Creating timing analysis plots")
 
         # Individual Plot 5: Timing vs EnergyShift
-        fig5, ax5 = plt.subplots(figsize=(10, 7))
+        _fig5, ax5 = plt.subplots(figsize=(10, 7))
         colors = cm.viridis(np.linspace(0, 1, len(unique_norms)))
         for i, norm in enumerate(unique_norms):
             mask = split_norms == norm
@@ -1048,7 +1050,7 @@ def plot_basis_params_convergence(
         individual_files["timing_vs_shift"] = file5
 
         # Individual Plot 6: Timing vs SplitNorm
-        fig6, ax6 = plt.subplots(figsize=(10, 7))
+        _fig6, ax6 = plt.subplots(figsize=(10, 7))
         colors = cm.plasma(np.linspace(0, 1, len(unique_shifts)))
         for i, shift in enumerate(unique_shifts):
             mask = energy_shifts == shift
@@ -1082,7 +1084,7 @@ def plot_basis_params_convergence(
         individual_files["timing_vs_norm"] = file6
 
         # Individual Plot 7: 2D Timing Heatmap
-        fig7, ax7 = plt.subplots(figsize=(10, 8))
+        _fig7, ax7 = plt.subplots(figsize=(10, 8))
         time_grid = np.zeros_like(shift_grid)
         for i in range(len(run_times)):
             if run_times[i] > 0:
@@ -1127,7 +1129,7 @@ def plot_basis_params_convergence(
         individual_files["timing_heatmap"] = file7
 
         # Individual Plot 8: Efficiency plot (Energy vs Time)
-        fig8, ax8 = plt.subplots(figsize=(10, 7))
+        _fig8, ax8 = plt.subplots(figsize=(10, 7))
         # Normalize energies to meV relative to minimum
         e_min = np.min(energies)
         energies_rel = (energies - e_min) * 1000  # meV
@@ -1478,7 +1480,7 @@ def plot_basis_functions(
     individual_files["orbital_extent"] = file1
 
     # Individual Plot 2: Split-valence orbitals
-    fig2, ax2 = plt.subplots(figsize=(10, 7))
+    _fig2, ax2 = plt.subplots(figsize=(10, 7))
     r = np.linspace(0, 8, 200)
     es_demo = 0.010
     unique_norms = sorted(
@@ -1525,11 +1527,11 @@ def plot_basis_functions(
     colors3 = plt.cm.viridis(np.linspace(0, 1, len(unique_shifts)))
     for i, es in enumerate(unique_shifts):
         r_cutoff = 5.0 / np.sqrt(es * 10)
-        pao_A = np.exp(-(radial_dist**2) / (2 * r_cutoff**2)) * np.exp(
+        pao_A = np.exp(-(radial_dist**2) / (2 * r_cutoff**2)) * np.exp(  # noqa: N806
             -es * radial_dist / r_cutoff
         )
         pao_A[radial_dist > r_cutoff] = 0
-        pao_B = np.exp(
+        pao_B = np.exp(  # noqa: N806
             -((radial_dist - bond_distance) ** 2) / (2 * r_cutoff**2)
         ) * np.exp(-es * np.abs(radial_dist - bond_distance) / r_cutoff)
         pao_B[np.abs(radial_dist - bond_distance) > r_cutoff] = 0
@@ -1761,7 +1763,7 @@ def plot_real_basis_functions(
     # If no ion files found, create informative plot
     if not basis_data:
         logger.warning("No ion.xml files found. Creating informative message plot.")
-        fig, ax = plt.subplots(1, 1, figsize=(14, 10))
+        _fig, ax = plt.subplots(1, 1, figsize=(14, 10))
         ax.axis("off")
 
         message = [
@@ -1825,7 +1827,7 @@ def plot_real_basis_functions(
 
     all_l_values = sorted(list(all_l_values_set))
 
-    # Create combined plot with subplots for each element × l combination
+    # Create combined plot with subplots for each element × l combination  # noqa: RUF003
     # Calculate grid size
     n_plots = len(all_elements) * len(all_l_values)
     n_cols = min(3, max(len(all_l_values), 2))
@@ -1932,7 +1934,7 @@ def plot_real_basis_functions(
     logger.info(f"Combined real basis function plot saved to {output_file}")
     console.print(f"[green]Combined real basis plot saved to: {output_file}[/green]")
 
-    # Save individual plots for each element × l combination
+    # Save individual plots for each element × l combination  # noqa: RUF003
     base_name = Path(output_file).stem
     output_dir = Path(output_file).parent
 
@@ -1954,7 +1956,7 @@ def plot_real_basis_functions(
             if not has_l:
                 continue
 
-            fig_ind, ax_ind = plt.subplots(figsize=(10, 8))
+            _fig_ind, ax_ind = plt.subplots(figsize=(10, 8))
 
             color_idx = 0
             legend_entries = []
@@ -2195,7 +2197,7 @@ def write_basis_params_summary(
                 std_e = np.std(energies[mask])
                 avg_energies_by_shift.append(avg_e)
                 f.write(
-                    f"  ES={shift:.6f}: E_avg={avg_e:.6f} eV (σ={std_e * 1000:.2f} meV)\n"
+                    f"  ES={shift:.6f}: E_avg={avg_e:.6f} eV (σ={std_e * 1000:.2f} meV)\n"  # noqa: RUF001
                 )
 
             shift_range = (
@@ -2213,7 +2215,7 @@ def write_basis_params_summary(
                 std_e = np.std(energies[mask])
                 avg_energies_by_norm.append(avg_e)
                 f.write(
-                    f"  SN={norm:.4f}: E_avg={avg_e:.6f} eV (σ={std_e * 1000:.2f} meV)\n"
+                    f"  SN={norm:.4f}: E_avg={avg_e:.6f} eV (σ={std_e * 1000:.2f} meV)\n"  # noqa: RUF001
                 )
 
             norm_range = (
@@ -2271,10 +2273,10 @@ def write_basis_params_summary(
         f.write("calculation, not schematic representations.\n\n")
 
         f.write("Plot Legend Information:\n")
-        f.write("  Each orbital is labeled: nℓζz (ES=X.XXX, SN=X.XX, r_c=X.XX)\n")
+        f.write("  Each orbital is labeled: nℓζz (ES=X.XXX, SN=X.XX, r_c=X.XX)\n")  # noqa: RUF001
         f.write("  where:\n")
         f.write("    n     = Principal quantum number (shell)\n")
-        f.write("    ℓ     = Angular momentum (s=0, p=1, d=2, f=3, g=4)\n")
+        f.write("    ℓ     = Angular momentum (s=0, p=1, d=2, f=3, g=4)\n")  # noqa: RUF001
         f.write("    ζ     = Zeta (1=first radial function, 2=split-valence, etc.)\n")
         f.write("    z     = Zeta index from SIESTA\n")
         f.write("    ES    = PAO.EnergyShift value (Ry)\n")
@@ -2302,7 +2304,7 @@ def write_basis_params_summary(
 
         f.write("3. Multiple Radial Functions (Split-Valence):\n")
         f.write("   • Generated when SplitNorm threshold is exceeded\n")
-        f.write("   • Allows different orbital sizes for same ℓ channel\n")
+        f.write("   • Allows different orbital sizes for same ℓ channel\n")  # noqa: RUF001
         f.write("   • Essential for polarization in chemical bonding\n")
         f.write("   • ζ2 orbitals typically have smaller r_c than ζ1\n\n")
 
@@ -2313,7 +2315,7 @@ def write_basis_params_summary(
             "   • d-orbitals: Five degenerate orbitals, important for polarization\n"
         )
         f.write(
-            "   • Higher ℓ channels added based on basis type (SZ, DZ, DZP, TZ, etc.)\n\n"
+            "   • Higher ℓ channels added based on basis type (SZ, DZ, DZP, TZ, etc.)\n\n"  # noqa: RUF001
         )
 
         f.write("Material-Specific Considerations:\n\n")
@@ -2360,18 +2362,18 @@ def write_basis_params_summary(
         f.write("PAO Generation Method:\n\n")
 
         f.write("SIESTA generates Numerical Atomic Orbitals by solving:\n")
-        f.write("  [H_atom + V_conf(r)] φ_nℓζ(r) = ε_nℓζ φ_nℓζ(r)\n\n")
+        f.write("  [H_atom + V_conf(r)] φ_nℓζ(r) = ε_nℓζ φ_nℓζ(r)\n\n")  # noqa: RUF001
 
         f.write("Where:\n")
         f.write("  • H_atom: Atomic Hamiltonian for isolated atom\n")
         f.write("  • V_conf(r): Confinement potential at cutoff radius r_c\n")
-        f.write("  • ε_nℓζ: Pseudo-eigenvalue (shifted by EnergyShift)\n\n")
+        f.write("  • ε_nℓζ: Pseudo-eigenvalue (shifted by EnergyShift)\n\n")  # noqa: RUF001
 
         f.write("The cutoff radius r_c is determined by:\n")
         f.write("  V_conf(r_c) = EnergyShift\n\n")
 
         f.write("Split-valence orbitals generated via:\n")
-        f.write("  φ_nℓζ2(r) ∝ r × φ_nℓζ1(r)  (normalized and confined)\n\n")
+        f.write("  φ_nℓζ2(r) ∝ r × φ_nℓζ1(r)  (normalized and confined)\n\n")  # noqa: RUF001
 
         f.write("Key Publications:\n\n")
 
@@ -2486,9 +2488,9 @@ def collect_eos_basis_data(
         "lattice_a": [],  # Lattice parameter a (from V₀^(1/3) assuming cubic)
         "lattice_b": [],  # Lattice parameter b (assuming cubic: b=a)
         "lattice_c": [],  # Lattice parameter c (assuming cubic: c=a)
-        "lattice_alpha": [],  # Angle α (assuming 90° for cubic)
+        "lattice_alpha": [],  # Angle α (assuming 90° for cubic)  # noqa: RUF003
         "lattice_beta": [],  # Angle β (assuming 90° for cubic)
-        "lattice_gamma": [],  # Angle γ (assuming 90° for cubic)
+        "lattice_gamma": [],  # Angle γ (assuming 90° for cubic)  # noqa: RUF003
         "run_time": [],  # Calculation time in seconds
         "names": [],
     }
@@ -2802,7 +2804,7 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
     if has_timing:
         fig, axes = plt.subplots(1, 4, figsize=(20, 5))
     else:
-        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+        _fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
     # Plot V0
     axes[0].plot(range(len(basis_sets)), v0_values, "o-", linewidth=2, markersize=8)
@@ -2898,7 +2900,7 @@ def plot_eos_overlay(flow_results: dict[str, Any], job_metadata: list[dict]) -> 
 
     logger.info(f"Creating EOS overlay plot: {output_file}")
 
-    fig, ax = plt.subplots(figsize=(12, 8))
+    _fig, ax = plt.subplots(figsize=(12, 8))
 
     colors = plt.cm.tab10(np.linspace(0, 1, len(job_metadata)))
 
@@ -3241,7 +3243,7 @@ def generate_eos_basis_outputs(
 
     # Generate overlay plot
     overlay_plot = output_path / "eos_overlay_all_basis.png"
-    fig, ax = plt.subplots(figsize=(12, 8))
+    _fig, ax = plt.subplots(figsize=(12, 8))
     colors = plt.cm.tab10(np.linspace(0, 1, len(job_metadata)))
 
     for i, job_info in enumerate(job_metadata):
@@ -3333,7 +3335,7 @@ def generate_eos_basis_outputs(
             f.write("-" * 120 + "\n")
             f.write(
                 f"{'Basis Set':<12} {'V₀ (ų)':<12} {'E₀ (eV)':<15} {'B₀ (GPa)':<12} "
-                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} {'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"
+                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} {'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
             )
             f.write("-" * 120 + "\n")
 

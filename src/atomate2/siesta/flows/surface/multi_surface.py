@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, job
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -305,10 +307,10 @@ def analyze_multi_surface_results(
             slab_energy = slab_info["job_output"].output.energy
 
             # Calculate surface energy (1 surface for asymmetric)
-            gamma_eV_A2 = (
+            gamma_eV_A2 = (  # noqa: N806
                 slab_energy - slab_info["n_formula_units"] * bulk_energy_per_formula
             ) / slab_info["surface_area"]
-            gamma_Jm2 = gamma_eV_A2 * 16.0218
+            gamma_Jm2 = gamma_eV_A2 * 16.0218  # noqa: N806
 
             termination_results.append(
                 {
@@ -359,7 +361,7 @@ def analyze_multi_surface_results(
     lines.append("")
     lines.append("Surface Energy Definition:")
     lines.append(
-        "  Surface energy (γ) represents the excess energy per unit area required"
+        "  Surface energy (γ) represents the excess energy per unit area required"  # noqa: RUF001
     )
     lines.append(
         "  to create a surface by cleaving a bulk crystal. It is a fundamental"
@@ -371,7 +373,7 @@ def analyze_multi_surface_results(
     lines.append("Calculation Method:")
     lines.append("  For asymmetric slabs (one surface exposed):")
     lines.append("")
-    lines.append("    γ = (E_slab - N × E_bulk) / A")
+    lines.append("    γ = (E_slab - N × E_bulk) / A")  # noqa: RUF001
     lines.append("")
     lines.append("  Where:")
     lines.append("    E_slab = Total energy of the slab (DFT calculated)")
@@ -381,7 +383,7 @@ def analyze_multi_surface_results(
     lines.append("")
     lines.append("  For symmetric slabs (two identical surfaces):")
     lines.append("")
-    lines.append("    γ = (E_slab - N × E_bulk) / (2A)")
+    lines.append("    γ = (E_slab - N × E_bulk) / (2A)")  # noqa: RUF001
     lines.append("")
     lines.append("  The factor of 2 accounts for two equivalent surfaces.")
     lines.append("")
@@ -389,12 +391,12 @@ def analyze_multi_surface_results(
     lines.append("  1 eV/Ų = 16.0218 J/m²")
     lines.append("")
     lines.append("Physical Interpretation:")
-    lines.append("  • Lower γ → More stable surface (energetically favorable)")
-    lines.append("  • Higher γ → Less stable surface (higher energy cost to form)")
+    lines.append("  • Lower γ → More stable surface (energetically favorable)")  # noqa: RUF001
+    lines.append("  • Higher γ → Less stable surface (higher energy cost to form)")  # noqa: RUF001
     lines.append(
         "  • Crystal morphology follows Wulff construction (minimizes total surface energy)"
     )
-    lines.append("  • Surfaces with lowest γ dominate equilibrium crystal shapes")
+    lines.append("  • Surfaces with lowest γ dominate equilibrium crystal shapes")  # noqa: RUF001
     lines.append("")
 
     # CALCULATION DETAILS
@@ -419,8 +421,8 @@ def analyze_multi_surface_results(
     lines.append("=" * 80)
     lines.append("")
     lines.append(
-        f"  {'Surface':<10} {'Lowest γ (eV/Ų)':<18} "
-        f"{'Lowest γ (J/m²)':<18} {'Best Term.':<15} {'# Terms'}"
+        f"  {'Surface':<10} {'Lowest γ (eV/Ų)':<18} "  # noqa: RUF001
+        f"{'Lowest γ (J/m²)':<18} {'Best Term.':<15} {'# Terms'}"  # noqa: RUF001
     )
     lines.append("  " + "-" * 77)
 
@@ -452,7 +454,7 @@ def analyze_multi_surface_results(
     lines.append(f"  Surface: ({miller_h} {miller_k} {miller_l})")
     lines.append(f"  Termination: {global_min_term['termination']}")
     lines.append(
-        f"  γ = {global_min_term['surface_energy']:.4f} eV/Ų ({global_min_term['surface_energy_Jm2']:.2f} J/m²)"
+        f"  γ = {global_min_term['surface_energy']:.4f} eV/Ų ({global_min_term['surface_energy_Jm2']:.2f} J/m²)"  # noqa: RUF001
     )
     lines.append("")
 
@@ -479,8 +481,8 @@ def analyze_multi_surface_results(
         for i, term in enumerate(sorted_terms, 1):
             lines.append(f"Termination {i}: {term['termination']}")
             lines.append("  Surface Energy:")
-            lines.append(f"    γ = {term['surface_energy']:.6f} eV/Ų")
-            lines.append(f"    γ = {term['surface_energy_Jm2']:.4f} J/m²")
+            lines.append(f"    γ = {term['surface_energy']:.6f} eV/Ų")  # noqa: RUF001
+            lines.append(f"    γ = {term['surface_energy_Jm2']:.4f} J/m²")  # noqa: RUF001
             if term["is_lowest"]:
                 lines.append("    ★ LOWEST for this surface")
             else:
@@ -789,8 +791,8 @@ def _create_multi_surface_plot(all_results: list[dict], bulk_composition) -> str
 
     # Prepare data
     surfaces = []
-    lowest_energies_eV = []
-    lowest_energies_Jm2 = []
+    lowest_energies_eV = []  # noqa: N806
+    lowest_energies_Jm2 = []  # noqa: N806
     n_terminations = []
     all_termination_data = []
 
@@ -822,7 +824,7 @@ def _create_multi_surface_plot(all_results: list[dict], bulk_composition) -> str
             )
 
     # Create figure with 2 subplots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
     # Plot 1: Bar chart of lowest surface energies
     x_pos = np.arange(len(surfaces))
@@ -841,7 +843,7 @@ def _create_multi_surface_plot(all_results: list[dict], bulk_composition) -> str
     ax1.grid(axis="y", alpha=0.3, linestyle="--")
 
     # Add value labels on bars
-    for i, (bar, energy) in enumerate(zip(bars, lowest_energies_eV)):
+    for i, (bar, energy) in enumerate(zip(bars, lowest_energies_eV, strict=False)):
         height = bar.get_height()
         ax1.text(
             bar.get_x() + bar.get_width() / 2.0,
@@ -896,7 +898,7 @@ def _create_multi_surface_plot(all_results: list[dict], bulk_composition) -> str
 
     # Add legend (remove duplicates)
     handles, labels = ax2.get_legend_handles_labels()
-    by_label = dict(zip(labels, handles))
+    by_label = dict(zip(labels, handles, strict=False))
     ax2.legend(by_label.values(), by_label.keys(), loc="upper right", fontsize=10)
 
     # Add text box with summary

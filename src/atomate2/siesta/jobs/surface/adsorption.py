@@ -116,7 +116,7 @@ def generate_adsorption_sites(
     """
     total_sites = grid_size[0] * grid_size[1]
     logger.info(
-        f"[PROGRESS] Generating {total_sites} adsorption sites ({grid_size[0]}×{grid_size[1]} grid)"
+        f"[PROGRESS] Generating {total_sites} adsorption sites ({grid_size[0]}×{grid_size[1]} grid)"  # noqa: RUF001
     )
 
     nx, ny = grid_size
@@ -222,7 +222,7 @@ def analyze_adsorption_scan(
     n_heights = len(heights)
     xy_sites = grid_size[0] * grid_size[1]
     logger.info(
-        f"[PROGRESS] Analyzing {total_sites} results ({xy_sites} xy sites × {n_heights} heights)"
+        f"[PROGRESS] Analyzing {total_sites} results ({xy_sites} xy sites × {n_heights} heights)"  # noqa: RUF001
     )
 
     # Calculate surface area and slab thickness
@@ -386,22 +386,22 @@ def plot_adsorption_sites(
     nx, ny = scan_doc.grid_size
     xi = np.linspace(0, 1, nx * 10)
     yi = np.linspace(0, 1, ny * 10)
-    XI, YI = np.meshgrid(xi, yi)
+    XI, YI = np.meshgrid(xi, yi)  # noqa: N806
 
     # Interpolate energies
     from scipy.interpolate import griddata
 
-    ZI = griddata((x_coords, y_coords), energies, (XI, YI), method="cubic")
+    ZI = griddata((x_coords, y_coords), energies, (XI, YI), method="cubic")  # noqa: N806
 
     # If multiple heights, also interpolate optimal heights
     if multiple_heights:
-        HI = griddata((x_coords, y_coords), best_heights, (XI, YI), method="cubic")
+        HI = griddata((x_coords, y_coords), best_heights, (XI, YI), method="cubic")  # noqa: N806
 
     # Create figure (3 plots if height-scanned, 2 otherwise)
     if multiple_heights:
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(24, 6))
     else:
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+        _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
 
     # Plot 1: Heatmap with contours
     cmap = LinearSegmentedColormap.from_list(
@@ -484,10 +484,10 @@ def plot_adsorption_sites(
     ax2.set_ylabel("Y (fractional)", fontsize=12, fontweight="bold")
 
     # Update scatter plot title with height info
-    scatter_title = f"Discrete Adsorption Sites\n{scan_doc.grid_size[0]}×{scan_doc.grid_size[1]} Grid"
+    scatter_title = f"Discrete Adsorption Sites\n{scan_doc.grid_size[0]}×{scan_doc.grid_size[1]} Grid"  # noqa: RUF001
     if multiple_heights:
         n_heights = len(set([s.height for s in scan_doc.site_results]))
-        scatter_title += f" × {n_heights} heights"
+        scatter_title += f" × {n_heights} heights"  # noqa: RUF001
 
     ax2.set_title(scatter_title, fontsize=14, fontweight="bold")
     ax2.set_aspect("equal")
@@ -510,7 +510,7 @@ def plot_adsorption_sites(
         ax3.clabel(contour_h, inline=True, fontsize=8, fmt="%.2f Å")
 
         # Mark sites with their heights as text labels
-        for x, y, h in zip(x_coords, y_coords, best_heights):
+        for x, y, h in zip(x_coords, y_coords, best_heights, strict=False):
             ax3.text(
                 x,
                 y,
@@ -605,7 +605,7 @@ def write_adsorption_summary(
         miller_h, miller_k, miller_l = scan_doc.miller_indices
         lines.append(f"  Miller indices:       ({miller_h} {miller_k} {miller_l})")
     lines.append(
-        f"  Grid size:            {scan_doc.grid_size[0]} × {scan_doc.grid_size[1]}"
+        f"  Grid size:            {scan_doc.grid_size[0]} × {scan_doc.grid_size[1]}"  # noqa: RUF001
     )
     lines.append(f"  Initial height:       {scan_doc.initial_height:.2f} Å")
     lines.append(f"  Surface area:         {scan_doc.surface_area:.3f} Ų")

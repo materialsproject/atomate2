@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, job
@@ -13,6 +12,8 @@ from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import BandStructureMaker, RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -191,7 +192,7 @@ def _analyze_band_gaps(k, energies, efermi):
     """
     import numpy as np
 
-    nband, nspin, nk = energies.shape
+    nband, _nspin, nk = energies.shape
 
     # Find VBM and CBM
     # Valence bands: below Fermi level, Conduction bands: above Fermi level
@@ -265,7 +266,7 @@ def _calculate_bandwidth(energies, efermi):
     """
     import numpy as np
 
-    nband, nspin, nk = energies.shape
+    nband, _nspin, _nk = energies.shape
 
     valence_min = np.inf
     valence_max = -np.inf
@@ -309,7 +310,7 @@ def _calculate_band_velocities(k, energies):
     import numpy as np
     from scipy.constants import eV, hbar
 
-    nband, nspin, nk = energies.shape
+    nband, nspin, _nk = energies.shape
     velocities = np.zeros_like(energies)
 
     # Convert units: k in 1/Ang, E in eV
@@ -337,9 +338,9 @@ def _plot_band_velocities(
     import matplotlib.pyplot as plt
     import numpy as np
 
-    nband, nspin, nk = velocities.shape
+    nband, nspin, _nk = velocities.shape
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    _fig, ax = plt.subplots(figsize=(10, 6))
 
     # Plot velocities for bands near Fermi level
     for iband in range(nband):
@@ -539,7 +540,7 @@ def analyze_band_structure(
             f.write("\nTRANSPORT PROPERTIES\n")
             f.write("-" * 70 + "\n")
             f.write(
-                f"  Maximum group velocity: {summary['max_group_velocity_1e6_m_s']:.2f} × 10⁶ m/s\n"
+                f"  Maximum group velocity: {summary['max_group_velocity_1e6_m_s']:.2f} × 10⁶ m/s\n"  # noqa: RUF001
             )
 
         f.write("\n" + "=" * 70 + "\n")
@@ -791,7 +792,7 @@ def _plot_band_structure(
         e_shifted = e - efermi
 
         # Create plot
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
 
         # Plot bands
         for ispin in range(nspin):

@@ -15,14 +15,17 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.defects.corrections.base import (
     CorrectionResult,
     CorrectionScheme,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +70,7 @@ class FreysoldtCorrection(CorrectionScheme):
     For dry-run mode (no .VT files), the correction falls back to:
     - Lattice term only (similar to Makov-Payne with Q=0)
     - Potential alignment set to 0 with a warning
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
@@ -77,7 +80,7 @@ class FreysoldtCorrection(CorrectionScheme):
         alignment_method: str = "planar",
         alignment_cutoff: float = 0.8,
         gaussian_width: float | None = None,
-    ):
+    ) -> None:
         """
         Initialize Freysoldt correction.
 
@@ -107,7 +110,7 @@ class FreysoldtCorrection(CorrectionScheme):
             ρ(r) = (q/(2πσ²)^(3/2)) × exp(-r²/2σ²)
             If None, estimates from defect localization (typically 1-2 Å for
             localized defects, larger for delocalized). Default: None (auto-estimate).
-        """
+        """  # noqa: RUF002
         # Handle both scalar and anisotropic dielectric constants
         if isinstance(epsilon_static, (list, tuple, np.ndarray)):
             if len(epsilon_static) != 3:
@@ -137,7 +140,7 @@ class FreysoldtCorrection(CorrectionScheme):
         self.alignment_cutoff = alignment_cutoff
 
         # Gaussian charge distribution model
-        self.gaussian_width = gaussian_width  # σ in Angstrom
+        self.gaussian_width = gaussian_width  # σ in Angstrom  # noqa: RUF003
 
     @property
     def name(self) -> str:
@@ -216,36 +219,36 @@ class FreysoldtCorrection(CorrectionScheme):
                 get_madelung_constant,
             )
 
-            alpha_M, citation = get_madelung_constant(host_structure)
+            alpha_M, citation = get_madelung_constant(host_structure)  # noqa: N806
             self.madelung_constant = alpha_M
             self.madelung_citation = citation
         else:
-            alpha_M = self.madelung_constant
+            alpha_M = self.madelung_constant  # noqa: N806
             self.madelung_citation = "User-provided value"
 
         # Estimate Gaussian width if not provided
         if self.gaussian_width is None:
             sigma = self._estimate_gaussian_width(defect_structure)
-            logger.info(f"Auto-estimated Gaussian width: σ = {sigma:.3f} Å")
+            logger.info(f"Auto-estimated Gaussian width: σ = {sigma:.3f} Å")  # noqa: RUF001
         else:
             sigma = self.gaussian_width
-            logger.info(f"Using user-provided Gaussian width: σ = {sigma:.3f} Å")
+            logger.info(f"Using user-provided Gaussian width: σ = {sigma:.3f} Å")  # noqa: RUF001
 
         # Get characteristic length L and volume Ω
-        L = self._get_characteristic_length(defect_structure)
-        Omega = defect_structure.volume
+        L = self._get_characteristic_length(defect_structure)  # noqa: N806
+        Omega = defect_structure.volume  # noqa: N806
 
         # Calculate lattice term (electrostatic correction)
         # Similar to Makov-Payne but with anisotropy factor
         q = abs(charge_state)
-        alpha_M = self.madelung_constant
+        alpha_M = self.madelung_constant  # noqa: N806
         epsilon_avg = self.epsilon_avg
 
         # Anisotropy factor (1.0 for isotropic, different for anisotropic)
         f_aniso = self._calculate_anisotropy_factor(defect_structure)
 
         # Formula in eV (using e^2/(4πε_0) ≈ 14.3996 eV·Å)
-        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å
+        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å  # noqa: N806
         lattice_term = (q**2 * alpha_M * eV_Angstrom) / (2 * epsilon_avg * L) * f_aniso
 
         # Calculate potential alignment correction
@@ -284,7 +287,7 @@ class FreysoldtCorrection(CorrectionScheme):
                         )
                         logger.info(
                             f"Mean ΔV (VT) = {plot_data['mean_alignment']:.4f} eV "
-                            f"(q × ΔV = {alignment_energy:.4f} eV)"
+                            f"(q × ΔV = {alignment_energy:.4f} eV)"  # noqa: RUF001
                         )
 
                         # Also plot VH (Hartree potential) if available
@@ -374,10 +377,10 @@ class FreysoldtCorrection(CorrectionScheme):
         if self.use_axis_average:
             # Use average of lattice parameters
             a, b, c = structure.lattice.abc
-            L = (a + b + c) / 3.0
+            L = (a + b + c) / 3.0  # noqa: N806
         else:
             # Use cube root of volume
-            L = structure.volume ** (1.0 / 3.0)
+            L = structure.volume ** (1.0 / 3.0)  # noqa: N806
 
         return L
 
@@ -437,7 +440,7 @@ class FreysoldtCorrection(CorrectionScheme):
         -------
         float
             Estimated Gaussian width σ in Angstrom
-        """
+        """  # noqa: RUF002
         # Find minimum nearest-neighbor distance
         min_nn_dist = float("inf")
         for i, site in enumerate(structure):
@@ -449,11 +452,11 @@ class FreysoldtCorrection(CorrectionScheme):
         if min_nn_dist == float("inf"):
             # Fallback: use 1.5 Å (typical for localized defects)
             logger.warning(
-                "Could not determine nearest-neighbor distance. Using default σ = 1.5 Å"
+                "Could not determine nearest-neighbor distance. Using default σ = 1.5 Å"  # noqa: RUF001
             )
             return 1.5
 
-        # Estimate σ as half the nearest-neighbor distance
+        # Estimate σ as half the nearest-neighbor distance  # noqa: RUF003
         # This assumes charge is localized within ~1 bond length
         sigma = 0.5 * min_nn_dist
 

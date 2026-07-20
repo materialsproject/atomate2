@@ -16,7 +16,7 @@ References
 .. [4] Born, M. & Huang, K. "Dynamical Theory of Crystal Lattices"
        Oxford University Press (1954).
 .. [5] CRC Handbook of Chemistry and Physics, 97th Ed. (2016-2017).
-"""
+"""  # noqa: RUF002
 
 from __future__ import annotations
 
@@ -99,7 +99,7 @@ def get_madelung_constant(
 
     Using the wrong α_M can introduce significant errors (10-30%) in the
     correction energy, especially for high-charge defects.
-    """
+    """  # noqa: RUF002
     from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
     try:
@@ -116,10 +116,10 @@ def get_madelung_constant(
         structure_type = _identify_structure_type(structure, spacegroup, crystal_system)
 
         if structure_type in MADELUNG_CONSTANTS:
-            alpha_M, citation = MADELUNG_CONSTANTS[structure_type]
+            alpha_M, citation = MADELUNG_CONSTANTS[structure_type]  # noqa: N806
             logger.info(
                 f"Using Madelung constant for {structure_type}: "
-                f"α_M = {alpha_M:.5f} (source: {citation})"
+                f"α_M = {alpha_M:.5f} (source: {citation})"  # noqa: RUF001
             )
             return alpha_M, citation
 
@@ -128,10 +128,10 @@ def get_madelung_constant(
 
     # Fallback to Wigner-Seitz approximation
     if use_wigner_seitz_fallback:
-        alpha_M, citation = MADELUNG_CONSTANTS["wigner_seitz"]
+        alpha_M, citation = MADELUNG_CONSTANTS["wigner_seitz"]  # noqa: N806
         logger.warning(
             f"Unknown structure type - using Wigner-Seitz approximation: "
-            f"α_M = {alpha_M:.5f}. This may introduce ~10-30% error. "
+            f"α_M = {alpha_M:.5f}. This may introduce ~10-30% error. "  # noqa: RUF001
             f"Consider providing madelung_constant manually for better accuracy."
         )
         return alpha_M, citation
@@ -268,7 +268,7 @@ def calculate_madelung_ewald(
     - Oxidation states are correctly assigned
     - Cutoffs are sufficiently large (>20 Å typically)
     - Structure is charge-neutral overall
-    """
+    """  # noqa: RUF002
     from pymatgen.analysis.ewald import EwaldSummation
 
     # Check if oxidation states are set

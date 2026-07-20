@@ -399,7 +399,7 @@ def plot_convergence(
         ]
         valid_stress = max_stress_array[valid_indices]
 
-        fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+        _fig, ax = plt.subplots(1, 1, figsize=(8, 6))
         ax.plot(
             valid_params, valid_stress, "h-", linewidth=2, markersize=8, color="brown"
         )

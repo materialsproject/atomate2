@@ -283,7 +283,7 @@ def calculate_reaction_free_energies(
     ... )
     >>> results["delta_G"]
     [0.45, 1.20, 0.80, 0.60]  # Free energy changes for each step (eV)
-    """
+    """  # noqa: RUF002
     # Get thermodynamic corrections
     corrections = calculate_free_energy_corrections(
         temperature=temperature, pressure=pressure
@@ -294,32 +294,32 @@ def calculate_reaction_free_energies(
     step_energies: list[float] = [float(step["energy"]) for step in pathway_steps]
 
     # Calculate energy differences (ΔE_DFT)
-    delta_E: list[float] = []
+    delta_E: list[float] = []  # noqa: N806
     for i in range(len(step_energies)):
         if i == 0:
             # First step: relative to clean surface
-            dE = step_energies[i] - clean_surface_energy
+            dE = step_energies[i] - clean_surface_energy  # noqa: N806
         else:
-            dE = step_energies[i] - step_energies[i - 1]
+            dE = step_energies[i] - step_energies[i - 1]  # noqa: N806
         delta_E.append(dE)
 
     # Calculate free energy differences (ΔG)
-    delta_G: list[float] = []
-    cumulative_G = [0.0]  # Start at ΔG = 0 for clean surface
+    delta_G: list[float] = []  # noqa: N806
+    cumulative_G = [0.0]  # Start at ΔG = 0 for clean surface  # noqa: N806
 
     # pH correction (affects all proton-coupled steps)
-    # μ(H⁺) = μ°(H⁺) - k_B T ln(10) × pH, so a step CONSUMING (H⁺ + e⁻)
-    # becomes harder at higher pH: ΔG_pH = +k_B T ln(10) × pH per pair
-    # (≈ +0.059 eV × pH at 298 K, SHE scale; on the RHE scale pH cancels)
+    # μ(H⁺) = μ°(H⁺) - k_B T ln(10) × pH, so a step CONSUMING (H⁺ + e⁻)  # noqa: RUF003
+    # becomes harder at higher pH: ΔG_pH = +k_B T ln(10) × pH per pair  # noqa: RUF003
+    # (≈ +0.059 eV × pH at 298 K, SHE scale; on the RHE scale pH cancels)  # noqa: RUF003
     ph_correction = KB * temperature * np.log(10) * ph  # eV
 
     for i, step in enumerate(pathway_steps):
         # Get number of electrons and protons transferred
         n_e: int = int(step.get("n_e", 0))
-        n_H: int = int(step.get("n_H", 0))
+        n_H: int = int(step.get("n_H", 0))  # noqa: N806
 
         # Base energy change
-        dG = delta_E[i]
+        dG = delta_E[i]  # noqa: N806
 
         # Gas-phase reference energies
         # Only apply gas-phase corrections if there's actual electron/proton transfer (not reference states)
@@ -338,45 +338,45 @@ def calculate_reaction_free_energies(
             if species == "H2O":
                 if n_H > 0:
                     # ORR: H2O is produced (released to gas phase) → add energy
-                    dG += gas_phase_energies[species]
+                    dG += gas_phase_energies[species]  # noqa: N806
                 elif n_H < 0:
                     # OER: H2O is consumed (from gas phase) → subtract energy
-                    dG -= gas_phase_energies[species]
+                    dG -= gas_phase_energies[species]  # noqa: N806
                 # n_H == 0 case is handled by is_reference_state check above
             elif species == "O2":
                 # ORR: O2 consumed from gas phase (n_H >= 0) → subtract
                 # OER: O2 produced to gas phase (n_H < 0) → add
                 if n_H >= 0:
                     # ORR: O2 is consumed from gas phase
-                    dG -= gas_phase_energies[species]
+                    dG -= gas_phase_energies[species]  # noqa: N806
                 else:
                     # OER: O2 is produced to gas phase (rare, usually pathway ends at O2*)
-                    dG += gas_phase_energies[species]
+                    dG += gas_phase_energies[species]  # noqa: N806
             else:
                 # Default: assume reactant (consumed)
-                dG -= gas_phase_energies[species]
+                dG -= gas_phase_energies[species]  # noqa: N806
 
         # Add thermodynamic corrections (ZPE, entropy) for species
         if species and species in corrections:
-            dG += corrections[species]
+            dG += corrections[species]  # noqa: N806
 
         # Proton-electron pair corrections (CHE model) for steps consuming
-        # n_e × (H⁺ + e⁻): subtract the pair chemical potential
-        # μ(H⁺ + e⁻) = ½μ(H₂) - eU - k_B T ln(10) × pH,
-        # so dG gains -½μ(H₂), the potential term, and +0.059 eV × pH
+        # n_e × (H⁺ + e⁻): subtract the pair chemical potential  # noqa: RUF003
+        # μ(H⁺ + e⁻) = ½μ(H₂) - eU - k_B T ln(10) × pH,  # noqa: RUF003
+        # so dG gains -½μ(H₂), the potential term, and +0.059 eV × pH  # noqa: RUF003
         if n_e > 0:
             # Subtract H₂ reference
             if "H2" in gas_phase_energies:
-                dG -= 0.5 * n_e * gas_phase_energies["H2"]
+                dG -= 0.5 * n_e * gas_phase_energies["H2"]  # noqa: N806
 
             # Add electrode potential contribution
             # CHE model: μ(H⁺ + e⁻) = ½μ(H₂) - eU
-            # Therefore: ΔG(U) = ΔG(0) - n_e × U
+            # Therefore: ΔG(U) = ΔG(0) - n_e × U  # noqa: RUF003
             # Verified against Pt(111) ORR literature (η ≈ 0.45 V)
-            dG -= n_e * potential  # eV (U in Volts)
+            dG -= n_e * potential  # eV (U in Volts)  # noqa: N806
 
             # Add pH correction
-            dG += n_e * ph_correction
+            dG += n_e * ph_correction  # noqa: N806
 
         delta_G.append(dG)
         cumulative_G.append(cumulative_G[-1] + dG)
@@ -387,8 +387,8 @@ def calculate_reaction_free_energies(
     # U_equilibrium = 1.23 V (O₂ + 4H⁺ + 4e⁻ → 2H₂O)
     #
     # Find maximum uphill step
-    max_delta_G = max(delta_G) if delta_G else 0.0
-    U_equilibrium_ORR = 1.23  # V vs. SHE
+    max_delta_G = max(delta_G) if delta_G else 0.0  # noqa: N806
+    U_equilibrium_ORR = 1.23  # V vs. SHE  # noqa: N806
 
     # If delta_G was calculated at equilibrium potential, overpotential = max_delta_G
     # If delta_G was calculated at different potential, need to adjust
@@ -417,7 +417,8 @@ def calculate_reaction_free_energies(
 
 
 def identify_rate_limiting_step(
-    delta_G: Sequence[float], step_labels: Sequence[str] | None = None
+    delta_G: Sequence[float],
+    step_labels: Sequence[str] | None = None,  # noqa: N803
 ) -> dict[str, int | str | float]:
     """
     Identify the rate-limiting step (RLS) in a reaction pathway.
@@ -454,7 +455,7 @@ def identify_rate_limiting_step(
 
     # Find step with maximum ΔG
     rls_index = int(np.argmax(delta_G))
-    rls_delta_G = float(delta_G[rls_index])
+    rls_delta_G = float(delta_G[rls_index])  # noqa: N806
 
     rls_label = None
     if step_labels and len(step_labels) > rls_index:

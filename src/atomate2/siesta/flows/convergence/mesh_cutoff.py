@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow.core.flow import Flow
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.convergence.utils import (
@@ -20,6 +18,10 @@ from atomate2.siesta.utils.common import print_docstring_in_box
 from atomate2.siesta.utils.verbosity import VerbosityLevel
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Molecule, Structure
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 
@@ -66,7 +68,7 @@ class MeshCutoffConvergenceFlowMaker(BaseSiestaFlowMaker):
 
     CONSOLE_VERBOSITY: VerbosityLevel = VerbosityLevel.INFO
     name: str = "Mesh Cutoff Convergence"
-    static_maker: BaseSiestaMaker = field(default_factory=lambda: StaticMaker())
+    static_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
     mesh_cutoffs: list[float] = field(
         default_factory=lambda: [100, 150, 200, 250, 300, 350, 400, 450, 500]
     )  # in Ry

@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow.core.flow import Flow
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.convergence.utils import (
@@ -20,6 +18,10 @@ from atomate2.siesta.utils.common import print_docstring_in_box
 from atomate2.siesta.utils.verbosity import VerbosityLevel
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import Molecule, Structure
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 
@@ -33,7 +35,7 @@ class ConvergenceCriteria:
     stress_tol: float | None = None  # eV/Å³ - maximum stress tolerance
     bandgap_tol: float | None = None  # eV - band gap difference tolerance
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation of criteria."""
         parts = [f"ΔE < {self.energy_tol} meV"]
         if self.fermi_tol is not None:
@@ -41,7 +43,7 @@ class ConvergenceCriteria:
         if self.force_tol is not None:
             parts.append(f"F < {self.force_tol} eV/Å")
         if self.stress_tol is not None:
-            parts.append(f"σ < {self.stress_tol} eV/Å³")
+            parts.append(f"σ < {self.stress_tol} eV/Å³")  # noqa: RUF001
         if self.bandgap_tol is not None:
             parts.append(f"ΔGap < {self.bandgap_tol} eV")
         return " & ".join(parts)
@@ -124,11 +126,11 @@ class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
         >>>
         >>> # Workflow will stop testing when all criteria are met
         >>> # No need to test all 7 mesh cutoffs if converged at 350 Ry!
-    """
+    """  # noqa: RUF002
 
     CONSOLE_VERBOSITY: VerbosityLevel = VerbosityLevel.INFO
     name: str = "Mesh-Kpoint Convergence"
-    static_maker: BaseSiestaMaker = field(default_factory=lambda: StaticMaker())
+    static_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
     mesh_cutoffs: list[float] = field(
         default_factory=lambda: [100, 150, 200, 250, 300, 350, 400, 450, 500]
     )

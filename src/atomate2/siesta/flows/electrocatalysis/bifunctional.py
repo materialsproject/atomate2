@@ -338,7 +338,9 @@ def _write_bifunctional_summary(
         "  Step-by-step ΔG (eV):",
     ]
 
-    for label, dg in zip(orr_thermo["step_labels"], orr_thermo["delta_G"]):
+    for label, dg in zip(
+        orr_thermo["step_labels"], orr_thermo["delta_G"], strict=False
+    ):
         lines.append(f"    {label}: {dg:.3f}")
 
     lines.extend(
@@ -354,7 +356,9 @@ def _write_bifunctional_summary(
         ]
     )
 
-    for label, dg in zip(oer_thermo["step_labels"], oer_thermo["delta_G"]):
+    for label, dg in zip(
+        oer_thermo["step_labels"], oer_thermo["delta_G"], strict=False
+    ):
         lines.append(f"    {label}: {dg:.3f}")
 
     lines.extend(
@@ -500,7 +504,7 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
     )
     surface_static_maker: StaticMaker = field(default_factory=StaticMaker)
     adsorption_relax_maker: RelaxMaker = field(
-        default_factory=lambda: RelaxMaker.fixed_cell_relaxation()
+        default_factory=RelaxMaker.fixed_cell_relaxation
     )
     adsorbate_static_maker: StaticMaker = field(default_factory=StaticMaker)
     grid_size: tuple[int, int] = (3, 3)

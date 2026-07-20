@@ -1139,7 +1139,7 @@ class PDOSMaker(BaseSiestaMaker):
     - Overlap between atom PDOS indicates bonding/antibonding states
     - Peak positions reveal orbital energies and ligand field splittings
     - Use dense k-mesh (same as DOS requirements)
-    """
+    """  # noqa: RUF002
 
     input_set_generator: PDOSSetGenerator = field(default_factory=PDOSSetGenerator)
     calc_type: str = "pdos"
@@ -1441,7 +1441,7 @@ class OpticalMaker(BaseSiestaMaker):
     - siesta.EPSIMG: Imaginary dielectric function ε₂(ω)
     - siesta.EPSREAL: Real dielectric function ε₁(ω)
     - Additional optical data in standard output
-    """
+    """  # noqa: RUF002
 
     input_set_generator: SiestaInputGenerator = field(
         default_factory=OpticalSetGenerator

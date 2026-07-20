@@ -30,13 +30,14 @@ from atomate2.siesta.flows.basis.eos import (
     plot_basis_functions,
     plot_real_basis_functions,
 )
-from atomate2.siesta.jobs.base import BaseSiestaMaker
 from atomate2.siesta.jobs.core import StaticMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core import Molecule, Structure
+
+    from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 logger = logging.getLogger(__name__)
 
@@ -95,14 +96,14 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     ... )
     >>> flow = maker.make(structure)
     >>> # This runs 3 basis × 3 shifts × 3 norms = 27 calculations
-    """
+    """  # noqa: RUF002
 
     name: str = "Complete Basis Convergence"
     basis_sizes: list[str] = None
     energy_shifts: list[float] = None
     split_norms: list[float] = None
     kpts: list[int] | None = None
-    static_maker: BaseSiestaMaker = field(default_factory=lambda: StaticMaker())
+    static_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
 
     def __post_init__(self):
         """Set defaults if not provided."""
@@ -140,7 +141,7 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             f"CompleteBasisConvergenceFlowMaker.make() - {n_total} total calculations"
         )
         logger.info(
-            f"  {len(self.basis_sizes)} basis sizes × {len(self.energy_shifts)} shifts × "
+            f"  {len(self.basis_sizes)} basis sizes × {len(self.energy_shifts)} shifts × "  # noqa: RUF001
             f"{len(self.split_norms)} norms"
         )
 
@@ -316,7 +317,7 @@ def collect_complete_basis_data(
         "run_times": [],
     }
 
-    for job_info, output in zip(job_metadata, job_outputs):
+    for job_info, output in zip(job_metadata, job_outputs, strict=False):
         basis_size = job_info["basis_size"]
         energy_shift = job_info["energy_shift"]
         split_norm = job_info["split_norm"]
@@ -437,7 +438,7 @@ def plot_complete_basis_convergence(
     # Check if we have data
     if len(energies) == 0:
         logger.error("No energy data to plot - creating empty plot with error message")
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
         ax.text(
             0.5,
             0.5,
@@ -671,7 +672,7 @@ def plot_complete_basis_convergence(
         )
 
         # Add value labels on bars
-        for i, (x, y) in enumerate(zip(x_pos, avg_times)):
+        for i, (x, y) in enumerate(zip(x_pos, avg_times, strict=False)):
             if y > 0:
                 ax6.text(
                     x,
@@ -879,7 +880,7 @@ def plot_complete_basis_convergence(
         # Add text labels showing max force and max stress
         for i in range(len(basis_energies)):
             # Display force (top) and stress (bottom)
-            label_text = f"F:{basis_forces[i]:.2f}\nσ:{basis_stresses[i]:.2f}"
+            label_text = f"F:{basis_forces[i]:.2f}\nσ:{basis_stresses[i]:.2f}"  # noqa: RUF001
             ax4.text(
                 basis_shifts[i],
                 basis_norms[i],
@@ -896,7 +897,7 @@ def plot_complete_basis_convergence(
         ax4.set_xlabel("PAO.EnergyShift (Ry)", fontsize=12, fontweight="bold")
         ax4.set_ylabel("PAO.SplitNorm", fontsize=12, fontweight="bold")
         ax4.set_title(
-            f"{basis} Basis: Quality Map (F=Force eV/Å, σ=Stress GPa)",
+            f"{basis} Basis: Quality Map (F=Force eV/Å, σ=Stress GPa)",  # noqa: RUF001
             fontsize=13,
             fontweight="bold",
         )
@@ -1004,7 +1005,7 @@ def write_complete_basis_summary(
 
         f.write(
             f"Tested {len(unique_basis)} basis sizes with {len(np.unique(energy_shifts))} "
-            f"EnergyShift × {len(np.unique(split_norms))} SplitNorm values\n"
+            f"EnergyShift × {len(np.unique(split_norms))} SplitNorm values\n"  # noqa: RUF001
         )
         f.write(f"Total calculations: {len(energies)}\n\n")
 
@@ -1131,7 +1132,7 @@ def write_complete_basis_summary(
             f.write("-" * 90 + "\n")
             f.write(
                 f"{'ES (Ry)':<12} {'SN':<10} {'Energy (eV)':<16} {'ΔE (meV)':<12} "
-                f"{'Max F':<10} {'Max σ':<10} {'Time (s)':<10}\n"
+                f"{'Max F':<10} {'Max σ':<10} {'Time (s)':<10}\n"  # noqa: RUF001
             )
             f.write("-" * 90 + "\n")
 

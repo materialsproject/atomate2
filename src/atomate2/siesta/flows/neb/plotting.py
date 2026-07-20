@@ -73,7 +73,7 @@ def _write_ase_neb_info(
         f.write("Per-Image Information:\n")
         f.write("=" * 80 + "\n")
         for i, (rc, e, e_rel, mf) in enumerate(
-            zip(reaction_coord, energies, energies_rel, max_forces)
+            zip(reaction_coord, energies, energies_rel, max_forces, strict=False)
         ):
             f.write(f"\nImage {i}:\n")
             f.write("-" * 40 + "\n")

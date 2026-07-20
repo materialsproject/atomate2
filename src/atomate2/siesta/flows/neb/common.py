@@ -85,7 +85,7 @@ def generate_neb_band(
     return os.getcwd()
 
 
-def _create_neb_lua_script(n_intermediate_images: int):
+def _create_neb_lua_script(n_intermediate_images: int) -> None:
     """
     Create a neb.lua script with the correct number of images.
 
@@ -97,7 +97,7 @@ def _create_neb_lua_script(n_intermediate_images: int):
     n_intermediate_images : int
         Number of intermediate images (excluding initial and final).
     """
-    print(
+    print(  # noqa: T201
         f"DEBUG: _create_neb_lua_script called with n_intermediate_images={n_intermediate_images}"
     )
     # Get FLOS path from settings
@@ -155,17 +155,17 @@ def _create_neb_lua_script(n_intermediate_images: int):
     # Debug: Verify the replacement worked
     new_match = re.search(r"local n_images\s*=\s*\d+", lua_content_modified)
     if new_match:
-        print(f"DEBUG: After replacement: '{new_match.group()}'")
+        print(f"DEBUG: After replacement: '{new_match.group()}'")  # noqa: T201
         logger.info(f"After replacement: '{new_match.group()}'")
         if str(n_intermediate_images) not in new_match.group():
-            print(
+            print(  # noqa: T201
                 f"DEBUG: Replacement FAILED! Expected {n_intermediate_images}, got: {new_match.group()}"
             )
             logger.error(
                 f"Replacement FAILED! Expected {n_intermediate_images}, got: {new_match.group()}"
             )
     else:
-        print("DEBUG: No match found after replacement!")
+        print("DEBUG: No match found after replacement!")  # noqa: T201
 
     lua_content = lua_content_modified
 
@@ -189,9 +189,9 @@ def _create_neb_lua_script(n_intermediate_images: int):
         verify_content = f.read()
         verify_match = re.search(r"local n_images\s*=\s*\d+", verify_content)
         if verify_match:
-            print(f"DEBUG: Verified file contents: '{verify_match.group()}'")
+            print(f"DEBUG: Verified file contents: '{verify_match.group()}'")  # noqa: T201
         else:
-            print("DEBUG: WARNING - Could not find n_images in written file!")
+            print("DEBUG: WARNING - Could not find n_images in written file!")  # noqa: T201
 
     logger.info(
         f"Created neb.lua from FLOS template with n_images={n_intermediate_images}"

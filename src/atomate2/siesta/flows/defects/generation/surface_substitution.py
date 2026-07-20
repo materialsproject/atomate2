@@ -194,7 +194,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
         layer_tolerance: float = 0.7,
         use_in_plane_symmetry: bool = True,
         symprec: float = 0.1,
-    ):
+    ) -> None:
         """Initialize SurfaceSubstitutionGenerator."""
         # Initialize parent (surface layer detection)
         super().__init__(
@@ -270,7 +270,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
         ...     species="Mo", dopants=["W", "Nb", "Ta"], charge_states=[0]
         ... )
         >>> # Returns 3 defects (one per dopant)
-        """
+        """  # noqa: RUF002
         # Convert species to list
         if isinstance(species, str):
             species_list = [species]
@@ -380,8 +380,8 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
 
         logger.info(
             f"Generated {len(defects)} surface substitution defect(s) "
-            f"({len(surface_sites)} unique site(s) × {len(dopant_list)} dopant(s) "
-            f"× {len(charge_states)} charge state(s))"
+            f"({len(surface_sites)} unique site(s) × {len(dopant_list)} dopant(s) "  # noqa: RUF001
+            f"× {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects

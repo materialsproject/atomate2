@@ -92,7 +92,7 @@ class SiestaInterstitialGenerator:
         min_dist: float = 1.5,
         use_symmetry: bool = True,
         symprec: float = 0.1,
-    ):
+    ) -> None:
         """Initialize SiestaInterstitialGenerator."""
         self.structure = structure
         self.min_dist = min_dist
@@ -321,7 +321,7 @@ class SiestaInterstitialGenerator:
         ...     species=["Li", "Na", "H"],
         ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
         ... )
-        """
+        """  # noqa: RUF002
         # Convert to list
         if isinstance(species, str):
             species_list = [species]
@@ -389,7 +389,7 @@ class SiestaInterstitialGenerator:
 
         logger.info(
             f"Generated {len(defects)} interstitial defect(s) "
-            f"({len(unique_sites)} unique site(s) × {len(species_list)} species × {len(charge_states)} charge state(s))"
+            f"({len(unique_sites)} unique site(s) × {len(species_list)} species × {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects

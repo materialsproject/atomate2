@@ -143,10 +143,10 @@ class DefectFlowMaker(Maker):
 
     name: str = "Defect Calculation"
     defect_relax_maker: DefectRelaxMaker = field(
-        default_factory=lambda: DefectRelaxMaker.defect_relax()
+        default_factory=DefectRelaxMaker.defect_relax
     )
     host_static_maker: DefectStaticMaker = field(
-        default_factory=lambda: DefectStaticMaker.defect_scf()
+        default_factory=DefectStaticMaker.defect_scf
     )
     epsilon_static: float = 10.0
     epsilon_parallel: float | None = None
@@ -875,7 +875,7 @@ class DefectFlowMaker(Maker):
         all relevant defects with symmetry reduction in a single call.
 
         **Code Reduction**: Significantly fewer lines for typical defect studies
-        """
+        """  # noqa: RUF002
         from atomate2.siesta.flows.defects.generation import (
             SiestaInterstitialGenerator,
             SiestaSubstitutionGenerator,
@@ -1266,7 +1266,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
         "Ti": ("hcp", 2.9508),  # CRC: a=2.9508 Å, c=4.6855 Å
         "V": ("bcc", 3.024),  # CRC: 3.024 Å
         "Cr": ("bcc", 2.8848),  # CRC: 2.8848 Å
-        "Fe": ("bcc", 2.8665),  # CRC: 2.8665 Å (α-Fe)
+        "Fe": ("bcc", 2.8665),  # CRC: 2.8665 Å (α-Fe)  # noqa: RUF003
         "Co": ("hcp", 2.5071),  # CRC: a=2.5071 Å, c=4.0695 Å
         "Ni": ("fcc", 3.5240),  # CRC: 3.5240 Å
         "Cu": ("fcc", 3.6149),  # CRC: 3.6149 Å
@@ -1957,7 +1957,7 @@ def generate_density_plot(
     -------
     dict
         Plot data with density information
-    """
+    """  # noqa: RUF002
     from pathlib import Path
 
     import matplotlib.pyplot as plt
@@ -2099,7 +2099,7 @@ def generate_dielectric_profile_plot(
         # Generate plot - save to current job directory
         output_path = Path.cwd() / output_name
 
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
 
         # Plot profiles
         ax.plot(
@@ -2219,7 +2219,7 @@ def generate_radial_distribution_plot(
         # Convert defect position to Cartesian
         defect_pos_cart = np.dot(defect_site_frac, cell)
 
-        fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+        _fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
         # --- Plot 1: Charge density Δρ(r) ---
         if defect_rho_files and host_rho_files:
@@ -2240,7 +2240,7 @@ def generate_radial_distribution_plot(
                 rho_avg + rho_std,
                 alpha=0.3,
                 color="blue",
-                label="±1σ",
+                label="±1σ",  # noqa: RUF001
             )
             axes[0].axhline(0, color="k", linestyle="--", linewidth=0.8, alpha=0.5)
             axes[0].set_xlabel("Distance from defect (Å)", fontsize=11)
@@ -2263,13 +2263,17 @@ def generate_radial_distribution_plot(
             )
 
             axes[0].plot(
-                r, gaussian_rho, "b--", linewidth=2, label=f"Gaussian (σ={sigma:.2f} Å)"
+                r,
+                gaussian_rho,
+                "b--",
+                linewidth=2,
+                label=f"Gaussian (σ={sigma:.2f} Å)",  # noqa: RUF001
             )
             axes[0].axhline(0, color="k", linestyle="--", linewidth=0.8, alpha=0.5)
             axes[0].set_xlabel("Distance from defect (Å)", fontsize=11)
-            axes[0].set_ylabel("ρ(r) (e/Å³)", fontsize=11)
+            axes[0].set_ylabel("ρ(r) (e/Å³)", fontsize=11)  # noqa: RUF001
             axes[0].set_title(
-                f"Charge Density (Gaussian σ={sigma:.2f} Å)",
+                f"Charge Density (Gaussian σ={sigma:.2f} Å)",  # noqa: RUF001
                 fontsize=12,
                 fontweight="bold",
             )
@@ -2281,10 +2285,10 @@ def generate_radial_distribution_plot(
             defect_vt_data = read_siesta_grid_file(str(defect_vt_files), file_type="VT")
             host_vt_data = read_siesta_grid_file(str(host_vt_files), file_type="VT")
 
-            delta_V = defect_vt_data["data"] - host_vt_data["data"]
+            delta_V = defect_vt_data["data"] - host_vt_data["data"]  # noqa: N806
 
             # Calculate radial distribution
-            r_bins, V_avg, V_std = _calculate_radial_distribution(
+            r_bins, V_avg, V_std = _calculate_radial_distribution(  # noqa: N806
                 delta_V, defect_vt_data["grid_shape"], cell, defect_pos_cart
             )
 
@@ -2295,7 +2299,7 @@ def generate_radial_distribution_plot(
                 V_avg + V_std,
                 alpha=0.3,
                 color="red",
-                label="±1σ",
+                label="±1σ",  # noqa: RUF001
             )
             axes[1].axhline(0, color="k", linestyle="--", linewidth=0.8, alpha=0.5)
             axes[1].set_xlabel("Distance from defect (Å)", fontsize=11)
@@ -2313,7 +2317,7 @@ def generate_radial_distribution_plot(
             epsilon_0 = 8.854187817e-12  # F/m
             e = 1.602176634e-19  # C
             ke = 1 / (4 * np.pi * epsilon_0) * e * 1e10 / e  # eV·Å/e
-            V_point = charge_state * ke / r
+            V_point = charge_state * ke / r  # noqa: N806
 
             axes[1].plot(r, V_point, "r--", linewidth=2, label="Point charge")
             axes[1].axhline(0, color="k", linestyle="--", linewidth=0.8, alpha=0.5)
@@ -2391,7 +2395,7 @@ def _calculate_radial_distribution(
     y_frac = np.linspace(0, 1, ny, endpoint=False)
     z_frac = np.linspace(0, 1, nz, endpoint=False)
 
-    X_frac, Y_frac, Z_frac = np.meshgrid(x_frac, y_frac, z_frac, indexing="ij")
+    X_frac, Y_frac, Z_frac = np.meshgrid(x_frac, y_frac, z_frac, indexing="ij")  # noqa: N806
 
     # Convert to Cartesian
     coords_frac = np.stack([X_frac.ravel(), Y_frac.ravel(), Z_frac.ravel()], axis=1)

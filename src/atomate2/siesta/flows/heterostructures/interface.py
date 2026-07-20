@@ -14,7 +14,7 @@ References
 - Koma et al., Heterostructures of layered semiconductors, 1985
 - Gong et al., Band offset in graphene-MoS₂ heterostructures, Nat. Mater. 2014
 - Björkman et al., van der Waals bonding in layered compounds, Phys. Rev. B 2012
-"""
+"""  # noqa: RUF002
 
 from __future__ import annotations
 
@@ -168,7 +168,7 @@ class InterfaceFlowMaker(BaseSiestaFlowMaker):
     - van der Waals corrections are crucial for accurate binding energies
     - Supercell matching can create large structures (>100 atoms) - consider cost
     - Binding energy typically ranges from -10 to -50 meV/Å² for vdW systems
-    """
+    """  # noqa: RUF002
 
     name: str = "interface_builder"
     relax_maker: RelaxMaker = field(default_factory=RelaxMaker)
@@ -179,7 +179,7 @@ class InterfaceFlowMaker(BaseSiestaFlowMaker):
 
     # Lattice matching strategy
     matching_mode: str = "strain"  # "strain", "supercell", "auto"
-    max_supercell_size: int = 10  # Maximum N×M supercell dimension
+    max_supercell_size: int = 10  # Maximum N×M supercell dimension  # noqa: RUF003
     max_area_mismatch: float = 0.05  # 5% for supercell matching
     apply_strain_to: str = "smaller"  # "smaller", "larger", "both" (for strain mode)
 
@@ -429,7 +429,7 @@ def find_supercell_match(
     - Larger supercells reduce strain but increase computational cost
     - Scoring function penalizes large supercells: penalty = (N*M + P*Q) / 100
     - If no match found within constraints, returns 1×1 with recommendation=False
-    """
+    """  # noqa: RUF002
     from itertools import product
 
     import numpy as np
@@ -451,21 +451,23 @@ def find_supercell_match(
         # Calculate moiré wavelength
         moire_wavelength = a / (2 * np.sin(theta_rad / 2))
 
-        # Find supercell size: N such that N×a ≈ λ_moiré
-        N_ideal = moire_wavelength / a
-        N = max(2, int(np.round(N_ideal)))  # At least 2×2 supercell
+        # Find supercell size: N such that N×a ≈ λ_moiré  # noqa: RUF003
+        N_ideal = moire_wavelength / a  # noqa: N806
+        N = max(
+            2, int(np.round(N_ideal))
+        )  # At least 2×2 supercell  # noqa: N806, RUF003
 
         # Ensure within max_size
         if max_size < N:
             logger.warning(
-                f"Moiré supercell size {N}×{N} exceeds max_size={max_size}. "
-                f"Using {max_size}×{max_size} instead. Increase max_supercell_size for accuracy."
+                f"Moiré supercell size {N}×{N} exceeds max_size={max_size}. "  # noqa: RUF001
+                f"Using {max_size}×{max_size} instead. Increase max_supercell_size for accuracy."  # noqa: RUF001
             )
-            N = max_size
+            N = max_size  # noqa: N806
 
         logger.info(
             f"Twisted bilayer (θ={rotation_angle}°): moiré λ={moire_wavelength:.2f} Å, "
-            f"using [{N}×{N}] supercell"
+            f"using [{N}×{N}] supercell"  # noqa: RUF001
         )
 
         # Return symmetric square supercell for both layers
@@ -506,8 +508,8 @@ def find_supercell_match(
     min_score = float("inf")
 
     # Try all supercell combinations
-    for N, M in product(range(1, max_size + 1), repeat=2):
-        for P, Q in product(range(1, max_size + 1), repeat=2):
+    for N, M in product(range(1, max_size + 1), repeat=2):  # noqa: N806
+        for P, Q in product(range(1, max_size + 1), repeat=2):  # noqa: N806
             # Calculate supercell dimensions
             bottom_super_a = N * bottom_a
             bottom_super_b = M * bottom_b
@@ -535,7 +537,7 @@ def find_supercell_match(
 
             # Update best if better than current
             # CRITICAL: Check BOTH area AND dimension matching to prevent discontinuities
-            # Area matching alone allows: Graphene 1×5 (b=12.3) + MoS2 1×3 (b=9.48)
+            # Area matching alone allows: Graphene 1×5 (b=12.3) + MoS2 1×3 (b=9.48)  # noqa: RUF003
             # which creates gaps because MoS2 only covers 77% of interface
             if (
                 score < min_score
@@ -560,7 +562,7 @@ def find_supercell_match(
         # No suitable match found within constraints
         logger.warning(
             f"No supercell match found within size {max_size} and "
-            f"mismatch {max_area_mismatch:.2%}. Returning 1×1 (not recommended)."
+            f"mismatch {max_area_mismatch:.2%}. Returning 1×1 (not recommended)."  # noqa: RUF001
         )
         bottom_area = bottom_a * bottom_b * np.sin(np.deg2rad(bottom_gamma))
         top_area = top_a * top_b * np.sin(np.deg2rad(top_gamma))
@@ -628,7 +630,7 @@ def check_lattice_compatibility(
     0.016
     >>> print(result["compatible"])
     True
-    """
+    """  # noqa: RUF002
     # Get in-plane lattice parameters
     bottom_a = bottom.lattice.a
     bottom_b = bottom.lattice.b
@@ -716,7 +718,7 @@ def build_interface_structure(
     - For "supercell" mode: Creates N×M and P×Q supercells, then applies residual strain
     - Rotation is applied to top layer before stacking
     - Final structure has combined lattice from bottom layer
-    """
+    """  # noqa: RUF002
     import numpy as np
 
     # Make copies to avoid modifying originals
@@ -727,10 +729,10 @@ def build_interface_structure(
     if matching_mode in ["supercell", "auto"] and supercell_match is not None:
         if supercell_match.get("recommended", True):
             # Use supercell matching
-            N, M = supercell_match["bottom_supercell"]
-            P, Q = supercell_match["top_supercell"]
+            N, M = supercell_match["bottom_supercell"]  # noqa: N806
+            P, Q = supercell_match["top_supercell"]  # noqa: N806
 
-            logger.info(f"Creating supercells: bottom {N}×{M}, top {P}×{Q}")
+            logger.info(f"Creating supercells: bottom {N}×{M}, top {P}×{Q}")  # noqa: RUF001
 
             # Always use simple diagonal matrix - rotation creates the moiré pattern
             bottom_matrix = [[N, 0, 0], [0, M, 0], [0, 0, 1]]
@@ -1026,8 +1028,8 @@ def calculate_interface_binding_energy(
     >>> print(result["binding_energy_per_area"])  # -500 meV/Ų
     -500.0
     """
-    E_bind_total = interface_energy - bottom_energy - top_energy  # eV
-    E_bind_per_area = (E_bind_total / interface_area) * 1000  # meV/Ų
+    E_bind_total = interface_energy - bottom_energy - top_energy  # eV  # noqa: N806
+    E_bind_per_area = (E_bind_total / interface_area) * 1000  # meV/Ų  # noqa: N806
 
     # Interpretation
     if E_bind_per_area < -50:
@@ -1103,7 +1105,7 @@ def calculate_interface_binding_energy(
     try:
         import matplotlib.pyplot as plt
 
-        fig, ax = plt.subplots(figsize=(8, 6))
+        _fig, ax = plt.subplots(figsize=(8, 6))
 
         # Bar plot
         categories = ["Graphene@h-BN\n(ref)", "This\nInterface", "MoS₂@graphene\n(ref)"]
@@ -1126,7 +1128,7 @@ def calculate_interface_binding_energy(
         )
 
         # Add value labels on bars
-        for bar, val in zip(bars, values):
+        for bar, val in zip(bars, values, strict=False):
             height = bar.get_height()
             ax.text(
                 bar.get_x() + bar.get_width() / 2.0,

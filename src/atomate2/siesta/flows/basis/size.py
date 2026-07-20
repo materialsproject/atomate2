@@ -230,7 +230,9 @@ def collect_basis_size_data(
         "run_times": [],
     }
 
-    for i, (job_info, output) in enumerate(zip(job_metadata, job_outputs)):
+    for i, (job_info, output) in enumerate(
+        zip(job_metadata, job_outputs, strict=False)
+    ):
         basis_size = job_info["basis_size"]
         energy_shift = job_info["energy_shift"]
         split_norm = job_info["split_norm"]
@@ -299,7 +301,7 @@ def collect_basis_size_data(
 
             logger.debug(
                 f"{job_name}: E={energy:.6f} eV, max_F={max_force:.6f} eV/Å, "
-                f"max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"
+                f"max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"  # noqa: RUF001
             )
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
@@ -390,7 +392,7 @@ def plot_basis_size_convergence(
 
     # Create figure with 4 panels (or 5 if timing available)
     n_panels = 5 if np.any(sorted_times > 0) else 4
-    fig, axes = plt.subplots(n_panels, 1, figsize=(12, 3.5 * n_panels))
+    _fig, axes = plt.subplots(n_panels, 1, figsize=(12, 3.5 * n_panels))
 
     # Panel 1: Absolute energies
     ax1 = axes[0]

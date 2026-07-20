@@ -12,15 +12,13 @@ The QHA enables calculation of:
 - Entropy S(T)
 - Gibbs free energy G(T,P)
 - Bulk modulus as a function of temperature B(T)
-"""
+"""  # noqa: RUF002
 
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
-
-from jobflow import Flow
 
 from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
@@ -29,6 +27,7 @@ from atomate2.siesta.jobs.core import RelaxMaker
 from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
 
 if TYPE_CHECKING:
+    from jobflow import Flow
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
@@ -253,7 +252,7 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
         - Gibbs free energy G(T,P)
         - Entropy S(T)
         - Bulk modulus B(T)
-        """
+        """  # noqa: RUF002
         from atomate2.siesta.utils.common import print_docstring_in_box
 
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)

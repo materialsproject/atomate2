@@ -143,7 +143,7 @@ class SiestaVacancyGenerator:
     --------
     create_vacancy_with_ghost : Low-level vacancy creation with ghost atoms
     DefectFlowMaker : Workflow for defect formation energy calculations
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
@@ -151,7 +151,7 @@ class SiestaVacancyGenerator:
         use_ghost_atoms: bool = True,
         use_symmetry: bool = True,
         symprec: float = 0.1,
-    ):
+    ) -> None:
         """Initialize SiestaVacancyGenerator."""
         self.structure = structure
         self.use_ghost_atoms = use_ghost_atoms
@@ -370,7 +370,7 @@ class SiestaVacancyGenerator:
 
         >>> defects = generator.generate_defects(species="O", charge_states=[0, +1, +2])
         >>> # Returns 3× defects (one for each charge state)
-        """
+        """  # noqa: RUF002
         # Get charge states
         if charge_states is None:
             charge_states = [0]
@@ -403,7 +403,7 @@ class SiestaVacancyGenerator:
                         sc_frac = site.frac_coords
 
                         # Map to unit cell coordinates (scaled by supercell matrix)
-                        # For 2×2×2 supercell, original [0.5, 0.5, 0.5] maps to [0.25, 0.25, 0.25]
+                        # For 2×2×2 supercell, original [0.5, 0.5, 0.5] maps to [0.25, 0.25, 0.25]  # noqa: RUF003
                         sc_matrix = np.array(supercell_matrix)
                         # Diagonal elements give scaling
                         scaling = np.diag(sc_matrix)
@@ -472,7 +472,7 @@ class SiestaVacancyGenerator:
 
         logger.info(
             f"Generated {len(defects)} vacancy defect(s) "
-            f"({len(unique_sites)} unique site(s) × {len(charge_states)} charge state(s))"
+            f"({len(unique_sites)} unique site(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects

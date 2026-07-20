@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.neb.common import generate_neb_band
 from atomate2.siesta.flows.neb.plotting import plot_neb_results
 from atomate2.siesta.jobs.core import LuaMaker, RelaxMaker
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -57,16 +60,19 @@ class NebVacancyExchangeFlowMaker(BaseSiestaFlowMaker):
 
     name: str = "NEB Vacancy Exchange Workflow"
     relax_maker: Maker | None = field(
-        default_factory=lambda: RelaxMaker.fixed_cell_relaxation()
+        default_factory=RelaxMaker.fixed_cell_relaxation
     )  # Maker for structure relaxation
-    neb_maker: Maker | None = field(default_factory=lambda: LuaMaker.neb())
+    neb_maker: Maker | None = field(default_factory=LuaMaker.neb)
     number_of_images: int = 5
     A: int = None
     B: int = None
     interpolation_method: str = "idpp"
 
     def generate_neb_images(
-        self, structure: Structure, A: int, B: int
+        self,
+        structure: Structure,
+        A: int,
+        B: int,  # noqa: N803
     ) -> list[Structure]:
         """
         Generate initial and final NEB images by swapping atoms at indices A and B.

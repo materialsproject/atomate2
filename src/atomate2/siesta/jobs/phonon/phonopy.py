@@ -274,7 +274,7 @@ def generate_phonon_displacements(
     sc_mult = int(round(abs(np.linalg.det(sc_matrix))))
     expected_atoms = structure.num_sites * sc_mult
     logger.info(
-        f"Final supercell: {structure.num_sites} atoms × {sc_mult} = {expected_atoms} atoms"
+        f"Final supercell: {structure.num_sites} atoms × {sc_mult} = {expected_atoms} atoms"  # noqa: RUF001
     )
 
     # Create Phonopy object

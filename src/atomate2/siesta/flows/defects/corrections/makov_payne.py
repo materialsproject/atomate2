@@ -9,14 +9,17 @@ DOI: 10.1103/PhysRevB.51.4014
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 import numpy as np
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.defects.corrections.base import (
     CorrectionResult,
     CorrectionScheme,
 )
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +53,7 @@ class MakovPayneCorrection(CorrectionScheme):
         - Still assumes isotropic dielectric
         - Quadrupole moment needs to be estimated or calculated
         - No potential alignment
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
@@ -58,7 +61,7 @@ class MakovPayneCorrection(CorrectionScheme):
         madelung_constant: float | None = None,
         quadrupole_moment: float | None = None,
         use_axis_average: bool = True,
-    ):
+    ) -> None:
         """
         Initialize Makov-Payne correction.
 
@@ -168,48 +171,48 @@ class MakovPayneCorrection(CorrectionScheme):
         # 3. Use instance value self.quadrupole_moment
         # 4. Default to 0.0
 
-        Q_calculated_from_density = False
+        Q_calculated_from_density = False  # noqa: N806
 
         if quadrupole_moment is not None:
             # Explicit parameter takes highest priority
-            Q = quadrupole_moment
+            Q = quadrupole_moment  # noqa: N806
         elif density_data is not None:
             # Calculate from density if available
             try:
-                Q = self.calculate_quadrupole_from_density(
+                Q = self.calculate_quadrupole_from_density(  # noqa: N806
                     defect_density=density_data["defect_density"],
                     host_density=density_data["host_density"],
                     cell=defect_structure.lattice.matrix,
                     defect_site_frac=defect_site,
                 )
-                Q_calculated_from_density = True
+                Q_calculated_from_density = True  # noqa: N806
                 logger.info(f"Using quadrupole moment from density: Q = {Q:.4f} eÅ²")
             except Exception as e:
                 logger.warning(
                     f"Failed to calculate quadrupole from density: {e}. "
                     f"Using fallback value."
                 )
-                Q = (
+                Q = (  # noqa: N806
                     self.quadrupole_moment
                     if self.quadrupole_moment is not None
                     else 0.0
                 )
         else:
             # Use instance value or default
-            Q = self.quadrupole_moment if self.quadrupole_moment is not None else 0.0
+            Q = self.quadrupole_moment if self.quadrupole_moment is not None else 0.0  # noqa: N806
 
         # Get characteristic length L and volume Ω
-        L = self._get_characteristic_length(defect_structure)
-        Omega = defect_structure.volume
+        L = self._get_characteristic_length(defect_structure)  # noqa: N806
+        Omega = defect_structure.volume  # noqa: N806
 
         # Calculate monopole term (same as Lany-Zunger)
-        # E_monopole = (q^2 * α_M) / (2 * ε * L)
+        # E_monopole = (q^2 * α_M) / (2 * ε * L)  # noqa: RUF003
         q = abs(charge_state)
-        alpha_M = self.madelung_constant
+        alpha_M = self.madelung_constant  # noqa: N806
         epsilon = self.epsilon_static
 
         # Formula in eV (using e^2/(4πε_0) ≈ 14.3996 eV·Å)
-        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å
+        eV_Angstrom = 14.3996  # e^2/(4πε_0) in eV·Å  # noqa: N806
         monopole_term = (q**2 * alpha_M * eV_Angstrom) / (2 * epsilon * L)
 
         # Calculate quadrupole term
@@ -235,7 +238,7 @@ class MakovPayneCorrection(CorrectionScheme):
             "monopole_term_eV": monopole_term,
             "quadrupole_term_eV": quadrupole_term,
             "use_axis_average": self.use_axis_average,
-            "formula": "E_corr = (q^2*α)/(2*ε*L) + (2π*q*Q)/(3*ε*Ω)",
+            "formula": "E_corr = (q^2*α)/(2*ε*L) + (2π*q*Q)/(3*ε*Ω)",  # noqa: RUF001
         }
 
         # Add warnings
@@ -279,10 +282,10 @@ class MakovPayneCorrection(CorrectionScheme):
         if self.use_axis_average:
             # Use average of lattice parameters
             a, b, c = structure.lattice.abc
-            L = (a + b + c) / 3.0
+            L = (a + b + c) / 3.0  # noqa: N806
         else:
             # Use cube root of volume
-            L = structure.volume ** (1.0 / 3.0)
+            L = structure.volume ** (1.0 / 3.0)  # noqa: N806
 
         return L
 
@@ -326,7 +329,7 @@ class MakovPayneCorrection(CorrectionScheme):
 
         For a point charge, Q=0. For extended charge distributions,
         Q can be significant (typically 0-100 eÅ² for defects).
-        """
+        """  # noqa: RUF002
         # Calculate density difference
         delta_rho = defect_density - host_density
 
@@ -337,7 +340,7 @@ class MakovPayneCorrection(CorrectionScheme):
         volume = abs(np.linalg.det(cell))
 
         # Volume element
-        dV = volume / (nx * ny * nz)
+        dV = volume / (nx * ny * nz)  # noqa: N806
 
         # Set defect site (default to cell center)
         if defect_site_frac is None:
@@ -354,13 +357,13 @@ class MakovPayneCorrection(CorrectionScheme):
         z_frac = (z_frac + 0.5) % 1.0 - 0.5
 
         # Create 3D grids
-        X_frac, Y_frac, Z_frac = np.meshgrid(x_frac, y_frac, z_frac, indexing="ij")
+        X_frac, Y_frac, Z_frac = np.meshgrid(x_frac, y_frac, z_frac, indexing="ij")  # noqa: N806
 
         # Convert to Cartesian coordinates (Angstroms)
         # r_cart = cell @ r_frac
-        X_cart = cell[0, 0] * X_frac + cell[0, 1] * Y_frac + cell[0, 2] * Z_frac
-        Y_cart = cell[1, 0] * X_frac + cell[1, 1] * Y_frac + cell[1, 2] * Z_frac
-        Z_cart = cell[2, 0] * X_frac + cell[2, 1] * Y_frac + cell[2, 2] * Z_frac
+        X_cart = cell[0, 0] * X_frac + cell[0, 1] * Y_frac + cell[0, 2] * Z_frac  # noqa: N806
+        Y_cart = cell[1, 0] * X_frac + cell[1, 1] * Y_frac + cell[1, 2] * Z_frac  # noqa: N806
+        Z_cart = cell[2, 0] * X_frac + cell[2, 1] * Y_frac + cell[2, 2] * Z_frac  # noqa: N806
 
         # Calculate r² = x² + y² + z²
         r_squared = X_cart**2 + Y_cart**2 + Z_cart**2
@@ -369,11 +372,11 @@ class MakovPayneCorrection(CorrectionScheme):
         integrand = delta_rho * (3 * Z_cart**2 - r_squared)
 
         # Integrate (sum over grid and multiply by volume element)
-        Q_zz = np.sum(integrand) * dV
+        Q_zz = np.sum(integrand) * dV  # noqa: N806
 
         # For cubic/isotropic systems, use Q = |Q_zz|
         # (The sign depends on orientation; magnitude matters for correction)
-        Q = abs(Q_zz)
+        Q = abs(Q_zz)  # noqa: N806
 
         logger.info(
             f"Calculated quadrupole moment from density: Q = {Q:.4f} eÅ² "

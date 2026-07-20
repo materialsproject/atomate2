@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, job
@@ -13,6 +12,8 @@ from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 
@@ -98,16 +99,16 @@ class ElasticFlowMaker(BaseSiestaFlowMaker, BaseElasticMaker):
     >>> # Run the workflow
     >>> from jobflow import run_locally
     >>> results = run_locally(flow)
-    """
+    """  # noqa: RUF002
 
     name: str = "elastic"
     order: int = 2
     sym_reduce: bool = True
     symprec: float = 1e-5
     bulk_relax_maker: BaseSiestaMaker | None = field(
-        default_factory=lambda: RelaxMaker.variable_cell_relaxation()
+        default_factory=RelaxMaker.variable_cell_relaxation
     )
-    elastic_relax_maker: BaseSiestaMaker = field(default_factory=lambda: StaticMaker())
+    elastic_relax_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
     max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
@@ -317,7 +318,7 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
         # Elastic tensor
         f.write("ELASTIC TENSOR (IEEE format, GPa)\n")
         f.write("-" * 80 + "\n")
-        f.write("Voigt notation (6×6 symmetric matrix):\n\n")
+        f.write("Voigt notation (6×6 symmetric matrix):\n\n")  # noqa: RUF001
         if ieee_tensor:
             tensor_array = np.array(ieee_tensor)
             f.write("      [1]       [2]       [3]       [4]       [5]       [6]\n")
@@ -371,7 +372,7 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
             f.write("RECOMMENDED FIXES:\n")
             f.write("-" * 80 + "\n")
             f.write("1. Increase k-point density:\n")
-            f.write("   • Use at least 6×6×6 (better: 8×8×8) for elastic constants\n")
+            f.write("   • Use at least 6×6×6 (better: 8×8×8) for elastic constants\n")  # noqa: RUF001
             f.write("   • Elastic properties require denser k-mesh than energies\n\n")
             f.write("2. Increase energy cutoff:\n")
             f.write("   • Use Mesh.Cutoff ≥ 300 Ry (better: 400 Ry)\n")
@@ -424,9 +425,9 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
             f.write("\n")
 
         if poisson is not None:
-            f.write("Poisson's Ratio (ν) - Lateral to axial strain ratio\n")
+            f.write("Poisson's Ratio (ν) - Lateral to axial strain ratio\n")  # noqa: RUF001
             f.write("-" * 80 + "\n")
-            f.write(f"  ν:                  {poisson:10.6f}\n")
+            f.write(f"  ν:                  {poisson:10.6f}\n")  # noqa: RUF001
             f.write("\n")
 
         if universal_aniso is not None:
@@ -462,7 +463,7 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
 
         f.write("Typical Property Ranges:\n")
         f.write("-" * 80 + "\n")
-        f.write("Material Type       K (GPa)    G (GPa)    E (GPa)    ν\n")
+        f.write("Material Type       K (GPa)    G (GPa)    E (GPa)    ν\n")  # noqa: RUF001
         f.write("-" * 80 + "\n")
         f.write("Soft polymers       1-10       0.1-1      0.5-5      0.4-0.5\n")
         f.write("Metals (soft)       50-100     20-40      50-120     0.3-0.4\n")
@@ -486,11 +487,11 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
         f.write("  Higher E = stiffer material (resists elongation)\n")
         f.write("  Important for structural applications\n\n")
 
-        f.write("• Poisson's Ratio (ν):\n")
-        f.write("  ν → 0.5:  Nearly incompressible (rubber-like)\n")
-        f.write("  ν ≈ 0.3:  Typical metals\n")
-        f.write("  ν ≈ 0.2:  Ceramics/semiconductors\n")
-        f.write("  ν → 0.0:  Cork-like behavior\n\n")
+        f.write("• Poisson's Ratio (ν):\n")  # noqa: RUF001
+        f.write("  ν → 0.5:  Nearly incompressible (rubber-like)\n")  # noqa: RUF001
+        f.write("  ν ≈ 0.3:  Typical metals\n")  # noqa: RUF001
+        f.write("  ν ≈ 0.2:  Ceramics/semiconductors\n")  # noqa: RUF001
+        f.write("  ν → 0.0:  Cork-like behavior\n\n")  # noqa: RUF001
 
         f.write("• Pugh's Ratio (K/G):\n")
         f.write("  K/G > 1.75:  Ductile (bends without breaking)\n")
@@ -630,7 +631,7 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
                 "[yellow]This indicates mechanical instability or poor convergence.[/yellow]"
             )
             console.print("\n[cyan]Recommendations:[/cyan]")
-            console.print("  • Increase k-points: Use ≥6×6×6 (better: 8×8×8)")
+            console.print("  • Increase k-points: Use ≥6×6×6 (better: 8×8×8)")  # noqa: RUF001
             console.print(
                 "  • Increase cutoff: Use Mesh.Cutoff ≥300 Ry (better: 400 Ry)"
             )
@@ -724,14 +725,14 @@ def plot_elastic_tensor_heatmap(
     -------
     str or None
         Path to saved plot file, or None if failed
-    """
+    """  # noqa: RUF002
     try:
         import matplotlib.pyplot as plt
         import numpy as np
 
         tensor = np.array(ieee_tensor)
 
-        fig, ax = plt.subplots(figsize=(10, 8))
+        _fig, ax = plt.subplots(figsize=(10, 8))
 
         # Create heatmap with diverging colormap centered at 0
         vmax = np.abs(tensor).max()
@@ -790,7 +791,7 @@ def plot_elastic_tensor_heatmap(
         return str(output_file)
 
     except Exception as e:
-        print(f"Warning: Could not create elastic tensor heatmap: {e}")
+        print(f"Warning: Could not create elastic tensor heatmap: {e}")  # noqa: T201
         return None
 
 
@@ -863,7 +864,7 @@ def plot_mechanical_properties_bar(
             ("Young's Modulus E", "E", e_gpa, "tab:red"),
         ]
 
-        for ax, (title, key, value, color) in zip(axes, properties):
+        for ax, (title, key, value, color) in zip(axes, properties, strict=False):
             if value is None:
                 ax.text(0.5, 0.5, "N/A", ha="center", va="center", fontsize=20)
                 ax.set_title(title, fontsize=12, fontweight="bold")
@@ -890,7 +891,7 @@ def plot_mechanical_properties_bar(
             ax.grid(axis="y", alpha=0.3)
 
             # Add value labels
-            for bar, val in zip(bars, values):
+            for bar, val in zip(bars, values, strict=False):
                 ax.text(
                     bar.get_x() + bar.get_width() / 2,
                     bar.get_height() + max(values) * 0.02,
@@ -927,7 +928,7 @@ def plot_mechanical_properties_bar(
         return str(output_file)
 
     except Exception as e:
-        print(f"Warning: Could not create mechanical properties bar chart: {e}")
+        print(f"Warning: Could not create mechanical properties bar chart: {e}")  # noqa: T201
         return None
 
 
@@ -966,7 +967,7 @@ def plot_stress_strain_curves(
         if not deformations or not stresses:
             return None
 
-        fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+        _fig, axes = plt.subplots(2, 3, figsize=(15, 10))
         axes = axes.flatten()
 
         # Voigt notation mapping
@@ -978,7 +979,7 @@ def plot_stress_strain_curves(
             i: {"strains": [], "stresses": []} for i in range(6)
         }
 
-        for deform, stress in zip(deformations, stresses):
+        for deform, stress in zip(deformations, stresses, strict=False):
             deform_arr = np.array(deform)
             stress_arr = np.array(stress)
 
@@ -1073,7 +1074,7 @@ def plot_stress_strain_curves(
         return str(output_file)
 
     except Exception as e:
-        print(f"Warning: Could not create stress-strain curves: {e}")
+        print(f"Warning: Could not create stress-strain curves: {e}")  # noqa: T201
         return None
 
 
@@ -1106,7 +1107,7 @@ def plot_youngs_modulus_3d(
     -------
     str or None
         Path to saved plot file, or None if failed
-    """
+    """  # noqa: RUF002
     try:
         import matplotlib.pyplot as plt
         import numpy as np
@@ -1116,7 +1117,7 @@ def plot_youngs_modulus_3d(
 
         # Check for singularity
         if np.linalg.det(tensor) == 0:
-            print("Warning: Elastic tensor is singular, cannot compute compliance")
+            print("Warning: Elastic tensor is singular, cannot compute compliance")  # noqa: T201
             return None
 
         # Compliance tensor (inverse of stiffness)
@@ -1135,7 +1136,7 @@ def plot_youngs_modulus_3d(
 
         # Calculate directional Young's modulus
         # Using Voigt notation transformation
-        E_dir = np.zeros_like(theta_grid)
+        E_dir = np.zeros_like(theta_grid)  # noqa: N806
 
         for i in range(n_points):
             for j in range(n_points):
@@ -1231,7 +1232,7 @@ def plot_youngs_modulus_3d(
         return str(output_file)
 
     except Exception as e:
-        print(f"Warning: Could not create 3D Young's modulus plot: {e}")
+        print(f"Warning: Could not create 3D Young's modulus plot: {e}")  # noqa: T201
         return None
 
 
@@ -1262,7 +1263,7 @@ def plot_linear_compressibility_3d(
     -------
     str or None
         Path to saved plot file, or None if failed
-    """
+    """  # noqa: RUF002
     try:
         import matplotlib.pyplot as plt
         import numpy as np
@@ -1272,7 +1273,7 @@ def plot_linear_compressibility_3d(
 
         # Check for singularity
         if np.linalg.det(tensor) == 0:
-            print("Warning: Elastic tensor is singular, cannot compute compliance")
+            print("Warning: Elastic tensor is singular, cannot compute compliance")  # noqa: T201
             return None
 
         # Compliance tensor
@@ -1395,7 +1396,7 @@ def plot_linear_compressibility_3d(
         return str(output_file)
 
     except Exception as e:
-        print(f"Warning: Could not create 3D compressibility plot: {e}")
+        print(f"Warning: Could not create 3D compressibility plot: {e}")  # noqa: T201
         return None
 
 
@@ -1593,5 +1594,5 @@ def plot_pugh_ratio_diagram(
         return str(output_file)
 
     except Exception as e:
-        print(f"Warning: Could not create Pugh's ratio diagram: {e}")
+        print(f"Warning: Could not create Pugh's ratio diagram: {e}")  # noqa: T201
         return None

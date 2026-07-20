@@ -84,13 +84,13 @@ def calculate_surface_energies(
         n_formula_units = slab_composition.num_atoms / bulk_atoms_per_formula
 
         # Surface energy (1 surface for asymmetric slabs)
-        # γ = (E_slab - N × E_bulk) / A
-        gamma_eV_A2 = (
+        # γ = (E_slab - N × E_bulk) / A  # noqa: RUF003
+        gamma_eV_A2 = (  # noqa: N806
             slab_energy - n_formula_units * bulk_energy_per_formula
         ) / surface_area
 
         # Convert to J/m² (1 eV/Ų = 16.0218 J/m²)
-        gamma_Jm2 = gamma_eV_A2 * 16.0218
+        gamma_Jm2 = gamma_eV_A2 * 16.0218  # noqa: N806
 
         # Get slab thickness
         positions = slab_structure.cart_coords
@@ -182,12 +182,12 @@ def plot_surface_energies(
     # Sort by surface energy
     sorted_terms = sorted(terminations, key=lambda x: x["surface_energy"])
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
+    _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
     # Extract data
     names = [t["termination"] for t in sorted_terms]
-    energies_eV = [t["surface_energy"] for t in sorted_terms]
-    energies_Jm2 = [t["surface_energy_Jm2"] for t in sorted_terms]
+    energies_eV = [t["surface_energy"] for t in sorted_terms]  # noqa: N806
+    energies_Jm2 = [t["surface_energy_Jm2"] for t in sorted_terms]  # noqa: N806
     colors = ["green" if t["is_lowest"] else "steelblue" for t in sorted_terms]
 
     # Plot 1: Bar chart (eV/Ų)
@@ -206,7 +206,7 @@ def plot_surface_energies(
     ax1.tick_params(axis="both", labelsize=10)
 
     # Add value labels on bars
-    for i, (name, energy) in enumerate(zip(names, energies_eV)):
+    for i, (name, energy) in enumerate(zip(names, energies_eV, strict=False)):
         ax1.text(
             i,
             energy,
@@ -232,7 +232,7 @@ def plot_surface_energies(
     ax2.tick_params(axis="both", labelsize=10)
 
     # Add value labels on bars
-    for i, (name, energy) in enumerate(zip(names, energies_Jm2)):
+    for i, (name, energy) in enumerate(zip(names, energies_Jm2, strict=False)):
         ax2.text(
             i,
             energy,
@@ -315,7 +315,7 @@ def write_surface_energy_summary(
     lines.append("TERMINATION ENERGIES")
     lines.append("-" * 80)
     lines.append(
-        f"  {'Termination':<15} {'γ (eV/Ų)':<12} {'γ (J/m²)':<12} "
+        f"  {'Termination':<15} {'γ (eV/Ų)':<12} {'γ (J/m²)':<12} "  # noqa: RUF001
         f"{'Δγ (eV/Ų)':<12} {'Status'}"
     )
     lines.append("  " + "-" * 75)

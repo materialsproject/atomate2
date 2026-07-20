@@ -422,7 +422,7 @@ def plot_potential_alignment(
     pot_diff = pot_defect - pot_host
 
     # Create plot
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+    _fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
 
     # Plot 1: Potentials
     ax1.plot(pos_host, pot_host, "b-", label="Host", linewidth=2)

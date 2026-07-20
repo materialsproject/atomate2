@@ -355,10 +355,10 @@ def _write_fdf_file(structure, fdf_path: Path, system_label: str) -> None:
     # Add species information for ghost atoms if present
     if "ghost_tags" in structure.site_properties:
         species_labels = structure.site_properties["species_label"]
-        species_Z = []
+        species_Z = []  # noqa: N806
         for i, site in enumerate(structure):
             is_ghost = structure.site_properties["ghost_tags"][i]
-            Z = _get_site_atomic_number(site)
+            Z = _get_site_atomic_number(site)  # noqa: N806
             # Ghost atoms have negative Z
             species_Z.append(-Z if is_ghost else Z)
 

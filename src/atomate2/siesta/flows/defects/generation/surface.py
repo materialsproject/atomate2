@@ -220,7 +220,7 @@ class SurfaceVacancyGenerator:
     SiestaVacancyGenerator : General vacancy generator (bulk structures)
     create_vacancy_with_ghost : Low-level vacancy creation
     DefectFlowMaker : Workflow for defect formation energy calculations
-    """
+    """  # noqa: RUF002
 
     def __init__(
         self,
@@ -231,7 +231,7 @@ class SurfaceVacancyGenerator:
         use_ghost_atoms: bool = True,
         use_in_plane_symmetry: bool = True,
         symprec: float = 0.1,
-    ):
+    ) -> None:
         """Initialize SurfaceVacancyGenerator."""
         self.slab_structure = slab_structure
         self.surface_layers = surface_layers
@@ -582,7 +582,7 @@ class SurfaceVacancyGenerator:
         >>> defects = generator.generate_defects(species="S")
         >>> for defect in defects:
         ...     print(f"V_S at layer {defect['layer_index']}")
-        """
+        """  # noqa: RUF002
         # Validate supercell for slabs
         if supercell_matrix is not None:
             sc_matrix = np.array(supercell_matrix)
@@ -703,7 +703,7 @@ class SurfaceVacancyGenerator:
 
         logger.info(
             f"Generated {len(defects)} surface vacancy defect(s) "
-            f"({len(surface_sites)} unique site(s) × {len(charge_states)} charge state(s))"
+            f"({len(surface_sites)} unique site(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects
