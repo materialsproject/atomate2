@@ -191,6 +191,13 @@ class GasPhaseMoleculeMaker(BaseSiestaFlowMaker):
 
         # 4. Apply magnetic moments to structure if needed
         if spin_polarized and spin_config.get("init_magnetic_moments") is not None:
+            # Preserve the exact per-atom moments applied below. The DM.InitSpin
+            # auto-generator defaults to antiferromagnetic ordering, which flips
+            # signs by atom index (e.g. O2 +1/+1 -> +1/-1 -> net S=0 SINGLET,
+            # 0.44 eV above the true triplet). "custom" keeps the molecular
+            # moments as-is (+1/+1 -> net S=2 triplet). User override respected.
+            params.setdefault("a2s_magnetic_ordering", "custom")
+
             # Apply magmoms via job
             magmom_job = _apply_magnetic_moments(
                 structure=molecule_in_box_job.output.structure,
