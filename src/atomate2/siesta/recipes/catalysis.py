@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow
-from pymatgen.core import Molecule, Structure
 
 from atomate2.siesta.flows.surface import (
     AdsorptionScanFlowMaker,
@@ -14,6 +13,9 @@ from atomate2.siesta.flows.surface import (
 )
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
+
+if TYPE_CHECKING:
+    from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -201,7 +203,7 @@ def adsorption_scanning_workflow(
     adsorbate: Molecule | Structure,
     grid_density: tuple[int, int] = (5, 5),
     height_above_surface: float = 2.0,
-    surface_side: str = "top",
+    surface_side: str = "top",  # noqa: ARG001 documented API param, reserved
     auto_params: bool = True,
     user_params: dict[str, Any] | None = None,
     tier: str | None = None,
@@ -321,7 +323,8 @@ def adsorption_scanning_workflow(
 
     flow = ads_maker.make(slab_structure, adsorbate)
     logger.info(
-        f"Adsorption scan workflow created with {grid_density[0] * grid_density[1]} sites"
+        "Adsorption scan workflow created with "
+        f"{grid_density[0] * grid_density[1]} sites"
     )
     return flow
 
@@ -378,8 +381,8 @@ def catalysis_study(
 
 def reaction_pathway_workflow(
     slab_structure: Structure,
-    initial_state: Structure,
-    final_state: Structure,
+    initial_state: Structure,  # noqa: ARG001 documented API param, reserved
+    final_state: Structure,  # noqa: ARG001 documented API param, reserved
     num_images: int = 7,
     **kwargs,
 ) -> Flow:
@@ -426,8 +429,8 @@ def reaction_pathway_workflow(
 
 def coverage_dependent_adsorption(
     slab_structure: Structure,
-    adsorbate: Molecule,
-    coverages: list[float] = [0.25, 0.50, 0.75, 1.0],
+    adsorbate: Molecule,  # noqa: ARG001 documented API param, reserved
+    coverages: list[float] | None = None,
     **kwargs,
 ) -> Flow:
     """
@@ -457,6 +460,8 @@ def coverage_dependent_adsorption(
     ...     slab, co_molecule, coverages=[0.11, 0.25, 0.50]
     ... )
     """
+    if coverages is None:
+        coverages = [0.25, 0.50, 0.75, 1.0]
     logger.info(f"Creating coverage-dependent study for {len(coverages)} coverages")
     # Simplified implementation
     from atomate2.siesta.jobs.core import RelaxMaker

@@ -1,12 +1,12 @@
 """Thermal property workflow recipes."""
+# ruff: noqa: RUF002 Greek alpha in docstrings denotes thermal expansion coefficient
 
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.phonon import (
     SiestaGruneisenFlowMaker,
@@ -16,6 +16,9 @@ from atomate2.siesta.flows.phonon import (
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -238,7 +241,8 @@ def thermal_properties(
             dry_run=dry_run,
         )
         logger.info(
-            f"Gruneisen phonon maker created with supercell_matrix={gruneisen_supercell_matrix}, "
+            "Gruneisen phonon maker created with "
+            f"supercell_matrix={gruneisen_supercell_matrix}, "
             f"min_length={6.0 if supercell_matrix is None else None}"
         )
         gruneisen_maker = SiestaGruneisenFlowMaker(
@@ -287,8 +291,8 @@ def thermal_properties(
             ignore_imaginary_modes=ignore_imaginary_modes,
             dry_run=dry_run,
         )
-        # NOTE: QHA automatically extracts supercell_matrix from phonon_maker.supercell_matrix
-        # (see SiestaQhaFlowMaker.make() lines 296-313)
+        # NOTE: QHA automatically extracts supercell_matrix from
+        # phonon_maker.supercell_matrix (see SiestaQhaFlowMaker.make() lines 296-313)
         qha_job = qha_maker.make(structure)
         jobs.append(qha_job)
 
@@ -341,7 +345,7 @@ def phonon_workflow(
 def gruneisen_workflow(
     structure: Structure,
     supercell_matrix: tuple[int, int, int] | None = None,
-    volume_change: float = 0.01,
+    volume_change: float = 0.01,  # noqa: ARG001 documented API param, reserved
     **kwargs,
 ) -> Flow:
     """

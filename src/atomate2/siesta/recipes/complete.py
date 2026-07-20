@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Response, job
-from pymatgen.core import Structure
 
 from atomate2.siesta.recipes.convergence import (
     convergence_suite,
@@ -15,6 +14,9 @@ from atomate2.siesta.recipes.convergence import (
 from atomate2.siesta.recipes.electronic import electronic_properties
 from atomate2.siesta.recipes.mechanical import mechanical_properties
 from atomate2.siesta.recipes.thermal import thermal_properties
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +73,8 @@ def complete_material_study(
         (T_min, T_max, T_step) in Kelvin for QHA (only used if "thermal" in properties).
         Default: (0, 1000, 10).
     ignore_imaginary_modes : bool
-        Use all volumes even if they have imaginary frequencies (only used if "thermal" in properties).
+        Use all volumes even if they have imaginary frequencies (only used if
+        "thermal" in properties).
         Default: False.
     test_convergence : bool
         Perform convergence testing first. Default: False.
@@ -398,7 +401,8 @@ def thermoelectric_analysis(
     supercell_matrix : tuple
         Supercell size for phonon calculation. Auto-detected if None.
     **kwargs
-        Additional parameters (phonon_user_params, temperature_range, ignore_imaginary_modes, etc.).
+        Additional parameters (phonon_user_params, temperature_range,
+        ignore_imaginary_modes, etc.).
 
     Returns
     -------
@@ -574,7 +578,8 @@ def structural_phase_transition(
     supercell_matrix : tuple
         Supercell size for phonon calculation. Auto-detected if None.
     **kwargs
-        Additional parameters (phonon_user_params, temperature_range, ignore_imaginary_modes, etc.).
+        Additional parameters (phonon_user_params, temperature_range,
+        ignore_imaginary_modes, etc.).
 
     Returns
     -------

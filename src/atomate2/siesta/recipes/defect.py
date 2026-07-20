@@ -1,14 +1,17 @@
 """Defect workflow recipes."""
+# ruff: noqa: RUF002 docstring uses scientific multiplication sign (x)
 
 from __future__ import annotations
 
 import logging
-
-from jobflow import Flow
-from pymatgen.core import Structure
+from typing import TYPE_CHECKING
 
 from atomate2.siesta.flows.defects import DefectFlowMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
+
+if TYPE_CHECKING:
+    from jobflow import Flow
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -23,9 +26,9 @@ def complete_defect_study(
     dopants: list[str] | None = None,
     interstitial_species: list[str] | None = None,
     auto_params: bool = True,
-    use_custodian: bool = True,
+    use_custodian: bool = True,  # noqa: ARG001 public recipe keyword
     dry_run: bool = False,
-    name: str = "complete_defect_study",
+    name: str = "complete_defect_study",  # noqa: ARG001 public recipe keyword
 ) -> list[Flow]:
     """
     Complete defect study: all vacancies, antisites, and interstitials.
@@ -168,9 +171,9 @@ def vacancy_study(
     chemical_potentials: dict[str, float] | None = None,
     auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
-    use_custodian: bool = True,
+    use_custodian: bool = True,  # noqa: ARG001 public recipe keyword
     dry_run: bool = False,
-    name: str = "vacancy_study",
+    name: str = "vacancy_study",  # noqa: ARG001 public recipe keyword
 ) -> list[Flow]:
     """
     Generate all symmetry-unique vacancy defects.
@@ -248,9 +251,9 @@ def substitution_study(
     chemical_potentials: dict[str, float] | None = None,
     auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
-    use_custodian: bool = True,
+    use_custodian: bool = True,  # noqa: ARG001 public recipe keyword
     dry_run: bool = False,
-    name: str = "substitution_study",
+    name: str = "substitution_study",  # noqa: ARG001 public recipe keyword
 ) -> list[Flow]:
     """
     Generate substitutional dopant defects.
@@ -353,9 +356,9 @@ def antisite_study(
     chemical_potentials: dict[str, float] | None = None,
     auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
-    use_custodian: bool = True,
+    use_custodian: bool = True,  # noqa: ARG001 public recipe keyword
     dry_run: bool = False,
-    name: str = "antisite_study",
+    name: str = "antisite_study",  # noqa: ARG001 public recipe keyword
 ) -> list[Flow]:
     """
     Generate all antisite defects (atom swapping).
@@ -433,9 +436,9 @@ def interstitial_study(
     chemical_potentials: dict[str, float] | None = None,
     auto_calculate_chemical_potentials: bool = False,
     auto_params: bool = True,
-    use_custodian: bool = True,
+    use_custodian: bool = True,  # noqa: ARG001 public recipe keyword
     dry_run: bool = False,
-    name: str = "interstitial_study",
+    name: str = "interstitial_study",  # noqa: ARG001 public recipe keyword
 ) -> list[Flow]:
     """
     Generate interstitial defects at high-symmetry sites.

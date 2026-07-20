@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, job
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.basis import BasisParametersConvergenceFlowMaker
 from atomate2.siesta.flows.convergence import (
@@ -16,12 +15,15 @@ from atomate2.siesta.flows.convergence import (
 from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+
 logger = logging.getLogger(__name__)
 
 
 def convergence_suite(
     structure: Structure,
-    property: str = "energy",
+    property: str = "energy",  # noqa: A002 public recipe keyword
     tolerance: float = 0.001,
     auto_params: bool = True,
     include_kpoints: bool = True,
@@ -150,8 +152,8 @@ def convergence_suite(
 
 def kpoints_convergence(
     structure: Structure,
-    property: str = "energy",
-    tolerance: float = 0.001,
+    property: str = "energy",  # noqa: A002, ARG001 public recipe keyword
+    tolerance: float = 0.001,  # noqa: ARG001 public recipe keyword
     auto_params: bool = True,
     kpts_range: list[int] | None = None,
     user_params: dict[str, Any] | None = None,
@@ -241,8 +243,8 @@ def kpoints_convergence(
 
 def mesh_cutoff_convergence(
     structure: Structure,
-    property: str = "energy",
-    tolerance: float = 0.001,
+    property: str = "energy",  # noqa: A002, ARG001 public recipe keyword
+    tolerance: float = 0.001,  # noqa: ARG001 public recipe keyword
     auto_params: bool = True,
     cutoff_range: list[float] | None = None,
     user_params: dict[str, Any] | None = None,
@@ -331,8 +333,8 @@ def mesh_cutoff_convergence(
 
 def basis_convergence(
     structure: Structure,
-    property: str = "energy",
-    tolerance: float = 0.001,
+    property: str = "energy",  # noqa: A002, ARG001 public recipe keyword
+    tolerance: float = 0.001,  # noqa: ARG001 public recipe keyword
     auto_params: bool = True,
     energy_shifts: list[float] | None = None,
     split_norms: list[float] | None = None,
@@ -362,7 +364,8 @@ def basis_convergence(
     auto_params : bool
         Auto-configure tests.
     energy_shifts : list
-        Energy shift values to test (Ry). Default: [0.001, 0.005, 0.01, 0.015, 0.02, 0.03]
+        Energy shift values to test (Ry).
+        Default: [0.001, 0.005, 0.01, 0.015, 0.02, 0.03]
     split_norms : list
         Split norm values to test. Default: [0.10, 0.15, 0.20, 0.25, 0.30]
     basis_size : str
@@ -431,7 +434,10 @@ def basis_convergence(
 
 
 def complete_convergence(
-    structure: Structure, property: str = "energy", tolerance: float = 0.0005, **kwargs
+    structure: Structure,
+    property: str = "energy",  # noqa: A002 public recipe keyword
+    tolerance: float = 0.0005,
+    **kwargs,
 ) -> Flow:
     """
     Ultra-thorough convergence testing.
@@ -510,7 +516,7 @@ def quick_convergence_check(structure: Structure, **kwargs) -> Flow:
 def extract_optimal_parameters(
     convergence_results: dict[str, Any],
     tolerance: float = 0.001,
-    property: str = "energy",
+    property: str = "energy",  # noqa: A002, ARG001 public recipe keyword
 ) -> dict[str, Any]:
     """
     Extract optimal converged parameters from convergence test results.
@@ -588,7 +594,7 @@ def extract_optimal_parameters(
                             f"Converged k-points: {optimal['a2s_kpts']} "
                             f"(ΔE = {energy_diffs[converged_idx - 1]:.6f} eV)"
                         )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 best-effort extraction, logged
             logger.warning(f"Could not extract k-points convergence: {e}")
 
     # Try to extract mesh cutoff convergence
@@ -627,7 +633,7 @@ def extract_optimal_parameters(
                             f"Converged mesh cutoff: {optimal['Mesh.Cutoff']} "
                             f"(ΔE = {energy_diffs[converged_idx - 1]:.6f} eV)"
                         )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 best-effort extraction, logged
             logger.warning(f"Could not extract mesh cutoff convergence: {e}")
 
     # Add convergence info to output

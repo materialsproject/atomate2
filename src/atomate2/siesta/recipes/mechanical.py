@@ -3,16 +3,18 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow
-from pymatgen.core import Structure
 
 from atomate2.siesta.flows.elastic import ElasticFlowMaker
 from atomate2.siesta.flows.eos import SiestaEosFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -164,8 +166,8 @@ def mechanical_properties(
 
 def elastic_constants_workflow(
     structure: Structure,
-    relax_first: bool = True,
-    strain_states: str = "default",
+    relax_first: bool = True,  # noqa: ARG001 documented API param, reserved
+    strain_states: str = "default",  # noqa: ARG001 documented API param, reserved
     **kwargs,
 ) -> Flow:
     """
@@ -206,7 +208,7 @@ def elastic_constants_workflow(
 
 def eos_workflow(
     structure: Structure,
-    number_of_frames: int = 7,
+    number_of_frames: int = 7,  # noqa: ARG001 documented API param, reserved
     **kwargs,
 ) -> Flow:
     """
@@ -251,7 +253,7 @@ def eos_workflow(
 def pressure_eos_workflow(
     structure: Structure,
     pressure_range: tuple[float, float] = (0.0, 50.0),
-    number_of_frames: int = 9,
+    number_of_frames: int = 9,  # noqa: ARG001 documented API param, reserved
     **kwargs,
 ) -> Flow:
     """

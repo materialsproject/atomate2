@@ -1,13 +1,17 @@
 """Base infrastructure for workflow recipes."""
+# ruff: noqa: T201  print() is the intentional user-facing output of the recipe book
 
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, ClassVar
 
 import numpy as np
-from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +58,7 @@ class MaterialAnalyzer:
     """Analyze structure and recommend optimal SIESTA parameters."""
 
     # Element classification
-    METALS = {
+    METALS: ClassVar[set[int]] = {
         3,
         4,
         11,
@@ -118,7 +122,7 @@ class MaterialAnalyzer:
         83,
     }
 
-    MAGNETIC_ELEMENTS = {
+    MAGNETIC_ELEMENTS: ClassVar[set[int]] = {
         24,
         25,
         26,
@@ -145,10 +149,7 @@ class MaterialAnalyzer:
         71,  # Lanthanides
     }
 
-    HEAVY_ELEMENTS = {
-        z
-        for z in range(37, 87)  # Rb to Fr
-    }
+    HEAVY_ELEMENTS: ClassVar[set[int]] = set(range(37, 87))  # Rb to Fr
 
     @classmethod
     def analyze(cls, structure: Structure) -> MaterialAnalysis:
@@ -188,7 +189,7 @@ class MaterialAnalyzer:
             sga = SpacegroupAnalyzer(structure)
             space_group = sga.get_space_group_number()
             crystal_system = sga.get_crystal_system()
-        except Exception:
+        except Exception:  # noqa: BLE001 symmetry analysis may fail; fall back to P1
             space_group = 1
             crystal_system = "triclinic"
 
@@ -410,9 +411,8 @@ class RecipeBook:
         print(
             f"  - Type: {'Metal' if analysis.is_metal else 'Insulator/Semiconductor'}"
         )
-        print(
-            f"  - Magnetic elements: {'Yes' if analysis.has_magnetic_elements else 'No'}"
-        )
+        magnetic = "Yes" if analysis.has_magnetic_elements else "No"
+        print(f"  - Magnetic elements: {magnetic}")
         print(f"  - Heavy elements: {'Yes' if analysis.has_heavy_elements else 'No'}")
         print(f"  - Max Z: {analysis.max_z}")
 

@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow
-from pymatgen.core import Structure
 
 from atomate2.siesta.jobs.core import BandStructureMaker, DOSMaker, RelaxMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
