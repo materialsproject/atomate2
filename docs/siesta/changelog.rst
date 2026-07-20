@@ -27,8 +27,10 @@ New Features
 * **Surface-Aware Defect Generators**: Added ``SurfaceVacancyGenerator``,
   ``SurfaceInterstitialGenerator``, and ``SurfaceSubstitutionGenerator`` for slab surfaces
   (layer detection, in-plane symmetry) — for 2D materials and catalysis.
-* **Adsorption Slab-Energy Reuse**: ``AdsorptionScanFlowMaker`` gained ``precalc_slab_energy``
-  so multi-adsorbate screening reuses a single slab calculation.
+* **Adsorption Slab/Adsorbate-Energy Reuse**: ``AdsorptionScanFlowMaker`` gained
+  ``precalc_slab_energy`` and ``precalc_adsorbate_energy`` (float or ``OutputReference``),
+  so multi-adsorbate screening reuses a single slab calculation (the ORR flow reuses the
+  O₂ scan's slab energy for the OOH/O/OH scans).
 * **Heterostructures**: Added ``InterfaceFlowMaker`` (2D interface construction, lattice
   matching, interlayer-distance optimization, binding energy).
 * **Cluster Profiles & Auto Resource Allocation**: Added ``ClusterProfile`` and
@@ -39,6 +41,39 @@ New Features
 
 Bug Fixes
 ---------
+
+Recovery, live-run hardening & physics fixes (July 2026)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Surfaced by running the full test suite and every ``tutorials/siesta`` script against a
+live SIESTA build (203/242 pass end-to-end; the rest are long-running or need
+jobflow-remote/MongoDB).
+
+* **Electrocatalysis package recovered**: eight source files and six test files
+  (``her.py``, ``oer.py``, ``analysis/{overpotential,plotting,thermodynamics}.py``,
+  ``utils/spin_config.py``, ``schemas/electrocatalysis.py``) were dropped in an earlier
+  merge, leaving ``flows.electrocatalysis`` un-importable and crashing
+  ``GasPhaseMoleculeMaker``. Restored from history.
+* **Open-shell molecule spin (O₂ triplet)**: ``GasPhaseMoleculeMaker`` and the isolated
+  adsorbate static in ``AdsorptionScanFlowMaker`` produced a singlet O₂ (0.44 eV too high)
+  because the ``DM.InitSpin`` auto-generator's antiferromagnetic default re-signed the
+  applied ``+1/+1`` moments to ``+1/-1`` (net S=0). Both now request ``custom`` ordering,
+  preserving the triplet (verified live: ``|S| = 2.000``).
+* **pH correction sign**: proton-consuming steps in the electrocatalysis CHE model now use
+  ``ΔG_pH = +0.059·pH`` per (H⁺+e⁻) on the SHE scale (was ``-0.059·pH``).
+* **Live-run fixes**: ``gzip_output_folder`` crashed every job at finalization
+  (``exclude_files`` signature); Lua/NEB runs never received ``LUA_PATH`` from ``FLOS_PATH``;
+  the flos NEB template was renamed to ``neb_simple.lua``; ``np.trapz`` removed in NumPy 2.0.
+* **Missing package init**: ``flows/heterostructures`` had no ``__init__.py``, so
+  ``InterfaceFlowMaker`` was un-importable.
+* **Defect recipes**: all five ``RecipeBook`` defect studies now accept and forward
+  ``chemical_potentials`` / ``auto_calculate_chemical_potentials`` (previously raised
+  before building any flow).
+* **Elastic order detection & validation**: replaced the ``len(stresses) < 70`` order
+  heuristic with strain-state analysis and added per-order deformation-sufficiency checks.
+* **Test infrastructure**: conftest fixtures now auto-provide the packaged pseudopotentials
+  and a flos NEB template stub, and the performance benchmarks skip cleanly without
+  ``pytest-benchmark`` — the suite runs green with zero environment setup.
 
 * **Database Basis Size Extraction**: Fixed PAO.BasisSize not being saved to database
 
