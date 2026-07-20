@@ -42,7 +42,7 @@ from __future__ import annotations
 __all__ = ["FDFDataclass"]
 
 import logging
-from typing import Any
+from typing import Any, ClassVar
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ class FDFDataclass:
     """
 
     # Global registry: fdf_name_lower → dataclass_name
-    _FDF_REGISTRY: dict[str, str] = {}
+    _FDF_REGISTRY: ClassVar[dict[str, str]] = {}
 
     @classmethod
     def register_fdf_params(cls, *fdf_names: str) -> None:
@@ -219,7 +219,7 @@ class FDFDataclass:
         fdf_name_lower = fdf_name.lower()
 
         # Search all fields for matching SIESTA keyword
-        for field_name, field_info in cls.__dataclass_fields__.items():
+        for field_info in cls.__dataclass_fields__.values():
             siesta_keyword = field_info.metadata.get("SIESTA keyword")
             if siesta_keyword and siesta_keyword.lower() == fdf_name_lower:
                 return field_info.metadata.get("unit")
@@ -233,7 +233,8 @@ class FDFDataclass:
 
         Returns
         -------
-            Dictionary mapping field names to their metadata (description, keyword, unit)
+            Dictionary mapping field names to their metadata
+            (description, keyword, unit)
 
         Example:
             >>> MeshSettings.get_all_fields_with_units()

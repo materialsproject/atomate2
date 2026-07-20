@@ -100,7 +100,7 @@ class ChemicalAnalysis(FDFDataclass):
     # TODO: WFS.EnergyMin
     # TODO: WFS.EnergyMax
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -109,12 +109,10 @@ class ChemicalAnalysis(FDFDataclass):
                 "Charge.Voronoi",
                 "COOP.Write",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own-class registration guard
 
-    def validate(self):
-        """
-        Validate the chemical analysis options block for the FDF file.
-        """
+    def validate(self) -> None:
+        """Validate the chemical analysis options block for the FDF file."""
         logger.info("ChemicalAnalysis.validate()")
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -190,14 +188,18 @@ class ChemicalAnalysis(FDFDataclass):
 
     @classmethod
     def setup_chemical_analysis(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 kept for interface compatibility
     ) -> "ChemicalAnalysis":
         """
         Create and configure a ChemicalAnalysis instance with full parameter parsing.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                may include dots).
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
@@ -230,8 +232,6 @@ class ChemicalAnalysis(FDFDataclass):
         # These are SIESTA-specific post-processing options
         return {}
 
-    def generate_chemical_analysis_block(self):
-        """
-        Generates the chemical analysis options block for the FDF file.
-        """
+    def generate_chemical_analysis_block(self) -> None:
+        """Generate the chemical analysis options block for the FDF file."""
         logger.info("ChemicalAnalysis.generate_chemical_analysis_block()")

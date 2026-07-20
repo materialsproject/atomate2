@@ -26,9 +26,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class RealSpaceGridParameters(FDFDataclass):
-    """
-    Data class to manage real-space grid and eggbox effect parameters for SIESTA input.
-    """
+    """Manage real-space grid and eggbox effect parameters for SIESTA input."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -43,14 +41,19 @@ class RealSpaceGridParameters(FDFDataclass):
         default=None,
         init=False,  # Prevent user from setting via constructor
         metadata={
-            "description": "Temporary storage for user parameters to validate grid settings.",
+            "description": (
+                "Temporary storage for user parameters to validate grid settings."
+            ),
             "SIESTA keyword": None,
         },
     )
     mesh_cutoff: float = field(
         default=100.0,
         metadata={
-            "description": "Sets the energy cutoff (in Rydberg) that determines the fineness of the real-space grid. This is a crucial accuracy parameter.",
+            "description": (
+                "Sets the energy cutoff (in Rydberg) that determines the fineness of "
+                "the real-space grid. This is a crucial accuracy parameter."
+            ),
             "SIESTA keyword": "Mesh.Cutoff",
             "unit": "Ry",
         },
@@ -58,35 +61,52 @@ class RealSpaceGridParameters(FDFDataclass):
     mesh_sizes_block: dict[int, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to manually specify the number of grid points along each lattice vector, offering direct control over the grid dimensions as an alternative to 'Mesh.Cutoff'.",
+            "description": (
+                "A block to manually specify the number of grid points along each "
+                "lattice vector, offering direct control over the grid dimensions as "
+                "an alternative to 'Mesh.Cutoff'."
+            ),
             "SIESTA keyword": "%block Mesh.Sizes",
         },
     )
     mesh_subdivisions: int = field(
         default=2,
         metadata={
-            "description": "For parallel calculations, this specifies the number of subdivisions of the real-space grid for domain decomposition.",
+            "description": (
+                "For parallel calculations, this specifies the number of subdivisions "
+                "of the real-space grid for domain decomposition."
+            ),
             "SIESTA keyword": "Mesh.SubDivisions",
         },
     )
     grid_cell_sampling: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a non-uniform real-space grid, allowing for different grid density in different regions of the simulation cell.",
+            "description": (
+                "A block to define a non-uniform real-space grid, allowing for "
+                "different grid density in different regions of the simulation cell."
+            ),
             "SIESTA keyword": "%block Grid.CellSampling",
         },
     )
     eggbox_remove_block: dict[float, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "A block to enable and configure a scheme to mitigate the 'egg-box' effect, which is an artificial energy corrugation due to the discrete real-space grid.",
+            "description": (
+                "A block to enable and configure a scheme to mitigate the 'egg-box' "
+                "effect, which is an artificial energy corrugation due to the discrete "
+                "real-space grid."
+            ),
             "SIESTA keyword": "%block EggboxRemove",
         },
     )
     eggbox_scale: float = field(
         default=1.0,
         metadata={
-            "description": "An energy scale parameter (in eV) used by the 'EggboxRemove' correction scheme.",
+            "description": (
+                "An energy scale parameter (in eV) used by the 'EggboxRemove' "
+                "correction scheme."
+            ),
             "SIESTA keyword": "EggboxScale",
             "unit": "eV",
         },
@@ -94,12 +114,14 @@ class RealSpaceGridParameters(FDFDataclass):
     grid_fdf_arguments: OrderedDict[str, Any] = field(
         default_factory=OrderedDict,
         metadata={
-            "description": "A dictionary for FDF flags related to real-space grid parameters.",
+            "description": (
+                "A dictionary for FDF flags related to real-space grid parameters."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -110,23 +132,26 @@ class RealSpaceGridParameters(FDFDataclass):
                 "%block EggboxRemove",
                 "EggboxScale",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own class-level guard
 
     @classmethod
     def setup_grid_settings(
         cls, user_params: dict[str, Any] | None = None
     ) -> "RealSpaceGridParameters":
-        """
-        Create and configure a RealSpaceGridParameters instance based on user parameters, retaining all default values for unspecified fields.
-        Issues warnings for invalid keys and skips them.
+        """Create and configure a RealSpaceGridParameters from user parameters.
+
+        Retains all default values for unspecified fields. Issues warnings for
+        invalid keys and skips them.
 
         Args:
-            user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
-                                         If None or empty, all default RealSpaceGridParameters values are used.
+            user_params (dict, optional): Dictionary of user-defined parameters
+                (case-insensitive, may include dots). If None or empty, all
+                default RealSpaceGridParameters values are used.
 
         Returns
         -------
-            RealSpaceGridParameters: Configured instance with all fields (default and user-specified) and FDF arguments.
+            RealSpaceGridParameters: Configured instance with all fields (default
+            and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
@@ -143,7 +168,8 @@ class RealSpaceGridParameters(FDFDataclass):
         if not grid_settings_instance._user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default RealSpaceGridParameters values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "RealSpaceGridParameters values.[/blue]"
                 )
                 console.print(
                     f"[blue]user_params: {grid_settings_instance._user_params}[/blue]"
@@ -154,7 +180,7 @@ class RealSpaceGridParameters(FDFDataclass):
                     f"[blue]user_params: {grid_settings_instance._user_params}[/blue]"
                 )
 
-            # Get valid attribute names (lowercase for comparison), excluding _user_params
+            # Get valid attribute names (lowercase for comparison), excluding _user_params  # noqa: E501
             grid_settings_attributes = {
                 field.name.lower()
                 for field in fields(cls)
@@ -162,7 +188,8 @@ class RealSpaceGridParameters(FDFDataclass):
             }
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Available RealSpaceGridParameters attributes: {grid_settings_attributes}[/blue]"
+                    f"[blue]Available RealSpaceGridParameters attributes: "
+                    f"{grid_settings_attributes}[/blue]"
                 )
 
             # Process user parameters
@@ -171,14 +198,16 @@ class RealSpaceGridParameters(FDFDataclass):
                 key_normalized = key.lower().replace(".", "_")
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                     console.print(
-                        f"[blue]Processing key: {key} -> normalized: {key_normalized}, value: {value}[/blue]"
+                        f"[blue]Processing key: {key} -> normalized: "
+                        f"{key_normalized}, value: {value}[/blue]"
                     )
 
                 # Skip _user_params if provided by user
                 if key_normalized == "_user_params":
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Ignoring user-provided '{key}'; it is internal.[/yellow]"
+                            f"[yellow]Ignoring user-provided '{key}'; it is "
+                            f"internal.[/yellow]"
                         )
                     continue
 
@@ -192,7 +221,8 @@ class RealSpaceGridParameters(FDFDataclass):
                     )
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Matched RealSpaceGridParameters field: {original_key} = {value}[/blue]"
+                            f"[blue]Matched RealSpaceGridParameters field: "
+                            f"{original_key} = {value}[/blue]"
                         )
 
                     # Handle type conversion for specific fields
@@ -243,7 +273,8 @@ class RealSpaceGridParameters(FDFDataclass):
                         setattr(grid_settings_instance, original_key, value)
                 elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Key '{key}' does not match any RealSpaceGridParameters field, skipping.[/yellow]"
+                        f"[yellow]Key '{key}' does not match any "
+                        f"RealSpaceGridParameters field, skipping.[/yellow]"
                     )
 
         # Validate settings
@@ -262,14 +293,14 @@ class RealSpaceGridParameters(FDFDataclass):
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]RealSpaceGridParameters[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]RealSpaceGridParameters[/yellow] Successful![/green]"
             )
 
         return grid_settings_instance
 
-    def validate(self):
-        """
-        Validates the real-space grid parameters.
+    def validate(self) -> None:
+        """Validate the real-space grid parameters.
 
         Raises
         ------
@@ -287,7 +318,8 @@ class RealSpaceGridParameters(FDFDataclass):
         # Validate mesh_subdivisions
         if not isinstance(self.mesh_subdivisions, int) or self.mesh_subdivisions <= 0:
             raise ValueError(
-                f"Mesh.SubDivisions must be a positive integer, got '{self.mesh_subdivisions}'"
+                f"Mesh.SubDivisions must be a positive integer, got "
+                f"'{self.mesh_subdivisions}'"
             )
 
         # Validate eggbox_scale
@@ -298,7 +330,8 @@ class RealSpaceGridParameters(FDFDataclass):
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
-                "[green]Validation: [yellow]RealSpaceGridParameters[/yellow] Successful![/green]"
+                "[green]Validation: [yellow]RealSpaceGridParameters[/yellow] "
+                "Successful![/green]"
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -416,12 +449,12 @@ class RealSpaceGridParameters(FDFDataclass):
         # ASE uses 'mesh' parameter name instead of 'Mesh.Cutoff'
         return {"mesh": self.mesh_cutoff}
 
-    def generate_grid_block(self):
-        """
-        Generates the real-space grid parameters block for the FDF file.
+    def generate_grid_block(self) -> None:
+        """Generate the real-space grid parameters block for the FDF file.
 
         This is a wrapper around generate_fdf() to maintain backward compatibility
-        with code that calls this method directly (e.g., setup_real_space_grid_parameters()).
+        with code that calls this method directly (e.g.,
+        setup_real_space_grid_parameters()).
 
         By calling generate_fdf(), we ensure:
         - Single source of truth for FDF generation
@@ -436,7 +469,7 @@ class RealSpaceGridParameters(FDFDataclass):
             )
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers via update_from_fdf())  # noqa: E501
         fdf = self.generate_fdf()
 
         # Add comment header

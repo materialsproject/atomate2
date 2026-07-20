@@ -1,25 +1,34 @@
 """Module registry for automatic dataclass initialization with tier-based filtering.
 
 This module provides a registration system for SIESTA input parameter dataclasses,
-enabling automatic initialization based on calculation tiers and material-specific presets.
+enabling automatic initialization based on calculation tiers and material-specific
+presets.
 
 Tier System: Two Separate Concepts
 -----------------------------------
 **1. Module Tier Classification** (for module organization - 4 core tiers):
    Each module is assigned to one of 4 core tiers based on complexity:
-   - **basic**: 6 essential modules (pseudopotentials, basis_sets, general_system, xc_functional, kpoints, mesh_cutoff)
-   - **intermediate**: 7 additional modules (chemical_analysis, constraints, electronic_structure, lua_scripting, md_relaxation, scf_loop, spin)
-   - **advanced**: 9 additional modules (auxiliary_force_field, charge_dipole, denchar, dftu, dos_bands, grids_advanced, optical, phonons, wannier90)
-   - **expert**: 6 additional modules (efficiency, hamiltonian_overlap, netcdf, parallel, rttddft, solvers)
+   - **basic**: 6 essential modules (pseudopotentials, basis_sets, general_system,
+     xc_functional, kpoints, mesh_cutoff)
+   - **intermediate**: 7 additional modules (chemical_analysis, constraints,
+     electronic_structure, lua_scripting, md_relaxation, scf_loop, spin)
+   - **advanced**: 9 additional modules (auxiliary_force_field, charge_dipole,
+     denchar, dftu, dos_bands, grids_advanced, optical, phonons, wannier90)
+   - **expert**: 6 additional modules (efficiency, hamiltonian_overlap, netcdf,
+     parallel, rttddft, solvers)
 
 **2. User-Facing Tier Levels** (for workflow selection - 7 tier names):
    Users specify tier names that map to module sets and parameter presets:
    - **dirty**: Minimal quality (SZ/[1,1,1]/50 Ry) → activates basic modules (6 total)
    - **basic**: Fast quality (DZP/[3,3,3]/150 Ry) → activates basic modules (6 total)
-   - **intermediate**: Standard quality (DZP/[6,6,6]/200 Ry) → activates basic+intermediate modules (13 total)
-   - **advanced**: High quality (TZP/[6,6,6]/300 Ry) → activates basic+intermediate+advanced modules (22 total)
-   - **expert**: Publication quality (TZP/[8,8,8]/400 Ry) → activates all modules (28 total)
-   - **ultra**: Benchmark quality (TZDP/[10,10,10]/800 Ry) → activates all modules (28 total)
+   - **intermediate**: Standard quality (DZP/[6,6,6]/200 Ry) → activates
+     basic+intermediate modules (13 total)
+   - **advanced**: High quality (TZP/[6,6,6]/300 Ry) → activates
+     basic+intermediate+advanced modules (22 total)
+   - **expert**: Publication quality (TZP/[8,8,8]/400 Ry) → activates all modules
+     (28 total)
+   - **ultra**: Benchmark quality (TZDP/[10,10,10]/800 Ry) → activates all modules
+     (28 total)
    - **all**: No parameter defaults → activates all modules (28 total)
 
 The registry solves the problem of manual module initialization in base.py by:
@@ -54,7 +63,8 @@ class DataclassModule:
     fdf_attribute : str
         Name of the attribute containing FDF arguments after setup
     instance_attribute : str
-        Name of the attribute where the module instance is stored (e.g., "md_relaxation")
+        Name of the attribute where the module instance is stored
+        (e.g., "md_relaxation")
         Defaults to name if not specified. This enables reuse of updated instances.
     tier : str
         Module tier classification: "basic", "intermediate", "advanced", or "expert"
@@ -81,7 +91,7 @@ class DataclassModule:
     priority: int = 50
     description: str = ""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate tier and category values, auto-set instance_attribute."""
         # Module tier classification (not user-facing tier levels)
         # Modules are categorized into 4 core tiers for organization
@@ -89,8 +99,10 @@ class DataclassModule:
         valid_module_tiers = {"basic", "intermediate", "advanced", "expert"}
         if self.tier not in valid_module_tiers:
             raise ValueError(
-                f"Invalid module tier '{self.tier}'. Must be one of {valid_module_tiers}. "
-                f"Note: This is the module's tier classification, not the user-facing tier level."
+                f"Invalid module tier '{self.tier}'. Must be one of "
+                f"{valid_module_tiers}. "
+                f"Note: This is the module's tier classification, not the "
+                f"user-facing tier level."
             )
 
         # Auto-set instance_attribute to name if not provided
@@ -276,7 +288,7 @@ def get_sorted_modules(modules: dict[str, DataclassModule]) -> list[DataclassMod
 # ==============================================================================
 
 
-def register_all_modules():
+def register_all_modules() -> None:
     """Register all SIESTA input parameter dataclass modules.
 
     Modules are organized into 4 tiers:

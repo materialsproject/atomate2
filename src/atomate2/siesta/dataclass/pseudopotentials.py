@@ -15,11 +15,14 @@ import logging
 import os
 from collections import OrderedDict
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +30,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Pseudopotentials(FDFDataclass):
     """
-    Data class to manage pseudopotential path for SIESTA input within the Atomate2 SIESTA extension.
+    Data class to manage pseudopotential path for SIESTA input.
 
     Supports automatic pseudopotential directory selection based on XC functional.
 
@@ -55,7 +58,10 @@ class Pseudopotentials(FDFDataclass):
     pseudo_path: str | None = field(
         default=None,
         metadata={
-            "description": "Direct path to pseudopotential directory. If set, overrides automatic path construction.",
+            "description": (
+                "Direct path to pseudopotential directory. If set, overrides "
+                "automatic path construction."
+            ),
             "SIESTA keyword": "SIESTA_PP_PATH",
         },
     )
@@ -64,7 +70,10 @@ class Pseudopotentials(FDFDataclass):
     pseudo_base_path: str | None = field(
         default=None,
         metadata={
-            "description": "Base directory containing pseudopotential subdirectories (e.g., /Users/user/.siesta/pseudos).",
+            "description": (
+                "Base directory containing pseudopotential subdirectories "
+                "(e.g., /Users/user/.siesta/pseudos)."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -92,18 +101,26 @@ class Pseudopotentials(FDFDataclass):
         },
     )
     pseudo_relativistic: str = field(
-        default="SR",  # SR is more compatible (FR has LJ projector issues in some SIESTA versions)
+        # SR is more compatible (FR has LJ projector issues in some SIESTA versions)
+        default="SR",
         metadata={
-            "description": "Relativistic treatment: SR (Scalar Relativistic) or FR (Fully Relativistic).",
+            "description": (
+                "Relativistic treatment: SR (Scalar Relativistic) or FR "
+                "(Fully Relativistic)."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    # XC functional information (used for automatic path construction) from 6.2 Pseudopotentials
+    # XC functional information (used for automatic path construction)
+    # from 6.2 Pseudopotentials
     xc_functional: str | None = field(
         default=None,
         metadata={
-            "description": "XC functional family (LDA, GGA, VDW). Extracted from ExchangeCorrelationFunctionals.",
+            "description": (
+                "XC functional family (LDA, GGA, VDW). Extracted from "
+                "ExchangeCorrelationFunctionals."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -111,7 +128,10 @@ class Pseudopotentials(FDFDataclass):
     xc_authors: str | None = field(
         default=None,
         metadata={
-            "description": "XC authors/parametrization (PBE, PBEsol, etc.). Extracted from ExchangeCorrelationFunctionals.",
+            "description": (
+                "XC authors/parametrization (PBE, PBEsol, etc.). Extracted "
+                "from ExchangeCorrelationFunctionals."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -121,19 +141,24 @@ class Pseudopotentials(FDFDataclass):
         default=None,
         init=False,
         metadata={
-            "description": "Temporary storage for user parameters to validate pseudopotential settings.",
+            "description": (
+                "Temporary storage for user parameters to validate "
+                "pseudopotential settings."
+            ),
             "SIESTA keyword": None,
         },
     )
     pseudo_fdf_arguments: OrderedDict[str, Any] = field(
         default_factory=OrderedDict,
         metadata={
-            "description": "A dictionary for FDF flags related to pseudopotential settings.",
+            "description": (
+                "A dictionary for FDF flags related to pseudopotential settings."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -142,11 +167,11 @@ class Pseudopotentials(FDFDataclass):
                 "PS.KBprojectors",
                 "%block PS.lmax",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level flag
 
     def construct_pseudo_path(self) -> str | None:
         """
-        Automatically construct the pseudopotential path from base_path and XC information.
+        Automatically construct the pseudopotential path from base_path and XC info.
 
         Priority order:
         1. If `pseudo_path` is explicitly set, use it (no construction needed)
@@ -155,7 +180,8 @@ class Pseudopotentials(FDFDataclass):
 
         Returns
         -------
-            str or None: Constructed pseudopotential path, or None if cannot be constructed
+            str or None: Constructed pseudopotential path, or None if it
+                cannot be constructed
 
         Example:
             pseudo_base_path = "/Users/user/.siesta/pseudos"
@@ -180,11 +206,13 @@ class Pseudopotentials(FDFDataclass):
             if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 if not self.pseudo_base_path:
                     console.print(
-                        "[yellow]Cannot construct pseudo_path: pseudo_base_path not set[/yellow]"
+                        "[yellow]Cannot construct pseudo_path: "
+                        "pseudo_base_path not set[/yellow]"
                     )
                 if not self.xc_authors:
                     console.print(
-                        "[yellow]Cannot construct pseudo_path: xc_authors not set[/yellow]"
+                        "[yellow]Cannot construct pseudo_path: "
+                        "xc_authors not set[/yellow]"
                     )
             return None
 
@@ -193,7 +221,10 @@ class Pseudopotentials(FDFDataclass):
 
         # Construct directory name: {family}-{XC}-{rel}-PDv{version}-{quality}
         # Example: ONCVPSP-PBEsol-FR-PDv0.4-Standard
-        dir_name = f"{self.pseudo_family}-{xc_name}-{self.pseudo_relativistic}-PDv{self.pseudo_version}-{self.pseudo_quality}"
+        dir_name = (
+            f"{self.pseudo_family}-{xc_name}-{self.pseudo_relativistic}"
+            f"-PDv{self.pseudo_version}-{self.pseudo_quality}"
+        )
 
         # Construct full path
         constructed_path = os.path.join(self.pseudo_base_path, dir_name)
@@ -257,7 +288,7 @@ class Pseudopotentials(FDFDataclass):
         try:
             from xml.etree import ElementTree as ET
 
-            tree = ET.parse(psml_file)
+            tree = ET.parse(psml_file)  # noqa: S314 trusted local pseudo file
             root = tree.getroot()
             ns = {"psml": "http://esl.cecam.org/PSML/ns/1.1"}
 
@@ -299,9 +330,9 @@ class Pseudopotentials(FDFDataclass):
                     "xc_name": xc_name,
                 }
 
-            return None
+            return None  # noqa: TRY300 explicit control flow
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 fall back to None on any parse error
             if Pseudopotentials.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
                     f"[yellow]Could not extract XC from {psml_file}: {e}[/yellow]"
@@ -313,7 +344,7 @@ class Pseudopotentials(FDFDataclass):
         pseudo_path: str,
         xc_functional: str,
         xc_authors: str,
-        structure,
+        structure: "Structure",
     ) -> None:
         """
         Validate that XC functional in FDF matches pseudopotential files.
@@ -335,7 +366,7 @@ class Pseudopotentials(FDFDataclass):
             return
 
         # Get unique elements from structure
-        elements = set(site.species_string for site in structure)
+        elements = {site.species_string for site in structure}
 
         # Check each element's pseudopotential
         mismatches = []
@@ -373,24 +404,27 @@ class Pseudopotentials(FDFDataclass):
         # Print warnings if mismatches found
         if mismatches:
             # Always show XC mismatch warnings (this is a critical validation)
-            if True:
-                console.print(
-                    "\n[bold yellow]⚠️  XC Functional Mismatch Warning[/bold yellow]"
-                )
-                console.print(
-                    "[yellow]The XC functional in your FDF does not match the pseudopotentials:[/yellow]\n"
-                )
-                for mismatch in mismatches:
-                    console.print(f"  [yellow]• {mismatch}[/yellow]")
-                console.print(
-                    "\n[yellow]This may lead to inconsistent results. Consider either:[/yellow]"
-                )
-                console.print(
-                    f"  [yellow]1. Using pseudopotentials matching XC.Authors = {xc_authors}[/yellow]"
-                )
-                console.print(
-                    "  [yellow]2. Changing XC.Authors to match your pseudopotentials[/yellow]\n"
-                )
+            console.print(
+                "\n[bold yellow]⚠️  XC Functional Mismatch Warning[/bold yellow]"
+            )
+            console.print(
+                "[yellow]The XC functional in your FDF does not match the "
+                "pseudopotentials:[/yellow]\n"
+            )
+            for mismatch in mismatches:
+                console.print(f"  [yellow]• {mismatch}[/yellow]")
+            console.print(
+                "\n[yellow]This may lead to inconsistent results. "
+                "Consider either:[/yellow]"
+            )
+            console.print(
+                "  [yellow]1. Using pseudopotentials matching "
+                f"XC.Authors = {xc_authors}[/yellow]"
+            )
+            console.print(
+                "  [yellow]2. Changing XC.Authors to match your "
+                "pseudopotentials[/yellow]\n"
+            )
 
     @staticmethod
     def parse_pseudo_path(pseudo_path: str) -> dict[str, str] | None:
@@ -436,7 +470,8 @@ class Pseudopotentials(FDFDataclass):
                     f"[yellow]Could not parse pseudo_path: {pseudo_path}[/yellow]"
                 )
                 console.print(
-                    "[yellow]Expected pattern: FAMILY-XC-REL-PDvVERSION-QUALITY[/yellow]"
+                    "[yellow]Expected pattern: "
+                    "FAMILY-XC-REL-PDvVERSION-QUALITY[/yellow]"
                 )
             return None
 
@@ -473,9 +508,11 @@ class Pseudopotentials(FDFDataclass):
         Set up pseudopotential settings using user parameters and a default pseudo path.
 
         Args:
-            user_params (dict, optional): User-provided parameters (case-insensitive, may include dots).
-                                         Supported key: pseudo_path.
-            default_pseudo_path (str, optional): Default path to pseudopotential files if not specified in user_params.
+            user_params (dict, optional): User-provided parameters
+                (case-insensitive, may include dots). Supported key:
+                pseudo_path.
+            default_pseudo_path (str, optional): Default path to
+                pseudopotential files if not specified in user_params.
 
         Returns
         -------
@@ -497,7 +534,8 @@ class Pseudopotentials(FDFDataclass):
             user_params_["pseudo_base_path"] = default_pseudo_path
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Using default_pseudo_path as pseudo_base_path: {default_pseudo_path}[/blue]"
+                    f"[blue]Using default_pseudo_path as pseudo_base_path: "
+                    f"{default_pseudo_path}[/blue]"
                 )
 
         pseudo_settings._user_params = user_params_
@@ -515,7 +553,8 @@ class Pseudopotentials(FDFDataclass):
             }
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Available Pseudopotentials attributes: {pseudo_attributes}[/blue]"
+                    f"[blue]Available Pseudopotentials attributes: "
+                    f"{pseudo_attributes}[/blue]"
                 )
 
             for key, value in pseudo_settings._user_params.items():
@@ -531,13 +570,16 @@ class Pseudopotentials(FDFDataclass):
                 key_normalized = key_stripped.replace(".", "_")
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                     console.print(
-                        f"[blue]Processing key: {key} -> stripped: {key_stripped} -> normalized: {key_normalized}, value: {value}[/blue]"
+                        f"[blue]Processing key: {key} -> stripped: "
+                        f"{key_stripped} -> normalized: {key_normalized}, "
+                        f"value: {value}[/blue]"
                     )
 
                 if key_normalized == "_user_params":
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Ignoring user-provided '{key}'; it is internal.[/yellow]"
+                            f"[yellow]Ignoring user-provided '{key}'; "
+                            f"it is internal.[/yellow]"
                         )
                     continue
 
@@ -549,7 +591,8 @@ class Pseudopotentials(FDFDataclass):
                     )
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Matched Pseudopotentials field: {original_key} = {value}[/blue]"
+                            f"[blue]Matched Pseudopotentials field: "
+                            f"{original_key} = {value}[/blue]"
                         )
 
                     # Set the attribute directly (works for all fields)
@@ -557,14 +600,15 @@ class Pseudopotentials(FDFDataclass):
                         setattr(pseudo_settings, original_key, value)
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(f"[blue]Set {original_key} = {value}[/blue]")
-                    except Exception as e:
+                    except Exception as e:  # noqa: BLE001 report and skip bad value
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
                                 f"[yellow]Failed to set '{original_key}': {e}[/yellow]"
                             )
                 elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Key '{key}' does not match any Pseudopotentials field, skipping.[/yellow]"
+                        f"[yellow]Key '{key}' does not match any "
+                        f"Pseudopotentials field, skipping.[/yellow]"
                     )
 
         # Automatically construct pseudo_path if not explicitly set
@@ -574,7 +618,8 @@ class Pseudopotentials(FDFDataclass):
                 pseudo_settings.pseudo_path = constructed_path
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
                     console.print(
-                        f"[green]Auto-constructed pseudo_path: {constructed_path}[/green]"
+                        f"[green]Auto-constructed pseudo_path: "
+                        f"{constructed_path}[/green]"
                     )
             elif pseudo_settings.pseudo_base_path or pseudo_settings.xc_authors:
                 # We have some info but couldn't construct - warn user
@@ -597,14 +642,15 @@ class Pseudopotentials(FDFDataclass):
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]Pseudopotentials[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]Pseudopotentials[/yellow] Successful![/green]"
             )
 
         return pseudo_settings
 
-    def validate(self):
+    def validate(self) -> None:
         """
-        Validates the pseudopotential settings.
+        Validate the pseudopotential settings.
 
         Raises
         ------
@@ -615,7 +661,8 @@ class Pseudopotentials(FDFDataclass):
 
         if self.pseudo_path and not os.path.isdir(self.pseudo_path):
             raise ValueError(
-                f"Pseudopotential path '{self.pseudo_path}' does not exist or is not a directory."
+                f"Pseudopotential path '{self.pseudo_path}' does not exist "
+                f"or is not a directory."
             )
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
@@ -623,7 +670,8 @@ class Pseudopotentials(FDFDataclass):
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
-                "[green]Validation: [yellow]Pseudopotentials[/yellow] Successful![/green]"
+                "[green]Validation: "
+                "[yellow]Pseudopotentials[/yellow] Successful![/green]"
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -672,10 +720,8 @@ class Pseudopotentials(FDFDataclass):
         # Path is typically set via environment variable
         return {}
 
-    def generate_pseudo_fdf(self):
-        """
-        Generates the pseudopotential-related FDF arguments for the SIESTA input file.
-        """
+    def generate_pseudo_fdf(self) -> None:
+        """Generate the pseudopotential-related FDF arguments for SIESTA input."""
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]Pseudopotentials.generate_pseudo_fdf()[/green]")
 

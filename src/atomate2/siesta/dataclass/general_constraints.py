@@ -23,17 +23,22 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class GeneralConstraints(FDFDataclass):
-    """ """
+    """SIESTA general geometry constraints (User's Guide Section 7.7)."""
 
     # ------------------------------
     # 7.7 Use of General constraints
     # ------------------------------
 
-    # geometry_constraints_block: Dict[float,Any]= field(default_factory=dict) # %block Geometry.Constraints 〈None〉
+    # geometry_constraints_block: Dict[float,Any]= field(default_factory=dict)
+    # %block Geometry.Constraints 〈None〉
     geometry_constraints_block: list[str] | dict[str, Any] = field(
         default_factory=list,
         metadata={
-            "description": "A block to define constraints on atomic positions or lattice vectors during a geometry optimization or molecular dynamics run (e.g., fixing atoms). Can be list or dict.",
+            "description": (
+                "A block to define constraints on atomic positions or lattice "
+                "vectors during a geometry optimization or molecular dynamics run "
+                "(e.g., fixing atoms). Can be list or dict."
+            ),
             "SIESTA keyword": "%block Geometry.Constraints",
         },
     )
@@ -41,20 +46,23 @@ class GeneralConstraints(FDFDataclass):
     constraints_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to geometric constraints.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags related "
+                "to geometric constraints."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
                 "%block Geometry.Constraints",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own-class registration guard
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate geometry constraint parameters.
 
@@ -113,7 +121,7 @@ class GeneralConstraints(FDFDataclass):
         # These are SIESTA-specific FDF constraints
         return {}
 
-    def generate_constraints_block(self):
+    def generate_constraints_block(self) -> None:
         """
         Generate the geometric constraints block for the FDF file.
 
@@ -133,7 +141,8 @@ class GeneralConstraints(FDFDataclass):
         logger.info("GeneralConstraints.generate_constraints_block()")
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers via
+        # update_from_fdf())
         self.constraints_fdf_arguments = self.generate_fdf()
 
     @classmethod
@@ -199,7 +208,7 @@ class GeneralConstraints(FDFDataclass):
         try:
             instance.validate()
         except ValueError as e:
-            logger.error(f"Geometric constraints validation failed: {e}")
+            logger.error(f"Geometric constraints validation failed: {e}")  # noqa: TRY400 preserve message-only log
             raise
 
         # Generate FDF block

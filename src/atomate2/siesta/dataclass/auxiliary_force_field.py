@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class AuxiliaryForceField(FDFDataclass):
-    """ """
+    """SIESTA auxiliary force field and dispersion-correction parameters."""
 
     # --------------------------
     # 6.25 Auxiliary Force field
@@ -36,14 +36,20 @@ class AuxiliaryForceField(FDFDataclass):
     mm_potentials_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "Defines molecular mechanics potentials for the auxiliary force field (SIESTA keyword: %block MM.Potentials)."
+            "description": (
+                "Defines molecular mechanics potentials for the auxiliary force "
+                "field (SIESTA keyword: %block MM.Potentials)."
+            )
         },
     )  # %block MM.Potentials 〈None〉
 
     mm_cutoff: float = field(
         default=30.0,
         metadata={
-            "description": "The real-space cutoff distance (in Bohr) for the molecular mechanics potentials.",
+            "description": (
+                "The real-space cutoff distance (in Bohr) for the molecular "
+                "mechanics potentials."
+            ),
             "SIESTA keyword": "MM.Cutoff",
             "unit": "Bohr",
         },
@@ -52,7 +58,10 @@ class AuxiliaryForceField(FDFDataclass):
     mm_units_energy: str = field(
         default="",
         metadata={
-            "description": "Specifies the units of energy to be used in the '%block MM.Potentials'. Default is eV.",
+            "description": (
+                "Specifies the units of energy to be used in the "
+                "'%block MM.Potentials'. Default is eV."
+            ),
             "SIESTA keyword": "MM.UnitsEnergy",
             "unit": "eV",
         },
@@ -61,7 +70,10 @@ class AuxiliaryForceField(FDFDataclass):
     mm_units_distance: str = field(
         default="",
         metadata={
-            "description": "Specifies the units of distance to be used in the '%block MM.Potentials'. Default is Angstrom.",
+            "description": (
+                "Specifies the units of distance to be used in the "
+                "'%block MM.Potentials'. Default is Angstrom."
+            ),
             "SIESTA keyword": "MM.UnitsDistance",
             "unit": "Ang",
         },
@@ -70,7 +82,10 @@ class AuxiliaryForceField(FDFDataclass):
     mm_grimme_d: float = field(
         default=20.0,
         metadata={
-            "description": "The damping parameter 'd' for the Grimme D2 van der Waals correction scheme.",
+            "description": (
+                "The damping parameter 'd' for the Grimme D2 van der Waals "
+                "correction scheme."
+            ),
             "SIESTA keyword": "MM.Grimme.D",
         },
     )
@@ -78,13 +93,16 @@ class AuxiliaryForceField(FDFDataclass):
     mm_grimme_s6: float = field(
         default=1.66,
         metadata={
-            "description": "The global scaling factor 's6' for the Grimme D2 van der Waals correction scheme.",
+            "description": (
+                "The global scaling factor 's6' for the Grimme D2 van der Waals "
+                "correction scheme."
+            ),
             "SIESTA keyword": "MM.Grimme.S6",
         },
     )
 
     # -------------------------------------
-    # 6.26 Grimme’s DFT-D3 dispersion model
+    # 6.26 Grimme’s DFT-D3 dispersion model  # noqa: RUF003
     # -------------------------------------
     # dft3: bool = False # DFTD3 false
     # dft3_use_xc_defaults: bool = True  # DFTD3.UseXCDefaults true
@@ -102,7 +120,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3: bool = field(
         default=False,
         metadata={
-            "description": "A master flag to enable the Grimme D3 dispersion correction for van der Waals interactions.",
+            "description": (
+                "A master flag to enable the Grimme D3 dispersion correction for "
+                "van der Waals interactions."
+            ),
             "SIESTA keyword": "DFTD3",
         },
     )
@@ -110,7 +131,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_use_xc_defaults: bool = field(
         default=True,
         metadata={
-            "description": "If true, automatically uses the recommended D3 parameters for the chosen exchange-correlation functional.",
+            "description": (
+                "If true, automatically uses the recommended D3 parameters for "
+                "the chosen exchange-correlation functional."
+            ),
             "SIESTA keyword": "DFTD3.UseXCDefaults",
         },
     )
@@ -118,7 +142,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_2_body_cutoff: float = field(
         default=60.0,
         metadata={
-            "description": "The real-space cutoff distance (in Bohr) for the two-body dispersion term.",
+            "description": (
+                "The real-space cutoff distance (in Bohr) for the two-body "
+                "dispersion term."
+            ),
             "SIESTA keyword": "DFTD3.2BodyCutOff",
             "unit": "Bohr",
         },
@@ -127,7 +154,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_3_body_cutoff: float = field(
         default=40.0,
         metadata={
-            "description": "The real-space cutoff distance (in Bohr) for the three-body dispersion term.",
+            "description": (
+                "The real-space cutoff distance (in Bohr) for the three-body "
+                "dispersion term."
+            ),
             "SIESTA keyword": "DFTD3.3BodyCutOff",
             "unit": "Bohr",
         },
@@ -136,7 +166,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_coordination_cutoff: float = field(
         default=10.0,
         metadata={
-            "description": "The cutoff distance (in Bohr) used for calculating atomic coordination numbers within the D3 scheme.",
+            "description": (
+                "The cutoff distance (in Bohr) used for calculating atomic "
+                "coordination numbers within the D3 scheme."
+            ),
             "SIESTA keyword": "DFTD3.CoordinationCutoff",
             "unit": "Bohr",
         },
@@ -145,7 +178,11 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_b_j_damping: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable the Becke-Johnson (BJ) damping function, which provides a more accurate short-range behavior for the dispersion correction.",
+            "description": (
+                "A flag to enable the Becke-Johnson (BJ) damping function, which "
+                "provides a more accurate short-range behavior for the dispersion "
+                "correction."
+            ),
             "SIESTA keyword": "DFTD3.BJdamping",
         },
     )
@@ -153,7 +190,9 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_s6: float = field(
         default=1.0,
         metadata={
-            "description": "The global scaling factor (s6) for the two-body (C6) dispersion term.",
+            "description": (
+                "The global scaling factor (s6) for the two-body (C6) dispersion term."
+            ),
             "SIESTA keyword": "DFTD3.s6",
         },
     )
@@ -161,7 +200,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_rs6: float = field(
         default=1.0,
         metadata={
-            "description": "The scaling factor (sr,6) for the damping function of the two-body C6 term.",
+            "description": (
+                "The scaling factor (sr,6) for the damping function of the "
+                "two-body C6 term."
+            ),
             "SIESTA keyword": "DFTD3.rs6",
         },
     )
@@ -169,7 +211,9 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_s8: float = field(
         default=1.0,
         metadata={
-            "description": "The global scaling factor (s8) for the two-body (C8) dispersion term.",
+            "description": (
+                "The global scaling factor (s8) for the two-body (C8) dispersion term."
+            ),
             "SIESTA keyword": "DFTD3.s8",
         },
     )
@@ -177,7 +221,10 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_rs8: float = field(
         default=1.0,
         metadata={
-            "description": "The scaling factor (sr,8) for the damping function of the two-body C8 term.",
+            "description": (
+                "The scaling factor (sr,8) for the damping function of the "
+                "two-body C8 term."
+            ),
             "SIESTA keyword": "DFTD3.rs8",
         },
     )
@@ -185,7 +232,11 @@ class AuxiliaryForceField(FDFDataclass):
     dft3_alpha: float = field(
         default=14.0,
         metadata={
-            "description": "A parameter for the three-body dispersion term. Note: This specific keyword might not be standard; 'a1' and 'a2' are used for BJ damping.",
+            "description": (
+                "A parameter for the three-body dispersion term. Note: This "
+                "specific keyword might not be standard; 'a1' and 'a2' are used "
+                "for BJ damping."
+            ),
             "SIESTA keyword": "DFTD3.alpha",
         },
     )
@@ -206,7 +257,7 @@ class AuxiliaryForceField(FDFDataclass):
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -231,9 +282,9 @@ class AuxiliaryForceField(FDFDataclass):
                 "DFTD3.a2",
                 # "DFTD3.Periodic" # TODO: Need to added
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate auxiliary force field parameters.
 
@@ -379,14 +430,18 @@ class AuxiliaryForceField(FDFDataclass):
 
     @classmethod
     def setup_auxiliary_force_field(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003
     ) -> "AuxiliaryForceField":
         """
-        Create and configure an AuxiliaryForceField instance with full parameter parsing.
+        Create and configure an AuxiliaryForceField instance with parameter parsing.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                may include dots).
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------

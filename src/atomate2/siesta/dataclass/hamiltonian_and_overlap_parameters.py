@@ -40,13 +40,16 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     Parameters
     ----------
     negl_non_overlap_int : bool
-        Neglect integrals between non-overlapping orbitals (speedup for sparse systems). Default: False
+        Neglect integrals between non-overlapping orbitals (speedup for sparse
+        systems). Default: False
     scf_write_extra : bool
         Write extra debugging info during SCF cycle. Default: False
     save_hs : bool
-        Save Hamiltonian and overlap matrices to .HS file (needed for post-processing). Default: True
+        Save Hamiltonian and overlap matrices to .HS file (needed for
+        post-processing). Default: True
     force_aux_cell : bool
-        Force use of auxiliary supercell for force calculations (charged systems). Default: False
+        Force use of auxiliary supercell for force calculations (charged
+        systems). Default: False
 
     Methods
     -------
@@ -65,7 +68,9 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     negl_non_overlap_int: bool = field(
         default=False,
         metadata={
-            "description": "A flag to neglect integrals between basis orbitals with zero spatial overlap. This is an approximation that can speed up calculations for very large, sparse systems.",
+            "description": "A flag to neglect integrals between basis orbitals "
+            "with zero spatial overlap. This is an approximation that can speed "
+            "up calculations for very large, sparse systems.",
             "SIESTA keyword": "Negl.NonOverlap.Int",
         },
     )
@@ -73,7 +78,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     scf_write_extra: bool = field(
         default=False,
         metadata={
-            "description": "A debugging flag to write extra, detailed information to the main output file during the SCF cycle.",
+            "description": "A debugging flag to write extra, detailed "
+            "information to the main output file during the SCF cycle.",
             "SIESTA keyword": "SCF.Write.Extra",
         },
     )
@@ -81,7 +87,9 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     save_hs: bool = field(
         default=True,
         metadata={
-            "description": "A flag to save the final converged Hamiltonian (H) and Overlap (S) matrices to a file (.HS), which is required for many post-processing tasks like band structure analysis.",
+            "description": "A flag to save the final converged Hamiltonian (H) "
+            "and Overlap (S) matrices to a file (.HS), which is required for "
+            "many post-processing tasks like band structure analysis.",
             "SIESTA keyword": "SaveHS",
         },
     )
@@ -92,14 +100,17 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     force_aux_cell: bool = field(
         default=False,
         metadata={
-            "description": "A flag to force the use of an auxiliary supercell for the calculation of forces, which can be necessary for charged systems or systems in an electric field.",
+            "description": "A flag to force the use of an auxiliary supercell "
+            "for the calculation of forces, which can be necessary for charged "
+            "systems or systems in an electric field.",
             "SIESTA keyword": "ForceAuxCell",
         },
     )
 
     # Comment header for FDF output
     comments: str = field(
-        default="# Hamiltonian and Overlap Matrix Configuration (HamiltonianAndOverlapParameters dataclass module)",
+        default="# Hamiltonian and Overlap Matrix Configuration "
+        "(HamiltonianAndOverlapParameters dataclass module)",
         metadata={"description": "Comment header for FDF file"},
     )
 
@@ -109,7 +120,7 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     # Track which parameters were explicitly provided by user
     _user_provided_params: set = field(default_factory=set, init=False, repr=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -118,9 +129,9 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
                 "SaveHS",
                 "ForceAuxCell",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate Hamiltonian and overlap matrix parameters.
 
@@ -217,7 +228,7 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
         # ASE doesn't have direct equivalents for these Hamiltonian/overlap parameters
         return {}
 
-    def generate_hamiltonian_block(self):
+    def generate_hamiltonian_block(self) -> None:
         """
         Generate FDF arguments for Hamiltonian and overlap with comment header.
 
@@ -259,19 +270,23 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
 
     @classmethod
     def setup_hamiltonian_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003
     ) -> "HamiltonianAndOverlapParameters":
         """
-        Create and configure a HamiltonianAndOverlapParameters instance with full parameter parsing.
+        Create and configure a HamiltonianAndOverlapParameters instance.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure Hamiltonian and overlap matrix settings from user parameters. Supports
-        SIESTA FDF parameter names (SaveHS, ForceAuxCell, etc.) with automatic conversion.
+        This method handles proper key normalization, type conversion, and
+        fuzzy matching to configure Hamiltonian and overlap matrix settings
+        from user parameters. Supports SIESTA FDF parameter names (SaveHS,
+        ForceAuxCell, etc.) with automatic conversion.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-                        If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                may include dots). If None or empty, all default values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
@@ -313,7 +328,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default HamiltonianAndOverlapParameters values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "HamiltonianAndOverlapParameters values.[/blue]"
                 )
             return instance
 
@@ -325,7 +341,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available HamiltonianAndOverlapParameters attributes: {hamiltonian_attributes}[/blue]"
+                f"[blue]Available HamiltonianAndOverlapParameters attributes: "
+                f"{hamiltonian_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -339,7 +356,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -376,7 +394,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
                     setattr(instance, matched_attr, bool(value))
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
                 console.print(
-                    f"[yellow]Warning: No match found for parameter '{key}' in HamiltonianAndOverlapParameters[/yellow]"
+                    f"[yellow]Warning: No match found for parameter '{key}' "
+                    f"in HamiltonianAndOverlapParameters[/yellow]"
                 )
 
         # Generate FDF block with comment header

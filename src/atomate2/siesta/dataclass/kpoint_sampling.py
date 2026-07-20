@@ -29,9 +29,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class KPointSampling(FDFDataclass):
-    """
-    Data class to manage k-point sampling for SIESTA input.
-    """
+    """Data class to manage k-point sampling for SIESTA input."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -42,7 +40,9 @@ class KPointSampling(FDFDataclass):
         default=None,
         init=False,  # Prevent user from setting via constructor
         metadata={
-            "description": "Temporary storage for user parameters to validate k-point settings.",
+            "description": (
+                "Temporary storage for user parameters to validate k-point settings."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -50,7 +50,10 @@ class KPointSampling(FDFDataclass):
         default=False,
         init=False,  # Set internally based on user input
         metadata={
-            "description": "If True, use absolute k-point grid (don't scale with cell size). Used for phonon supercells.",
+            "description": (
+                "If True, use absolute k-point grid "
+                "(don't scale with cell size). Used for phonon supercells."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -65,21 +68,31 @@ class KPointSampling(FDFDataclass):
     k_points: list[tuple[int, int, int]] = field(
         default_factory=lambda: [(1, 1, 1)],
         metadata={
-            "description": "Defines the dimensions of the Monkhorst-Pack k-point grid for sampling the Brillouin zone.",
+            "description": (
+                "Defines the dimensions of the Monkhorst-Pack k-point grid "
+                "for sampling the Brillouin zone."
+            ),
             "SIESTA keyword": "%block kgrid_Monkhorst_Pack",
         },
     )
     k_shift: tuple[float, float, float] = field(
         default=(0.0, 0.0, 0.0),
         metadata={
-            "description": "A displacement vector applied to the entire k-point grid. This is specified within the kgrid_Monkhorst_Pack block.",
+            "description": (
+                "A displacement vector applied to the entire k-point grid. "
+                "This is specified within the kgrid_Monkhorst_Pack block."
+            ),
             "SIESTA keyword": "%block kgrid_Monkhorst_Pack",
         },
     )
     kgrid_cutoff: float | None = field(
         default=10.0,
         metadata={
-            "description": "A real-space cutoff (in Angstroms) used to automatically generate a k-point grid of commensurate density. This is an alternative to specifying k_points manually.",
+            "description": (
+                "A real-space cutoff (in Angstroms) used to automatically "
+                "generate a k-point grid of commensurate density. "
+                "This is an alternative to specifying k_points manually."
+            ),
             "SIESTA keyword": "kgrid.Cutoff",
         },
     )
@@ -91,226 +104,18 @@ class KPointSampling(FDFDataclass):
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
                 "%block kgrid.Monkhorst.Pack",
                 "kgrid.Cutoff",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001  one-time class registration flag
 
-    # @classmethod
-    # def setup_kpoint_settings(cls, structure: Structure, user_params: Optional[Dict[str, Any]] = None) -> 'KPointSampling':
-    #     """
-    #     Create and configure a KPointSampling instance based on user parameters and structure, retaining all default values for unspecified fields.
-    #     Issues warnings for invalid keys and skips them. Uses either kgrid_Monkhorst_Pack or kgrid.Cutoff, not both.
-
-    #     Args:
-    #         structure (pymatgen.core.Structure): The structure for which k-points are generated.
-    #         user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
-    #                                      Supported keys: kpts or k_points (list or single 3D list/tuple), k_shift, kgrid.cutoff, k_density (default 1000).
-
-    #     Returns:
-    #         KPointSampling: Configured instance with all fields (default and user-specified) and FDF arguments.
-    #     """
-    #     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
-    #         console.print("[green]KPointSampling.setup_kpoint_settings()[/green]")
-
-    #     # Initialize instance with defaults
-    #     kpoint_settings_instance = cls()
-
-    #     # Store user_params for validate method
-    #     kpoint_settings_instance._user_params = user_params if user_params else {}
-
-    #     # Handle k-point generation
-    #     if not kpoint_settings_instance._user_params:
-    #         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #             console.print("[blue]No user parameters provided; generating k-points from structure with density 1000.[/blue]")
-    #             console.print(f"[blue]user_params: {kpoint_settings_instance._user_params}[/blue]")
-    #         # Generate k-points based on default density
-    #         k_density = 1000
-    #         try:
-    #             kpoints = Kpoints.automatic_density_by_vol(structure, k_density)
-    #             if kpoints.kpts and len(kpoints.kpts[0]) == 3:
-    #                 kpoint_settings_instance.k_points = [tuple(int(max(1, round(v))) for v in kpoints.kpts[0])]
-    #             else:
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                     console.print("[yellow]Automatic k-point generation failed; using default k_points [(1, 1, 1)][/yellow]")
-    #                 kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #         except Exception as e:
-    #             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                 console.print(f"[yellow]Error in k-point generation: {e}; using default k_points [(1, 1, 1)][/yellow]")
-    #             kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #     else:
-    #         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #             console.print(f"[blue]user_params: {kpoint_settings_instance._user_params}[/blue]")
-
-    #         # Check for k_density
-    #         k_density = 1000
-    #         for key in kpoint_settings_instance._user_params:
-    #             if key.lower() in ["k_density", "k.density"]:
-    #                 try:
-    #                     k_density = float(kpoint_settings_instance._user_params[key])
-    #                     if k_density <= 0:
-    #                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                             console.print(f"[yellow]Invalid k_density '{k_density}'; must be positive, using default 1000.[/yellow]")
-    #                         k_density = 1000
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #                         console.print(f"[blue]Using user-provided k_density: {k_density}[/blue]")
-    #                 except (ValueError, TypeError):
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                         console.print(f"[yellow]Invalid k_density '{kpoint_settings_instance._user_params[key]}'; using default 1000.[/yellow]")
-    #                     k_density = 1000
-
-    #         # Check for kpts or k_points or fdf_arguments with kgrid_Monkhorst_Pack
-    #         kpts_key = "kpts" if "kpts" in kpoint_settings_instance._user_params else "k_points" if "k_points" in kpoint_settings_instance._user_params else None
-    #         if kpts_key:
-    #             kpts_value = kpoint_settings_instance._user_params[kpts_key]
-    #             # Convert single list/tuple to list of tuples
-    #             if isinstance(kpts_value, (list, tuple)) and len(kpts_value) == 3 and all(isinstance(v, (int, float)) for v in kpts_value):
-    #                 try:
-    #                     kpoint_settings_instance.k_points = [tuple(int(v) for v in kpts_value)]
-    #                 except (ValueError, TypeError):
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                         console.print(f"[yellow]Invalid {kpts_key} format '{kpts_value}', using automatic k-points.[/yellow]")
-    #                     kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #             elif isinstance(kpts_value, list) and all(isinstance(k, (list, tuple)) and len(k) == 3 for k in kpts_value):
-    #                 try:
-    #                     kpoint_settings_instance.k_points = [tuple(int(v) for v in k) for k in kpts_value]
-    #                 except (ValueError, TypeError):
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                         console.print(f"[yellow]Invalid {kpts_key} format '{kpts_value}', using automatic k-points.[/yellow]")
-    #                     kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #             else:
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                     console.print(f"[yellow]Invalid {kpts_key} format '{kpts_value}', using automatic k-points.[/yellow]")
-    #                 try:
-    #                     kpoints = Kpoints.automatic_density_by_vol(structure, k_density)
-    #                     if kpoints.kpts and len(kpoints.kpts[0]) == 3:
-    #                         kpoint_settings_instance.k_points = [tuple(int(max(1, round(v))) for v in kpoints.kpts[0])]
-    #                     else:
-    #                         kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #                 except Exception as e:
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                         console.print(f"[yellow]Error in k-point generation: {e}; using default k_points [(1, 1, 1)][/yellow]")
-    #                     kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #                 console.print(f"[blue]Using user-provided {kpts_key}: {kpoint_settings_instance.k_points}[/blue]")
-    #         elif "fdf_arguments" in kpoint_settings_instance._user_params and "kgrid_Monkhorst_Pack" in kpoint_settings_instance._user_params["fdf_arguments"]:
-    #             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                 console.print("[yellow]Warning: User provided kgrid_Monkhorst_Pack manually. It will be overwritten by automatic k-points.[/yellow]")
-    #             try:
-    #                 kpoints = Kpoints.automatic_density_by_vol(structure, k_density)
-    #                 if kpoints.kpts and len(kpoints.kpts[0]) == 3:
-    #                     kpoint_settings_instance.k_points = [tuple(int(max(1, round(v))) for v in kpoints.kpts[0])]
-    #                 else:
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                         console.print("[yellow]Automatic k-point generation failed; using default k_points [(1, 1, 1)][/yellow]")
-    #                     kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #             except Exception as e:
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                     console.print(f"[yellow]Error in k-point generation: {e}; using default k_points [(1, 1, 1)][/yellow]")
-    #                 kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #         else:
-    #             try:
-    #                 kpoints = Kpoints.automatic_density_by_vol(structure, k_density)
-    #                 if kpoints.kpts and len(kpoints.kpts[0]) == 3:
-    #                     kpoint_settings_instance.k_points = [tuple(int(max(1, round(v))) for v in kpoints.kpts[0])]
-    #                 else:
-    #                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                         console.print("[yellow]Automatic k-point generation failed; using default k_points [(1, 1, 1)][/yellow]")
-    #                     kpoint_settings_instance.k_points = [(1, 1, 1)]
-    #             except Exception as e:
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                     console.print(f"[yellow]Error in k-point generation: {e}; using default k_points [(1, 1, 1)][/yellow]")
-    #                 kpoint_settings_instance.k_points = [(1, 1, 1)]
-
-    #         # Get valid attribute names (lowercase for comparison), excluding _user_params
-    #         kpoint_settings_attributes = {field.name.lower() for field in fields(cls) if not field.name.startswith("_")}
-    #         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #             console.print(f"[blue]Available KPointSampling attributes: {kpoint_settings_attributes}[/blue]")
-
-    #         # Process user parameters
-    #         for key, value in kpoint_settings_instance._user_params.items():
-    #             # Skip fdf_arguments, k_density, kpts, and k_points as they are handled above
-    #             if key.lower() in ["fdf_arguments", "k_density", "k.density", "kpts", "k_points"]:
-    #                 continue
-
-    #             # Normalize key: convert to lowercase and replace dots with underscores
-    #             key_normalized = key.lower().replace(".", "_")
-    #             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #                 console.print(f"[blue]Processing key: {key} -> normalized: {key_normalized}, value: {value}[/blue]")
-
-    #             # Skip _user_params if provided by user
-    #             if key_normalized == "_user_params":
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                     console.print(f"[yellow]Ignoring user-provided '{key}'; it is internal.[/yellow]")
-    #                 continue
-
-    #             # Check if normalized key matches any attribute
-    #             if key_normalized in kpoint_settings_attributes:
-    #                 # Find the original attribute name (preserving case)
-    #                 original_key = next(
-    #                     field.name for field in fields(cls) if field.name.lower() == key_normalized
-    #                 )
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-    #                     console.print(f"[blue]Matched KPointSampling field: {original_key} = {value}[/blue]")
-
-    #                 # Handle type conversion for specific fields
-    #                 if original_key == "k_points":
-    #                     if isinstance(value, list) and all(isinstance(k, (list, tuple)) and len(k) == 3 for k in value):
-    #                         try:
-    #                             kpoint_settings_instance.k_points = [tuple(int(v) for v in k) for k in value]
-    #                         except (ValueError, TypeError):
-    #                             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                                 console.print(f"[yellow]Invalid k_points format for '{key}', skipping.[/yellow]")
-    #                     elif isinstance(value, (list, tuple)) and len(value) == 3:
-    #                         try:
-    #                             kpoint_settings_instance.k_points = [tuple(int(v) for v in value)]
-    #                         except (ValueError, TypeError):
-    #                             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                                 console.print(f"[yellow]Invalid k_points format for '{key}', skipping.[/yellow]")
-    #                     else:
-    #                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                             console.print(f"[yellow]Invalid k_points format for '{key}', skipping.[/yellow]")
-    #                 elif original_key == "k_shift" and isinstance(value, (list, tuple)) and len(value) == 3:
-    #                     try:
-    #                         kpoint_settings_instance.k_shift = tuple(float(v) for v in value)
-    #                     except (ValueError, TypeError):
-    #                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                             console.print(f"[yellow]Invalid k_shift format for '{key}', skipping.[/yellow]")
-    #                 elif original_key == "kgrid_cutoff":
-    #                     try:
-    #                         kpoint_settings_instance.kgrid_cutoff = float(value) if value is not None else None
-    #                     except (ValueError, TypeError):
-    #                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                             console.print(f"[yellow]Invalid kgrid_cutoff format for '{key}', skipping.[/yellow]")
-    #                 else:
-    #                     setattr(kpoint_settings_instance, original_key, value)
-    #             else:
-    #                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                     console.print(f"[yellow]Key '{key}' does not match any KPointSampling field, skipping.[/yellow]")
-
-    #     # Validate settings
-    #     try:
-    #         kpoint_settings_instance.validate()
-    #     except ValueError as e:
-    #         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.ERROR.value:
-    #             console.print(f"[red]Validation failed: {e}[/red]")
-    #         raise
-
-    #     # Generate FDF block
-    #     kpoint_settings_instance.generate_kpoint_block()
-
-    #     # Clear _user_params after validation to avoid memory leaks
-    #     kpoint_settings_instance._user_params = None
-
-    #     return kpoint_settings_instance
-
-    def validate(self):
+    def validate(self) -> None:
         """
-        Validates the k-point sampling settings.
+        Validate the k-point sampling settings.
 
         Raises
         ------
@@ -340,12 +145,14 @@ class KPointSampling(FDFDataclass):
             not isinstance(self.kgrid_cutoff, (int, float)) or self.kgrid_cutoff <= 0
         ):
             raise ValueError(
-                f"kgrid.Cutoff must be a positive number or None, got '{self.kgrid_cutoff}'"
+                "kgrid.Cutoff must be a positive number or None, "
+                f"got '{self.kgrid_cutoff}'"
             )
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Validated: kgrid_cutoff={self.kgrid_cutoff}, k_points={self.k_points}, k_shift={self.k_shift}[/blue]"
+                f"[blue]Validated: kgrid_cutoff={self.kgrid_cutoff}, "
+                f"k_points={self.k_points}, k_shift={self.k_shift}[/blue]"
             )
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -400,8 +207,9 @@ class KPointSampling(FDFDataclass):
                     except (IndexError, ValueError, TypeError) as e:
                         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Failed to parse %block kgrid.monkhorst.pack: {e}. "
-                                f"Using default k-points.[/yellow]"
+                                "[yellow]Failed to parse "
+                                f"%block kgrid.monkhorst.pack: {e}. "
+                                "Using default k-points.[/yellow]"
                             )
 
             elif key_lower == "kgrid.cutoff":
@@ -411,9 +219,12 @@ class KPointSampling(FDFDataclass):
                     True  # Mark that user explicitly wants cutoff
                 )
 
-            elif key_lower == "k_shift":
-                if isinstance(value, (list, tuple)) and len(value) == 3:
-                    self.k_shift = tuple(float(v) for v in value)
+            elif (
+                key_lower == "k_shift"
+                and isinstance(value, (list, tuple))
+                and len(value) == 3
+            ):
+                self.k_shift = tuple(float(v) for v in value)
 
     def generate_fdf(self) -> dict[str, Any]:
         """
@@ -446,7 +257,8 @@ class KPointSampling(FDFDataclass):
             else:
                 fdf["kgrid.Cutoff"] = f"{self.kgrid_cutoff} Ang"
         elif self._use_absolute_kpts:
-            # User explicitly provided k-points (via a2s_kpts, kpts, or k_points parameter)
+            # User explicitly provided k-points
+            # (via a2s_kpts, kpts, or k_points parameter)
             # Write Monkhorst.Pack block even if k_points == [(1,1,1)]
             # SIESTA format:
             # %block kgrid.Monkhorst.Pack
@@ -463,7 +275,8 @@ class KPointSampling(FDFDataclass):
             ]
             fdf["%block kgrid.Monkhorst.Pack"] = kgrid_block
         elif self.kgrid_cutoff is not None:
-            # Use kgrid.Cutoff (only if no explicit k-points) - always write with default marker
+            # Use kgrid.Cutoff (only if no explicit k-points)
+            # - always write with default marker
             if self.kgrid_cutoff == 10.0:
                 fdf["kgrid.Cutoff"] = f"{self.kgrid_cutoff} Ang  # SIESTA DEFAULT VALUE"
             else:
@@ -486,7 +299,8 @@ class KPointSampling(FDFDataclass):
 
         Returns
         -------
-            Dictionary of ASE parameters (ASE uses 'kpts' instead of kgrid.Monkhorst.Pack)
+            Dictionary of ASE parameters
+            (ASE uses 'kpts' instead of kgrid.Monkhorst.Pack)
         """
         # ASE uses 'kpts' parameter name
         if self.k_points and len(self.k_points) > 0:
@@ -498,16 +312,22 @@ class KPointSampling(FDFDataclass):
         cls, structure: Structure, user_params: dict[str, Any] | None = None
     ) -> "KPointSampling":
         """
-        Create and configure a KPointSampling instance based on user parameters and structure, retaining all default values for unspecified fields.
-        Issues warnings for invalid keys and skips them. Prioritizes kgrid.Cutoff if provided.
+        Create and configure a KPointSampling instance from user params.
+
+        Retains all default values for unspecified fields, issues warnings for
+        invalid keys and skips them, and prioritizes kgrid.Cutoff if provided.
+
         Args:
-            structure (pymatgen.core.Structure): The structure for which k-points are generated.
-            user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
-                                        Supported keys: kpts or k_points, k_shift, kgrid.cutoff, k_density (default 1000).
+            structure (pymatgen.core.Structure): The structure for which
+                k-points are generated.
+            user_params (dict, optional): Dictionary of user-defined parameters
+                (case-insensitive, may include dots). Supported keys: kpts or
+                k_points, k_shift, kgrid.cutoff, k_density (default 1000).
 
         Returns
         -------
-            KPointSampling: Configured instance with all fields (default and user-specified) and FDF arguments.
+            KPointSampling: Configured instance with all fields (default and
+                user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]KPointSampling.setup_kpoint_settings()[/green]")
@@ -530,7 +350,8 @@ class KPointSampling(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[yellow]Invalid kgrid.cutoff '{kgrid_cutoff}'; must be positive, using default.[/yellow]"
+                                    f"[yellow]Invalid kgrid.cutoff '{kgrid_cutoff}'; "
+                                    "must be positive, using default.[/yellow]"
                                 )
                             kgrid_cutoff = None
                         else:
@@ -540,12 +361,15 @@ class KPointSampling(FDFDataclass):
                                 >= VerbosityLevel.DEBUG.value
                             ):
                                 console.print(
-                                    f"[blue]Using user-provided kgrid.cutoff: {kgrid_cutoff}[/blue]"
+                                    "[blue]Using user-provided kgrid.cutoff: "
+                                    f"{kgrid_cutoff}[/blue]"
                                 )
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Invalid kgrid.cutoff '{kpoint_settings_instance._user_params[key]}'; skipping.[/yellow]"
+                                "[yellow]Invalid kgrid.cutoff "
+                                f"'{kpoint_settings_instance._user_params[key]}'; "
+                                "skipping.[/yellow]"
                             )
                 elif key.lower() in ["k_density", "k.density"]:
                     try:
@@ -556,17 +380,21 @@ class KPointSampling(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[yellow]Invalid k_density '{k_density}'; must be positive, using default 1000.[/yellow]"
+                                    f"[yellow]Invalid k_density '{k_density}'; "
+                                    "must be positive, using default 1000.[/yellow]"
                                 )
                             k_density = 1000
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(
-                                f"[blue]Using user-provided k_density: {k_density}[/blue]"
+                                "[blue]Using user-provided k_density: "
+                                f"{k_density}[/blue]"
                             )
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Invalid k_density '{kpoint_settings_instance._user_params[key]}'; using default 1000.[/yellow]"
+                                "[yellow]Invalid k_density "
+                                f"'{kpoint_settings_instance._user_params[key]}'; "
+                                "using default 1000.[/yellow]"
                             )
                         k_density = 1000
 
@@ -601,12 +429,15 @@ class KPointSampling(FDFDataclass):
                     kpoint_settings_instance._use_absolute_kpts = True
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Using user-provided {kpts_key} (absolute grid): {kpoint_settings_instance.k_points}[/blue]"
+                            f"[blue]Using user-provided {kpts_key} "
+                            f"(absolute grid): {kpoint_settings_instance.k_points}"
+                            "[/blue]"
                         )
                 except (ValueError, TypeError):
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid {kpts_key} format '{kpts_value}', using default k_points [(1, 1, 1)][/yellow]"
+                            f"[yellow]Invalid {kpts_key} format '{kpts_value}', "
+                            "using default k_points [(1, 1, 1)][/yellow]"
                         )
             elif isinstance(kpts_value, list) and all(
                 isinstance(k, (list, tuple)) and len(k) == 3 for k in kpts_value
@@ -619,21 +450,26 @@ class KPointSampling(FDFDataclass):
                     kpoint_settings_instance._use_absolute_kpts = True
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Using user-provided {kpts_key} (absolute grid): {kpoint_settings_instance.k_points}[/blue]"
+                            f"[blue]Using user-provided {kpts_key} "
+                            f"(absolute grid): {kpoint_settings_instance.k_points}"
+                            "[/blue]"
                         )
                 except (ValueError, TypeError):
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid {kpts_key} format '{kpts_value}', using default k_points [(1, 1, 1)][/yellow]"
+                            f"[yellow]Invalid {kpts_key} format '{kpts_value}', "
+                            "using default k_points [(1, 1, 1)][/yellow]"
                         )
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Invalid {kpts_key} format '{kpts_value}', using default k_points [(1, 1, 1)][/yellow]"
+                    f"[yellow]Invalid {kpts_key} format '{kpts_value}', "
+                    "using default k_points [(1, 1, 1)][/yellow]"
                 )
         elif not kgrid_cutoff:  # Only generate k-points if kgrid.cutoff is not set
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No kpts/k_points provided, generating k-points with k_density.[/blue]"
+                    "[blue]No kpts/k_points provided, "
+                    "generating k-points with k_density.[/blue]"
                 )
             try:
                 kpoints = Kpoints.automatic_density_by_vol(structure, k_density)
@@ -644,13 +480,15 @@ class KPointSampling(FDFDataclass):
                 else:
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            "[yellow]Automatic k-point generation failed; using default k_points [(1, 1, 1)][/yellow]"
+                            "[yellow]Automatic k-point generation failed; "
+                            "using default k_points [(1, 1, 1)][/yellow]"
                         )
                     kpoint_settings_instance.k_points = [(1, 1, 1)]
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001  fall back to default k-points on any generation error
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Error in k-point generation: {e}; using default k_points [(1, 1, 1)][/yellow]"
+                        f"[yellow]Error in k-point generation: {e}; "
+                        "using default k_points [(1, 1, 1)][/yellow]"
                     )
                 kpoint_settings_instance.k_points = [(1, 1, 1)]
 
@@ -662,7 +500,8 @@ class KPointSampling(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available KPointSampling attributes: {kpoint_settings_attributes}[/blue]"
+                "[blue]Available KPointSampling attributes: "
+                f"{kpoint_settings_attributes}[/blue]"
             )
 
         for key, value in kpoint_settings_instance._user_params.items():
@@ -679,12 +518,14 @@ class KPointSampling(FDFDataclass):
             key_normalized = key.lower().replace(".", "_")
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> normalized: {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> "
+                    f"normalized: {key_normalized}, value: {value}[/blue]"
                 )
             if key_normalized == "_user_params":
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Ignoring user-provided '{key}'; it is internal.[/yellow]"
+                        f"[yellow]Ignoring user-provided '{key}'; "
+                        "it is internal.[/yellow]"
                     )
                 continue
             if key_normalized in kpoint_settings_attributes:
@@ -705,13 +546,15 @@ class KPointSampling(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Invalid k_shift format for '{key}', skipping.[/yellow]"
+                                f"[yellow]Invalid k_shift format for '{key}', "
+                                "skipping.[/yellow]"
                             )
                 else:
                     setattr(kpoint_settings_instance, original_key, value)
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Key '{key}' does not match any KPointSampling field, skipping.[/yellow]"
+                    f"[yellow]Key '{key}' does not match any "
+                    "KPointSampling field, skipping.[/yellow]"
                 )
 
         # Validate settings
@@ -728,14 +571,17 @@ class KPointSampling(FDFDataclass):
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]KPointSampling[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]KPointSampling[/yellow] Successful![/green]"
             )
 
         return kpoint_settings_instance
 
-    def generate_kpoint_block(self):
+    def generate_kpoint_block(self) -> None:
         """
-        Generates the k-point sampling block for the FDF file, prioritizing kgrid.Cutoff if explicitly set.
+        Generate the k-point sampling block for the FDF file.
+
+        Prioritizes kgrid.Cutoff if explicitly set.
 
         This is a wrapper around generate_fdf() to maintain backward compatibility
         with code that calls this method directly (e.g., setup_kpoint_sampling()).
@@ -751,45 +597,6 @@ class KPointSampling(FDFDataclass):
             console.print("[green]KPointSampling.generate_kpoint_block()[/green]")
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers
+        # via update_from_fdf())
         self.kpoint_fdf_arguments = self.generate_fdf()
-
-    # def generate_kpoint_block(self):
-    #     """
-    #     Generates the k-point sampling block for the FDF file, using either kgrid_Monkhorst_Pack or kgrid.Cutoff.
-    #     """
-    #     if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
-    #         console.print("[green]KPointSampling.generate_kpoint_block()[/green]")
-
-    #     self.kpoint_fdf_arguments = OrderedDict()
-
-    #     self.kpoint_fdf_arguments["#KPointSampling"]="KPointSampling"
-    #     # Check if k_points is non-default or explicitly set
-    #     default_k_points = [(1, 1, 1)]
-    #     use_monkhorst_pack = self.k_points != default_k_points or (self._user_params and ("kpts" in self._user_params or "k_points" in self._user_params))
-
-    #     if use_monkhorst_pack:
-    #         # Generate kgrid_Monkhorst_Pack block
-    #         monkhorst_pack = []
-    #         # Use diagonal matrix format
-    #         for i, kpt in enumerate(self.k_points[:1]):  # Use only the first k-point tuple
-    #             for j in range(3):
-    #                 row = [0] * 3 + [0.0]  # Initialize row with zeros and shift
-    #                 row[j] = kpt[j]  # Set diagonal element
-    #                 row[3] = self.k_shift[j]  # Set shift
-    #                 monkhorst_pack.append(" ".join(str(v) for v in row))
-    #         self.kpoint_fdf_arguments["kgrid_Monkhorst_Pack"] = monkhorst_pack
-    #     else:
-    #         # Use kgrid.Cutoff if provided, otherwise use default k_points
-    #         if self.kgrid_cutoff is not None:
-    #             self.kpoint_fdf_arguments["kgrid.Cutoff"] = f"{self.kgrid_cutoff} Ang"
-    #         else:
-    #             if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-    #                 console.print("[yellow]No valid k-points or kgrid.Cutoff provided; using default k_points [(1, 1, 1)][/yellow]")
-    #             # Generate default kgrid_Monkhorst_Pack block
-    #             monkhorst_pack = [
-    #                 f"{self.k_points[0][0]} 0 0 {self.k_shift[0]}",
-    #                 f"0 {self.k_points[0][1]} 0 {self.k_shift[1]}",
-    #                 f"0 0 {self.k_points[0][2]} {self.k_shift[2]}"
-    #             ]
-    #             self.kpoint_fdf_arguments["kgrid_Monkhorst_Pack"] = monkhorst_pack

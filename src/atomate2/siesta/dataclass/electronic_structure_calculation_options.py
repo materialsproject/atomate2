@@ -27,9 +27,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ElectronicStructureCalculationOptions(FDFDataclass):
-    """
-    Data class to manage electronic structure calculation options for SIESTA input.
-    """
+    """Manage electronic structure calculation options for SIESTA input."""
 
     # --------------------------------------------
     # 6.12 Calculation of the electronic structure
@@ -38,7 +36,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     solution_method: str = field(
         default="",
         metadata={
-            "description": "Selects the algorithm to solve the Kohn-Sham equations. Options include 'diagon' (standard diagonalization), 'OMM' (Order-N linear scaling), or 'PEXSI' (pole expansion).",
+            "description": (
+                "Selects the algorithm to solve the Kohn-Sham equations. Options "
+                "include 'diagon' (standard diagonalization), 'OMM' (Order-N "
+                "linear scaling), or 'PEXSI' (pole expansion)."
+            ),
             "SIESTA keyword": "SolutionMethod",
         },
     )
@@ -54,14 +56,17 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     # diag_elpa_gpu: bool = False  #Diag.ELPA.GPU false
     # diag_elpa_gpu_string: str = 'nvidia-gpu' #Diag.ELPA.GPU.String nvidia-gpu
     # diag_parallel_over_k: bool = False  #Diag.ParallelOverK false
-    # diag_abs_tol: float = 1e-16 #Diag.AbsTol 10−16
-    # diag_or_fac: float = 1e-3 #Diag.OrFac 10−3
+    # diag_abs_tol: float = 1e-16 #Diag.AbsTol 10−16  # noqa: RUF003
+    # diag_or_fac: float = 1e-3 #Diag.OrFac 10−3  # noqa: RUF003
     # diag_memory: int = 1  #Diag.Memory 1
     # diag_upper_lower: str = 'lower' #Diag.UpperLower lower|upper
     number_of_eigen_states: int = field(
         default=None,
         metadata={
-            "description": "Specifies the total number of electronic eigenstates (orbitals) to be computed. Defaults to all available orbitals if not set.",
+            "description": (
+                "Specifies the total number of electronic eigenstates (orbitals) "
+                "to be computed. Defaults to all available orbitals if not set."
+            ),
             "SIESTA keyword": "NumberOfEigenStates",
         },
     )
@@ -69,7 +74,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_wfs_cache: str = field(
         default=None,
         metadata={
-            "description": "A flag to cache wavefunctions to disk to reduce memory usage. Options are 'none' or 'cdf'.",
+            "description": (
+                "A flag to cache wavefunctions to disk to reduce memory usage. "
+                "Options are 'none' or 'cdf'."
+            ),
             "SIESTA keyword": "Diag.WFS.Cache",
         },
     )
@@ -77,7 +85,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_use_2d: bool = field(
         default=True,
         metadata={
-            "description": "Enables the use of a 2D block-cyclic distribution for matrices, required for ScaLAPACK-based diagonalizers.",
+            "description": (
+                "Enables the use of a 2D block-cyclic distribution for matrices, "
+                "required for ScaLAPACK-based diagonalizers."
+            ),
             "SIESTA keyword": "Diag.Use2D",
         },
     )
@@ -85,7 +96,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_processor_y: int = field(
         default=None,
         metadata={
-            "description": "Manually sets the number of processors in the 'Y' dimension of the 2D processor grid for diagonalization.",
+            "description": (
+                "Manually sets the number of processors in the 'Y' dimension of "
+                "the 2D processor grid for diagonalization."
+            ),
             "SIESTA keyword": "Diag.ProcessorY",
         },
     )
@@ -93,7 +107,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_block_size: int = field(
         default=None,
         metadata={
-            "description": "The block size for the 2D block-cyclic data distribution of matrices. A key performance tuning parameter.",
+            "description": (
+                "The block size for the 2D block-cyclic data distribution of "
+                "matrices. A key performance tuning parameter."
+            ),
             "SIESTA keyword": "Diag.BlockSize",
         },
     )
@@ -101,7 +118,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_algorithm: str = field(
         default="divide-and-Conquer",
         metadata={
-            "description": "Selects the specific algorithm used by the underlying diagonalization library (e.g., ScaLAPACK's 'DC' for Divide-and-Conquer).",
+            "description": (
+                "Selects the specific algorithm used by the underlying "
+                "diagonalization library (e.g., ScaLAPACK's 'DC' for "
+                "Divide-and-Conquer)."
+            ),
             "SIESTA keyword": "Diag.Algorithm",
         },
     )
@@ -109,7 +130,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_elpa_gpu: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable GPU offloading when using the ELPA diagonalization library.",
+            "description": (
+                "A flag to enable GPU offloading when using the ELPA "
+                "diagonalization library."
+            ),
             "SIESTA keyword": "Diag.ELPA.GPU",
         },
     )
@@ -117,7 +141,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_elpa_gpu_string: str = field(
         default="nvidia-gpu",
         metadata={
-            "description": "A string passed to the ELPA library to specify the GPU type (e.g., 'nvidia-gpu').",
+            "description": (
+                "A string passed to the ELPA library to specify the GPU type "
+                "(e.g., 'nvidia-gpu')."
+            ),
             "SIESTA keyword": "Diag.ELPA.GPU.String",
         },
     )
@@ -125,7 +152,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_parallel_over_k: bool = field(
         default=False,
         metadata={
-            "description": "Enables an additional level of parallelism by distributing k-points across different processor groups.",
+            "description": (
+                "Enables an additional level of parallelism by distributing "
+                "k-points across different processor groups."
+            ),
             "SIESTA keyword": "Diag.ParallelOverK",
         },
     )
@@ -133,7 +163,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_abs_tol: float = field(
         default=1e-16,
         metadata={
-            "description": "An absolute tolerance for the diagonalization process, affecting the precision of the computed eigenvalues and eigenvectors.",
+            "description": (
+                "An absolute tolerance for the diagonalization process, "
+                "affecting the precision of the computed eigenvalues and "
+                "eigenvectors."
+            ),
             "SIESTA keyword": "Diag.AbsTol",
         },
     )
@@ -141,7 +175,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_or_fac: float = field(
         default=1e-3,
         metadata={
-            "description": "The orthogonalization factor, a tolerance parameter used in some iterative diagonalization schemes.",
+            "description": (
+                "The orthogonalization factor, a tolerance parameter used in "
+                "some iterative diagonalization schemes."
+            ),
             "SIESTA keyword": "Diag.OrFac",
         },
     )
@@ -149,7 +186,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_memory: int = field(
         default=1,
         metadata={
-            "description": "The amount of memory (in MBytes) to be allocated per processor for the diagonalization workspace.",
+            "description": (
+                "The amount of memory (in MBytes) to be allocated per processor "
+                "for the diagonalization workspace."
+            ),
             "SIESTA keyword": "Diag.Memory",
         },
     )
@@ -157,7 +197,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_upper_lower: str = field(
         default="lower",
         metadata={
-            "description": "Specifies whether the solver should use the 'lower' or 'upper' triangle of the symmetric matrices.",
+            "description": (
+                "Specifies whether the solver should use the 'lower' or 'upper' "
+                "triangle of the symmetric matrices."
+            ),
             "SIESTA keyword": "Diag.UpperLower",
         },
     )
@@ -171,7 +214,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_mrrr: bool = field(
         default=False,
         metadata={
-            "description": "A flag to explicitly request the 'Multiple-Relatively-Robust-Representations' (MRRR) algorithm for diagonalization, known for its speed.",
+            "description": (
+                "A flag to explicitly request the "
+                "'Multiple-Relatively-Robust-Representations' (MRRR) algorithm "
+                "for diagonalization, known for its speed."
+            ),
             "SIESTA keyword": "Diag.MRRR",
         },
     )
@@ -179,7 +226,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_divide_and_conquer: bool = field(
         default=True,
         metadata={
-            "description": "A flag to explicitly request the 'Divide and Conquer' algorithm for diagonalization.",
+            "description": (
+                "A flag to explicitly request the 'Divide and Conquer' algorithm "
+                "for diagonalization."
+            ),
             "SIESTA keyword": "Diag.DivideAndConquer",
         },
     )
@@ -187,7 +237,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_elpa: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the use of the ELPA (Eigenvalue Solvers for Petaflop Applications) library for diagonalization, which is highly efficient on parallel machines.",
+            "description": (
+                "A flag to enable the use of the ELPA (Eigenvalue Solvers for "
+                "Petaflop Applications) library for diagonalization, which is "
+                "highly efficient on parallel machines."
+            ),
             "SIESTA keyword": "Diag.ELPA",
         },
     )
@@ -195,7 +249,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     diag_no_expert: bool = field(
         default=False,
         metadata={
-            "description": "A flag to use the basic, non-expert drivers from ScaLAPACK or ELPA, which can be useful for debugging.",
+            "description": (
+                "A flag to use the basic, non-expert drivers from ScaLAPACK or "
+                "ELPA, which can be useful for debugging."
+            ),
             "SIESTA keyword": "Diag.NoExpert",
         },
     )
@@ -206,21 +263,30 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     write_eigenvalues: bool = field(
         default=False,
         metadata={
-            "description": "A flag to control whether the calculated Kohn-Sham eigenvalues are written to a file (.EIG), which is useful for plotting band structures.",
+            "description": (
+                "A flag to control whether the calculated Kohn-Sham eigenvalues "
+                "are written to a file (.EIG), which is useful for plotting band "
+                "structures."
+            ),
             "SIESTA keyword": "WriteEigenvalues",
         },
     )
     # ------------------------------------------------------
     # 6.12.3 Occupation of electronic states and Fermi level
     # ------------------------------------------------------
-    # occupation_function: str = "FD"  #OccupationFunction FD  Method for occupation ('FD' for Fermi-Dirac, 'MP' for Methfessel-Paxton)
+    # occupation_function: str = "FD"  #OccupationFunction FD  Method for occupation
+    # ('FD' for Fermi-Dirac, 'MP' for Methfessel-Paxton)
     # occupation_mp_order: int = 1 #OccupationMPOrder 1
     # electronic_temperature: float = 300    # ElectronicTemperature 300 K
     occupation_function: str = field(
         default="FD",
         metadata={
-            "description": "Selects the function for determining the occupation of electronic states. "
-            "Common options are 'FD' (Fermi-Dirac) and 'MP' (Methfessel-Paxton).",
+            "description": (
+                "Selects the function for determining the occupation of "
+                "electronic states. "
+                "Common options are 'FD' (Fermi-Dirac) and 'MP' "
+                "(Methfessel-Paxton)."
+            ),
             "SIESTA keyword": "OccupationFunction",
         },
     )
@@ -228,7 +294,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     occupation_mp_order: int = field(
         default=1,
         metadata={
-            "description": "Sets the order of the Hermite polynomial for Methfessel-Paxton smearing ('OccupationFunction MP').",
+            "description": (
+                "Sets the order of the Hermite polynomial for Methfessel-Paxton "
+                "smearing ('OccupationFunction MP')."
+            ),
             "SIESTA keyword": "OccupationMPOrder",
         },
     )
@@ -236,7 +305,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     electronic_temperature: float = field(
         default=300.0,
         metadata={
-            "description": "Sets the electronic temperature (in Kelvin) which defines the broadening/smearing of the occupation function around the Fermi level.",
+            "description": (
+                "Sets the electronic temperature (in Kelvin) which defines the "
+                "broadening/smearing of the occupation function around the Fermi "
+                "level."
+            ),
             "SIESTA keyword": "ElectronicTemperature",
             "unit": "K",
         },
@@ -253,7 +326,7 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     # omm_diagon_frist_step: int = None   #OMM.DiagonFirstStep 〈OMM.Diagon〉
     # omm_block_size: int = None #OMM.BlockSize 〈BlockSize〉
     # omm_t_prcon_scale: float = 10 # OMM.TPreconScale 10 Ry
-    # omm_rel_tol: float = 1e-9 #OMM.RelTol 10−9
+    # omm_rel_tol: float = 1e-9 #OMM.RelTol 10−9  # noqa: RUF003
     # omm_eigenvalues: bool = True # OMM.Eigenvalues false
     # omm_write_coeffs: bool = True # OMM.WriteCoeffs false
     # omm_read_coeffs: bool = False # OMM.ReadCoeffs false
@@ -261,7 +334,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_use_cholesky: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable the use of Cholesky decomposition for matrix inversion within the OMM (Order-N) solver.",
+            "description": (
+                "A flag to enable the use of Cholesky decomposition for matrix "
+                "inversion within the OMM (Order-N) solver."
+            ),
             "SIESTA keyword": "OMM.UseCholesky",
         },
     )
@@ -269,7 +345,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_use_2d: bool = field(
         default=True,
         metadata={
-            "description": "Enables the use of a 2D block-cyclic distribution for matrices, required for parallel OMM calculations.",
+            "description": (
+                "Enables the use of a 2D block-cyclic distribution for matrices, "
+                "required for parallel OMM calculations."
+            ),
             "SIESTA keyword": "OMM.Use2D",
         },
     )
@@ -277,7 +356,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_user_sparse: bool = field(
         default=False,
         metadata={
-            "description": "Enables the use of sparse matrix algebra libraries within the OMM solver, which is efficient for very large systems.",
+            "description": (
+                "Enables the use of sparse matrix algebra libraries within the "
+                "OMM solver, which is efficient for very large systems."
+            ),
             "SIESTA keyword": "OMM.UseSparse",
         },
     )
@@ -285,7 +367,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_precon: int = field(
         default=-1,
         metadata={
-            "description": "Controls the use and type of preconditioner to accelerate the OMM minimization.",
+            "description": (
+                "Controls the use and type of preconditioner to accelerate the "
+                "OMM minimization."
+            ),
             "SIESTA keyword": "OMM.Precon",
         },
     )
@@ -293,7 +378,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_precon_first_step: int = field(
         default=None,
         metadata={
-            "description": "Specifies the preconditioner scheme for the first geometry/MD step. Defaults to the value of 'OMM.Precon'.",
+            "description": (
+                "Specifies the preconditioner scheme for the first geometry/MD "
+                "step. Defaults to the value of 'OMM.Precon'."
+            ),
             "SIESTA keyword": "OMM.PreconFirstStep",
         },
     )
@@ -301,7 +389,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_diagon: int = field(
         default=0,
         metadata={
-            "description": "The number of OMM steps after which a full diagonalization is performed to purify the density matrix. A value of 0 disables it.",
+            "description": (
+                "The number of OMM steps after which a full diagonalization is "
+                "performed to purify the density matrix. A value of 0 disables it."
+            ),
             "SIESTA keyword": "OMM.Diagon",
         },
     )
@@ -309,7 +400,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_diagon_first_step: int = field(
         default=None,
         metadata={
-            "description": "The diagonalization frequency for the first geometry/MD step. Defaults to the value of 'OMM.Diagon'.",
+            "description": (
+                "The diagonalization frequency for the first geometry/MD step. "
+                "Defaults to the value of 'OMM.Diagon'."
+            ),
             "SIESTA keyword": "OMM.DiagonFirstStep",
         },
     )
@@ -317,7 +411,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_block_size: int = field(
         default=None,
         metadata={
-            "description": "The block size for the 2D block-cyclic matrix distribution in parallel OMM calculations.",
+            "description": (
+                "The block size for the 2D block-cyclic matrix distribution in "
+                "parallel OMM calculations."
+            ),
             "SIESTA keyword": "OMM.BlockSize",
         },
     )
@@ -334,7 +431,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_rel_tol: float = field(
         default=1e-9,
         metadata={
-            "description": "A relative tolerance criterion for the convergence of the OMM minimization algorithm.",
+            "description": (
+                "A relative tolerance criterion for the convergence of the OMM "
+                "minimization algorithm."
+            ),
             "SIESTA keyword": "OMM.RelTol",
         },
     )
@@ -342,7 +442,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_eigenvalues: bool = field(
         default=True,
         metadata={
-            "description": "A flag to compute and write the band-structure eigenvalues, even when using the OMM method.",
+            "description": (
+                "A flag to compute and write the band-structure eigenvalues, "
+                "even when using the OMM method."
+            ),
             "SIESTA keyword": "OMM.Eigenvalues",
         },
     )
@@ -350,7 +453,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_write_coeffs: bool = field(
         default=True,
         metadata={
-            "description": "If true, writes the OMM coefficients (density matrix information) to a file for restarting calculations.",
+            "description": (
+                "If true, writes the OMM coefficients (density matrix "
+                "information) to a file for restarting calculations."
+            ),
             "SIESTA keyword": "OMM.WriteCoeffs",
         },
     )
@@ -358,7 +464,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_read_coeffs: bool = field(
         default=False,
         metadata={
-            "description": "If true, reads the OMM coefficients from a file to initialize the calculation.",
+            "description": (
+                "If true, reads the OMM coefficients from a file to initialize "
+                "the calculation."
+            ),
             "SIESTA keyword": "OMM.ReadCoeffs",
         },
     )
@@ -366,7 +475,9 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     omm_long_output: bool = field(
         default=False,
         metadata={
-            "description": "A debugging flag to enable long, detailed output from the OMM solver.",
+            "description": (
+                "A debugging flag to enable long, detailed output from the OMM solver."
+            ),
             "SIESTA keyword": "OMM.LongOutput",
         },
     )
@@ -376,7 +487,7 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     # ----------------------------
     # on_funcional: str = "Kim" #ON.functional Kim
     # on_max_num_iter: int = 1000 # ON.MaxNumIter 1000
-    # on_etol: int = 1e-8  #ON.Etol 10−8
+    # on_etol: int = 1e-8  #ON.Etol 10−8  # noqa: RUF003
     # on_eta: int = 0 # ON.eta 0 eV
     # on_eta_alpha: int = 0    # ON.eta.alpha 0 eV
     # on_eta_beta: int = 0 #  ON.eta.beta 0 eV
@@ -384,14 +495,18 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     # on_chemical_potential: bool = False # ON.ChemicalPotential false
     # on_chemical_potential_use: bool = False # ON.ChemicalPotential.Use false
     # on_chemical_potential_rc: float = 9.5 # ON.ChemicalPotential.Rc 9.5 Bohr
-    # on_chemical_potential_temperature: float = 0.05 # ON.ChemicalPotential.Temperature 0.05 Ry
+    # on_chemical_potential_temperature: float = 0.05
+    # ON.ChemicalPotential.Temperature 0.05 Ry
     # on_chemical_potential_order: int = 100 # ON.ChemicalPotential.Order 100
     # on_lower_meomory: bool = False # ON.LowerMemory false
     # on_use_save_lwf:bool = False # ON.UseSaveLWF false
     on_funcional: str = field(
         default="Kim",
         metadata={
-            "description": "Selects the specific Order-N functional to be used, for example, 'Kim' for the Kim-Mauri-Galli functional.",
+            "description": (
+                "Selects the specific Order-N functional to be used, for "
+                "example, 'Kim' for the Kim-Mauri-Galli functional."
+            ),
             "SIESTA keyword": "ON.functional",
         },
     )
@@ -399,7 +514,9 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_max_num_iter: int = field(
         default=1000,
         metadata={
-            "description": "The maximum number of iterations for the Order-N minimization loop.",
+            "description": (
+                "The maximum number of iterations for the Order-N minimization loop."
+            ),
             "SIESTA keyword": "ON.MaxNumIter",
         },
     )
@@ -407,7 +524,9 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_etol: float = field(
         default=1e-8,
         metadata={
-            "description": "The energy convergence tolerance for the Order-N minimization process.",
+            "description": (
+                "The energy convergence tolerance for the Order-N minimization process."
+            ),
             "SIESTA keyword": "ON.Etol",
         },
     )
@@ -415,7 +534,9 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_eta: float = field(
         default=0.0,
         metadata={
-            "description": "The value of the electronic chemical potential (Fermi Level) in eV.",
+            "description": (
+                "The value of the electronic chemical potential (Fermi Level) in eV."
+            ),
             "SIESTA keyword": "ON.eta",
             "unit": "eV",
         },
@@ -424,7 +545,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_eta_alpha: float = field(
         default=0.0,
         metadata={
-            "description": "The chemical potential (in eV) for the alpha (spin-up) channel in spin-polarized calculations.",
+            "description": (
+                "The chemical potential (in eV) for the alpha (spin-up) channel "
+                "in spin-polarized calculations."
+            ),
             "SIESTA keyword": "ON.eta.alpha",
             "unit": "eV",
         },
@@ -433,7 +557,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_eta_beta: float = field(
         default=0.0,
         metadata={
-            "description": "The chemical potential (in eV) for the beta (spin-down) channel in spin-polarized calculations.",
+            "description": (
+                "The chemical potential (in eV) for the beta (spin-down) channel "
+                "in spin-polarized calculations."
+            ),
             "SIESTA keyword": "ON.eta.beta",
             "unit": "eV",
         },
@@ -442,7 +569,9 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_rc_lwf: float = field(
         default=9.5,
         metadata={
-            "description": "The cutoff radius (in Bohr) for the localized Wannier functions (LWF).",
+            "description": (
+                "The cutoff radius (in Bohr) for the localized Wannier functions (LWF)."
+            ),
             "SIESTA keyword": "ON.RcLWF",
             "unit": "Bohr",
         },
@@ -451,7 +580,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_chemical_potential: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the automatic determination of the chemical potential.",
+            "description": (
+                "A flag to enable the automatic determination of the chemical "
+                "potential."
+            ),
             "SIESTA keyword": "ON.ChemicalPotential",
         },
     )
@@ -459,7 +591,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_chemical_potential_use: bool = field(
         default=False,
         metadata={
-            "description": "If true, use the automatically determined chemical potential in the calculation.",
+            "description": (
+                "If true, use the automatically determined chemical potential in "
+                "the calculation."
+            ),
             "SIESTA keyword": "ON.ChemicalPotential.Use",
         },
     )
@@ -467,7 +602,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_chemical_potential_rc: float = field(
         default=9.5,
         metadata={
-            "description": "A cutoff radius (in Bohr) used in the algorithm for determining the chemical potential.",
+            "description": (
+                "A cutoff radius (in Bohr) used in the algorithm for determining "
+                "the chemical potential."
+            ),
             "SIESTA keyword": "ON.ChemicalPotential.Rc",
             "unit": "Bohr",
         },
@@ -476,7 +614,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_chemical_potential_temperature: float = field(
         default=0.05,
         metadata={
-            "description": "An electronic temperature (in Rydberg) used in the chemical potential determination algorithm.",
+            "description": (
+                "An electronic temperature (in Rydberg) used in the chemical "
+                "potential determination algorithm."
+            ),
             "SIESTA keyword": "ON.ChemicalPotential.Temperature",
             "unit": "Ry",
         },
@@ -485,7 +626,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_chemical_potential_order: int = field(
         default=100,
         metadata={
-            "description": "The order of the polynomial expansion used in the chemical potential search algorithm.",
+            "description": (
+                "The order of the polynomial expansion used in the chemical "
+                "potential search algorithm."
+            ),
             "SIESTA keyword": "ON.ChemicalPotential.Order",
         },
     )
@@ -493,7 +637,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_lower_memory: bool = field(
         default=False,
         metadata={
-            "description": "If true, attempts to use a lower-memory algorithm, possibly at the cost of increased computation time.",
+            "description": (
+                "If true, attempts to use a lower-memory algorithm, possibly at "
+                "the cost of increased computation time."
+            ),
             "SIESTA keyword": "ON.LowerMemory",
         },
     )
@@ -501,7 +648,10 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     on_use_save_lwf: bool = field(
         default=False,
         metadata={
-            "description": "If true, reads previously saved localized Wannier functions (LWF) to initialize the calculation.",
+            "description": (
+                "If true, reads previously saved localized Wannier functions "
+                "(LWF) to initialize the calculation."
+            ),
             "SIESTA keyword": "ON.UseSaveLWF",
         },
     )
@@ -509,7 +659,11 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     electronic_structure_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to electronic structure. This allows for using keywords not explicitly defined elsewhere.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags related "
+                "to electronic structure. This allows for using keywords not "
+                "explicitly defined elsewhere."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -517,12 +671,15 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
     comments: str = field(
         default="ElectronicStructureCalculationOptions",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": (
+                "User-provided comments to be included as a comment block in the "
+                "FDF file."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -583,21 +740,24 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
                 "ON.LowerMemory",
                 "ON.UseSaveLWF",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
     @classmethod
     def setup_electronic_structure_settings(
         cls, user_params: dict[str, Any] | None = None
     ) -> "ElectronicStructureCalculationOptions":
         """
-        Create and configure ElectronicStructureCalculationOptions instance based on user parameters.
+        Create and configure an ElectronicStructureCalculationOptions instance.
+
+        Configures the instance based on the provided user parameters.
 
         Args:
             user_params (dict, optional): Dictionary of user-defined parameters.
 
         Returns
         -------
-            ElectronicStructureCalculationOptions: Configured instance with FDF arguments.
+            ElectronicStructureCalculationOptions: Configured instance with FDF
+            arguments.
         """
         from dataclasses import fields
 
@@ -610,7 +770,8 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
                 # Normalize key: lowercase and replace dots with underscores
                 key_normalized = key.lower().replace(".", "_")
 
-                # Match by comparing without underscores (handles CamelCase -> snake_case)
+                # Match by comparing without underscores
+                # (handles CamelCase -> snake_case)
                 key_no_underscores = key_normalized.replace("_", "")
                 matching_field = None
                 for f in fields(cls):
@@ -623,7 +784,9 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
                     original_key = matching_field
 
                     # Handle type conversion
-                    # Special case: ElectronicTemperature can be float or string with units
+                    # Special case: ElectronicTemperature can be float or string
+                    # with units
+                    converted_value = value
                     if original_key == "electronic_temperature":
                         # Keep as-is (string with units like "1000 K" or float)
                         pass
@@ -631,16 +794,16 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
                         type(getattr(electronic_instance, original_key))
                     ):
                         if isinstance(value, str):
-                            value = value.lower() in ("true", "t", "1", "yes")
-                        value = bool(value)
+                            converted_value = value.lower() in ("true", "t", "1", "yes")
+                        converted_value = bool(converted_value)
                     elif "int" in str(type(getattr(electronic_instance, original_key))):
-                        value = int(value)
+                        converted_value = int(value)
                     elif "float" in str(
                         type(getattr(electronic_instance, original_key))
                     ):
-                        value = float(value)
+                        converted_value = float(value)
 
-                    setattr(electronic_instance, original_key, value)
+                    setattr(electronic_instance, original_key, converted_value)
 
         # Validate and generate FDF block
         electronic_instance.validate()
@@ -648,10 +811,8 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
 
         return electronic_instance
 
-    def validate(self):
-        """
-        Validates the electronic structure calculation options.
-        """
+    def validate(self) -> None:
+        """Validate the electronic structure calculation options."""
         logger.info("ElectronicStructureCalculationOptions.validate()")
         allowed_solution_method = ["diagon", "OMM", "OrderN", "PEXSI", "ELSI", "CheSS"]  # noqa: F841
         allowed_diag_algorithm = [  # noqa: F841
@@ -671,7 +832,8 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
 
         if self.occupation_function not in allowed_occupation_function:
             raise ValueError(
-                f"Invalid occupation method '{self.occupation_function}'. Allowed values are: {allowed_occupation_function}"
+                f"Invalid occupation method '{self.occupation_function}'. "
+                f"Allowed values are: {allowed_occupation_function}"
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -790,12 +952,13 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
         # Most of these are SIESTA-specific
         return {}
 
-    def generate_electronic_structure_block(self):
+    def generate_electronic_structure_block(self) -> None:
         """
-        Generates the electronic structure calculation options block for the FDF file.
+        Generate the electronic structure calculation options block for the FDF file.
 
         This is a wrapper around generate_fdf() to maintain backward compatibility
-        with code that calls this method directly (e.g., setup_electronic_structure_calculation_options()).
+        with code that calls this method directly
+        (e.g., setup_electronic_structure_calculation_options()).
 
         By calling generate_fdf(), we ensure:
         - Single source of truth for FDF generation
@@ -805,13 +968,15 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
         - Values updated via update_from_fdf() are properly reflected
         """
         logger.info(
-            "ElectronicStructureCalculationOptions.generate_electronic_structure_block()"
+            "ElectronicStructureCalculationOptions."
+            "generate_electronic_structure_block()"
         )
 
         from collections import OrderedDict
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers via
+        # update_from_fdf())
         fdf = self.generate_fdf()
 
         # Add comment header

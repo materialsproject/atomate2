@@ -1,5 +1,5 @@
 """
-Module defining base SIESTA input set and generator for OpticalProperties
+Module defining base SIESTA input set and generator for OpticalProperties.
 
 class OpticalProperties
 
@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class OpticalProperties(FDFDataclass):
-    """
-    Data class to analysis optical properties options for SIESTA input.
-    """
+    """Data class to analysis optical properties options for SIESTA input."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -42,14 +40,17 @@ class OpticalProperties(FDFDataclass):
     # optical_broaden: float = 0.1 # Optical.Broaden 0 Ry
     # optical_scissor: float = 0.0 # Optical.Scissor 0 Ry
     # optical_number_of_bands: int = None  # Optical.NumberOfBands all bands
-    # optical_mesh_block: List[str] = field(default_factory=lambda:['10 10 10']) # ['10 10 10'] #Dict[float,Any]= field(default_factory=dict) # %block Optical.Mesh 〈None〉
+    # optical_mesh_block: List[str] = field(default_factory=lambda:['10 10 10']) # ['10 10 10'] #Dict[float,Any]= field(default_factory=dict) # %block Optical.Mesh 〈None〉  # noqa: E501
     # optical_offset_mesh: bool = False # Optical.OffsetMesh false
-    # optical_polarization_type: str = 'polycrystal' # Optical.PolarizationType polycrystal
-    # optical_vector_block: Dict[float,Any]= field(default_factory=dict) # %block Optical.Vector 〈None〉
+    # optical_polarization_type: str = 'polycrystal' # Optical.PolarizationType polycrystal  # noqa: E501
+    # optical_vector_block: Dict[float,Any]= field(default_factory=dict) # %block Optical.Vector 〈None〉  # noqa: E501
     optical_calculation: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable the calculation of optical properties. This will activate the relevant 'Optical' keywords in the input.",
+            "description": (
+                "A wrapper-level flag to enable the calculation of optical properties. "
+                "This will activate the relevant 'Optical' keywords in the input."
+            ),
             "SIESTA keyword": "OpticalCalculation",
         },
     )
@@ -57,7 +58,10 @@ class OpticalProperties(FDFDataclass):
     optical_energy_minimum: float = field(
         default=-10.0,
         metadata={
-            "description": "The minimum energy (in Rydberg) of the photon range for which the optical spectrum is calculated.",
+            "description": (
+                "The minimum energy (in Rydberg) of the photon range for which the "
+                "optical spectrum is calculated."
+            ),
             "SIESTA keyword": "Optical.Energy.Minimum",
         },
     )
@@ -65,7 +69,10 @@ class OpticalProperties(FDFDataclass):
     optical_energy_maximum: float = field(
         default=20.0,
         metadata={
-            "description": "The maximum energy (in Rydberg) of the photon range for which the optical spectrum is calculated.",
+            "description": (
+                "The maximum energy (in Rydberg) of the photon range for which the "
+                "optical spectrum is calculated."
+            ),
             "SIESTA keyword": "Optical.Energy.Maximum",
         },
     )
@@ -73,7 +80,10 @@ class OpticalProperties(FDFDataclass):
     optical_broaden: float = field(
         default=0.1,
         metadata={
-            "description": "An energy broadening (in Rydberg) applied to the calculated optical spectrum to aid visualization.",
+            "description": (
+                "An energy broadening (in Rydberg) applied to the calculated optical "
+                "spectrum to aid visualization."
+            ),
             "SIESTA keyword": "Optical.Broaden",
         },
     )
@@ -81,7 +91,10 @@ class OpticalProperties(FDFDataclass):
     optical_scissor: float = field(
         default=0.0,
         metadata={
-            "description": "A rigid energy shift (in Rydberg), known as a 'scissor operator', applied to the conduction bands to correct for band-gap errors.",
+            "description": (
+                "A rigid energy shift (in Rydberg), known as a 'scissor operator', "
+                "applied to the conduction bands to correct for band-gap errors."
+            ),
             "SIESTA keyword": "Optical.Scissor",
         },
     )
@@ -89,7 +102,10 @@ class OpticalProperties(FDFDataclass):
     optical_number_of_bands: int = field(
         default=None,
         metadata={
-            "description": "The number of bands to be included in the optical properties calculation. Defaults to all available bands if not set.",
+            "description": (
+                "The number of bands to be included in the optical properties "
+                "calculation. Defaults to all available bands if not set."
+            ),
             "SIESTA keyword": "Optical.NumberOfBands",
         },
     )
@@ -97,7 +113,11 @@ class OpticalProperties(FDFDataclass):
     optical_mesh_block: list[str] = field(
         default_factory=lambda: ["10 10 10"],
         metadata={
-            "description": "A block to define the dimensions of a specific Monkhorst-Pack k-point grid for the optical calculation, which is typically denser than the SCF grid.",
+            "description": (
+                "A block to define the dimensions of a specific Monkhorst-Pack k-point "
+                "grid for the optical calculation, which is typically denser than the "
+                "SCF grid."
+            ),
             "SIESTA keyword": "%block Optical.Mesh",
         },
     )
@@ -105,7 +125,10 @@ class OpticalProperties(FDFDataclass):
     optical_offset_mesh: bool = field(
         default=False,
         metadata={
-            "description": "A flag to control whether to use an offset for the k-point grid in the optical calculation.",
+            "description": (
+                "A flag to control whether to use an offset for the k-point grid in "
+                "the optical calculation."
+            ),
             "SIESTA keyword": "Optical.OffsetMesh",
         },
     )
@@ -113,7 +136,10 @@ class OpticalProperties(FDFDataclass):
     optical_polarization_type: str = field(
         default="polycrystal",
         metadata={
-            "description": "Specifies the type of light polarization to be considered. Options are 'polarized', 'unpolarized', or 'polycrystal'.",
+            "description": (
+                "Specifies the type of light polarization to be considered. Options "
+                "are 'polarized', 'unpolarized', or 'polycrystal'."
+            ),
             "SIESTA keyword": "Optical.PolarizationType",
         },
     )
@@ -121,7 +147,10 @@ class OpticalProperties(FDFDataclass):
     optical_vector_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to specify the electric field polarization vector when 'Optical.PolarizationType' is set to 'polarized'.",
+            "description": (
+                "A block to specify the electric field polarization vector when "
+                "'Optical.PolarizationType' is set to 'polarized'."
+            ),
             "SIESTA keyword": "%block Optical.Vector",
         },
     )
@@ -129,7 +158,10 @@ class OpticalProperties(FDFDataclass):
     optical_number_of_energies: int | None = field(
         default=None,
         metadata={
-            "description": "The number of energy points for the optical spectrum. If not set, SIESTA uses an internally determined value.",
+            "description": (
+                "The number of energy points for the optical spectrum. If not set, "
+                "SIESTA uses an internally determined value."
+            ),
             "SIESTA keyword": "Optical.NumberOfEnergies",
         },
     )
@@ -137,27 +169,32 @@ class OpticalProperties(FDFDataclass):
     optical_calculation_type: str | None = field(
         default=None,
         metadata={
-            "description": "The type of optical calculation (e.g., 'absorption', 'optical').",
+            "description": (
+                "The type of optical calculation (e.g., 'absorption', 'optical')."
+            ),
             "SIESTA keyword": "Optical.CalculationType",
         },
     )
     # ------------------------------
     # 6.21 Macroscopic polarization
     # ------------------------------
-    # polarization_grids_block: Dict[float,Any]= field(default_factory=dict) # %block PolarizationGrids 〈None〉
+    # polarization_grids_block: Dict[float,Any]= field(default_factory=dict) # %block PolarizationGrids 〈None〉  # noqa: E501
     # born_charge: bool = False # BornCharge false
-    # calculate_mulliken_charges: bool = True  # Flag to indicate if Mulliken charges should be calculated
-    # calculate_overlap_populations: bool = False  # Flag to indicate if overlap populations should be calculated
-    # calculate_coop_cohp: bool = False  # Flag to indicate if COOP/COHP analysis should be performed
-    # optical_properties: bool = False  # Flag to indicate if optical properties should be calculated
-    # optical_energy_range: List[float] = field(default_factory=lambda: [0.0, 10.0])  # Energy range for optical calculations (in eV)
-    # #optical_k_points: List[List[float]] = field(default_factory=list)  # List of k-points for optical properties calculation
-    # polarization_directions: List[List[float]] = field(default_factory=lambda: [[1, 0, 0], [0, 1, 0], [0, 0, 1]])  # Polarization directions
+    # calculate_mulliken_charges: bool = True  # Flag to indicate if Mulliken charges should be calculated  # noqa: E501
+    # calculate_overlap_populations: bool = False  # Flag to indicate if overlap populations should be calculated  # noqa: E501
+    # calculate_coop_cohp: bool = False  # Flag to indicate if COOP/COHP analysis should be performed  # noqa: E501
+    # optical_properties: bool = False  # Flag to indicate if optical properties should be calculated  # noqa: E501
+    # optical_energy_range: List[float] = field(default_factory=lambda: [0.0, 10.0])  # Energy range for optical calculations (in eV)  # noqa: E501
+    # #optical_k_points: List[List[float]] = field(default_factory=list)  # List of k-points for optical properties calculation  # noqa: E501
+    # polarization_directions: List[List[float]] = field(default_factory=lambda: [[1, 0, 0], [0, 1, 0], [0, 0, 1]])  # Polarization directions  # noqa: E501
     # optical_fdf_arguments: Dict[float,Any]= field(default_factory=dict)
     polarization_grids_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define fine-grained grids for the calculation of electric polarization using the Berry phase method.",
+            "description": (
+                "A block to define fine-grained grids for the calculation of electric "
+                "polarization using the Berry phase method."
+            ),
             "SIESTA keyword": "%block PolarizationGrids",
         },
     )
@@ -165,7 +202,9 @@ class OpticalProperties(FDFDataclass):
     born_charge: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the calculation of Born effective charges.",
+            "description": (
+                "A flag to enable the calculation of Born effective charges."
+            ),
             "SIESTA keyword": "BornCharge",
         },
     )
@@ -173,7 +212,10 @@ class OpticalProperties(FDFDataclass):
     calculate_mulliken_charges: bool = field(
         default=True,
         metadata={
-            "description": "A wrapper-level flag to enable Mulliken population analysis. Sets 'WriteMullikenPop' to 1 or higher.",
+            "description": (
+                "A wrapper-level flag to enable Mulliken population analysis. Sets "
+                "'WriteMullikenPop' to 1 or higher."
+            ),
             "SIESTA keyword": "WriteMullikenPop",
         },
     )
@@ -181,7 +223,10 @@ class OpticalProperties(FDFDataclass):
     calculate_overlap_populations: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable Mulliken overlap population analysis. Sets 'WriteMullikenPop' to 3.",
+            "description": (
+                "A wrapper-level flag to enable Mulliken overlap population analysis. "
+                "Sets 'WriteMullikenPop' to 3."
+            ),
             "SIESTA keyword": "WriteMullikenPop",
         },
     )
@@ -189,7 +234,10 @@ class OpticalProperties(FDFDataclass):
     calculate_coop_cohp: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable COOP/COHP analysis for chemical bonding. Sets 'COOP.Write' to true.",
+            "description": (
+                "A wrapper-level flag to enable COOP/COHP analysis for chemical "
+                "bonding. Sets 'COOP.Write' to true."
+            ),
             "SIESTA keyword": "COOP.Write",
         },
     )
@@ -197,7 +245,10 @@ class OpticalProperties(FDFDataclass):
     optical_properties: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable the calculation of optical properties. Sets 'OpticalCalculation' to true.",
+            "description": (
+                "A wrapper-level flag to enable the calculation of optical properties. "
+                "Sets 'OpticalCalculation' to true."
+            ),
             "SIESTA keyword": "OpticalCalculation",
         },
     )
@@ -205,7 +256,10 @@ class OpticalProperties(FDFDataclass):
     optical_energy_range: list[float] = field(
         default_factory=lambda: [0.0, 10.0],
         metadata={
-            "description": "The energy range [Emin, Emax] for optical calculations. Corresponds to 'Optical.Energy.Minimum' and 'Optical.Energy.Maximum'.",
+            "description": (
+                "The energy range [Emin, Emax] for optical calculations. Corresponds "
+                "to 'Optical.Energy.Minimum' and 'Optical.Energy.Maximum'."
+            ),
             "SIESTA keyword": "Optical.Energy.Minimum, Optical.Energy.Maximum",
         },
     )
@@ -213,7 +267,10 @@ class OpticalProperties(FDFDataclass):
     polarization_directions: list[list[float]] = field(
         default_factory=lambda: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
         metadata={
-            "description": "Defines the electric field polarization vectors for the optical calculation. This is used to generate the '%block Optical.Vector'.",
+            "description": (
+                "Defines the electric field polarization vectors for the optical "
+                "calculation. This is used to generate the '%block Optical.Vector'."
+            ),
             "SIESTA keyword": "%block Optical.Vector",
         },
     )
@@ -229,12 +286,15 @@ class OpticalProperties(FDFDataclass):
     optical_fdf_arguments: OrderedDict[str, Any] = field(
         default_factory=OrderedDict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to optical properties.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags related to "
+                "optical properties."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -251,31 +311,33 @@ class OpticalProperties(FDFDataclass):
                 "Optical.PolarizationType",
                 "%block Optical.Vector",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own class-level guard
 
-    def validate(self):
-        """
-        Validates the chemical analysis and optical properties options.
-        """
+    def validate(self) -> None:
+        """Validate the chemical analysis and optical properties options."""
         logger.info("OpticalProperties.validate()")
         allowed_optical_polarization_type = ["polycrystal", "polarized", "unpolarized"]
         if self.optical_calculation:
             if self.optical_polarization_type not in allowed_optical_polarization_type:
                 raise ValueError(
-                    f"Invalid optical_polarization_type '{self.optical_polarization_type}'. Allowed values are: {allowed_optical_polarization_type}"
+                    f"Invalid optical_polarization_type "
+                    f"'{self.optical_polarization_type}'. Allowed values are: "
+                    f"{allowed_optical_polarization_type}"
                 )
-            # if len(self.optical_energy_range) != 2 or self.optical_energy_range[0] >= self.optical_energy_range[1]:
-            #    raise ValueError("Energy range for optical properties must be a list of two values [min, max] with min < max.")
+            # if len(self.optical_energy_range) != 2 or self.optical_energy_range[0] >= self.optical_energy_range[1]:  # noqa: E501
+            #    raise ValueError("Energy range for optical properties must be a list of two values [min, max] with min < max.")  # noqa: E501
             if not self.optical_mesh_block:
                 raise ValueError(
-                    " optical_mesh_block must be specified for optical properties calculation."
+                    " optical_mesh_block must be specified for optical properties "
+                    "calculation."
                 )
         # print(f"Validation: OpticalProperties DONE!")
-        # print(f"Validated: {self.calculate_mulliken_charges=}, {self.calculate_overlap_populations=}, {self.calculate_coop_cohp=}, {self.optical_properties=}, {self.optical_energy_range=}, {self.optical_k_points=}, {self.polarization_directions=}")
+        # print(f"Validated: {self.calculate_mulliken_charges=}, {self.calculate_overlap_populations=}, {self.calculate_coop_cohp=}, {self.optical_properties=}, {self.optical_energy_range=}, {self.optical_k_points=}, {self.polarization_directions=}")  # noqa: E501
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]OpticalProperties[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]OpticalProperties[/yellow] Successful![/green]"
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -398,10 +460,8 @@ class OpticalProperties(FDFDataclass):
         # These are SIESTA-specific post-processing options
         return {}
 
-    def generate_optical_properties_block(self):
-        """
-        Generates the optical properties calculation options block for the FDF file.
-        """
+    def generate_optical_properties_block(self) -> None:
+        """Generate the optical properties options block for the FDF file."""
         logger.info("OpticalProperties.generate_optical_properties_block()")
         if self.optical_calculation:
             # Add comment header
@@ -431,18 +491,21 @@ class OpticalProperties(FDFDataclass):
 
     @classmethod
     def setup_optical_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 optional interface passthrough
     ) -> "OpticalProperties":
         """
         Create and configure a OpticalProperties instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure optical properties settings from user parameters.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure optical properties settings from user parameters.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-                        If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                may include dots). If None or empty, all default values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
@@ -458,7 +521,8 @@ class OpticalProperties(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default Optical values.[/blue]"
+                    "[blue]No user parameters provided; using all default Optical "
+                    "values.[/blue]"
                 )
             return instance
 
@@ -470,7 +534,8 @@ class OpticalProperties(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available OpticalProperties attributes: {optical_attributes}[/blue]"
+                f"[blue]Available OpticalProperties attributes: "
+                f"{optical_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -483,7 +548,8 @@ class OpticalProperties(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, value: "
+                    f"{value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -498,7 +564,8 @@ class OpticalProperties(FDFDataclass):
                         matched_attr = attr
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(
-                                f"[blue]Fuzzy matched: {key_normalized} -> {attr}[/blue]"
+                                f"[blue]Fuzzy matched: {key_normalized} -> "
+                                f"{attr}[/blue]"
                             )
                         break
 
@@ -526,7 +593,8 @@ class OpticalProperties(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: expected "
+                            f"dict, got {type(value)}[/yellow]"
                         )
 
                 # Boolean fields
@@ -539,9 +607,10 @@ class OpticalProperties(FDFDataclass):
                     "calculate_coop_cohp",
                     "optical_properties",
                 ]:
-                    if isinstance(value, str):
-                        value = value.lower() in ("true", "t", "1", "yes")
-                    setattr(instance, original_key, bool(value))
+                    bool_value = value
+                    if isinstance(bool_value, str):
+                        bool_value = bool_value.lower() in ("true", "t", "1", "yes")
+                    setattr(instance, original_key, bool(bool_value))
 
                 # Integer fields (optional)
                 elif original_key == "optical_number_of_bands":
@@ -553,7 +622,8 @@ class OpticalProperties(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to int[/yellow]"
+                                f"[yellow]Could not convert {original_key}={value} "
+                                f"to int[/yellow]"
                             )
 
                 # Float fields
@@ -568,7 +638,8 @@ class OpticalProperties(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to float[/yellow]"
+                                f"[yellow]Could not convert {original_key}={value} "
+                                f"to float[/yellow]"
                             )
 
                 # List fields
@@ -581,7 +652,8 @@ class OpticalProperties(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected list, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: expected "
+                            f"list, got {type(value)}[/yellow]"
                         )
 
                 # String fields
@@ -594,7 +666,8 @@ class OpticalProperties(FDFDataclass):
 
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                    f"[yellow]Unrecognized parameter: {key} (normalized: "
+                    f"{key_normalized})[/yellow]"
                 )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:

@@ -39,14 +39,18 @@ class PhononCalculations(FDFDataclass):
         The type of molecular dynamics run, typically set to "FC" for force constant
         calculations in phonon analyses. Default is "FC".
     md_fc_displ : float
-        The displacement value (in Bohr) used in force constant calculations. Default is 0.04.
+        The displacement value (in Bohr) used in force constant calculations.
+        Default is 0.04.
     md_fc_first : int
-        The index of the first atom involved in force constant calculations. Default is 1.
+        The index of the first atom involved in force constant calculations.
+        Default is 1.
     md_fc_last : int or None
-        The index of the last atom involved in force constant calculations. If set to None,
-        it defaults to the value of `md_fc_first`. Default is None.
+        The index of the last atom involved in force constant calculations.
+        If set to None, it defaults to the value of `md_fc_first`. Default is
+        None.
     eigenvectors : bool
-        A flag indicating whether eigenvector calculations should be performed. Default is True.
+        A flag indicating whether eigenvector calculations should be performed.
+        Default is True.
     phonon_fdf_arguments : dict
         A dictionary storing the phonon-related FDF (input) arguments for SIESTA.
         This dictionary is populated after calling `generate_phonon_block`.
@@ -82,7 +86,8 @@ class PhononCalculations(FDFDataclass):
     md_type_of_run: str = field(
         default="FC",
         metadata={
-            "description": "Sets the calculation type to compute forces for a finite-difference phonon calculation.",
+            "description": "Sets the calculation type to compute forces for a "
+            "finite-difference phonon calculation.",
             "SIESTA keyword": "MD.TypeOfRun",
         },
     )
@@ -90,7 +95,8 @@ class PhononCalculations(FDFDataclass):
     md_fc_displ: float = field(
         default=0.04,
         metadata={
-            "description": "The size of the atomic displacement (in Bohr) used to calculate the force constants for phonon calculations.",
+            "description": "The size of the atomic displacement (in Bohr) used to "
+            "calculate the force constants for phonon calculations.",
             "SIESTA keyword": "MD.FCDispl",
             "unit": "Bohr",
         },
@@ -99,7 +105,8 @@ class PhononCalculations(FDFDataclass):
     md_fc_first: int = field(
         default=1,
         metadata={
-            "description": "The index of the first atom to be displaced for the force-constants calculation.",
+            "description": "The index of the first atom to be displaced for the "
+            "force-constants calculation.",
             "SIESTA keyword": "MD.FCFirst",
         },
     )
@@ -107,7 +114,9 @@ class PhononCalculations(FDFDataclass):
     md_fc_last: int = field(
         default=None,
         metadata={
-            "description": "The index of the last atom to be displaced for the force-constants calculation. Defaults to the value of MD.FCFirst.",
+            "description": "The index of the last atom to be displaced for the "
+            "force-constants calculation. Defaults to the value of "
+            "MD.FCFirst.",
             "SIESTA keyword": "MD.FCLast",
         },
     )
@@ -115,7 +124,8 @@ class PhononCalculations(FDFDataclass):
     eigenvectors: bool = field(
         default=True,
         metadata={
-            "description": "A flag to control the output of eigenvectors from the diagonalization of the dynamical matrix.",
+            "description": "A flag to control the output of eigenvectors from the "
+            "diagonalization of the dynamical matrix.",
             "SIESTA keyword": "Eigenvectors",
         },
     )
@@ -131,12 +141,13 @@ class PhononCalculations(FDFDataclass):
     phonon_fdf_arguments: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to phonon calculations.",
+            "description": "A dictionary for any additional or arbitrary FDF flags "
+            "related to phonon calculations.",
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -146,9 +157,9 @@ class PhononCalculations(FDFDataclass):
                 "MD.FCLast",
                 "Eigenvectors",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own-class registry flag
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate phonon calculation parameters.
 
@@ -164,12 +175,14 @@ class PhononCalculations(FDFDataclass):
         logger.info("PhononCalculations.validate()")
         # Allowed Phonon
         allowed_md_type_of_run_phonon = ["FC"]
-        # if self.perform_fc and self.md_type_of_run not in allowed_md_type_of_run_phonon:
+        # if self.perform_fc and self.md_type_of_run
+        #     not in allowed_md_type_of_run_phonon:
         if self.md_type_of_run not in allowed_md_type_of_run_phonon:
             raise ValueError(
-                f"Invalid MD FC  '{self.md_type_of_run}'. Allowed values are: {allowed_md_type_of_run_phonon}"
+                f"Invalid MD FC  '{self.md_type_of_run}'. Allowed values are: "
+                f"{allowed_md_type_of_run_phonon}"
             )
-        print("Validation: PhononCalculations DONE!")
+        print("Validation: PhononCalculations DONE!")  # noqa: T201 diagnostic output
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
@@ -192,7 +205,7 @@ class PhononCalculations(FDFDataclass):
                 self.md_fc_first = int(value)
             elif key_lower in ["md.fclast", "md_fc_last"]:
                 self.md_fc_last = int(value) if value is not None else None
-            elif key_lower in ["eigenvectors"]:
+            elif key_lower == "eigenvectors":
                 self.eigenvectors = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
@@ -232,10 +245,8 @@ class PhononCalculations(FDFDataclass):
         # These are SIESTA-specific force constant calculation settings
         return {}
 
-    def generate_phonon_block(self):
-        """
-        Generates the molecular dynamics options block for the FDF file.
-        """
+    def generate_phonon_block(self) -> None:
+        """Generate the molecular dynamics options block for the FDF file."""
         logger.info("PhononCalculations.generate_phonon_block()")
 
         # Add comment header
@@ -254,18 +265,23 @@ class PhononCalculations(FDFDataclass):
 
     @classmethod
     def setup_phonon_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 interface compatibility
     ) -> "PhononCalculations":
         """
         Create and configure a PhononCalculations instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure phonon calculation settings from user parameters.
+        This method handles proper key normalization, type conversion, and
+        fuzzy matching to configure phonon calculation settings from user
+        parameters.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-                        If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters
+                (case-insensitive, may include dots). If None or empty, all
+                default values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
@@ -281,7 +297,8 @@ class PhononCalculations(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default Phonon values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "Phonon values.[/blue]"
                 )
             return instance
 
@@ -293,7 +310,8 @@ class PhononCalculations(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available PhononCalculations attributes: {phonon_attributes}[/blue]"
+                f"[blue]Available PhononCalculations attributes: "
+                f"{phonon_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -306,7 +324,8 @@ class PhononCalculations(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -321,7 +340,8 @@ class PhononCalculations(FDFDataclass):
                         matched_attr = attr
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(
-                                f"[blue]Fuzzy matched: {key_normalized} -> {attr}[/blue]"
+                                f"[blue]Fuzzy matched: {key_normalized} -> "
+                                f"{attr}[/blue]"
                             )
                         break
 
@@ -345,14 +365,18 @@ class PhononCalculations(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: "
+                            f"expected dict, got {type(value)}[/yellow]"
                         )
 
                 # Boolean fields
                 elif original_key == "eigenvectors":
-                    if isinstance(value, str):
-                        value = value.lower() in ("true", "t", "1", "yes")
-                    setattr(instance, original_key, bool(value))
+                    bool_value = (
+                        value.lower() in ("true", "t", "1", "yes")
+                        if isinstance(value, str)
+                        else value
+                    )
+                    setattr(instance, original_key, bool(bool_value))
 
                 # Integer fields (md_fc_first, md_fc_last can be None)
                 elif original_key in ["md_fc_first", "md_fc_last"]:
@@ -364,7 +388,8 @@ class PhononCalculations(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to int[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to int[/yellow]"
                             )
 
                 # Float fields
@@ -374,7 +399,8 @@ class PhononCalculations(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to float[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to float[/yellow]"
                             )
 
                 # String fields
@@ -387,7 +413,8 @@ class PhononCalculations(FDFDataclass):
 
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                    f"[yellow]Unrecognized parameter: {key} "
+                    f"(normalized: {key_normalized})[/yellow]"
                 )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:

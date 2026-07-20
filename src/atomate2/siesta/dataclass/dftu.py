@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class DFTU(FDFDataclass):
-    """
-    Data class to manage DFT+U parameters for SIESTA input.
-    """
+    """Data class to manage DFT+U parameters for SIESTA input."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -37,7 +35,8 @@ class DFTU(FDFDataclass):
     # dftu_projector_generation_method: int = 2 # DFTU.ProjectorGenerationMethod 2
     # dftu_energy_shift: float = 0.05 # DFTU.EnergyShift 0.05 Ry
     # dftu_cutoff_norm: float = 0.9 # DFTU.CutoffNorm 0.9
-    # dftu_proj_block: Dict[float,Any]= field(default_factory=dict)# %block DFTU.Proj 〈None〉
+    # dftu_proj_block: Dict[float,Any]= field(default_factory=dict)
+    # %block DFTU.Proj 〈None〉
     # dftu_first_iteration: bool = False # DFTU.FirstIteration false
     # dftu_threshold_tol: float = 0.01 # DFTU.ThresholdTol 0.01
     # dftu_pop_tol: float = 0.001 # DFTU.PopTol 0.001
@@ -46,7 +45,10 @@ class DFTU(FDFDataclass):
     dftu_projector_generation_method: int = field(
         default=2,
         metadata={
-            "description": "Selects the method for generating the projectors used in the DFT+U calculation.",
+            "description": (
+                "Selects the method for generating the projectors used in the "
+                "DFT+U calculation."
+            ),
             "SIESTA keyword": "DFTU.ProjectorGenerationMethod",
         },
     )
@@ -54,7 +56,10 @@ class DFTU(FDFDataclass):
     dftu_energy_shift: float = field(
         default=0.05,
         metadata={
-            "description": "An energy shift (in Rydberg) applied during the generation of the DFT+U projectors.",
+            "description": (
+                "An energy shift (in Rydberg) applied during the generation of "
+                "the DFT+U projectors."
+            ),
             "SIESTA keyword": "DFTU.EnergyShift",
             "unit": "Ry",
         },
@@ -63,7 +68,9 @@ class DFTU(FDFDataclass):
     dftu_cutoff_norm: float = field(
         default=0.9,
         metadata={
-            "description": "A norm cutoff used during the generation of the DFT+U projectors.",
+            "description": (
+                "A norm cutoff used during the generation of the DFT+U projectors."
+            ),
             "SIESTA keyword": "DFTU.CutoffNorm",
         },
     )
@@ -71,7 +78,10 @@ class DFTU(FDFDataclass):
     dftu_proj_block: dict[str, Any] | list[str] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to manually define the projectors for the DFT+U calculation. Can be dict or list.",
+            "description": (
+                "A block to manually define the projectors for the DFT+U "
+                "calculation. Can be dict or list."
+            ),
             "SIESTA keyword": "%block DFTU.Proj",
         },
     )
@@ -79,7 +89,10 @@ class DFTU(FDFDataclass):
     dftu_first_iteration: bool = field(
         default=False,
         metadata={
-            "description": "If true, the DFT+U correction is applied starting from the very first SCF iteration.",
+            "description": (
+                "If true, the DFT+U correction is applied starting from the very "
+                "first SCF iteration."
+            ),
             "SIESTA keyword": "DFTU.FirstIteration",
         },
     )
@@ -87,7 +100,10 @@ class DFTU(FDFDataclass):
     dftu_threshold_tol: float = field(
         default=0.01,
         metadata={
-            "description": "A tolerance threshold used in the DFT+U implementation, likely related to orbital occupations.",
+            "description": (
+                "A tolerance threshold used in the DFT+U implementation, likely "
+                "related to orbital occupations."
+            ),
             "SIESTA keyword": "DFTU.ThresholdTol",
         },
     )
@@ -95,7 +111,10 @@ class DFTU(FDFDataclass):
     dftu_pop_tol: float = field(
         default=0.001,
         metadata={
-            "description": "A tolerance for the convergence of the orbital occupation matrix in the DFT+U calculation.",
+            "description": (
+                "A tolerance for the convergence of the orbital occupation matrix "
+                "in the DFT+U calculation."
+            ),
             "SIESTA keyword": "DFTU.PopTol",
         },
     )
@@ -103,7 +122,9 @@ class DFTU(FDFDataclass):
     dftu_potential_shift: bool = field(
         default=False,
         metadata={
-            "description": "If true, applies a potential shift as part of the DFT+U correction.",
+            "description": (
+                "If true, applies a potential shift as part of the DFT+U correction."
+            ),
             "SIESTA keyword": "DFTU.PotentialShift",
         },
     )
@@ -119,12 +140,15 @@ class DFTU(FDFDataclass):
     dftu_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to DFT+U.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags related "
+                "to DFT+U."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -137,9 +161,9 @@ class DFTU(FDFDataclass):
                 "DFTU.PopTol",
                 "DFTU.PotentialShift",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate DFT+U configuration parameters.
 
@@ -270,10 +294,8 @@ class DFTU(FDFDataclass):
         # DFT+U is SIESTA-specific
         return {}
 
-    def generate_dftu_block(self):
-        """
-        Generates the DFT+U options block for the FDF file.
-        """
+    def generate_dftu_block(self) -> None:
+        """Generate the DFT+U options block for the FDF file."""
         logger.info("DFTU.generate_dftu_block()")
 
         # Add comment header
@@ -284,7 +306,9 @@ class DFTU(FDFDataclass):
         # DFT+U parameters are typically only written when DFT+U is actually being used
         self.dftu_fdf_arguments.update(
             {
-                "DFTU.ProjectorGenerationMethod": f"{self.dftu_projector_generation_method}",
+                "DFTU.ProjectorGenerationMethod": (
+                    f"{self.dftu_projector_generation_method}"
+                ),
                 "DFTU.EnergyShift": f"{self.dftu_energy_shift} Ry",
                 "DFTU.CutoffNorm": f"{self.dftu_cutoff_norm}",
                 "DFTU.FirstIteration": f"{self.dftu_first_iteration}",
@@ -296,18 +320,22 @@ class DFTU(FDFDataclass):
 
     @classmethod
     def setup_dftu_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 interface kwarg
     ) -> "DFTU":
         """
         Create and configure a DFTU instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure DFT+U settings from user parameters.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure DFT+U settings from user parameters.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                        may include dots).
                         If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            **kwargs: Additional keyword arguments to override or supplement
+                        user_params.
 
         Returns
         -------
@@ -323,7 +351,8 @@ class DFTU(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default DFT+U values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "DFT+U values.[/blue]"
                 )
             return instance
 
@@ -346,7 +375,8 @@ class DFTU(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -361,7 +391,8 @@ class DFTU(FDFDataclass):
                         matched_attr = attr
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(
-                                f"[blue]Fuzzy matched: {key_normalized} -> {attr}[/blue]"
+                                f"[blue]Fuzzy matched: {key_normalized} -> "
+                                f"{attr}[/blue]"
                             )
                         break
 
@@ -385,14 +416,16 @@ class DFTU(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: expected "
+                            f"dict, got {type(value)}[/yellow]"
                         )
 
                 # Boolean fields
                 elif original_key in ["dftu_first_iteration", "dftu_potential_shift"]:
+                    bool_value = value
                     if isinstance(value, str):
-                        value = value.lower() in ("true", "t", "1", "yes")
-                    setattr(instance, original_key, bool(value))
+                        bool_value = value.lower() in ("true", "t", "1", "yes")
+                    setattr(instance, original_key, bool(bool_value))
 
                 # Integer fields
                 elif original_key == "dftu_projector_generation_method":
@@ -401,7 +434,8 @@ class DFTU(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to int[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to int[/yellow]"
                             )
 
                 # Float fields
@@ -416,7 +450,8 @@ class DFTU(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to float[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to float[/yellow]"
                             )
 
                 # Default: direct assignment
@@ -425,7 +460,8 @@ class DFTU(FDFDataclass):
 
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                    f"[yellow]Unrecognized parameter: {key} "
+                    f"(normalized: {key_normalized})[/yellow]"
                 )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:

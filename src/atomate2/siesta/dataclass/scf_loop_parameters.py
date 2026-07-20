@@ -23,20 +23,20 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SCFLoopParameters(FDFDataclass):
-    """
-    Data class to manage self-consistent field (SCF) loop parameters for SIESTA input.
-    """
+    """Data class to manage SCF loop parameters for SIESTA input."""
 
     # ----------------------------------
     # 6.9 The self-consistent-field loop
     # ----------------------------------
     # mix_scf_iterations: int = 0     #   MinSCFIterations
-    # max_scf_iterations: int = 200   #  MaxSCFIterations  Maximum number of SCF iterations
+    # max_scf_iterations: int = 200   #  MaxSCFIterations  Maximum number of SCF
+    # iterations
     # scf_must_converge: bool = True  # SCF.MustConverge
     mix_scf_iterations: int = field(
         default=0,
         metadata={
-            "description": "The minimum number of SCF iterations to be performed, even if convergence is achieved earlier.",
+            "description": "The minimum number of SCF iterations to be performed, even "
+            "if convergence is achieved earlier.",
             "SIESTA keyword": "MinSCFIterations",
         },
     )
@@ -44,7 +44,8 @@ class SCFLoopParameters(FDFDataclass):
     max_scf_iterations: int = field(
         default=200,
         metadata={
-            "description": "The maximum number of allowed iterations in the self-consistent field (SCF) cycle.",
+            "description": "The maximum number of allowed iterations in the "
+            "self-consistent field (SCF) cycle.",
             "SIESTA keyword": "MaxSCFIterations",
         },
     )
@@ -52,7 +53,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_must_converge: bool = field(
         default=True,
         metadata={
-            "description": "If true, the program will stop with an error if the SCF cycle does not converge within the maximum number of iterations.",
+            "description": "If true, the program will stop with an error if the SCF "
+            "cycle does not converge within the maximum number of iterations.",
             "SIESTA keyword": "SCF.MustConverge",
         },
     )
@@ -63,7 +65,9 @@ class SCFLoopParameters(FDFDataclass):
     harris_functional: bool = field(
         default=False,
         metadata={
-            "description": "If true, performs a single-iteration, non-self-consistent calculation using the Harris functional approximation for the total energy.",
+            "description": "If true, performs a single-iteration, non-self-consistent "
+            "calculation using the Harris functional approximation for the total "
+            "energy.",
             "SIESTA keyword": "Harris.Functional",
         },
     )
@@ -76,23 +80,28 @@ class SCFLoopParameters(FDFDataclass):
     # scf_mix_first: bool = True  #SCF.Mix.First
     # scf_mix_first_force: bool = False #SCF.Mix.First.Force
     # scf_mixer_method: str = " " # SCF.Mixer.Method Pulay|Broyden|Linear
-    # scf_mixer_variant: str = "Pulay"  # SCF.Mixer.Variant  Mixing scheme for the SCF loop (e.g., 'original' 'Pulay', 'Simple')
-    # scf_mixer_weight: float = 0.25  # SCF.Mixer.Weight Mixing parameter (typically between 0 and 1)
+    # scf_mixer_variant: str = "Pulay"  # SCF.Mixer.Variant  Mixing scheme for the SCF
+    # loop (e.g., 'original' 'Pulay', 'Simple')
+    # scf_mixer_weight: float = 0.25  # SCF.Mixer.Weight Mixing parameter (typically
+    # between 0 and 1)
     # scf_mixer_history: int = 2 # SCF.Mixer.History 2
     # scf_mixer_kick: int = 0 # SCF.Mixer.Kick 0
     # scf_mixer_kick_weight: float = 0.2  # SCF.Mixer.Kick.Weight 〈SCF.Mixer.Weight〉
     # scf_mixer_restart: int = 0 # SCF.Mixer.Restart
     # scf_mixer_restart_save: int = 1 # SCF.Mixer.Restart.Save
     # scf_mixer_linear_after: int = -1 #SCF.Mixer.Linear.After
-    # scf_mixer_linear_after_weight: float = 0.0 # SCF.Mixer.Linear.After.Weight 〈SCF.Mixer.Weight〉
-    # scf_mixers_block:  Dict[str, float] = field(default_factory=dict) # %block SCF.Mixers 〈None〉
+    # scf_mixer_linear_after_weight: float = 0.0 # SCF.Mixer.Linear.After.Weight
+    # 〈SCF.Mixer.Weight〉
+    # scf_mixers_block:  Dict[str, float] = field(default_factory=dict) # %block
+    # SCF.Mixers 〈None〉
     # compat_pre_v4_dm_h: bool = False  #Compat.Pre-v4-DM-H false
     # scf_mix_after_convergence: bool = False # SCF.Mix.AfterConvergence false
 
     scf_mix: str = field(
         default="Hamiltonian",
         metadata={
-            "description": "Specifies which quantity is mixed during the SCF cycle. Options: 'Hamiltonian', 'density', 'charge'.",
+            "description": "Specifies which quantity is mixed during the SCF cycle. "
+            "Options: 'Hamiltonian', 'density', 'charge'.",
             "SIESTA keyword": "SCF.Mix",
         },
     )
@@ -100,7 +109,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mix_spin: str = field(
         default=" ",
         metadata={
-            "description": "In spin-polarized calculations, specifies how spin components are mixed. Options: 'all', 'spinor', 'sum', 'sum+diff'.",
+            "description": "In spin-polarized calculations, specifies how spin "
+            "components are mixed. Options: 'all', 'spinor', 'sum', 'sum+diff'.",
             "SIESTA keyword": "SCF.Mix.Spin",
         },
     )
@@ -108,7 +118,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mix_first: bool = field(
         default=True,
         metadata={
-            "description": "A flag to control whether mixing is applied from the very first SCF iteration.",
+            "description": "A flag to control whether mixing is applied from the very "
+            "first SCF iteration.",
             "SIESTA keyword": "SCF.Mix.First",
         },
     )
@@ -116,7 +127,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mix_first_force: bool = field(
         default=False,
         metadata={
-            "description": "A flag to force mixing on the first iteration, even when starting from a converged density matrix from a previous run.",
+            "description": "A flag to force mixing on the first iteration, even when "
+            "starting from a converged density matrix from a previous run.",
             "SIESTA keyword": "SCF.Mix.First.Force",
         },
     )
@@ -124,7 +136,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_method: str = field(
         default=" ",
         metadata={
-            "description": "Selects the primary algorithm for charge mixing. Options: 'Pulay', 'Broyden', 'Linear'.",
+            "description": "Selects the primary algorithm for charge mixing. Options: "
+            "'Pulay', 'Broyden', 'Linear'.",
             "SIESTA keyword": "SCF.Mixer.Method",
         },
     )
@@ -132,7 +145,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_variant: str = field(
         default="Pulay",
         metadata={
-            "description": "Specifies a particular variant or implementation of the chosen mixer method (e.g., 'original', 'Pulay', 'Simple').",
+            "description": "Specifies a particular variant or implementation of the "
+            "chosen mixer method (e.g., 'original', 'Pulay', 'Simple').",
             "SIESTA keyword": "SCF.Mixer.Variant",
         },
     )
@@ -140,7 +154,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_weight: float = field(
         default=0.25,
         metadata={
-            "description": "The linear mixing parameter, controlling the weight of the new density/Hamiltonian mixed with the previous one.",
+            "description": "The linear mixing parameter, controlling the weight of the "
+            "new density/Hamiltonian mixed with the previous one.",
             "SIESTA keyword": "SCF.Mixer.Weight",
         },
     )
@@ -148,7 +163,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_history: int = field(
         default=2,
         metadata={
-            "description": "The number of previous SCF steps to use in history-based mixing schemes like Pulay or Broyden.",
+            "description": "The number of previous SCF steps to use in history-based "
+            "mixing schemes like Pulay or Broyden.",
             "SIESTA keyword": "SCF.Mixer.History",
         },
     )
@@ -156,7 +172,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_kick: int = field(
         default=0,
         metadata={
-            "description": "The number of initial iterations to apply a special 'kick' to the density to move away from local minima.",
+            "description": "The number of initial iterations to apply a special 'kick' "
+            "to the density to move away from local minima.",
             "SIESTA keyword": "SCF.Mixer.Kick",
         },
     )
@@ -164,7 +181,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_kick_weight: float = field(
         default=0.2,
         metadata={
-            "description": "The mixing weight to be used during the initial 'kick' iterations. Defaults to SCF.Mixer.Weight if not set.",
+            "description": "The mixing weight to be used during the initial 'kick' "
+            "iterations. Defaults to SCF.Mixer.Weight if not set.",
             "SIESTA keyword": "SCF.Mixer.Kick.Weight",
         },
     )
@@ -172,7 +190,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_restart: int = field(
         default=0,
         metadata={
-            "description": "The number of iterations after which the mixer's history is reset.",
+            "description": "The number of iterations after which the mixer's history "
+            "is reset.",
             "SIESTA keyword": "SCF.Mixer.Restart",
         },
     )
@@ -180,7 +199,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_restart_save: int = field(
         default=1,
         metadata={
-            "description": "The number of previous steps to save and reuse after a mixer restart.",
+            "description": "The number of previous steps to save and reuse after a "
+            "mixer restart.",
             "SIESTA keyword": "SCF.Mixer.Restart.Save",
         },
     )
@@ -188,7 +208,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_linear_after: int = field(
         default=-1,
         metadata={
-            "description": "The number of iterations after which the mixer should switch to simple linear mixing. A value of -1 disables this.",
+            "description": "The number of iterations after which the mixer should "
+            "switch to simple linear mixing. A value of -1 disables this.",
             "SIESTA keyword": "SCF.Mixer.Linear.After",
         },
     )
@@ -196,7 +217,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixer_linear_after_weight: float = field(
         default=0.0,
         metadata={
-            "description": "The mixing weight to use after switching to linear mixing. Defaults to SCF.Mixer.Weight if not set.",
+            "description": "The mixing weight to use after switching to linear mixing. "
+            "Defaults to SCF.Mixer.Weight if not set.",
             "SIESTA keyword": "SCF.Mixer.Linear.After.Weight",
         },
     )
@@ -204,7 +226,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mixers_block: dict[str, float] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a sequence of different mixers to be used at different stages of the SCF cycle.",
+            "description": "A block to define a sequence of different mixers to be "
+            "used at different stages of the SCF cycle.",
             "SIESTA keyword": "%block SCF.Mixers",
         },
     )
@@ -212,7 +235,8 @@ class SCFLoopParameters(FDFDataclass):
     compat_pre_v4_dm_h: bool = field(
         default=False,
         metadata={
-            "description": "A compatibility flag to reproduce the behavior of the DM/H mixing from SIESTA versions before 4.0.",
+            "description": "A compatibility flag to reproduce the behavior of the DM/H "
+            "mixing from SIESTA versions before 4.0.",
             "SIESTA keyword": "Compat.Pre-v4-DM-H",
         },
     )
@@ -220,7 +244,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mix_after_convergence: bool = field(
         default=False,
         metadata={
-            "description": "A flag to perform one final mixing step after the SCF cycle has already converged.",
+            "description": "A flag to perform one final mixing step after the SCF "
+            "cycle has already converged.",
             "SIESTA keyword": "SCF.Mix.AfterConvergence",
         },
     )
@@ -231,7 +256,8 @@ class SCFLoopParameters(FDFDataclass):
     # scf_kerker_q0sq: float = 0.0 # SCF.Kerker.q0sq 0 Ry
     # scf_rho_g_mixing_cutoff: float = 9 # SCF.RhoGMixingCutoff 9 Ry
     # scf_rho_g_diis_depth: int = 0 # SCF.RhoG.DIIS.Depth 0
-    # scf_rho_g_metric_preconditioner_cutoff: float = None # SCF.RhoG.Metric.Preconditioner.Cutoff 〈None〉
+    # scf_rho_g_metric_preconditioner_cutoff: float = None #
+    # SCF.RhoG.Metric.Preconditioner.Cutoff 〈None〉
     # scf_debug_rho_g_mixing: bool = False #SCF.DebugRhoGMixing false
     # debug_diis: bool = False # Debug.DIIS false
     # scf_mix_charge_scf1: bool = False # SCF.MixCharge.SCF1 false
@@ -239,7 +265,9 @@ class SCFLoopParameters(FDFDataclass):
     scf_kerker_q0sq: float = field(
         default=0.0,
         metadata={
-            "description": "The squared wave-vector parameter (q0^2) for Kerker preconditioning, used to improve SCF convergence by damping charge fluctuations.",
+            "description": "The squared wave-vector parameter (q0^2) for Kerker "
+            "preconditioning, used to improve SCF convergence by damping charge "
+            "fluctuations.",
             "SIESTA keyword": "SCF.Kerker.q0sq",
             "unit": "Ry",
         },
@@ -248,7 +276,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_rho_g_mixing_cutoff: float = field(
         default=9.0,
         metadata={
-            "description": "A reciprocal-space cutoff (in Rydberg) for real-space density (Rho(G)) mixing schemes.",
+            "description": "A reciprocal-space cutoff (in Rydberg) for real-space "
+            "density (Rho(G)) mixing schemes.",
             "SIESTA keyword": "SCF.RhoGMixingCutoff",
             "unit": "Ry",
         },
@@ -257,7 +286,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_rho_g_diis_depth: int = field(
         default=0,
         metadata={
-            "description": "The history depth for the DIIS (Direct Inversion in the Iterative Subspace) mixer when using real-space density mixing.",
+            "description": "The history depth for the DIIS (Direct Inversion in the "
+            "Iterative Subspace) mixer when using real-space density mixing.",
             "SIESTA keyword": "SCF.RhoG.DIIS.Depth",
         },
     )
@@ -265,7 +295,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_rho_g_metric_preconditioner_cutoff: float = field(
         default=None,
         metadata={
-            "description": "A cutoff for the preconditioner in the metric used for real-space density mixing.",
+            "description": "A cutoff for the preconditioner in the metric used for "
+            "real-space density mixing.",
             "SIESTA keyword": "SCF.RhoG.Metric.Preconditioner.Cutoff",
         },
     )
@@ -273,7 +304,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_debug_rho_g_mixing: bool = field(
         default=False,
         metadata={
-            "description": "A debugging flag to print detailed information about the real-space density (Rho(G)) mixing process.",
+            "description": "A debugging flag to print detailed information about the "
+            "real-space density (Rho(G)) mixing process.",
             "SIESTA keyword": "SCF.DebugRhoGMixing",
         },
     )
@@ -281,7 +313,9 @@ class SCFLoopParameters(FDFDataclass):
     debug_diis: bool = field(
         default=False,
         metadata={
-            "description": "A general debugging flag to print detailed information from any DIIS (Direct Inversion in the Iterative Subspace) algorithm used.",
+            "description": "A general debugging flag to print detailed information "
+            "from any DIIS (Direct Inversion in the Iterative Subspace) algorithm "
+            "used.",
             "SIESTA keyword": "Debug.DIIS",
         },
     )
@@ -289,7 +323,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_mix_charge_scf1: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enforce charge mixing on the very first SCF iteration, even if the primary mixing scheme is different.",
+            "description": "A flag to enforce charge mixing on the very first SCF "
+            "iteration, even if the primary mixing scheme is different.",
             "SIESTA keyword": "SCF.MixCharge.SCF1",
         },
     )
@@ -310,7 +345,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_use_save_dm: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable reading a previously saved Density Matrix from a file to use as the initial guess for the SCF cycle.",
+            "description": "A flag to enable reading a previously saved Density Matrix "
+            "from a file to use as the initial guess for the SCF cycle.",
             "SIESTA keyword": "DM.UseSaveDM",
         },
     )
@@ -318,7 +354,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_init_unfold: bool = field(
         default=True,
         metadata={
-            "description": "If true, allows unfolding a Density Matrix from a smaller unit cell calculation to initialize a larger supercell calculation.",
+            "description": "If true, allows unfolding a Density Matrix from a smaller "
+            "unit cell calculation to initialize a larger supercell calculation.",
             "SIESTA keyword": "DM.Init.Unfold",
         },
     )
@@ -326,7 +363,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_formatted_files: bool = field(
         default=True,
         metadata={
-            "description": "A global flag to use formatted (human-readable) files for all Density Matrix I/O. Can be overridden by specific input/output flags.",
+            "description": "A global flag to use formatted (human-readable) files for "
+            "all Density Matrix I/O. Can be overridden by specific input/output flags.",
             "SIESTA keyword": "DM.FormattedFiles",
         },
     )
@@ -334,7 +372,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_formatted_input: bool = field(
         default=True,
         metadata={
-            "description": "Specifies that the input Density Matrix file to be read is in a formatted (ASCII, human-readable) format.",
+            "description": "Specifies that the input Density Matrix file to be read is "
+            "in a formatted (ASCII, human-readable) format.",
             "SIESTA keyword": "DM.FormattedInput",
         },
     )
@@ -342,7 +381,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_formatted_output: bool = field(
         default=False,
         metadata={
-            "description": "Specifies that the output Density Matrix file should be written in a formatted (ASCII, human-readable) format.",
+            "description": "Specifies that the output Density Matrix file should be "
+            "written in a formatted (ASCII, human-readable) format.",
             "SIESTA keyword": "DM.FormattedOutput",
         },
     )
@@ -350,7 +390,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_init_random_states: int = field(
         default=0,
         metadata={
-            "description": "The number of random states to introduce during the initialization of the Density Matrix, useful for symmetry breaking.",
+            "description": "The number of random states to introduce during the "
+            "initialization of the Density Matrix, useful for symmetry breaking.",
             "SIESTA keyword": "DM.Init.RandomStates",
         },
     )
@@ -358,7 +399,9 @@ class SCFLoopParameters(FDFDataclass):
     dm_allow_reuse: bool = field(
         default=True,
         metadata={
-            "description": "During a geometry optimization or MD run, allows reusing the converged DM from the previous step as the initial guess for the current step.",
+            "description": "During a geometry optimization or MD run, allows reusing "
+            "the converged DM from the previous step as the initial guess for the "
+            "current step.",
             "SIESTA keyword": "DM.AllowReuse",
         },
     )
@@ -366,7 +409,9 @@ class SCFLoopParameters(FDFDataclass):
     dm_allow_extrapolation: bool = field(
         default=True,
         metadata={
-            "description": "During a geometry optimization or MD run, allows extrapolating the DM from previous steps to provide a better initial guess for the current step.",
+            "description": "During a geometry optimization or MD run, allows "
+            "extrapolating the DM from previous steps to provide a better initial "
+            "guess for the current step.",
             "SIESTA keyword": "DM.AllowExtrapolation",
         },
     )
@@ -374,7 +419,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_history_depth: int = field(
         default=1,
         metadata={
-            "description": "The number of previous geometry steps to use in the history for Density Matrix extrapolation schemes.",
+            "description": "The number of previous geometry steps to use in the "
+            "history for Density Matrix extrapolation schemes.",
             "SIESTA keyword": "DM.History.Depth",
         },
     )
@@ -383,12 +429,14 @@ class SCFLoopParameters(FDFDataclass):
     # 6.9.5 Initialization of the SCF cycle with charge densities
     # -----------------------------------------------------------
     # scf_read_charge_netcdf: bool = False # SCF.Read.Charge.NetCDF
-    # scf_read_deformation_charge_netcdf: bool = False # SCF.Read.Deformation.Charge.NetCDF false
+    # scf_read_deformation_charge_netcdf: bool = False #
+    # SCF.Read.Deformation.Charge.NetCDF false
 
     scf_read_charge_netcdf: bool = field(
         default=False,
         metadata={
-            "description": "A flag to read the initial total charge density from a file in NetCDF format.",
+            "description": "A flag to read the initial total charge density from a "
+            "file in NetCDF format.",
             "SIESTA keyword": "SCF.Read.Charge.NetCDF",
         },
     )
@@ -396,7 +444,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_read_deformation_charge_netcdf: bool = field(
         default=False,
         metadata={
-            "description": "A flag to read the initial deformation charge density from a file in NetCDF format.",
+            "description": "A flag to read the initial deformation charge density from "
+            "a file in NetCDF format.",
             "SIESTA keyword": "SCF.Read.Deformation.Charge.NetCDF",
         },
     )
@@ -416,7 +465,8 @@ class SCFLoopParameters(FDFDataclass):
     use_blocked_write_mat: bool = field(
         default=False,
         metadata={
-            "description": "A technical flag to use a blocked I/O algorithm when writing matrices, which can be more efficient for very large systems.",
+            "description": "A technical flag to use a blocked I/O algorithm when "
+            "writing matrices, which can be more efficient for very large systems.",
             "SIESTA keyword": "Use.Blocked.WriteMat",
         },
     )
@@ -424,7 +474,8 @@ class SCFLoopParameters(FDFDataclass):
     write_dm: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable writing the converged Density Matrix (DM) to a file at the end of the calculation.",
+            "description": "A flag to enable writing the converged Density Matrix (DM) "
+            "to a file at the end of the calculation.",
             "SIESTA keyword": "Write.DM",
         },
     )
@@ -432,7 +483,8 @@ class SCFLoopParameters(FDFDataclass):
     write_dm_end_of_cycle: bool = field(
         default=None,
         metadata={
-            "description": "If true, writes the Density Matrix at the end of every SCF cycle. By default, it follows the 'Write.DM' setting.",
+            "description": "If true, writes the Density Matrix at the end of every SCF "
+            "cycle. By default, it follows the 'Write.DM' setting.",
             "SIESTA keyword": "Write.DM.end.of.cycle",
         },
     )
@@ -440,7 +492,8 @@ class SCFLoopParameters(FDFDataclass):
     write_h: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable writing the converged Hamiltonian matrix (H) to a file.",
+            "description": "A flag to enable writing the converged Hamiltonian matrix "
+            "(H) to a file.",
             "SIESTA keyword": "Write.H",
         },
     )
@@ -448,7 +501,8 @@ class SCFLoopParameters(FDFDataclass):
     write_h_end_of_cycle: bool = field(
         default=None,
         metadata={
-            "description": "If true, writes the Hamiltonian matrix at the end of every SCF cycle. By default, it follows the 'Write.H' setting.",
+            "description": "If true, writes the Hamiltonian matrix at the end of every "
+            "SCF cycle. By default, it follows the 'Write.H' setting.",
             "SIESTA keyword": "Write.H.end.of.cycle",
         },
     )
@@ -456,7 +510,8 @@ class SCFLoopParameters(FDFDataclass):
     write_dm_netcdf: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable writing the Density Matrix in the portable NetCDF format.",
+            "description": "A flag to enable writing the Density Matrix in the "
+            "portable NetCDF format.",
             "SIESTA keyword": "Write.DM.NetCDF",
         },
     )
@@ -464,7 +519,8 @@ class SCFLoopParameters(FDFDataclass):
     write_dmhs_netcdf: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable writing the Density Matrix, Hamiltonian, and Overlap matrix (DMHS) into a single NetCDF file.",
+            "description": "A flag to enable writing the Density Matrix, Hamiltonian, "
+            "and Overlap matrix (DMHS) into a single NetCDF file.",
             "SIESTA keyword": "Write.DMHS.NetCDF",
         },
     )
@@ -472,7 +528,8 @@ class SCFLoopParameters(FDFDataclass):
     write_dm_history_netcdf: bool = field(
         default=False,
         metadata={
-            "description": "During a geometry optimization or MD run, writes the history of Density Matrices from previous steps to a NetCDF file.",
+            "description": "During a geometry optimization or MD run, writes the "
+            "history of Density Matrices from previous steps to a NetCDF file.",
             "SIESTA keyword": "Write.DM.History.NetCDF",
         },
     )
@@ -480,7 +537,8 @@ class SCFLoopParameters(FDFDataclass):
     write_dmhs_history_netcdf: bool = field(
         default=False,
         metadata={
-            "description": "During a geometry optimization or MD run, writes the history of DM, H, and S matrices from previous steps to a NetCDF file.",
+            "description": "During a geometry optimization or MD run, writes the "
+            "history of DM, H, and S matrices from previous steps to a NetCDF file.",
             "SIESTA keyword": "Write.DMHS.History.NetCDF",
         },
     )
@@ -488,7 +546,8 @@ class SCFLoopParameters(FDFDataclass):
     write_tshs_history: bool = field(
         default=False,
         metadata={
-            "description": "In a TranSIESTA calculation, writes the history of the Hamiltonian and Self-energy matrices for the electrodes.",
+            "description": "In a TranSIESTA calculation, writes the history of the "
+            "Hamiltonian and Self-energy matrices for the electrodes.",
             "SIESTA keyword": "Write.TSHS.History",
         },
     )
@@ -497,20 +556,22 @@ class SCFLoopParameters(FDFDataclass):
     # 6.9.7 Convergence criteria
     # --------------------------
     # scf_dm_converge: bool = True # SCF.DM.Converge true
-    # scf_dm_tolerance: float = 1e-5  # SCF.DM.Tolerance 10−4  Convergence threshold for the SCF loop
-    # dm_normalization_tolerance: float = 1e-5 # DM.Normalization.Tolerance 10−5
+    # scf_dm_tolerance: float = 1e-5  # SCF.DM.Tolerance 10-4  Convergence threshold for
+    # the SCF loop
+    # dm_normalization_tolerance: float = 1e-5 # DM.Normalization.Tolerance 10-5
     # scf_h_converge: bool = True # SCF.H.Converge true
-    # scf_h_tolerance: float = 1e-3 # SCF.H.Tolerance 10−3 eV
+    # scf_h_tolerance: float = 1e-3 # SCF.H.Tolerance 10-3 eV
     # scf_edm_converge: bool = True # SCF.EDM.Converge true
-    # scf_edm_tolerance: float = 1e-3 # SCF.EDM.Tolerance 10−3 eV
+    # scf_edm_tolerance: float = 1e-3 # SCF.EDM.Tolerance 10-3 eV
     # scf_free_e_converge: bool = False # SCF.FreeE.Converge false
-    # scf_free_e_tolerance: float = 1e-4 # SCF.FreeE.Tolerance 10−4 eV
+    # scf_free_e_tolerance: float = 1e-4 # SCF.FreeE.Tolerance 10-4 eV
     # scf_harris_converge: bool = False # SCF.Harris.Converge false
-    # scf_harris_tolerance: float = 1e-4 # SCF.Harris.Tolerance 10−4 eV
+    # scf_harris_tolerance: float = 1e-4 # SCF.Harris.Tolerance 10-4 eV
     scf_dm_converge: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable convergence checking based on the change in the Density Matrix (DM).",
+            "description": "A flag to enable convergence checking based on the change "
+            "in the Density Matrix (DM).",
             "SIESTA keyword": "SCF.DM.Converge",
         },
     )
@@ -518,7 +579,9 @@ class SCFLoopParameters(FDFDataclass):
     scf_dm_tolerance: float = field(
         default=1e-5,
         metadata={
-            "description": "The convergence threshold for the maximum absolute difference between elements of the Density Matrix in consecutive SCF steps.",
+            "description": "The convergence threshold for the maximum absolute "
+            "difference between elements of the Density Matrix in consecutive SCF "
+            "steps.",
             "SIESTA keyword": "SCF.DM.Tolerance",
         },
     )
@@ -526,7 +589,8 @@ class SCFLoopParameters(FDFDataclass):
     dm_normalization_tolerance: float = field(
         default=1e-5,
         metadata={
-            "description": "The tolerance for the deviation of the Density Matrix trace from the total number of electrons.",
+            "description": "The tolerance for the deviation of the Density Matrix "
+            "trace from the total number of electrons.",
             "SIESTA keyword": "DM.Normalization.Tolerance",
         },
     )
@@ -534,7 +598,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_h_converge: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable convergence checking based on the change in the Hamiltonian matrix (H).",
+            "description": "A flag to enable convergence checking based on the change "
+            "in the Hamiltonian matrix (H).",
             "SIESTA keyword": "SCF.H.Converge",
         },
     )
@@ -542,7 +607,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_h_tolerance: float = field(
         default=1e-3,
         metadata={
-            "description": "The convergence threshold (in eV) for the maximum difference between Hamiltonian matrix elements in consecutive SCF steps.",
+            "description": "The convergence threshold (in eV) for the maximum "
+            "difference between Hamiltonian matrix elements in consecutive SCF steps.",
             "SIESTA keyword": "SCF.H.Tolerance",
             "unit": "eV",
         },
@@ -551,7 +617,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_edm_converge: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable convergence checking based on the change in the total energy calculated from the previous step's DM.",
+            "description": "A flag to enable convergence checking based on the change "
+            "in the total energy calculated from the previous step's DM.",
             "SIESTA keyword": "SCF.EDM.Converge",
         },
     )
@@ -559,7 +626,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_edm_tolerance: float = field(
         default=1e-3,
         metadata={
-            "description": "The convergence threshold (in eV) for the change in the total energy between SCF steps.",
+            "description": "The convergence threshold (in eV) for the change in the "
+            "total energy between SCF steps.",
             "SIESTA keyword": "SCF.EDM.Tolerance",
             "unit": "eV",
         },
@@ -568,7 +636,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_free_e_converge: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable convergence checking based on the change in the free energy (for finite electronic temperatures).",
+            "description": "A flag to enable convergence checking based on the change "
+            "in the free energy (for finite electronic temperatures).",
             "SIESTA keyword": "SCF.FreeE.Converge",
         },
     )
@@ -576,7 +645,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_free_e_tolerance: float = field(
         default=1e-4,
         metadata={
-            "description": "The convergence threshold (in eV) for the change in free energy between SCF steps.",
+            "description": "The convergence threshold (in eV) for the change in free "
+            "energy between SCF steps.",
             "SIESTA keyword": "SCF.FreeE.Tolerance",
             "unit": "eV",
         },
@@ -585,7 +655,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_harris_converge: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable convergence checking based on the change in the Harris functional energy.",
+            "description": "A flag to enable convergence checking based on the change "
+            "in the Harris functional energy.",
             "SIESTA keyword": "SCF.Harris.Converge",
         },
     )
@@ -593,7 +664,8 @@ class SCFLoopParameters(FDFDataclass):
     scf_harris_tolerance: float = field(
         default=1e-4,
         metadata={
-            "description": "The convergence threshold (in eV) for the change in the Harris energy between SCF steps.",
+            "description": "The convergence threshold (in eV) for the change in the "
+            "Harris energy between SCF steps.",
             "SIESTA keyword": "SCF.Harris.Tolerance",
             "unit": "eV",
         },
@@ -602,7 +674,9 @@ class SCFLoopParameters(FDFDataclass):
     scf_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to SCF loop. This allows for using keywords not explicitly defined elsewhere.",
+            "description": "A dictionary for any additional or arbitrary FDF flags "
+            "related to SCF loop. This allows for using keywords not explicitly "
+            "defined elsewhere.",
             "SIESTA keyword": None,
         },
     )
@@ -610,12 +684,13 @@ class SCFLoopParameters(FDFDataclass):
     comments: str = field(
         default="SCFLoopParameters",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": "User-provided comments to be included as a comment block "
+            "in the FDF file.",
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -644,7 +719,8 @@ class SCFLoopParameters(FDFDataclass):
                 "SCF.Mixer.Linear.After.Weight",
                 "%block SCF.Mixers",
                 "SCF.DM.Tolerance",
-                "DM.Tolerance",  # Legacy alias for SCF.DM.Tolerance (older SIESTA versions)
+                # Legacy alias for SCF.DM.Tolerance (older SIESTA versions)
+                "DM.Tolerance",
                 "SCF.DM.Converge",
                 "SCF.H.Tolerance",
                 "SCF.H.Converge",
@@ -684,7 +760,7 @@ class SCFLoopParameters(FDFDataclass):
                 "SCF.DebugRhoGMixing",
                 "Debug.DIIS",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
     @classmethod
     def setup_scf_settings(
@@ -711,7 +787,8 @@ class SCFLoopParameters(FDFDataclass):
                 # Normalize key: lowercase and replace dots with underscores
                 key_normalized = key.lower().replace(".", "_")
 
-                # Match by comparing without underscores (handles CamelCase -> snake_case)
+                # Match by comparing without underscores
+                # (handles CamelCase -> snake_case)
                 key_no_underscores = key_normalized.replace("_", "")
                 matching_field = None
                 for f in fields(cls):
@@ -722,18 +799,24 @@ class SCFLoopParameters(FDFDataclass):
 
                 if matching_field:
                     original_key = matching_field
+                    converted_value = value
 
                     # Handle type conversion
                     if "bool" in str(type(getattr(scf_instance, original_key))):
-                        if isinstance(value, str):
-                            value = value.lower() in ("true", "t", "1", "yes")
-                        value = bool(value)
+                        if isinstance(converted_value, str):
+                            converted_value = converted_value.lower() in (
+                                "true",
+                                "t",
+                                "1",
+                                "yes",
+                            )
+                        converted_value = bool(converted_value)
                     elif "int" in str(type(getattr(scf_instance, original_key))):
-                        value = int(value)
+                        converted_value = int(converted_value)
                     elif "float" in str(type(getattr(scf_instance, original_key))):
-                        value = float(value)
+                        converted_value = float(converted_value)
 
-                    setattr(scf_instance, original_key, value)
+                    setattr(scf_instance, original_key, converted_value)
 
         # Validate and generate FDF block
         scf_instance.validate()
@@ -741,15 +824,14 @@ class SCFLoopParameters(FDFDataclass):
 
         return scf_instance
 
-    def validate(self):
-        """
-        Validates the SCF loop parameters.
-        """
+    def validate(self) -> None:
+        """Validate the SCF loop parameters."""
         logger.info("SCFLoopParameters.validate()")
         allowed_scf_mixer_variant = ["Pulay", "Simple", "kresse", "GR"]
         if self.scf_mixer_variant not in allowed_scf_mixer_variant:
             raise ValueError(
-                f"Invalid mixing scheme '{self.scf_mixer_variant}'. Allowed values are: {allowed_scf_mixer_variant}"
+                f"Invalid mixing scheme '{self.scf_mixer_variant}'. "
+                f"Allowed values are: {allowed_scf_mixer_variant}"
             )
         if not (0 <= self.scf_mixer_weight <= 1):
             raise ValueError("Mixing parameter must be between 0 and 1.")
@@ -896,19 +978,16 @@ class SCFLoopParameters(FDFDataclass):
         if system_changes is None:
             return True  # No changes, safe to reuse DM
 
-        # Check if critical properties changed
-        if (
+        # Reuse the saved DM only if no critical property changed
+        return not (
             "numbers" in system_changes
             or "initial_magmoms" in system_changes
             or "initial_charges" in system_changes
-        ):
-            return False  # System changed - don't reuse old DM
+        )
 
-        return True  # No critical changes, safe to reuse DM
-
-    def generate_scf_block(self):
+    def generate_scf_block(self) -> None:
         """
-        Generates the SCF loop parameters block for the FDF file.
+        Generate the SCF loop parameters block for the FDF file.
 
         This is a wrapper around generate_fdf() to maintain backward compatibility
         with code that calls this method directly (e.g., setup_scf_loop_parameters()).
@@ -925,7 +1004,8 @@ class SCFLoopParameters(FDFDataclass):
         from collections import OrderedDict
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers
+        # via update_from_fdf())
         fdf = self.generate_fdf()
 
         # Add comment header

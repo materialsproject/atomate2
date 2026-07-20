@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class GeneralSystemDescriptors(FDFDataclass):
-    """
-    Data class to store general system descriptors for SIESTA input.
-    """
+    """Data class to store general system descriptors for SIESTA input."""
 
     # -------------------------------
     # 6.1 General system descriptors
@@ -76,7 +74,8 @@ class GeneralSystemDescriptors(FDFDataclass):
     synthetic_atoms: dict[int, list[float]] = field(
         default_factory=dict,
         metadata={
-            "description": "Information for synthetic atoms, such as pseudopotential parameters",
+            "description": "Information for synthetic atoms, "
+            "such as pseudopotential parameters",
             "SIESTA keyword": " %block SyntheticAtoms",
         },
     )  # Information for synthetic atoms
@@ -92,7 +91,8 @@ class GeneralSystemDescriptors(FDFDataclass):
     _comments: str = field(
         default="",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": "User-provided comments to be included as a comment "
+            "block in the FDF file.",
             "SIESTA keyword": None,
         },
     )
@@ -100,11 +100,14 @@ class GeneralSystemDescriptors(FDFDataclass):
     # system_name: str = "siesta"  # Descriptive name of the system
     # number_of_species: int = 0  # Number of different atomic species in the simulation
     # number_of_atoms: int = 0  # Number of atoms in the simulation
-    # chemical_species_label: Dict[int, str] = field(default_factory=dict)  # Mapping of species number to chemical label
-    # synthetic_atoms: Dict[int, List[float]] = field(default_factory=dict)  # Information for synthetic atoms
-    # atomic_mass: Dict[int, float] = field(default_factory=dict)  # Custom atomic masses for different species
+    # Mapping of species number to chemical label:
+    # chemical_species_label: Dict[int, str] = field(default_factory=dict)
+    # Information for synthetic atoms:
+    # synthetic_atoms: Dict[int, List[float]] = field(default_factory=dict)
+    # Custom atomic masses for different species:
+    # atomic_mass: Dict[int, float] = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -118,27 +121,27 @@ class GeneralSystemDescriptors(FDFDataclass):
                 "LatticeConstant",
                 "AtomicCoordinatesFormat",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
-    def validate_label_and_name(self):
-        """
-        Forcing label and name to be siesta
-        """
+    def validate_label_and_name(self) -> None:
+        """Force label and name to be siesta."""
         logger.info("GeneralSystemDescriptors.validate_label_and_name()")
         if (self.system_label != "siesta") or (self.system_name != "siesta"):
             console.print(
-                "[red] system label & name should be siesta ... (Maybe i'll change later this... [/red]"
+                "[red] system label & name should be siesta ... "
+                "(Maybe i'll change later this... [/red]"
             )
-            raise ValueError  # ("system label & name should be siesta ... (Maybe i'll change later this...)")
+            # ("system label & name should be siesta ...
+            # (Maybe i'll change later this...)")
+            raise ValueError
 
-    def validate(self):
-        """
-        Validates the general system descriptors.
-        """
+    def validate(self) -> None:
+        """Validate the general system descriptors."""
         logger.info("GeneralSystemDescriptors.validate()")
         if self.number_of_species != len(self.chemical_species_label):
             raise ValueError(
-                "Number of species does not match the number of entries in chemical_species_label."
+                "Number of species does not match the number of entries "
+                "in chemical_species_label."
             )
         if self.number_of_atoms <= 0:
             raise ValueError("Number of atoms must be greater than 0.")
@@ -162,9 +165,8 @@ class GeneralSystemDescriptors(FDFDataclass):
                 self.number_of_species = int(value)
             elif key_lower in ["numberofatoms", "number_of_atoms"]:
                 self.number_of_atoms = int(value)
-            elif key_lower == "%block chemicalspecieslabel":
-                if isinstance(value, dict):
-                    self.chemical_species_label = value
+            elif key_lower == "%block chemicalspecieslabel" and isinstance(value, dict):
+                self.chemical_species_label = value
 
     def generate_fdf(self) -> dict[str, Any]:
         """

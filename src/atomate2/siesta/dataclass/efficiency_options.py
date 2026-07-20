@@ -40,7 +40,8 @@ class EfficiencyOptions(FDFDataclass):
     Parameters
     ----------
     direct_phi : bool
-        Use direct real-space summation for electrostatic potential (slower). Default: False
+        Use direct real-space summation for electrostatic potential (slower).
+        Default: False
     alloc_report_level : int
         Verbosity level for memory allocation report (0=minimal). Default: 0
     alloc_report_threshold : float
@@ -77,7 +78,12 @@ class EfficiencyOptions(FDFDataclass):
     direct_phi: bool = field(
         default=False,
         metadata={
-            "description": "If true, computes the electrostatic potential via a direct real-space summation instead of using Fast Fourier Transforms (FFTs). This is slower but can be used for open boundary conditions.",
+            "description": (
+                "If true, computes the electrostatic potential via a direct "
+                "real-space summation instead of using Fast Fourier Transforms "
+                "(FFTs). This is slower but can be used for open boundary "
+                "conditions."
+            ),
             "SIESTA keyword": "DirectPhi",
         },
     )
@@ -88,7 +94,10 @@ class EfficiencyOptions(FDFDataclass):
     alloc_report_level: int = field(
         default=0,
         metadata={
-            "description": "Sets the verbosity level for the memory allocation report at the end of the run.",
+            "description": (
+                "Sets the verbosity level for the memory allocation report at "
+                "the end of the run."
+            ),
             "SIESTA keyword": "AllocReportLevel",
         },
     )
@@ -96,7 +105,10 @@ class EfficiencyOptions(FDFDataclass):
     alloc_report_threshold: float = field(
         default=0.0,
         metadata={
-            "description": "The minimum memory allocation size (in Mbytes) to be included in the allocation report.",
+            "description": (
+                "The minimum memory allocation size (in Mbytes) to be included "
+                "in the allocation report."
+            ),
             "SIESTA keyword": "AllocReportThreshold",
         },
     )
@@ -104,7 +116,10 @@ class EfficiencyOptions(FDFDataclass):
     timer_report_threshold: float = field(
         default=0.0,
         metadata={
-            "description": "The minimum time (in seconds) for a routine to be included in the timing report.",
+            "description": (
+                "The minimum time (in seconds) for a routine to be included in "
+                "the timing report."
+            ),
             "SIESTA keyword": "TimerReportThreshold",
         },
     )
@@ -112,7 +127,10 @@ class EfficiencyOptions(FDFDataclass):
     user_tree_timer: bool = field(
         default=False,
         metadata={
-            "description": "If true, uses a tree-like structure for the timing reports, showing the hierarchy of routines.",
+            "description": (
+                "If true, uses a tree-like structure for the timing reports, "
+                "showing the hierarchy of routines."
+            ),
             "SIESTA keyword": "UseTreeTimer",
         },
     )
@@ -120,7 +138,10 @@ class EfficiencyOptions(FDFDataclass):
     user_parallel_timer: bool = field(
         default=True,
         metadata={
-            "description": "If true, timers are synchronized across parallel processors to provide more accurate parallel timing information.",
+            "description": (
+                "If true, timers are synchronized across parallel processors to "
+                "provide more accurate parallel timing information."
+            ),
             "SIESTA keyword": "UseParallelTimer",
         },
     )
@@ -128,7 +149,10 @@ class EfficiencyOptions(FDFDataclass):
     timing_split_scf_steps: bool = field(
         default=False,
         metadata={
-            "description": "If true, provides separate timing information for each individual SCF step.",
+            "description": (
+                "If true, provides separate timing information for each "
+                "individual SCF step."
+            ),
             "SIESTA keyword": "TimingSplitScfSteps",
         },
     )
@@ -136,7 +160,10 @@ class EfficiencyOptions(FDFDataclass):
     max_walltime: float = field(
         default=None,
         metadata={
-            "description": "The maximum wall-clock time (in seconds) for the job. SIESTA will attempt a clean stop before this time is reached.",
+            "description": (
+                "The maximum wall-clock time (in seconds) for the job. SIESTA "
+                "will attempt a clean stop before this time is reached."
+            ),
             "SIESTA keyword": "MaxWalltime",
         },
     )
@@ -144,7 +171,10 @@ class EfficiencyOptions(FDFDataclass):
     max_walltime_slack: float = field(
         default=5.0,
         metadata={
-            "description": "The slack time (in seconds) before the 'MaxWalltime' is reached, during which SIESTA will initiate a clean shutdown.",
+            "description": (
+                "The slack time (in seconds) before the 'MaxWalltime' is "
+                "reached, during which SIESTA will initiate a clean shutdown."
+            ),
             "SIESTA keyword": "MaxWalltime.Slack",
         },
     )
@@ -155,21 +185,28 @@ class EfficiencyOptions(FDFDataclass):
     use_save_data: bool = field(
         default=False,
         metadata={
-            "description": "A global flag to enable the use of any available restart data, such as the density matrix (.DM) or atomic positions (.XV), to continue a previous calculation.",
+            "description": (
+                "A global flag to enable the use of any available restart data, "
+                "such as the density matrix (.DM) or atomic positions (.XV), to "
+                "continue a previous calculation."
+            ),
             "SIESTA keyword": "UseSaveData",
         },
     )
 
     # Comment header for FDF output
     comments: str = field(
-        default="# Efficiency and Performance Configuration (EfficiencyOptions dataclass module)",
+        default=(
+            "# Efficiency and Performance Configuration "
+            "(EfficiencyOptions dataclass module)"
+        ),
         metadata={"description": "Comment header for FDF file"},
     )
 
     # Dictionary to hold FDF arguments
     efficiency_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -189,14 +226,15 @@ class EfficiencyOptions(FDFDataclass):
                 "UseSaveData",
                 "MD.UseSaveXV",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate efficiency and performance options.
 
         Checks settings for memory reporting, CPU/walltime accounting, and restart
-        data usage. Ensures walltime limits and reporting thresholds are properly configured.
+        data usage. Ensures walltime limits and reporting thresholds are properly
+        configured.
 
         Raises
         ------
@@ -208,11 +246,13 @@ class EfficiencyOptions(FDFDataclass):
         # Validate thresholds are non-negative
         if self.alloc_report_threshold < 0:
             raise ValueError(
-                f"AllocReportThreshold must be non-negative, got {self.alloc_report_threshold}"
+                "AllocReportThreshold must be non-negative, got "
+                f"{self.alloc_report_threshold}"
             )
         if self.timer_report_threshold < 0:
             raise ValueError(
-                f"TimerReportThreshold must be non-negative, got {self.timer_report_threshold}"
+                "TimerReportThreshold must be non-negative, got "
+                f"{self.timer_report_threshold}"
             )
 
         # Validate walltime parameters
@@ -369,7 +409,7 @@ class EfficiencyOptions(FDFDataclass):
         # These are SIESTA-specific monitoring options
         return {}
 
-    def generate_efficiency_block(self):
+    def generate_efficiency_block(self) -> None:
         """
         Generate FDF arguments for efficiency and performance with comment header.
 
@@ -420,19 +460,24 @@ class EfficiencyOptions(FDFDataclass):
 
     @classmethod
     def setup_efficiency_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 interface kwarg
     ) -> "EfficiencyOptions":
         """
         Create and configure a EfficiencyOptions instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure efficiency and performance settings from user parameters. Supports
-        SIESTA FDF parameter names (DirectPhi, AllocReportLevel, etc.) with automatic conversion.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure efficiency and performance settings from user
+        parameters. Supports SIESTA FDF parameter names (DirectPhi,
+        AllocReportLevel, etc.) with automatic conversion.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                        may include dots).
                         If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            **kwargs: Additional keyword arguments to override or supplement
+                        user_params.
 
         Returns
         -------
@@ -470,7 +515,8 @@ class EfficiencyOptions(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default EfficiencyOptions values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "EfficiencyOptions values.[/blue]"
                 )
             return instance
 
@@ -482,7 +528,8 @@ class EfficiencyOptions(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available EfficiencyOptions attributes: {efficiency_attributes}[/blue]"
+                f"[blue]Available EfficiencyOptions attributes: "
+                f"{efficiency_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -496,7 +543,8 @@ class EfficiencyOptions(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -524,7 +572,8 @@ class EfficiencyOptions(FDFDataclass):
                         setattr(instance, matched_attr, int(value))
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to int for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to int "
+                            f"for '{matched_attr}'. Using default.[/yellow]"
                         )
                 elif matched_attr in [
                     "alloc_report_threshold",
@@ -540,7 +589,8 @@ class EfficiencyOptions(FDFDataclass):
                             setattr(instance, matched_attr, None)
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to float for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to "
+                            f"float for '{matched_attr}'. Using default.[/yellow]"
                         )
                 elif matched_attr in [
                     "direct_phi",
@@ -565,7 +615,8 @@ class EfficiencyOptions(FDFDataclass):
                     setattr(instance, matched_attr, value)
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
                 console.print(
-                    f"[yellow]Warning: No match found for parameter '{key}' in EfficiencyOptions[/yellow]"
+                    f"[yellow]Warning: No match found for parameter '{key}' "
+                    f"in EfficiencyOptions[/yellow]"
                 )
 
         # Generate FDF block with comment header

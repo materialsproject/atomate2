@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class RTTDDFT(FDFDataclass):
-    """Dataclass for Input options for RT-TDDFT"""
+    """Dataclass for Input options for RT-TDDFT."""
 
     # ------------------------------
     # 9.3 Input options for RT-TDDFT
@@ -42,7 +42,10 @@ class RTTDDFT(FDFDataclass):
     tded_wf_initialize: bool = field(
         default=False,
         metadata={
-            "description": "If true, initializes the wavefunctions for a time-dependent evolution, often from a ground-state calculation.",
+            "description": (
+                "If true, initializes the wavefunctions for a time-dependent "
+                "evolution, often from a ground-state calculation."
+            ),
             "SIESTA keyword": "TDED.WF.Initialize",
         },
     )
@@ -50,7 +53,10 @@ class RTTDDFT(FDFDataclass):
     tded_nsteps: int = field(
         default=1,
         metadata={
-            "description": "The total number of time steps to perform in the time-dependent simulation.",
+            "description": (
+                "The total number of time steps to perform in the "
+                "time-dependent simulation."
+            ),
             "SIESTA keyword": "TDED.Nsteps",
         },
     )
@@ -58,7 +64,10 @@ class RTTDDFT(FDFDataclass):
     tded_time_step: float = field(
         default=0.001,
         metadata={
-            "description": "The duration of each time step (in femtoseconds) for the time-evolution algorithm.",
+            "description": (
+                "The duration of each time step (in femtoseconds) for the "
+                "time-evolution algorithm."
+            ),
             "SIESTA keyword": "TDED.TimeStep",
             "unit": "fs",
         },
@@ -67,7 +76,11 @@ class RTTDDFT(FDFDataclass):
     tded_extrapolate: bool = field(
         default=False,
         metadata={
-            "description": "If true, uses an extrapolation scheme to predict the wavefunction at the next time step, which can improve stability and accuracy.",
+            "description": (
+                "If true, uses an extrapolation scheme to predict the "
+                "wavefunction at the next time step, which can improve "
+                "stability and accuracy."
+            ),
             "SIESTA keyword": "TDED.Extrapolate",
         },
     )
@@ -75,7 +88,10 @@ class RTTDDFT(FDFDataclass):
     tded_extrapolate_substeps: int = field(
         default=3,
         metadata={
-            "description": "The number of substeps used within the wavefunction extrapolation algorithm.",
+            "description": (
+                "The number of substeps used within the wavefunction "
+                "extrapolation algorithm."
+            ),
             "SIESTA keyword": "TDED.Extrapolate.Substeps",
         },
     )
@@ -83,7 +99,10 @@ class RTTDDFT(FDFDataclass):
     tded_inverse_linear: bool = field(
         default=True,
         metadata={
-            "description": "A technical flag to use a linear approximation for a matrix inversion step within the time-evolution algorithm.",
+            "description": (
+                "A technical flag to use a linear approximation for a matrix "
+                "inversion step within the time-evolution algorithm."
+            ),
             "SIESTA keyword": "TDED.Inverse.Linear",
         },
     )
@@ -91,7 +110,10 @@ class RTTDDFT(FDFDataclass):
     tded_wf_save: bool = field(
         default=False,
         metadata={
-            "description": "If true, saves the time-evolved wavefunction at the end of the simulation.",
+            "description": (
+                "If true, saves the time-evolved wavefunction at the end of "
+                "the simulation."
+            ),
             "SIESTA keyword": "TDED.WF.Save",
         },
     )
@@ -99,7 +121,9 @@ class RTTDDFT(FDFDataclass):
     tded_write_etot: bool = field(
         default=True,
         metadata={
-            "description": "If true, writes the total energy of the system at each time step.",
+            "description": (
+                "If true, writes the total energy of the system at each time step."
+            ),
             "SIESTA keyword": "TDED.Write.Etot",
         },
     )
@@ -107,7 +131,10 @@ class RTTDDFT(FDFDataclass):
     tded_write_dipole: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the total electric dipole moment of the system at each time step.",
+            "description": (
+                "If true, writes the total electric dipole moment of the "
+                "system at each time step."
+            ),
             "SIESTA keyword": "TDED.Write.Dipole",
         },
     )
@@ -115,7 +142,10 @@ class RTTDDFT(FDFDataclass):
     tded_write_eig: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the instantaneous Kohn-Sham eigenvalues at each time step.",
+            "description": (
+                "If true, writes the instantaneous Kohn-Sham eigenvalues at "
+                "each time step."
+            ),
             "SIESTA keyword": "TDED.Write.Eig",
         },
     )
@@ -123,7 +153,10 @@ class RTTDDFT(FDFDataclass):
     tded_save_rho: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the saving of the time-dependent charge density on a grid at specified intervals.",
+            "description": (
+                "A flag to enable the saving of the time-dependent charge "
+                "density on a grid at specified intervals."
+            ),
             "SIESTA keyword": "TDED.Saverho",
         },
     )
@@ -131,12 +164,15 @@ class RTTDDFT(FDFDataclass):
     tded_n_save_rho: int = field(
         default=100,
         metadata={
-            "description": "The frequency of saving the charge density; it will be saved every 'N' steps.",
+            "description": (
+                "The frequency of saving the charge density; it will be "
+                "saved every 'N' steps."
+            ),
             "SIESTA keyword": "TDED.Nsaverho",
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -153,9 +189,9 @@ class RTTDDFT(FDFDataclass):
                 "TDED.Saverho",
                 "TDED.Nsaverho",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate RT-TDDFT (Real-Time Time-Dependent DFT) parameters.
 
@@ -300,14 +336,18 @@ class RTTDDFT(FDFDataclass):
 
     @classmethod
     def setup_rttddft(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 accepted for interface compatibility
     ) -> "RTTDDFT":
         """
         Create and configure a RTTDDFT instance with full parameter parsing.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                may include dots).
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------

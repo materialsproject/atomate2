@@ -39,7 +39,8 @@ class BasisSetsAndProjectors(FDFDataclass):
     Future enhancements (not yet implemented):
 
     (Option 2) Custom PAO.Basis blocks:
-        Allow perform_siesta_default_basis = False with user-defined basis specifications:
+        Allow perform_siesta_default_basis = False with user-defined basis
+        specifications:
 
         Example format:
             %block PAO.Basis
@@ -72,42 +73,68 @@ class BasisSetsAndProjectors(FDFDataclass):
     perform_siesta_default_basis: bool = field(
         default=True,
         metadata={
-            "description": "A wrapper-level flag to control whether a default basis set should be generated using the subsequent PAO parameters. This is not a direct SIESTA keyword.",
+            "description": (
+                "A wrapper-level flag to control whether a default basis set "
+                "should be generated using the subsequent PAO parameters. This "
+                "is not a direct SIESTA keyword."
+            ),
             "SIESTA keyword": None,
         },
     )
     pao_basis_type: str = field(
         default="split",
         metadata={
-            "description": "The method used to generate the PAO basis set. Common options are 'split' for split-valence or 'gamess' for reading GAMESS output.",
+            "description": (
+                "The method used to generate the PAO basis set. Common options "
+                "are 'split' for split-valence or 'gamess' for reading GAMESS "
+                "output."
+            ),
             "SIESTA keyword": "PAO.BasisType",
         },
     )
     pao_basissize: str = field(
         default="DZP",
         metadata={
-            "description": "A convenience flag for defining standard basis set sizes like SZ, DZ, SZP, DZP. This is a scalar parameter, not a block.",
+            "description": (
+                "A convenience flag for defining standard basis set sizes like "
+                "SZ, DZ, SZP, DZP. This is a scalar parameter, not a block."
+            ),
             "SIESTA keyword": "PAO.BasisSize",
         },
     )
     pao_basissizes_block: list[str] = field(
         default_factory=list,
         metadata={
-            "description": "Allows per-species basis size specification. Accepts TWO formats: (1) List: ['Si DZP', 'O TZP'], (2) Dict: {'Si': 'DZP', 'O_surface': 'TZP', 'O_bulk': 'DZ'} (enables species variants). Dict format is auto-converted to list internally. Mutually exclusive with PAO.BasisSize scalar and %block PAO.Basis.",
+            "description": (
+                "Allows per-species basis size specification. Accepts TWO "
+                "formats: (1) List: ['Si DZP', 'O TZP'], (2) Dict: {'Si': "
+                "'DZP', 'O_surface': 'TZP', 'O_bulk': 'DZ'} (enables species "
+                "variants). Dict format is auto-converted to list internally. "
+                "Mutually exclusive with PAO.BasisSize scalar and "
+                "%block PAO.Basis."
+            ),
             "SIESTA keyword": "%block PAO.BasisSizes",
         },
     )
     pao_basis_block: list[str] = field(
         default_factory=list,
         metadata={
-            "description": "Full custom basis specification with complete orbital details. This is the highest priority and overrides both PAO.BasisSize and %block PAO.BasisSizes.",
+            "description": (
+                "Full custom basis specification with complete orbital details. "
+                "This is the highest priority and overrides both PAO.BasisSize "
+                "and %block PAO.BasisSizes."
+            ),
             "SIESTA keyword": "%block PAO.Basis",
         },
     )
     pao_energy_shift: float = field(
         default=0.01,
         metadata={
-            "description": "An energy shift (in Rydberg) to soften the confining potential of orbitals, which can improve stability. Note: This is overridden by settings in the PAO.BasisSize block.",
+            "description": (
+                "An energy shift (in Rydberg) to soften the confining potential "
+                "of orbitals, which can improve stability. Note: This is "
+                "overridden by settings in the PAO.BasisSize block."
+            ),
             "SIESTA keyword": "PAO.EnergyShift",
             "unit": "Ry",
         },
@@ -115,28 +142,43 @@ class BasisSetsAndProjectors(FDFDataclass):
     write_graphviz: str = field(
         default="none",
         metadata={
-            "description": "If set (e.g., to 'iteration'), writes the calculation dependency graph in Graphviz format for debugging.",
+            "description": (
+                "If set (e.g., to 'iteration'), writes the calculation "
+                "dependency graph in Graphviz format for debugging."
+            ),
             "SIESTA keyword": "WriteGraphviz",
         },
     )
     pao_split_norm: float = field(
         default=0.15,
         metadata={
-            "description": "In the 'split' basis type, this is the norm of the tail of the first-zeta orbital that determines the split point for creating the second-zeta.",
+            "description": (
+                "In the 'split' basis type, this is the norm of the tail of the "
+                "first-zeta orbital that determines the split point for creating "
+                "the second-zeta."
+            ),
             "SIESTA keyword": "PAO.SplitNorm",
         },
     )
     pao_split_norm_h: float = field(
         default=1.0,
         metadata={
-            "description": "A special value of PAO.SplitNorm that is applied only to Hydrogen atoms.",
+            "description": (
+                "A special value of PAO.SplitNorm that is applied only to "
+                "Hydrogen atoms."
+            ),
             "SIESTA keyword": "PAO.SplitNormH",
         },
     )
     pao_split_tail_norm: bool = field(
         default=True,
         metadata={
-            "description": "Determines the split criterion. If true, uses the tail norm; if false, uses the overlap between first and second zeta orbitals. Disabling is recommended for larger basis sets like DZP/TZP.",
+            "description": (
+                "Determines the split criterion. If true, uses the tail norm; "
+                "if false, uses the overlap between first and second zeta "
+                "orbitals. Disabling is recommended for larger basis sets like "
+                "DZP/TZP."
+            ),
             "SIESTA keyword": "PAO.SplitTailNorm",
         },
     )
@@ -150,14 +192,22 @@ class BasisSetsAndProjectors(FDFDataclass):
     pao_fix_split_table: bool = field(
         default=False,
         metadata={
-            "description": "If true, uses a fixed internal table for split-valence parameters, ensuring reproducibility across different architectures.",
+            "description": (
+                "If true, uses a fixed internal table for split-valence "
+                "parameters, ensuring reproducibility across different "
+                "architectures."
+            ),
             "SIESTA keyword": "PAO.FixSplitTable",
         },
     )
     pao_energy_cutoff: float = field(
         default=20.0,
         metadata={
-            "description": "Energy cutoff (in Rydberg) for the orbital-filtering process, which discards redundant or high-energy orbitals from the basis.",
+            "description": (
+                "Energy cutoff (in Rydberg) for the orbital-filtering process, "
+                "which discards redundant or high-energy orbitals from the "
+                "basis."
+            ),
             "SIESTA keyword": "PAO.Filter.Cutoff",
             "unit": "Ry",
         },
@@ -165,7 +215,10 @@ class BasisSetsAndProjectors(FDFDataclass):
     pao_energy_pol_cutoff: float = field(
         default=20.0,
         metadata={
-            "description": "A specific energy cutoff (in Rydberg) applied only to polarization orbitals during the filtering process.",
+            "description": (
+                "A specific energy cutoff (in Rydberg) applied only to "
+                "polarization orbitals during the filtering process."
+            ),
             "SIESTA keyword": "PAO.Filter.PolarizationCutoff",
             "unit": "Ry",
         },
@@ -173,42 +226,61 @@ class BasisSetsAndProjectors(FDFDataclass):
     pao_contraction_cutoff: float = field(
         default=0.0,
         metadata={
-            "description": "Radial overlap cutoff used to contract basis orbitals into more efficient, combined orbitals.",
+            "description": (
+                "Radial overlap cutoff used to contract basis orbitals into "
+                "more efficient, combined orbitals."
+            ),
             "SIESTA keyword": "PAO.ContractionCutoff",
         },
     )
     pao_polarization_non_perturbative: bool = field(
         default=True,
         metadata={
-            "description": "If true, enables the non-perturbative generation of polarization orbitals. Recommended for 'allowed' basis sets.",
+            "description": (
+                "If true, enables the non-perturbative generation of "
+                "polarization orbitals. Recommended for 'allowed' basis sets."
+            ),
             "SIESTA keyword": "PAO.Polarization.NonPerturbative",
         },
     )
     pao_polarization_scheme_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "Allows for the detailed customization of the polarization shell scheme on a per-species basis.",
+            "description": (
+                "Allows for the detailed customization of the polarization "
+                "shell scheme on a per-species basis."
+            ),
             "SIESTA keyword": "%block PAO.Polarization.Scheme",
         },
     )
     pao_polarization_rc_expansion_factor: float = field(
         default=1.0,
         metadata={
-            "description": "A factor to scale the cutoff radii (rc) of the orbitals used to generate the polarization orbitals.",
+            "description": (
+                "A factor to scale the cutoff radii (rc) of the orbitals used "
+                "to generate the polarization orbitals."
+            ),
             "SIESTA keyword": "PAO.Polarization.RcExpansionFactor",
         },
     )
     pao_soft_default: bool = field(
         default=True,
         metadata={
-            "description": "A wrapper-level flag to use a soft confinement potential for generating orbitals, controlled by the subsequent parameters. This is not a direct SIESTA keyword.",
+            "description": (
+                "A wrapper-level flag to use a soft confinement potential for "
+                "generating orbitals, controlled by the subsequent parameters. "
+                "This is not a direct SIESTA keyword."
+            ),
             "SIESTA keyword": None,
         },
     )
     pao_soft_inner_radius: float = field(
         default=0.9,
         metadata={
-            "description": "The inner radius (in Bohr) at which the soft repulsive potential begins.",
+            "description": (
+                "The inner radius (in Bohr) at which the soft repulsive "
+                "potential begins."
+            ),
             "SIESTA keyword": "PAO.SoftDefault.InnerRadius",
             "unit": "Bohr",
         },
@@ -224,21 +296,30 @@ class BasisSetsAndProjectors(FDFDataclass):
     ps_lmax_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "Specifies the maximum angular momentum (l) of the pseudopotential to use for each species.",
+            "description": (
+                "Specifies the maximum angular momentum (l) of the "
+                "pseudopotential to use for each species."
+            ),
             "SIESTA keyword": "%block PS.lmax",
         },
     )
     kb_projectors_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "Defines the number of Kleinman-Bylander (KB) projectors for each angular momentum channel.",
+            "description": (
+                "Defines the number of Kleinman-Bylander (KB) projectors for "
+                "each angular momentum channel."
+            ),
             "SIESTA keyword": "%block PS.KBprojectors",
         },
     )
     filter_cutoff: float = field(
         default=0.0,
         metadata={
-            "description": "Energy cutoff (in eV) for the orbital-filtering process. Note: The native SIESTA unit is Rydberg.",
+            "description": (
+                "Energy cutoff (in eV) for the orbital-filtering process. "
+                "Note: The native SIESTA unit is Rydberg."
+            ),
             "SIESTA keyword": "PAO.Filter.Cutoff",
             "unit": "eV",
         },
@@ -246,7 +327,11 @@ class BasisSetsAndProjectors(FDFDataclass):
     filter_tol: float = field(
         default=0.0,
         metadata={
-            "description": "Tolerance (in eV) to discard linearly-dependent orbitals during the filtering stage. Note: The native SIESTA unit is Rydberg.",
+            "description": (
+                "Tolerance (in eV) to discard linearly-dependent orbitals "
+                "during the filtering stage. Note: The native SIESTA unit is "
+                "Rydberg."
+            ),
             "SIESTA keyword": "PAO.Filter.Tolerance",
             "unit": "eV",
         },
@@ -254,21 +339,33 @@ class BasisSetsAndProjectors(FDFDataclass):
     user_basis: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to indicate that a user-provided basis set file should be used, potentially bypassing automatic generation.",
+            "description": (
+                "A wrapper-level flag to indicate that a user-provided basis "
+                "set file should be used, potentially bypassing automatic "
+                "generation."
+            ),
             "SIESTA keyword": "User.Basis",
         },
     )
     user_basis_netcdf: bool = field(
         default=False,
         metadata={
-            "description": "A flag to specify that the user-provided basis set is in the NetCDF (.nc) format. This is not a direct SIESTA keyword; file type is inferred from the filename.",
+            "description": (
+                "A flag to specify that the user-provided basis set is in the "
+                "NetCDF (.nc) format. This is not a direct SIESTA keyword; file "
+                "type is inferred from the filename."
+            ),
             "SIESTA keyword": "User.Basis.NetCDF",
         },
     )
     basis_pressure: float = field(
         default=0.2,
         metadata={
-            "description": "Sets the confining pressure (in GPa) on the atom to generate basis orbitals. A higher pressure results in more localized (less diffuse) orbitals.",
+            "description": (
+                "Sets the confining pressure (in GPa) on the atom to generate "
+                "basis orbitals. A higher pressure results in more localized "
+                "(less diffuse) orbitals."
+            ),
             "SIESTA keyword": "BasisPressure",
             "unit": "GPa",
         },
@@ -276,28 +373,44 @@ class BasisSetsAndProjectors(FDFDataclass):
     reparametrize_pseudos: bool = field(
         default=True,
         metadata={
-            "description": "A wrapper-level flag to enable a custom reparametrization of pseudopotentials before the main calculation. This is not a direct SIESTA keyword.",
+            "description": (
+                "A wrapper-level flag to enable a custom reparametrization of "
+                "pseudopotentials before the main calculation. This is not a "
+                "direct SIESTA keyword."
+            ),
             "SIESTA keyword": "Reparametrize.Pseudos",
         },
     )
     new_a_parameter: float = field(
         default=0.001,
         metadata={
-            "description": "A custom 'a' parameter for the pseudopotential reparametrization scheme. Its meaning is defined by the external tool used. Not a SIESTA keyword.",
+            "description": (
+                "A custom 'a' parameter for the pseudopotential "
+                "reparametrization scheme. Its meaning is defined by the "
+                "external tool used. Not a SIESTA keyword."
+            ),
             "SIESTA keyword": "New.A.Parameter",
         },
     )
     new_b_parameter: float = field(
         default=0.01,
         metadata={
-            "description": "A custom 'b' parameter for the pseudopotential reparametrization scheme. Its meaning is defined by the external tool used. Not a SIESTA keyword.",
+            "description": (
+                "A custom 'b' parameter for the pseudopotential "
+                "reparametrization scheme. Its meaning is defined by the "
+                "external tool used. Not a SIESTA keyword."
+            ),
             "SIESTA keyword": "New.B.Parameter",
         },
     )
     rmax_radial_grid: float = field(
         default=50.0,
         metadata={
-            "description": "The maximum radius (in Bohr) for the radial grid used during the atomic (e.g., pseudopotential generation) calculation. Not a direct SIESTA keyword.",
+            "description": (
+                "The maximum radius (in Bohr) for the radial grid used during "
+                "the atomic (e.g., pseudopotential generation) calculation. Not "
+                "a direct SIESTA keyword."
+            ),
             "SIESTA keyword": "Rmax.Radial.Grid",
             "unit": "Bohr",
         },
@@ -305,14 +418,21 @@ class BasisSetsAndProjectors(FDFDataclass):
     restricted_radial_grid: bool = field(
         default=True,
         metadata={
-            "description": "A flag to use a restricted radial grid that adapts to the orbital extent, instead of a fixed grid. This is a feature of auxiliary atomic codes. Not a SIESTA keyword.",
+            "description": (
+                "A flag to use a restricted radial grid that adapts to the "
+                "orbital extent, instead of a fixed grid. This is a feature of "
+                "auxiliary atomic codes. Not a SIESTA keyword."
+            ),
             "SIESTA keyword": "Restricted.Radial.Grid",
         },
     )
     pao_rc_unbound_state: float = field(
         default=0.0,
         metadata={
-            "description": "Sets the cutoff radius (in Bohr) for unbound atomic states that are used for generating basis orbitals.",
+            "description": (
+                "Sets the cutoff radius (in Bohr) for unbound atomic states "
+                "that are used for generating basis orbitals."
+            ),
             "SIESTA keyword": "PAO.rc.unbound.state",
             "unit": "Bohr",
         },
@@ -320,19 +440,26 @@ class BasisSetsAndProjectors(FDFDataclass):
     basis_set_fdf_arguments: OrderedDict[str, Any] = field(
         default_factory=OrderedDict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF (Flexible Data Format) flags related to the basis set. This allows for using keywords not explicitly defined elsewhere.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF (Flexible "
+                "Data Format) flags related to the basis set. This allows for "
+                "using keywords not explicitly defined elsewhere."
+            ),
             "SIESTA keyword": None,
         },
     )
     comments: str = field(
         default="BasisSetsAndProjectors Settings",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": (
+                "User-provided comments to be included as a comment block in "
+                "the FDF file."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -368,23 +495,28 @@ class BasisSetsAndProjectors(FDFDataclass):
                 "Restricted.Radial.Grid",
                 "PAO.rc.unbound.state",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001
 
     @classmethod
     def setup_basis_sets_and_projectors(
         cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "BasisSetsAndProjectors":
         """
-        Create and configure a BasisSetsAndProjectors instance based on user parameters, retaining all default values for unspecified fields.
+        Create and configure a BasisSetsAndProjectors instance from user params.
+
+        All default values are retained for unspecified fields.
 
         Args:
-            user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
-                                         If None or empty, all default BasisSetsAndProjectors values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params (dict, optional): Dictionary of user-defined parameters
+                (case-insensitive, may include dots). If None or empty, all
+                default BasisSetsAndProjectors values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
-            BasisSetsAndProjectors: Configured instance with all fields (default and user-specified) and FDF arguments.
+            BasisSetsAndProjectors: Configured instance with all fields (default
+                and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
@@ -398,14 +530,16 @@ class BasisSetsAndProjectors(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default BasisSetsAndProjectors values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "BasisSetsAndProjectors values.[/blue]"
                 )
         else:
-            # Get valid BasisSetsAndProjectors attribute names (lowercase for comparison)
+            # Get valid BasisSetsAndProjectors attribute names (lowercase)
             basis_attributes = {field.name.lower() for field in fields(cls)}
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Available BasisSetsAndProjectors attributes: {basis_attributes}[/blue]"
+                    f"[blue]Available BasisSetsAndProjectors attributes: "
+                    f"{basis_attributes}[/blue]"
                 )
 
             # Process user parameters
@@ -419,7 +553,8 @@ class BasisSetsAndProjectors(FDFDataclass):
                 key_normalized = key_with_underscores.replace(".", "_").lower()
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                     console.print(
-                        f"[blue]Processing key: {key} -> {key_with_underscores} -> {key_normalized}, value: {value}[/blue]"
+                        f"[blue]Processing key: {key} -> {key_with_underscores} "
+                        f"-> {key_normalized}, value: {value}[/blue]"
                     )
 
                 # Check if normalized key matches any BasisSetsAndProjectors attribute
@@ -438,7 +573,9 @@ class BasisSetsAndProjectors(FDFDataclass):
                                 >= VerbosityLevel.DEBUG.value
                             ):
                                 console.print(
-                                    f"[blue]Fuzzy matched: {key_normalized} -> {attr} (both normalize to {key_no_underscores})[/blue]"
+                                    f"[blue]Fuzzy matched: {key_normalized} -> "
+                                    f"{attr} (both normalize to "
+                                    f"{key_no_underscores})[/blue]"
                                 )
                             break
 
@@ -451,7 +588,8 @@ class BasisSetsAndProjectors(FDFDataclass):
                     )
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Matched BasisSetsAndProjectors field: {original_key} = {value}[/blue]"
+                            f"[blue]Matched BasisSetsAndProjectors field: "
+                            f"{original_key} = {value}[/blue]"
                         )
 
                     # Handle type conversion for specific fields
@@ -462,7 +600,8 @@ class BasisSetsAndProjectors(FDFDataclass):
                         "ps_lmax_block",
                         "kb_projectors_block",
                     ]:
-                        # Special handling for pao_basissizes_block: accepts dict OR list
+                        # Special handling for pao_basissizes_block:
+                        # accepts dict OR list
                         if original_key == "pao_basissizes_block":
                             if isinstance(value, dict):
                                 # Convert dict to list format
@@ -481,7 +620,9 @@ class BasisSetsAndProjectors(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[yellow]Invalid value type for {original_key}: expected dict or list, got {type(value)}[/yellow]"
+                                    f"[yellow]Invalid value type for "
+                                    f"{original_key}: expected dict or list, "
+                                    f"got {type(value)}[/yellow]"
                                 )
                         # Other block fields: list only
                         elif isinstance(value, list):
@@ -490,7 +631,9 @@ class BasisSetsAndProjectors(FDFDataclass):
                             cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value
                         ):
                             console.print(
-                                f"[yellow]Invalid value type for {original_key}: expected list, got {type(value)}[/yellow]"
+                                f"[yellow]Invalid value type for "
+                                f"{original_key}: expected list, got "
+                                f"{type(value)}[/yellow]"
                             )
                     elif original_key in [
                         "perform_siesta_default_basis",
@@ -504,9 +647,12 @@ class BasisSetsAndProjectors(FDFDataclass):
                         "reparametrize_pseudos",
                         "restricted_radial_grid",
                     ]:
-                        if isinstance(value, str):
-                            value = value.lower() in ("true", "t", "1", "yes")
-                        setattr(basis_instance, original_key, bool(value))
+                        bool_value = (
+                            value.lower() in ("true", "t", "1", "yes")
+                            if isinstance(value, str)
+                            else value
+                        )
+                        setattr(basis_instance, original_key, bool(bool_value))
                     elif original_key in [
                         "pao_energy_shift",
                         "pao_split_norm",
@@ -533,7 +679,9 @@ class BasisSetsAndProjectors(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[yellow]Invalid value type for {original_key}: expected float, got {value}[/yellow]"
+                                    f"[yellow]Invalid value type for "
+                                    f"{original_key}: expected float, got "
+                                    f"{value}[/yellow]"
                                 )
                     elif original_key == "pao_basis_type":
                         allowed_basis_types = [
@@ -549,13 +697,17 @@ class BasisSetsAndProjectors(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[red]Invalid basis type [bold]'{value}'[/bold] for [bold]{original_key}[/bold].[/red]"
+                                    f"[red]Invalid basis type "
+                                    f"[bold]'{value}'[/bold] for "
+                                    f"[bold]{original_key}[/bold].[/red]"
                                 )
                                 console.print(
-                                    f"[red]Allowed basis types are [bold]{allowed_basis_types}[/bold][/red]"
+                                    f"[red]Allowed basis types are "
+                                    f"[bold]{allowed_basis_types}[/bold][/red]"
                                 )
                             raise ValueError(
-                                f"Invalid basis type '{value}'. Allowed values are: {allowed_basis_types}"
+                                f"Invalid basis type '{value}'. Allowed values "
+                                f"are: {allowed_basis_types}"
                             )
                         setattr(basis_instance, original_key, value.lower())
                     elif original_key == "pao_basissize":
@@ -593,20 +745,25 @@ class BasisSetsAndProjectors(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[red]Invalid basis size [bold]'{value}'[/bold] for [bold]{original_key}[/bold].[/red]"
+                                    f"[red]Invalid basis size "
+                                    f"[bold]'{value}'[/bold] for "
+                                    f"[bold]{original_key}[/bold].[/red]"
                                 )
                                 console.print(
-                                    f"[red]Allowed basis sizes are [bold]{allowed_basis_sizes}[/bold][/red]"
+                                    f"[red]Allowed basis sizes are "
+                                    f"[bold]{allowed_basis_sizes}[/bold][/red]"
                                 )
                             raise ValueError(
-                                f"Invalid basis size '{value}'. Allowed values are: {allowed_basis_sizes}"
+                                f"Invalid basis size '{value}'. Allowed values "
+                                f"are: {allowed_basis_sizes}"
                             )
                         setattr(basis_instance, original_key, value.upper())
                     else:
                         setattr(basis_instance, original_key, value)
                 elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Key '{key}' does not match any BasisSetsAndProjectors field, skipping.[/yellow]"
+                        f"[yellow]Key '{key}' does not match any "
+                        f"BasisSetsAndProjectors field, skipping.[/yellow]"
                     )
 
         # Update with kwargs (kwargs take precedence over user_params)
@@ -620,7 +777,8 @@ class BasisSetsAndProjectors(FDFDataclass):
                 )
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                     console.print(
-                        f"[blue]Matched BasisSetsAndProjectors kwarg: {original_key} = {value}[/blue]"
+                        f"[blue]Matched BasisSetsAndProjectors kwarg: "
+                        f"{original_key} = {value}[/blue]"
                     )
                 # Apply similar type conversion logic for kwargs
                 if original_key in [
@@ -630,7 +788,8 @@ class BasisSetsAndProjectors(FDFDataclass):
                     "ps_lmax_block",
                     "kb_projectors_block",
                 ]:
-                    # Special handling for pao_basissizes_block: accepts dict OR list
+                    # Special handling for pao_basissizes_block:
+                    # accepts dict OR list
                     if original_key == "pao_basissizes_block":
                         if isinstance(value, dict):
                             # Convert dict to list format
@@ -656,9 +815,12 @@ class BasisSetsAndProjectors(FDFDataclass):
                     "reparametrize_pseudos",
                     "restricted_radial_grid",
                 ]:
-                    if isinstance(value, str):
-                        value = value.lower() in ("true", "t", "1", "yes")
-                    setattr(basis_instance, original_key, bool(value))
+                    bool_value = (
+                        value.lower() in ("true", "t", "1", "yes")
+                        if isinstance(value, str)
+                        else value
+                    )
+                    setattr(basis_instance, original_key, bool(bool_value))
                 elif original_key in [
                     "pao_energy_shift",
                     "pao_split_norm",
@@ -682,7 +844,9 @@ class BasisSetsAndProjectors(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Invalid value type for {original_key}: expected float, got {value}[/yellow]"
+                                f"[yellow]Invalid value type for "
+                                f"{original_key}: expected float, got "
+                                f"{value}[/yellow]"
                             )
                 elif original_key == "pao_basis_type":
                     allowed_basis_types = [
@@ -695,13 +859,17 @@ class BasisSetsAndProjectors(FDFDataclass):
                     if value.lower() not in allowed_basis_types:
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[red]Invalid basis type [bold]'{value}'[/bold] for [bold]{original_key}[/bold].[/red]"
+                                f"[red]Invalid basis type "
+                                f"[bold]'{value}'[/bold] for "
+                                f"[bold]{original_key}[/bold].[/red]"
                             )
                             console.print(
-                                f"[red]Allowed basis types are [bold]{allowed_basis_types}[/bold][/red]"
+                                f"[red]Allowed basis types are "
+                                f"[bold]{allowed_basis_types}[/bold][/red]"
                             )
                         raise ValueError(
-                            f"Invalid basis type '{value}'. Allowed values are: {allowed_basis_types}"
+                            f"Invalid basis type '{value}'. Allowed values are: "
+                            f"{allowed_basis_types}"
                         )
                     setattr(basis_instance, original_key, value.lower())
                 elif original_key == "pao_basissize":
@@ -736,13 +904,17 @@ class BasisSetsAndProjectors(FDFDataclass):
                     if value.upper() not in allowed_basis_sizes:
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[red]Invalid basis size [bold]'{value}'[/bold] for [bold]{original_key}[/bold].[/red]"
+                                f"[red]Invalid basis size "
+                                f"[bold]'{value}'[/bold] for "
+                                f"[bold]{original_key}[/bold].[/red]"
                             )
                             console.print(
-                                f"[red]Allowed basis sizes are [bold]{allowed_basis_sizes}[/bold][/red]"
+                                f"[red]Allowed basis sizes are "
+                                f"[bold]{allowed_basis_sizes}[/bold][/red]"
                             )
                         raise ValueError(
-                            f"Invalid basis size '{value}'. Allowed values are: {allowed_basis_sizes}"
+                            f"Invalid basis size '{value}'. Allowed values are: "
+                            f"{allowed_basis_sizes}"
                         )
                     setattr(basis_instance, original_key, value.upper())
                 else:
@@ -761,15 +933,14 @@ class BasisSetsAndProjectors(FDFDataclass):
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]BasisSetsAndProjectors[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]BasisSetsAndProjectors[/yellow] Successful![/green]"
             )
 
         return basis_instance
 
-    def validate(self):
-        """
-        Validates the basis set and KB projectors settings.
-        """
+    def validate(self) -> None:
+        """Validate the basis set and KB projectors settings."""
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]BasisSetsAndProjectors.validate()[/green]")
 
@@ -804,34 +975,42 @@ class BasisSetsAndProjectors(FDFDataclass):
         # Basis Size
         if self.pao_basissize.upper() not in allowed_basis_size:
             raise ValueError(
-                f"Invalid basis set '{self.pao_basissize}'. Allowed values are: {allowed_basis_size}"
+                f"Invalid basis set '{self.pao_basissize}'. Allowed values "
+                f"are: {allowed_basis_size}"
             )
 
         # Basis Type
         allowed_pao_basis_type = ["split", "splitgauss", "nodes", "nonodes", "filteret"]
         if self.pao_basis_type not in allowed_pao_basis_type:
             raise ValueError(
-                f"Invalid basis set '{self.pao_basis_type}'. Allowed values are: {allowed_pao_basis_type}"
+                f"Invalid basis set '{self.pao_basis_type}'. Allowed values "
+                f"are: {allowed_pao_basis_type}"
             )
 
-        if self.perform_siesta_default_basis:
-            if self.pao_basis_type in ["split", "nodes"]:
-                if not self.pao_energy_shift:
-                    raise ValueError(
-                        "pao_energy_shift must be specified when pao_basis_type is 'split' or 'nodes'."
-                    )
-                if not self.pao_split_norm:
-                    raise ValueError(
-                        "pao_split_norm must be specified when pao_basis_type is 'split' or 'nodes'."
-                    )
-                if not self.pao_basissize:
-                    raise ValueError(
-                        "pao_basissize must be specified when pao_basis_type is 'split' or 'nodes'."
-                    )
+        if self.perform_siesta_default_basis and self.pao_basis_type in [
+            "split",
+            "nodes",
+        ]:
+            if not self.pao_energy_shift:
+                raise ValueError(
+                    "pao_energy_shift must be specified when pao_basis_type "
+                    "is 'split' or 'nodes'."
+                )
+            if not self.pao_split_norm:
+                raise ValueError(
+                    "pao_split_norm must be specified when pao_basis_type "
+                    "is 'split' or 'nodes'."
+                )
+            if not self.pao_basissize:
+                raise ValueError(
+                    "pao_basissize must be specified when pao_basis_type "
+                    "is 'split' or 'nodes'."
+                )
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation: [yellow]BasisSetsAndProjectors[/yellow] Successful![/green]"
+                "[green]Validation: [yellow]BasisSetsAndProjectors[/yellow] "
+                "Successful![/green]"
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -989,14 +1168,17 @@ class BasisSetsAndProjectors(FDFDataclass):
         if self.pao_basis_block:
             fdf["%block PAO.Basis"] = self.pao_basis_block
 
-        # PRIORITY 2: Per-species basis sizes (medium priority, mutually exclusive with PAO.BasisSize)
+        # PRIORITY 2: Per-species basis sizes (medium priority, mutually
+        # exclusive with PAO.BasisSize)
         if self.pao_basissizes_block:
             fdf["%block PAO.BasisSizes"] = self.pao_basissizes_block
-            # Don't write scalar - %block PAO.BasisSizes completely replaces PAO.BasisSize
+            # Don't write scalar - %block PAO.BasisSizes completely replaces
+            # PAO.BasisSize
 
         # PRIORITY 3: Global basis size scalar (fallback for species not in blocks)
         elif not self.pao_basissizes_block:
-            # Write scalar if no %block PAO.BasisSizes (can coexist with %block PAO.Basis)
+            # Write scalar if no %block PAO.BasisSizes (can coexist with
+            # %block PAO.Basis)
             if self.pao_basissize == "DZP":
                 fdf["PAO.BasisSize"] = "DZP  # SIESTA DEFAULT VALUE"
             else:
@@ -1083,7 +1265,8 @@ class BasisSetsAndProjectors(FDFDataclass):
         # PAO.Polarization.NonPerturbative
         if self.pao_polarization_non_perturbative:
             fdf["PAO.Polarization.NonPerturbative"] = (
-                f"{str(self.pao_polarization_non_perturbative).lower()}  # SIESTA DEFAULT VALUE"
+                f"{str(self.pao_polarization_non_perturbative).lower()}  "
+                "# SIESTA DEFAULT VALUE"
             )
         else:
             fdf["PAO.Polarization.NonPerturbative"] = str(
@@ -1151,20 +1334,22 @@ class BasisSetsAndProjectors(FDFDataclass):
             Dictionary of ASE parameters
         """
         # ASE uses different parameter names for basis settings
-        ase_params = {
+        return {
             "pao_basis_type": self.pao_basis_type,
             "pao_basissize": self.pao_basissize,
             "pao_energyshift": self.pao_energy_shift,
             "pao_splitnorm": self.pao_split_norm,
         }
-        return ase_params
 
-    def generate_basis_block(self):
+    def generate_basis_block(self) -> None:
         """
-        Generates the PAO.Basis block or flags for the FDF file, including all relevant fields (default and user-specified).
+        Generate the PAO.Basis block or flags for the FDF file.
 
-        This is a wrapper around generate_fdf() to maintain backward compatibility
-        with code that calls this method directly (e.g., setup_basis_sets_and_projectors()).
+        Includes all relevant fields (default and user-specified).
+
+        This is a wrapper around generate_fdf() to maintain backward
+        compatibility with code that calls this method directly (e.g.,
+        setup_basis_sets_and_projectors()).
 
         By calling generate_fdf(), we ensure:
         - Single source of truth for FDF generation
@@ -1179,7 +1364,8 @@ class BasisSetsAndProjectors(FDFDataclass):
             )
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers via
+        # update_from_fdf())
         fdf = self.generate_fdf()
 
         # Add comment header

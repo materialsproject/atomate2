@@ -32,9 +32,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class MolecularDynamicsAndRelaxation(FDFDataclass):
-    """
-    Data class to manage molecular dynamics (MD) and structural relaxation options for SIESTA input.
-    """
+    """Manage molecular dynamics (MD) and structural relaxation options for SIESTA."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -44,11 +42,14 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # --------------------------------------------------------
     # 7 STRUCTURAL RELAXATION, AND MOLECULAR DYNAMICS
     # --------------------------------------------------------
-    # md_type_of_run: str = "CG"  # Relaxation method ('CG' for conjugate gradients, 'BFGS', etc.)
+    # md_type_of_run: str = "CG"
+    # Relaxation method ('CG' for conjugate gradients, 'BFGS', etc.)
     md_type_of_run: str = field(
         default="CG",
         metadata={
-            "description": "Selects the algorithm for a molecular dynamics or geometry optimization run. Common options are 'CG' (conjugate gradients), 'BFGS', 'Verlet', and 'Nose'.",
+            "description": "Selects the algorithm for a molecular dynamics or geometry"
+            " optimization run. Common options are 'CG' (conjugate gradients), 'BFGS',"
+            " 'Verlet', and 'Nose'.",
             "SIESTA keyword": "MD.TypeOfRun",
         },
     )
@@ -59,8 +60,10 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # md_variable_cell: bool = False # MD.VariableCell false
     # md_constant_volume: bool = False # Constant.Volume false
     # md_relax_cell_only: bool = False # MD.RelaxCellOnly false
-    # md_max_force_tol: float = 0.01  # MD.MaxForceTol 0.04 eV/Ang Tolerance for relaxation convergence in eV/Angstrom
-    # md_max_stress_tol: float = 0.01  # MD.MaxStressTol 1 GPa Tolerance for relaxation convergence in GPa
+    # md_max_force_tol: float = 0.01
+    # MD.MaxForceTol 0.04 eV/Ang Tolerance for relaxation convergence in eV/Angstrom
+    # md_max_stress_tol: float = 0.01
+    # MD.MaxStressTol 1 GPa Tolerance for relaxation convergence in GPa
     # md_steps: int = 200  # Maximum number of steps for relaxation
     # md_max_displ: float = 0.2  # MD.MaxDispl 0.2 Bohr
     # md_precondition_variable_cell: float = 5.0 # MD.PreconditionVariableCell 5 Ang
@@ -71,7 +74,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_variable_cell: bool = field(
         default=False,
         metadata={
-            "description": "If true, allows the lattice vectors (the simulation cell) to change during a geometry optimization.",
+            "description": "If true, allows the lattice vectors (the simulation cell)"
+            " to change during a geometry optimization.",
             "SIESTA keyword": "MD.VariableCell",
         },
     )
@@ -79,7 +83,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_constant_volume: bool = field(
         default=False,
         metadata={
-            "description": "If true, keeps the volume of the simulation cell constant during a variable-cell geometry optimization.",
+            "description": "If true, keeps the volume of the simulation cell constant"
+            " during a variable-cell geometry optimization.",
             "SIESTA keyword": "MD.ConstantVolume",
         },
     )
@@ -87,7 +92,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_relax_cell_only: bool = field(
         default=False,
         metadata={
-            "description": "If true, only the lattice vectors are relaxed, while the fractional coordinates of the atoms are kept fixed.",
+            "description": "If true, only the lattice vectors are relaxed, while the"
+            " fractional coordinates of the atoms are kept fixed.",
             "SIESTA keyword": "MD.RelaxCellOnly",
         },
     )
@@ -95,7 +101,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_max_force_tol: float = field(
         default=0.01,
         metadata={
-            "description": "The convergence threshold (in eV/Angstrom) for the maximum force on any atom during a geometry optimization.",
+            "description": "The convergence threshold (in eV/Angstrom) for the maximum"
+            " force on any atom during a geometry optimization.",
             "SIESTA keyword": "MD.MaxForceTol",
             "unit": "eV/Ang",
         },
@@ -104,7 +111,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_max_stress_tol: float = field(
         default=0.01,
         metadata={
-            "description": "The convergence threshold (in GPa) for the maximum component of the stress tensor during a variable-cell geometry optimization.",
+            "description": "The convergence threshold (in GPa) for the maximum"
+            " component of the stress tensor during a variable-cell geometry"
+            " optimization.",
             "SIESTA keyword": "MD.MaxStressTol",
             "unit": "GPa",
         },
@@ -113,7 +122,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_steps: int = field(
         default=200,
         metadata={
-            "description": "The maximum number of molecular dynamics or geometry optimization steps to be performed.",
+            "description": "The maximum number of molecular dynamics or geometry"
+            " optimization steps to be performed.",
             "SIESTA keyword": "MD.NumCGsteps",
         },
     )
@@ -121,7 +131,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_max_displ: float = field(
         default=0.2,
         metadata={
-            "description": "The maximum allowed atomic displacement (in Bohr) in a single geometry optimization step.",
+            "description": "The maximum allowed atomic displacement (in Bohr) in a"
+            " single geometry optimization step.",
             "SIESTA keyword": "MD.MaxDispl",
             "unit": "Bohr",
         },
@@ -130,7 +141,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_precondition_variable_cell: float = field(
         default=5.0,
         metadata={
-            "description": "A preconditioning factor (in Angstrom) for variable-cell relaxation, related to the bulk modulus.",
+            "description": "A preconditioning factor (in Angstrom) for variable-cell"
+            " relaxation, related to the bulk modulus.",
             "SIESTA keyword": "MD.PreconditionVariableCell",
             "unit": "Ang",
         },
@@ -139,7 +151,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     zm_force_tol_length: float = field(
         default=0.0155574,
         metadata={
-            "description": "The force tolerance (in Ry/Bohr) for bond lengths in a Z-matrix (internal coordinates) optimization.",
+            "description": "The force tolerance (in Ry/Bohr) for bond lengths in a"
+            " Z-matrix (internal coordinates) optimization.",
             "SIESTA keyword": "ZM.ForceTolLength",
             "unit": "Ry/Bohr",
         },
@@ -148,7 +161,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     zm_force_tol_angle: float = field(
         default=0.00356549,
         metadata={
-            "description": "The force tolerance (in Ry/radian) for angles in a Z-matrix (internal coordinates) optimization.",
+            "description": "The force tolerance (in Ry/radian) for angles in a Z-matrix"
+            " (internal coordinates) optimization.",
             "SIESTA keyword": "ZM.ForceTolAngle",
             "unit": "Ry/rad",
         },
@@ -157,7 +171,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     zm_max_displ_length: float = field(
         default=0.2,
         metadata={
-            "description": "The maximum allowed displacement (in Bohr) for bond lengths in a Z-matrix optimization step.",
+            "description": "The maximum allowed displacement (in Bohr) for bond lengths"
+            " in a Z-matrix optimization step.",
             "SIESTA keyword": "ZM.MaxDisplLength",
             "unit": "Bohr",
         },
@@ -166,7 +181,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     zm_max_displ_angle: float = field(
         default=0.003,
         metadata={
-            "description": "The maximum allowed displacement (in radians) for angles in a Z-matrix optimization step.",
+            "description": "The maximum allowed displacement (in radians) for angles"
+            " in a Z-matrix optimization step.",
             "SIESTA keyword": "ZM.MaxDisplAngle",
             "unit": "rad",
         },
@@ -179,7 +195,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_use_save_cg: bool = field(
         default=False,
         metadata={
-            "description": "If true, reads the conjugate-gradients history from a previous run to allow for an efficient restart of a geometry optimization.",
+            "description": "If true, reads the conjugate-gradients history from a"
+            " previous run to allow for an efficient restart of a geometry"
+            " optimization.",
             "SIESTA keyword": "MD.UseSaveCG",
         },
     )
@@ -189,11 +207,14 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # --------------------------
     # md_broyden_history_steps: int = 5 # MD.Broyden.History.Steps 5
     # md_broyden_cycle_on_maxit: bool = True # MD.Broyden.Cycle.On.Maxit true
-    # md_broyden_initial_inverse_jacobian: int = 1 # MD.Broyden.Initial.Inverse.Jacobian 1
+    # md_broyden_initial_inverse_jacobian: int = 1
+    # MD.Broyden.Initial.Inverse.Jacobian 1
     md_broyden_history_steps: int = field(
         default=5,
         metadata={
-            "description": "Sets the number of previous steps (history depth) used to construct the approximate Hessian matrix in the Broyden geometry optimization method.",
+            "description": "Sets the number of previous steps (history depth) used to"
+            " construct the approximate Hessian matrix in the Broyden geometry"
+            " optimization method.",
             "SIESTA keyword": "MD.Broyden.History.Steps",
         },
     )
@@ -201,7 +222,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_broyden_cycle_on_maxit: bool = field(
         default=True,
         metadata={
-            "description": "A flag that controls the behavior of the Broyden algorithm when the maximum number of iterations for an inner loop is reached, potentially restarting the cycle.",
+            "description": "A flag that controls the behavior of the Broyden algorithm"
+            " when the maximum number of iterations for an inner loop is reached,"
+            " potentially restarting the cycle.",
             "SIESTA keyword": "MD.Broyden.Cycle.On.Maxit",
         },
     )
@@ -209,7 +232,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_broyden_initial_inverse_jacobian: int = field(
         default=1,
         metadata={
-            "description": "Selects the scheme for constructing the initial guess for the inverse Jacobian (or Hessian) matrix at the start of a Broyden geometry optimization.",
+            "description": "Selects the scheme for constructing the initial guess for"
+            " the inverse Jacobian (or Hessian) matrix at the start of a Broyden"
+            " geometry optimization.",
             "SIESTA keyword": "MD.Broyden.Initial.Inverse.Jacobian",
         },
     )
@@ -218,13 +243,17 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # 7.2.3 FIRE relaxation
     # ---------------------
     # target_pressure: float = 0.0 # Target.Pressure 0 GPa
-    # block_targ_stress_voigt: Optional[List[int]] = field(default_factory=list)  # %block Target.Stress.Voigt −1 −1 −1 0 0 0
-    # block_md_target_stress: Optional[List[int]] = field(default_factory=list) # %block MD.TargetStress −1 −1 −1 0 0 0
-    # md_remote_intramolecular_pressure: bool = False # MD.RemoveIntramolecularPressure false
+    # block_targ_stress_voigt: Optional[List[int]] = field(default_factory=list)
+    # %block Target.Stress.Voigt −1 −1 −1 0 0 0  # noqa: RUF003
+    # block_md_target_stress: Optional[List[int]] = field(default_factory=list)
+    # %block MD.TargetStress −1 −1 −1 0 0 0  # noqa: RUF003
+    # md_remote_intramolecular_pressure: bool = False
+    # MD.RemoveIntramolecularPressure false
     target_pressure: float = field(
         default=0.0,
         metadata={
-            "description": "The target external pressure (in GPa) for a variable-cell geometry optimization.",
+            "description": "The target external pressure (in GPa) for a variable-cell"
+            " geometry optimization.",
             "SIESTA keyword": "Target.Pressure",
             "unit": "GPa",
         },
@@ -233,7 +262,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     block_targ_stress_voigt: list[int] | None = field(
         default_factory=list,
         metadata={
-            "description": "A block to specify the target stress tensor in Voigt notation. A value of -1 for a component means it is determined by the Target.Pressure.",
+            "description": "A block to specify the target stress tensor in Voigt"
+            " notation. A value of -1 for a component means it is determined by the"
+            " Target.Pressure.",
             "SIESTA keyword": "%block Target.Stress.Voigt",
         },
     )
@@ -241,7 +272,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     block_md_target_stress: list[int] | None = field(
         default_factory=list,
         metadata={
-            "description": "A block to specify the target stress tensor for a molecular dynamics run under constant pressure.",
+            "description": "A block to specify the target stress tensor for a molecular"
+            " dynamics run under constant pressure.",
             "SIESTA keyword": "%block MD.TargetStress",
         },
     )
@@ -249,7 +281,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_remote_intramolecular_pressure: bool = field(
         default=False,
         metadata={
-            "description": "If true, attempts to remove the intramolecular contribution to the pressure, which is useful for soft materials or molecules in a box.",
+            "description": "If true, attempts to remove the intramolecular"
+            " contribution to the pressure, which is useful for soft materials or"
+            " molecules in a box.",
             "SIESTA keyword": "MD.RemoveIntramolecularPressure",
         },
     )
@@ -264,7 +298,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # md_target_temperature: float = 0.0 # MD.TargetTemperature 0 K
     # md_nose_mass: float = 100.0 # MD.NoseMass 100 Ry fs2
     # md_parrinello_rahmans_mass: float = 100.0 # MD.ParrinelloRahmanMass 100 Ry fs2
-    # md_anneal_option: str = "TemperatureAndPressure" # MD.AnnealOption TemperatureAndPressure
+    # md_anneal_option: str = "TemperatureAndPressure"
+    # MD.AnnealOption TemperatureAndPressure
     # md_tau_relax: int = 100 # MD.TauRelax 100 fs
     # md_bulk_modulus: float = 100.0  # MD.BulkModulus 100 Ry/Bohr3
     md_initial_time_step: int = field(
@@ -278,7 +313,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_final_time_step: int | None = field(
         default=None,
         metadata={
-            "description": "The step number at which the MD simulation will end. Defaults to running for a total of MD.NumCGsteps.",
+            "description": "The step number at which the MD simulation will end."
+            " Defaults to running for a total of MD.NumCGsteps.",
             "SIESTA keyword": "MD.FinalTimeStep",
         },
     )
@@ -286,7 +322,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_length_time_step: float = field(
         default=1.0,
         metadata={
-            "description": "The size of the time step (in femtoseconds) used for the molecular dynamics integration.",
+            "description": "The size of the time step (in femtoseconds) used for the"
+            " molecular dynamics integration.",
             "SIESTA keyword": "MD.LengthTimeStep",
             "unit": "fs",
         },
@@ -295,7 +332,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_initial_temperature: float = field(
         default=0.0,
         metadata={
-            "description": "The initial temperature (in Kelvin) for an MD simulation, used to set the initial atomic velocities.",
+            "description": "The initial temperature (in Kelvin) for an MD simulation,"
+            " used to set the initial atomic velocities.",
             "SIESTA keyword": "MD.InitialTemperature",
             "unit": "K",
         },
@@ -304,7 +342,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_target_temperature: float = field(
         default=0.0,
         metadata={
-            "description": "The target temperature (in Kelvin) to be maintained by a thermostat in an NVT or NPT simulation.",
+            "description": "The target temperature (in Kelvin) to be maintained by a"
+            " thermostat in an NVT or NPT simulation.",
             "SIESTA keyword": "MD.TargetTemperature",
             "unit": "K",
         },
@@ -313,7 +352,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_nose_mass: float = field(
         default=100.0,
         metadata={
-            "description": "The fictitious mass parameter (in Ry*fs^2) for the Nosé-Hoover thermostat, controlling the coupling to the heat bath.",
+            "description": "The fictitious mass parameter (in Ry*fs^2) for the"
+            " Nosé-Hoover thermostat, controlling the coupling to the heat bath.",
             "SIESTA keyword": "MD.NoseMass",
             "unit": "Ry*fs^2",
         },
@@ -322,7 +362,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_parrinello_rahmans_mass: float = field(
         default=100.0,
         metadata={
-            "description": "The fictitious mass parameter (in Ry*fs^2) for the Parrinello-Rahman barostat, controlling the dynamics of the simulation cell.",
+            "description": "The fictitious mass parameter (in Ry*fs^2) for the"
+            " Parrinello-Rahman barostat, controlling the dynamics of the simulation"
+            " cell.",
             "SIESTA keyword": "MD.ParrinelloRahmanMass",
             "unit": "Ry*fs^2",
         },
@@ -331,7 +373,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_anneal_option: str = field(
         default="TemperatureAndPressure",
         metadata={
-            "description": "In a simulated annealing run, this specifies whether to anneal the 'Temperature', 'Pressure', or both 'TemperatureAndPressure'.",
+            "description": "In a simulated annealing run, this specifies whether to"
+            " anneal the 'Temperature', 'Pressure', or both 'TemperatureAndPressure'.",
             "SIESTA keyword": "MD.AnnealOption",
         },
     )
@@ -339,7 +382,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_tau_relax: float = field(
         default=100.0,
         metadata={
-            "description": "The relaxation time (in femtoseconds) for the thermostat or barostat, offering an alternative way to set the coupling strength.",
+            "description": "The relaxation time (in femtoseconds) for the thermostat"
+            " or barostat, offering an alternative way to set the coupling strength.",
             "SIESTA keyword": "MD.TauRelax",
             "unit": "fs",
         },
@@ -348,7 +392,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_bulk_modulus: float = field(
         default=100.0,
         metadata={
-            "description": "An estimate of the system's bulk modulus (in Ry/Bohr^3), used as a preconditioner in constant-pressure simulations.",
+            "description": "An estimate of the system's bulk modulus (in Ry/Bohr^3),"
+            " used as a preconditioner in constant-pressure simulations.",
             "SIESTA keyword": "MD.BulkModulus",
             "unit": "Ry/Bohr^3",
         },
@@ -363,7 +408,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # write_md_history: bool = False # WriteMDHistory false
     # write_orbital_index: bool = True # Write.OrbitalIndex true
 
-    # md_use_save_XV: bool = True # instructs SIESTA to read the atomic positions and velocities stored in file SystemLabel.XV by a previous run
+    # md_use_save_XV: bool = True
+    # instructs SIESTA to read the atomic positions and velocities stored in file
+    # SystemLabel.XV by a previous run
 
     # # For TDED
     # perform_tded: bool = False
@@ -374,10 +421,14 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     # #md_steps: int = 1000  # Number of MD steps to perform
     # md_time_step: float = 1.0  # Time step for MD in femtoseconds
 
-    # perform_md: bool = False  # Flag to indicate if molecular dynamics should be performed
-    # md_fdf_arguments : Dict[str, Any] = field(default_factory=dict) # Optional fdf_arguments to return md_fdf_arguments
-    # perform_relaxation: bool = False  # Flag to indicate if structural relaxation should be performed
-    # relaxation_fdf_arguments : Dict[str, Any] = field(default_factory=dict) # Optional fdf_arguments to return relaxation_fdf_arguments
+    # perform_md: bool = False
+    # Flag to indicate if molecular dynamics should be performed
+    # md_fdf_arguments : Dict[str, Any] = field(default_factory=dict)
+    # Optional fdf_arguments to return md_fdf_arguments
+    # perform_relaxation: bool = False
+    # Flag to indicate if structural relaxation should be performed
+    # relaxation_fdf_arguments : Dict[str, Any] = field(default_factory=dict)
+    # Optional fdf_arguments to return relaxation_fdf_arguments
 
     write_coor_initial: bool = field(
         default=True,
@@ -390,7 +441,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     write_coor_step: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the atomic coordinates at every step of a geometry optimization or MD run.",
+            "description": "If true, writes the atomic coordinates at every step of a"
+            " geometry optimization or MD run.",
             "SIESTA keyword": "WriteCoorStep",
         },
     )
@@ -398,7 +450,10 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     write_forces: bool = field(
         default=True,  # Atomate2 default (SIESTA default is False)
         metadata={
-            "description": "If true, writes the atomic forces at every step of a geometry optimization or MD run. Atomate2 sets this to True by default (SIESTA default is False) because forces are needed for workflow analysis.",
+            "description": "If true, writes the atomic forces at every step of a"
+            " geometry optimization or MD run. Atomate2 sets this to True by default"
+            " (SIESTA default is False) because forces are needed for workflow"
+            " analysis.",
             "SIESTA keyword": "WriteForces",
         },
     )
@@ -406,7 +461,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     write_md_history: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the MD history file (.MD), which includes velocities and other thermodynamic data.",
+            "description": "If true, writes the MD history file (.MD), which includes"
+            " velocities and other thermodynamic data.",
             "SIESTA keyword": "WriteMDHistory",
         },
     )
@@ -414,16 +470,19 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     write_orbital_index: bool = field(
         default=True,
         metadata={
-            "description": "If true, writes the .OI file, which maps the internal orbital numbering to the quantum numbers (n, l, m, zeta).",
+            "description": "If true, writes the .OI file, which maps the internal"
+            " orbital numbering to the quantum numbers (n, l, m, zeta).",
             "SIESTA keyword": "Write.OrbitalIndex",
         },
     )
 
     # MD Restart and Wrapper-level Controls
-    md_use_save_XV: bool = field(
+    md_use_save_XV: bool = field(  # noqa: N815 matches SIESTA MD.UseSaveXV (.XV file)
         default=True,
         metadata={
-            "description": "If true, reads atomic positions, velocities, and cell vectors from a previous run's .XV file to restart an MD or geometry optimization.",
+            "description": "If true, reads atomic positions, velocities, and cell"
+            " vectors from a previous run's .XV file to restart an MD or geometry"
+            " optimization.",
             "SIESTA keyword": "MD.UseSaveXV",
         },
     )
@@ -431,7 +490,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     perform_tded: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable a Time-Dependent Density Functional Theory (TDDFT) calculation for simulating dynamics under a time-varying potential.",
+            "description": "A wrapper-level flag to enable a Time-Dependent Density"
+            " Functional Theory (TDDFT) calculation for simulating dynamics under a"
+            " time-varying potential.",
             "SIESTA keyword": None,
         },
     )
@@ -439,7 +500,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     perform_md: bool = field(
         default=False,
         metadata={
-            "description": "A high-level wrapper flag to enable a molecular dynamics simulation. Sets MD.TypeOfRun and related parameters.",
+            "description": "A high-level wrapper flag to enable a molecular dynamics"
+            " simulation. Sets MD.TypeOfRun and related parameters.",
             "SIESTA keyword": None,
         },
     )
@@ -447,7 +509,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     perform_relaxation: bool = field(
         default=False,
         metadata={
-            "description": "A high-level wrapper flag to enable a geometry optimization (structural relaxation). Sets MD.TypeOfRun to 'CG' or 'BFGS'.",
+            "description": "A high-level wrapper flag to enable a geometry optimization"
+            " (structural relaxation). Sets MD.TypeOfRun to 'CG' or 'BFGS'.",
             "SIESTA keyword": None,
         },
     )
@@ -455,7 +518,9 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_ensemble: str = field(
         default="NVT",
         metadata={
-            "description": "A high-level wrapper flag to select the thermodynamic ensemble ('NVE', 'NVT', 'NPT') for an MD run. This controls which thermostat/barostat is used.",
+            "description": "A high-level wrapper flag to select the thermodynamic"
+            " ensemble ('NVE', 'NVT', 'NPT') for an MD run. This controls which"
+            " thermostat/barostat is used.",
             "SIESTA keyword": None,
         },
     )
@@ -463,7 +528,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_temperature: float = field(
         default=300.0,
         metadata={
-            "description": "A wrapper-level parameter for the target temperature (in Kelvin) for an MD simulation.",
+            "description": "A wrapper-level parameter for the target temperature (in"
+            " Kelvin) for an MD simulation.",
             "SIESTA keyword": "MD.TargetTemperature",
             "unit": "K",
         },
@@ -472,7 +538,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_time_step: float = field(
         default=1.0,
         metadata={
-            "description": "A wrapper-level parameter for the molecular dynamics time step (in femtoseconds).",
+            "description": "A wrapper-level parameter for the molecular dynamics time"
+            " step (in femtoseconds).",
             "SIESTA keyword": "MD.LengthTimeStep",
             "unit": "fs",
         },
@@ -481,7 +548,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     md_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to molecular dynamics.",
+            "description": "A dictionary for any additional or arbitrary FDF flags"
+            " related to molecular dynamics.",
             "SIESTA keyword": None,
         },
     )
@@ -489,7 +557,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     relaxation_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to geometry optimization (relaxation).",
+            "description": "A dictionary for any additional or arbitrary FDF flags"
+            " related to geometry optimization (relaxation).",
             "SIESTA keyword": None,
         },
     )
@@ -497,12 +566,13 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
     comments: str = field(
         default="",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": "User-provided comments to be included as a comment block"
+            " in the FDF file.",
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -545,12 +615,10 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
                 "WriteMDHistory",
                 "Write.OrbitalIndex",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration flag
 
-    def validate(self):
-        """
-        Validates the molecular dynamics and relaxation options.
-        """
+    def validate(self) -> None:
+        """Validate the molecular dynamics and relaxation options."""
         # console = Console()
         logger.info("MolecularDynamicsAndRelaxation.validate()")
 
@@ -558,7 +626,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         allowed_md_type_of_run_tded = ["TDED"]
         if self.perform_tded and self.md_type_of_run not in allowed_md_type_of_run_tded:
             raise ValueError(
-                f"Invalid MD FC  '{self.md_type_of_run}'. Allowed values are: {allowed_md_type_of_run_tded}"
+                f"Invalid MD FC  '{self.md_type_of_run}'. Allowed values are:"
+                f" {allowed_md_type_of_run_tded}"
             )
 
         # Allowed Ensembles
@@ -574,7 +643,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
             and self.md_ensemble not in allowed_md_type_of_run_molecular_dynamics
         ):
             raise ValueError(
-                f"Invalid MD ensemble '{self.md_ensemble}'. Allowed values are: {allowed_md_type_of_run_molecular_dynamics}"
+                f"Invalid MD ensemble '{self.md_ensemble}'. Allowed values are:"
+                f" {allowed_md_type_of_run_molecular_dynamics}"
             )
 
         # Allowed Relaxation Method
@@ -584,19 +654,25 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
             and self.md_type_of_run not in allowed_md_type_of_run_relaxation
         ):
             raise ValueError(
-                f"Invalid relaxation method '{self.md_type_of_run}'. Allowed values are: {allowed_md_type_of_run_relaxation}"
+                f"Invalid relaxation method '{self.md_type_of_run}'. Allowed values"
+                f" are: {allowed_md_type_of_run_relaxation}"
             )
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]MolecularDynamicsAndRelaxation[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]MolecularDynamicsAndRelaxation[/yellow] Successful![/green]"
             )
-            # console.print(f"[green]Validation: [yellow]MolecularDynamicsAndRelaxation[/yellow] Successful![/green]")
+            # console.print(
+            #     f"[green]Validation: "
+            #     f"[yellow]MolecularDynamicsAndRelaxation[/yellow] Successful![/green]"
+            # )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """Update this dataclass from FDF parameters."""
         logger.info(
-            f"MolecularDynamicsAndRelaxation.update_from_fdf() called with {len(fdf_dict)} parameters"
+            "MolecularDynamicsAndRelaxation.update_from_fdf() called with"
+            f" {len(fdf_dict)} parameters"
         )
         for key, value in fdf_dict.items():
             key_lower = key.lower()
@@ -632,7 +708,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
 
         This generates the same parameters as generate_relaxation_block() to ensure
         consistency whether called from _initialize_modules() or core.py.
-        Uses dataclass attributes which have been updated from user_params/powerups/tiers.
+        Uses dataclass attributes updated from user_params/powerups/tiers.
         """
         fdf: dict[str, Any] = OrderedDict()
 
@@ -702,10 +778,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         """Generate ASE-format parameters."""
         return {}
 
-    def generate_md_block(self):
-        """
-        Generates the molecular dynamics options block for the FDF file.
-        """
+    def generate_md_block(self) -> str | None:
+        """Generate the molecular dynamics options block for the FDF file."""
         logger.info("MolecularDynamicsAndRelaxation.generate_md_block()")
         if not self.perform_md:
             return ""
@@ -716,10 +790,11 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
             "MD.Steps": f"{self.md_steps}",
             "MD.TimeStep": f"{self.md_time_step} fs",
         }
+        return None
 
-    def generate_relaxation_block(self):
+    def generate_relaxation_block(self) -> str | None:
         """
-        Generates the structural relaxation options block for the FDF file.
+        Generate the structural relaxation options block for the FDF file.
 
         This is a wrapper around generate_fdf() to maintain backward compatibility
         with code that calls this method directly (e.g., core.py).
@@ -735,15 +810,16 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
             return ""
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these are updated from user_params/powerups/tiers via update_from_fdf())
         self.relaxation_fdf_arguments = self.generate_fdf()
+        return None
 
     @classmethod
     def setup_md_relax_settings(
         cls, user_params: dict[str, Any] | None = None
     ) -> "MolecularDynamicsAndRelaxation":
         """
-        Create and configure a MolecularDynamicsAndRelaxation instance from user parameters.
+        Create and configure a MolecularDynamicsAndRelaxation instance.
 
         This classmethod provides a convenient way to initialize MD/relaxation settings
         for the tier-based input system, processing user-provided parameters and
@@ -772,7 +848,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using default MD/relaxation settings.[/blue]"
+                    "[blue]No user parameters provided; using default MD/relaxation"
+                    " settings.[/blue]"
                 )
         else:
             # Process user_params - simple attribute setting for now

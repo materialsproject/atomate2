@@ -1,5 +1,5 @@
 """
-Data class to manage density of states (DOS) and band-structure analysis options for SIESTA input.
+Data class managing DOS and band-structure analysis options for SIESTA input.
 
 class DensityOfStatesAndBandStructure
 
@@ -14,7 +14,8 @@ Section: 6.16 Band-structure analysis
          6.18.3 Local density of states
          6.19 Options for chemical analysis
          6.19.1 Mulliken charges and overlap populations
-         6.19.2 Depreceted population flags (Voronoi and Hirshfeld atomic population analysis)
+         6.19.2 Depreceted population flags (Voronoi and Hirshfeld atomic
+                population analysis)
          6.19.3 Crystal-Orbital overlap and hamilton populations (COOP/COHP)
 
 """
@@ -26,20 +27,25 @@ __all__ = ["DensityOfStatesAndBandStructure"]
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.sets.bands import band_paymatgen_to_siesta
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
 
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
+
 logger = logging.getLogger(__name__)
 
 
 @dataclass
 class DensityOfStatesAndBandStructure(FDFDataclass):
-    """
-    Data class to manage density of states (DOS) and band-structure analysis options for SIESTA input.
+    """Manage density of states (DOS) and band-structure analysis options.
+
+    Data class covering SIESTA User's Guide sections 6.16-6.19 (band structure,
+    wavefunctions, density of states, and chemical-analysis population flags).
     """
 
     # Class-level verbosity control
@@ -47,19 +53,25 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         VerbosityLevel.ERROR
     )  # Default to show errors only
 
-    # Default changed to "ReciprocalLatticeVectors" to match pymatgen's band path generation
+    # Default changed to "ReciprocalLatticeVectors" to match pymatgen's band path
+    # generation
     # ----------------------------
     # 6.16 Band-structure analysis
     # ----------------------------
     # band_line_scale: str = "pi/a" # BandLinesScale pi/a
-    # band_lines_block: Optional [Dict[float,Any]]= field(default_factory=dict) # %block BandLines 〈None〉
-    # band_points_block: Optional [Dict[float,Any]]= field(default_factory=dict) # %block BandPoints 〈None〉
+    # band_lines_block: Optional [Dict[float,Any]]= field(default_factory=dict) #
+    # %block BandLines 〈None〉
+    # band_points_block: Optional [Dict[float,Any]]= field(default_factory=dict) #
+    # %block BandPoints 〈None〉
     # write_k_bands: bool = False # WriteKbands false
     # write_bands: bool = False # WriteBands  false
     band_line_scale: str = field(
         default="ReciprocalLatticeVectors",
         metadata={
-            "description": "Sets the scale for the k-point coordinates used in the 'BandLines' block. Common options are 'pi/a' or 'ReciprocalLatticeVectors'.",
+            "description": (
+                "Sets the scale for the k-point coordinates used in the 'BandLines' "
+                "block. Common options are 'pi/a' or 'ReciprocalLatticeVectors'."
+            ),
             "SIESTA keyword": "BandLinesScale",
         },
     )
@@ -67,7 +79,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     band_lines_block: dict[float, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the high-symmetry lines (paths) in the Brillouin zone along which the electronic band structure will be calculated.",
+            "description": (
+                "A block to define the high-symmetry lines (paths) in the Brillouin "
+                "zone along which the electronic band structure will be calculated."
+            ),
             "SIESTA keyword": "%block BandLines",
         },
     )
@@ -75,7 +90,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     band_points_block: dict[float, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a set of individual, discrete k-points at which the electronic bands will be calculated, as an alternative to defining lines.",
+            "description": (
+                "A block to define a set of individual, discrete k-points at which the "
+                "electronic bands will be calculated, as an alternative to defining "
+                "lines."
+            ),
             "SIESTA keyword": "%block BandPoints",
         },
     )
@@ -83,7 +102,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     write_k_bands: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the coordinates and accumulated distances of the k-points along the band structure path to a file, which is useful for plotting.",
+            "description": (
+                "If true, writes the coordinates and accumulated distances of the "
+                "k-points along the band structure path to a file, which is useful for "
+                "plotting."
+            ),
             "SIESTA keyword": "WriteKbands",
         },
     )
@@ -91,7 +114,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     write_bands: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the calculated eigenvalues (the bands) along the specified k-point path to the output file for plotting.",
+            "description": (
+                "If true, writes the calculated eigenvalues (the bands) along the "
+                "specified k-point path to the output file for plotting."
+            ),
             "SIESTA keyword": "WriteBands",
         },
     )
@@ -106,7 +132,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     wfs_write_for_bands: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable writing the wavefunctions for each state calculated along the band structure path.",
+            "description": (
+                "A flag to enable writing the wavefunctions for each state calculated "
+                "along the band structure path."
+            ),
             "SIESTA keyword": "WFS.Write.For.Bands",
         },
     )
@@ -114,7 +143,9 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     wfs_band_min: int = field(
         default=1,
         metadata={
-            "description": "The minimum band index for which the wavefunction will be written.",
+            "description": (
+                "The minimum band index for which the wavefunction will be written."
+            ),
             "SIESTA keyword": "WFS.Band.Min",
         },
     )
@@ -122,7 +153,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     wfs_band_max: int | None = field(
         default=None,
         metadata={
-            "description": "The maximum band index for which the wavefunction will be written. Defaults to the total number of calculated orbitals if not set.",
+            "description": (
+                "The maximum band index for which the wavefunction will be written. "
+                "Defaults to the total number of calculated orbitals if not set."
+            ),
             "SIESTA keyword": "WFS.Band.Max",
         },
     )
@@ -130,13 +164,19 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     # -------------------------------------
     # 6.17 Output of selected wavefunctions
     # -------------------------------------
-    # wave_func_k_point_scale: str = "ReciprocalLatticeVectors" # WaveFuncKPointsScale pi/a
-    # wave_func_k_points_block: Optional [Dict[float,Any]]= field(default_factory=dict) # %block WaveFuncKPoints 〈None〉
+    # wave_func_k_point_scale: str = "ReciprocalLatticeVectors" # WaveFuncKPointsScale
+    # pi/a
+    # wave_func_k_points_block: Optional [Dict[float,Any]]= field(default_factory=dict)
+    # # %block WaveFuncKPoints 〈None〉
     # write_wave_functions: bool = False # WriteWaveFunctions false
     wave_func_k_point_scale: str = field(
         default="ReciprocalLatticeVectors",
         metadata={
-            "description": "Sets the scale and basis for the k-point coordinates in the 'WaveFuncKPoints' block. Common options are 'ReciprocalLatticeVectors' (fractional) or 'pi/a'.",
+            "description": (
+                "Sets the scale and basis for the k-point coordinates in the "
+                "'WaveFuncKPoints' block. Common options are "
+                "'ReciprocalLatticeVectors' (fractional) or 'pi/a'."
+            ),
             "SIESTA keyword": "WaveFuncKPointsScale",
         },
     )
@@ -145,7 +185,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     wave_func_k_points_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a list of specific k-points at which the real-space wavefunctions will be calculated and written to output files.",
+            "description": (
+                "A block to define a list of specific k-points at which the real-space "
+                "wavefunctions will be calculated and written to output files."
+            ),
             "SIESTA keyword": "%block WaveFuncKPoints",
         },
     )
@@ -153,7 +196,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     write_wave_functions: bool = field(
         default=False,
         metadata={
-            "description": "A master flag to enable the writing of real-space wavefunctions at the specific k-points defined in the 'WaveFuncKPoints' block.",
+            "description": (
+                "A master flag to enable the writing of real-space wavefunctions at "
+                "the specific k-points defined in the 'WaveFuncKPoints' block."
+            ),
             "SIESTA keyword": "WriteWaveFunctions",
         },
     )
@@ -162,13 +208,18 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     # 6.18 Density of states
     # 6.18.1 Total density of states
     # ------------------------------
-    # dos_kgrid_monkhorst_pack_block: Dict[float,Any]= field(default_factory=dict)  # DOS.kgrid.MonkhorstPack
+    # dos_kgrid_monkhorst_pack_block: Dict[float,Any]= field(default_factory=dict)  #
+    # DOS.kgrid.MonkhorstPack
     # dos_kgrid_cutoff: float = None  # DOS.kgrid.Cutoff
     # dos_kgrid_file: str = None # DOS.kgrid.File
     dos_kgrid_monkhorst_pack_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a specific Monkhorst-Pack k-point grid to be used for the Density of States calculation, which can be denser than the SCF grid.",
+            "description": (
+                "A block to define a specific Monkhorst-Pack k-point grid to be used "
+                "for the Density of States calculation, which can be denser than the "
+                "SCF grid."
+            ),
             "SIESTA keyword": "%block DOS.kgrid.MonkhorstPack",
         },
     )
@@ -176,7 +227,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     dos_kgrid_cutoff: float | None = field(
         default=None,
         metadata={
-            "description": "A real-space cutoff (in Angstroms) used to automatically generate a k-point grid specifically for the DOS calculation.",
+            "description": (
+                "A real-space cutoff (in Angstroms) used to automatically generate a "
+                "k-point grid specifically for the DOS calculation."
+            ),
             "SIESTA keyword": "DOS.kgrid.Cutoff",
         },
     )
@@ -184,7 +238,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     dos_kgrid_file: str | None = field(
         default=None,
         metadata={
-            "description": "The name of a file from which to read the k-points to be used for the DOS calculation, offering maximum flexibility.",
+            "description": (
+                "The name of a file from which to read the k-points to be used for the "
+                "DOS calculation, offering maximum flexibility."
+            ),
             "SIESTA keyword": "DOS.kgrid.File",
         },
     )
@@ -192,14 +249,19 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     # ---------------------------------------------
     # 6.18.2 Partial (projected) density of states
     # ---------------------------------------------
-    # projected_density_of_states_block: Dict[float,Any]= field(default_factory=dict) # %block ProjectedDensityOfStates 〈None〉
-    # pdos_kgrid_monkhorst_pack_block: Dict[float,Any]= field(default_factory=dict) # PDOS.kgrid.MonkhorstPack
+    # projected_density_of_states_block: Dict[float,Any]= field(default_factory=dict) #
+    # %block ProjectedDensityOfStates 〈None〉
+    # pdos_kgrid_monkhorst_pack_block: Dict[float,Any]= field(default_factory=dict) #
+    # PDOS.kgrid.MonkhorstPack
     # pdos_kgrid_cutoff: float = None # PDOS.kgrid.Cutoff
     # pdos_kgrid_file: str = None # PDOS.kgrid.File
     projected_density_of_states_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the projections of the Density of States onto specific atomic orbitals, allowing analysis of orbital contributions.",
+            "description": (
+                "A block to define the projections of the Density of States onto "
+                "specific atomic orbitals, allowing analysis of orbital contributions."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -207,7 +269,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     pdos_kgrid_monkhorst_pack_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a specific Monkhorst-Pack k-point grid to be used for the Projected Density of States (PDOS) calculation.",
+            "description": (
+                "A block to define a specific Monkhorst-Pack k-point grid to be used "
+                "for the Projected Density of States (PDOS) calculation."
+            ),
             "SIESTA keyword": "%block PDOS.kgrid.MonkhorstPack",
         },
     )
@@ -215,7 +280,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     pdos_kgrid_cutoff: float | None = field(
         default=None,
         metadata={
-            "description": "A real-space cutoff (in Angstroms) used to automatically generate a k-point grid specifically for the PDOS calculation.",
+            "description": (
+                "A real-space cutoff (in Angstroms) used to automatically generate a "
+                "k-point grid specifically for the PDOS calculation."
+            ),
             "SIESTA keyword": "PDOS.kgrid.Cutoff",
         },
     )
@@ -223,7 +291,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     pdos_kgrid_file: str | None = field(
         default=None,
         metadata={
-            "description": "The name of a file from which to read the k-points to be used for the PDOS calculation.",
+            "description": (
+                "The name of a file from which to read the k-points to be used for the "
+                "PDOS calculation."
+            ),
             "SIESTA keyword": "PDOS.kgrid.File",
         },
     )
@@ -231,14 +302,19 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     # -------------------------------
     # 6.18.3 Local density of states
     # -------------------------------
-    # local_density_of_states_block: Dict[float,Any]= field(default_factory=dict) # %block LocalDensityOfStates 〈None〉
-    # ldos_kgrid_monkhorst_pack_block: Dict[float,Any]= field(default_factory=dict) # LDOS.kgrid.MonkhorstPack
+    # local_density_of_states_block: Dict[float,Any]= field(default_factory=dict) #
+    # %block LocalDensityOfStates 〈None〉
+    # ldos_kgrid_monkhorst_pack_block: Dict[float,Any]= field(default_factory=dict) #
+    # LDOS.kgrid.MonkhorstPack
     # ldos_kgrid_cutoff: float = None # LDOS.kgrid.Cutoff
     # ldos_kgrid_file: str = None # LDOS.kgrid.File
     local_density_of_states_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the energy window (Emin, Emax) for which the real-space Local Density of States (LDOS) will be calculated.",
+            "description": (
+                "A block to define the energy window (Emin, Emax) for which the "
+                "real-space Local Density of States (LDOS) will be calculated."
+            ),
             "SIESTA keyword": "%block LocalDensityOfStates",
         },
     )
@@ -246,7 +322,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     ldos_kgrid_monkhorst_pack_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a specific Monkhorst-Pack k-point grid to be used for the Local Density of States calculation.",
+            "description": (
+                "A block to define a specific Monkhorst-Pack k-point grid to be used "
+                "for the Local Density of States calculation."
+            ),
             "SIESTA keyword": "%block LDOS.kgrid_Monkhorst_pack",
         },
     )
@@ -254,7 +333,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     ldos_kgrid_cutoff: float | None = field(
         default=None,
         metadata={
-            "description": "A real-space cutoff (in Angstroms) used to automatically generate a k-point grid specifically for the LDOS calculation.",
+            "description": (
+                "A real-space cutoff (in Angstroms) used to automatically generate a "
+                "k-point grid specifically for the LDOS calculation."
+            ),
             "SIESTA keyword": "LDOS.kgrid.Cutoff",
         },
     )
@@ -262,7 +344,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     ldos_kgrid_file: str | None = field(
         default=None,
         metadata={
-            "description": "The name of a file from which to read the k-points to be used for the LDOS calculation.",
+            "description": (
+                "The name of a file from which to read the k-points to be used for the "
+                "LDOS calculation."
+            ),
             "SIESTA keyword": "LDOS.kgrid.File",
         },
     )
@@ -277,7 +362,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     write_mullkin_pop: int = field(
         default=0,
         metadata={
-            "description": "Sets the level of detail for the Mulliken population analysis. 0=none, 1=per-atom, 2=per-orbital, 3=overlap populations.",
+            "description": (
+                "Sets the level of detail for the Mulliken population analysis. "
+                "0=none, 1=per-atom, 2=per-orbital, 3=overlap populations."
+            ),
             "SIESTA keyword": "WriteMullikenPop",
         },
     )
@@ -285,7 +373,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     mulliken_in_scf: bool = field(
         default=False,
         metadata={
-            "description": "If true, performs and prints the Mulliken population analysis at every SCF iteration, not just at the end.",
+            "description": (
+                "If true, performs and prints the Mulliken population analysis at "
+                "every SCF iteration, not just at the end."
+            ),
             "SIESTA keyword": "MullikenInSCF",
         },
     )
@@ -293,19 +384,25 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     spin_in_scf: bool = field(
         default=True,
         metadata={
-            "description": "If true, prints the integrated total and absolute spin polarization at every SCF iteration.",
+            "description": (
+                "If true, prints the integrated total and absolute spin polarization "
+                "at every SCF iteration."
+            ),
             "SIESTA keyword": "SpinInSCF",
         },
     )
 
     # --------------------------------------------------------
-    # 6.19.2 (Deprecated population flag) Voronoi and Hirshfeld atomic population analysis
+    # 6.19.2 (Deprecated population flag) Voronoi and Hirshfeld atomic population
+    # analysis
     # --------------------------------------------------------
     # write_mulliken_pop:int = 0 #
     # write_harishfeld_pop: bool = False #Write.HirshfeldPop false
     # write_voronoi_pop: bool = False #Write.VoronoiPop false
-    # partial_charges_at_every_geometry: bool = False #PartialChargesAtEveryGeometry false
-    # partial_charges_at_every_scf_step: bool = False #PartialChargesAtEverySCFStep false
+    # partial_charges_at_every_geometry: bool = False #PartialChargesAtEveryGeometry
+    # false
+    # partial_charges_at_every_scf_step: bool = False #PartialChargesAtEverySCFStep
+    # false
     # TODO:Write.MullikenPop
     write_mulliken_pop: int = field(
         default=0,
@@ -318,7 +415,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     write_hirshfeld_pop: bool = field(
         default=False,
         metadata={
-            "description": "If true, calculates and prints atomic partial charges using the Hirshfeld partitioning scheme.",
+            "description": (
+                "If true, calculates and prints atomic partial charges using the "
+                "Hirshfeld partitioning scheme."
+            ),
             "SIESTA keyword": "Write.HirshfeldPop",
         },
     )
@@ -326,7 +426,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     write_voronoi_pop: bool = field(
         default=False,
         metadata={
-            "description": "If true, calculates and prints atomic partial charges by integrating the charge density within each atom's Voronoi cell.",
+            "description": (
+                "If true, calculates and prints atomic partial charges by integrating "
+                "the charge density within each atom's Voronoi cell."
+            ),
             "SIESTA keyword": "Write.VoronoiPop",
         },
     )
@@ -334,7 +437,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     partial_charges_at_every_geometry: bool = field(
         default=False,
         metadata={
-            "description": "If true, calculates and prints partial charges at every step of a geometry optimization or molecular dynamics run.",
+            "description": (
+                "If true, calculates and prints partial charges at every step of a "
+                "geometry optimization or molecular dynamics run."
+            ),
             "SIESTA keyword": "PartialChargesAtEveryGeometry",
         },
     )
@@ -342,7 +448,9 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     partial_charges_at_every_scf_step: bool = field(
         default=False,
         metadata={
-            "description": "If true, calculates and prints partial charges at every SCF iteration.",
+            "description": (
+                "If true, calculates and prints partial charges at every SCF iteration."
+            ),
             "SIESTA keyword": "PartialChargesAtEverySCFStep",
         },
     )
@@ -351,12 +459,15 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     # 6.19.3 Crystal-Orbital overlap and hamilton populations (COOP/COHP)
     # -------------------------------------------------------------------
     # coop_write: bool = False # COOP.Write false
-    # wfs_energy_min: float = None # WFS.Energy.Min −∞
+    # wfs_energy_min: float = None # WFS.Energy.Min −∞  # noqa: RUF003
     # wfs_energy_max: float = None # WFS.Energy.Max ∞
     coop_write: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the writing of data for Crystal Orbital Overlap Population (COOP) analysis, used to analyze chemical bonding.",
+            "description": (
+                "A flag to enable the writing of data for Crystal Orbital Overlap "
+                "Population (COOP) analysis, used to analyze chemical bonding."
+            ),
             "SIESTA keyword": "COOP.Write",
         },
     )
@@ -364,7 +475,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     wfs_energy_min: float | None = field(
         default=None,
         metadata={
-            "description": "Sets a minimum energy threshold for writing wavefunctions. Only states with an energy above this value will be written.",
+            "description": (
+                "Sets a minimum energy threshold for writing wavefunctions. Only "
+                "states with an energy above this value will be written."
+            ),
             "SIESTA keyword": "WFS.Energy.Min",
         },
     )
@@ -372,17 +486,25 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     wfs_energy_max: float | None = field(
         default=None,
         metadata={
-            "description": "Sets a maximum energy threshold for writing wavefunctions. Only states with an energy below this value will be written.",
+            "description": (
+                "Sets a maximum energy threshold for writing wavefunctions. Only "
+                "states with an energy below this value will be written."
+            ),
             "SIESTA keyword": "WFS.Energy.Max",
         },
     )
 
-    # calculate_total_dos: bool = True  # Flag to indicate if total density of states (DOS) should be calculated
-    # calculate_partial_dos: bool = False  # Flag to indicate if partial DOS should be calculated
-    # projected_dos_atoms: List[int] = field(default_factory=list)  # List of atom indices for projected DOS (if any)
-    # band_structure_kpoints: List[List[float]] = field(default_factory=list)  # List of k-points for band structure calculation
+    # calculate_total_dos: bool = True  # Flag to indicate if total density of states
+    # (DOS) should be calculated
+    # calculate_partial_dos: bool = False  # Flag to indicate if partial DOS should be
+    # calculated
+    # projected_dos_atoms: List[int] = field(default_factory=list)  # List of atom
+    # indices for projected DOS (if any)
+    # band_structure_kpoints: List[List[float]] = field(default_factory=list)  # List
+    # of k-points for band structure calculation
     # output_dos_files: bool = True  # Whether to output DOS to dedicated files
-    # energy_range: List[float] = field(default_factory=lambda: [-10.0, 10.0])  # Energy range for DOS calculation (in eV)
+    # energy_range: List[float] = field(default_factory=lambda: [-10.0, 10.0])  #
+    # Energy range for DOS calculation (in eV)
     # smearing_width: float = 0.1  # Smearing width for DOS calculation (in eV)
 
     # bands_fdf_arguments: Dict[float,Any]= field(default_factory=dict)
@@ -390,7 +512,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     calculate_total_dos: bool = field(
         default=True,
         metadata={
-            "description": "A wrapper-level flag to enable the calculation of the total Density of States (DOS). In SIESTA, this is triggered by including a 'ProjectedDensityOfStates' block.",
+            "description": (
+                "A wrapper-level flag to enable the calculation of the total Density "
+                "of States (DOS). In SIESTA, this is triggered by including a "
+                "'ProjectedDensityOfStates' block."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -398,7 +524,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     calculate_partial_dos: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable the calculation of the Partial (or Projected) Density of States (PDOS), which requires specifying atoms and orbitals in the 'ProjectedDensityOfStates' block.",
+            "description": (
+                "A wrapper-level flag to enable the calculation of the Partial (or "
+                "Projected) Density of States (PDOS), which requires specifying atoms "
+                "and orbitals in the 'ProjectedDensityOfStates' block."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -406,7 +536,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     projected_dos_atoms: list[int] = field(
         default_factory=list,
         metadata={
-            "description": "A list of atom indices to be used for the Projected Density of States calculation. This list is used by the wrapper to generate the '%block ProjectedDensityOfStates'.",
+            "description": (
+                "A list of atom indices to be used for the Projected Density of States "
+                "calculation. This list is used by the wrapper to generate the '%block "
+                "ProjectedDensityOfStates'."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -414,7 +548,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     band_structure_kpoints: list[list[float]] = field(
         default_factory=list,
         metadata={
-            "description": "A list of k-points defining the path for a band structure calculation. This list is used by the wrapper to generate the '%block BandLines'.",
+            "description": (
+                "A list of k-points defining the path for a band structure "
+                "calculation. This list is used by the wrapper to generate the '%block "
+                "BandLines'."
+            ),
             "SIESTA keyword": "%block BandLines",
         },
     )
@@ -422,7 +560,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     output_dos_files: bool = field(
         default=True,
         metadata={
-            "description": "A wrapper-level flag to control whether the output DOS/PDOS files are generated. File writing in SIESTA is implicitly controlled by other settings.",
+            "description": (
+                "A wrapper-level flag to control whether the output DOS/PDOS files are "
+                "generated. File writing in SIESTA is implicitly controlled by other "
+                "settings."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -430,7 +572,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     energy_range: list[float] = field(
         default_factory=lambda: [-10.0, 10.0],
         metadata={
-            "description": "The energy range [Emin, Emax] (in eV) for the DOS/PDOS calculation, which is specified within the 'ProjectedDensityOfStates' block.",
+            "description": (
+                "The energy range [Emin, Emax] (in eV) for the DOS/PDOS calculation, "
+                "which is specified within the 'ProjectedDensityOfStates' block."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -438,7 +583,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     smearing_width: float = field(
         default=0.1,
         metadata={
-            "description": "The Gaussian or Lorentzian smearing width (in eV) applied to the DOS/PDOS plot, specified within the 'ProjectedDensityOfStates' block.",
+            "description": (
+                "The Gaussian or Lorentzian smearing width (in eV) applied to the "
+                "DOS/PDOS plot, specified within the 'ProjectedDensityOfStates' block."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -446,7 +594,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     n_energy_points: int | None = field(
         default=None,
         metadata={
-            "description": "Number of energy points for DOS/PDOS calculation. If None, calculated from energy_range and smearing_width.",
+            "description": (
+                "Number of energy points for DOS/PDOS calculation. If None, calculated "
+                "from energy_range and smearing_width."
+            ),
             "SIESTA keyword": "%block ProjectedDensityOfStates",
         },
     )
@@ -455,7 +606,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
     bands_fdf_arguments: OrderedDict[str, Any] = field(
         default_factory=OrderedDict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to bands or DOS calculations.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags related to "
+                "bands or DOS calculations."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -468,7 +622,7 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -512,12 +666,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                 "PartialChargesAtEverySCFStep",
                 "COOP.Write",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own-class registration guard
 
-    def validate(self):
-        """
-        Validates the DOS and band-structure analysis options.
-        """
+    def validate(self) -> None:
+        """Validate the DOS and band-structure analysis options."""
         logger.info("DensityOfStatesAndBandStructure.validate()")
         if self.calculate_partial_dos and not self.projected_dos_atoms:
             raise ValueError(
@@ -527,8 +679,11 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
             raise ValueError(
                 "Energy range must be a list of two values [min, max] with min < max."
             )
-        print(
-            f"Validated: {self.calculate_total_dos=}, {self.calculate_partial_dos=}, {self.projected_dos_atoms=}, {self.band_structure_kpoints=}, {self.output_dos_files=}, {self.energy_range=}, {self.smearing_width=}"
+        print(  # noqa: T201 intentional validation diagnostic
+            f"Validated: {self.calculate_total_dos=}, "
+            f"{self.calculate_partial_dos=}, {self.projected_dos_atoms=}, "
+            f"{self.band_structure_kpoints=}, {self.output_dos_files=}, "
+            f"{self.energy_range=}, {self.smearing_width=}"
         )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -684,9 +839,12 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
             )
 
         # NOTE: ProjectedDensityOfStates block is NOT output here.
-        # For DOSMaker/PDOSMaker: handled by generate_dos_block() which is called in get_parameter_updates()
-        # For StaticMaker with user-provided block: the user's block is stored in projected_density_of_states_block
-        #   and generate_dos_block() is called automatically when dos_bands module is activated
+        # For DOSMaker/PDOSMaker: handled by generate_dos_block() which is called in
+        # get_parameter_updates()
+        # For StaticMaker with user-provided block: the user's block is stored in
+        # projected_density_of_states_block
+        #   and generate_dos_block() is called automatically when dos_bands module is
+        # activated
         # This avoids duplicates - there's only ONE place that outputs the block
 
         # LocalDensityOfStates block - write if user provided
@@ -717,13 +875,13 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         # These are SIESTA-specific post-processing options
         return {}
 
-    def generate_dos_block(self):
+    def generate_dos_block(self) -> None:
         """
-        Generates the DOS calculation options block for the FDF file in proper SIESTA format.
+        Generate the DOS calculation options block for the FDF file in SIESTA format.
 
         This method calls generate_fdf() first to ensure all base DOS/bands parameters
-        are included with proper "# SIESTA DEFAULT VALUE" markers, then adds DOS-specific
-        ProjectedDensityOfStates block.
+        are included with proper "# SIESTA DEFAULT VALUE" markers, then adds
+        DOS-specific ProjectedDensityOfStates block.
 
         Creates %block ProjectedDensityOfStates which generates:
         - siesta.DOS (total density of states)
@@ -737,7 +895,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         if not (self.calculate_total_dos or self.calculate_partial_dos):
             return
 
-        # Initialize DOS-only parameters (NOT band structure parameters like BandLinesScale)
+        # Initialize DOS-only parameters (NOT band structure parameters like
+        # BandLinesScale)
         # Band structure params are only added by generate_band_structure_block()
         self.bands_fdf_arguments = OrderedDict()
 
@@ -805,13 +964,13 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
 
         logger.info(f"Generated DOS block with {len(pdos_lines)} lines")
 
-    def generate_band_structure_block(self, structure):
+    def generate_band_structure_block(self, structure: "Structure") -> None:
         """
-        Generates the band structure calculation options block for the FDF file.
+        Generate the band structure calculation options block for the FDF file.
 
         This method calls generate_fdf() first to ensure all base DOS/bands parameters
-        are included with proper "# SIESTA DEFAULT VALUE" markers, then adds band-specific
-        parameters.
+        are included with proper "# SIESTA DEFAULT VALUE" markers, then adds
+        band-specific parameters.
         """
         logger.info("DensityOfStatesAndBandStructure.generate_band_structure_block()")
 
@@ -839,18 +998,22 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
 
     @classmethod
     def setup_dos_bands_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 kept for interface compatibility
     ) -> "DensityOfStatesAndBandStructure":
         """
-        Create and configure a DensityOfStatesAndBandStructure instance with full parameter parsing.
+        Create and configure a DensityOfStatesAndBandStructure from user parameters.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure DOS and band structure settings from user parameters.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure DOS and band structure settings from user parameters.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                        may include dots).
                         If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
@@ -868,7 +1031,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default DOS/Bands values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "DOS/Bands values.[/blue]"
                 )
             return instance
 
@@ -880,7 +1044,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available DensityOfStatesAndBandStructure attributes: {dos_attributes}[/blue]"
+                f"[blue]Available DensityOfStatesAndBandStructure "
+                f"attributes: {dos_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -893,7 +1058,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -908,7 +1074,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                         matched_attr = attr
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(
-                                f"[blue]Fuzzy matched: {key_normalized} -> {attr}[/blue]"
+                                f"[blue]Fuzzy matched: {key_normalized} -> "
+                                f"{attr}[/blue]"
                             )
                         break
 
@@ -942,7 +1109,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: "
+                            f"expected dict, got {type(value)}[/yellow]"
                         )
 
                 # Boolean fields
@@ -962,9 +1130,10 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                     "calculate_partial_dos",
                     "output_dos_files",
                 ]:
+                    bool_value = value
                     if isinstance(value, str):
-                        value = value.lower() in ("true", "t", "1", "yes")
-                    setattr(instance, original_key, bool(value))
+                        bool_value = value.lower() in ("true", "t", "1", "yes")
+                    setattr(instance, original_key, bool(bool_value))
 
                 # Integer fields
                 elif original_key in [
@@ -980,7 +1149,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to int[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to int[/yellow]"
                             )
 
                 # Float fields (including optional)
@@ -1000,7 +1170,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to float[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to float[/yellow]"
                             )
 
                 # List fields
@@ -1013,7 +1184,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected list, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: "
+                            f"expected list, got {type(value)}[/yellow]"
                         )
 
                 # String fields
@@ -1036,12 +1208,14 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
 
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                    f"[yellow]Unrecognized parameter: {key} "
+                    f"(normalized: {key_normalized})[/yellow]"
                 )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]DensityOfStatesAndBandStructure instance configured successfully.[/green]"
+                "[green]DensityOfStatesAndBandStructure instance "
+                "configured successfully.[/green]"
             )
 
         return instance

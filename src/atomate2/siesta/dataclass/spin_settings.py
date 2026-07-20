@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SpinSettings(FDFDataclass):
-    """
-    Data class to manage spin polarization and spin-orbit coupling for SIESTA input.
+    """Data class to manage spin polarization and spin-orbit coupling for SIESTA input.
+
     Spin non-polarized
     Spin.Fix false
     %block Spin.Spiral 〈None〉
@@ -47,7 +47,10 @@ class SpinSettings(FDFDataclass):
     _performe_spin_polarized: bool = field(
         default=False,
         metadata={
-            "description": "A wrapper-level flag to enable spin-polarized calculations. If true, this will activate the appropriate 'Spin' keyword setting.",
+            "description": (
+                "A wrapper-level flag to enable spin-polarized calculations. If true, "
+                "this will activate the appropriate 'Spin' keyword setting."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -55,7 +58,10 @@ class SpinSettings(FDFDataclass):
     spin: str = field(
         default="non-polarized",
         metadata={
-            "description": "Sets the global spin configuration. Options: 'non-polarized', 'polarized' (collinear), 'non-collinear', 'spin-orbit'.",
+            "description": (
+                "Sets the global spin configuration. Options: 'non-polarized', "
+                "'polarized' (collinear), 'non-collinear', 'spin-orbit'."
+            ),
             "SIESTA keyword": "Spin",
         },
     )
@@ -63,7 +69,10 @@ class SpinSettings(FDFDataclass):
     dm_init: str = field(
         default="atomic",
         metadata={
-            "description": "Specifies the method for initializing the Density Matrix (DM) at the start of the calculation.",
+            "description": (
+                "Specifies the method for initializing the Density Matrix (DM) at the "
+                "start of the calculation."
+            ),
             "SIESTA keyword": "DM.Init",
         },
     )
@@ -71,7 +80,10 @@ class SpinSettings(FDFDataclass):
     dm_init_spin_af: bool = field(
         default=False,
         metadata={
-            "description": "A boolean flag to initialize the spin density in a simple antiferromagnetic (AF) configuration.",
+            "description": (
+                "A boolean flag to initialize the spin density in a simple "
+                "antiferromagnetic (AF) configuration."
+            ),
             "SIESTA keyword": "DM.InitSpin.AF",
         },
     )
@@ -79,7 +91,11 @@ class SpinSettings(FDFDataclass):
     dm_init_spin_block: list[str] | None = field(
         default=None,
         metadata={
-            "description": "A block to explicitly specify the initial spin moment (a 3D vector for non-collinear cases) for each atom. Each element is a string like '1  +0.5'.",
+            "description": (
+                "A block to explicitly specify the initial spin moment (a 3D vector "
+                "for non-collinear cases) for each atom. Each element is a string like "
+                "'1  +0.5'."
+            ),
             "SIESTA keyword": "%block DM.InitSpin",
         },
     )
@@ -87,7 +103,10 @@ class SpinSettings(FDFDataclass):
     spin_fix: bool = field(
         default=False,
         metadata={
-            "description": "A flag to fix the total spin moment of the system during the self-consistency cycle.",
+            "description": (
+                "A flag to fix the total spin moment of the system during the "
+                "self-consistency cycle."
+            ),
             "SIESTA keyword": "Spin.Fix",
         },
     )
@@ -95,7 +114,10 @@ class SpinSettings(FDFDataclass):
     spin_total: float = field(
         default=0.0,
         metadata={
-            "description": "The target total spin moment (in units of h-bar/2) to be enforced when 'Spin.Fix' is enabled.",
+            "description": (
+                "The target total spin moment (in units of h-bar/2) to be enforced "
+                "when 'Spin.Fix' is enabled."
+            ),
             "SIESTA keyword": "Spin.Total",
         },
     )
@@ -103,7 +125,10 @@ class SpinSettings(FDFDataclass):
     spin_spiral_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the q-vector of a spin spiral for non-collinear calculations.",
+            "description": (
+                "A block to define the q-vector of a spin spiral for non-collinear "
+                "calculations."
+            ),
             "SIESTA keyword": "%block Spin.Spiral",
         },
     )
@@ -111,7 +136,10 @@ class SpinSettings(FDFDataclass):
     spin_spiral_scale: list[str] | None = field(
         default_factory=list,
         metadata={
-            "description": "A block to scale the q-vector of the spin spiral, which can be used to define a path in q-space.",
+            "description": (
+                "A block to scale the q-vector of the spin spiral, which can be used "
+                "to define a path in q-space."
+            ),
             "SIESTA keyword": "%block Spin.Spiral.Scale",
         },
     )
@@ -119,7 +147,10 @@ class SpinSettings(FDFDataclass):
     single_excitation: bool = field(
         default=False,
         metadata={
-            "description": "Enables the calculation of single-particle excitations, typically used in methods like TD-DFT.",
+            "description": (
+                "Enables the calculation of single-particle excitations, typically "
+                "used in methods like TD-DFT."
+            ),
             "SIESTA keyword": "SingleExcitation",
         },
     )
@@ -127,7 +158,10 @@ class SpinSettings(FDFDataclass):
     spin_orbit_strength: float = field(
         default=1.0,
         metadata={
-            "description": "A scaling factor (from 0.0 to 1.0) for the strength of the spin-orbit coupling interaction.",
+            "description": (
+                "A scaling factor (from 0.0 to 1.0) for the strength of the spin-orbit "
+                "coupling interaction."
+            ),
             "SIESTA keyword": "Spin.OrbitStrength",
         },
     )
@@ -135,7 +169,9 @@ class SpinSettings(FDFDataclass):
     write_orb_mom: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the writing of orbital moments to the output files.",
+            "description": (
+                "A flag to enable the writing of orbital moments to the output files."
+            ),
             "SIESTA keyword": "WriteOrbMom",
         },
     )
@@ -143,7 +179,11 @@ class SpinSettings(FDFDataclass):
     soc_split_sr_so: bool = field(
         default=True,
         metadata={
-            "description": "A technical flag for handling the interplay between scalar-relativistic (SR) and spin-orbit (SO) components in the pseudopotentials.",
+            "description": (
+                "A technical flag for handling the interplay between "
+                "scalar-relativistic (SR) and spin-orbit (SO) components in the "
+                "pseudopotentials."
+            ),
             "SIESTA keyword": "SOC.Split.SR.SO",
         },
     )
@@ -151,7 +191,11 @@ class SpinSettings(FDFDataclass):
     spin_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF (Flexible Data Format) flags related to spin. This allows for using keywords not explicitly defined elsewhere.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF (Flexible Data "
+                "Format) flags related to spin. This allows for using keywords not "
+                "explicitly defined elsewhere."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -159,12 +203,15 @@ class SpinSettings(FDFDataclass):
     comments: str = field(
         default="SpinSettings",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": (
+                "User-provided comments to be included as a comment block in the FDF "
+                "file."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -181,7 +228,7 @@ class SpinSettings(FDFDataclass):
                 "WriteOrbMom",
                 "SOC.Split.SR.SO",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own class-level guard
 
     @classmethod
     def setup_spin_settings(
@@ -190,24 +237,31 @@ class SpinSettings(FDFDataclass):
         structure: Any | None = None,
         magnetic_ordering: str = "antiferromagnetic",
     ) -> "SpinSettings":
-        """
-        Create and configure a SpinSettings instance based on user parameters, retaining all default values for unspecified fields.
-        The _performe_spin_polarized field is derived from the spin setting and cannot be directly set by user_params.
+        """Create and configure a SpinSettings instance from user parameters.
+
+        Retains all default values for unspecified fields. The
+        _performe_spin_polarized field is derived from the spin setting and
+        cannot be directly set by user_params.
 
         Args:
-            user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
-                                         If None or empty, all default SpinSettings values are used.
-            structure (Structure or Molecule, optional): Pymatgen structure with magnetic moments in site_properties["magmom"].
-                                                        If provided and magmom property exists, automatically generates DM.InitSpin block.
-            magnetic_ordering (str): Magnetic ordering type for auto-generation. Options:
-                                    - "ferromagnetic" or "FM": All moments aligned (same sign)
-                                    - "antiferromagnetic" or "AFM": Alternating moments (opposite signs)
-                                    - "custom": Use exact values from structure.magmom (with signs)
-                                    Default: "antiferromagnetic"
+            user_params (dict, optional): Dictionary of user-defined parameters
+                (case-insensitive, may include dots). If None or empty, all
+                default SpinSettings values are used.
+            structure (Structure or Molecule, optional): Pymatgen structure with
+                magnetic moments in site_properties["magmom"]. If provided and
+                magmom property exists, automatically generates DM.InitSpin block.
+            magnetic_ordering (str): Magnetic ordering type for auto-generation.
+                Options:
+                    - "ferromagnetic" or "FM": All moments aligned (same sign)
+                    - "antiferromagnetic" or "AFM": Alternating moments (opposite
+                      signs)
+                    - "custom": Use exact values from structure.magmom (with signs)
+                    Default: "antiferromagnetic"
 
         Returns
         -------
-            SpinSettings: Configured SpinSettings instance with all fields (default and user-specified) and FDF arguments.
+            SpinSettings: Configured SpinSettings instance with all fields
+            (default and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]SpinSettings.setup_spin_settings()[/green]")
@@ -219,10 +273,11 @@ class SpinSettings(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default SpinSettings values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "SpinSettings values.[/blue]"
                 )
         else:
-            # Get valid SpinSettings attribute names (lowercase for comparison), excluding _performe_spin_polarized
+            # Get valid SpinSettings attribute names (lowercase for comparison), excluding _performe_spin_polarized  # noqa: E501
             spin_settings_attributes = {
                 field.name.lower()
                 for field in fields(cls)
@@ -230,7 +285,8 @@ class SpinSettings(FDFDataclass):
             }
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Available SpinSettings attributes: {spin_settings_attributes}[/blue]"
+                    f"[blue]Available SpinSettings attributes: "
+                    f"{spin_settings_attributes}[/blue]"
                 )
 
             # Process user parameters
@@ -239,14 +295,17 @@ class SpinSettings(FDFDataclass):
                 key_normalized = key.lower().replace(".", "_")
                 if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                     console.print(
-                        f"[blue]Processing key: {key} -> normalized: {key_normalized}, value: {value}[/blue]"
+                        f"[blue]Processing key: {key} -> normalized: "
+                        f"{key_normalized}, value: {value}[/blue]"
                     )
 
                 # Skip _performe_spin_polarized if provided by user
                 if key_normalized == "_performe_spin_polarized":
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            "[yellow]Ignoring user-provided '_performe_spin_polarized'; it is derived from 'spin'.[/yellow]"
+                            "[yellow]Ignoring user-provided "
+                            "'_performe_spin_polarized'; it is derived from "
+                            "'spin'.[/yellow]"
                         )
                     continue
 
@@ -260,7 +319,8 @@ class SpinSettings(FDFDataclass):
                     )
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Matched SpinSettings field: {original_key} = {value}[/blue]"
+                            f"[blue]Matched SpinSettings field: {original_key} = "
+                            f"{value}[/blue]"
                         )
 
                     # Handle type conversion for specific fields
@@ -280,9 +340,10 @@ class SpinSettings(FDFDataclass):
                         "write_orb_mom",
                         "soc_split_sr_so",
                     ]:
-                        if isinstance(value, str):
-                            value = value.lower() in ("true", "t", "1", "yes")
-                        setattr(spin_settings_instance, original_key, bool(value))
+                        bool_value = value
+                        if isinstance(bool_value, str):
+                            bool_value = bool_value.lower() in ("true", "t", "1", "yes")
+                        setattr(spin_settings_instance, original_key, bool(bool_value))
                     elif original_key in ["spin_total", "spin_orbit_strength"]:
                         setattr(spin_settings_instance, original_key, float(value))
                     elif original_key == "spin":
@@ -299,11 +360,14 @@ class SpinSettings(FDFDataclass):
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[red]Invalid spin value [bold]'{value}'[/bold] for [bold]{original_key}[/bold].[/red]"
+                                    f"[red]Invalid spin value "
+                                    f"[bold]'{value}'[/bold] for "
+                                    f"[bold]{original_key}[/bold].[/red]"
                                 )
-                                # raise ValueError(f"allowed spin values are {allowed_spin=}")
+                                # raise ValueError(f"allowed spin values are {allowed_spin=}")  # noqa: E501
                                 console.print(
-                                    f"[red]allowed spin values are [bold]{allowed_spin=}[/bold][/red]"
+                                    f"[red]allowed spin values are "
+                                    f"[bold]{allowed_spin=}[/bold][/red]"
                                 )
                                 raise ValueError
                             continue
@@ -312,7 +376,8 @@ class SpinSettings(FDFDataclass):
                         setattr(spin_settings_instance, original_key, value)
                 elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Key '{key}' does not match any SpinSettings field, skipping.[/yellow]"
+                        f"[yellow]Key '{key}' does not match any SpinSettings "
+                        f"field, skipping.[/yellow]"
                     )
 
         # Derive _performe_spin_polarized from spin
@@ -321,7 +386,8 @@ class SpinSettings(FDFDataclass):
         )
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Derived _performe_spin_polarized: {spin_settings_instance._performe_spin_polarized}[/blue]"
+                f"[blue]Derived _performe_spin_polarized: "
+                f"{spin_settings_instance._performe_spin_polarized}[/blue]"
             )
 
         # =====================================================================
@@ -342,16 +408,14 @@ class SpinSettings(FDFDataclass):
                         if "DM.InitSpin" in fdf_args or "dm_init_spin" in fdf_args:
                             user_provided_init_spin = True
                         # Check in user_params directly
-                        if "dm_init_spin_block" in {
-                            k.lower() for k in user_params.keys()
-                        }:
+                        if "dm_init_spin_block" in {k.lower() for k in user_params}:
                             user_provided_init_spin = True
 
                     if not user_provided_init_spin:
                         # Check for sign-only format parameter (NEW v1.0.0!)
                         dm_init_spin_format = "numeric"  # default
                         if user_params:
-                            # Check for internal parameter (with a2s_ or atomate2siesta_ prefix)
+                            # Check for internal parameter (with a2s_ or atomate2siesta_ prefix)  # noqa: E501
                             for key in [
                                 "a2s_dm_init_spin_format",
                                 "atomate2siesta_dm_init_spin_format",
@@ -370,7 +434,10 @@ class SpinSettings(FDFDataclass):
                             site = structure[i]
                             species = site.specie.symbol
                             coords = site.coords
-                            comment = f"# {species} atom {i + 1} at ({coords[0]:.4f}, {coords[1]:.4f}, {coords[2]:.4f})"
+                            comment = (
+                                f"# {species} atom {i + 1} at ({coords[0]:.4f}, "
+                                f"{coords[1]:.4f}, {coords[2]:.4f})"
+                            )
 
                             if abs_moment < 1e-6:
                                 # Zero moment - skip it (cleaner DM.InitSpin)
@@ -394,13 +461,15 @@ class SpinSettings(FDFDataclass):
                                     >= VerbosityLevel.WARNING.value
                                 ):
                                     console.print(
-                                        f"[yellow]Unknown magnetic_ordering '{magnetic_ordering}', using ferromagnetic[/yellow]"
+                                        f"[yellow]Unknown magnetic_ordering "
+                                        f"'{magnetic_ordering}', using "
+                                        f"ferromagnetic[/yellow]"
                                     )
                                 final_moment = abs_moment
 
                             # Format output: numeric vs sign-only (NEW v1.0.0!)
                             if dm_init_spin_format == "sign_only":
-                                # Sign-only: just "+" or "-" (SIESTA determines magnitude)
+                                # Sign-only: just "+" or "-" (SIESTA determines magnitude)  # noqa: E501
                                 sign = "+" if final_moment > 0 else "-"
                                 dm_init_spin_lines.append(f"{i + 1}  {sign}  {comment}")
                             else:
@@ -416,7 +485,9 @@ class SpinSettings(FDFDataclass):
                             n_atoms = len(magmoms)
                             n_magnetic = sum(1 for m in magmoms if abs(m) > 1e-6)
                             console.print(
-                                f"[green]✓ Auto-generated DM.InitSpin block: {n_magnetic}/{n_atoms} magnetic atoms ({magnetic_ordering} ordering)[/green]"
+                                f"[green]✓ Auto-generated DM.InitSpin block: "
+                                f"{n_magnetic}/{n_atoms} magnetic atoms "
+                                f"({magnetic_ordering} ordering)[/green]"
                             )
 
         # Validate spin settings
@@ -432,15 +503,14 @@ class SpinSettings(FDFDataclass):
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]SpinSettings[/yellow] Successful![/green]"
+                "[green]Validation & Generation: [yellow]SpinSettings[/yellow] "
+                "Successful![/green]"
             )
 
         return spin_settings_instance
 
-    def validate(self):
-        """
-        Validates the spin settings.
-        """
+    def validate(self) -> None:
+        """Validate the spin settings."""
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]SpinSettings.validate()[/green]")
         if self._performe_spin_polarized:
@@ -453,7 +523,8 @@ class SpinSettings(FDFDataclass):
             ]
             if self.spin not in allowed_spin:
                 raise ValueError(
-                    f"Invalid spin type '{self.spin}'. Allowed values are: {allowed_spin}"
+                    f"Invalid spin type '{self.spin}'. Allowed values are: "
+                    f"{allowed_spin}"
                 )
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
@@ -618,9 +689,10 @@ class SpinSettings(FDFDataclass):
         # Most spin settings are SIESTA-specific
         return {}
 
-    def generate_spin_block(self):
-        """
-        Generates the spin-related block for the FDF file, including all relevant fields (default and user-specified).
+    def generate_spin_block(self) -> None:
+        """Generate the spin-related block for the FDF file.
+
+        Includes all relevant fields (default and user-specified).
 
         This is a wrapper around generate_fdf() to maintain backward compatibility
         with code that calls this method directly (e.g., setup_spin_settings()).
@@ -636,7 +708,7 @@ class SpinSettings(FDFDataclass):
             console.print("[green]SpinSettings.generate_spin_block()[/green]")
 
         # Call generate_fdf() which uses the current dataclass attributes
-        # (these have been updated from user_params/powerups/tiers via update_from_fdf())
+        # (these have been updated from user_params/powerups/tiers via update_from_fdf())  # noqa: E501
         fdf = self.generate_fdf()
 
         # Add comment header
@@ -655,13 +727,13 @@ class SpinSettings(FDFDataclass):
     #     console=Console()
     #     logger.info("SpinSettings.validate()")
     #     if self.performe_spin_polarized:
-    #         allowed_spin = ['non-polarized','polarized','non-colinear','spin-orbit','spin+onsite']
+    #         allowed_spin = ['non-polarized','polarized','non-colinear','spin-orbit','spin+onsite']  # noqa: E501
     #         if self.spin not in allowed_spin:
-    #             raise ValueError(f"Invalid spin type '{self.spin}'. Allowed values are: {allowed_spin}")
+    #             raise ValueError(f"Invalid spin type '{self.spin}'. Allowed values are: {allowed_spin}")  # noqa: E501
     #         if self.initial_spin_moments is None:
-    #             raise ValueError("Initial spin moments must be provided for spin-polarized calculations.")
+    #             raise ValueError("Initial spin moments must be provided for spin-polarized calculations.")  # noqa: E501
     #     # print("Validation: SpinSettings DONE!")
-    #     console.print(f"[green]Validation: [yellow]SpinSettings[/yellow] Successful![/green]")
+    #     console.print(f"[green]Validation: [yellow]SpinSettings[/yellow] Successful![/green]")  # noqa: E501
 
     # def generate_spin_block(self):
     #     """

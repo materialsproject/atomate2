@@ -40,15 +40,18 @@ class ParallelOptions(FDFDataclass):
     block_size : int, optional
         Block size for 2D block-cyclic matrix distribution. Default: None (automatic)
     processor_y : int, optional
-        Number of processors in Y dimension of 2D processor grid. Default: None (automatic)
+        Number of processors in Y dimension of 2D processor grid.
+        Default: None (automatic)
     fft_processor_y_traditional : bool
         Use traditional FFT parallelization over Y dimension. Default: False
     use_domain_decomposition : bool
-        Enable domain decomposition (orbitals/atoms grouped by processor). Default: False
+        Enable domain decomposition (orbitals/atoms grouped by processor).
+        Default: False
     use_spatial_decomposition : bool
         Enable spatial decomposition (real-space grid distribution). Default: True
     rc_spatial : float, optional
-        Communication radius for spatial decomposition (Bohr). Default: None (max orbital range)
+        Communication radius for spatial decomposition (Bohr).
+        Default: None (max orbital range)
 
     Methods
     -------
@@ -67,7 +70,9 @@ class ParallelOptions(FDFDataclass):
     block_size: int = field(
         default=None,
         metadata={
-            "description": "Sets the block size for the 2D block-cyclic distribution of matrices in parallel calculations. This is a key performance tuning parameter.",
+            "description": "Sets the block size for the 2D block-cyclic distribution"
+            " of matrices in parallel calculations. This is a key performance tuning"
+            " parameter.",
             "SIESTA keyword": "BlockSize",
         },
     )
@@ -75,7 +80,9 @@ class ParallelOptions(FDFDataclass):
     processor_y: int = field(
         default=None,
         metadata={
-            "description": "Manually sets the number of processors in the 'Y' dimension of the 2D processor grid, allowing for manual tuning of the parallel layout.",
+            "description": "Manually sets the number of processors in the 'Y'"
+            " dimension of the 2D processor grid, allowing for manual tuning of the"
+            " parallel layout.",
             "SIESTA keyword": "ProcessorY",
         },
     )
@@ -83,7 +90,9 @@ class ParallelOptions(FDFDataclass):
     fft_processor_y_traditional: bool = field(
         default=False,
         metadata={
-            "description": "If true, uses a traditional parallelization scheme for the Fast Fourier Transforms (FFTs) over the 'Y' dimension of the processor grid.",
+            "description": "If true, uses a traditional parallelization scheme for the"
+            " Fast Fourier Transforms (FFTs) over the 'Y' dimension of the processor"
+            " grid.",
             "SIESTA keyword": "FFT.ProcessorY.Traditional",
         },
     )
@@ -94,7 +103,9 @@ class ParallelOptions(FDFDataclass):
     use_domain_decomposition: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable a parallelization strategy based on domain decomposition, where orbitals or atoms are grouped and assigned to different processors.",
+            "description": "A flag to enable a parallelization strategy based on domain"
+            " decomposition, where orbitals or atoms are grouped and assigned to"
+            " different processors.",
             "SIESTA keyword": "UseDomainDecomposition",
         },
     )
@@ -102,7 +113,8 @@ class ParallelOptions(FDFDataclass):
     use_spatial_decomposition: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable a parallelization strategy based on decomposing the real-space grid and distributing it among processors.",
+            "description": "A flag to enable a parallelization strategy based on"
+            " decomposing the real-space grid and distributing it among processors.",
             "SIESTA keyword": "UseSpatialDecomposition",
         },
     )
@@ -110,21 +122,24 @@ class ParallelOptions(FDFDataclass):
     rc_spatial: float = field(
         default=None,
         metadata={
-            "description": "The communication radius (in Bohr) for the spatial decomposition scheme. It defaults to the maximum range of the basis orbitals.",
+            "description": "The communication radius (in Bohr) for the spatial"
+            " decomposition scheme. It defaults to the maximum range of the basis"
+            " orbitals.",
             "SIESTA keyword": "RcSpatial",
         },
     )
 
     # Comment header for FDF output
     comments: str = field(
-        default="# Parallel Computation Configuration (ParallelOptions dataclass module)",
+        default="# Parallel Computation Configuration"
+        " (ParallelOptions dataclass module)",
         metadata={"description": "Comment header for FDF file"},
     )
 
     # Dictionary to hold FDF arguments
     parallel_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -136,9 +151,9 @@ class ParallelOptions(FDFDataclass):
                 "RcSpatial",
                 "NumberOfNodesPerGroup",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration flag
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate parallel computation options.
 
@@ -249,12 +264,13 @@ class ParallelOptions(FDFDataclass):
         # These are handled by the ASE calculator wrapper
         return {}
 
-    def generate_parallel_block(self):
+    def generate_parallel_block(self) -> None:
         """
         Generate FDF arguments for parallel computation with comment header.
 
         Populates parallel_fdf_arguments dictionary with all parallel computation
-        parameters that are set to non-default values. Adds comment header if comments are enabled.
+        parameters that are set to non-default values. Adds comment header if comments
+        are enabled.
         """
         logger.info("ParallelOptions.generate_parallel_block()")
 
@@ -284,19 +300,23 @@ class ParallelOptions(FDFDataclass):
 
     @classmethod
     def setup_parallel_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 accepted for API compatibility
     ) -> "ParallelOptions":
         """
         Create and configure a ParallelOptions instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure parallel computation settings from user parameters. Supports SIESTA FDF
-        parameter names (BlockSize, ProcessorY, etc.) with automatic conversion.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure parallel computation settings from user parameters.
+        Supports SIESTA FDF parameter names (BlockSize, ProcessorY, etc.) with
+        automatic conversion.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-                        If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive, may
+                        include dots). If None or empty, all default values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                        user_params.
 
         Returns
         -------
@@ -328,7 +348,8 @@ class ParallelOptions(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default ParallelOptions values.[/blue]"
+                    "[blue]No user parameters provided; using all default"
+                    " ParallelOptions values.[/blue]"
                 )
             return instance
 
@@ -340,7 +361,8 @@ class ParallelOptions(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available ParallelOptions attributes: {parallel_attributes}[/blue]"
+                "[blue]Available ParallelOptions attributes:"
+                f" {parallel_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -354,7 +376,8 @@ class ParallelOptions(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized},"
+                    f" value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -385,7 +408,8 @@ class ParallelOptions(FDFDataclass):
                             setattr(instance, matched_attr, None)
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to int for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to int"
+                            f" for '{matched_attr}'. Using default.[/yellow]"
                         )
                 elif matched_attr == "rc_spatial":
                     # Float parameter
@@ -396,7 +420,8 @@ class ParallelOptions(FDFDataclass):
                             setattr(instance, matched_attr, None)
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to float for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to float"
+                            f" for '{matched_attr}'. Using default.[/yellow]"
                         )
                 elif matched_attr in [
                     "fft_processor_y_traditional",
@@ -419,7 +444,8 @@ class ParallelOptions(FDFDataclass):
                     setattr(instance, matched_attr, value)
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
                 console.print(
-                    f"[yellow]Warning: No match found for parameter '{key}' in ParallelOptions[/yellow]"
+                    f"[yellow]Warning: No match found for parameter '{key}'"
+                    " in ParallelOptions[/yellow]"
                 )
 
         # Generate FDF block with comment header

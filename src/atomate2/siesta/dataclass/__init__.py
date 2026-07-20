@@ -133,7 +133,7 @@ from atomate2.siesta.dataclass.structural_information import (
 )
 from atomate2.siesta.dataclass.wannier90 import Wannier90
 
-__all__ = [
+__all__ = [  # noqa: RUF022  intentionally grouped by SIESTA parameter tier
     # Base class
     "FDFDataclass",
     # Basic tier (7)

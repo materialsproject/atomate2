@@ -183,7 +183,8 @@ def parse_force(value: str | float, target_unit: str = "eV/Ang") -> float:
     Parameters
     ----------
     value : str or float
-        Force value, either as float or string with unit (e.g., "0.04 eV/Ang", "0.01 Ry/Bohr")
+        Force value, either as float or string with unit
+        (e.g., "0.04 eV/Ang", "0.01 Ry/Bohr")
     target_unit : str, optional
         Target force unit: "eV/Ang", "Ry/Bohr", etc. (default: "eV/Ang")
 
@@ -238,7 +239,7 @@ def parse_force(value: str | float, target_unit: str = "eV/Ang") -> float:
         "ry/bohr": ["ry/bohr"],
     }
 
-    for canonical, variants in unit_variants.items():
+    for variants in unit_variants.values():
         if unit_normalized in variants and target_normalized in variants:
             return number
 

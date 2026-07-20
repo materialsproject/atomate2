@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ExchangeCorrelationFunctionals(FDFDataclass):
-    """
-    Data class to manage exchange-correlation functionals for SIESTA input.
-    """
+    """Data class to manage exchange-correlation functionals for SIESTA input."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -37,7 +35,10 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
     _comments: str = field(
         default="ExchangeCorrelationFunctionals",
         metadata={
-            "description": "User-provided comments to be included as a comment block in the FDF file.",
+            "description": (
+                "User-provided comments to be included as a comment block "
+                "in the FDF file."
+            ),
             "SIESTA keyword": None,
         },
     )
@@ -51,40 +52,56 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
     xc_functional: str = field(
         default="GGA",
         metadata={
-            "description": "The general family of the exchange-correlation functional (e.g., LDA, GGA) to be used.",
+            "description": (
+                "The general family of the exchange-correlation functional "
+                "(e.g., LDA, GGA) to be used."
+            ),
             "SIESTA keyword": "XC.functional",
         },
     )
     xc_authors: str = field(
         default="PBE",
         metadata={
-            "description": "The specific parametrization or 'author' of the chosen exchange-correlation functional (e.g., PW91, PBE, revPBE).",
+            "description": (
+                "The specific parametrization or 'author' of the chosen "
+                "exchange-correlation functional (e.g., PW91, PBE, revPBE)."
+            ),
             "SIESTA keyword": "XC.authors",
         },
     )
     xc_use_bsc_cell_xc: bool = field(
         default=False,
         metadata={
-            "description": "A specific flag used within some van der Waals functionals (like vdW-DF-cx) to modify the cell-dependent part of the correlation.",
+            "description": (
+                "A specific flag used within some van der Waals functionals "
+                "(like vdW-DF-cx) to modify the cell-dependent part of the "
+                "correlation."
+            ),
             "SIESTA keyword": "XC.Use.BSC.CellXC",
         },
     )
     xc_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
-            "description": "A block for detailed specification of the XC functional, particularly for hybrid or complex vdW functionals.",
+            "description": (
+                "A block for detailed specification of the XC functional, "
+                "particularly for hybrid or complex vdW functionals."
+            ),
             "SIESTA keyword": "%block XC.Mix",
         },
     )
     xc_fdf_arguments: OrderedDict[str, Any] = field(
         default_factory=OrderedDict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to the XC functional.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags "
+                "related to the XC functional."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -93,23 +110,27 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                 "XC.Use.BSC.CellXC",
                 "%block XC.Mix",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level flag
 
     @classmethod
     def setup_xc_settings(
         cls, user_params: dict[str, Any] | None = None
     ) -> "ExchangeCorrelationFunctionals":
         """
-        Create and configure an ExchangeCorrelationFunctionals instance based on user parameters, retaining all default values for unspecified fields.
-        Issues warnings for invalid keys and skips them.
+        Create and configure an ExchangeCorrelationFunctionals instance.
+
+        Based on user parameters, retaining all default values for unspecified
+        fields. Issues warnings for invalid keys and skips them.
 
         Args:
-            user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
-                                         If None or empty, all default ExchangeCorrelationFunctionals values are used.
+            user_params (dict, optional): Dictionary of user-defined parameters
+                (case-insensitive, may include dots). If None or empty, all
+                default ExchangeCorrelationFunctionals values are used.
 
         Returns
         -------
-            ExchangeCorrelationFunctionals: Configured instance with all fields (default and user-specified) and FDF arguments.
+            ExchangeCorrelationFunctionals: Configured instance with all fields
+                (default and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
@@ -126,7 +147,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         if not xc_settings_instance._user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default ExchangeCorrelationFunctionals values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "ExchangeCorrelationFunctionals values.[/blue]"
                 )
                 console.print(
                     f"[blue]user_params: {xc_settings_instance._user_params}[/blue]"
@@ -137,7 +159,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                     f"[blue]user_params: {xc_settings_instance._user_params}[/blue]"
                 )
 
-            # Get valid attribute names (lowercase for comparison), excluding _comments and _user_params
+            # Get valid attribute names (lowercase for comparison),
+            # excluding _comments and _user_params
             xc_settings_attributes = {
                 field.name.lower()
                 for field in fields(cls)
@@ -145,7 +168,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
             }
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Available ExchangeCorrelationFunctionals attributes: {xc_settings_attributes}[/blue]"
+                    f"[blue]Available ExchangeCorrelationFunctionals attributes: "
+                    f"{xc_settings_attributes}[/blue]"
                 )
 
             # Process user parameters
@@ -154,14 +178,16 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                 key_normalized = key.lower().replace(".", "_")
                 if cls.CONSOLE_VERBOSITY.value == VerbosityLevel.DEBUG.value:
                     console.print(
-                        f"[blue]Processing key: {key} -> normalized: {key_normalized}, value: {value}[/blue]"
+                        f"[blue]Processing key: {key} -> normalized: "
+                        f"{key_normalized}, value: {value}[/blue]"
                     )
 
                 # Skip _comments and _user_params if provided by user
                 if key_normalized in ["_comments", "_user_params"]:
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Ignoring user-provided '{key}'; it is internal.[/yellow]"
+                            f"[yellow]Ignoring user-provided '{key}'; "
+                            f"it is internal.[/yellow]"
                         )
                     continue
 
@@ -175,16 +201,20 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                     )
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                         console.print(
-                            f"[blue]Matched ExchangeCorrelationFunctionals field: {original_key} = {value}[/blue]"
+                            f"[blue]Matched ExchangeCorrelationFunctionals field: "
+                            f"{original_key} = {value}[/blue]"
                         )
 
                     # Handle type conversion for specific fields
                     if original_key == "xc_block" and isinstance(value, dict):
                         setattr(xc_settings_instance, original_key, value)
                     elif original_key == "xc_use_bsc_cell_xc":
-                        if isinstance(value, str):
-                            value = value.lower() in ("true", "t", "1", "yes")
-                        setattr(xc_settings_instance, original_key, bool(value))
+                        bool_value = (
+                            value.lower() in ("true", "t", "1", "yes")
+                            if isinstance(value, str)
+                            else value
+                        )
+                        setattr(xc_settings_instance, original_key, bool(bool_value))
                     elif original_key in ["xc_functional", "xc_authors"]:
                         setattr(
                             xc_settings_instance,
@@ -195,7 +225,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                         setattr(xc_settings_instance, original_key, value)
                 elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]Key '{key}' does not match any ExchangeCorrelationFunctionals field, skipping.[/yellow]"
+                        f"[yellow]Key '{key}' does not match any "
+                        f"ExchangeCorrelationFunctionals field, skipping.[/yellow]"
                     )
 
         # Validate settings
@@ -214,14 +245,17 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]Validation & Generation: [yellow]ExchangeCorrelationFunctionals[/yellow] Successful![/green]"
+                "[green]Validation & Generation: "
+                "[yellow]ExchangeCorrelationFunctionals[/yellow] Successful![/green]"
             )
 
         return xc_settings_instance
 
-    def validate(self):
+    def validate(self) -> None:
         """
-        Validates the exchange-correlation functional settings, including checks for xc, xc.functional, and xc.authors.
+        Validate the exchange-correlation functional settings.
+
+        Includes checks for xc, xc.functional, and xc.authors.
 
         Raises
         ------
@@ -233,10 +267,11 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         # Check for xc, xc.functional, and xc.authors in _user_params
         if self._user_params:
             # Check for 'xc' key
-            if any(k.lower() == "xc" for k in self._user_params):
-                if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.ERROR.value:
-                    # console.print("[red]Error: Use xc.functional and xc.authors instead of 'xc'[/red]")
-                    raise ValueError("Use xc.functional and xc.authors instead of 'xc'")
+            if (
+                any(k.lower() == "xc" for k in self._user_params)
+                and self.CONSOLE_VERBOSITY.value >= VerbosityLevel.ERROR.value
+            ):
+                raise ValueError("Use xc.functional and xc.authors instead of 'xc'")
 
             # Check for xc.functional and xc.authors
             has_xc_functional = any(
@@ -249,23 +284,27 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
             if has_xc_functional and has_xc_authors:
                 if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                     console.print(
-                        "[blue]Successfully validated XC.Functional and XC.Authors[/blue]"
+                        "[blue]Successfully validated XC.Functional and "
+                        "XC.Authors[/blue]"
                     )
             elif has_xc_functional or has_xc_authors:
                 if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        "[yellow]Warning: Both xc.functional and xc.authors must be specified together[/yellow]"
+                        "[yellow]Warning: Both xc.functional and xc.authors "
+                        "must be specified together[/yellow]"
                     )
             elif self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    "[yellow]Warning: Default values are taken for XC.Functional and XC.Authors[/yellow]"
+                    "[yellow]Warning: Default values are taken for "
+                    "XC.Functional and XC.Authors[/yellow]"
                 )
 
         # Validate xc_functional and xc_authors
         allowed_xc_functionals = ["LDA", "LSD", "GGA", "VDW"]
         if self.xc_functional.upper() not in allowed_xc_functionals:
             raise ValueError(
-                f"Invalid functional type '{self.xc_functional}'. Allowed values are: {allowed_xc_functionals}"
+                f"Invalid functional type '{self.xc_functional}'. "
+                f"Allowed values are: {allowed_xc_functionals}"
             )
 
         allowed_xc_authors = [
@@ -292,12 +331,14 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         ]
         if self.xc_authors.upper() not in allowed_xc_authors:
             raise ValueError(
-                f"Invalid xc authors type '{self.xc_authors}'. Allowed values are: {allowed_xc_authors}"
+                f"Invalid xc authors type '{self.xc_authors}'. "
+                f"Allowed values are: {allowed_xc_authors}"
             )
 
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
-                "[green]Validation: [yellow]ExchangeCorrelationFunctionals[/yellow] Successful![/green]"
+                "[green]Validation: "
+                "[yellow]ExchangeCorrelationFunctionals[/yellow] Successful![/green]"
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -325,9 +366,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                     if isinstance(value, str)
                     else bool(value)
                 )
-            elif key_lower == "%block xc.mix":
-                if isinstance(value, dict):
-                    self.xc_block = value
+            elif key_lower == "%block xc.mix" and isinstance(value, dict):
+                self.xc_block = value
 
     @staticmethod
     def _format_xc_authors_for_siesta(xc_authors: str) -> str:
@@ -407,10 +447,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         # ASE uses 'xc' parameter (combines functional + authors)
         return {"xc": f"{self.xc_functional.upper()}:{self.xc_authors.upper()}"}
 
-    def generate(self):
-        """
-        Generates the exchange-correlation functional block for the FDF file.
-        """
+    def generate(self) -> None:
+        """Generate the exchange-correlation functional block for the FDF file."""
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]ExchangeCorrelationFunctionals.generate()[/green]")
 

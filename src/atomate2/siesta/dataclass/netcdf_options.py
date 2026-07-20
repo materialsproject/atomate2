@@ -62,7 +62,10 @@ class NetcdfOptions(FDFDataclass):
     cdf_save: bool = field(
         default=False,
         metadata={
-            "description": "A master flag to enable saving of grid-based data (like charge density) in the NetCDF format.",
+            "description": (
+                "A master flag to enable saving of grid-based data "
+                "(like charge density) in the NetCDF format."
+            ),
             "SIESTA keyword": "CDF.Save",
         },
     )
@@ -70,7 +73,10 @@ class NetcdfOptions(FDFDataclass):
     cdf_compress: int = field(
         default=0,
         metadata={
-            "description": "Sets the compression level (0-9) for NetCDF files. A value of 0 means no compression.",
+            "description": (
+                "Sets the compression level (0-9) for NetCDF files. "
+                "A value of 0 means no compression."
+            ),
             "SIESTA keyword": "CDF.Compress",
         },
     )
@@ -78,7 +84,10 @@ class NetcdfOptions(FDFDataclass):
     cdf_mpi: bool = field(
         default=False,
         metadata={
-            "description": "If true, uses the parallel I/O capabilities of the NetCDF library for faster file writing in MPI runs.",
+            "description": (
+                "If true, uses the parallel I/O capabilities of the NetCDF "
+                "library for faster file writing in MPI runs."
+            ),
             "SIESTA keyword": "CDF.MPI",
         },
     )
@@ -86,7 +95,10 @@ class NetcdfOptions(FDFDataclass):
     cdf_grid_precision: str = field(
         default="single",
         metadata={
-            "description": "Sets the precision for grid data written to NetCDF files. Options are 'single' or 'double'.",
+            "description": (
+                "Sets the precision for grid data written to NetCDF files. "
+                "Options are 'single' or 'double'."
+            ),
             "SIESTA keyword": "CDF.Grid.Precision",
         },
     )
@@ -100,7 +112,7 @@ class NetcdfOptions(FDFDataclass):
     # Dictionary to hold FDF arguments
     netcdf_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -109,9 +121,9 @@ class NetcdfOptions(FDFDataclass):
                 "CDF.MPI",
                 "CDF.Grid.Precision",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration guard
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate NetCDF output options.
 
@@ -129,14 +141,16 @@ class NetcdfOptions(FDFDataclass):
         # Validate compression level
         if not (0 <= self.cdf_compress <= 9):
             raise ValueError(
-                f"Invalid CDF.Compress value: {self.cdf_compress}. Must be between 0 and 9."
+                f"Invalid CDF.Compress value: {self.cdf_compress}. "
+                "Must be between 0 and 9."
             )
 
         # Validate grid precision
         valid_precisions = ["single", "double"]
         if self.cdf_grid_precision.lower() not in valid_precisions:
             raise ValueError(
-                f"Invalid CDF.Grid.Precision: {self.cdf_grid_precision}. Must be 'single' or 'double'."
+                f"Invalid CDF.Grid.Precision: {self.cdf_grid_precision}. "
+                "Must be 'single' or 'double'."
             )
 
     def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
@@ -216,12 +230,13 @@ class NetcdfOptions(FDFDataclass):
         # These are SIESTA-specific file format options
         return {}
 
-    def generate_netcdf_block(self):
+    def generate_netcdf_block(self) -> None:
         """
         Generate FDF arguments for NetCDF output with comment header.
 
         Populates netcdf_fdf_arguments dictionary with all NetCDF parameters
-        that are set to non-default values. Adds comment header if comments are enabled.
+        that are set to non-default values. Adds comment header if comments
+        are enabled.
         """
         logger.info("NetcdfOptions.generate_netcdf_block()")
 
@@ -245,19 +260,24 @@ class NetcdfOptions(FDFDataclass):
 
     @classmethod
     def setup_netcdf_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 accepted for interface compatibility
     ) -> "NetcdfOptions":
         """
         Create and configure a NetcdfOptions instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure NetCDF output settings from user parameters. Supports SIESTA FDF
-        parameter names (CDF.Save, CDF.Compress, etc.) with automatic conversion.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure NetCDF output settings from user parameters. Supports
+        SIESTA FDF parameter names (CDF.Save, CDF.Compress, etc.) with automatic
+        conversion.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
+            user_params: Dictionary of user-defined parameters (case-insensitive,
+                        may include dots).
                         If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            **kwargs: Additional keyword arguments to override or supplement
+                        user_params.
 
         Returns
         -------
@@ -293,7 +313,8 @@ class NetcdfOptions(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default NetcdfOptions values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "NetcdfOptions values.[/blue]"
                 )
             return instance
 
@@ -319,7 +340,8 @@ class NetcdfOptions(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -349,11 +371,13 @@ class NetcdfOptions(FDFDataclass):
                             setattr(instance, matched_attr, compress_val)
                         else:
                             console.print(
-                                f"[yellow]Warning: CDF.Compress must be 0-9, got {compress_val}. Using default 0.[/yellow]"
+                                f"[yellow]Warning: CDF.Compress must be 0-9, "
+                                f"got {compress_val}. Using default 0.[/yellow]"
                             )
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to int for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to "
+                            f"int for '{matched_attr}'. Using default.[/yellow]"
                         )
                 elif matched_attr == "cdf_grid_precision":
                     # String parameter with validation
@@ -363,7 +387,9 @@ class NetcdfOptions(FDFDataclass):
                             setattr(instance, matched_attr, value.lower())
                         else:
                             console.print(
-                                f"[yellow]Warning: '{value}' not in {valid_precisions}. Using default 'single'.[/yellow]"
+                                f"[yellow]Warning: '{value}' not in "
+                                f"{valid_precisions}. Using default 'single'."
+                                "[/yellow]"
                             )
                     else:
                         setattr(instance, matched_attr, str(value))
@@ -384,7 +410,8 @@ class NetcdfOptions(FDFDataclass):
                     setattr(instance, matched_attr, value)
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
                 console.print(
-                    f"[yellow]Warning: No match found for parameter '{key}' in NetcdfOptions[/yellow]"
+                    f"[yellow]Warning: No match found for parameter '{key}' "
+                    f"in NetcdfOptions[/yellow]"
                 )
 
         # Generate FDF block with comment header

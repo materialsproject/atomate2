@@ -71,7 +71,8 @@ class Denchar(FDFDataclass):
     write_denchar: bool = field(
         default=False,
         metadata={
-            "description": "If true, writes the files required by the 'denchar' post-processing utility for plotting charge densities.",
+            "description": "If true, writes the files required by the 'denchar'"
+            " post-processing utility for plotting charge densities.",
             "SIESTA keyword": "Write.Denchar",
         },
     )
@@ -80,7 +81,8 @@ class Denchar(FDFDataclass):
     denchar_x_min: float | None = field(
         default=None,
         metadata={
-            "description": "Minimum X coordinate for denchar visualization grid (Bohr or Ang).",
+            "description": "Minimum X coordinate for denchar visualization grid"
+            " (Bohr or Ang).",
             "SIESTA keyword": "Denchar.XMin",
         },
     )
@@ -88,7 +90,8 @@ class Denchar(FDFDataclass):
     denchar_x_max: float | None = field(
         default=None,
         metadata={
-            "description": "Maximum X coordinate for denchar visualization grid (Bohr or Ang).",
+            "description": "Maximum X coordinate for denchar visualization grid"
+            " (Bohr or Ang).",
             "SIESTA keyword": "Denchar.XMax",
         },
     )
@@ -96,7 +99,8 @@ class Denchar(FDFDataclass):
     denchar_y_min: float | None = field(
         default=None,
         metadata={
-            "description": "Minimum Y coordinate for denchar visualization grid (Bohr or Ang).",
+            "description": "Minimum Y coordinate for denchar visualization grid"
+            " (Bohr or Ang).",
             "SIESTA keyword": "Denchar.YMin",
         },
     )
@@ -104,7 +108,8 @@ class Denchar(FDFDataclass):
     denchar_y_max: float | None = field(
         default=None,
         metadata={
-            "description": "Maximum Y coordinate for denchar visualization grid (Bohr or Ang).",
+            "description": "Maximum Y coordinate for denchar visualization grid"
+            " (Bohr or Ang).",
             "SIESTA keyword": "Denchar.YMax",
         },
     )
@@ -112,7 +117,8 @@ class Denchar(FDFDataclass):
     denchar_z_min: float | None = field(
         default=None,
         metadata={
-            "description": "Minimum Z coordinate for denchar visualization grid (Bohr or Ang).",
+            "description": "Minimum Z coordinate for denchar visualization grid"
+            " (Bohr or Ang).",
             "SIESTA keyword": "Denchar.ZMin",
         },
     )
@@ -120,7 +126,8 @@ class Denchar(FDFDataclass):
     denchar_z_max: float | None = field(
         default=None,
         metadata={
-            "description": "Maximum Z coordinate for denchar visualization grid (Bohr or Ang).",
+            "description": "Maximum Z coordinate for denchar visualization grid"
+            " (Bohr or Ang).",
             "SIESTA keyword": "Denchar.ZMax",
         },
     )
@@ -129,7 +136,8 @@ class Denchar(FDFDataclass):
     denchar_x_points: int = field(
         default=50,
         metadata={
-            "description": "Number of grid points in X direction for denchar visualization.",
+            "description": "Number of grid points in X direction for denchar"
+            " visualization.",
             "SIESTA keyword": "Denchar.NumberPointsX",
         },
     )
@@ -137,7 +145,8 @@ class Denchar(FDFDataclass):
     denchar_y_points: int = field(
         default=50,
         metadata={
-            "description": "Number of grid points in Y direction for denchar visualization.",
+            "description": "Number of grid points in Y direction for denchar"
+            " visualization.",
             "SIESTA keyword": "Denchar.NumberPointsY",
         },
     )
@@ -145,7 +154,8 @@ class Denchar(FDFDataclass):
     denchar_z_points: int = field(
         default=50,
         metadata={
-            "description": "Number of grid points in Z direction for denchar visualization.",
+            "description": "Number of grid points in Z direction for denchar"
+            " visualization.",
             "SIESTA keyword": "Denchar.NumberPointsZ",
         },
     )
@@ -159,7 +169,7 @@ class Denchar(FDFDataclass):
     # Dictionary to hold FDF arguments
     denchar_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -174,9 +184,9 @@ class Denchar(FDFDataclass):
                 "Denchar.NumberPointsY",
                 "Denchar.NumberPointsZ",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level registration flag
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate Denchar output options.
 
@@ -303,12 +313,13 @@ class Denchar(FDFDataclass):
         # These are SIESTA-specific post-processing options
         return {}
 
-    def generate_denchar_block(self):
+    def generate_denchar_block(self) -> None:
         """
         Generate FDF arguments for denchar with comment header.
 
         Populates denchar_fdf_arguments dictionary with all denchar parameters
-        that are set to non-default values. Adds comment header if comments are enabled.
+        that are set to non-default values. Adds comment header if comments are
+        enabled.
         """
         logger.info("Denchar.generate_denchar_block()")
 
@@ -348,19 +359,23 @@ class Denchar(FDFDataclass):
 
     @classmethod
     def setup_denchar(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 accepted for API compatibility
     ) -> "Denchar":
         """
         Create and configure a Denchar instance with full parameter parsing.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure denchar output settings from user parameters. Supports SIESTA FDF
-        parameter names (Write.Denchar, Denchar.NumberPointsX, etc.) with automatic conversion.
+        This method handles proper key normalization, type conversion, and fuzzy
+        matching to configure denchar output settings from user parameters. Supports
+        SIESTA FDF parameter names (Write.Denchar, Denchar.NumberPointsX, etc.) with
+        automatic conversion.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-                        If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters (case-insensitive, may
+                        include dots). If None or empty, all default values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                        user_params.
 
         Returns
         -------
@@ -407,7 +422,8 @@ class Denchar(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default Denchar values.[/blue]"
+                    "[blue]No user parameters provided; using all default"
+                    " Denchar values.[/blue]"
                 )
             return instance
 
@@ -433,7 +449,8 @@ class Denchar(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized},"
+                    f" value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -447,7 +464,7 @@ class Denchar(FDFDataclass):
                 )
                 if close_matches:
                     # For NumberPointsX/Y/Z, prefer match containing same axis letter
-                    if key_normalized.endswith("_x") or key_normalized.endswith("x"):
+                    if key_normalized.endswith(("_x", "x")):
                         matched_attr = next(
                             (
                                 m
@@ -456,7 +473,7 @@ class Denchar(FDFDataclass):
                             ),
                             close_matches[0],
                         )
-                    elif key_normalized.endswith("_y") or key_normalized.endswith("y"):
+                    elif key_normalized.endswith(("_y", "y")):
                         matched_attr = next(
                             (
                                 m
@@ -465,7 +482,7 @@ class Denchar(FDFDataclass):
                             ),
                             close_matches[0],
                         )
-                    elif key_normalized.endswith("_z") or key_normalized.endswith("z"):
+                    elif key_normalized.endswith(("_z", "z")):
                         matched_attr = next(
                             (
                                 m
@@ -507,7 +524,8 @@ class Denchar(FDFDataclass):
                         setattr(instance, matched_attr, int(value))
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to int for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to int"
+                            f" for '{matched_attr}'. Using default.[/yellow]"
                         )
                 else:
                     # Float parameters (grid coordinates)
@@ -515,11 +533,13 @@ class Denchar(FDFDataclass):
                         setattr(instance, matched_attr, float(value))
                     except (ValueError, TypeError):
                         console.print(
-                            f"[yellow]Warning: Could not convert '{value}' to float for '{matched_attr}'. Using default.[/yellow]"
+                            f"[yellow]Warning: Could not convert '{value}' to float"
+                            f" for '{matched_attr}'. Using default.[/yellow]"
                         )
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
                 console.print(
-                    f"[yellow]Warning: No match found for parameter '{key}' in Denchar[/yellow]"
+                    f"[yellow]Warning: No match found for parameter '{key}'"
+                    " in Denchar[/yellow]"
                 )
 
         # Generate FDF block with comment header

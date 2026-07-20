@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ChargeDipoleElectricField(FDFDataclass):
-    """
-    Data class to manage charge, dipole, and electric field options for SIESTA input.
-    """
+    """Manage charge, dipole, and electric field options for SIESTA input."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -39,16 +37,26 @@ class ChargeDipoleElectricField(FDFDataclass):
     # -----------------------------------------------------------
     # net_charge: int = 0 # NetCharge 0
     # simulate_doping: bool = False  # SimulateDoping false
-    # external_electric_field_block:  Dict[float,Any]= field(default_factory=dict) # %block ExternalElectricField 〈None〉
-    # slab_dipole_correction: str = ''  # Slab.DipoleCorrection ?|true|false|charge|vacuum|none
-    # slab_dipole_correction_origin_block: Dict[float,Any]= field(default_factory=dict) # %block Slab.DipoleCorrection.Origin 〈None〉
-    # slab_dipole_correction_vacuum_block: Dict[float,Any]= field(default_factory=dict) # %block Slab.DipoleCorrection.Vacuum 〈None〉
-    # geometry_hartree_block: Dict[float,Any]= field(default_factory=dict) # %block Geometry.Hartree 〈None〉
-    # geometry_charge_block: Dict[float,Any]= field(default_factory=dict) # %block Geometry.Charge 〈None〉
+    # external_electric_field_block:  Dict[float,Any]= field(default_factory=dict)
+    #   # %block ExternalElectricField 〈None〉
+    # slab_dipole_correction: str = ''
+    #   # Slab.DipoleCorrection ?|true|false|charge|vacuum|none
+    # slab_dipole_correction_origin_block: Dict[float,Any]= field(default_factory=dict)
+    #   # %block Slab.DipoleCorrection.Origin 〈None〉
+    # slab_dipole_correction_vacuum_block: Dict[float,Any]= field(default_factory=dict)
+    #   # %block Slab.DipoleCorrection.Vacuum 〈None〉
+    # geometry_hartree_block: Dict[float,Any]= field(default_factory=dict)
+    #   # %block Geometry.Hartree 〈None〉
+    # geometry_charge_block: Dict[float,Any]= field(default_factory=dict)
+    #   # %block Geometry.Charge 〈None〉
     net_charge: float = field(
         default=0.0,
         metadata={
-            "description": "Sets the total net charge of the system in units of electron charge. A compensating background charge is added automatically.",
+            "description": (
+                "Sets the total net charge of the system in units of electron "
+                "charge. A compensating background charge is added "
+                "automatically."
+            ),
             "SIESTA keyword": "NetCharge",
         },
     )
@@ -56,7 +64,11 @@ class ChargeDipoleElectricField(FDFDataclass):
     simulate_doping: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable a model for simulating doping by adding fractional charges to the nuclei, as an alternative to NetCharge.",
+            "description": (
+                "A flag to enable a model for simulating doping by adding "
+                "fractional charges to the nuclei, as an alternative to "
+                "NetCharge."
+            ),
             "SIESTA keyword": "SimulateDoping",
         },
     )
@@ -64,7 +76,10 @@ class ChargeDipoleElectricField(FDFDataclass):
     external_electric_field_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a uniform external electric field applied to the system, specifying its direction and magnitude.",
+            "description": (
+                "A block to define a uniform external electric field applied "
+                "to the system, specifying its direction and magnitude."
+            ),
             "SIESTA keyword": "%block ExternalElectricField",
         },
     )
@@ -72,7 +87,11 @@ class ChargeDipoleElectricField(FDFDataclass):
     slab_dipole_correction: str = field(
         default="",
         metadata={
-            "description": "Enables a dipole correction for slab geometries to cancel spurious interactions between periodic images. Options: 'true', 'false', 'charge', 'vacuum', 'none'.",
+            "description": (
+                "Enables a dipole correction for slab geometries to cancel "
+                "spurious interactions between periodic images. Options: "
+                "'true', 'false', 'charge', 'vacuum', 'none'."
+            ),
             "SIESTA keyword": "Slab.DipoleCorrection",
         },
     )
@@ -80,7 +99,10 @@ class ChargeDipoleElectricField(FDFDataclass):
     slab_dipole_correction_origin_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to specify the origin point for the slab dipole correction potential.",
+            "description": (
+                "A block to specify the origin point for the slab dipole "
+                "correction potential."
+            ),
             "SIESTA keyword": "%block Slab.DipoleCorrection.Origin",
         },
     )
@@ -88,7 +110,10 @@ class ChargeDipoleElectricField(FDFDataclass):
     slab_dipole_correction_vacuum_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to specify the vacuum region of the cell for the slab dipole correction algorithm.",
+            "description": (
+                "A block to specify the vacuum region of the cell for the "
+                "slab dipole correction algorithm."
+            ),
             "SIESTA keyword": "%block Slab.DipoleCorrection.Vacuum",
         },
     )
@@ -96,7 +121,11 @@ class ChargeDipoleElectricField(FDFDataclass):
     geometry_hartree_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a custom analytical shape for the Hartree potential, useful for modeling electrostatic gates or environments.",
+            "description": (
+                "A block to define a custom analytical shape for the Hartree "
+                "potential, useful for modeling electrostatic gates or "
+                "environments."
+            ),
             "SIESTA keyword": "%block Geometry.Hartree",
         },
     )
@@ -104,7 +133,11 @@ class ChargeDipoleElectricField(FDFDataclass):
     geometry_charge_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define a fictitious, continuous charge distribution (e.g., a charged plane) within the simulation cell.",
+            "description": (
+                "A block to define a fictitious, continuous charge "
+                "distribution (e.g., a charged plane) within the simulation "
+                "cell."
+            ),
             "SIESTA keyword": "%block Geometry.Charge",
         },
     )
@@ -113,13 +146,17 @@ class ChargeDipoleElectricField(FDFDataclass):
     # 6.23.1 Bulk current
     # -------------------
     # bulk_bias_voltage: float = 0.0 # BulkBias.Voltage 0. eV
-    # bulk_bias_direction_block: Dict[float,Any]= field(default_factory=dict) # %block BulkBias.Direction 〈None〉
-    # bulk_bias_tolerance: float = 1e-15 # BulkBias.Tolerance 10−15
+    # bulk_bias_direction_block: Dict[float,Any]= field(default_factory=dict)
+    #   # %block BulkBias.Direction 〈None〉
+    # bulk_bias_tolerance: float = 1e-15 # BulkBias.Tolerance 10-15
     # bulk_bias_current: bool = True # BulkBias.Current true
     bulk_bias_voltage: float = field(
         default=0.0,
         metadata={
-            "description": "Sets the magnitude of the voltage bias (in eV) to be applied between the electrodes in a transport calculation.",
+            "description": (
+                "Sets the magnitude of the voltage bias (in eV) to be applied "
+                "between the electrodes in a transport calculation."
+            ),
             "SIESTA keyword": "BulkBias.Voltage",
             "unit": "eV",
         },
@@ -128,7 +165,10 @@ class ChargeDipoleElectricField(FDFDataclass):
     bulk_bias_direction_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the direction vector along which the bulk voltage bias is applied.",
+            "description": (
+                "A block to define the direction vector along which the bulk "
+                "voltage bias is applied."
+            ),
             "SIESTA keyword": "%block BulkBias.Direction",
         },
     )
@@ -136,7 +176,10 @@ class ChargeDipoleElectricField(FDFDataclass):
     bulk_bias_tolerance: float = field(
         default=1e-15,
         metadata={
-            "description": "A convergence tolerance for the self-consistent calculation under the applied bulk bias.",
+            "description": (
+                "A convergence tolerance for the self-consistent calculation "
+                "under the applied bulk bias."
+            ),
             "SIESTA keyword": "BulkBias.Tolerance",
         },
     )
@@ -144,7 +187,10 @@ class ChargeDipoleElectricField(FDFDataclass):
     bulk_bias_current: bool = field(
         default=True,
         metadata={
-            "description": "A flag to enable the calculation of the electrical current resulting from the applied bias.",
+            "description": (
+                "A flag to enable the calculation of the electrical current "
+                "resulting from the applied bias."
+            ),
             "SIESTA keyword": "BulkBias.Current",
         },
     )
@@ -160,12 +206,15 @@ class ChargeDipoleElectricField(FDFDataclass):
     charge_dipole_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A dictionary for any additional or arbitrary FDF flags related to charge, dipole, and electric field.",
+            "description": (
+                "A dictionary for any additional or arbitrary FDF flags "
+                "related to charge, dipole, and electric field."
+            ),
             "SIESTA keyword": None,
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -182,9 +231,9 @@ class ChargeDipoleElectricField(FDFDataclass):
                 "BulkBias.Tolerance",
                 "BulkBias.Current",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 class-level flag
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate charge, dipole, and electric field settings.
 
@@ -324,10 +373,8 @@ class ChargeDipoleElectricField(FDFDataclass):
         # These are SIESTA-specific for charged systems and transport
         return {}
 
-    def generate_charge_dipole_block(self):
-        """
-        Generates the charge, dipole, and electric field options block for the FDF file.
-        """
+    def generate_charge_dipole_block(self) -> None:
+        """Generate the charge, dipole, and electric field options block."""
         logger.info("ChargeDipoleElectricField.generate_charge_dipole_block()")
 
         # Add comment header
@@ -362,18 +409,23 @@ class ChargeDipoleElectricField(FDFDataclass):
 
     @classmethod
     def setup_charge_dipole_settings(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003
     ) -> "ChargeDipoleElectricField":
         """
-        Create and configure a ChargeDipoleElectricField instance with full parameter parsing.
+        Create and configure a ChargeDipoleElectricField instance.
 
-        This method handles proper key normalization, type conversion, and fuzzy matching
-        to configure charge, dipole, and electric field settings from user parameters.
+        This method handles proper key normalization, type conversion, and
+        fuzzy matching to configure charge, dipole, and electric field settings
+        from user parameters, with full parameter parsing.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-                        If None or empty, all default values are used.
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters
+                (case-insensitive, may include dots). If None or empty, all
+                default values are used.
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
@@ -391,7 +443,8 @@ class ChargeDipoleElectricField(FDFDataclass):
         if user_params is None or not user_params:
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    "[blue]No user parameters provided; using all default Charge/Dipole values.[/blue]"
+                    "[blue]No user parameters provided; using all default "
+                    "Charge/Dipole values.[/blue]"
                 )
             return instance
 
@@ -403,7 +456,8 @@ class ChargeDipoleElectricField(FDFDataclass):
         }
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
             console.print(
-                f"[blue]Available ChargeDipoleElectricField attributes: {charge_attributes}[/blue]"
+                f"[blue]Available ChargeDipoleElectricField attributes: "
+                f"{charge_attributes}[/blue]"
             )
 
         # Process user parameters
@@ -416,7 +470,8 @@ class ChargeDipoleElectricField(FDFDataclass):
 
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
-                    f"[blue]Processing key: {key} -> {key_normalized}, value: {value}[/blue]"
+                    f"[blue]Processing key: {key} -> {key_normalized}, "
+                    f"value: {value}[/blue]"
                 )
 
             # Check if normalized key matches any attribute
@@ -431,7 +486,8 @@ class ChargeDipoleElectricField(FDFDataclass):
                         matched_attr = attr
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                             console.print(
-                                f"[blue]Fuzzy matched: {key_normalized} -> {attr}[/blue]"
+                                f"[blue]Fuzzy matched: {key_normalized} -> "
+                                f"{attr}[/blue]"
                             )
                         break
 
@@ -462,14 +518,18 @@ class ChargeDipoleElectricField(FDFDataclass):
                         setattr(instance, original_key, value)
                     elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
-                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                            f"[yellow]Invalid type for {original_key}: "
+                            f"expected dict, got {type(value)}[/yellow]"
                         )
 
                 # Boolean fields
                 elif original_key in ["simulate_doping", "bulk_bias_current"]:
-                    if isinstance(value, str):
-                        value = value.lower() in ("true", "t", "1", "yes")
-                    setattr(instance, original_key, bool(value))
+                    bool_value = (
+                        value.lower() in ("true", "t", "1", "yes")
+                        if isinstance(value, str)
+                        else value
+                    )
+                    setattr(instance, original_key, bool(bool_value))
 
                 # Integer fields
                 elif original_key == "net_charge":
@@ -478,7 +538,8 @@ class ChargeDipoleElectricField(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to int[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to int[/yellow]"
                             )
 
                 # Float fields
@@ -488,7 +549,8 @@ class ChargeDipoleElectricField(FDFDataclass):
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                             console.print(
-                                f"[yellow]Could not convert {original_key}={value} to float[/yellow]"
+                                f"[yellow]Could not convert "
+                                f"{original_key}={value} to float[/yellow]"
                             )
 
                 # String fields
@@ -501,12 +563,14 @@ class ChargeDipoleElectricField(FDFDataclass):
 
             elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                    f"[yellow]Unrecognized parameter: {key} "
+                    f"(normalized: {key_normalized})[/yellow]"
                 )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(
-                "[green]ChargeDipoleElectricField instance configured successfully.[/green]"
+                "[green]ChargeDipoleElectricField instance configured "
+                "successfully.[/green]"
             )
 
         return instance

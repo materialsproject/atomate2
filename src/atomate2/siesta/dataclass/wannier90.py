@@ -4,7 +4,8 @@ Module defining base SIESTA input set and generator.
 class Wannier90
 
 Based on User's Guide Siesta 5.4.0
-Section:    6.22 Maximally Localized Wannier Functions. Interface with the wannier90 code
+Section:    6.22 Maximally Localized Wannier Functions. Interface with the
+            wannier90 code
             6.22.1 wannier90 as a postprocessing tool
             6.22.2 wannier90 called on-the-fly within siesta
 """
@@ -25,7 +26,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Wannier90(FDFDataclass):
     """
-    Maximally Localized Wannier Functions. Interface with the wannier90 code
+    Maximally Localized Wannier Functions; interface with the wannier90 code.
+
     # -----------------------------------------------------------------------------
     # 6.22 Maximally Localized Wannier Functions. Interface with the wannier90 code
     # 6.22.1 wannier90 as a postprocessing tool
@@ -34,19 +36,28 @@ class Wannier90(FDFDataclass):
     # siesta_2_wannier90_write_amn: bool = False # Siesta2Wannier90.WriteAmn false
     # siesta_2_wannier90_write_eig: bool = False # Siesta2Wannier90.WriteEig false
     # siesta_2_wannier90_write_unk: bool = False # Siesta2Wannier90.WriteUnk false
-    # siesta_2_wannier90_unk_grid1: int = None # Siesta2Wannier90.UnkGrid1 〈mesh points along A〉
-    # siesta_2_wannier90_unk_grid2: int = None # Siesta2Wannier90.UnkGrid2 〈mesh points along B〉
-    # siesta_2_wannier90_unk_grid3: int = None # Siesta2Wannier90.UnkGrid3 〈mesh points along C〉
-    # siesta_2_wannier90_unk_grid_binary: bool = True # Siesta2Wannier90.UnkGridBinary true
-    # siesta_2_wannier90_number_of_bands: int = None # Siesta2Wannier90.NumberOfBands occupied bands
-    # siesta_2_wannier90_number_of_bands_up: int = None # Siesta2Wannier90.NumberOfBandsUp 〈Siesta2Wannier90.NumberOfBands〉
-    # siesta_2_wannier90_number_of_bands_down: int = None # Siesta2Wannier90.NumberOfBandsDown 〈Siesta2Wannier90.NumberOfBands〉
+    # siesta_2_wannier90_unk_grid1: int = None
+    #   Siesta2Wannier90.UnkGrid1 〈mesh points along A〉
+    # siesta_2_wannier90_unk_grid2: int = None
+    #   Siesta2Wannier90.UnkGrid2 〈mesh points along B〉
+    # siesta_2_wannier90_unk_grid3: int = None
+    #   Siesta2Wannier90.UnkGrid3 〈mesh points along C〉
+    # siesta_2_wannier90_unk_grid_binary: bool = True
+    #   Siesta2Wannier90.UnkGridBinary true
+    # siesta_2_wannier90_number_of_bands: int = None
+    #   Siesta2Wannier90.NumberOfBands occupied bands
+    # siesta_2_wannier90_number_of_bands_up: int = None
+    #   Siesta2Wannier90.NumberOfBandsUp 〈Siesta2Wannier90.NumberOfBands〉
+    # siesta_2_wannier90_number_of_bands_down: int = None
+    #   Siesta2Wannier90.NumberOfBandsDown 〈Siesta2Wannier90.NumberOfBands〉
     """
 
     siesta_2_wannier90_write_mmn: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable writing the overlap matrices between cell-periodic parts of Bloch states (.mmn file), required by Wannier90.",
+            "description": "A flag to enable writing the overlap matrices between "
+            "cell-periodic parts of Bloch states (.mmn file), required by "
+            "Wannier90.",
             "SIESTA keyword": "Siesta2Wannier90.WriteMmn",
         },
     )
@@ -54,7 +65,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_write_amn: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable writing the projection of Bloch states onto trial localized orbitals (.amn file), used by Wannier90 as an initial guess.",
+            "description": "A flag to enable writing the projection of Bloch states "
+            "onto trial localized orbitals (.amn file), used by Wannier90 "
+            "as an initial guess.",
             "SIESTA keyword": "Siesta2Wannier90.WriteAmn",
         },
     )
@@ -62,7 +75,8 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_write_eig: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable writing the eigenvalues of the Bloch states (.eig file) in a format suitable for Wannier90.",
+            "description": "A flag to enable writing the eigenvalues of the Bloch "
+            "states (.eig file) in a format suitable for Wannier90.",
             "SIESTA keyword": "Siesta2Wannier90.WriteEig",
         },
     )
@@ -70,7 +84,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_write_unk: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable writing the periodic part of the Bloch wavefunctions on a real-space grid (.UNK files), used for plotting Wannier functions.",
+            "description": "A flag to enable writing the periodic part of the Bloch "
+            "wavefunctions on a real-space grid (.UNK files), used for "
+            "plotting Wannier functions.",
             "SIESTA keyword": "Siesta2Wannier90.WriteUnk",
         },
     )
@@ -78,7 +94,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_unk_grid1: int = field(
         default=None,
         metadata={
-            "description": "The number of grid points along the first lattice vector for the wavefunction output (.UNK files). Defaults to the main mesh size.",
+            "description": "The number of grid points along the first lattice vector "
+            "for the wavefunction output (.UNK files). Defaults to the "
+            "main mesh size.",
             "SIESTA keyword": "Siesta2Wannier90.UnkGrid1",
         },
     )
@@ -86,7 +104,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_unk_grid2: int = field(
         default=None,
         metadata={
-            "description": "The number of grid points along the second lattice vector for the wavefunction output (.UNK` files). Defaults to the main mesh size.",
+            "description": "The number of grid points along the second lattice vector "
+            "for the wavefunction output (.UNK` files). Defaults to the "
+            "main mesh size.",
             "SIESTA keyword": "Siesta2Wannier90.UnkGrid2",
         },
     )
@@ -94,7 +114,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_unk_grid3: int = field(
         default=None,
         metadata={
-            "description": "The number of grid points along the third lattice vector for the wavefunction output (.UNK` files). Defaults to the main mesh size.",
+            "description": "The number of grid points along the third lattice vector "
+            "for the wavefunction output (.UNK` files). Defaults to the "
+            "main mesh size.",
             "SIESTA keyword": "Siesta2Wannier90.UnkGrid3",
         },
     )
@@ -102,7 +124,8 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_unk_grid_binary: bool = field(
         default=True,
         metadata={
-            "description": "If true, writes the real-space wavefunction grid files (.UNK) in binary format.",
+            "description": "If true, writes the real-space wavefunction grid files "
+            "(.UNK) in binary format.",
             "SIESTA keyword": "Siesta2Wannier90.UnkGridBinary",
         },
     )
@@ -110,7 +133,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_number_of_bands: int = field(
         default=None,
         metadata={
-            "description": "The number of bands to be included in the inner 'frozen' window for the Wannier90 calculation. Defaults to the number of occupied bands.",
+            "description": "The number of bands to be included in the inner 'frozen' "
+            "window for the Wannier90 calculation. Defaults to the "
+            "number of occupied bands.",
             "SIESTA keyword": "Siesta2Wannier90.NumberOfBands",
         },
     )
@@ -118,7 +143,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_number_of_bands_up: int = field(
         default=None,
         metadata={
-            "description": "For spin-polarized calculations, the number of bands to include for the spin-up channel. Defaults to the value of 'Siesta2Wannier90.NumberOfBands'.",
+            "description": "For spin-polarized calculations, the number of bands to "
+            "include for the spin-up channel. Defaults to the value of "
+            "'Siesta2Wannier90.NumberOfBands'.",
             "SIESTA keyword": "Siesta2Wannier90.NumberOfBandsUp",
         },
     )
@@ -126,7 +153,9 @@ class Wannier90(FDFDataclass):
     siesta_2_wannier90_number_of_bands_down: int = field(
         default=None,
         metadata={
-            "description": "For spin-polarized calculations, the number of bands to include for the spin-down channel. Defaults to the value of 'Siesta2Wannier90.NumberOfBands'.",
+            "description": "For spin-polarized calculations, the number of bands to "
+            "include for the spin-down channel. Defaults to the value of "
+            "'Siesta2Wannier90.NumberOfBands'.",
             "SIESTA keyword": "Siesta2Wannier90.NumberOfBandsDown",
         },
     )
@@ -134,16 +163,22 @@ class Wannier90(FDFDataclass):
     # ------------------------------------------------
     # 6.22.2 wannier90 called on-the-fly within siesta
     # ------------------------------------------------
-    # wannier_manifolds_block: Dict[float,Any]= field(default_factory=dict) # %block Wannier.Manifolds 〈None〉
-    # wannier_manifold_block: Dict[float,Any]= field(default_factory=dict) # %block Wannier.Manifold.<> 〈None〉
-    # wannier_projectors_block: Dict[float,Any]= field(default_factory=dict) # %block Wannier.Projectors 〈projection functions as in wannier90〉
-    # wannier_manifolds_threshold: float = 1e-6 # Wannier.Manifolds.Threshold 10−6
+    # wannier_manifolds_block: Dict[float,Any]= field(default_factory=dict)
+    #   %block Wannier.Manifolds 〈None〉
+    # wannier_manifold_block: Dict[float,Any]= field(default_factory=dict)
+    #   %block Wannier.Manifold.<> 〈None〉
+    # wannier_projectors_block: Dict[float,Any]= field(default_factory=dict)
+    #   %block Wannier.Projectors 〈projection functions as in wannier90〉
+    # wannier_manifolds_threshold: float = 1e-6
+    #   Wannier.Manifolds.Threshold 10−6  # noqa: RUF003
     # wannier_manifolds_unk: float = False # Wannier.Manifolds.Unk false
-    # wannier_k_block: Dict[float,Any]= field(default_factory=dict) # %block Wannier.k Γ-point
+    # wannier_k_block: Dict[float,Any]= field(default_factory=dict)
+    #   %block Wannier.k Γ-point
     wannier_manifolds_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define one or more distinct groups (manifolds) of Wannier functions.",
+            "description": "A block to define one or more distinct groups (manifolds) "
+            "of Wannier functions.",
             "SIESTA keyword": "%block Wannier.Manifolds",
         },
     )
@@ -151,7 +186,10 @@ class Wannier90(FDFDataclass):
     wannier_manifold_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A generic block for defining a specific Wannier function manifold's properties, such as its energy window. The block name is user-defined (e.g., '%block Wannier.Manifold.conduction').",
+            "description": "A generic block for defining a specific Wannier function "
+            "manifold's properties, such as its energy window. The "
+            "block name is user-defined (e.g., "
+            "'%block Wannier.Manifold.conduction').",
             "SIESTA keyword": "%block Wannier.Manifold.<>",
         },
     )
@@ -159,7 +197,9 @@ class Wannier90(FDFDataclass):
     wannier_projectors_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the trial orbitals (projection functions) used as an initial guess for the Wannierization procedure, similar to Wannier90's 'projections' block.",
+            "description": "A block to define the trial orbitals (projection "
+            "functions) used as an initial guess for the Wannierization "
+            "procedure, similar to Wannier90's 'projections' block.",
             "SIESTA keyword": "%block Wannier.Projectors",
         },
     )
@@ -167,7 +207,8 @@ class Wannier90(FDFDataclass):
     wannier_manifolds_threshold: float = field(
         default=1e-6,
         metadata={
-            "description": "A convergence threshold for the Wannierization procedure or for selecting states within a manifold.",
+            "description": "A convergence threshold for the Wannierization procedure "
+            "or for selecting states within a manifold.",
             "SIESTA keyword": "Wannier.Manifolds.Threshold",
         },
     )
@@ -175,7 +216,8 @@ class Wannier90(FDFDataclass):
     wannier_manifolds_unk: bool = field(
         default=False,
         metadata={
-            "description": "A flag to enable the writing of the calculated Wannier functions on a real-space grid for plotting.",
+            "description": "A flag to enable the writing of the calculated Wannier "
+            "functions on a real-space grid for plotting.",
             "SIESTA keyword": "Wannier.Manifolds.Unk",
         },
     )
@@ -183,12 +225,13 @@ class Wannier90(FDFDataclass):
     wannier_k_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
-            "description": "A block to define the k-point grid to be used for the Wannierization process.",
+            "description": "A block to define the k-point grid to be used for the "
+            "Wannierization process.",
             "SIESTA keyword": "%block Wannier.k",
         },
     )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
             self.register_fdf_params(
@@ -212,9 +255,9 @@ class Wannier90(FDFDataclass):
                 "%block Wannier.Projectors",
                 "%block Wannier.k",
             )
-            self.__class__._registered = True
+            self.__class__._registered = True  # noqa: SLF001 own-class registry flag
 
-    def validate(self):
+    def validate(self) -> None:
         """
         Validate Wannier90 interface parameters.
 
@@ -239,53 +282,53 @@ class Wannier90(FDFDataclass):
             key_lower = key.lower()
 
             # Siesta2Wannier90 parameters (postprocessing)
-            if key_lower in ["siesta2wannier90.writemmn"]:
+            if key_lower == "siesta2wannier90.writemmn":
                 self.siesta_2_wannier90_write_mmn = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
                     else bool(value)
                 )
-            elif key_lower in ["siesta2wannier90.writeamn"]:
+            elif key_lower == "siesta2wannier90.writeamn":
                 self.siesta_2_wannier90_write_amn = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
                     else bool(value)
                 )
-            elif key_lower in ["siesta2wannier90.writeeig"]:
+            elif key_lower == "siesta2wannier90.writeeig":
                 self.siesta_2_wannier90_write_eig = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
                     else bool(value)
                 )
-            elif key_lower in ["siesta2wannier90.writeunk"]:
+            elif key_lower == "siesta2wannier90.writeunk":
                 self.siesta_2_wannier90_write_unk = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
                     else bool(value)
                 )
-            elif key_lower in ["siesta2wannier90.unkgrid1"]:
+            elif key_lower == "siesta2wannier90.unkgrid1":
                 self.siesta_2_wannier90_unk_grid1 = int(value)
-            elif key_lower in ["siesta2wannier90.unkgrid2"]:
+            elif key_lower == "siesta2wannier90.unkgrid2":
                 self.siesta_2_wannier90_unk_grid2 = int(value)
-            elif key_lower in ["siesta2wannier90.unkgrid3"]:
+            elif key_lower == "siesta2wannier90.unkgrid3":
                 self.siesta_2_wannier90_unk_grid3 = int(value)
-            elif key_lower in ["siesta2wannier90.unkgridbinary"]:
+            elif key_lower == "siesta2wannier90.unkgridbinary":
                 self.siesta_2_wannier90_unk_grid_binary = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
                     else bool(value)
                 )
-            elif key_lower in ["siesta2wannier90.numberofbands"]:
+            elif key_lower == "siesta2wannier90.numberofbands":
                 self.siesta_2_wannier90_number_of_bands = int(value)
-            elif key_lower in ["siesta2wannier90.numberofbandsup"]:
+            elif key_lower == "siesta2wannier90.numberofbandsup":
                 self.siesta_2_wannier90_number_of_bands_up = int(value)
-            elif key_lower in ["siesta2wannier90.numberofbandsdown"]:
+            elif key_lower == "siesta2wannier90.numberofbandsdown":
                 self.siesta_2_wannier90_number_of_bands_down = int(value)
 
             # Wannier parameters (on-the-fly)
-            elif key_lower in ["wannier.manifolds.threshold"]:
+            elif key_lower == "wannier.manifolds.threshold":
                 self.wannier_manifolds_threshold = float(value)
-            elif key_lower in ["wannier.manifolds.unk"]:
+            elif key_lower == "wannier.manifolds.unk":
                 self.wannier_manifolds_unk = (
                     value.lower() in ["true", "t", "yes", "1"]
                     if isinstance(value, str)
@@ -358,14 +401,18 @@ class Wannier90(FDFDataclass):
 
     @classmethod
     def setup_wannier90(
-        cls, user_params: dict[str, Any] | None = None, **kwargs
+        cls,
+        user_params: dict[str, Any] | None = None,
+        **kwargs,  # noqa: ARG003 interface compatibility
     ) -> "Wannier90":
         """
         Create and configure a Wannier90 instance with full parameter parsing.
 
         Args:
-            user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
-            **kwargs: Additional keyword arguments to override or supplement user_params.
+            user_params: Dictionary of user-defined parameters
+                (case-insensitive, may include dots).
+            **kwargs: Additional keyword arguments to override or supplement
+                user_params.
 
         Returns
         -------
