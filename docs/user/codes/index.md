@@ -8,4 +8,5 @@ The section gives the instructions for codes supported by atomate2.
 vasp
 openmm
 forcefields
+siesta
 ```

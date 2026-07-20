@@ -1,0 +1,73 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:2
+#: aeb551e52d664b999affa71790dfd539
+msgid "01 Basic Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:5
+#: 8ebf97865d7a472daeb037e5c2bfa03d
+msgid "Relaxmaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:13
+#: a4930f26bdef493dbd4185b5f690926c
+msgid "Bandstructuremaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:21
+#: be6227c5cf03463cb9034571211d2b98
+msgid "Luamaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:29
+#: bf5e2361e60443ea8aec20db3986f4f6
+msgid "Relaxmaker Staticmaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:37
+#: f9fbf11648a540ab9c835c098c30b1dd
+msgid "Dosmaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:45
+#: 2983db05080746e38f9ec7b05d0d5c25
+msgid "Pdosmaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:53
+#: 9418615419da4c98b307305edd458523
+msgid "Phonopymaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-auto/01-basics.rst:61
+#: b0160ed2ef1a4063b9a05a3dbf06a3d2
+msgid "Siestaphononmaker"
+msgstr ""
+
+#~ msgid "Basic Tutorials"
+#~ msgstr ""
+
+#~ msgid "Tutorials in this category"
+#~ msgstr ""
+

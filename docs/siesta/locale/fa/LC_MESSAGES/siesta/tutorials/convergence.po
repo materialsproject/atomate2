@@ -1,0 +1,907 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials/convergence.rst:3 103db1aec6b64abcb2f4bab2d5764e9f
+msgid "Convergence Learning Paths"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:5 971af60f3f7644499d40df7a77ccfbe4
+msgid ""
+"Systematic parameter optimization for production-quality calculations. "
+"These tutorials are **essential** before running any production "
+"workflows."
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:11 32daa3f483a84ef7b85f1df1f57855a4
+msgid "Why Convergence Testing Matters"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:13 4f58faf640994a2cafbf287b5705ec45
+msgid "**The Problem**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:15 7489efc8e4084722ac80e81d4286ddd4
+msgid ""
+"DFT calculations depend on numerical approximations with adjustable "
+"parameters. Without proper convergence testing, results may be:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:18 eb8123447642499791d1eb97687a1144
+msgid "Inaccurate (errors > 10 meV/atom)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:19 64b206b8b2f4421bad97112ffefcbf6b
+msgid "Non-reproducible (different parameters → different results)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:20 37de768cb3e443e0848b07fe33e33ec4
+msgid "Unreliable for comparisons"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:22 3145219fdaf9495eb99ff7438c5b4918
+msgid "**The Solution**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:24 eb187e8ca2be4d33bec379dfd7e06aeb
+msgid ""
+"Systematically test parameters until results are converged within "
+"acceptable tolerances."
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:26 028e206a86a04a4c921cb5ac8fd9bd8e
+msgid "**Recommended Workflow**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:28 7f46dac0fb0d46d8b3ec48baf0753faa
+msgid "Run convergence studies once for your material class"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:29 41976580d749439e885ed5f92704a3db
+msgid "Apply converged parameters to all production calculations"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:30 72de98e2bee84d258f50a0dd9b98b233
+msgid "Document parameters in your workflow scripts"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:35 89359296374e4d8595bf79def09d230a
+msgid "Tutorial 06: K-points and Mesh Cutoff"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:37
+#: ../../source/tutorials/convergence.rst:267
+#: ../../source/tutorials/convergence.rst:347 7073dacc7ad845508fa48a91162b50ff
+#: d7edbbeb64b24b8c8e3491f3024f435d e811a8e2e3424cfdbe7ba00935f264b6
+msgid "**Learning Objectives**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:39 a7e41cf1c1874fdc92116ed064137cfc
+msgid "Understand k-point sampling and real-space grid cutoff"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:40 f78e2785594c4af8bf604f13e0b4c493
+msgid "Perform systematic convergence studies"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:41 5c63aeb8bc054e87a710c06b399576f4
+msgid "Determine production parameters"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:42 6169cdd541894a4db4eacb0a4a204c3b
+msgid "Balance accuracy vs. computational cost"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:44
+#: ../../source/tutorials/convergence.rst:274 3646bf539c384ef8bc9835fb978a8bda
+#: 36631f43ad5c4bec8b6524da88311636
+msgid "**Key Concepts**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:46 5fccb76a951c43f5becbc2cfc383c5d5
+msgid "**K-points**: Brillouin zone sampling for periodic systems"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:47 05ef7d202e864ec0ac6ea4fb6681d57a
+msgid "**Mesh cutoff**: Real-space grid fineness for charge density"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:48 6b457ed3ff8d4fb196db8464ca490e3c
+msgid "Convergence criterion: Energy change < threshold"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:50 04e3d0fc6e154c86a98ce14dc2137374
+msgid "**Recommended Convergence Criteria**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:56 17b1b464d3974d78bb671ed8b4f3478a
+msgid "Property"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:57 3e9a9f51a7e34345a657d2e07fdeb741
+msgid "Criterion"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:58 1069b9a78d424424a14f24315ecf6918
+msgid "Typical Value"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:59 72f0cfe4c59446d2826cf70a876b439a
+msgid "Total energy"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:60 fc65c5d1eacf481198c3432ba7d50e69
+msgid "< 1 meV/atom"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:61 8fc91302e4c1418c8a652257b9c8f3e2
+msgid "Δ kpts < 0.001 eV/atom"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:62 7b384e70846b48718a8dcf9dd3b3628f
+msgid "Forces"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:63 37ab3268e16041c9b169160cd31123cb
+msgid "< 0.01 eV/Å"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:64 3a76fc1ad13f4b16ab9afb78c76cc87f
+msgid "For relaxations"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:65 7da4812839284cb6b93e9060a30fa8b7
+msgid "Band gap"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:66 2df5e564fe8e4b529cb13d38a947d6ce
+msgid "< 0.01 eV"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:67 3ca9168db9e940f6b21e95a5e2e4ef4e
+msgid "For semiconductors"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:68 6378f951ead04e2fad19d6993d432182
+msgid "Lattice parameters"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:69 ce85d9288f8e49399ae9dbe85d89fb80
+msgid "< 0.01 Å"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:70 c1140b0086504ca1ad0f407801cb0719
+msgid "For structure prediction"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:72 583b8dbd4aa345f2abcf28e175b2c2a8
+msgid "**K-point Convergence Example**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:95 1d41cc368ae74404a5d250920e9b3f84
+msgid "**Mesh Cutoff Convergence Example**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:112 c6e1b024e34b436fa9eec11a83033107
+msgid "**Combined Mesh Cutoff + K-points Convergence**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:114 11d2d120778d413782b5d242a67c5f01
+msgid "For efficient two-stage convergence testing with intelligent stopping:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:148 84b14b64d75f423bbe77d9450ea53085
+msgid "**How the Combined Workflow Works**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:150 b162671ea2fe4791926da987fa3b38b0
+msgid ""
+"**Stage 1**: Tests mesh cutoff values sequentially with coarse k-points "
+"(4×4×4)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:151 763252acb73246d4a362cf92e2338d1f
+msgid ""
+"**Stage 2**: Tests k-point grids sequentially using converged mesh cutoff"
+" from Stage 1"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:152 3cdbd7634b484cb2a13dd80339bd4c83
+msgid ""
+"**Intelligent Stopping**: Stops testing when ALL specified criteria are "
+"satisfied for two consecutive parameter values (configurable via "
+"``require_consecutive``)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:154 50c72f9265fe45c1a0e98cc606b6b9fe
+msgid "**Comprehensive Output**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:156 e89467e775af48819dc75cbb69e387f2
+msgid ""
+"6 individual plots per stage: energy, convergence, Fermi energy, bandgap,"
+" forces, stress"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:157 626e43ba01494f57aeb41119826aa89b
+msgid "Detailed text files with convergence analysis"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:158 45543808d4a24dd5ae9b37f9f9e6d388
+msgid "Automatic parameter evolution tracking"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:160 f7835126f23745e79a762ddf36e13384
+msgid "**Output Files Generated** (per stage):"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:162 df2b6b7591cd4130b54dfdfbf9546f77
+msgid "``convergence_mesh_cutoff_energy.png`` - Total energy vs. parameter"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:163 f28f41c593c54723aa9597f5e0492322
+msgid ""
+"``convergence_mesh_cutoff_convergence.png`` - Energy difference between "
+"consecutive points"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:164 886622bb610e4a52a4eb1abeea96a066
+msgid "``convergence_mesh_cutoff_fermi.png`` - Fermi energy evolution"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:165 949df808c39a418b8613696dd885f1a4
+msgid ""
+"``convergence_mesh_cutoff_bandgap.png`` - Band gap evolution (if "
+"applicable)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:166 631ff910ec20405c8087471174271c69
+msgid "``convergence_mesh_cutoff_forces.png`` - Maximum force evolution"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:167 2d0b2d2f13f4449cb89449914e28a705
+msgid "``convergence_mesh_cutoff_stress.png`` - Maximum stress evolution"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:168 881ca1dcacf64fb096dd0527fedf55a9
+msgid "``convergence_mesh_cutoff.txt`` - Comprehensive text analysis"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:170 e2dfc8881c2844aa969b45ea2977744d
+msgid "Same pattern for k-points stage: ``convergence_kpoints_*.png/txt``"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:172 2d833721ab2c4fcd9364081ce0e561f2
+msgid "**Use Case Examples**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:174 249430b88d49478c936316d069983db8
+msgid "**Energy-Only Convergence** (fastest):"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:185 cf0051c162ae46d6a339eb06b0d19100
+msgid "**Relaxation-Focused Convergence** (tight forces):"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:201 47bdbebe5686420685c92d2f1220a9de
+msgid "**Electronic Structure Convergence** (tight Fermi/bandgap):"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:217 c83a9f19ff864f6f93d38b14eb9d01ec
+msgid "**Multi-Criteria Convergence** (comprehensive):"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:236 b107a6651ca446b193ea28a3c070841a
+msgid "**Tutorials**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:238 38c569145cf94e4badb7b0123092c2dc
+msgid ""
+"See ``tutorials/02-convergence/01-kpoints-mesh-cutoff/`` for complete "
+"examples:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:240 54b46e8712704e3f96742f1fd8259868
+msgid "``04_1_combined_basic.py`` - Basic energy-only convergence"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:241 d0142ecc209643b1bb396ff954c89987
+msgid "``04_2_combined_multi_criteria.py`` - Multi-property convergence"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:242 4675c3fa8d264273b564eff4e8690328
+msgid "``04_3_combined_relaxation.py`` - Optimized for geometry relaxations"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:243 34750f979a7942cd9cff4e877346c15d
+msgid "``04_4_combined_electronic.py`` - Optimized for band structure/DOS"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:245
+#: ../../source/tutorials/convergence.rst:324 77013e0ab7e94d5994c8e4abe43e8b3a
+#: 7afa19a2c6d3468596563a6568401ad7
+msgid "**Guidelines**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:247 a2e9efb25ce54402a97f82ee4dafdf14
+msgid "**Metals**: Require denser k-points than insulators (Fermi surface)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:248 17f47a3acb1f4521a9db457a6777519e
+msgid "**2D materials**: Dense in-plane (xy), sparse out-of-plane (z)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:249 6981cda7ffce41c481ecd2c63b4c025b
+msgid "**Molecules**: Γ-point only (no periodicity)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:251
+#: ../../source/tutorials/convergence.rst:330 c04dc719edad40f088b4ad14a551c21f
+#: c66c346ca9374b05867c7471b7b001fe
+msgid "**Typical Converged Values**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:253 e3b1c9c093204cf392b85a3fb02f2b39
+msgid "**K-points**: 4×4×4 (simple), 6×6×6 (standard), 8×8×8+ (high accuracy)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:254 daef870bb8004a74b9190043955490ab
+msgid "**Mesh cutoff**: 300 Ry (standard), 400-500 Ry (high accuracy)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:256 e54fa3ce8444446f963517a2ef0a90d1
+msgid "📁 **Location**: ``tutorials/02-convergence/01-kpoints-cutoff/``"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:258 70706a89021744b4b9c5000163334076
+msgid "⏱️ **Time**: 45 minutes"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:260 e62e4f814f1e46798b004e93590e0fe8
+msgid "⭐ **Difficulty**: Intermediate"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:265 9434aebab0e24852ba78a55afc193d62
+msgid "Tutorial 07: Basis Parameters (PAO.EnergyShift, SplitNorm)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:269 f1e688ddf88d4755a7fcde6abef98b6c
+msgid "Understand SIESTA's PAO basis set construction"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:270 893afa363de84a5b80ba8b2deb10cb54
+msgid "Converge PAO.EnergyShift and PAO.SplitNorm"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:271 e348288c871b449db1c3d6d4d6ce8d4c
+msgid "Balance basis quality vs. computational cost"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:272 be1fe30181fb403e90d72fd351c0ed42
+msgid "Analyze timing data"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:276 7fe886f7e4e84aadbe162ba121b55a5c
+msgid "**PAO (Pseudo-Atomic Orbital)**: SIESTA's numerical atomic orbitals"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:277 c06d1920df5c42cdbdec020b36943869
+msgid "**PAO.EnergyShift**: Orbital confinement energy (smaller = larger basis)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:278 0e1c5ee672ce47429ecf85c5524f9fa6
+msgid "**PAO.SplitNorm**: Multiple-zeta splitting parameter"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:279 82687bd008e94d87b09a761841a83d63
+msgid "**Timing analysis**: Computational cost vs. accuracy tradeoff"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:281 065918513dab40099b3116bddafb24f1
+msgid "**PAO.EnergyShift**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:283 e0f0329d3a344186b639ca8a59f0cb60
+msgid ""
+"Controls orbital confinement radius. Smaller values → larger orbitals → "
+"better accuracy but higher cost."
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:285 0f5a3680293c4e9080d309977c498a88
+msgid "Default: 0.02 Ry (~270 meV)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:286 9b147be8012d46dc8008801d8e90570a
+msgid "Standard: 0.01 Ry (~136 meV)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:287 7de0dc116f954eb698ee381b97a05504
+msgid "High accuracy: 0.005 Ry (~68 meV)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:288 b32e1e7df6e34e3ca3a6417848aa338a
+msgid "Ultra-high: 0.001 Ry (~14 meV)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:290 4ea7c0a5067b44949cff1f4d20918690
+msgid "**PAO.SplitNorm**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:292 18b39994adaf4a888b3c7b9850ca860d
+msgid "Controls splitting of orbitals for multiple-zeta basis sets (DZ, TZ)."
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:294 8d4a23a4b3e449a4b9421b7efd971255
+msgid "Default: 0.15"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:295 794e00c439304dcc9966eb44770c4c1b
+msgid "Standard: 0.15-0.25"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:296 9777d8f14a904c46a40eeb28b33c923f
+msgid "Larger values → more localized split orbitals"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:298
+#: ../../source/tutorials/convergence.rst:360 a3ffec4f296343938a3df7c790601d38
+#: c9edc05fc54a4f6fae009385a4d56982
+msgid "**Example**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:315 83ff8006cff2490c99629f1d672f8eae
+msgid "**Timing Analysis**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:317 d15bc4f90caf417581fb2ae6af2f2634
+msgid "Tutorial includes automatic timing analysis:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:319 fca7d4eef3184e268498d64162cc2126
+msgid "Wall time vs. parameter value"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:320 b436fc64fdde4933baa44e050122d61b
+msgid "Scaling behavior"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:321 fc0bfed0dc9d46f28246ee2fd51e9aea
+msgid "Cost vs. accuracy tradeoff"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:322 5a93ed0c4ac2475f9c61d5e2aaa24310
+msgid "Optimal parameter selection"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:326 854cbd754089451db362cf095360802e
+msgid "Start with PAO.BasisSize (SZ → DZ → DZP → TZP)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:327 a59dac39831246dab41e93bd9e3d69a4
+msgid "Then converge PAO.EnergyShift for chosen basis size"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:328 4090787149a948babe31b97fa7f1eac5
+msgid "Finally test PAO.SplitNorm for multiple-zeta (DZ, TZ)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:332 51b579a2e9ee4b21829be789720da2ca
+msgid "**Quick tests**: PAO.EnergyShift = 0.02 Ry"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:333 b4932b3fda1f4a08b88d150026bef369
+msgid "**Standard**: PAO.EnergyShift = 0.01 Ry, SplitNorm = 0.15"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:334 8e85183dad8a460788bc609e91b361a6
+msgid "**High accuracy**: PAO.EnergyShift = 0.005 Ry, SplitNorm = 0.20"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:336 0b707d5f795e49108751c36d6e419eb6
+msgid "📁 **Location**: ``tutorials/02-convergence/02-basis-parameters/``"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:338 e8621abd5c2a47009de63c259e209c94
+msgid "⏱️ **Time**: 60 minutes"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:340
+#: ../../source/tutorials/convergence.rst:436 727bb5e5dd7b47849d002fa7072d54a1
+#: a06028e7a89846cb8e1c601201f35a6b
+msgid "⭐ **Difficulty**: Advanced"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:345 a8b98a19e218467680ffa84bdc0b49d5
+msgid "Tutorial 08: Complete Basis Convergence"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:349 34c9623934a04780a20e0af65958c5a6
+msgid "Perform comprehensive basis set convergence"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:350 bc4cc976263647fdb9a549f1f88e72b7
+msgid "Test basis size, energy shift, and split norm systematically"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:351 cbaaf88027ef464984b809c5e2fbdf78
+msgid "Understand parameter interactions"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:352 e562fe14b2c846748d86ee5ff376e409
+msgid "Select optimal basis parameters for production"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:354 30e764feacac46769d41c1393f44d2e0
+msgid "**Workflow**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:356 508067f1c41845c78189ff6a58e5ad40
+msgid "**Basis Size**: SZ → DZ → DZP → TZP → QZP"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:357 aa6c868974d24805ba7cb54c29c498c0
+msgid "**Energy Shift** (for each size): 0.05 → 0.02 → 0.01 → 0.005 Ry"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:358 08efff223f064100adf05bea25611a03
+msgid "**Split Norm** (for multi-zeta): 0.10 → 0.15 → 0.20 → 0.25"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:376 01a3b09d110a4e9c99354d9b8ad5224c
+msgid "**Parameter Interactions**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:378 f74791a629dc47069b86c42a43f79b38
+msgid "Basis size has largest effect (SZ vs. DZP: ~10-100 meV/atom)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:379 4bdc9a1e9fb4419899b104cbe7e969bd
+msgid "EnergyShift has moderate effect (0.02 vs. 0.005 Ry: ~1-10 meV/atom)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:380 ff8be334be014552938af2a948266bd1
+msgid "SplitNorm has small effect (~0.1-1 meV/atom)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:382 dc87a18593974a8b9d8d6f8e80f64b5b
+msgid "**Basis Size Guidelines**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:388 f39f6c719c8049ad80c007ac7b703c89
+msgid "Basis Size"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:389 dbb266a1d63d489ab627cd29f37e13ff
+msgid "Description"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:390 c7fe19d66f9d4090917b101beeb8f9e3
+msgid "Use Case"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:391 e64ff873c5c84f59a1de739c503e4b15
+msgid "SZ"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:392 bd7aae30498e406c98113e59c2c17b20
+msgid "Single-zeta"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:393 20a6fcfb503a49edb9328857e0fb58d6
+msgid "Quick tests only (not production)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:394 02e8b96d7c01491793f081ce2954c3d9
+msgid "DZ"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:395 e84e1264e9334ae98db385e51a1da26e
+msgid "Double-zeta"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:396 b6ffef9214424ba4a481a016ba57ff36
+msgid "Minimum for production"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:397 0216e3f24e6d49c9aad958764e08dff2
+msgid "DZP"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:398 b0287810b372431a84357d296dc81ba5
+msgid "DZ + polarization"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:399 42a7c5449ada4b2092d3dcb0d538e8ed
+msgid "Standard production (recommended)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:400 af0ff95e3085466f9255405c22af413b
+msgid "TZP"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:401 417876864f2a4aa18e8902ba60544d26
+msgid "Triple-zeta + polarization"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:402 d52dd80ee0d4421fae761d930cb53608
+msgid "High accuracy, expensive"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:403 86e96780e3504216bc57edfd6208570a
+msgid "QZP"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:404 28401aaa4bf64d9aadd301e8d6344159
+msgid "Quadruple-zeta + polarization"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:405 d6dd8ba69eaa45e882af6af50f43ed32
+msgid "Benchmarking only"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:407 dbda4f52907a4f2c945944f4ccab3a59
+msgid "**Cost Scaling**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:409 d64d0d758729486796719dfb240db00d
+msgid "SZ → DZ: ~2× slower"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:410 bdf4af56115a4b52addfbd970b1fc829
+msgid "DZ → DZP: ~1.5× slower (add polarization)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:411 43f46181bb654aa08912313d091be862
+msgid "DZP → TZP: ~2× slower"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:412 67ba41ba0a8748bb8f34852f663203ed
+msgid "Total: TZP is ~6× slower than SZ"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:414 33aff251d43b47999d4980d24d855617
+msgid "**Recommended Production Parameters**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:432 153f07b9a65b4fd88de74ec5e2d101cc
+msgid "📁 **Location**: ``tutorials/02-convergence/03-complete-basis/``"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:434 0db5ac8e25f342f4af717777b719ee58
+msgid "⏱️ **Time**: 90 minutes (simple: 30 min, full: 1-4 hours)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:441 463d93384d874213b644394cd9cc4338
+msgid "Convergence Best Practices"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:444 1a1c792a21f7454bb3ba1ddde6216a7f
+msgid "General Guidelines"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:446 b9f1e60793ab4521bf4b25f113903e32
+msgid "**Test one parameter at a time**"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:448 e18e29b77fe4492cabad3dc583084f26
+msgid "Keep other parameters fixed"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:449 3aa5ccbb813848489302dd4f8eca0b77
+msgid "Easier to analyze and debug"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:451 a1d7a859a99840bdb03be57592db2af1
+msgid "**Start with coarse sampling, refine as needed**"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:453 2efed3d54cea41c7b5d0f61ecc435c85
+msgid "K-points: 2×2×2, 4×4×4, 6×6×6, ..."
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:454 813ff66da9a543ceb967aed828281ae4
+msgid "Cutoff: 200, 300, 400, 500 Ry"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:456 1dcc02c61f8f4a90a4ce8b4e21fa8a46
+msgid "**Plot results**"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:458 60ec68627b0a4a32b270143e8e479d21
+msgid "Energy vs. parameter value"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:459 ef0dd605a9204da1a587691c4e678e27
+msgid "Look for plateau or asymptotic behavior"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:461 b0f9e19e841044a4a8bb73fadf908f0c
+msgid "**Check multiple properties**"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:463 29bce55c58644510be6d8a42dfc1c516
+msgid "Total energy (most sensitive)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:464 48cfc7bc578647e585ef5c87fbd692aa
+msgid "Forces (for relaxations)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:465 fb050122351e4bc7a919e63e68c2c6db
+msgid "Band gap (for semiconductors)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:466 2d3120f631714a84b673b54665d484c9
+msgid "Lattice parameters (for structure prediction)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:468 4a328b3654684130bc638e3a8bef4cf9
+msgid "**Document converged parameters**"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:470 ece4bf77278741c8b871553fb9e7b697
+msgid "Include in all production scripts"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:471 c0b8f9de9f15447e950995f2598662d0
+msgid "Note in publications"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:473 3a20817f62754f9b82ddef1127c93e83
+msgid "**Use conservative criteria**"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:475 99b6fa6273d745b9b1e1c0342886e266
+msgid "Aim for < 1 meV/atom for energies"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:476 f1653f241c6643ab8d6b6b628a989fcb
+msgid "Tighter for energy differences (e.g., formation energies)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:479 2c34e4a003724d48b3b40e0faec7539d
+msgid "Recommended Order"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:481 27b38074b5044d8aa19847df0fa73891
+msgid "For new material:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:483 8c5117773f0042fd9df1e9b87f4336cc
+msgid "**Mesh cutoff** (quickest to converge)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:484 de31493276a94b0d9ba4b47940f37345
+msgid "**K-points** (material-dependent)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:485 5aae6f21ecf1461bad975139496d6233
+msgid "**Basis size** (largest effect)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:486 e34572379fdf46a9b473471ce43adf7b
+msgid "**PAO.EnergyShift** (fine-tuning)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:487 ff64f727e5a74cf9983f35654af926d9
+msgid "**PAO.SplitNorm** (usually least important)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:490 e8e01ac0022b4d439b98c7e22cfc8651
+msgid "Material-Specific Considerations"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:492 5e827e9007554834a1943df6dc3dd6a7
+msgid "**Metals**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:494 eab631b8e4c5493a89b705adb5c5e596
+msgid "Denser k-points (Fermi surface)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:495 13853bc0c8b44d17a88a5f09d77da164
+msgid "MP or FD occupation function"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:496 2faae9a5d10942cea8f17b9988119721
+msgid "Electronic temperature (~300-1000 K)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:498 42ebb88acef7474c817d94d7502b062a
+msgid "**Semiconductors/Insulators**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:500 206e39b160c247b0829540336e672b1d
+msgid "Standard k-points sufficient"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:501 d3d2744379674b7785bb10b1f44bd530
+msgid "Default occupation function"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:502 60c5ba3e75be4e4eb809f4684384e60b
+msgid "No smearing needed"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:504 e475707613884932b781f1335c2b1236
+msgid "**2D Materials**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:506 a454062712bb4998b20e8928e615d45d
+msgid "Dense in-plane k-points"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:507 d58bd602085148a9b73f7f7453fdd2a7
+msgid "Γ-point in out-of-plane direction"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:508 074c1588a3d9425489d7879e7593a45a
+msgid "Large vacuum spacing (> 15 Å)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:510 e88da6030ebf4a86898005da9409a882
+msgid "**Molecules**:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:512 3cea8b2b7efe4724ba09420c1ae33c1e
+msgid "Γ-point only"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:513 e5b258c91dae462db67cee1c5aa8076e
+msgid "Focus on basis quality"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:514 dd92db3222e14c108fae6ed5672a605e
+msgid "Large supercell to avoid image interactions"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:519 33a45e557e924db79463bf79537a2a3f
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:521 f4c3b7d4eaa84e31b3413273048df59e
+msgid "After converging parameters:"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:523 56c576bf1148485e9eeb38061dbac2b1
+msgid "Apply to **production workflows** (Tutorials 09-18)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:524 592e584c8e31438bab682d070ca840d1
+msgid "Consider **tier presets** for material-specific settings (Tutorial 18)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:525 cc507859ce8b47beaa766ed1afcb4edb
+msgid "Enable **error handling** for robust calculations (Tutorial 15)"
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:527 39c88cbd678f4f1380054c670936d4c9
+msgid "See :doc:`index` for full tutorial listing."
+msgstr ""
+
+#: ../../source/tutorials/convergence.rst:533 0506b93457744c99b1a4bd74201e61de
+msgid ""
+"Convergence testing is a one-time investment that ensures all subsequent "
+"calculations are reliable and reproducible. Don't skip this step!"
+msgstr ""
+
+#~ msgid "**Combined Mesh Cutoff + K-points Convergence** (NEW in v1.1.0):"
+#~ msgstr ""

@@ -1,0 +1,643 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:1
+#: 81e3afc091db4d5ca946b134cb234909
+msgid "01-Basics: Fundamental Makers and Single-Job Calculations"
+msgstr "01-Basics: Fundamental Makers and Single-Job Calculations"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:3
+#: aa0727e2ceff48fbaf2e97ac23017d16
+msgid "**Focus**: Core SIESTA Makers for single-calculation workflows"
+msgstr "**Focus**: Core SIESTA Makers for single-calculation workflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:5
+#: 6f85498fde404b33882b0cbc6708106b
+msgid "**Difficulty**: Beginner"
+msgstr "**سطح سختی**: مبتدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:7
+#: a6ab71a363894d3ea15bd0e128255b39
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:8
+#: b13e053eb9544cbe9d057354aed6a787
+msgid "Python 3.9+"
+msgstr "Python 3.9+"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:9
+#: 63fe57f23fe94c6bb6befef5bc5577a0
+msgid "SIESTA installed and configured"
+msgstr "SIESTA instlled و configured"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:10
+#: 652e805a9bfe44deb7a88b86d0635089
+msgid "Basic understanding of DFT calculations"
+msgstr "Bsic understوing of DFT clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:11
+#: edaad7b9780341dc8407a2967ad9e1b2
+msgid "`~/.atomate2.yaml` configuration file"
+msgstr "`~/.atomate2.yaml` configuration file"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:15
+#: 529bd263e48743d39e10ebf471c24e8f
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:17
+#: 2840134b96b845a68614b0162fa47586
+msgid "[01-RelaxMaker](01-RelaxMaker/)"
+msgstr "[01-RelaxMaker](01-RelaxMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:18
+#: a44917c445874463b4528412a3a28a7e
+msgid ""
+"**Description**: Structural relaxation with fixed and variable cell "
+"options **Difficulty**: Beginner **Time**: ~2 min (dry-run), ~10-15 min "
+"(full calculation) **Key Concepts**: RelaxMaker, fixed_cell_relaxation(),"
+" variable_cell_relaxation(), jobflow basics **Files**: 8 tutorial scripts"
+" covering basic to advanced relaxation workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:24
+#: 56a00a11aaf44ce1a4602b7d67873efe
+msgid "[02-BandStructureMaker](02-BandStructureMaker/)"
+msgstr "[02-BandStructureMaker](02-BandStructureMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:25
+#: f93358190ccd4485865c7358eaf2f5f5
+msgid ""
+"**Description**: Electronic band structure calculations with automatic "
+"k-path generation **Difficulty**: Beginner **Time**: ~2 min (dry-run), "
+"~15-20 min (full calculation) **Key Concepts**: BandStructureMaker, high-"
+"symmetry k-paths, electronic structure **Files**: Multiple examples for "
+"different material types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:31
+#: bd442e39fb854ef0a593b2a5d0adcc97
+msgid "[03-LuaMaker](03-LuaMaker/)"
+msgstr "[03-LuaMaker](03-LuaMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:32
+#: e3b5f2d9db1b4d3ca7301f2c9dbefcea
+msgid ""
+"**Description**: Lua scripting for advanced SIESTA features (FLOS "
+"optimization, geometry constraints) **Difficulty**: Intermediate "
+"**Time**: ~2 min (dry-run), ~15-20 min (full calculation) **Key "
+"Concepts**: Lua scripting, FLOS library, geometry constraints, "
+"MD.TypeOfRun **Files**: Basic Lua integration examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:38
+#: 3ab73921ad124dd1b723fa7167453c23
+msgid "[04-RelaxMaker-StaticMaker](04-RelaxMaker-StaticMaker/)"
+msgstr "[04-RelaxMaker-StaticMaker](04-RelaxMaker-StaticMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:39
+#: a0e0640a1cbb49b0acc177cf0eba4536
+msgid ""
+"**Description**: Multi-step workflows combining relaxation and static "
+"calculations **Difficulty**: Beginner **Time**: ~2 min (dry-run), ~20-30 "
+"min (full calculation) **Key Concepts**: jobflow Flow, job chaining, "
+"relax → static workflows **Files**: Sequential workflow examples with job"
+" dependencies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:45
+#: db6b1dd0abce45b28b54ec987048fe7f
+msgid "[05-DOSMaker](05-DOSMaker/)"
+msgstr "[05-DOSMaker](05-DOSMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:46
+#: c578d9461dd94ebfbb86999c7a7c830d
+msgid ""
+"**Description**: Density of states (DOS) calculations **Difficulty**: "
+"Beginner **Time**: ~2 min (dry-run), ~10-15 min (full calculation) **Key "
+"Concepts**: DOSMaker, electronic density of states, Fermi energy "
+"**Files**: Basic DOS calculation examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:52
+#: 9c32866a5ca945cea83c46476578e890
+msgid "[06-PDOSMaker](06-PDOSMaker/)"
+msgstr "[06-PDOSMaker](06-PDOSMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:53
+#: 29697e870e4b440085ed0d1a22170984
+msgid ""
+"**Description**: Projected density of states (PDOS) calculations "
+"**Difficulty**: Beginner **Time**: ~2 min (dry-run), ~10-15 min (full "
+"calculation) **Key Concepts**: PDOSMaker, orbital-projected DOS, atomic "
+"decomposition **Files**: PDOS calculation with orbital analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:59
+#: 8c6ed723cdc44673b5c2056960b35d69
+msgid "[07-PhonopyMaker](07-PhonopyMaker/)"
+msgstr "[07-PhonopyMaker](07-PhonopyMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:60
+#: a06c980feb9e41ca98f0fa0bf5c1249b
+msgid ""
+"**Description**: Phonopy-based phonon calculations with finite "
+"differences **Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~1-2"
+" hours (full calculation) **Key Concepts**: PhonopyMaker, supercell "
+"generation, force constants, automatic plotting **Files**: Basic phonopy "
+"integration examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:66
+#: bde0f7fd589d4cce8900dbe86fc9f7ab
+msgid "[08-SiestaPhononMaker](08-SiestaPhononMaker/)"
+msgstr "[08-SiestaPhononMaker](08-SiestaPhononMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:67
+#: d3e23fc93dd54ef4acc18307e37b6681
+msgid ""
+"**Description**: Native SIESTA phonon calculations using force constant "
+"approach **Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~30-60 "
+"min (full calculation) **Key Concepts**: SiestaPhononMaker, SIESTA's "
+"built-in phonon features, MD.TypeOfRun **Files**: SIESTA-native phonon "
+"examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:75
+#: 1b1fcd44f5b646fdaa658c2429f75247
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:77
+#: 5d638e76a0fa4a0287233e6db7d08941
+msgid "We recommend following this sequence:"
+msgstr "We recommend following this sequence:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:79
+#: c21a6b26702d4f37be42ba963da04b78
+msgid "Core Sequence (Essential)"
+msgstr "Cیاe Sequence (ضروری)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:80
+#: cd509df9fb5745afb3214a0aead5c948
+msgid ""
+"**Start here**: [01-RelaxMaker](01-RelaxMaker/) - Learn the absolute "
+"basics of structural relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:81
+#: 2f6304a409d84b5aa5896f7baff301f2
+msgid ""
+"**Multi-step**: [04-RelaxMaker-StaticMaker](04-RelaxMaker-StaticMaker/) -"
+" Combine multiple jobs into workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:82
+#: c5eeaf9b19ae4716b5c9b9a3a8a018a6
+msgid ""
+"**Electronic**: [02-BandStructureMaker](02-BandStructureMaker/) - "
+"Electronic band structure analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:84
+#: 78f507cb93044431a3180c8a02b068d8
+msgid "Electronic Structure Track"
+msgstr "Electronic Structure Trck"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:85
+#: 54a91e5c73634359a4907e2560c9fea5
+msgid "**DOS**: [05-DOSMaker](05-DOSMaker/) - Total density of states"
+msgstr "**DOS**: [05-DOSMaker](05-DOSMaker/) - Total density of states"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:86
+#: 43e632aa9bc44f93b0ddcedb65f6a645
+msgid ""
+"**PDOS**: [06-PDOSMaker](06-PDOSMaker/) - Orbital-projected density of "
+"states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:88
+#: b889230c0c494e86b6a5cb44371b5eee
+msgid "Vibrational Properties Track"
+msgstr "Vibrtionl Properties Trck"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:89
+#: dc0b0ae46e5f4dc1a432d3f49d6639c6
+msgid ""
+"**Phonopy**: [07-PhonopyMaker](07-PhonopyMaker/) - Phonon calculations "
+"with phonopy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:90
+#: db22f5432919410d9d63cc6412e97b9e
+msgid ""
+"**Native**: [08-SiestaPhononMaker](08-SiestaPhononMaker/) - SIESTA's "
+"built-in phonon features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:92
+#: 2e19105275f340e4a0954ce6e232ac2e
+msgid "Advanced Control (Optional)"
+msgstr "پیشرفته Control (اختیاری)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:93
+#: e3190345f61548b8bc847b1e5b52f8a6
+msgid ""
+"**Lua**: [03-LuaMaker](03-LuaMaker/) - Advanced optimization with Lua "
+"scripting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:97
+#: 262e053dccd242e98e9044df0f252142
+msgid "Quick Start Pattern"
+msgstr "شروع سریع Pttern"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:99
+#: 2ca3bb148b434ac2b500e4bd41c05ccb
+msgid "All tutorials in this category follow a consistent pattern:"
+msgstr "All tutیاils in this ctegیاy follow  consistent pttern:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:130
+#: 91c3d775496b400c9c03a14904f59e4c
+msgid "Execution Modes"
+msgstr "Execution Modes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:132
+#: 57097dfffc35417cb9a04f92596a5715
+msgid "All tutorials support three execution modes:"
+msgstr "All tutیاils suppیاt three execution modes:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:147
+#: d06ab34e185545859049772055d539f6
+msgid "**Recommendation**: Always start with `dry_run=True` to verify your setup!"
+msgstr "**Recommendation**: Always start with `dry_run=True` to verify your setup!"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:151
+#: 6bb70a54064d4acf9ce5d2fd236ad038
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:153
+#: 0a770a61222f4d978b42774858f89c29
+msgid "Issue 1: \"SIESTA command not found\""
+msgstr "Issue 1: \"SIESTA commو not found\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:154
+#: b5dc3a8a921c439d8a8d56c01289e2b9
+msgid "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2.yaml`:"
+msgstr "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2.yaml`:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:159
+#: 65706d321935416b8106daab64459f70
+msgid "Issue 2: \"Pseudopotential files not found\""
+msgstr "Issue 2: \"Pseudopotentil files not found\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:160
+#: bf4b51b9190d450193692713f8239368
+msgid "**Solution**: Install pseudopotentials and configure path:"
+msgstr "**Solution**: Instll pseudopotentils و configure pth:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:165
+#: bbd97f80c6ec46548d3e2b9ba6ac2b4c
+msgid "Then configure in `~/.atomate2.yaml`:"
+msgstr "Then configure in `~/.atomate2.yaml`:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:170
+#: 78478059687a48de81d7dfc84408c392
+msgid "Issue 3: \"Structure file not found\""
+msgstr "Issue 3: \"Structure file not found\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:171
+#: b07ff334e8c34f2e85835b5832ef3214
+msgid ""
+"**Solution**: Check that `00-structures/` directory exists at tutorials "
+"root:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:176
+#: d24d3c57eb994d7ab3b5a7cd5c32228d
+msgid "Issue 4: \"Module not found: atomate2.siesta\""
+msgstr "Issue 4: \"Module not found: tomte2.siest\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:177
+#: 452e371ea20c425da95cfae7a37565de
+msgid "**Solution**: Install atomate2siesta in development mode:"
+msgstr "**Solution**: Instll tomte2siest in development mode:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:183
+#: 4e62536891904ca9b3fda78d1ec50911
+msgid "Issue 5: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:184
+#: c6eff6f5017f46849ad850140ad006e4
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:186
+#: 64a46731c22a4c27856ff0d2df39d488
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:188
+#: a544151f4be94ba6a5da68694d60e4b8
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:205
+#: a10d7e1cb8bd425bb6540c7d04a1263c
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section above."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:209
+#: 2640f6d518c04169b24b579a145fa549
+msgid "Maker Reference"
+msgstr "Maker Reference"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 906f4039804c4c1bad399a96a1b73a0a
+msgid "Maker"
+msgstr "Maker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 1eb4b4bd835c4df58c5ccb1ba2e3fc74
+msgid "Class Method"
+msgstr "Clss Method"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 9926d18a9d0a4a69ae42692913e15262
+msgid "Purpose"
+msgstr "Purpose"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 3e98c0c1195747b1a1f83619d1c29e45 5afd4a2d9fbd4ca9872e151a929c281c
+msgid "RelaxMaker"
+msgstr "RelaxMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 5a6b6719b1804b5f926596348684bb90
+msgid "`fixed_cell_relaxation()`"
+msgstr "`fixed_cell_relaxation()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: b6c36a52b6b24b0983ea3718ca340334
+msgid "Relax atomic positions only"
+msgstr "Relx tomic positions only"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: b69670dda47f4f5297712b207254dd5d
+msgid "`variable_cell_relaxation()`"
+msgstr "`variable_cell_relaxation()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 1e9ca8d304734a4eb86bd45ac2ffd0a8
+msgid "Relax atoms + cell"
+msgstr "Relx toms + cell"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 83772806c5d04b33907d5b03bc207af2
+msgid "BandStructureMaker"
+msgstr "BandStructureMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 7274ec5403a14c39be595a7514e8330d
+msgid "`band_structure()`"
+msgstr "`band_structure()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 325f8ed3429d4a57886a65a03105f690
+msgid "Electronic band structure"
+msgstr "Electronic bو structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 45e7471ddf8b402db3ca7c9dbdf5150b
+msgid "DOSMaker"
+msgstr "DOSMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: b0e2a4f3274941d19c2c404b0edb63a6
+msgid "`dos()`"
+msgstr "`dos()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: f96c6e4ba208410cb82ae5f3572e185a
+msgid "Density of states"
+msgstr "Density of sttes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 6f8b2ae6419a451c8319f774ca83fb2c
+msgid "PDOSMaker"
+msgstr "PDOSMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 135a2d06f2894b77a2c8cceddc366480
+msgid "`pdos()`"
+msgstr "`pdos()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 291f950bfe96406f8b27c520cb5fc73b
+msgid "Projected DOS"
+msgstr "Projected DOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: c95f84af29d84bc2aa14fb8ee0170c99
+msgid "PhonopyMaker"
+msgstr "PhonopyMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 3bc9cd9025724f56b56ea60dfc9cd38d 9606ee7a3e8c47fe87ce9930273e3b9f
+msgid "`phonon()`"
+msgstr "`phonon()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: d38daddf013c4b4d9544afeedb7cc8f6
+msgid "Phonon with phonopy"
+msgstr "فونون با phonopy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 4896d6f355934a7fa6e6fe51d4a8db23
+msgid "SiestaPhononMaker"
+msgstr "SiestaPhononMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 8078ae6989e44a3ca3740aebfc38e75e
+msgid "Native SIESTA phonon"
+msgstr "Ntive SIESTA phonon"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 090ca01d0100455c89555fd3a8b0f36e
+msgid "LuaMaker"
+msgstr "LuaMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: 0941e4e9df5147bdbd72860998277f3b
+msgid "`lua_optimization()`"
+msgstr "`lua_optimization()`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md
+#: b66337cdba094b5a91c35ff4811c41d3
+msgid "Lua-scripted optimization"
+msgstr "Lu-scripted optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:224
+#: 813f20ef7b834647a1e3ad71cd127cf8
+msgid "Parameter Customization"
+msgstr "Prmeter Customiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:226
+#: dd2e3d713a6646cb9c1593a73730eb23
+msgid "Using Tier Presets (Recommended)"
+msgstr "استفاده از Tier Presets (Recommended)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:234
+#: d2790a73e51a4192813cb16f2a96d603
+msgid "Direct Parameter Specification"
+msgstr "Direct Prmeter Specifiction"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:245
+#: 83d9f25657ec4d188e82e3a99dd66205
+msgid "Override Preset Parameters"
+msgstr "Override Preset Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:258
+#: f56dd30cc659477cb43dd575063b4cd7
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:260
+#: 237d23b91cee473b9edf9c94177d3782
+msgid ""
+"For FDF block parameters (like `DM.InitSpin`, `Geometry.Constraints`, "
+"etc.), use the `\"%block ParamName\"` syntax **directly** in "
+"`user_params`:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:284
+#: 4177423c22ee490a82907c61ef62c4f3
+msgid ""
+"**Note**: The `fdf_arguments` wrapper is deprecated. See individual "
+"tutorial READMEs for comprehensive examples."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:286
+#: e1739a9c38c74be19cefa3870682ae31
+msgid ""
+"See **[03-advanced-features/01-tier-system](../03-advanced-features/01"
+"-tier-system/)** for detailed tier preset documentation."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:290
+#: 7b9decbbbd694d37b90235a4d90f39f5
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:292
+#: 00227626f4e34655b68ba1a4ad663e1e
+msgid "After completing the basics, proceed to:"
+msgstr "After completing  bsics, proceed to:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:294
+#: 40bb462717174a1d9cba20a79702f7f0
+msgid "Immediate Next Steps"
+msgstr "Immedite گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:295
+#: 756a98f566ba4a47b5c5455fe626f6d8
+msgid ""
+"**[02-workflows/01-convergence](../02-workflows/01-convergence/)** - "
+"Learn systematic parameter optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:296
+#: de69deb3e36e4980995d242da5bf17cc
+msgid ""
+"**[03-advanced-features/01-tier-system](../03-advanced-features/01-tier-"
+"system/)** - Material-specific parameter presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:298
+#: 72afb6c9b0e94153995d1fbc6a25ff54
+msgid "By Research Interest"
+msgstr "By Reserch Interest"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:299
+#: 34ee1dc2c54f4b6ab5d0d2adee41f74d
+msgid ""
+"**Electronic properties**: [02-workflows/02-equation-of-"
+"states](../02-workflows/02-equation-of-states/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:300
+#: 2eded140541f4812a8377702d4f0fd42
+msgid ""
+"**Vibrational properties**: [02-workflows/06-vibrational-"
+"properties](../02-workflows/06-vibrational-properties/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:301
+#: cc4028db6947473787c94b690ca5ec4a
+msgid ""
+"**Surface chemistry**: [02-workflows/03-surfaces-and-"
+"adsorption](../02-workflows/03-surfaces-and-adsorption/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:302
+#: 955a73a4d5384da49d889ec44220821b
+msgid ""
+"**Mechanical properties**: "
+"[02-workflows/04-mechanical](../02-workflows/04-mechanical/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:306
+#: 07d0c3846a0049e6978a995927964229
+msgid "Tutorial Metrics"
+msgstr "Tutیاil Metrics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:308
+#: 43f281fd6d254705a7d2ae74c2e0da52
+msgid "**Total tutorials**: 8 fundamental Makers"
+msgstr "**Total tutorials**: 8 fundamental Makers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:309
+#: 3a85572319b14b7abaeedc4d77cd239d
+msgid "**Total example files**: 30+ Python scripts"
+msgstr "**Totl exmple files**: 30+ Python scripts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:310
+#: f8452ef24a2443b0b9d49d963eb3c7bb
+msgid "**Coverage**: All basic single-job Makers"
+msgstr "**Coverage**: All basic single-job Makers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:311
+#: 778950f38a5e4d7f95a5e2b688cd5b8f
+msgid "**Difficulty**: Beginner (7 tutorials) + Intermediate (1 tutorial)"
+msgstr "**سطح سختی**: مبتدی (7 tutیاils) + متوسط (1 tutیاil)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/README.md:315
+#: 2995d44ad23d40f58ebb80aa42ba03e1
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"
+

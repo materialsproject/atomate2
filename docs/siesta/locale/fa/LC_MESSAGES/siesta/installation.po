@@ -1,0 +1,214 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/installation.rst:2 a42c14533a3a4c8887fbfffe4fc7abc0
+msgid "Installation"
+msgstr "نصب"
+
+#: ../../source/installation.rst:4 333b07e41c494cc498151ad43c2029f5
+msgid ""
+"`atomate2siesta` can be installed in a few easy steps. Follow these "
+"instructions to get started with the package and ensure all dependencies "
+"are properly installed."
+msgstr ""
+"`atomate2siesta` را می‌توان در چند گام آسان نصب کرد. این دستورالعمل‌ها را دنبال کنید تا "
+"با بسته شروع کنید و اطمینان حاصل کنید که تمام وابستگی‌ها به‌درستی نصب شده‌اند."
+
+#: ../../source/installation.rst:7 1edd041744514e24a92b78d7f00277b1
+msgid "Step 1: Install Using pip"
+msgstr "گام ۱: نصب با استفاده از pip"
+
+#: ../../source/installation.rst:9 fec602fc9f1c4d34a26a12dfea56d597
+msgid ""
+"You can install `atomate2siesta` directly from its Git repository using "
+"`pip`. Run the following command in your terminal:"
+msgstr ""
+"می‌توانید `atomate2siesta` را مستقیماً از مخزن Git آن با استفاده از `pip` نصب کنید. "
+"دستور زیر را در ترمینال خود اجرا کنید:"
+
+#: ../../source/installation.rst:15 33c3a513d36d4af1a0dd8237f0eaa1ce
+msgid "or"
+msgstr "یا"
+
+#: ../../source/installation.rst:24 31c93fb630f540648c2c43fecd4e8f8d
+msgid "you can use `hash -r` command if cli not working"
+msgstr "اگر CLI کار نمی‌کند، می‌توانید از دستور `hash -r` استفاده کنید"
+
+#: ../../source/installation.rst:27 77be791cae9a45ceb15d35f0b805b855
+msgid "Step 2: Automatic Installation of Required Dependencies"
+msgstr "گام ۲: نصب خودکار وابستگی‌های مورد نیاز"
+
+#: ../../source/installation.rst:29 c100187886fe4eb8a5dee38f0363d925
+msgid ""
+"The package depends on several other tools to work correctly. All the "
+"dependencies will be installed automatically."
+msgstr ""
+"این بسته برای کار صحیح به چندین ابزار دیگر وابسته است. تمام وابستگی‌ها "
+"به‌صورت خودکار نصب خواهند شد."
+
+#: ../../source/installation.rst:33 d6fba322f6654708bc68910cd36fcace
+msgid "Step 3: Verify Your Installation"
+msgstr "گام ۳: تأیید نصب"
+
+#: ../../source/installation.rst:35 8d59032d1a8c41469d4df52a97b50c71
+msgid ""
+"Once installed, you can verify that `atomate2siesta` is correctly "
+"installed by importing it in a Python environment:"
+msgstr ""
+"پس از نصب، می‌توانید با وارد کردن آن در محیط Python تأیید کنید که "
+"`atomate2siesta` به‌درستی نصب شده است:"
+
+#: ../../source/installation.rst:41 cefb744f83c146318660a6d14749c454
+msgid "If no errors occur, the installation was successful."
+msgstr "اگر خطایی رخ نداد، نصب موفقیت‌آمیز بود."
+
+#: ../../source/installation.rst:44 dbca5304284f45c0b320e8f8c4cc87e8
+msgid "Step 3-1 Optional: Install Additional Tools"
+msgstr "گام ۳-۱ اختیاری: نصب ابزارهای اضافی"
+
+#: ../../source/installation.rst:46 10cf484640124e63ada1fcc2f70f7e87
+msgid ""
+"Depending on your workflow, you may need to install additional tools or "
+"dependencies to enhance the functionality of `atomate2siesta`. For "
+"example, if you plan on running high-throughput workflows or using custom"
+" SIESTA pseudopotentials, you might want to install:"
+msgstr ""
+"بسته به جریان کار شما، ممکن است نیاز به نصب ابزارها یا وابستگی‌های اضافی "
+"برای بهبود عملکرد `atomate2siesta` داشته باشید. به‌عنوان مثال، اگر قصد اجرای "
+"جریان‌های کار با توان عملیاتی بالا یا استفاده از شبه‌پتانسیل‌های سفارشی SIESTA "
+"را دارید، ممکن است بخواهید اینها را نصب کنید:"
+
+#: ../../source/installation.rst:48 4bb14162cde241beb4f7e293ed78b939
+msgid ""
+"**FireWorks**: A workflow management system for running high-throughput "
+"simulations. You can install it using:"
+msgstr ""
+"**FireWorks**: سیستم مدیریت جریان کار برای اجرای شبیه‌سازی‌های با توان عملیاتی بالا. "
+"می‌توانید آن را با استفاده از این دستور نصب کنید:"
+
+#: ../../source/installation.rst:55 f3636930ddcc4dadaf3a507f3c0c0365
+msgid ""
+"**jobflow-remote**: This package allows you to manage remote job "
+"execution within `jobflow` workflows, which is essential for running "
+"simulations on remote HPC clusters. Install it using:"
+msgstr ""
+"**jobflow-remote**: این بسته به شما امکان می‌دهد اجرای کارهای راه‌دور را در "
+"جریان‌های کار `jobflow` مدیریت کنید، که برای اجرای شبیه‌سازی‌ها روی خوشه‌های "
+"HPC راه‌دور ضروری است. آن را با استفاده از این دستور نصب کنید:"
+
+#: ../../source/installation.rst:62 e06367e8606048c099fb99506795b0b2
+msgid "Step 4: Setting Up jobflow-remote"
+msgstr "گام ۴: راه‌اندازی jobflow-remote"
+
+#: ../../source/installation.rst:64 f433bb456f7d44b6b0dd634b4c23abd3
+msgid ""
+"To use `jobflow-remote` for managing remote jobs within your "
+"`atomate2siesta` workflows, you'll need to configure it according to your"
+" HPC environment. Here's a brief example setup:"
+msgstr ""
+"برای استفاده از `jobflow-remote` جهت مدیریت کارهای راه‌دور در جریان‌های کار "
+"`atomate2siesta` خود، باید آن را مطابق با محیط HPC خود پیکربندی کنید. "
+"در اینجا یک نمونه راه‌اندازی مختصر آورده شده است:"
+
+#: ../../source/installation.rst:66 033ffef17b7545d5bc210105f598bc4c
+msgid ""
+"**Create a Configuration File**: `jobflow-remote` requires a "
+"configuration YAML file. For example:"
+msgstr ""
+"**ایجاد فایل پیکربندی**: `jobflow-remote` نیاز به یک فایل پیکربندی YAML دارد. "
+"به‌عنوان مثال:"
+
+#: ../../source/installation.rst:85 e14d308b64814a158f5b216f648aa5db
+msgid "Step 5: Project Configuration"
+msgstr "گام ۵: پیکربندی پروژه"
+
+#: ../../source/installation.rst:87 019b67725b3f422eb28ef097b80ebb70
+msgid "Generate a project configuration file using the following command:"
+msgstr "فایل پیکربندی پروژه را با استفاده از دستور زیر تولید کنید:"
+
+#: ../../source/installation.rst:93 fe28498752fa4ebc9bc821ce6a7253a7
+msgid ""
+"This will create a YAML file (e.g., `std.yaml`) where you can define your"
+" workers, queue, and jobstore configuration."
+msgstr ""
+"این یک فایل YAML (مثلاً `std.yaml`) ایجاد می‌کند که می‌توانید پیکربندی "
+"کارگرها، صف، و jobstore خود را در آن تعریف کنید."
+
+#: ../../source/installation.rst:95 872508878737420fb3f02f679aca64a7
+msgid "Example Configuration:"
+msgstr "پیکربندی نمونه:"
+
+#: ../../source/installation.rst:137 cf75a494756b4f6da8f8f0b889580161
+msgid "Step 6: Run Jobs with jobflow-remote"
+msgstr "گام ۶: اجرای کارها با jobflow-remote"
+
+#: ../../source/installation.rst:139 832dac1974b54eccb89621505726176d
+msgid ""
+"Once the project is set up, you can use the `jf runner` command to start "
+"the job execution:"
+msgstr ""
+"پس از راه‌اندازی پروژه، می‌توانید از دستور `jf runner` برای شروع اجرای کار "
+"استفاده کنید:"
+
+#: ../../source/installation.rst:145 f10d124870814867aff459b7386a875c
+msgid "To check job statuses:"
+msgstr "برای بررسی وضعیت کارها:"
+
+#: ../../source/installation.rst:151 f47c79870c964fae86c213768da4e807
+msgid "To stop the runner:"
+msgstr "برای توقف اجراکننده:"
+
+#: ../../source/installation.rst:157 7fb29b963eb2487ba46386ea18023689
+msgid "You can fetch job results using:"
+msgstr "می‌توانید نتایج کارها را با استفاده از این دستور دریافت کنید:"
+
+#: ../../source/installation.rst:163 8bed696afbcd43d5bfc95a135c38211c
+msgid ""
+"**Submit Remote Jobs**: You can now submit jobs to your remote cluster in"
+" `atomate2siesta` workflows:"
+msgstr ""
+"**ارسال کارهای راه‌دور**: اکنون می‌توانید کارها را به خوشه راه‌دور خود در "
+"جریان‌های کار `atomate2siesta` ارسال کنید:"
+
+#: ../../source/installation.rst:173 39730dbeb63e407d9112cb82efaf5308
+msgid ""
+"This setup allows `atomate2siesta` workflows to seamlessly run on remote "
+"HPC clusters using jobflow-remote."
+msgstr ""
+"این راه‌اندازی به جریان‌های کار `atomate2siesta` اجازه می‌دهد تا به‌صورت یکپارچه "
+"روی خوشه‌های HPC راه‌دور با استفاده از jobflow-remote اجرا شوند."
+
+#: ../../source/installation.rst:176 f6ec7e4ec6dc454eab1342d25a2703a8
+msgid "NOTE: Environment Setup"
+msgstr "توجه: راه‌اندازی محیط"
+
+#: ../../source/installation.rst:178 16b73ed5c5654f338221d4c2c720d2b1
+msgid ""
+"If you are using conda, you can set up a consistent environment across "
+"machines. On one machine, export the environment using:"
+msgstr ""
+"اگر از conda استفاده می‌کنید، می‌توانید یک محیط یکپارچه در سراسر ماشین‌ها راه‌اندازی کنید. "
+"روی یک ماشین، محیط را با استفاده از این دستور صادر کنید:"
+
+#: ../../source/installation.rst:184 e16a8f16b2f44baf9009f4c26dde0111
+msgid "Then, create the same environment on another machine:"
+msgstr "سپس، همان محیط را روی ماشین دیگری ایجاد کنید:"

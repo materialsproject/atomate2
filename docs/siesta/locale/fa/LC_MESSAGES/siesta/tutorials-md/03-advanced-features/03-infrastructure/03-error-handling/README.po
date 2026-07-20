@@ -1,0 +1,2163 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1
+#: 6b450e901c3942969039481d397807ab
+msgid "Tutorial: Custodian Error Handling"
+msgstr "آموزش: Custodin Errیا Hوling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:3
+#: adc6c0286d424390b72c24d35f1177f4
+msgid ""
+"**Category**: 03-infrastructure **Difficulty**: Intermediate **Time**: ~5"
+" min (dry-run), ~15-30 min (local with errors)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:9
+#: bfb027849dd1418fbd27a2efe8f771e9
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:11
+#: 0ab1bb45280a411c9318ca0e51ffff66
+msgid ""
+"Automatic error detection and recovery for SIESTA calculations using the "
+"custodian framework. Enable custodian to handle common calculation "
+"failures (SCF convergence, memory issues, walltime limits) with "
+"progressive correction strategies."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:13
+#: 95299123df0c4578afaae8b9b8837373
+msgid ""
+"This tutorial demonstrates how to enable robust, production-ready "
+"calculations that can automatically recover from common errors without "
+"manual intervention."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:17
+#: b6ee2cbe0b8d4a599b5feb24fe21040e
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:19
+#: 211d3fae73104e2ca27fc6f9ac0572ef
+msgid "Automatic error detection from SIESTA output"
+msgstr "Automtic errیا detection from SIESTA output"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:20
+#: 21c9fad8fe344d7ba827707ab14ada8a
+msgid "Progressive correction strategies"
+msgstr "Progressive cیاrection strtegies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:21
+#: 5baa5374fe5d46229344f9d81e3656b5
+msgid "Default handlers: SCF, Walltime, Memory, Frozen"
+msgstr "Defult hوlers: SCF, Wlltime, Memیاy, Frozen"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:22
+#: 5d54bd438a594f3290998a3db241fad9
+msgid "Custom handler configuration"
+msgstr "Custom hوler configurtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:23
+#: 9bd02e4b06d14973be6652ab40f2a8c4
+msgid "JSON logging of corrections"
+msgstr "JSON logging of cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:24
+#: c961e1e5451842efab5d1238a70e6526
+msgid "When to enable/disable custodian"
+msgstr "When to enble/disble custodin"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:28
+#: 663b076fee4b4adeb2284a8a080a1568
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:30
+#: 1432f411b57542dfaf9bf6e1ff1af11a
+#, fuzzy
+msgid "**Required**: [01-basics](../../../01-basics/) tutorials completed"
+msgstr "**مورد نیاز**: [01-relxtion](../../01-bsics/01-relxtion/) completed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:31
+#: c84860f4d45a46288034960221c21f76
+msgid "**Recommended**: Experience with SCF convergence issues"
+msgstr "**Recommended**: Experience با SCF convergence issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:35
+#: 3d490b4f5d834dae825a4484fb43683d
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:37
+#: 87c8303bb6d34531a81cfbe7078373f3
+msgid "Custodian Framework"
+msgstr "Custodin Frmewیاk"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:39
+#: 9d2d1ee4accb4c8ebe245d492e2c36af
+msgid ""
+"**Purpose**: Automatic error detection and recovery for computational "
+"workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:41
+#: 2542de580d224c72a920b499df4b5ac2
+msgid "**How it works**:"
+msgstr "**How it wیاks**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:42
+#: 216d88cad4cf4ef39387a4f4529ba368
+msgid "**Monitor**: Watch SIESTA calculation output"
+msgstr "**Monitیا**: Wtch SIESTA clcultion output"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:43
+#: 43f626355d8a4526aa4a34a23f3c1eb3
+msgid "**Detect**: Identify errors (SCF not converged, memory issues, etc.)"
+msgstr "**Detect**: Identify errیاs (SCF not converged, memیاy issues, etc.)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:44
+#: c3b6baa1eafd498cb31ed50ef6f24643
+msgid ""
+"**Correct**: Apply progressive fixes (reduce mixing, increase iterations,"
+" etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:45
+#: 240f4af6a28844eeb626216266df460c
+msgid "**Retry**: Re-run calculation with corrected parameters"
+msgstr "**Retry**: Re-run clcultion با cیاrected prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:46
+#: 6046f626d9ac4a7784279823f34f6674
+msgid "**Log**: Record all errors and corrections in `custodian.json`"
+msgstr "**Log**: Record all errors and corrections in `custodian.json`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:48
+#: d458d487b9f14daca7b7ceffd2a08e9d
+msgid "**Philosophy**:"
+msgstr "**Philosophy**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:49
+#: 30d0329d55c9462b8edf783909807d30
+msgid ""
+"**Progressive corrections**: Start with minimal changes, escalate if "
+"needed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:50
+#: e4adac3c3e2b46e6ac095b37eb2d0a23
+msgid "**Conservative approach**: Preserve user settings when possible"
+msgstr "**Conservtive pproch**: Preserve user settings when possible"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:51
+#: df1721672052493d93aa3bd95dd38277
+msgid "**Transparent logging**: All actions recorded for review"
+msgstr "**Trnsprent logging**: All ctions recیاded برای review"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:53
+#: dde9859f075f4f3d88fa9a459eb55b8c
+msgid "Default Handlers"
+msgstr "Defult Hوlers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:55
+#: 09fd15cd00d44bcb9d798ffdaf52964e
+#, fuzzy
+msgid "Atomate2SIESTA includes 4 default error handlers:"
+msgstr "Atomte2-SIESTA includes 4 defult errیا hوlers:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:57
+#: d5ab3d5b516d432f8bebd1ff2e3a1254
+msgid "1. SCFConvergenceHandler"
+msgstr "1. SCFهمگراییHوler"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:59
+#: b8f4a890a7a14689add246dc5b332177
+msgid ""
+"**Detects**: `SCF_NOT_CONVERGED` error (self-consistent field not "
+"converging)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:61
+#: e116ca2f8fb64d7c9f3c30fd9b279ec1
+msgid "**Progressive correction strategy** (5 levels):"
+msgstr "**Progressive cیاrection strtegy** (5 levels):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:63
+#: 40b7713ea54f4e7bb324047f608fe3cc
+msgid "**Level 1**: Reduce mixing weight"
+msgstr "**Level 1**: Reduce mixing weight"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:68
+#: ab7456d1e18444bc8d87271bb1408a7f
+msgid "**Level 2**: Increase SCF iterations"
+msgstr "**Level 2**: Increse SCF itertions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:73
+#: a98a9bfe9db04853a2e81040d278cf31
+msgid "**Level 3**: Change mixer method"
+msgstr "**Level 3**: Chnge mixer method"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:78
+#: 3dfdc382da524e79b601f4407b368f52
+msgid "**Level 4**: Relax convergence tolerance"
+msgstr "**Level 4**: Relx convergence tolernce"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:83
+#: bfc3e1079fb8484289d9393965d84668
+msgid "**Level 5**: Add electronic temperature (metals)"
+msgstr "**Level 5**: Add electronic temperture (metls)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:89
+#: dd889c9edbc146399333fb1b45b5fd0a
+msgid "**Max attempts**: 5 levels"
+msgstr "**Mx ttempts**: 5 levels"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:91
+#: 138f6a97cff44cc48dfc7a12ae413451
+msgid "2. WalltimeHandler"
+msgstr "2. WlltimeHوler"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:93
+#: d5e3d6b68a32488aa30baf37932dc329
+msgid "**Detects**: Calculation exceeding walltime limit"
+msgstr "**Detects**: محاسبه exceeding wlltime limit"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:95
+#: 4f53325d581544d1aca87ceb75173164
+msgid "**Action**:"
+msgstr "**Action**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:96
+#: f5ae5780f76c40fbbcbe59b150bbe060
+msgid "Save current state"
+msgstr "Sve current stte"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:97
+#: 127ca522f01042c18acba22746479503
+msgid "Request calculation restart from last saved state"
+msgstr "Request clcultion restrt from lst sved stte"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:98
+#: 2cde7a474e434c23962af6ba34ad90db
+msgid "Common on HPC systems with job time limits"
+msgstr "Common on HPC systems با job time limits"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:100
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:593
+#: 7e9fd300087f4b018733d59830b804fd 8d29ed0f26274afe9809460feb732655
+msgid "**Use cases**:"
+msgstr "**Use cses**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:101
+#: d78a232b5a164f2dac81e26f01f124bc
+msgid "Long calculations on job queue systems"
+msgstr "Long clcultions on job queue systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:102
+#: 6390821ced664d0894c2927467c4da1e
+msgid "Checkpointing large systems"
+msgstr "Checkpointing lrge systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:103
+#: 20706ef5b65240f1b44078712f40bb6b
+msgid "Multi-day calculations"
+msgstr "Multi-dy clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:105
+#: 11b3e6b0c6d94e72b30712ceea3fac95
+msgid "3. MemoryHandler"
+msgstr "3. MemیاyHوler"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:107
+#: ec42da7f90c14b758eab91acde73c85a
+msgid "**Detects**: Out of memory errors"
+msgstr "**Detects**: Out of memیاy errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:109
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:120
+#: 7fe5c1016ea546ec9b4494b28155382b 9392e97a6f5d40618acddf6e8fcf6351
+msgid "**Actions**:"
+msgstr "**Actions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:110
+#: 6efe4d95c5b945bfb3de49b641c83b20
+msgid "Reduce memory-intensive options"
+msgstr "Reduce memیاy-intensive options"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:111
+#: b57235dc73cb4b04a8b00403189bf367
+msgid "Adjust buffer sizes"
+msgstr "Adjust buffer sizes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:112
+#: bb5eb739ca4a47dabf217136134873a2
+msgid "Suggest increasing available memory"
+msgstr "Suggest incresing vilble memیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:114
+#: 66852719c7624fca81eda3c596b192cd
+msgid ""
+"**Note**: Rare with modern systems, but critical for very large "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:116
+#: 185af14dea0b43a68a9fb48542035e84
+msgid "4. FrozenHandler"
+msgstr "4. FrozenHوler"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:118
+#: 23f8fbdec68b422195120dd065bfdfe4
+msgid "**Detects**: Calculation not making progress (frozen/hanging)"
+msgstr "**Detects**: محاسبه not mking progress (frozen/hnging)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:121
+#: 7fd4be2146424cab859294974c3fff6e
+msgid "Kill frozen process"
+msgstr "Kill frozen process"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:122
+#: 6d343279b5e64198bbd6d9b177055726
+msgid "Restart with adjusted settings"
+msgstr "Restrt با djusted settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:123
+#: 282d7a94c9f74227b90b4e890d92da2c
+msgid "Prevent indefinite hangs"
+msgstr "Prevent indefinite hngs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:125
+#: 2896bb93fe5943bf88bf17e648c4160a
+msgid "Correction Logging"
+msgstr "Cیاrection Logging"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:127
+#: a7a417d9459e427db0719a7ed8ef2f69
+msgid "All custodian actions are recorded in `custodian.json`:"
+msgstr "All custodian actions are recorded in `custodian.json`:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:155
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:820
+#: a810cebe699643f78ecd08c711f93ac9 afd7ecf2697e4146852ecc617291a579
+msgid "**Benefits**:"
+msgstr "**Benefits**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:156
+#: b6ca80eeff154fadb15ef58837470755
+msgid "Transparency: See exactly what custodian did"
+msgstr "Trnsprency: See exctly wht custodin did"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:157
+#: 74030a778f304d67b9adc22cff588d6c
+msgid "Debugging: Understand why calculations needed corrections"
+msgstr "Debugging: Understو why clcultions needed cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:158
+#: 4d6bd1e5ab1f4a7f8b57dec40a6add30
+msgid "Optimization: Identify patterns for better initial settings"
+msgstr "Optimiztion: Identify ptterns برای better initil settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:162
+#: cbb27285f9374a7bb44edbf73cb567ca
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:164
+#: 8d09385f68bf4f769fd1da7259d888a4
+msgid "1. Basic (Default Settings)"
+msgstr "1. Bsic (Defult Settings)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:168
+#: 954ddb3299ef48c48cf144c17519040b
+msgid "Enable custodian with default handlers"
+msgstr "Enble custodin با defult hوlers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:169
+#: ffd6df01e8ad406db39ec38ab38ffd22
+msgid "Max errors: 5 (standard)"
+msgstr "Mx errیاs: 5 (stوrd)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:170
+#: 78d68635d109434abc20a47ff183faa2
+msgid "All 4 default handlers active"
+msgstr "All 4 defult hوlers ctive"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:171
+#: a2178e08f0614572a21e51aab1f056f5
+msgid "~15 minutes runtime"
+msgstr "~15 minutes runtime"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:172
+#: 3a9d1f46e5b84a9e95a14140c16119ce
+msgid "**Use for**: Standard production calculations"
+msgstr "**Use برای**: Stوrd production clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:174
+#: f54766c7ab524731ace6ae0842def1e1
+msgid "2. Custom (Increased Error Tolerance)"
+msgstr "2. Custom (Incresed Errیا Tolernce)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:178
+#: 22445e223b554d7da0ebbb22ee79b846
+msgid "Max errors: 10 (increased for difficult systems)"
+msgstr "Mx errیاs: 10 (incresed برای difficult systems)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:179
+#: 9d2d40b458e74aa681f0c23e1a0e712a
+msgid "Conservative initial SCF settings"
+msgstr "Conservtive initil SCF settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:180
+#: 73fbd09af4724314ab4ea5c002e68cec
+msgid "More correction attempts allowed"
+msgstr "Mیاe cیاrection ttempts llowed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:181
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:191
+#: 2086987f041f45818b11c27f16675ac8 c0569c395e58409c9770004581207f14
+msgid "~20-30 minutes runtime"
+msgstr "~20-30 minutes runtime"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:182
+#: 47cc8ccaeea444cf882189ecb2b119b4
+msgid "**Use for**: Difficult SCF convergence (metals, magnetic systems)"
+msgstr "**Use برای**: Difficult SCF convergence (metls, mgnetic systems)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:184
+#: cd154a74ca754c488154affe2b3c6c56
+msgid "3. Difficult SCF (Test Recovery)"
+msgstr "3. Difficult SCF (Test Recovery)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:188
+#: 458127c3fcdf4ff59cefa0694aa8df6d
+msgid "Intentionally difficult initial settings"
+msgstr "Intentionlly difficult initil settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:189
+#: 320b0f7fbcca494bb94c06f4c5216b66
+msgid "Tests custodian's recovery capabilities"
+msgstr "Tests custodin's recovery cpbilities"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:190
+#: a82eed4b0435411db1b55151f8c0f680
+msgid "Max errors: 8"
+msgstr "Mx errیاs: 8"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:192
+#: be9fa55b9f8b448b825e183d5eff452f
+msgid "**Use for**: Understanding custodian behavior, testing robustness"
+msgstr "**Use برای**: درک custodin behviیا, testing robustness"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:194
+#: 18b8fa6566704c51be749554c4e71e48
+msgid "4. Geometry Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:198
+#: 357256b68d5f4bbd92ef7bd8c8b1a258
+msgid "Four modes for geometry convergence handling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:199
+#: a1dce9c004ec4c6ab5b4694723cd32bc
+msgid "MODE 1: Fast/dirty (lenient, no custodian)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:200
+#: 22c19bb505504fc197e3c4c7a5320836
+msgid "MODE 2: Auto-recovery (custodian, lenient validator)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:201
+#: d928ced0183b4c9991e3a9c9feb3d947
+msgid "MODE 3: Strict checking (no custodian, strict validator)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:202
+#: 5854bf05a5e047c5842ab9d112a97cd6
+msgid "MODE 4: Paranoid (custodian + strict validator)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:203
+#: c45d849e58f646b09be17d9eb32e2151
+msgid ""
+"**Use for**: Understanding geometry convergence handling, choosing right "
+"mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:207
+#: 0678b5fdee544462a5b96885973388ce
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:224
+#: c2cdff4e970740398077cabe7804a164
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:226
+#: 8cd8bb7fb9584eed8b38589554cd2c4c
+msgid "Successful Calculation (No Errors)"
+msgstr "Successful محاسبه (No Errیاs)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:244
+#: 275f0d652fb1473e9864b6f3b8c049e1
+msgid "**custodian.json** (no errors):"
+msgstr "**custodin.json** (no errیاs):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:257
+#: 20e8749d6ce8473d8a0f86efb4b95443
+msgid "Calculation with SCF Errors"
+msgstr "محاسبه با SCF Errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:259
+#: be2804e1e86b43a6b5d7a4a2139ee9c3
+msgid "**Console output**:"
+msgstr "**Console output**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:274
+#: c4e804a49ad34cb38ce2886837b389eb
+msgid "**custodian.json** (with corrections):"
+msgstr "**custodin.json** (با cیاrections):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:314
+#: fd2619695f71492f82357001fcf5ae8b
+msgid "When to Use Custodian"
+msgstr "When to Use Custodin"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:316
+#: 66f8674cdd86496fb9e58bbefac20b2f
+msgid "✅ Enable Custodian For:"
+msgstr "✅ Enble Custodin Fیا:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:318
+#: 700fd6de6a104921b8456955948ef3a0
+msgid "**Production Calculations**:"
+msgstr "**Production محاسبهs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:319
+#: 2e7fd4f19478453b94b50d3dcd340a15
+msgid "Important calculations where robustness > speed"
+msgstr "مهم clcultions where robustness > speed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:320
+#: ef7453cb84b342489ebc22247471d6d9
+msgid "Want unattended completion overnight/weekend"
+msgstr "Wnt unttended completion overnight/weekend"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:321
+#: eac09cf1bdbe4c66ae322e7063336a14
+msgid "Can't afford manual intervention"
+msgstr "Cn't fبرایd mnul intervention"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:323
+#: 5a15c6eecf45462fa42fbac6c50d09fd
+msgid "**Batch Workflows**:"
+msgstr "**Btch گردش کارs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:324
+#: b961d6a3ae2346e1b2c1f33bf085b810
+msgid "Large-scale screening (100+ structures)"
+msgstr "Lrge-scle screening (100+ structures)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:325
+#: c9d9ca7a86b649a289ca0d58b0299d3b
+msgid "Automated workflows"
+msgstr "Automted wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:326
+#: c9a528fe4f1d43858e78b8aee102db48
+msgid "High-throughput calculations"
+msgstr "High-throughput clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:328
+#: 6793cf18fa2d4b13ad96a2edad35cc68
+msgid "**HPC Job Submission**:"
+msgstr "**HPC Job Submission**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:329
+#: dd0edaae32c9445db1f6251b7851ea36
+msgid "Limited job queue access"
+msgstr "Limited job queue ccess"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:330
+#: 07e2cbc2b2164199b003e305b059f378
+msgid "Expensive to re-submit failed jobs"
+msgstr "Expensive to re-submit filed jobs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:331
+#: 7402b5fa4b144026a9137b5409d4e4e6
+msgid "Walltime limits require checkpointing"
+msgstr "Wlltime limits require checkpointing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:333
+#: 5dbf7c86729f4138af03e1e08fc07079
+msgid "**Difficult Systems**:"
+msgstr "**Difficult Systems**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:334
+#: f2a998f26ab049e8b4a5565174820e65
+msgid "Metals (Fermi surface)"
+msgstr "Metls (Fermi surfce)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:335
+#: a39fcd6dd23e4c5bb41758698efa175f
+msgid "Magnetic systems (spin convergence)"
+msgstr "Mgnetic systems (spin convergence)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:336
+#: a7bf36adfb8845e0ad5abeea8c968e85
+msgid "Systems with history of SCF issues"
+msgstr "Systems با histیاy of SCF issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:337
+#: 79743e0dc6db42ee999695cf098226ca
+msgid "Unknown/untested structures"
+msgstr "Unknown/untested structures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:339
+#: 9e1ff01e111c4525b03fce89553a44c5
+msgid "**Automated Workflows**:"
+msgstr "**Automted گردش کارs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:340
+#: d4f87016dd6f4a6bb9183f962a58dfa6
+msgid "No manual monitoring possible"
+msgstr "No mnul monitیاing possible"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:341
+#: c2383385ca7743eb849c0cb4def5901b
+msgid "Need guaranteed completion"
+msgstr "Need gurnteed completion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:342
+#: 211a9214e4054d16bd94eb1286299894
+msgid "Production pipelines"
+msgstr "Production pipelines"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:344
+#: bd9d9d01568a4f608811e11f2e803cfb
+msgid "❌ Disable Custodian For:"
+msgstr "❌ Disble Custodin Fیا:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:346
+#: 28f8e19fa5524f5c9b30c2ad57b5b4e2
+msgid "**Debugging**:"
+msgstr "**Debugging**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:347
+#: 21bf9120f60b4ff18a2b47b5f740d304
+msgid "Understanding WHY calculation fails"
+msgstr "درک WHY clcultion fils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:348
+#: 1c9ac3ca70b0429ebe1d7ae3d6d0207c
+msgid "Testing new parameters"
+msgstr "Testing new prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:349
+#: af65b7845452444483098f73235e39d1
+msgid "Learning about failure modes"
+msgstr "Lerning bout filure modes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:351
+#: 7702646169e4480588768eb65b05824c
+msgid "**Parameter Testing**:"
+msgstr "**Prmeter Testing**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:352
+#: 647de187a3e34148b0f41f11de9d27ef
+msgid "Want to see raw results without corrections"
+msgstr "Wnt to see rw results باout cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:353
+#: 9ca43f7c25b2429e962852efd67e28d2
+msgid "Testing convergence systematically"
+msgstr "Testing convergence systemticlly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:354
+#: 4de081ad6d5d4c88901c19cd495c1503
+msgid "Comparing different settings"
+msgstr "Compring different settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:356
+#: 41f7b51f9e5547c6a207155920cce88d
+msgid "**Quick Tests**:"
+msgstr "**Quick Tests**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:357
+#: ef508835b24a4205b7baf980ae660395
+msgid "Dry-run mode (custodian not needed)"
+msgstr "Dry-run mode (custodin not needed)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:358
+#: f6c3f99b854e4f1eb08505c3000e5d4e
+msgid "Structure validation"
+msgstr "Structure vlidtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:359
+#: 5e4fb218794d46738152b19d9e23108f
+msgid "Quick energy estimates"
+msgstr "Quick energy estimtes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:361
+#: 9dbe19cb19584dc1b439469d03498393
+msgid "**Known Good Settings**:"
+msgstr "**Known Good Settings**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:362
+#: 1c3da40da86246828e123164fa958ac3
+msgid "Well-tested parameters for your system"
+msgstr "Well-tested prmeters برای your system"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:363
+#: 367bef0c9aa044df80cbb111ca298a7d
+msgid "Calculations that always work"
+msgstr "محاسبهs tht lwys wیاk"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:364
+#: ee282d58165447adb819d25c78de09b0
+msgid "When speed > robustness"
+msgstr "When speed > robustness"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:368
+#: a64cb7ce30d04830849ebdb7d1250ddc
+msgid "Settings Guidelines"
+msgstr "Settings Guidelines"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:370
+#: f75e23339fa742ffad697f00dcc3c015
+msgid "Standard Production"
+msgstr "Stوrd Production"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:372
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:387
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:407
+#: 651d7824cbe84c53a87317182dd7ff21 c803211970b9459aac26165244d145df
+#: e87d83048e2b48bb99fe68f223202b70
+msgid "**Configuration**:"
+msgstr "**Configurtion**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:378
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:397
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:419
+#: 206df8c4ff524f9abbb1a731bee4ad2a c544fbcccde24e1cbadfc5344e865668
+#: e1ad065c5f904d63931c715f883e7ae0
+msgid "**Use for**:"
+msgstr "**Use برای**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:379
+#: 97384ee57faa4b5987ccb95b6d9ef7b2
+msgid "General production calculations"
+msgstr "Generl production clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:380
+#: 9afc36bcca1e49989aff33989b133117
+msgid "Most materials"
+msgstr "Most mterils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:381
+#: 0a95c1dd39844a1b81884cca2e38967e
+msgid "Typical convergence behavior"
+msgstr "Typicl convergence behviیا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:383
+#: d75407c68b3a4d2e9368c845ccab3ee4
+msgid "**Expected**: 0-2 corrections for well-behaved systems"
+msgstr "**Expected**: 0-2 cیاrections برای well-behved systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:385
+#: c8ea7e88a0c143c9bd460a6d86cd9b00
+msgid "Difficult Convergence"
+msgstr "Difficult همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:398
+#: 399c16ab1ef04210a410f9a344daceb6
+msgid "Metals"
+msgstr "Metls"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:399
+#: 463b26d1449240448fab1cd055475db3
+msgid "Magnetic systems"
+msgstr "Mgnetic systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:400
+#: b93a61a9f9d846c28ea5ece7f356c862
+msgid "Large systems (>100 atoms)"
+msgstr "Lrge systems (>100 toms)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:401
+#: 1c66d02374374a29b7461d0b6acb19c0
+msgid "Complex structures (surfaces, interfaces)"
+msgstr "Complex structures (surfces, interfces)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:403
+#: 65ffe49231ee4c0d8f6bffde3bf4da90
+msgid "**Expected**: 3-8 corrections possible"
+msgstr "**Expected**: 3-8 cیاrections possible"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:405
+#: 2b44f09728ab4d8c894a9849fc2c3cd9
+msgid "Very Difficult Systems"
+msgstr "Very Difficult Systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:420
+#: 216c4362ff8a4208a0a45656a1c2ffb9
+msgid "Pathologically difficult systems"
+msgstr "Pthologiclly difficult systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:421
+#: 2901f8db8f9348948da46ceae617b303
+msgid "When all else fails"
+msgstr "When ll else fils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:422
+#: e8369c0707194da1b85f86f06aab001a
+msgid "Research into difficult convergence"
+msgstr "Reserch into difficult convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:424
+#: bf56dd7e5f04436588bc8f122d502b23
+msgid "**Note**: If needing >15 corrections, consider:"
+msgstr "**توجه**: If needing >15 cیاrections, consider:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:425
+#: 24fdbaebd4fc4c9daa7e62aeea6d1b33
+msgid "Is structure reasonable?"
+msgstr "Is structure resonble?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:426
+#: e988458f4b334d1087763b630264b5c5
+msgid "Are parameters appropriate?"
+msgstr "Are prmeters pproprite?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:427
+#: d07fb39acc5a4659b4d76ad256610cc3
+msgid "Is SIESTA suitable for this system?"
+msgstr "Is SIESTA suitble برای this system?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:431
+#: 69aa5a9d153c4e74b494972d4e3e73bb
+msgid "Common Scenarios"
+msgstr "Common Scenrios"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:433
+#: 1c7f027aa79e4d3599d91ebc50d8ae30
+msgid "Scenario 1: Simple Insulator"
+msgstr "Scenrio 1: Simple Insultیا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:435
+#: 72776aadcf4b44728d142727b1c9eea3
+msgid "**System**: Silicon, NaCl, Diamond"
+msgstr "**System**: Silicon, NCl, Dimond"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:437
+#: 02a67a5d35a44f9b89d468494cebf88f
+msgid "**Expected behavior**:"
+msgstr "**Expected behviیا**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:438
+#: 668360f0c75f42a5aa51be3bcdf38c6e
+msgid "Usually no errors"
+msgstr "Usully no errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:439
+#: c437aef836234982bc6bdb5657b5d7e0
+msgid "custodian.json shows `\"errors\": []`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:440
+#: 70c5e586f5574965aaf912cd37064adf
+msgid "Completes in first run"
+msgstr "Completes in first run"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:442
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:457
+#: 813ece4517584a5c957d8a8d9fcb1821 aff30b0668a148599693b66f0db709df
+msgid "**Settings**: Standard (max_errors=5)"
+msgstr "**Settings**: Stوrd (mx_errیاs=5)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:444
+#: 310bcf8a9dee497d985c87a41c80b1d5
+msgid "Scenario 2: Metal"
+msgstr "Scenrio 2: Metl"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:446
+#: d39b1647c58d4d3fb41ad70e3542f51b
+msgid "**System**: Al, Cu, Au"
+msgstr "**System**: Al, Cu, Au"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:448
+#: c1c1111e1a94455eb87a7b5ae3804edf
+msgid "**Initial error**: SCF_NOT_CONVERGED"
+msgstr "**Initil errیا**: SCF_NOT_CONVERGED"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:450
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:465
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:482
+#: 9da749953d4d494d8f5d81b1d45ebd78 a04d74de34384b12b2f21d3764c8a928
+#: fb509cb8642a4f5f8bd8e2682d991d05
+msgid "**Custodian actions**:"
+msgstr "**Custodin ctions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:451
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:466
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:483
+#: 265555a1ecd44f4a8f68d97baf993195 f87efda187ce41e19ff2625cdd65a416
+#: f9ff6967c0d342cab7f3ef47c3f82eaf
+msgid "Reduce mixing weight"
+msgstr "Reduce mixing weight"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:452
+#: d0ecc29277454887976e410c89ea10f0
+msgid "Add Fermi smearing (OccupationFunction: MP)"
+msgstr "Add Fermi smering (OccuptionFunction: MP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:453
+#: 1aef6df768bc499a8cab80dacccaf384
+msgid "Increase MaxSCFIterations"
+msgstr "Increse MxSCFItertions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:455
+#: 28279b63b2ef4a4b8350bbd5c5875eb6
+msgid "**Final result**: Converged in 2-3 corrections"
+msgstr "**Finl result**: Converged in 2-3 cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:459
+#: 51385a2f8af6455facb86de7b6a671a6
+msgid "Scenario 3: Magnetic System"
+msgstr "Scenrio 3: Mgnetic System"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:461
+#: 4ea9feaf37f8415a8d036c0fd8fee99f
+msgid "**System**: Fe, Ni, magnetic oxides"
+msgstr "**System**: Fe, Ni, mgnetic oxides"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:463
+#: cca8a1b420c946eb88d5afc00b30eee7
+msgid "**Initial errors**: Multiple SCF_NOT_CONVERGED"
+msgstr "**Initil errیاs**: Multiple SCF_NOT_CONVERGED"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:467
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:484
+#: 1894b10de6da4e8ebc54332ee02c1bd5 ef52c157624842768c6d92620a716ebb
+msgid "Increase SCF iterations"
+msgstr "Increse SCF itertions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:468
+#: da6ce723659242e097ddb56e14d570e3
+msgid "Change mixer method"
+msgstr "Chnge mixer method"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:469
+#: fa4ae443a05b469ca8a5eb9d8eabbdf8
+msgid "Add electronic temperature"
+msgstr "Add electronic temperture"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:470
+#: 20c03fcada3843be8b1840367d341536
+msgid "Relax DM.Tolerance"
+msgstr "Relx DM.Tolernce"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:472
+#: 882ff57803a441e695af4656164f1491
+msgid "**Final result**: Converged in 4-6 corrections"
+msgstr "**Finl result**: Converged in 4-6 cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:474
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:489
+#: ac16bcf5d23840a98437b18dff71825e cd9ad97a93eb4f56ad6f5db1bf57986d
+msgid "**Settings**: Difficult (max_errors=10)"
+msgstr "**Settings**: Difficult (mx_errیاs=10)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:476
+#: 3e36e15298464bcdbd7b7c122dfadf4d
+msgid "Scenario 4: Surface/Slab"
+msgstr "Scenrio 4: Surfce/Slb"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:478
+#: 61cc70a24c0e4460a15c807e0a604f31
+msgid "**System**: Metal surface with adsorbate"
+msgstr "**System**: Metl surfce با dsیاbte"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:480
+#: 14909e9844e347728df8341504648ca6
+msgid "**Initial errors**: SCF_NOT_CONVERGED"
+msgstr "**Initil errیاs**: SCF_NOT_CONVERGED"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:485
+#: 66312e7f83be494fab460f939d8c2c10
+msgid "Add electronic temperature (if metal)"
+msgstr "Add electronic temperture (if metl)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:487
+#: b91c02e490d2455480d04444f8e8f22a
+msgid "**Final result**: Converged in 2-4 corrections"
+msgstr "**Finl result**: Converged in 2-4 cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:493
+#: d708c6cbe18e458c99d05c79873fd59f
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:495
+#: 8b45711e30914b37a7b5a6a31f88e12b
+msgid "Workflow Strategy"
+msgstr "گردش کار Strtegy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:497
+#: c73aa5e2fad340299a7b87718b15bb22
+msgid "**1. Start Conservative**:"
+msgstr "**1. Strt Conservtive**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:507
+#: 71ed1742246c49c18440399a1200d285
+msgid "**2. Enable Custodian**:"
+msgstr "**2. Enble Custodin**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:513
+#: 8ee340387f4b4acb86fbce40f289b60a
+msgid "**3. Review Corrections**:"
+msgstr "**3. Review Cیاrections**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:520
+#: 130884dc800a404798e3b57dc24c97c8
+msgid "**4. Optimize Initial Settings**:"
+msgstr "**4. Optimize Initil Settings**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:521
+#: 811b56310d9d4998abb2899d13c3f39d
+msgid ""
+"If many corrections: Incorporate successful corrections into initial "
+"settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:522
+#: caa9fe5ae80943d09890015c606b4aef
+msgid "If no corrections: Can try looser settings for speed"
+msgstr "If no cیاrections: Cn try looser settings برای speed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:523
+#: 4f69ef9cc43a4ee8bddbe4c603ed16bc
+msgid "Document successful parameter sets"
+msgstr "Document successful prmeter sets"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:525
+#: 111a337c999c4d5b976cc79f4522af0e
+msgid "Production Checklist"
+msgstr "Production Checklist"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:527
+#: efd6387711dd470397b8f4ed9aef06ca
+msgid "✅ **Enable custodian** for production calculations"
+msgstr "✅ **Enble custodin** برای production clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:529
+#: 4a86550ed3ca4d53b55ffe3b54ac569b
+msgid "✅ **Set appropriate max_errors**:"
+msgstr "✅ **Set pproprite mx_errیاs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:530
+#: 24c72aece3504f999c1bf41988168e82
+msgid "Standard systems: 5"
+msgstr "Stوrd systems: 5"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:531
+#: 0cd5d3fc6a164581b06298da41754651
+msgid "Difficult systems: 10"
+msgstr "Difficult systems: 10"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:532
+#: 2e1ce3d985364e7aa7b4827fda895a2c
+msgid "Very difficult: 15 (rare)"
+msgstr "Very difficult: 15 (rre)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:534
+#: 902e5d0516794f888b7e6295b1902ac0
+msgid "✅ **Review custodian.json** after completion:"
+msgstr "✅ **Review custodin.json** fter completion:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:535
+#: 4fefb563977d4a17b17d1587e73ecf88
+msgid "What errors occurred?"
+msgstr "Wht errیاs occurred?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:536
+#: 1b896fb2ce984b8d87955500cdb7b322
+msgid "What corrections worked?"
+msgstr "Wht cیاrections wیاked?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:537
+#: 4f78281df356436c9efb378fe67f9cda
+msgid "Can initial parameters be improved?"
+msgstr "Cn initil prmeters be improved?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:539
+#: cd8433f36f8f452386010dd7703af323
+msgid "✅ **Document corrections** for future calculations:"
+msgstr "✅ **Document cیاrections** برای future clcultions:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:540
+#: eebb001b5a1a442fa9620826702d45ae
+msgid "Record successful parameter sets"
+msgstr "Recیاd successful prmeter sets"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:541
+#: 6ee9d61b44f640e589cbd002264daac9
+msgid "Build library of working settings"
+msgstr "Build librry of wیاking settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:542
+#: 701189a8ffa7451ca64950dd7cda118f
+msgid "Share with team/community"
+msgstr "Shre با tem/community"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:544
+#: 1eb17223b4974eaba8bc4a499771f557
+msgid "✅ **Monitor patterns**:"
+msgstr "✅ **Monitیا ptterns**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:545
+#: 967c5ca91ea941078947933ed503b67e
+msgid "Same errors repeating?"
+msgstr "Sme errیاs repeting?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:546
+#: b71e9a8af6334d5d82411ddb3fa14248
+msgid "Certain materials always need corrections?"
+msgstr "Certin mterils lwys need cیاrections?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:547
+#: eb1e2e42f2b948b7ae115ca36b522588
+msgid "Update default settings accordingly"
+msgstr "Updte defult settings ccیاdingly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:549
+#: df8ef58630994e7c949187645dc60cd1
+msgid "Performance Considerations"
+msgstr "Perبرایmnce Considertions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:551
+#: 3d1e2508c03c4927abdcb2eb6e672458
+msgid "**Overhead**:"
+msgstr "**Overhed**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:552
+#: 2ea1779d604249858df5784e7b5c6c94
+msgid "Custodian monitoring: Negligible (<1%)"
+msgstr "Custodin monitیاing: Negligible (<1%)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:553
+#: 4e8d50d9566d473ca083311ef96fd7b5
+msgid "Error detection: ~1-2 seconds per check"
+msgstr "Errیا detection: ~1-2 seconds per check"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:554
+#: fbdc6db632ee46d8af09bbb13130cd04
+msgid "Restart overhead: Minimal (continues from last state)"
+msgstr "Restrt overhed: Miniml (continues from lst stte)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:556
+#: db895a9af34d40a4bf86aa4f5566eecd
+msgid "**Time savings**:"
+msgstr "**زمان svings**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:557
+#: 938dea92c3f04d91a9d9a8aa63c64aa0
+msgid "Avoids manual restarts: Hours to days"
+msgstr "Avoids mnul restrts: Hours to dys"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:558
+#: 570af305578445e19e121d08af2713e8
+msgid "Prevents job queue re-submissions: Days"
+msgstr "Prevents job queue re-submissions: Dys"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:559
+#: fee8210c855643938c376b5496d09ffd
+msgid "Enables overnight/weekend runs: Priceless"
+msgstr "Enbles overnight/weekend runs: Priceless"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:561
+#: 63736441d52a489fab5ae4db2240c00e
+msgid "**Trade-off**:"
+msgstr "**Trde-off**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:562
+#: f778f38de4554cd1b2f6248ab54fe844
+msgid "Slightly slower individual runs (corrections)"
+msgstr "Slightly slower individul runs (cیاrections)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:563
+#: ec708f11d6dd4c708af1bdb86345d5ad
+msgid "Much faster overall workflow (no manual intervention)"
+msgstr "Much fster overll wیاkflow (no mnul intervention)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:564
+#: 98c21b6abf25446ea9e27cde3b68dfdf
+msgid "**Recommendation**: Enable for all production work"
+msgstr "**Recommendtion**: Enble برای ll production wیاk"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:568
+#: 8f27602d47df4833a2017d0b203bf23e
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:570
+#: d050e10da26944ec9d8722bedc2abfa4
+msgid "Custom Handlers"
+msgstr "Custom Hوlers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:572
+#: a34aad23491d42c98fc84460eda45301
+msgid "For specialized error handling, write custom handlers:"
+msgstr "Fیا specilized errیا hوling, write custom hوlers:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:594
+#: fcff4367026b4a92a9f6797168a43683
+msgid "System-specific errors"
+msgstr "System-specific errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:595
+#: b710465ac33f45d4aafeae146257b957
+msgid "Custom convergence strategies"
+msgstr "Custom convergence strtegies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:596
+#: da9e845e521b4abba422f1780cc4b340
+msgid "Integration with other codes"
+msgstr "Integrtion با or codes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:597
+#: 0a74c00e092d49d284aeee8b7a7befac
+msgid "Specialized workflows"
+msgstr "Specilized wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:599
+#: cbb10c061d614aa488f71af08f257455
+msgid ""
+"**Documentation**: See `src/atomate2/siesta/custodian/handlers.py` for "
+"examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:601
+#: fac503280cb64df58b9c5c66428f1a5a
+msgid "Handler Priority"
+msgstr "Hوler Priیاity"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:603
+#: d38a1813e4a244cca188d57218d20e3e
+msgid "Handlers are executed in order:"
+msgstr "Hوlers re executed in یاder:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:605
+#: 847a530efc344882bfc593cf61159af5
+msgid "**SCFConvergenceHandler** (most common)"
+msgstr "**SCFهمگراییHوler** (most common)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:606
+#: dc9f3cfcff2c46798b5b23e8b58400c7
+msgid "**WalltimeHandler** (HPC-specific)"
+msgstr "**WlltimeHوler** (HPC-specific)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:607
+#: 8958ca11394646289231d750058dccee
+msgid "**MemoryHandler** (resource errors)"
+msgstr "**MemیاyHوler** (resource errیاs)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:608
+#: 0b491b180b874387983187d6386c9368
+msgid "**FrozenHandler** (last resort)"
+msgstr "**FrozenHوler** (lst resیاt)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:610
+#: a13c7eed646e4db498de58553a606908
+msgid "Custom handlers can be inserted at any position:"
+msgstr "Custom hوlers cn be inserted t ny position:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:620
+#: ca1a8684e0624d4dab3abe4a385ae836
+msgid "Multi-Stage Corrections"
+msgstr "Multi-Stge Cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:622
+#: 2f847eb754fe474e8a7a503dc6c23464
+msgid "For complex workflows, custodian can handle multi-stage corrections:"
+msgstr "Fیا complex wیاkflows, custodin cn hوle multi-stge cیاrections:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:624
+#: 36cece8743c74ad7a3a66d89c126fc8e
+msgid "**Example**: Phonon calculation with tight forces"
+msgstr "**مثال**: فونون clcultion با tight برایces"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:643
+#: db34de68ecb743c3b7e4ee793a7907d4
+msgid "**Benefit**: Each stage gets appropriate error tolerance"
+msgstr "**Benefit**: Ech stge gets pproprite errیا tolernce"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:647
+#: e469cae93d594b7da05d9ddaec5db875
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:649
+#: 929911e9390648eca46e316b032370a7
+msgid "Issue 1: Too Many Errors"
+msgstr "Issue 1: Too Mny Errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:651
+#: 78d9162ca9be48dd9bb89577d8b1786d
+msgid "**Symptoms**: Calculation exceeds `custodian_max_errors`"
+msgstr "**Symptoms**: Calculation exceeds `custodian_max_errors`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:653
+#: 5e466f8ec6d5460ea1996715a6a296c1
+msgid "**Possible causes**:"
+msgstr "**Possible cuses**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:654
+#: 2446c0a6672a4a0a9b9de9b8bb4069e4
+msgid "Structure is unreasonable (overlapping atoms, wrong lattice)"
+msgstr "Structure is unresonble (overlpping toms, wrong lttice)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:655
+#: 0883b792248c4e629a7e52d41999b9a5
+msgid "Parameters are inappropriate for system"
+msgstr "Prmeters re inpproprite برای system"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:656
+#: 5a6dbc4d370c4b04b26db591b8d66634
+msgid "System is genuinely very difficult"
+msgstr "System is genuinely very difficult"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:658
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:695
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:721
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:745
+#: 90070f7c8d4445159cee2f97c9be5430 962be3098bca4e999d22a8dd2074a511
+#: ae7d3ec99b294a9b94238248e33e58f6 e3846247c5704ad39c75522907d0dc58
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:659
+#: 754519ab7f4d4757a13d6e1e5d71a194
+msgid "**Check structure**:"
+msgstr "**Check structure**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:667
+#: 612e5846abea45899e1d8c436070b1c2
+msgid "**Try stricter initial settings**:"
+msgstr "**Try stricter initil settings**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:676
+#: 2b0749918b6b4784a386bf755e15a07e
+msgid "**Increase max_errors** (up to 15):"
+msgstr "**Increse mx_errیاs** (up to 15):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:681
+#: 86bab548dba446c4a981e5c56440cbb7
+msgid "**Check if SIESTA is appropriate**:"
+msgstr "**Check if SIESTA is pproprite**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:682
+#: ed9972ee27054dcf8621a564fc93d4f2
+msgid "Very heavy elements? Consider other codes"
+msgstr "Very hevy elements? Consider or codes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:683
+#: d48ca949e260468d9bbfb255fd661c96
+msgid "Strong correlation? SIESTA may struggle"
+msgstr "Strong cیاreltion? SIESTA my struggle"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:684
+#: f0eb121ea07c44bd8e8278e16777f1f6
+msgid "Review literature for your system"
+msgstr "Review literture برای your system"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:686
+#: fdf9a8ee490b4c919eaf499dd0de7a68
+msgid "Issue 2: Custodian Not Running"
+msgstr "Issue 2: Custodin Not اجرای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:688
+#: b835a6159f1d4586a81cefacd063d230
+msgid "**Symptoms**: No `custodian.json` file created"
+msgstr "**Symptoms**: No `custodian.json` file created"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:690
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:716
+#: 1fe831b637ab459194f5da8bfb7224aa 72888cad188e4e0195844013b68e3747
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:691
+#: ef20f4b85ec048518f49db39deaa16c7
+msgid "Custodian only runs with actual SIESTA (not dry_run)"
+msgstr "Custodin only runs با ctul SIESTA (not dry_run)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:692
+#: 53b2dccf662f413284038293f6a50c5e
+msgid "`use_custodian=False` in settings"
+msgstr "`use_custodian=False` in settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:693
+#: 3bdbe508a86e449c9bbbd9257b88c6de
+msgid "Job failed before custodian started"
+msgstr "Job filed beبرایe custodin strted"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:696
+#: 994c34b072994510849c230cb864edfa
+msgid "**Check RUN_MODE**:"
+msgstr "**Check RUN_MODE**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:701
+#: 79d100e0619b42b5879fd5519b4b8042
+msgid "**Verify custodian enabled**:"
+msgstr "**Verify custodin enbled**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:706
+#: b72b3809bbdf4a6a9b1a1c57360e54c2
+msgid "**Check logs**:"
+msgstr "**Check logs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:712
+#: 51e341dc13fc4350b72a37ae840adbb0
+msgid "Issue 3: Corrections Not Effective"
+msgstr "Issue 3: Cیاrections Not Effective"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:714
+#: 94d4d8aef2044f1fb9b064d10ec6362d
+msgid "**Symptoms**: Same error repeating despite corrections"
+msgstr "**Symptoms**: Sme errیا repeting despite cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:717
+#: 44b5dd3922664c65b063319ed55ab89f
+msgid "Correction strategy not suitable for this error type"
+msgstr "Cیاrection strtegy not suitble برای this errیا type"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:718
+#: f7438e241b0d475b9cfeeb65cc8465f4
+msgid "System needs different approach"
+msgstr "System needs different pproch"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:719
+#: bf48a830eeed4ca5ac53f94d62137d0b
+msgid "Convergence impossible with current settings"
+msgstr "همگرایی impossible با current settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:722
+#: b76e81035c154f4db248e07d6082d242
+msgid "**Review custodian.json**:"
+msgstr "**Review custodin.json**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:728
+#: aad8ebae476b45fdbb510f8e6bd9dbdc
+msgid "**Try manual corrections**:"
+msgstr "**Try mnul cیاrections**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:729
+#: f44e6ea722694a64b193d944805169ea
+msgid "Identify pattern in corrections"
+msgstr "Identify pttern in cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:730
+#: 4914cab82e264ee79b45b64652189594
+msgid "Apply more aggressive fixes manually"
+msgstr "Apply mیاe ggressive fixes mnully"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:731
+#: a075d286a0f84772b4c426427f37dd83
+msgid "Test if convergence possible"
+msgstr "Test if convergence possible"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:733
+#: b0dfb5ec8f964b8fbd36a1b8b5eeb475
+msgid "**Consider alternatives**:"
+msgstr "**Consider lterntives**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:734
+#: 6713ea0dc734403b87f117dac41c07b2
+msgid "Different functional (GGA → LDA)"
+msgstr "Different functionl (GGA → LDA)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:735
+#: f6c3d8375fcf4b9787851a13d4746a08
+msgid "Different basis set (DZP → SZ)"
+msgstr "Different bsis set (DZP → SZ)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:736
+#: d085e31a8e5c4cbb9ab3792adc20d906
+msgid "Different pseudopotentials"
+msgstr "Different pseudopotentils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:737
+#: 9dfdb5e5ae404cce8b85014f772f6422
+msgid "Different DFT code"
+msgstr "Different DFT code"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:739
+#: d40e724a3a4a4adebe9f8e4945bb1215
+msgid "Issue 4: Slow Progress"
+msgstr "Issue 4: Slow Progress"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:741
+#: ebe6cfe7869d4139aa56a0ea69783a9a
+msgid "**Symptoms**: Many corrections, slow convergence"
+msgstr "**Symptoms**: Mny cیاrections, slow convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:743
+#: 332c1d9c22db44f297b66a477c1f6144
+msgid "**Cause**: Progressive corrections starting from very conservative"
+msgstr "**Cuse**: Progressive cیاrections strting from very conservtive"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:746
+#: 1152656ccef648ce9c46eab9629d5555
+msgid "**Start with better settings**:"
+msgstr "**Strt با better settings**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:755
+#: a4c78c7b678a46eeb34645f2eece09f4
+msgid "**Analyze previous corrections**:"
+msgstr "**Anlyze previous cیاrections**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:756
+#: fa2f9ffb622a4f0a9a5e4fd3b0b9e000
+msgid "What final settings worked?"
+msgstr "Wht finl settings wیاked?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:757
+#: bf5f1dbb5d5b4b9c9387534e71e5eaaf
+msgid "Use those as initial settings next time"
+msgstr "Use those s initil settings next time"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:759
+#: b41f18b27ad44420993fadf63caed0eb
+msgid "**Build parameter library**:"
+msgstr "**Build prmeter librry**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:760
+#: da19a9c77348491eb7c6a8c527e3ea4a
+msgid "Document successful settings per material type"
+msgstr "Document successful settings per mteril type"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:761
+#: f014a9684ac54ed3a5fc4e45cd32b49b
+msgid "Share within research group"
+msgstr "Shre باin reserch group"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:765
+#: 665c4368f4d845c7b9d33e58730127a0
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:767
+#: 4ef1662ca30d4b21a3ce8c4f6094c2e6
+msgid ""
+"✅ **Enable for production**: Always use custodian for important "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:769
+#: 8613fc1bdb7e41bc989a21140cd49d6a
+msgid "✅ **Review logs**: Check `custodian.json` after every run"
+msgstr "✅ **Review logs**: Check `custodian.json` after every run"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:771
+#: 677ca28a3081420894e14965050c2efc
+msgid "✅ **Document patterns**: Build library of successful parameter sets"
+msgstr "✅ **Document ptterns**: Build librry of successful prmeter sets"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:773
+#: 5e37d6daaf2740af834022c02004372b
+msgid "✅ **Start conservative**: Better initial settings = fewer corrections"
+msgstr "✅ **Strt conservtive**: Better initil settings = fewer cیاrections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:775
+#: d6f36c7d515246adbde4159146603947
+msgid ""
+"✅ **Appropriate max_errors**: Standard (5), difficult (10), very "
+"difficult (15)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:777
+#: d26d44780e074741b22f000c650ef0cf
+msgid "✅ **Monitor overhead**: Custodian adds minimal time (<1%)"
+msgstr "✅ **Monitیا overhed**: Custodin dds miniml time (<1%)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:779
+#: 5aecb64c82ca4f91b7e1348552f40c98
+msgid ""
+"✅ **Test without custodian first**: Understand failure modes before "
+"automating"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:781
+#: fffbe9c9bbd0406ea9f2b08f8bed4ffe
+msgid "✅ **Share knowledge**: Document working settings for your materials"
+msgstr "✅ **Shre knowledge**: Document wیاking settings برای your mterils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:785
+#: 4aefdec345b54d8684215e2280b27852
+msgid "Integration with Workflows"
+msgstr "Integrtion با گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:787
+#: 60bb25b1bffd4b988eab6084ddaae2c1
+msgid "With Database Storage"
+msgstr "With Dtbse Stیاge"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:789
+#: 672f6e8d044c4ef6b40c0a8702e221b6
+msgid "Custodian corrections are automatically saved in database:"
+msgstr "Custodin cیاrections re utomticlly sved in dtbse:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:806
+#: 328e71ed40bd4268bfb1bcde2f6f3130
+msgid "With Jobflow Remote (HPC)"
+msgstr "With Jobflow Remote (HPC)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:808
+#: 8f61f41aa95949d9b79ed9236962902f
+msgid "Custodian runs automatically on remote systems:"
+msgstr "Custodin runs utomticlly on remote systems:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:821
+#: 38290b2eafcf467bb3c967876e52c405
+msgid "No manual intervention on cluster"
+msgstr "No mnul intervention on cluster"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:822
+#: 2b8a2d9efbb940cf840cb25218ad221f
+msgid "Automatic recovery from errors"
+msgstr "Automtic recovery from errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:823
+#: 1a5faa2ebe6f48d3881fd56204c25306
+msgid "Logged corrections for review"
+msgstr "Logged cیاrections برای review"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:825
+#: 7adae43f4f1b4435bf902fa803981fc4
+msgid "With Convergence Studies"
+msgstr "With همگرایی Studies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:827
+#: e985ee7dbcb944c3b45665d95e805c8e
+msgid "Enable custodian for all convergence calculations:"
+msgstr "Enble custodin برای ll convergence clcultions:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:839
+#: 501ccfc906f94a7499eb6928c65375ad
+msgid ""
+"**Benefit**: Entire convergence study completes even if some calculations"
+" difficult"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:843
+#: eab332ce896f41ab9e8f5ce1af487a0d
+#, fuzzy
+msgid "Geometry Convergence Handling (NEW!)"
+msgstr "1. SCFهمگراییHوler"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:845
+#: 7a2bb4d42cde4088b7c79137f71a3d41
+msgid "Automatic geometry convergence recovery and flexible validation modes."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:847
+#: 6e72dfd394854c28a8e1971667a5832b
+msgid "The Problem"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:849
+#: 1c07c47ba2d7499b86b02461cc2853d3
+msgid "Non-converged relaxations can silently succeed, leading to:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:850
+#: 0fa4b3d273474742830f6074b747ff61
+msgid "Bad geometries in database"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:851
+#: ec8bcf87bb0247939188bd0fee9d3a57
+msgid "Incorrect downstream calculations (phonons, NEB)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:852
+#: b3ae712108e54c9990bf7d4d68cfc768
+msgid "No warning or error"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:854
+#: fd0f4a4e5bbb479bb13565a61afbfd16
+msgid ""
+"**User question that triggered this**: \"What happens if the Relaxation "
+"is not converged?!\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:856
+#: c110d71e08a34d56b76e15eba93857dd
+msgid "The Solution: Dual-Mode System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:858
+#: 9b89394d084848d08428da40ced3862f
+msgid "1. GeometryConvergenceHandler (Automatic Recovery)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:860
+#: c7f608fc4c924f9b9190f3ad3d0e08fe
+msgid "Progressive MD step increases when geometry doesn't converge:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:862
+#: 0436e2746ea24e749e02a2fc0c3ba978
+#, python-format
+msgid ""
+"**Level 1**: +50% steps (200 → 300) **Level 2**: +100% steps (200 → 400) "
+"**Level 3**: +150% + FIRE method **Level 4**: +200% + relaxed tolerance "
+"**Level 5**: Max 1000 steps + Broyden optimizer"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:868
+#: aad6adf214304529b104f2bd34beca8d
+msgid "Similar to SCFRelaxationHandler but for geometry convergence."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:870
+#: 45603814479c4560bf8a8525aa9ff2de
+msgid "2. Strict Convergence Mode (Quality Gate)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:872
+#: 508b685810064d779235be18022c47f3
+msgid "New parameter: `strict_convergence: bool = False`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:874
+#: f627c5253aab488991466b6641cbf8e1
+msgid "**Lenient mode** (default):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:875
+#: 689fc2a45d5c423cada9ae3aeebd97a1
+msgid "Allow non-converged geometries"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:876
+#: 5ed46bd4a5814d148b1c6a63adec5257
+#, fuzzy
+msgid "Use for dirty/fast calculations"
+msgstr "**Use برای**: Stوrd production clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:877
+#: 0c288f06cf1d4a568e6e53ca73771458
+msgid "Handler can fix issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:879
+#: 2b567356203848f18faaed746ff662f7
+msgid "**Strict mode** (`strict_convergence=True`):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:880
+#: 9d4169a114ed4db680caa9b3cd9b7ace
+msgid "Must converge or validation fails"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:881
+#: b89913004e2e4590970e5c7d531989d8
+#, fuzzy
+msgid "Clear error messages with suggestions"
+msgstr "SIESTA mnul: Errیا messges section"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:882
+#: e003a4642a0f4d0faad5498f36feaae5
+msgid "Use for production with quality assurance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:884
+#: 337cb52460ae45deb3c02e5382845c83
+msgid "3. Convergence Metadata (Always Tracked)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:886
+#: cddf954840284ec9b7ac8d548d3edf5a
+msgid "New fields in OutputDoc (all modes):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:887
+#: 4e0f456c527940958d1e97b1243f94bc
+msgid "`geometry_converged: bool` - Did it converge?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:888
+#: 12feddb806454e7d8460cbc83fff8184
+msgid "`final_max_force: float` - Max force (eV/Ang)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:889
+#: fe8764c280c64c9fb4af284eefc2d4ce
+msgid "`force_tolerance: float` - Tolerance used (eV/Ang)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:891
+#: 74a62bbb49104943b358d4b43d38bd39
+msgid "Four Usage Modes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: da15aebb651a4fdea96cdcd11a9d66cd
+msgid "Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 8d361f6255624311be19d27f6014ed15
+#, fuzzy
+msgid "Custodian"
+msgstr "Custodin Frmewیاk"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 80b0bee6382847198b7e6fd82fdc41db
+msgid "Strict"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 6d2ddc0d3656471ca0e3e7ccfa299117
+#, fuzzy
+msgid "Use Case"
+msgstr "**Use cses**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: f5852127ec6e4f138aa549e396dfd2b9
+msgid "1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 4a32578c3b5145bcb14088425a31ebf8 543eed850ca4400c9fb936c370957a1a
+#: 5eac1cad7ca04534b7ae609ef27c882e 65878c0274f04d97934e83464a9f8188
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 140f58d2a7de4c819a30cbf8968037e0
+msgid "Fast/dirty (screening)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 00f015783b0a4962b7659e698bbab4f1
+msgid "2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 3b62cca7816b4365b5e210d3e25d5b80 3f8fb4e815e9482d979f6e272715f20c
+#: 74254a78ad9a47ceba67b6fb492f0865 a794c4813312471a8d5331d3ef619206
+msgid "True"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: c777dccf47ff4d25be7894509a2ec36a
+msgid "Production with auto-recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 90bf2dc2ae304055a3ab90d8d0dd58af
+msgid "3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: e8f1547522ac4f6f821d3558670cf782
+#, fuzzy
+msgid "Production with strict checking"
+msgstr "Production Checklist"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: f6cf861de9d74c58977ec2baeedb6707
+msgid "4"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md
+#: 8ed65619770a45a7ad11c3965e64fd29
+#, fuzzy
+msgid "Paranoid (guaranteed convergence)"
+msgstr "Need gurnteed completion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:900
+#: 7d201f7030ef4c7fbac59a8676e7a1c3
+msgid "**Example: Mode 2 (Recommended for Production)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:913
+#: d90118a6bc3b499b949c0126753116f5
+#, fuzzy
+msgid "**Example: Mode 4 (Critical Calculations)**"
+msgstr "**Production محاسبهs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:926
+#: cfd2c751fa784be6acf22948436c1c40
+msgid "Tutorial: 04_geometry_convergence.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:928
+#: 2b6c3939086a4e2fa360a53cc9d358c4
+msgid "Run all 4 modes to see different behaviors:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:948
+#: b89553982fb54d2488d3e55a095b0ce1
+#, fuzzy
+msgid "When to Use Each Mode"
+msgstr "When to Use Custodin"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:950
+#: a595740f72ac4cce89d0d1afd6776b8d
+msgid "**Mode 1 (Default)**: Research, screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:951
+#: b45fd9960fc346538c85c7d85cab0c7c
+msgid "Fast calculations more important than convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:952
+#: 9edc6eced2f2455cb2a422488a95859a
+#, fuzzy
+msgid "Testing workflows"
+msgstr "Automted wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:953
+#: bf4d4b0fd31c4465ba98d056d6e760c5
+msgid "Pre-relaxation before fine relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:955
+#: 6dc5d2490194448596fafccce7d5290d
+#, fuzzy
+msgid "**Mode 2 (Production)**: Standard production"
+msgstr "**Use برای**: Stوrd production clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:956
+#: f163002054fc4eaf89d1c44ce57791c3
+#, fuzzy
+msgid "Unattended calculations"
+msgstr "Multi-dy clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:957
+#: e9abfae6ead7495196383b73d76dc2ff
+#, fuzzy
+msgid "HPC job submission"
+msgstr "**HPC Job Submission**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:958
+#: 7574ec27070348569be1f4ac2748e37a
+#, fuzzy
+msgid "Want automatic recovery"
+msgstr "Automtic recovery from errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:960
+#: 07d68324d017476abb24cd5fede5cc52
+msgid "**Mode 3 (Strict)**: Production with immediate feedback"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:961
+#: 69281ca074464f38a1db9b8d9142072a
+msgid "Need to know convergence status immediately"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:962
+#: 56716cc39b82429fa1db64e193a0603d
+msgid "Want clear error messages"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:963
+#: 464c8bfa0b8f4334a15387d6348bdd07
+#, fuzzy
+msgid "Testing if convergence possible"
+msgstr "Test if convergence possible"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:965
+#: e09abf4f7c1846d0bdfed1322867f8c9
+msgid "**Mode 4 (Critical)**: Phonon, NEB, critical calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:966
+#: 4694b6d256074cf398d44b554a180cf8
+#, fuzzy
+msgid "Require guaranteed converged geometries"
+msgstr "Need gurnteed completion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:967
+#: 84ba8bd00d494742b973172fd2874864
+msgid "Maximum robustness + quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:968
+#: 277a6d3d7bb24ebd98d40a564d0c0041
+msgid "Can't accept non-converged results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:972
+#: 8d4dcac7f86442f9890c3fa891a0617d
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:974
+#: abac7adad5ba499c849b66b3d9eab2bb
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:976
+#: 9f44004dbfcd44dd9b1c74811050a21c
+msgid ""
+"**Run Basic Example**: → Test custodian with simple system → Review "
+"`custodian.json` output → Understand default behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:981
+#: 8965ecca4a9d4840b8bbf91739fc274d
+msgid ""
+"**Test Difficult System**: → Run `EXAMPLE_TYPE = \"difficult_scf\"` → See"
+" progressive corrections in action → Understand recovery capabilities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:986
+#: 85b57e86bcb747d1ba0eb93cec9d8098
+msgid ""
+"**Try Geometry Convergence Modes** (NEW!): → Run "
+"`04_geometry_convergence.py` with MODE = 1, 2, 3, 4 → Compare behavior "
+"for each mode → Check convergence metadata in results → Choose "
+"appropriate mode for your workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:992
+#: 49099f4acd76495cb14782a3c97396b4
+msgid ""
+"**Apply to Your Work**: → Enable custodian for production calculations → "
+"Document corrections for your systems → Build parameter library → Use "
+"appropriate geometry convergence mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:998
+#: 0ec5200dbdef493fa4087aee03d5d5ea
+msgid ""
+"**Advanced Topics**: → Write custom handlers if needed → Integrate with "
+"workflows → Optimize initial parameters based on corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1003
+#: a02c9f1af8874ace8b856eeaf3c8fa81
+msgid ""
+"**Related Tutorials**: → [Database Storage](../01-database-storage/) - "
+"Store custodian logs → [Jobflow Remote](../02-jobflow-remote/) - HPC "
+"submission with custodian → [Convergence "
+"Studies](../../../02-workflows/01-convergence/) - Custodian + convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1010
+#: 208424fbb9b74836b571de7132dea44e
+msgid "References"
+msgstr "References"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1012
+#: 5834965fee624b12a7fde0086d2a0a93
+msgid "**Custodian Documentation**: MaterialsProject custodian library"
+msgstr "**Custodin Documenttion**: MterilsProject custodin librry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1013
+#: 0a193bb43f114016aa4a873754f2d93b
+msgid "https://github.com/materialsproject/custodian"
+msgstr "https://github.com/materialsproject/custodian"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1014
+#: a1dbdad67f82444f8fcdab8149b01875
+msgid "General framework for error handling"
+msgstr "Generl frmewیاk برای errیا hوling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1016
+#: beea778a955649f9b955c550cc56de78
+msgid "**SIESTA Error Handling**: Common SIESTA errors and solutions"
+msgstr "**SIESTA Errیا Hوling**: Common SIESTA errیاs و solutions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1017
+#: 21e1ceb6ff2f48a98ddd00d0ba53333d
+msgid "SIESTA manual: Error messages section"
+msgstr "SIESTA mnul: Errیا messges section"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1018
+#: 84b5a086cc5a4df6a0e9e95dac6f220b
+msgid "Community forums: siesta.icmab.es"
+msgstr "Community برایums: siest.icmb.es"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1020
+#: adde675187df43df8bfb1ecaf9d32dd0
+#, fuzzy
+msgid "**Atomate2SIESTA Handlers**: Implementation details"
+msgstr "**Atomte2-SIESTA Hوlers**: Implementtion detils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1021
+#: b11138a0494a46389ebcc42ac13ffa96
+msgid "`src/atomate2/siesta/custodian/handlers.py`"
+msgstr "`src/atomate2/siesta/custodian/handlers.py`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1022
+#: 7ec1abc7ec6d4398b9756b907175241e
+msgid "Source code for all handlers"
+msgstr "Source code برای ll hوlers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1024
+#: c28e1e0814274abe8fa3a07e4efb47c9
+msgid "**Online Documentation**:"
+msgstr "**Online Documenttion**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1025
+#: 925999be35b04c0c95820a7459d1041d
+msgid "See https://github.com/materialsproject/atomate2 for technical details"
+msgstr "See https://github.com/materialsproject/atomate2 for technical details"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1029
+#: a6172ac998c749e8b4d7ebfd5c20d783
+msgid ""
+"*Back to [03-infrastructure](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid ""
+#~ "**Category**: 04-infrastructure **Difficulty**: "
+#~ "Intermediate **Time**: ~5 min (dry-run),"
+#~ " ~15-30 min (local with errors)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Apply to Your Work**: → Enable "
+#~ "custodian for production calculations → "
+#~ "Document corrections for your systems →"
+#~ " Build parameter library"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "*Back to [04-infrastructure](../README.md) | "
+#~ "[Main Tutorial Index](../../README.md)*"
+#~ msgstr ""
+

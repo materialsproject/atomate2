@@ -1,0 +1,1252 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:1
+#: 425bef709bdf405686320eaedd27c8e9
+msgid ""
+"Tutorial: Quasi-Harmonic Approximation (QHA) - Temperature-Dependent "
+"Thermodynamics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:3
+#: 9a6c7fd11181412880bd7ca871c3a38c
+msgid ""
+"**Category**: 05-vibrational-properties **Difficulty**: Advanced "
+"**Time**: ~10 min (dry-run), ~3-5 hours (full calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:9
+#: 8a89bd9157f24f4d9256b36e0655028f
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:11
+#: f175ed98dc5f49a89f28fd50c71d601a
+msgid ""
+"Calculate temperature-dependent thermodynamic properties using the Quasi-"
+"Harmonic Approximation (QHA). QHA combines phonon calculations with "
+"equation of state (EOS) to predict thermal expansion, heat capacity, and "
+"free energies as functions of temperature and pressure."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:13
+#: c6cd61ef36e740479f7ae29bcd9ecc23
+msgid ""
+"This tutorial consolidates 5 comprehensive QHA examples into a single "
+"configurable workflow, demonstrating basic calculations, high-pressure "
+"studies, custom accuracy settings, metallic systems, and wide temperature"
+" ranges."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:17
+#: a16140ca48044d35aaf42c645ecda9cd
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:19
+#: 0f463328b0854d678ed964b77b085e05
+msgid "QHA computational workflow (EOS + phonons at multiple volumes)"
+msgstr "QHA computtionl wیاkflow (EOS + phonons t multiple volumes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:20
+#: 68a5d0e647d642f08427ffd5ebae236e
+msgid "Temperature-dependent properties (α, Cv, Cp, G, S, B, V)"
+msgstr "Temperture-dependent properties (α, Cv, Cp, G, S, B, V)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:21
+#: a9be9c948b5a48e38eb9048f858cbd6f
+msgid "Pressure-dependent calculations for P-T diagrams"
+msgstr "Pressure-dependent clcultions برای P-T digrms"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:22
+#: c89bffb61e2d4ff3a9cee9040eff1919
+msgid "High-accuracy settings for different material types"
+msgstr "High-ccurcy settings برای different mteril types"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:23
+#: 95b264066ecd4b3091a08378088d18a5
+msgid "Handling imaginary modes in metals"
+msgstr "Hوling imginry modes in metls"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:24
+#: 8ffb0a8ae36845beab652a84d9e10739
+msgid "Result analysis and validation"
+msgstr "Result nlysis و vlidtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:25
+#: 5abca71f5ffd48e6a3ea28561ec63a79
+msgid "QHA limitations and best practices"
+msgstr "QHA limittions و best prctices"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:29
+#: b5c68650f85f4e079d9708acac0ae53c
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:31
+#: 8e535cf158ee48219f036cbf91f8ec23
+msgid ""
+"**Required**: [16-phonon-calculations](../02-phonon-calculations/) "
+"completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:32
+#: 4552b9d973034138a04b8865c13fa855
+msgid ""
+"**Required**: [09-equation-of-state](../../../02-workflows/01-equation-"
+"of-state/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:33
+#: f4a435d5324d4511858345318ad22f10
+msgid "**Recommended**: Understanding of statistical thermodynamics"
+msgstr "**Recommended**: درک of sttisticl rmodynmics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:34
+#: 0a1f12e2400e42dbb0cefe3ebffe92a5
+msgid "**Recommended**: Familiarity with phonon density of states"
+msgstr "**Recommended**: Fmilirity با phonon density of sttes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:38
+#: 45e2aea4bb9b4f63b207908a166e04b7
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:40
+#: e499548caeaf488dbcc75b5f296b20a3
+msgid "What is QHA?"
+msgstr "Wht is QHA?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:42
+#: edbf3512ba514adb8ef471e8f190c39b
+msgid "The **Quasi-Harmonic Approximation** combines:"
+msgstr "The **Qusi-Hrmonic Approximtion** combines:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:43
+#: ee57e68f09e744e5bef03fa415aa41a4
+msgid "**Equation of State**: E(V) relationship"
+msgstr "**Eqution of Stte**: E(V) reltionship"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:44
+#: 57d0733038f648abb98c0ff6a3b27e25
+msgid "**Phonons at Multiple Volumes**: ω(q,V) frequencies change with volume"
+msgstr "**فونون‌ها t Multiple Volumes**: ω(q,V) frequencies chnge با volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:45
+#: 9a0cf7f3dba64b2c9189c54e8500b158
+msgid "**Statistical Mechanics**: Free energy from phonon DOS"
+msgstr "**Sttisticl Mechnics**: Free energy from phonon DOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:47
+#: f949bfca930947a4bb0e470b3261a888
+msgid ""
+"**Key Assumption**: Phonons are harmonic at each fixed volume, but "
+"frequencies vary with volume (volume-dependent anharmonicity)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:49
+#: 7fc72f41ab7640768702ff3ee85dd933
+msgid "**NOT Included in QHA**:"
+msgstr "**NOT Included in QHA**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:50
+#: dc307ee04b8e4efb902506bdf0d552af
+msgid "❌ Phonon-phonon scattering (need phono3py)"
+msgstr "❌ فونون-phonon scttering (need phono3py)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:51
+#: 4a48b2fbcb864055bdec8f00569d61b2
+msgid "❌ Temperature-dependent phonon linewidths"
+msgstr "❌ Temperture-dependent phonon linewidths"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:52
+#: ede905b990424f48b474f4c186a8f489
+msgid "❌ Intrinsic anharmonicity at fixed volume"
+msgstr "❌ Intrinsic nhrmonicity t fixed volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:54
+#: 55eb6dc33f934e5e915980b7e723cdca
+msgid "Physical Properties from QHA"
+msgstr "Physicl Properties from QHA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:56
+#: 5dd065c442b6482dbdee11ea542ba031
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"\\alpha(T) = \\frac{1}{V}\\left(\\frac{\\partial V}{\\partial "
+"T}\\right)_P\n"
+msgstr "$$S(T) = -\\left(\\frc{\\prtil F}{\\prtil T}\\right)_V$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:60
+#: 76fe1b9bd38f49f7a11fe7bc5f3c5f22
+msgid "**Thermal expansion coefficient**"
+msgstr "**Therml expnsion coefficient**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:62
+#: 0dc926307862418689fbab04725d6e9f
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"C_V(T) = \\left(\\frac{\\partial E}{\\partial T}\\right)_V\n"
+msgstr "$$C_V(T) = \\left(\\frc{\\prtil E}{\\prtil T}\\right)_V$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:66
+#: f81d70c7d5074366a5c8f25ce77f9b79
+msgid "**Heat capacity (constant volume)**"
+msgstr "**Het cpcity (constnt volume)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:68
+#: e0e1f248dc1b417ab6cbd00cfbe74bb8
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"C_P(T) = \\left(\\frac{\\partial H}{\\partial T}\\right)_P = C_V + "
+"\\alpha^2 B_T V T\n"
+msgstr "$$C_V(T) = \\left(\\frc{\\prtil E}{\\prtil T}\\right)_V$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:72
+#: a895763571154c479c57279fc7cbe01e
+msgid "**Heat capacity (constant pressure)**"
+msgstr "**Het cpcity (constnt pressure)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:74
+#: 27af2faeeffe48178a442484892faea4
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"G(T,P) = \\min_V [E(V) + F_{vib}(V,T) + PV]\n"
+msgstr "$$G(T,P) = \\min_V [E(V) + F_{vib}(V,T) + PV]$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:78
+#: ae46f87819bd44a987b6fa6b014504bc
+msgid "**Gibbs free energy**"
+msgstr "**Gibbs free energy**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:80
+#: decc2ebff34341eab0f29415176a5fe5
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"S(T) = -\\left(\\frac{\\partial F}{\\partial T}\\right)_V\n"
+msgstr "$$S(T) = -\\left(\\frc{\\prtil F}{\\prtil T}\\right)_V$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:84
+#: bc21f71c3da946d6ba9067fda00947ef
+msgid "**Entropy**"
+msgstr "**Entropy**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:86
+#: c84e9435c1e244018fcecea9e57b9be0
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"B_T(T) = -V\\left(\\frac{\\partial P}{\\partial V}\\right)_T\n"
+msgstr "$$B_T(T) = -V\\left(\\frc{\\prtil P}{\\prtil V}\\right)_T$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:90
+#: 2851fdbff5724ca4aa919098cd586cab
+msgid "**Bulk modulus**"
+msgstr "**Bulk modulus**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:92
+#: ae25dc87e95d4e618604a3d3b92459fa
+msgid "Computational Workflow"
+msgstr "Computtionl گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:115
+#: f777d2d2b4054b9e8b74ba6bd8213bf9
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:117
+#: c81d487ec5344889ad4fa446d4b29545
+msgid "Example Types"
+msgstr "مثال Types"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:119
+#: 6d6a1c2023fd4686a011668ed371933f
+msgid "The tutorial provides 5 comprehensive examples:"
+msgstr "The tutیاil provides 5 comprehensive exmples:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:121
+#: b731c3d77b8e42b0a6e1e0ebe8a02fec
+msgid "1. Basic (Silicon)"
+msgstr "1. Bsic (Silicon)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:125
+#: 9c368e8e92974aefb70febdcfb5ca0e8
+msgid "Material: Silicon (diamond cubic)"
+msgstr "Mteril: Silicon (dimond cubic)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:126
+#: fcca40a5ec904fa69c922bbbeadb43dd
+msgid "Temperature: 0-1000 K (11 points)"
+msgstr "Temperture: 0-1000 K (11 points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:127
+#: 713281ca5d784a2098baff817c5e5dd5
+msgid "Pressure: Ambient (0 GPa)"
+msgstr "Pressure: Ambient (0 GP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:128
+#: 1f02aec227be4fcfae2d47d91aeb6a94
+msgid "Purpose: Learn basic QHA workflow"
+msgstr "Purpose: Lern bsic QHA wیاkflow"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:129
+#: f988944d8af449ebaafa9cf783db3e8e
+msgid "Settings: Standard (2×2×2 k-points, 2×2×2 supercell)"
+msgstr "Settings: Stوrd (2×2×2 k-points, 2×2×2 supercell)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:131
+#: 70de8afabcf84b66943a679e30f75507
+msgid "2. High Pressure (MgO)"
+msgstr "2. High Pressure (MgO)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:135
+#: 04f514e3255843f9844ae4e35ce1bd6a
+msgid "Material: MgO (rocksalt)"
+msgstr "Mteril: MgO (rockslt)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:136
+#: 0a5f19129835487bbb5530d7ba0e31c1
+msgid "Temperature: 300-2000 K (7 points)"
+msgstr "Temperture: 300-2000 K (7 points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:137
+#: 37cf7e1cb2da4b72a05c8d170e156207
+msgid "Pressure: 0-100 GPa (6 pressures)"
+msgstr "Pressure: 0-100 GP (6 pressures)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:138
+#: 098ec646cd4b4c2d8b7b708b289d080b
+msgid "Purpose: Create P-T phase diagram, study Earth's mantle"
+msgstr "Purpose: Crete P-T phse digrm, study Erth's mntle"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:139
+#: c05952bfd0784956bf8775f8a14c5a91
+msgid "Settings: More volumes (7), Birch-Murnaghan EOS"
+msgstr "Settings: Mیاe volumes (7), Birch-Murnghn EOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:141
+#: 3dd6c8fb91ac47b1a06137cffc929ea3
+msgid "3. Custom Accuracy (Diamond)"
+msgstr "3. Custom Accurcy (Dimond)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:145
+#: aa67a22ab33e4da9894ecf562d1cda92
+msgid "Material: Diamond (very hard)"
+msgstr "Mteril: Dimond (very hrd)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:146
+#: c2f13ec4eee842ee90cab3a2ec7c7adf
+msgid "Temperature: 300-1200 K (4 points)"
+msgstr "Temperture: 300-1200 K (4 points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:147
+#: 66308e0fb35c446c84ecb1db5d26d3a4
+msgid "Accuracy: Publication-quality (TZP, 500 Ry, 8×8×8 k-points)"
+msgstr "Accurcy: Publiction-qulity (TZP, 500 Ry, 8×8×8 k-points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:148
+#: 03722e694c924052a39e5e57a5ea1d2f
+msgid "Purpose: High-accuracy calculations"
+msgstr "Purpose: High-ccurcy clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:149
+#: 3caf5ce394e74ddca57b9f044f07c7fa
+msgid "Settings: Large supercell (3×3×3), dense EOS (11 volumes)"
+msgstr "Settings: Lrge supercell (3×3×3), dense EOS (11 volumes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:151
+#: 318533bf42114a9680d3664472cc2406
+msgid "4. Metal (Aluminum)"
+msgstr "4. Metl (Aluminum)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:155
+#: 84cd3840496f4f69b4f825862e80a06b
+msgid "Material: Aluminum (FCC)"
+msgstr "Mteril: Aluminum (FCC)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:156
+#: e108844c35ad4b9299deea88c2dac3de
+msgid "Temperature: 300-900 K (4 points)"
+msgstr "Temperture: 300-900 K (4 points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:157
+#: c379c632a67a4744991701b52e9a6c48
+msgid "Special: Handles imaginary modes from electronic smearing"
+msgstr "Specil: Hوles imginry modes from electronic smering"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:158
+#: 9df9e5badeca487c8deff0b6c70724a4
+msgid "Purpose: Demonstrate metal-specific settings"
+msgstr "Purpose: Demonstrte metl-specific settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:159
+#: 27977488673040f18bbe1732abbd179e
+msgid "Settings: MP occupation, ignore_imaginary_modes=True"
+msgstr "Settings: MP occuption, ignیاe_imginry_modes=True"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:161
+#: 2d0f81cae7274b7a8029d14f356a30ad
+msgid "5. Wide Temperature (NaCl)"
+msgstr "5. Wide Temperture (NCl)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:165
+#: d20e4b6c782d422eaafa49e623205e8a
+msgid "Material: NaCl (rocksalt)"
+msgstr "Mteril: NCl (rockslt)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:166
+#: bf023bedcd274f9185644efc8bf3db75
+msgid "Temperature: 0-1200 K (21 points, non-uniform)"
+msgstr "Temperture: 0-1200 K (21 points, non-uniبرایm)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:167
+#: 7c5905ae96dd45ffb78bb8ce99b891d3
+msgid "Purpose: Comprehensive thermal characterization"
+msgstr "Purpose: Comprehensive rml chrcteriztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:168
+#: 119a64926b0c457db4a5e02b3df17430
+msgid "Settings: Dense sampling at low T (quantum regime)"
+msgstr "Settings: Dense smpling t low T (quntum regime)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:172
+#: 3f0a6bd5003b4ab0955b8851f217db06
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:194
+#: 18d74103378d4559ba2db7ed8f0c3082
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:196
+#: 03b798ea92db42b484a44a243e5d5ae1
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:211
+#: e763807eb96d4e1ead97aa2b9445bd37
+msgid "**Directory Structure**:"
+msgstr "**Directیاy Structure**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:222
+#: 817ec7b8b9f243d9b1b6d939dce557c2
+msgid "Local Mode"
+msgstr "Locl Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:238
+#: ce276acbe06c48dd936c2ef4a7f7f007
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:240
+#: 3bef2376ca2e4b40874542fe58910503
+msgid "Validation Checks"
+msgstr "Vlidtion Checks"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:242
+#: 5200f71b92ff43fdb300e6f527a9f62d
+msgid "QHA results should satisfy:"
+msgstr "QHA results should stisfy:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:244
+#: a2756fd81964429fad35752b8ce459ec
+msgid ""
+"✓ **Dulong-Petit Limit**: Cv → 3NkB at high T (24.94 J/(mol·K) per atom) "
+"✓ **Third Law**: α → 0 as T → 0 ✓ **Monotonicity**: V(T) increases for "
+"normal materials ✓ **Thermodynamic Requirement**: Cp > Cv always"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:249
+#: f0aeb52a23cc4e33bc192aa0171b1c43
+msgid "Comparison with Experiment"
+msgstr "Comprison با Experiment"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:251
+#: bed415ab226f41229a9bf18c2703111d
+msgid "Typical QHA accuracy:"
+msgstr "Typicl QHA ccurcy:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:252
+#: 5fd8359273eb4b428e66ea4a97706bc6
+msgid "**Thermal expansion α**: ±10-20% (better at low T)"
+msgstr "**Therml expnsion α**: ±10-20% (better t low T)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:253
+#: 3590c4a52b89429e9bac72bc18a23e97
+msgid "**Heat capacity Cv**: ±5-10% (very good)"
+msgstr "**Het cpcity Cv**: ±5-10% (very good)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:254
+#: ecfb3debf9a6496bb2584cb675cb3412
+msgid "**Bulk modulus B**: ±5-15%"
+msgstr "**Bulk modulus B**: ±5-15%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:256
+#: dcfdf1c92cb242b480b9e9fb4cadde77
+msgid "Plotting Example"
+msgstr "Plotting مثال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:302
+#: 62754033da514759bb525a3409e02007
+msgid "Convergence & Best Practices"
+msgstr "همگرایی & بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:304
+#: 58097e4e76824f3d958f42ecd9cb7927
+msgid "Number of Volumes"
+msgstr "Number of Volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:306
+#: df68ba46f3f44790963b8bbd58fc3689
+msgid "**Minimum**: 3 (NOT recommended)"
+msgstr "**Minimum**: 3 (NOT recommended)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:307
+#: 0d00538435d84f9ba05d6629994a2c92
+msgid "**Standard**: 5-7 volumes (this tutorial)"
+msgstr "**Stوrd**: 5-7 volumes (this tutیاil)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:308
+#: ebd021a73eab4a1d85c31753eaa870f4
+msgid "**High accuracy**: 9-11 volumes"
+msgstr "**High ccurcy**: 9-11 volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:309
+#: be17026b38504ed6a922db28cfb09dba
+msgid "**Rule**: More volumes = better G(V,T) surface fitting"
+msgstr "**Rule**: Mیاe volumes = better G(V,T) surfce fitting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:311
+#: 0a9bb6e9090441bf80fdabfd5338a893
+msgid "Volume Range (`volume_factor`)"
+msgstr "Volume Range (`volume_factor`)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:313
+#: 11b099f5e41b459a9c29b530ecb8b959
+msgid "Controls how wide the volume range is:"
+msgstr "Controls how wide  volume rnge is:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:314
+#: a578494223884746b1293b2c25ed68e4
+msgid "**Soft materials**: 0.90-0.92 (±8-10%)"
+msgstr "**Soft mterils**: 0.90-0.92 (±8-10%)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:315
+#: 85e8b4ae442941ea8c1043909407edd8
+msgid "**Normal materials**: 0.93-0.95 (±5-7%) - default"
+msgstr "**Nیاml mterils**: 0.93-0.95 (±5-7%) - defult"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:316
+#: 9a171060be0a441cbd6e9825b7e8aa1e
+msgid "**Hard materials**: 0.95-0.97 (±3-5%)"
+msgstr "**Hrd mterils**: 0.95-0.97 (±3-5%)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:318
+#: b662247ff66c42e6a0279a6295906ede
+msgid "Example: `volume_factor=0.92` → volumes from V₀×0.92 to V₀/0.92"
+msgstr "Example: `volume_factor=0.92` → volumes from V₀×0.92 to V₀/0.92"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:320
+#: 93166022048b478cb55e446b224f6349
+msgid "Temperature Grid"
+msgstr "Temperture Grid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:322
+#: f69af529dc9f4b559b1757de8485b076
+msgid "**Low T** (0-200 K): Dense sampling (ΔT = 50 K) for quantum effects"
+msgstr "**Low T** (0-200 K): Dense smpling (ΔT = 50 K) برای quntum effects"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:323
+#: 3101ce6a160d48f2a2499d2bc2141ef0
+msgid "**Room T** (200-600 K): Standard sampling (ΔT = 100 K)"
+msgstr "**Room T** (200-600 K): Stوrd smpling (ΔT = 100 K)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:324
+#: 2e9e2627a22b4da0956f264054642079
+msgid "**High T** (> 600 K): Coarse sampling (ΔT = 100-200 K)"
+msgstr "**High T** (> 600 K): Corse smpling (ΔT = 100-200 K)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:325
+#: 72e544387dcc4e62bd3cd772e67f6953
+msgid "**Near transitions**: Very dense sampling"
+msgstr "**Ner trnsitions**: Very dense smpling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:327
+#: 20db48aa0d0a43c9ab9c3a12a1d97520
+msgid "EOS Choice"
+msgstr "EOS Choice"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:329
+#: 5a0f88936c124643a986d80d02bf877a
+msgid "**vinet**: Best general choice, handles compression well"
+msgstr "**vinet**: Best generl choice, hوles compression well"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:330
+#: af41ce225b82493684edd154b011860a
+msgid ""
+"**birch_murnaghan**: Good for high pressure, ionic solids (this tutorial "
+"uses for MgO)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:331
+#: a5bbd49e6dae46a68784a247b44cbdef
+msgid "**murnaghan**: Simple, less accurate at high compression"
+msgstr "**murnghn**: Simple, less ccurte t high compression"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:333
+#: f66d8dbbd765404f8f98c0f93c4371f0
+msgid "Computational Cost"
+msgstr "Computtionl Cost"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:335
+#: 804f6d39bb34484c835d65971eec6151
+msgid "For Si (2 atoms), 2×2×2 supercell, basic settings:"
+msgstr "Fیا Si (2 toms), 2×2×2 supercell, bsic settings:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:336
+#: d75093f657194e8ab8d55d28a5ed4f80
+msgid "**EOS**: 9 relaxations (~2-5 min each) = 20-45 min"
+msgstr "**EOS**: 9 relxtions (~2-5 min ech) = 20-45 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:337
+#: 9160b60153e8497c81566a9f9012d23f
+msgid "**QHA**: 5 phonon calculations (~30-60 min each) = 2.5-5 hours"
+msgstr "**QHA**: 5 phonon clcultions (~30-60 min ech) = 2.5-5 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:338
+#: 5b4f176fe0974954964ee3e0a7a8dafd
+msgid "**Total**: ~3-5 hours on modern workstation"
+msgstr "**Totl**: ~3-5 hours on modern wیاksttion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:340
+#: 9dddafd0826a440290fefb4ebc22fe07
+msgid "Scales with:"
+msgstr "Scles با:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:341
+#: 756b923c9c554a18903a5e9101551ebf
+msgid "System size (supercell atoms)"
+msgstr "System size (supercell toms)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:342
+#: 464aa087feb44616a0368bc8d1174ae5
+msgid "K-point density"
+msgstr "K-point density"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:343
+#: 5f54926396724b5baca3ff7110aa2115
+msgid "Basis set quality"
+msgstr "Bsis set qulity"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:344
+#: 7036a1557fea4f81bdf6b64550e19b60
+msgid "Number of volumes"
+msgstr "Number of volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:346
+#: d4e02bff725748da9ea0ed034b36def7
+msgid "Critical Convergence Tests"
+msgstr "Criticl همگرایی Tests"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:348
+#: f1c693ca5af44be79c728cd489317492
+msgid "Always test convergence of:"
+msgstr "Alwys test convergence of:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:349
+#: 97e71f8ed01447e3b4aae6c6fffa2132
+msgid "✅ **Supercell size** for phonons (see tutorial 16)"
+msgstr "✅ **Supercell size** برای phonons (see tutیاil 16)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:350
+#: 34c0bd5e450e4512bd78b0bae7ca9a8e
+msgid "✅ **K-point mesh** density"
+msgstr "✅ **K-point mesh** density"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:351
+#: 1b5026851b014240acda6208b80410c9
+msgid "✅ **Number of volumes** in QHA (compare 5 vs 7 vs 9)"
+msgstr "✅ **Number of volumes** in QHA (compre 5 vs 7 vs 9)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:352
+#: fe259044b2f64fe69d7aec1b7bb6d648
+msgid "✅ **Volume range** (volume_factor)"
+msgstr "✅ **Volume rnge** (volume_fctیا)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:353
+#: 6757f0da2f1d42918d44bc5e56007169
+msgid "✅ **EOS fit quality** (plot E vs V, check R²)"
+msgstr "✅ **EOS fit qulity** (plot E vs V, check R²)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:357
+#: d25b354231864c64b583b948fac6a0ad
+msgid "QHA Limitations"
+msgstr "QHA Limittions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:359
+#: 0c1c5060bcee4b64a4d2bcf4021cb332
+msgid "QHA is Valid When:"
+msgstr "QHA is Vlid When:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:361
+#: 5cf5017101f24962bc3cd8ce5b56525a
+msgid ""
+"✅ Temperature not too high (T < 0.5-0.7 × T_melt) ✅ Material not strongly"
+" anharmonic ✅ Phonons remain stable (no imaginary modes, except metals) ✅"
+" Single-phase system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:366
+#: 59f046d99c2644808d5ad14f21427e13
+msgid "QHA Breaks Down When:"
+msgstr "QHA Breks Down When:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:368
+#: 1629bce331244664b9db6b47f9ec794c
+msgid "❌ **High Temperature** (T > 0.7 T_melt):"
+msgstr "❌ **High Temperture** (T > 0.7 T_melt):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:369
+#: 0bf7a11c139a4a669965b99c2f936110
+msgid "Intrinsic anharmonicity becomes important"
+msgstr "Intrinsic nhrmonicity becomes impیاtnt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:370
+#: 0c718e60379d431d8c4e4eb7f2513b47
+msgid "Need full anharmonic methods (phono3py)"
+msgstr "Need full nhrmonic methods (phono3py)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:372
+#: 3f1f6478ffc745a6a825f4478082dd19
+msgid "❌ **Phase Transitions**:"
+msgstr "❌ **Phse Trnsitions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:373
+#: a7aa5bbf0bfd4fcab4caaccde128231b
+msgid "QHA assumes single phase"
+msgstr "QHA ssumes single phse"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:374
+#: 6a216c8f90e04f1394de3c1f21506eab
+msgid "Cannot predict transition temperatures accurately"
+msgstr "Cnnot predict trnsition tempertures ccurtely"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:375
+#: 34ea42cdc4944c7c8482b95c766e9b6a
+msgid "Discontinuities in G(T,P) not captured"
+msgstr "Discontinuities in G(T,P) not cptured"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:377
+#: 3e71824c35a44f4bb35d65b54c0baeb4
+msgid "❌ **Strongly Anharmonic Systems**:"
+msgstr "❌ **Strongly Anhrmonic Systems**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:378
+#: 1e54ce0873414f3eb528a0e38cc666ef
+msgid "Perovskites with soft modes"
+msgstr "Perovskites با soft modes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:379
+#: 0ad4dbaa793248c09bd6520b8a891cdf
+msgid "Ferroelectrics near Tc"
+msgstr "Ferroelectrics ner Tc"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:380
+#: 9bf612f59d8947fbbabf051ecb8fbb24
+msgid "Materials with low-lying optic modes"
+msgstr "Mterils با low-lying optic modes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:381
+#: 04f7127899234650bd64c8d080972f2f
+msgid "Large amplitude vibrations"
+msgstr "Lrge mplitude vibrtions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:383
+#: 1a79023277654a4dabdceca93f29edb6
+msgid "❌ **Liquids and Melting**:"
+msgstr "❌ **Liquids و Melting**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:384
+#: 9f9e47b2a79b4d8bb4ccf253d288387b
+msgid "Harmonic approximation invalid"
+msgstr "Hrmonic pproximtion invlid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:385
+#: 9a6b622f13014f90b26baafa86e34553
+msgid "Need molecular dynamics or advanced methods"
+msgstr "Need moleculr dynmics یا dvnced methods"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:387
+#: f72b52ed05644ac9abfed78e56183065
+msgid "When to Use QHA:"
+msgstr "When to Use QHA:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:389
+#: 451dd7e268ef4e04a70cddec16546c5b
+msgid ""
+"✅ Thermal expansion at moderate T (T < 0.6 T_melt) ✅ Heat capacity "
+"calculations ✅ Equation of state at high pressure ✅ Materials screening "
+"and high-throughput ✅ Bulk thermodynamic properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:395
+#: 7b52fa96818445548c9fd95796938412
+msgid "When NOT to Use QHA:"
+msgstr "When NOT to Use QHA:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:397
+#: 5b5b994a8e884dfb97d2da962a52090f
+msgid ""
+"❌ Thermal conductivity (need phono3py for phonon-phonon scattering) ❌ "
+"High-T thermodynamics near melting ❌ Strongly anharmonic materials ❌ "
+"Dynamic properties (viscosity, diffusion) ❌ Surface properties (different"
+" thermal expansion)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:405
+#: b3bc46c77b8a48d7b63c6d4307d63114
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:407
+#: 4b520de4557a4c12a35bb9ab3e5d3066
+msgid "Issue 1: Imaginary Frequencies"
+msgstr "Issue 1: Imginry Frequencies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:409
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:427
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:443
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:467
+#: 0dc5d6628a124b339abb73bb2db759e5 d0699f4b5188482aaa2587f9f3967268
+#: e35a8e42bbe841dcbee2fe3de36f698e ff7e8bfb635a427d890ce5dbd4ae3e97
+msgid "**Symptoms**:"
+msgstr "**Symptoms**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:415
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:435
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:449
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:458
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:474
+#: 3825b222a9aa4965a80a6c609b53b9f0 98f21478dc1a4baaace58e04501dba9b
+#: d77762e38e404e73862d45423aa231ab ea7f279295da4a6ca0200c8dec93a261
+#: f77835a081f24c8d9a1e248764b35b48
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:416
+#: ccc23cbe2f0e40b1bc36058a23d5aa6c
+msgid "**Ensure full relaxation**: Check forces < 0.02 eV/Å"
+msgstr "**Ensure full relxtion**: Check برایces < 0.02 eV/Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:417
+#: f0d9c4ff06ab4977ba1487aad1288bb1
+msgid "**Check stability**: Material may be dynamically unstable"
+msgstr "**Check stbility**: Mteril my be dynmiclly unstble"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:418
+#: 036dbf29b542436fb62215b302e7ac6a
+msgid "**For metals**: Use `ignore_imaginary_modes=True` (metal example)"
+msgstr "**For metals**: Use `ignore_imaginary_modes=True` (metal example)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:419
+#: 9de5e10885034bf8a8fcf5aff0bf466a
+msgid "**Increase supercell**: Larger supercell → better phonon sampling"
+msgstr "**Increse supercell**: Lrger supercell → better phonon smpling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:420
+#: 94c48e21c675475e8638b02fbe2dd849
+msgid "**Check SCF**: Ensure tight SCF convergence (DM.Tolerance < 1e-5)"
+msgstr "**Check SCF**: Ensure tight SCF convergence (DM.Tolernce < 1e-5)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:422
+#: 45ec14956067496a8d9335ee16e2a742
+msgid ""
+"**Metal-Specific**: Metals often have small imaginary modes near Γ due to"
+" electronic smearing. The `ignore_imaginary_modes=True` flag filters "
+"these artifacts."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:425
+#: a7dafdd466584134bccadbaeb9d329e5
+msgid "Issue 2: Unphysical Properties"
+msgstr "Issue 2: Unphysicl Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:436
+#: 169456c3e3834c6197137c97c6b23e23
+msgid "**More volumes**: Increase from 5 to 7 or 9"
+msgstr "**Mیاe volumes**: Increse from 5 to 7 یا 9"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:437
+#: 5d77ca1622f542f3b774506df9bfe686
+msgid "**Check phonon convergence**: Supercell size, k-points"
+msgstr "**Check phonon convergence**: Supercell size, k-points"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:438
+#: 48b5c65ffa6c41b786551f50ee0c41ce
+msgid "**Verify EOS fit**: Plot E vs V, check fit quality (R² > 0.999)"
+msgstr "**Verify EOS fit**: Plot E vs V, check fit qulity (R² > 0.999)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:439
+#: 1214a5e52926475c94f8dc62e6f5faad
+msgid "**Adjust volume range**: Ensure appropriate for material hardness"
+msgstr "**Adjust volume rnge**: Ensure pproprite برای mteril hrdness"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:441
+#: 1852490f039f4f43bb389b8dbde28916
+msgid "Issue 3: Slow Convergence"
+msgstr "Issue 3: Slow همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:450
+#: 28ccc2cd965942df84399cf380f9766b
+msgid "**Larger supercell**: Increase phonon supercell (2×2×2 → 3×3×3)"
+msgstr "**Lrger supercell**: Increse phonon supercell (2×2×2 → 3×3×3)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:451
+#: 212fb7e24ec940be8f04382a80ce0493
+msgid "**Tighter SCF**: DM.Tolerance = 1e-6"
+msgstr "**Tighter SCF**: DM.Tolernce = 1e-6"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:452
+#: 1b8a27371c834e4dae19205f79d1775e
+msgid "**More QHA volumes**: Use 7 or 9 instead of 5"
+msgstr "**Mیاe QHA volumes**: Use 7 یا 9 insted of 5"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:453
+#: 56123eaab43840d08344d2e70e29af1a
+msgid "**Denser k-points**: Especially for metals"
+msgstr "**Denser k-points**: Especilly برای metls"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:454
+#: 15ec163a34cd42fc8dfeac29b1982d19
+msgid "**Better basis**: DZP → TZP for high accuracy"
+msgstr "**Better bsis**: DZP → TZP برای high ccurcy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:456
+#: 620610d2cd164ca58fc1f7a0500507f1
+msgid "Issue 4: Long Calculation Time"
+msgstr "Issue 4: Long محاسبه زمان"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:459
+#: a80d4de0c1914798a72dd75b8307790f
+msgid "**Start small**: Use 2×2×2 supercell for testing"
+msgstr "**Strt smll**: Use 2×2×2 supercell برای testing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:460
+#: fb11e1fa984440278a144a1e2add6c93
+msgid "**Reduce k-points**: Test with [2,2,2] first"
+msgstr "**Reduce k-points**: Test با [2,2,2] first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:461
+#: 903ac28c9815444b97dfbf188db3fe58
+msgid "**Fewer volumes**: Start with 5 volumes"
+msgstr "**Fewer volumes**: Strt با 5 volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:462
+#: edcc7818b73d485daae59103221299f6
+msgid "**Use HPC**: Submit to cluster (RUN_MODE=\"submit\")"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:463
+#: 3c98a935bdd24cce99548903fac0cd4e
+msgid "**Parallel**: Use jobflow-remote for parallel execution"
+msgstr "**Prllel**: Use jobflow-remote برای prllel execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:465
+#: d6a60669099b4e5ebd5763b0b3888130
+msgid "Issue 5: EOS Fit Problems"
+msgstr "Issue 5: EOS Fit Problems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:475
+#: f67100c3c502445ab0416f4eee87a699
+msgid "**More EOS points**: Increase from 9 to 11 volumes"
+msgstr "**Mیاe EOS points**: Increse from 9 to 11 volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:476
+#: 7c26a3629ede43a1b40809a654963855
+msgid "**Better initial structure**: Ensure well-relaxed starting point"
+msgstr "**Better initil structure**: Ensure well-relxed strting point"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:477
+#: 21102d03e307481c9bc1d794a480935b
+msgid "**Adjust volume range**: Use appropriate volume_factor"
+msgstr "**Adjust volume rnge**: Use pproprite volume_fctیا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:478
+#: aaca09057d644acaa0819724b508ffcc
+msgid "**Try different EOS**: vinet vs birch_murnaghan vs murnaghan"
+msgstr "**Try different EOS**: vinet vs birch_murnghn vs murnghn"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:479
+#: 7b1fb7c59c9f47d3b54ec26c6061a5d7
+msgid "**Check relaxation**: Ensure all EOS points converged"
+msgstr "**Check relxtion**: Ensure ll EOS points converged"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:483
+#: 6c89cc028b874ea48052356a1ef2b3eb
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:485
+#: 3041aedd5cb84c80854831afa569624d
+msgid "Creating P-T Phase Diagrams"
+msgstr "ایجاد P-T Phse Digrms"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:511
+#: a92955e8e0274685a1a00d4fa8c39779
+msgid "Combining with Elastic Constants"
+msgstr "Combining با Elstic Constnts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:526
+#: 50e86487dac3406999d8c1bff7a58f78
+msgid "High-Throughput QHA"
+msgstr "High-Throughput QHA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:550
+#: e81c968b1f5a4f0c899335d9fee49d4e
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:552
+#: 92b720431244496192362bb205cf020c
+msgid ""
+"✅ **Always start with dry-run**: Verify workflow before 3-hour "
+"calculation ✅ **Test convergence systematically**: Supercell, k-points, "
+"volumes ✅ **Use basic settings first**: 2×2×2 supercell, [2,2,2] k-points"
+" for testing ✅ **For metals**: Always use `ignore_imaginary_modes=True` ✅"
+" **Check EOS fit**: Plot E vs V, ensure R² > 0.999 ✅ **Validate "
+"thermodynamics**: Cp > Cv, Cv → 3NkB, α → 0 as T → 0 ✅ **Compare with "
+"experiment**: Benchmark α, Cv against literature ✅ **Document settings**:"
+" Keep notes on what works for each material type ✅ **Save results**: QHA "
+"calculations are expensive!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:564
+#: 9723e46fe11848d9b26536e841faeb02
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:566
+#: 5d4b7985a379480ba44a45f75fb1bcda
+msgid "**Workflow Design**:"
+msgstr "**گردش کار Design**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:567
+#: eb4c7f1f152b4a2aae68af6364e0b62f
+msgid "**Start simple**: Basic example with minimal settings"
+msgstr "**Strt simple**: Bsic exmple با miniml settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:568
+#: 99dcc090eca240ddac505e0c3ba710b2
+msgid "**Test convergence**: Increase settings systematically"
+msgstr "**Test convergence**: Increse settings systemticlly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:569
+#: 8da096d0f5b44065b8e3c9c9e2f0e6a0
+msgid "**Production run**: Use custom_accuracy settings"
+msgstr "**Production run**: Use custom_ccurcy settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:570
+#: d7ab46b948ce44cd9d47682642bc93e4
+msgid "**Validate**: Compare with experiment or literature"
+msgstr "**Vlidte**: Compre با experiment یا literture"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:572
+#: d081e1387d1f4cf7bab03168e4d265e9
+msgid "**For Each Material Type**:"
+msgstr "**Fیا Ech Mteril Type**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:573
+#: 6e01bbcf8d1641f3bcc32ab4c5108bea
+msgid "**Metals**: MP occupation, ignore_imaginary_modes, dense k-points"
+msgstr "**Metls**: MP occuption, ignیاe_imginry_modes, dense k-points"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:574
+#: 8632ed2cb482442e9782f28b928d6157
+msgid "**Insulators**: Standard settings, can use coarser k-points"
+msgstr "**Insultیاs**: Stوrd settings, cn use corser k-points"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:575
+#: 9615c8f348624ffbbf2e3b52ee594b51
+msgid "**Hard materials**: Smaller volume range (volume_factor~0.95)"
+msgstr "**Hrd mterils**: Smller volume rnge (volume_fctیا~0.95)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:576
+#: 678ed849671f4f568207956a3cbad52e
+msgid "**Soft materials**: Larger volume range (volume_factor~0.90)"
+msgstr "**Soft mterils**: Lrger volume rnge (volume_fctیا~0.90)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:578
+#: ee7af708c44848468ec3d65227b62045
+msgid "**Resource Management**:"
+msgstr "**Resource Mngement**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:579
+#: 72805fe786fe46b982bfc6cbb7f3451a
+msgid "**Estimate time**: ~5-7 phonons × (supercell time)"
+msgstr "**Estimte time**: ~5-7 phonons × (supercell time)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:580
+#: 4ca28ec6ef5a4ab0b050fd904374401e
+msgid "**Check disk space**: Each phonon = many files"
+msgstr "**Check disk spce**: Ech phonon = mny files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:581
+#: 2764f81cfe9d4d0cb8c8731b17098ff1
+msgid "**Use HPC wisely**: Submit to cluster for production"
+msgstr "**Use HPC wisely**: Submit to cluster برای production"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:582
+#: ddd5de12c1ee488083f89604208d5ca8
+msgid "**Clean up**: Remove intermediate files after completion"
+msgstr "**Clen up**: Remove intermedite files fter completion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:586
+#: f72a6336f0484f00bd2ca374974988f0
+msgid "References"
+msgstr "References"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:588
+#: 062086ff2af44ade866923a8bcd150f1
+msgid "Theory"
+msgstr "Theیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:590
+#: 714114630ba94b0a98b0a18859faeb31
+msgid "**QHA Formalism**:"
+msgstr "**QHA Fیاmlism**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:591
+#: 74c8265e9cf44c1dbb8d6bf590c67ca4
+msgid ""
+"Born, M. & Huang, K. (1954). *Dynamical Theory of Crystal Lattices*. "
+"Oxford."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:592
+#: 216c533c21ed4638891bcb74f3e41f47
+msgid "Wallace, D.C. (1972). *Thermodynamics of Crystals*. Wiley."
+msgstr "Wllce, D.C. (1972). *Thermodynmics of Crystls*. Wiley."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:594
+#: f8555072f9a745d9b41ed191e99b653f
+msgid "**Implementation**:"
+msgstr "**Implementtion**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:595
+#: b3ef664949444e069b6b7c85dff62b53
+msgid "Togo, A. & Tanaka, I. (2015). *Scr. Mater.* 108, 1-5. (phonopy)"
+msgstr "Togo, A. & Tnk, I. (2015). *Scr. Mter.* 108, 1-5. (phonopy)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:596
+#: 2aaaed41d3f64052b04a3a7daf9ee41d
+msgid "Toher, C. et al. (2014). *Phys. Rev. B* 90, 174107. (AFLOW-QHA)"
+msgstr "Toher, C. et l. (2014). *Phys. Rev. B* 90, 174107. (AFLOW-QHA)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:598
+#: 373bf9f775b6474d8db952e85909df71
+msgid "Applications"
+msgstr "Applictions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:600
+#: c132e26ac03a4be2a71032488e0c0e64
+msgid "**Thermal Expansion**:"
+msgstr "**Therml Expnsion**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:601
+#: d9b79eb811fd4750b0b5bd39b1369384
+msgid "Carrier, P. et al. (2007). *Phys. Rev. B* 76, 064116."
+msgstr "Crrier, P. et l. (2007). *Phys. Rev. B* 76, 064116."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:603
+#: 96ff6fecc82a4ac3a208572a756ac7c0
+msgid "**High Pressure**:"
+msgstr "**High Pressure**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:604
+#: d02bd9890be74f0db719d239153ed84a
+msgid "Karki, B.B. et al. (2000). *Rev. Geophys.* 38, 495. (Earth's mantle)"
+msgstr "Krki, B.B. et l. (2000). *Rev. Geophys.* 38, 495. (Erth's mntle)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:608
+#: 550918973fd04ce6a84b6a88f4947b08
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:610
+#: fa7d178421ad49e7812cea443798221e
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:612
+#: d18096f210fb4a2f822afe0fb978c3cb
+msgid "**Understand workflow**: Review dry-run output, job structure"
+msgstr "**Understو wیاkflow**: Review dry-run output, job structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:613
+#: 4f9df631a44448ea97716c55b9233466
+msgid "**Test convergence**: Vary supercell, k-points, number of volumes"
+msgstr "**Test convergence**: Vry supercell, k-points, number of volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:614
+#: 3951f5d6724944c9ae75db0b208a20a5
+msgid "**Try all examples**: Understand differences between material types"
+msgstr "**Try ll exmples**: Understو differences between mteril types"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:615
+#: 3aef609fe41c460da9faa29a8da4aec5
+msgid "**Validate results**: Compare with experimental thermal expansion"
+msgstr "**Vlidte results**: Compre با experimentl rml expnsion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:616
+#: 6ecc536f3cba489a8885ce53a38ad503
+msgid "**Advanced**: Create P-T diagrams, combine with elastic constants"
+msgstr "**پیشرفته**: Crete P-T digrms, combine با elstic constnts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:617
+#: a38ffbaca57c4b49bc01cc34f7c62c70
+msgid "**High-throughput**: Screen multiple materials for thermal properties"
+msgstr "**High-throughput**: Screen multiple mterils برای rml properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/06-vibrational-properties/03-SiestaQhaFlowMaker/README.md:621
+#: fb9445e1ac134ba58f1d67c260a5e6d9
+msgid ""
+"*Back to [05-vibrational-properties](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid ""
+#~ "$$\\alpha(T) = \\frac{1}{V}\\left(\\frac{\\partial "
+#~ "V}{\\partial T}\\right)_P$$"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "$$C_P(T) = \\left(\\frac{\\partial H}{\\partial "
+#~ "T}\\right)_P = C_V + \\alpha^2 B_T "
+#~ "V T$$"
+#~ msgstr ""
+

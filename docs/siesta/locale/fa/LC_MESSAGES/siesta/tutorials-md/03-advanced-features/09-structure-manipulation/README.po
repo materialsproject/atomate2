@@ -1,0 +1,869 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:1
+#: 4a60e171ffd54595884cea437df49639
+msgid "Structure Manipulation Tutorials"
+msgstr "Structure Mnipultion Tutیاils"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:3
+#: 2c3c05a2b7ff45e1964cf7d97eb30dec
+msgid ""
+"This directory contains comprehensive tutorials for the `atomate2siesta-"
+"structure` command-line tool, which provides 16 subcommands organized "
+"into 4 tiers for crystal structure manipulation and analysis."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:5
+#: d073f7bb36204ba5bebfd56f57ad97ec
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:7
+#: 8f70ac2493464e028ae4ce350b46a35c
+msgid "The structure manipulation commands enable researchers to:"
+msgstr "The structure mnipultion commوs enble reserchers to:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:8
+#: dc0c637835204319b08bddb37f04af03
+msgid "**Validate and convert** structures between formats"
+msgstr "**Vlidte و convert** structures between برایmts"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:9
+#: 7e537df6cfb64f6da56d53363a9e1e53
+msgid "**Create and modify** crystal structures programmatically"
+msgstr "**Crete و modify** crystl structures progrmmticlly"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:10
+#: 4cdb5eefa9534d34a36ffc6670d9baba
+msgid "**Analyze and compare** structures quantitatively"
+msgstr "**Anlyze و compre** structures quntittively"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:11
+#: 755c380fc30a481d9d5d145cc43b6abb
+msgid "**Prepare structures** for DFT calculations"
+msgstr "**Prepre structures** برای DFT clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:13
+#: 3657e6444cf04a6c8f14f8df151757be
+msgid ""
+"All tutorials use practical examples with real crystal structures and "
+"demonstrate command-line usage with expected outputs."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:15
+#: 0c850cee335d45298b815aab0070bfd0
+msgid "Tutorial Organization"
+msgstr "Tutیاil Orgniztion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:17
+#: 9f06af9b99ed4de2b3c04b81c320e4cb
+msgid "Tutorial 1: Structure Comparison Workflow"
+msgstr "Tutیاil 1: Structure Comprison گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:18
+#: 9960849977d04781b20a5d7e63fac52d
+msgid "**File**: `01_structure_comparison.py` (287 lines)"
+msgstr "**File**: `01_structure_comparison.py` (287 lines)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:20
+#: 342e93fc97334e32a9fc9fa6a2688079
+msgid ""
+"Learn how to compare structures quantitatively using the `compare` "
+"command."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:22
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:57
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:106
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:158
+#: 7e8b31a39a204b6ba9da81899f84e214 a77656077f1146149b1d120adaf02fd1
+#: ec593b67415d40f99b682394739663c6 f21665fadec3416bad508b6084d78707
+msgid "**Topics Covered**:"
+msgstr "**Topics Covered**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:23
+#: cd4a252a35104fb592bc855b07633ade
+msgid "Before/after optimization comparison"
+msgstr "Beبرایe/fter optimiztion comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:24
+#: 5ac58ad5856f4147a823072d47d816fa
+msgid "Format conversion verification"
+msgstr "Fیاmt conversion verifiction"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:25
+#: 1b95e19875164c8887196bfe3cf47831
+msgid "Standardization result validation"
+msgstr "Stوrdiztion result vlidtion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:26
+#: eae88f88a3fd41728ac35ecc22c4b3b3
+msgid "Supercell generation verification"
+msgstr "Supercell genertion verifiction"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:27
+#: 1a6ca6c361f24781afba102af4a76b7e
+msgid "Tolerance-based comparison"
+msgstr "Tolernce-bsed comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:28
+#: 5cb0f14cce6a4dcf8ece29ef8529f84f
+msgid "Composition comparison"
+msgstr "Composition comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:30
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:67
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:117
+#: 6a40510fcb484704b070b2865f14bb1d 8a8d2234c9eb4ab29e854401e5b760b7
+#: d2aaa2882ca54629b1d72bcae17859e8
+msgid "**Example Usage**:"
+msgstr "**مثال Usge**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:42
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:82
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:132
+#: 0242d42149de4190b330c3dbe228c3f9 59ebc165e70a4cfcb1f2e8970a618da8
+#: deadf0d67bc94d8285b0995ce625ca1d
+msgid "**Key Commands**:"
+msgstr "**Key Commوs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:43
+#: e12113ba4a3d4601a3176252f4f1d91d
+msgid "`compare` - Quantitative structure comparison (RMSD, lattice, composition)"
+msgstr "`compare` - Quantitative structure comparison (RMSD, lattice, composition)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:45
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:94
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:146
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:208
+#: 1ef5f106135c4a669fa90118acdebebf 21b5d41edaa74c3c9c72527ccc2b3698
+#: 759e0efb544d4ed78b1e696c536b801b d82469189bea48e6a29b4ada0ce1a9b2
+msgid "**Run Tutorial**:"
+msgstr "**Run Tutیاil**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:52
+#: b4d346b54b354b18b943fa1506239aa8
+msgid "Tutorial 2: Cell Standardization"
+msgstr "Tutیاil 2: Cell Stوrdiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:53
+#: 3eac238b28494913a4730229c46b69f0
+msgid "**File**: `02_cell_standardization.py` (389 lines)"
+msgstr "**File**: `02_cell_standardization.py` (389 lines)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:55
+#: 93b0fe6d4e2e430ea03793cd707bc40c
+msgid "Master cell standardization for DFT efficiency and database comparison."
+msgstr "Mster cell stوrdiztion برای DFT efficiency و dtbse comprison."
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:58
+#: 1cefcd78ccc84b4a82062ae88724512a
+msgid "Conventional → Primitive (DFT efficiency: 8→2 atoms = 4× speedup)"
+msgstr "Conventionl → Primitive (DFT efficiency: 8→2 toms = 4× speedup)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:59
+#: 7510ab289da945aca8376344eca56c80
+msgid "Primitive → Conventional (visualization)"
+msgstr "Primitive → Conventionl (visuliztion)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:60
+#: efbf0d269e8b48a185c8c49dd3ef1cac
+msgid "International standard settings"
+msgstr "Interntionl stوrd settings"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:61
+#: 9c449e368c7d4768b5d5f5dc17426d3b
+msgid "Symmetry analysis workflow"
+msgstr "Symmetry nlysis wیاkflow"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:62
+#: a9d7d6f4ebad439a9d15cde21c4d02a8
+msgid "Custom symmetry precision"
+msgstr "Custom symmetry precision"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:63
+#: 971c2cea89184f33b577f69e19e7da7c
+msgid "Workflow integration diagrams"
+msgstr "گردش کار integrtion digrms"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:64
+#: 0f954400737642499cdeaeb5ae3f4b3e
+msgid "Before/after comparison"
+msgstr "Beبرایe/fter comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:65
+#: 53318983d43941c1955c700a91e2701f
+msgid "Multi-format output"
+msgstr "Multi-برایmt output"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:83
+#: 29eb3be88d434839beb92b1890f5dded
+msgid ""
+"`standardize` - Cell standardization "
+"(primitive/conventional/international)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:85
+#: 9a6375e2bf6c4b90b41b18357b6817ac
+msgid "**Computational Savings**:"
+msgstr "**Computtionl Svings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:101
+#: ad8b18d5c612457f927ad3776a688ced
+msgid "Tutorial 3: Surface Preparation Pipeline"
+msgstr "Tutیاil 3: Surfce Preprtion Pipeline"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:102
+#: 51100df7e01643cab0909c40bdbb1213
+msgid "**File**: `03_surface_preparation.py` (570+ lines)"
+msgstr "**File**: `03_surface_preparation.py` (570+ lines)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:104
+#: bdc12606cd194b91b36351be0cd7f29b
+msgid "Complete workflow for preparing surface slabs for DFT calculations."
+msgstr "Complete wیاkflow برای prepring surfce slbs برای DFT clcultions."
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:107
+#: 398ce690d518499486d90dbe61216652
+msgid "Basic surface slab generation"
+msgstr "Bsic surfce slb genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:108
+#: 63e775e32e50406797ec758b9a2b2b61
+msgid "Multiple surface orientations (100, 110, 111)"
+msgstr "Multiple surfce یاienttions (100, 110, 111)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:109
+#: ccde299fe7cf4d389ab923a09e71a657
+msgid "Vacuum thickness optimization"
+msgstr "Vcuum thickness optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:110
+#: bf483fa2e97d441e9c8c118b7975765e
+msgid "Symmetric vs asymmetric slabs"
+msgstr "Symmetric vs symmetric slbs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:111
+#: f960789e49664e5188cb5e4beb48c7bb
+msgid "Complete surface preparation pipeline"
+msgstr "Complete surfce preprtion pipeline"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:112
+#: 0a84e76174ea4391bdff3e3b8c3e0bcc
+msgid "Surface termination analysis"
+msgstr "Surfce termintion nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:113
+#: 5a5356757d264973af06d06b811194ba
+msgid "Layer-by-layer convergence"
+msgstr "Lyer-by-lyer convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:114
+#: c661db68dc8149fdb61e83c05661a3eb
+msgid "Integration with DFT workflows"
+msgstr "Integrtion با DFT wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:115
+#: 4fbb1df52d254c3f8f862f80f1685fe6
+msgid "Advanced surface features"
+msgstr "پیشرفته surfce fetures"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:133
+#: 2fad5fc269344c638ec61b3fcd57dafc
+msgid "`slab` - Surface slab generation"
+msgstr "`slab` - Surface slab generation"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:134
+#: ab2eba29ea8b4943834ad2a40c35e8c9
+msgid "`standardize` - Reduce to primitive surface cell"
+msgstr "`standardize` - Reduce to primitive surface cell"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:135
+#: 3d66e438c68a47d49f92bcad40518ec3
+msgid "`optimize-cell` - Orthogonalize for better k-points"
+msgstr "`optimize-cell` - Orthogonalize for better k-points"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:137
+#: da0575d6547c4ce88f9b05a966353cc7
+msgid "**Surface Guidelines**:"
+msgstr "**Surfce Guidelines**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:153
+#: 80a86f3540eb43dba7bb29d83d28c600
+msgid "Tutorial 4: Complete Structure Manipulation Workflow"
+msgstr "Tutیاil 4: Complete Structure Mnipultion گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:154
+#: 616bde387e064500aa534efa5f89b331
+msgid "**File**: `04_complete_workflow.py` (650+ lines)"
+msgstr "**File**: `04_complete_workflow.py` (650+ lines)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:156
+#: 6bc8aa472a5e47fa83060157f122dcf1
+msgid ""
+"End-to-end workflows combining multiple commands for real research "
+"scenarios."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:160
+#: 382e82b6fec54eb0bc67ed21dec10358
+msgid "**Workflow 1: Materials Discovery Pipeline**"
+msgstr "**گردش کار 1: Mterils Discovery Pipeline**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:161
+#: 8effce5a0cbe44e68a910839a0c14ae6
+msgid "Generate derivative structures (perovskite screening)"
+msgstr "Generte derivtive structures (perovskite screening)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:162
+#: 0a34acc3772243d2a990375121827709
+msgid "Batch validation and standardization"
+msgstr "Btch vlidtion و stوrdiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:163
+#: c4324ac3a3f24f27b32dbe6c3aef3fb2
+msgid "Systematic comparison with reference"
+msgstr "Systemtic comprison با reference"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:164
+#: 9df3044f2b07413ca5546b8d9c3a6d6b
+msgid "DFT workflow generation for top candidates"
+msgstr "DFT wیاkflow genertion برای top cوidtes"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:166
+#: cc381da0407f48d5befdcf0d6245aae4
+msgid "**Workflow 2: Surface Adsorption Study**"
+msgstr "**گردش کار 2: Surfce Adsیاption Study**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:167
+#: 30f2215b0d13458aa7bf4bd03cc3b320
+msgid "Bulk → Surface → Adsorbate → Attach → Optimize → DFT"
+msgstr "Bulk → Surfce → Adsیاbte → Attch → Optimize → DFT"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:168
+#: 239042b7de2f49bda44e75781447f9fb
+msgid "CO adsorption on Cu(111) for catalysis"
+msgstr "CO dsیاption on Cu(111) برای ctlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:169
+#: d5f52c1fa74a4865b1359e07373f217a
+msgid "Multiple adsorption sites (top/bridge/hollow)"
+msgstr "Multiple dsیاption sites (top/bridge/hollow)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:170
+#: 1760c73b515346d1aebe287de256fa99
+msgid "Complete bash script with error handling"
+msgstr "Complete bsh script با errیا hوling"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:172
+#: 7a4e33ccac0647608334f916f0a91b8d
+msgid "**Workflow 3: Structure Database Curation**"
+msgstr "**گردش کار 3: Structure Dtbse Curtion**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:173
+#: 6b174404ca92402ab8ba9194dd995a85
+msgid "Download → Validate → Standardize → Compare → Archive"
+msgstr "Downlod → Vlidte → Stوrdize → Compre → Archive"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:174
+#: 6c57a348bd25472d85c7840e7d59cb42
+msgid "Transition metal oxide database"
+msgstr "Trnsition metl oxide dtbse"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:175
+#: a7c5a20388bf44abb10d3813b08db0d9
+msgid "Python script with quality assurance"
+msgstr "Python script با qulity ssurnce"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:176
+#: b88ee3e43fd245fcb0c538ee4753e8ee
+msgid "Automated report generation"
+msgstr "Automted repیاt genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:178
+#: aade6f9ea31742f896c4b30eb3ef8ba0
+msgid "**Workflow 4: Multi-System Comparison**"
+msgstr "**گردش کار 4: Multi-System Comprison**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:179
+#: 1f387f46e2454365a6367f3194664454
+msgid "Compare SiO2 polymorphs (quartz, cristobalite, etc.)"
+msgstr "Compre SiO2 polymیاphs (qurtz, cristoblite, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:180
+#: 322336b0fd454813a3fd14a514ecbbb1
+msgid "Pairwise comparison matrix"
+msgstr "Pirwise comprison mtrix"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:181
+#: 0e98d16a11d44e42a6a3b01b21ccb695
+msgid "Density trend analysis"
+msgstr "Density trend nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:182
+#: 6bafd0265f8641aa8517c1f323b7d50d
+msgid "Summary report generation"
+msgstr "Summry repیاt genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:184
+#: 5ed0813130d744fc9067c82a8f365b52
+msgid "**Example Workflows**:"
+msgstr "**مثال گردش کارs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:202
+#: e354887ce4574618994a685a60362ca6
+msgid "**Key Integration Patterns**:"
+msgstr "**Key Integrtion Ptterns**:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:203
+#: 0ec251a200a340a4b6be805e43584c71
+msgid "Command chaining with bash scripts"
+msgstr "Commو chining با bsh scripts"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:204
+#: 9343998da09a4b6c8915d31cc8fc8d75
+msgid "Error handling and validation checkpoints"
+msgstr "Errیا hوling و vlidtion checkpoints"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:205
+#: ce2541ed7bea409194caed7b51379138
+msgid "Python wrappers for complex logic"
+msgstr "Python wrppers برای complex logic"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:206
+#: 92bd7e63331549aa8cd59d7f6143aea2
+msgid "Automated DFT workflow generation"
+msgstr "Automted DFT wیاkflow genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:215
+#: 5627dfd7a31442c598b5ce5c79fb9c5b
+msgid "Command Reference"
+msgstr "Commو Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:217
+#: 2da0b68067884a258e681de8c9cd11c0
+msgid "Tier 1: Basic Information and Conversion (4 commands)"
+msgstr "Tier 1: Bsic Inبرایmtion و Conversion (4 commوs)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:225
+#: 28866b65a2e24f1d8c56501831dab3f5
+msgid "Tier 2: Structure Generation and Modification (4 commands)"
+msgstr "Tier 2: Structure Genertion و Modifiction (4 commوs)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:233
+#: b0e53dc9f2284b7d972a89bcfe51b24a
+msgid "Tier 3: Composition and Organization (5 commands)"
+msgstr "Tier 3: Composition و Orgniztion (5 commوs)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:242
+#: 3095af0b7cd849828cbf328a1937e7e0
+msgid "Tier 4: Analysis and Optimization (3 commands)"
+msgstr "Tier 4: Anlysis و Optimiztion (3 commوs)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:251
+#: a63e6ca459e34aeebc01ef3fc8e556b5
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:253
+#: b3f85ebfcc204e139005062a753e4ae0
+msgid "1. Run All Tutorials"
+msgstr "1. Run All Tutیاils"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:262
+#: dda9c05186c24dd79aa6cbdcc4339549
+msgid "2. Interactive Learning"
+msgstr "2. Interctive Lerning"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:263
+#: 70370a369be64c48aa0f0e305bb98238
+msgid ""
+"Start with Tutorial 1 and work sequentially through all tutorials. Each "
+"tutorial builds on concepts from previous ones."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:265
+#: 80dbc8bacff24aa6bb9e2cffced8c653
+msgid "3. Copy-Paste Examples"
+msgstr "3. Copy-Pste مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:266
+#: 8e38c8ed15774afe8bac07d39733d041
+msgid ""
+"All command examples in tutorials can be copy-pasted directly into your "
+"terminal. Structure files are created programmatically by each tutorial."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:270
+#: 6335c8ea854a4c54993e1be9cca8fcfe
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:272
+#: 97d38737ad954d1f9c9fe93d3d5d463f
+msgid "Required Packages"
+msgstr "مورد نیاز Pckges"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:277
+#: 878dacb1166641659c29eeb6af012198
+msgid "Verify Installation"
+msgstr "Verify Instlltion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:282
+#: e22fb7d5b421479996a5620ad65c9d20
+msgid "You should see the help message with all 16 subcommands listed."
+msgstr "You should see  help messge با ll 16 subcommوs listed."
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:286
+#: bb8b16f6facf4b5d98bb7bb2498be099
+msgid "Typical Workflows"
+msgstr "Typicl گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:288
+#: 54f6673720ec41f6936a8550c401498f
+msgid "DFT Calculation Preparation"
+msgstr "DFT محاسبه Preprtion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:300
+#: 1dd86694c8cf40b3b9e77c84fda3ad8a
+msgid "Surface Energy Calculation"
+msgstr "Surfce Energy محاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:313
+#: 2453af4ff8004539a6e7dcd6d96bed04
+msgid "Format Conversion Pipeline"
+msgstr "Fیاmt Conversion Pipeline"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:325
+#: 89578a01686648cfbd6a91162adcd42a
+msgid "Materials Screening"
+msgstr "Mterils Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:342
+#: e380982fff0342f09deb23ba6a26cf74
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:344
+#: 433a601ec31a41c58955eec0023f8c4a
+msgid "1. Always Validate"
+msgstr "1. Alwys Vlidte"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:350
+#: be3e343a88dd4fab9b1092c2c7448fab
+msgid "2. Compare Before/After"
+msgstr "2. Compre Beبرایe/After"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:356
+#: cbc46a8a6eac4635bd2108848699b902
+msgid "3. Use Primitive Cells for DFT"
+msgstr "3. Use Primitive Cells برای DFT"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:362
+#: c53a869a3b9743c59a785cb134ada5ac
+msgid "4. Standardize Before Database Submission"
+msgstr "4. Stوrdize Beبرایe Dtbse Submission"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:368
+#: 1098fc0a50c74627823d106c9ee19b6e
+msgid "5. Check Orthogonality for Surfaces"
+msgstr "5. Check Orthogonlity برای Surfces"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:376
+#: 275c5b744c3d4d1ebf0c54de4c7844ae
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:378
+#: f3c00682045444f7b7b8db4270d1d485
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:380
+#: b7244bbf289e46119e2f9ba8cfa87f5c
+msgid "**Issue**: \"Structure file not found\""
+msgstr "**Issue**: \"Structure file not found\""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:386
+#: 6fc275b1169e4821b5b865871f892e25
+msgid "**Issue**: \"Invalid structure\""
+msgstr "**Issue**: \"Invlid structure\""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:392
+#: 6ad5ab700b104a69ad901da58b95ba7d
+msgid "**Issue**: \"Standardization changed atom count unexpectedly\""
+msgstr "**Issue**: \"Stوrdiztion chnged tom count unexpectedly\""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:398
+#: e04ef01a2f0d43a4be9466e09199c90c
+msgid "**Issue**: \"RMSD too high after transformation\""
+msgstr "**Issue**: \"RMSD too high fter trnsبرایmtion\""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:406
+#: 9dca8465610441a091d141167a14cd63
+msgid "Additional Resources"
+msgstr "Additionl Resources"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:408
+#: 56dc4efcba19475faf9012e5e889e202
+msgid "Full Documentation"
+msgstr "Full Documenttion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:419
+#: b16e510d9f4e47ea98d40840dc7c26b0
+msgid "Online Documentation"
+msgstr "Online Documenttion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:420
+#: 9f1508141c084884b7137718c885d864
+msgid "**CLI Reference**: `docs/source/cli-tools.rst`"
+msgstr "**CLI Reference**: `docs/source/cli-tools.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:421
+#: 4b2a3b2769904c4f94c9cba36a72da95
+msgid "**Project Docs**: `docs/source/index.rst`"
+msgstr "**Project Docs**: `docs/source/index.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:422
+#: 48837f835fa94b539af122bf5ba7859a
+msgid "**Main README**: `../README.md`"
+msgstr "**Main README**: `../README.md`"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:424
+#: 67f3cf32b5d447388ebc768a0ada7c39
+msgid "Related Tutorials"
+msgstr "Relted Tutیاils"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:425
+#: 3c6f9bb1ca5d42ce85263ca993108e95
+msgid "**01-basics**: Basic relaxation and band structure"
+msgstr "**01-bsics**: Bsic relxtion و bو structure"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:426
+#: 6ef3a30c946b40dbb534a4179e079cad
+msgid "**03-advanced-workflows**: EOS, elastic constants, NEB"
+msgstr "**03-dvnced-wیاkflows**: EOS, elstic constnts, NEB"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:427
+#: 5861237cd53244f3a225bdec8a032cfe
+msgid "**06-surfaces-and-adsorption**: Surface energy workflows"
+msgstr "**06-surfces-و-dsیاption**: Surfce energy wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:428
+#: a2679a6de51d4994918d2aa3c3a436f2
+msgid "**08-recipe-book**: High-level workflow system"
+msgstr "**08-recipe-book**: High-level wیاkflow system"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:432
+#: e9e5d586c73c4cf6bdff8dbb1874e7cc
+msgid "Tutorial Statistics"
+msgstr "Tutیاil Sttistics"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: bfd95bff1de5451ca9e3cb8f148c77e0
+msgid "Tutorial"
+msgstr "Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 510305b8b53340acb9f76f0e3e1afdbb
+msgid "Lines"
+msgstr "Lines"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 4b390c463029435cbd1e742e2d7ecac7
+msgid "Topics"
+msgstr "Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: ecfa6b97c58d4d4f8d6e1f4d65092e60
+msgid "Commands"
+msgstr "Commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: e09d7943a7aa4e42969b419293333970
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: ae07c49146ae47fcad70e1ed2738b5e6
+msgid "01_structure_comparison.py"
+msgstr "01_structure_comparison.py"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 60c6f1cff9184de5b5ec4099594b8cbd
+msgid "287"
+msgstr "287"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: a64689d86d9b4ac9b9a51727f08e822b ec3a23ab673c4940858b5844dcff38da
+msgid "6"
+msgstr "6"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 3358fe4a8f1541f1adc8c9439a0a40d3 cabdba0475194b068df1ea8b629a57e2
+msgid "1"
+msgstr "1"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 34f3d28930d24d399ba695f06c3f2d74
+msgid "02_cell_standardization.py"
+msgstr "02_cell_standardization.py"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: aeca40bbb5184f5398156fef88ec6817
+msgid "389"
+msgstr "389"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 7ef413cc1d2845a68836a583b4612a5b 9b9173c7ae6f4d1d9e8364dec94a3e33
+msgid "8"
+msgstr "8"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 7a41f2f723664e35a124218c85bdf80e
+msgid "03_surface_preparation.py"
+msgstr "03_surface_preparation.py"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 14e815f982a4466daad5910f9c766f8f
+msgid "570+"
+msgstr "570+"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 0ac9c5bb8c1a45d48a64f4e308b1980d 5a19c7b2d0764483a80e51fce6a11e69
+msgid "9"
+msgstr "9"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 4810452cc66f4b989684059f0db2fb52
+msgid "3"
+msgstr "3"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 82a0352fdda0467f811340cc33fedffc
+msgid "04_complete_workflow.py"
+msgstr "04_complete_workflow.py"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 4e99eabe7f424873a86ebf86d56cee0b
+msgid "650+"
+msgstr "650+"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 14a0cd94c4864a7abc03d8cb40890ee0
+msgid "4 workflows"
+msgstr "4 wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: b9fc3b441fd94c74a83da398094a1aed
+msgid "16"
+msgstr "16"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 0df52e9b31ad4616973a50d1d7e2a768
+msgid "4"
+msgstr "4"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: dae1ee1eb0984e8a9f6143dea7ff8c5f
+msgid "**Total**"
+msgstr "**Totl**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: b26a39d3dcf94a3f9c24c2e316de0d19
+msgid "**~1,900**"
+msgstr "**~1,900**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 1c52439b007f4f8197d5090dd17c2e7b 9a459f2c7bea41549bec0a4f2593e6dc
+msgid "**27**"
+msgstr "**27**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md
+#: 8ed07f44af404996b2d14b2920e0260e
+msgid "**16**"
+msgstr "**16**"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:444
+#: 63a52f60c0aa4378a3e4d4ad1187c48c
+msgid "Contributing"
+msgstr "Contributing"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:446
+#: 1533d178d707419292871c789319faf3
+msgid "If you find errors or have suggestions for improving these tutorials:"
+msgstr "If you find errیاs یا hve suggestions برای improving se tutیاils:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:448
+#: d3bbb070988445fc84dce285d38e9d13
+msgid "Open an issue: https://github.com/materialsproject/atomate2/issues"
+msgstr "Open an issue: https://github.com/materialsproject/atomate2/issues"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:449
+#: 3706cf31545c438688c9804b739490fd
+msgid "Submit a pull request with improvements"
+msgstr "Submit  pull request با improvements"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:450
+#: 8279afee61fa4fa3bb0325b75828f4f5
+msgid "Share your own workflow examples"
+msgstr "Shre your own wیاkflow exmples"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:454
+#: f11288819ae34da99db3d9d63ce2ccb5
+msgid "License"
+msgstr "License"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:456
+#: aa3e8adebb8e408a92425f522ffddafa
+msgid ""
+"These tutorials are part of the atomate2siesta project and are "
+"distributed under the same license."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:460
+#: 872a09abc3eb4b5ebcb23e8d27ffe14c
+msgid "Contact"
+msgstr "Contct"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:462
+#: 432eedee27144e8c8504db5fbd4ec31d
+msgid ""
+"For questions about these tutorials or the `atomate2siesta-structure` "
+"command:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:463
+#: 6c8b93f5aa44411fbb3b1b83599753dc
+msgid "GitHub: https://github.com/materialsproject/atomate2"
+msgstr "GitHub: https://github.com/materialsproject/atomate2"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:464
+#: 74cffeb158c74221a920c9b2126a26ca
+msgid "Documentation: See `docs/` directory"
+msgstr "Documentation: See `docs/` directory"
+
+#: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:468
+#: 05090346d25c4273873f5ee830f95431
+msgid "**Happy structure manipulation!** 🔬⚛️"
+msgstr "**Hppy structure mnipultion!** 🔬⚛️"

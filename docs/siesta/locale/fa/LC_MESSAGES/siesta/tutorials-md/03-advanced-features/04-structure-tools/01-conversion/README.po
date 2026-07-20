@@ -1,0 +1,597 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:1
+#: c62bfcb77b1545dd9b34f49d42f9c510
+msgid "Structure File Conversion Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:3
+#: 67eb828417144ee4a8b126416f48134d
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:5
+#: 08f03795e3e94199b9c1d7e335d7eb2a
+msgid ""
+"This tutorial demonstrates structure format conversion in atomate2siesta "
+"using pymatgen, sisl, and custom powerups."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:7
+#: aa670180eacf4a99b525196733dc98ed
+msgid "Tutorial Scripts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 1ca49707206147f9b9bd49e754cec340
+msgid "Script"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: b3ae321256fa488c9b6cb6088a223cf9
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 490cee751c464a7db0dd7748cf58233e
+msgid "Key Features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 41c5533495f2412cbe488d380d77a94d
+msgid "`01_basic_conversion.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 8f94939a6969459fabd735752e61eca0
+msgid "Pymatgen conversion basics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 8b399e739a5f463a9e06f9239d245d71
+msgid "CIF, XSF, JSON, POSCAR"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: b0b3aa26c98e47d5b2bf29a411e51314
+msgid "`02_siesta_formats.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: fdb3887708d64e66958ac4de19983123
+msgid "Reading SIESTA FDF files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 8df02a6fbc8043809655a23226b4212d
+msgid "siesta_to_pymatgen powerup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 98cf3342400b4c2a8aa97cbac4ca57fb
+msgid "`03_dry_run_formats.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 60a7eb38aa3d4fda90bcd8c21d4faa41
+msgid "Dry-run format generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 2696e12d2d9b4ad78da04ca1c706394c
+msgid "All output formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: ebca2c07a9304de491bfaf066615f5aa
+msgid "`04_xsf_cif_molecule.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 0a84e45672b94adcae6d0d77c8888fbf
+msgid "Molecule format conversion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 0f5755c0a1fb4aaeb91a95567cdfff65
+msgid "XSF molecular format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:16
+#: 3cb4d30de2fc4b529e982ee1856cd3da
+msgid "**Run the tutorials:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:28
+#: 6f609f392087426d82cbe5e5bd6a1024
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:30
+#: ebcc36d6bed8470cb4ad33be12ff9aa3
+msgid "Reading Structures with Pymatgen"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:46
+#: 37e3e466fdd04accb69853f688427d5b
+msgid "Writing Structures with Pymatgen"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:57
+#: 53353b4896f04d329d3019fa1850034f
+msgid "Supported Formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 9bf3d73d00374dfdb7e566ae8faff849
+msgid "Format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: bc9e9edc93b04d6bb845b08ceaec3472
+msgid "Extension"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: d382bf24b774485187caf9977d846f65
+msgid "Use Case"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 81a0f8a04d704e54adb14cfe436d5d1c
+msgid "Notes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: db288ed38ea94bf682f64275d298aad3
+msgid "CIF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 7498b3fc2c374535ba31aeec50489a6f
+msgid ".cif"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: cb1d4814abbc426d87594ca35d791a3c
+msgid "Standard crystallographic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 5f87c427391844b98f26454e71f13306
+msgid "Most common format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 19180c4967484d539e64c5a1dbed5012
+msgid "XSF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 0a6b86d9335a4eb0b18cb68f50ff1ebb
+msgid ".xsf"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 9d31f5d0964448a4bb5aaa317bf6d66e
+msgid "XCrySDen visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 3f4df8f142264139a42965a9c41e67e1
+msgid "Good for molecules too"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 0144a777561e4e4fa9fd033692978af1 91557b65eb0945b1b8bc2c2ad6f19b13
+msgid "POSCAR"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 0af4f94abe1c46668bb9cc8403eb4071
+msgid "VASP compatibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 49e30d9c5876463895b31be79561cd9d
+msgid "No extension"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 4e664bd7f48a47b0864e7ed2b28fcd04
+msgid "JSON"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 6390400144b04fd8a6674b68d9c36998
+msgid ".json"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 292086bf5ee84ab1b3df3be66a21ab62
+msgid "Python-friendly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: d67f25432f744038982e9117200d17c0
+msgid "Includes metadata"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 5f1a5c64076341eca206b2c5146cd7db
+msgid "YAML"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 8a1657ab364a4accab2dea1685a8cab2
+msgid ".yaml"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 72b293feb6294f92a92c5efd0f029dbc
+msgid "Human-readable"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: d19ac181cdc549aabf148993c2bed3ba
+msgid "Config-style format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:69
+#: c03e435a23614c84bc6548bc7f6c0e7a
+msgid "Reading SIESTA Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:71
+#: f3264d5a1fa3472ca32c1b3224ffbc83
+msgid "Using siesta_to_pymatgen Powerup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:73
+#: ca13b6a0d90c4340b777b2e03c7fb5e9
+msgid "The `siesta_to_pymatgen()` powerup reads SIESTA FDF and XV files:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:85
+#: 2aabfc74ed834525842e11cec31a4b78
+msgid "**Important distinctions:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 1bc2b1a07e3948b493f2e75850526c5a
+msgid "File"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 071083de84f54fcd946d2b5442a3cb9a
+msgid "When Available"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 5dc3064143264c92bbe92e452bd4e704
+msgid "Contains"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 6c658c305a7542d594128859610bf2e4
+msgid "`siesta.fdf`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: f8c53572d3d44f0381d1d6709647eff2
+msgid "Always (input file)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 9337bdecc4cf4158a3892db95e686247
+msgid "Initial structure from input"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 169e0befc7584aefb50f94ea0ffd1ea7
+msgid "`siesta.XV`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 4fe9184a6e1140b1b2c251ebd276aab4
+msgid "After SIESTA runs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md
+#: 55b0b3c2829146c29ce0a907a81147c5
+msgid "**Relaxed structure** (output)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:92
+#: 63bf517ad2dd403ea39a16bafcb96f58
+msgid ""
+"**Dry-run mode:** Only generates `siesta.fdf` (input files), not "
+"`siesta.XV` (output files require actual SIESTA execution)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:94
+#: 1a1fb6220df743dd865873ffc882f85c
+msgid "Dry-Run Output Location"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:96
+#: 78a8eaf2d20c49328ba42556be3d41b2
+msgid "When using `dry_run=True`, files are in nested directories:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:102
+#: 75545c1351074d7a9366e0f0ee39e143
+msgid "When using `dry_run=False`, files are in job root:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:109
+#: 8f78cccc5f8748d8bded791ade048d5b
+msgid "Example: Reading from Dry-Run"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:121
+#: 4e1beba0414b45e8bbd5850573d1f4d2
+msgid "Example: Reading Relaxed Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:130
+#: 1b1610b053a44f82a93074fabe19a680
+msgid "Writing SIESTA Input Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:132
+#: b48b245196104d21b6dd6bd17ea6ebe3
+msgid "Using SiestaInputGenerator"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:145
+#: d9ba1a443f7f4c7aa60854bc7e1be36b
+msgid "Using Dry-Run Mode (Recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:159
+#: 9a5cd720cd944b6a9d53df1428df1e1b
+msgid "CLI Conversion Tool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:161
+#: 3cd82a9769b14a15937be3608abc3bbd
+msgid ""
+"The `atomate2siesta-structure convert` command provides automatic format "
+"detection:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:180
+#: bbdd8ef59a6b42368311a9d93097f819
+msgid ""
+"**Supported input formats:** `.fdf`, `.xv`/`.XV`, `.cif`, `.xsf` "
+"(automatic detection)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:182
+#: adbd9306acae4b7c802433003a3fc01c
+msgid "**Supported output formats:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:183
+#: beddc253677747048cef10fd5f387ddd
+msgid "CIF (`.cif`) - Standard crystallographic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:184
+#: 0a79a2d123e54880b84198aba3a59d0b
+msgid "XSF (`.xsf`) - Visualization format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:185
+#: 84cb1986cf2046139bef984f6c184289
+msgid "JSON (`.json`) - Python-friendly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:186
+#: 4fa5b55f9a5a4f7db66c1aaa9a79f000
+msgid "FDF (SIESTA input) - For SIESTA calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:187
+#: 9bde88e2a11e426a87c43f6d7b68e0f5
+msgid "Pickle formats (sisl/ASE/pymatgen)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:191
+#: 0b6464ce144c4061a6885ff38a2d1760
+msgid "Dry-Run Format Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:193
+#: 069c54c66f9543e990930c542e13dffc
+msgid "Control output structure format in dry-run mode:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:207
+#: 35c1309aa6364a95afc1378d22f8a292
+msgid "**Available formats:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:208
+#: 4a3a80025e2b4a50b2c64f2db19b96cc
+msgid "`\"cif\"` - CIF format (default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:209
+#: deaa53f41b3e45c39e4b45ceb7030e2b
+msgid "`\"xsf\"` - XSF format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:210
+#: d7b6f778eb81447f80255c1c177e5bb5
+msgid "`\"json\"` - JSON format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:211
+#: be9391964b3b41699f5f97d16e9d846f
+msgid "`\"POSCAR\"` - VASP format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:215
+#: 805642b37e7249bda10bdcf58cc63a13
+msgid "Common Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:217
+#: 0a3c732906ef46e899f5a8c20e4f9370
+msgid "Workflow 1: CIF → SIESTA → Relaxed Structure → XSF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:235
+#: ace170b9cb6a488e8ecafdbe8138879b
+msgid "Workflow 2: Preview Input Files Only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:249
+#: f7c889d8937f4f1bab837964aa0745e7
+msgid "Workflow 3: CLI Batch Conversion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:263
+#: abba4e69595844329e36b9deb736bddd
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:265
+#: 78ae1cf95e2d4ea8a9808318b03aea10
+msgid "**Always prefer pymatgen** for standard formats (CIF, XSF, JSON)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:266
+#: 7eca71ad9fa8426e880324583df7755a
+msgid "**Use siesta_to_pymatgen** only for SIESTA-specific files (FDF, XV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:267
+#: 4091641c4e3146feb35921de176d8af6
+msgid "**Use dry-run mode** to preview input files before expensive calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:268
+#: 9bf63b309af2465eb81beb0389e7a6d3
+msgid ""
+"**Read XV files for relaxed structures**, not FDF files (which have "
+"initial structure)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:269
+#: ae8dd548bc1747ce8823d6e8c1e19488
+msgid "**Use glob patterns** to handle jobflow directory names with timestamps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:273
+#: 71cb6232e7eb4c1fa4d8362e1648e139
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:275
+#: e6f5e0722e764005a6dd833cf239c571
+msgid "Issue: \"No such file or directory: job_*/siesta.XV\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:277
+#: 56f1676f538249ce8a7d047ffef54a15
+msgid ""
+"**Cause:** XV files are only created by actual SIESTA execution, not dry-"
+"run mode."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:279
+#: 830f845950c848d78ae50493b8973a70
+msgid "**Solution:** Remove `dry_run=True` to run actual calculation:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:284
+#: 598ecc489407421c9b4a653ba1833fde
+msgid "Issue: FDF file not found in expected location"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:286
+#: 8e23098c0d444a5fbcfbc0d67f0758a9
+msgid ""
+"**Cause:** Dry-run creates files in nested `dry_run_output/*/` "
+"directories."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:288
+#: 9dd3ba553dd04fadb0fbc5312853eb95
+msgid "**Solution:** Use glob to find files:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:294
+#: 94ed76b0fa9541c2959543ecae26a57b
+msgid "Issue: Structure coordinates differ from expected"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:296
+#: d6831669315b411788be034905053fcf
+msgid "**Cause:** Reading FDF file (input) instead of XV file (output)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:298
+#: a0f684c02a48444385c5823e5576a005
+msgid "**Solution:** Always use XV for relaxed structures:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:306
+#: d5956f77c6174a2190f6efc831a2a7c8
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:308
+#: 6c1ebe8684bc42d0bd1ab69b5b27f2c6
+msgid "**Pymatgen docs**: https://pymatgen.org/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:309
+#: 11078ade2aab47b8af8cc906c44fa6c0
+msgid "**sisl docs**: https://sisl.readthedocs.io/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:310
+#: a1ca080e2c614a639a16965e66925f19
+msgid "**Dry-run tutorial**: `03-infrastructure/05-dry-run-preview/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:311
+#: 0a524c0a5dc44c89b326c56d11d6220a
+msgid "**Structure manipulation**: `04-structure-tools/02-manipulation/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:312
+#: 88084da5ad284d72b97eef636c1c9722
+msgid "**CLI structure tools**: `atomate2siesta-structure --help`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/01-conversion/README.md:316
+#: 680538a454dd4310916107bf021c114c
+msgid ""
+"**Summary:** Use pymatgen for standard conversions, siesta_to_pymatgen "
+"for SIESTA files, and dry-run mode to preview calculations!"
+msgstr ""
+

@@ -1,0 +1,1763 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:1
+#: 06d3eefcac4b4e53aa4518ec53924e75
+msgid "Equation of State (EOS) Workflow Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:3
+#: 68644a4cc18246b19a02b90578fa5c2c
+msgid ""
+"**Category**: Advanced Workflows **Difficulty**: Intermediate **Time**: "
+"~5 min (dry-run), ~30-60 min (full calculation) **Prerequisites**: "
+"Completed convergence studies (tutorials/02-convergence/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:10
+#: 9e0aade1fecd42bca2acef97a36d68ee
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:12
+#: 999841083bb247f2ae831ec850266c7a
+msgid ""
+"This tutorial demonstrates how to calculate the **Equation of State "
+"(EOS)** for crystalline materials using atomate2siesta. The EOS describes"
+" the relationship between volume, pressure, and energy, providing "
+"fundamental information about a material's compressibility and stability."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:14
+#: d867869e94f44d14a14b4fcbb2acb5f8
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:16
+#: 72a1074b386748fabeadda9cca4f144b
+msgid "How to run multi-volume EOS workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:17
+#: 415afbb0464743659ec924426200d399
+msgid "Fitting energy-volume data to various EOS models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:18
+#: 090f23e0bc8e45ac8b41ce037c9c1958
+msgid "Extracting bulk modulus and equilibrium volume"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:19
+#: d03630f5e87441b6ba59f8a87af07d43
+msgid "Interpreting EOS fit quality and physical parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:20
+#: fb951e2bf511445ba0a0f8fc29d7a01b
+msgid "Choosing appropriate strain ranges and number of points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:22
+#: d0e125459523450480282df8bba8cd97
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:24
+#: cda2a9e8624a4692892a19ae97790cc7
+msgid ""
+"**Equation of State**: Mathematical relationship E(V) describing how a "
+"material's energy changes with volume"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:26
+#: 1637ea4ac9374465addd32000acf7173
+msgid ""
+"**Bulk Modulus (B₀)**: Resistance to uniform compression (GPa) B₀ = "
+"-V(∂P/∂V)ₜ"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:29
+#: 367285e770ef4c63bfbebc7c1885230a
+msgid ""
+"**Equilibrium Volume (V₀)**: Volume at which energy is minimized (zero "
+"pressure)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:31
+#: 5123214798c849069f3d83dae603d8b0
+msgid "**EOS Models**: Different mathematical forms for fitting E-V data:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:32
+#: 3d35db9b7d16491f9f7ff9484698cab7
+msgid "**Birch-Murnaghan**: General-purpose, most commonly used"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:33
+#: 3a14b6fd9e55444dad056457670f5135
+msgid "**Murnaghan**: Simpler, good for metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:34
+#: b454fd4fa8994533bcbe90c5cb6abce4
+msgid "**Vinet**: Accurate over wide pressure ranges"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:35
+#: a5c8d18e8eb947abaf669f793d75fe02
+msgid "**Pourier-Tarantola**: Alternative to Birch-Murnaghan"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:39
+#: 7676bca454574f5f91de95c21e57dee4
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:41
+#: f7a45292941843a99b078196a214eb8a
+msgid "1. Run the Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:48
+#: fa450ff4e83a4097b4bc6e4ec8537737
+msgid "**What it does**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:49
+#: c4f16efc880e4d239119662f5ae31606
+msgid "7-point EOS with standard settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:136
+#: 7b6d7fb58d2e4e47bb3408853e20ee0c 835fc536c12e448e905a023eb9d5dae4
+msgid "Strain range: -5% to +5%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:51
+#: 779f6099bcee4224b76a618225f56155
+msgid "Dry-run mode enabled (preview without calculations)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:52
+#: e0a5e0e5ddb44f30a330517884acabb7
+msgid "Demonstrates complete EOS workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:54
+#: 1d8760ef972644eda89d709ca9a3832c
+msgid "2. Customize for Your Material"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:56
+#: a91ebc509d284e798283e53ab9b04aa2
+msgid "Edit `01_basic.py` and modify:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:70
+#: 541a9ddbf9cd426d87f45a468fac5b35
+msgid "3. Select Execution Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:84
+#: 453e25cc1f864011ada952925377079a
+msgid "Understanding the Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:86
+#: 185ac9558bed4ee0aa07c024b68e8cf8
+msgid "Workflow Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:102
+#: 6d363ec0dcab498da9c310e8f793541a
+msgid "What Happens at Each Step"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:104
+#: be9a49e14ba640fca073d2e3af8522ef
+msgid "**Step 1 - Initial Relaxation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:105
+#: e4c1a9f3fd6d479eb23deb9484620a18
+msgid "Fully relaxes initial structure (cell + atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:106
+#: a6be2f02524c44689a361b0eec60be0b
+msgid "Finds equilibrium geometry at zero pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:107
+#: 63b3bc0d3a284a2cad3fea21b2c9a5a0
+msgid "Provides reference structure for strain application"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:109
+#: a0d9f65cf23f4cc0aef1ea41d6a05641
+msgid "**Step 2 - Structure Generation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:110
+#: 5718ef0d388d42bcbba4005066d122ca
+msgid "Applies volumetric strains to equilibrium structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:111
+#: 1d89d9ed2ee1449487d732ea0edb936f
+msgid "Maintains symmetry during scaling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:112
+#: 5abb36cfc1944c459bf884422f0fb1cc
+msgid "Generates N structures (5-11 typical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:114
+#: fd73440c48944f95857e3bf9544e4eeb
+msgid "**Step 3 - Energy Calculations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:115
+#: 92f6e8d5ec4e4d72a47cc1a8b4793cf9
+msgid "Relaxes atoms at each fixed volume"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:116
+#: b4c14e3cad86439299f0ac41d90605d0
+msgid "Calculates minimum energy for each volume"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:117
+#: 341497b101cc45489de21443946e1350
+msgid "Ensures consistent force tolerance across all volumes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:119
+#: d9c74f571fba4ef3ac5fc4c2f762306c
+msgid "**Step 4-6 - EOS Fitting**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:120
+#: 596ae7c624ff4fb58af64d67e5fe0041
+msgid "Fits E(V) data to multiple EOS models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:121
+#: 657afc7f3517463584a0b4bff163a6ec
+msgid "Extracts B₀, V₀, E₀ for each model"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:122
+#: a794dd712b1b4deaafe9e27a6edbac4a
+msgid "Compares fit quality across models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:124
+#: e5bda367bdfe46c8abe99f7dfce24734
+msgid "**Step 7 - Analysis**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:125
+#: 500943ca0bbc4ea5a0fb4e6ea79f4815
+msgid "Generates publication-quality E-V plots"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:126
+#: 21785a65753446179f244fb9dbdd7544
+msgid "Writes comprehensive text summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:127
+#: 8b9b3065fd744dd4a78340b3cd25ff94
+msgid "Provides physical interpretation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:131
+#: ebeb76e2e0e94f7bbe30ace251d5306a
+msgid "Example Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:133
+#: d783e861a7d34206afaae0b7f0dda15a
+msgid "The tutorial (`01_basic.py`) uses these settings:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:135
+#: 0b4a6e64bc8c42f8b353fc3d4c596a80
+msgid "**Configuration**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:137
+#: 294b54cc94b04cddb8ffd7d089d5c4ed
+msgid "Number of points: 7"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:138
+#: 8d26b6e39c1e444cacbbfce25058d0aa
+msgid "Dry-run mode: Enabled (preview only)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:140
+#: dbbbd5948a184de2bb822da75c6bded2
+msgid "**When to customize**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:141
+#: bf5f618e47224c1ebbe2d7a9ee41a46e
+msgid "For production calculations: Set `dry_run=False`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:142
+#: 06b00b38d5b7495dbca4c884605e7634
+msgid "For higher accuracy: Increase points to 9-11"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:143
+#: 8745b4d3796749ab8735fce28fd09ae3
+msgid "For extended range: Use `(-0.07, 0.07)` or wider"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:144
+#: 19d68fcea5bc41d9910da993af9b6d47
+msgid "For tighter convergence: Add custom parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:146
+#: 891edb35f321439baa88d56e82a7bf37
+msgid "**Expected runtime** (when dry_run=False):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:147
+#: e6b143a7db924686aa4349b6a5596591
+msgid "Standard (DZP, 300 Ry, 4×4×4): ~30-45 minutes (local)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:148
+#: a4f3fdaca369402f9d3d12bf5735b525
+msgid "Tight (DZP, 350 Ry, 6×6×6): ~60-90 minutes (local)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:152
+#: 2bc9e9233de54aa6b1a3605557dc96f4
+msgid "Understanding EOS Models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:154
+#: ebe70cf9ecf94e109d3ea4190e7e0afb
+msgid "Birch-Murnaghan EOS (Recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:156
+#: 4feec5c2e9904933a3ac2a960328faf9
+msgid "**Equation** (3rd order):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:161
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:176
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:195
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:209
+#: 11a03db0d4084b0585270b5f56b8c348 4626a27bf95a496d97ed91414de90761
+#: 5c2d14896d834549966c3febfd6ad6b0 f027893fd0834444a73c50dd3db2c68a
+msgid "**Strengths**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:162
+#: dc912953a4dc43168c66ece35115891e
+msgid "Based on finite strain theory"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:163
+#: 513bc820b6064e60b8534328414f484f
+msgid "Physically motivated"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:164
+#: 1ba88da48b11405795e127d68a20644f
+msgid "Works for most materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:165
+#: 879ccea7eeaf4d45835af75694381060
+msgid "Most commonly reported in literature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:167
+#: 176e7cf44ac34ad4a0824ca0991e1002
+msgid "**Use for**: General-purpose EOS fitting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:169
+#: 4d73319d28b14e9cab9a726193ebd120
+msgid "Murnaghan EOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:171
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:189
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:204
+#: 35c5b4cab2b842c492ab02117687908b 7d85d3fe73fe4d159d487f3e66a32fec
+#: c6040299b399483baa272adde66b937e
+msgid "**Equation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:177
+#: ae94832eb43849ea97650557e7e5df1c
+msgid "Simpler functional form"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:178
+#: 880ced80177949f29630287ac219a48c
+msgid "Good for metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:179
+#: a69298ae82044aba98bf357772fcbeb6
+msgid "Fewer parameters than Birch-Murnaghan"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:181
+#: 1812aea813174faca4469e2a165fc605
+msgid "**Limitations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:182
+#: 0b0859fc43274147b1701b582ed1e175
+msgid "Less accurate at high compressions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:183
+#: 59b49db1593143e99a3b12d1b6f76ba6
+msgid "Assumes linear B(P) relationship"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:185
+#: dedb59f6cc1245d8a0f254cde79df189
+msgid "**Use for**: Metallic systems, quick estimates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:187
+#: 020396facc224575850c766341054924
+msgid "Vinet EOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:196
+#: 9ffe0f360ab64498b310e4a7a3427b44
+msgid "Excellent for wide pressure ranges"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:197
+#: 71b672af1f9d4bcd8eb4b4fbd505c78c
+msgid "Good high-compression behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:198
+#: 9f33ed59a0b44eaca726fe5af859484b
+msgid "Universal EOS form"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:200
+#: 064878dc49114197babd3a7013aa0547
+msgid "**Use for**: High-pressure studies, planetary interiors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:202
+#: 75913a9f3e614d9a9232a990b5ad7087
+msgid "Pourier-Tarantola EOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:210
+#: fa9678ca666a4c37bdf0e38e33335c11
+msgid "Logarithmic strain-based"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:211
+#: 95e64cdde5634125800903ecceb02514
+msgid "Alternative to Birch-Murnaghan"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:212
+#: 3e9303a239764442bb15fda9718295d3
+msgid "Similar accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:214
+#: b734770b4bc545e8aeb9a7430c349b23
+msgid "**Use for**: Comparison with Birch-Murnaghan, validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:218
+#: 8c51cd8a103740eeb56b06eca03f94c0
+msgid "Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:220
+#: 102d3cf39c77421497f488a09a837e85
+msgid "eos_summary.txt"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:222
+#: ebce456e265742b7b72d495724a8396d
+msgid "**Contents**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:253
+#: 6d0d72d0cc214575a27f5c3e54d8732b
+msgid "**How to interpret**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:255
+#: fd49dc3f8b464c94bf4fccda4c7a6c89
+msgid "**Check RMS error**: Should be < 0.01 eV for good fit"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:256
+#: 91d1a425c459403198f45558a1ebd670
+msgid "**Compare models**: V₀ and B₀ should be similar across models (±5%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:257
+#: 441ad16e270348659fab1ed6e89fe9be
+msgid "**Physical values**: Check B₀ against literature/expectations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:258
+#: c33236635e5d4146b7dd1c904c3a06ad
+msgid "**B₁ range**: Typically 3-5 for most materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:260
+#: f4bd622c46194fa6b0f7aef0ea6fc0e4
+msgid "eos_fit.png"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:262
+#: fae13ecc2b044e0386d1c786d3a962ad
+msgid "**Plot contents**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:263
+#: a53320220e0744d7a47e4ff57c587258
+msgid "Red circles: Calculated E-V data points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:264
+#: 0bbb024ad25a4b43b7ec485fc1e9f61a
+msgid "Solid lines: EOS fit curves for each model"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:265
+#: ffc6bc792b1645d69ee129f0278a9726
+msgid "Vertical line: Equilibrium volume (V₀)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:266
+#: 0246063485b14e5c9d8c665df8a94048
+msgid "Legend: Fit parameters for each model"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:268
+#: 4a104dae27a94a528eadf4fb18cbfa32
+msgid "**Visual quality checks**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:269
+#: 9d6b42ee609a4662bf2e6a1ccdcb66ed
+msgid "Data points should fall on fit curves"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:270
+#: 8109cf0c6c7548018fe9e3480125660d
+msgid "Minimum should be well-defined (parabolic shape)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:271
+#: c10d37f67ba54c99b7a332b8eb785fa9
+msgid "No outlier points far from fit"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:272
+#: 1e60d19b80dd480d8d3f9e9c16e19785
+msgid "Multiple models should overlap near minimum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:276
+#: ef4a8c83b5914a4fb79520664e26b6a1
+msgid "Choosing Workflow Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:278
+#: a961cad495b64ff3a2f8f769f5d0ed4d
+msgid "Strain Range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:280
+#: 9bfb1ae3b64842d982c84a676d3886ae
+msgid "**Guidelines**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 9da90d29b2a4400c9a6461b967cc6679
+msgid "Material Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 35e52f9023c945778f4ac6e7f00c9039
+msgid "Recommended Range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: be9ace2c37e34e52a7b833038818abe7
+msgid "Reason"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 9f6e662f1ce3414da6ce4fe37f59411e
+msgid "Metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: be727d3cd6e74c95885d9a3d9bcad52f
+msgid "±5% to ±6%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 9b5ddb5c62854ba082d96c6e708241a6
+msgid "Moderate compressibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 988d8ab194914ef1af3f2c9de84b3c74
+msgid "Semiconductors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 74d39dee90874e16bd6e266c9b46a62d
+msgid "±5% to ±7%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 05d1c9a1981c405ab03b2bac1bb5b217
+msgid "Standard range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 224bee1d1edf4c9e88a2b7118ba15188
+msgid "Ionic compounds"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 629d921fbd614934b6319012b1c1f3bf
+msgid "±6% to ±8%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 9e9c89130f4b4ab9b64613085703c2b9
+msgid "Higher compressibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 37e6b32267d148f9ade8fb8cc27eafec
+msgid "Hard materials (diamond, SiC)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: b0db4aab158c4831845bace0e4345eda
+msgid "±4% to ±5%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: d293f92beb744a44b89e0fedbcb43f5d
+msgid "Low compressibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 5369e665da864822a0c364eb15723a9c
+msgid "Soft materials (polymers)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 8962e9760ac3452b99e452075d635b16
+msgid "±8% to ±10%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: f3258eb1c8844e358eb7a1f785dd2f1d
+msgid "High compressibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:290
+#: f8b75f1a80bf407abf25714a1989f274
+msgid "**Extending the range**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:295
+#: 97723655d519438796c4df626cdd64d0
+msgid "**When to extend**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:296
+#: 2e4fa601820c4d92b11944437ffff84d
+msgid "Fit doesn't capture curvature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:297
+#: df3488cdb09c4a6d9a7186b351c639cb
+msgid "Studying high-pressure behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:298
+#: ce0c9a4be54340d6b41df85e44d97b42
+msgid "Unusual compressibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:300
+#: 5bef72394d4a417c8a4b8bba1afed819
+msgid "Number of Points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:302
+#: 75ad16c151504a0f8bce5b6ab0bb2b44
+msgid "**Recommendations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 1ac15a2217084a78a1e20b7282e33821
+msgid "Points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 77fcd300bc824abba6aff39f94166580
+msgid "Quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 65b1ee111fd94dc59764e917cf6c766e
+msgid "Use Case"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: f918bd3e56834fb99595d1e951c8435b
+msgid "Runtime Multiplier"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 80e74fa6b13f4c9190622b72d86bcb41
+msgid "5"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: f056f3a975874b85b3b10f3f4fd43ee3
+msgid "Minimal"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: e5c2e47ea5d84c638aa33c36b40e1ba5
+msgid "Testing only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 3fe9148aee6f4ae8b4d1444b51cf8ae6
+msgid "1× (fastest)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: a372008b1d9141078efacf80e26b7a28
+msgid "7"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: bee4732be05940528f0eec25f1c96a92
+msgid "Standard"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 1f5788e6527c4ccc80e6688fe7742449
+msgid "Most calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 0e3021ba367b444c9d573fc5bbb25604
+msgid "1.4×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 4ade7228e9b34692aabee91bbaa3ff58
+msgid "9"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: d2b2427947f8420db913e305a9570538
+msgid "Good"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: f69cfa127f7645f7ae7adaa510da5a4c
+msgid "Publication quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 92ad48c926834a1a86f150198b35ccb0
+msgid "1.8×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: c63d145082f2468cbe423ac604b06064
+msgid "11"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: ab8f044ebeeb4fbe92f9d008d000572a
+msgid "Excellent"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: daf404d32d98494cb2e5527b9cf9f45f
+msgid "High accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: f78bff5ab1a141ef943215fce46bc675
+msgid "2.2×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 5401959b3b7e4f58a68b99c6a15b2d30
+msgid "13+"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: ab047cc3f5ff44ca832b6cce3f1a5f17
+msgid "Excessive"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: f9d0b3a6910a4a1d864dcb13e9406060
+msgid "Usually unnecessary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md
+#: 273ffa9b4fc349e09b36be6181568c32
+msgid "2.6×+"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:312
+#: 4f5bc2b780f0482a9a6d748543c31263
+msgid "**Rule of thumb**: 7-9 points sufficient for most materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:314
+#: 5f3cbd9f7c254f0b88bb8fd42ca9a49e
+msgid "**More points needed when**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:315
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:476
+#: 41542db998204d538b9e05990fc436eb ec7d7ac3700a4aaebc99b2360ea9b83b
+msgid "Asymmetric E-V curve"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:316
+#: 63dfb1a1272c434e9bfa93fba9e7a2e8
+msgid "Phase transitions possible"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:317
+#: 7afab313b72b4f73be27d081910a3ecc
+msgid "High-accuracy required"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:318
+#: 3386e0bc73144c9884ee6b7b863c71ae
+msgid "Comparing multiple EOS models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:320
+#: b589b8fd52444119a4fdfb77f47d8944
+msgid "SIESTA Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:322
+#: c5b3e04d926541c588942836f05f4bf1
+msgid "**Minimum requirements**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:329
+#: d4e3dbddd8fc481ebb521ebfe3b069a0
+msgid "**For publication quality**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:337
+#: 36b691c433894444b722cf348203819e
+msgid ""
+"**Critical**: Use the SAME parameters you converged in "
+"tutorials/02-convergence!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:341
+#: f3b782a7a294424cbf0a59c6c29671ca
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:343
+#: 36e61fb55c994a41912faf3c195b7f53
+msgid "1. Always Converge First"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:345
+#: 1777d74dcb4c46b985412be6472e82aa
+msgid "**Before running EOS**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:355
+#: c6451370320e4b0db0da937f8b5da4ba
+msgid "**Then apply converged parameters to EOS workflow**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:357
+#: aef08c34ef854ddd9f153d07c4f73daf
+msgid "2. Start with Dry-Run"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:363
+#: dce1a1b79b714b43be51634ca1f47b76
+msgid "**Verify**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:364
+#: dddd0a8f4a714968a887b6c0e16726f9
+msgid "Number of structures generated (should be N+1)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:365
+#: fbf59e06712d49d5884cdf5c70701f37
+msgid "Volume range is reasonable"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:366
+#: 4d3aa60eae2648b08f4877cda8a138f1
+msgid "Structure files look correct"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:367
+#: 07f7f183e1c74c4aa4ccfd1a3f2b5ef4
+msgid "No errors in structure generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:369
+#: 447eb5142c8046e0847d4d41d59eca75
+msgid "3. Use Consistent Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:371
+#: c2d3be164d0e48b9b3c4d9c8e30ae9e5
+msgid "**DO**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:372
+#: 001a6193bf5c46a4a5941610c98f955d
+msgid "Use same k-points for all volumes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:373
+#: 1d68060c8887457c9940d114f43bbdd4
+msgid "Use same basis set for all calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:374
+#: 1680dafc3bb34139a9c499895ac39066
+msgid "Use same convergence criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:376
+#: 2792eabc2d2249d2bd4702cfca81e757
+msgid "**DON'T**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:377
+#: 6b71c7f944df4c0aa4e5f644f047ebcc
+msgid "Change parameters between volumes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:378
+#: 01cce917703c4dccbc7874154a22b8d7
+msgid "Mix different functionals (XC.functional)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:379
+#: 10d687d77a5d46a5ad00dd3e64a7eab7
+msgid "Use different pseudopotentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:381
+#: 26547f6497c4454daa1cfa2b37c5b9ed
+msgid "4. Check Fit Quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:383
+#: 59cbffb40a0741b3b39472a6cf7e73fc
+msgid "**Good fit indicators**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:384
+#: 5f90eb0354ee4ab0b6c13aa8100c212d
+msgid "RMS error < 0.01 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:385
+#: ff2b867f13c34146a01a5e1cb712895d
+msgid "All models give similar V₀ (within ±2%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:386
+#: 1cae469a07744b72834e5657cb06ec45
+msgid "All models give similar B₀ (within ±5%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:387
+#: 6fb6cf9ef9e041e39431a4f455599b5c
+msgid "B₁ in range 3-5 for most materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:388
+#: e714c9f7dc2746b7a2e32c20f533ce1e
+msgid "Smooth E-V curve with clear minimum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:390
+#: c5394c8e2f2c4ba7afd20e4eed1a45c2
+msgid "**Bad fit indicators**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:391
+#: d987af1c36684dce83178738ca102692
+msgid "RMS error > 0.1 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:392
+#: cf5bdbccca644032b463d8e064d1503d
+msgid "Models disagree significantly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:393
+#: a388cf9ab4634f7db910687b23314e80
+msgid "B₁ < 2 or B₁ > 7 (unusual)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:394
+#: 78f3f5e0e1da49cc9673b07d0c00c2c3
+msgid "E-V curve has noise or outliers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:396
+#: b5699d0030864f2285697a04ddc679d9
+msgid "5. Validate Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:398
+#: d157690e04eb42b180969f6f758ca2ee
+msgid "**Compare with literature**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:407
+#: 702683a5216c4370a3ffe477fce24c67
+msgid "**Typical bulk moduli**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:408
+#: 54f5810e5b6a47cd97e8d696e6c0d4a7
+msgid "Very hard: > 300 GPa (diamond, c-BN)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:409
+#: e08a6b68db514e39886c62a8a6edbd6a
+msgid "Hard: 100-300 GPa (transition metals, SiC)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:410
+#: c0c5e7775f904a698dd341422281ab25
+msgid "Moderate: 50-100 GPa (Si, Al, semiconductors)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:411
+#: b7f11f9b0b2e45ac98228ef50547361c
+msgid "Soft: < 50 GPa (alkali metals, ionic crystals)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:415
+#: 9caa319ac3064a0b9bbc990ee69555d8
+msgid "Common Issues and Solutions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:417
+#: ca025f7509c741eaadde24f5de9bec04
+msgid "Issue 1: \"Fit fails for some EOS models\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:419
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:443
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:469
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:493
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:520
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:543
+#: 191279d91b92484caade0349b55ecea5 2b571c6f15834bc78da45f21442fd6c8
+#: 488cc0f79c76402db64529bf46650419 7e7875b1f8f34504bbfd472019bacf92
+#: 830e6a2cff3a4ef0b6c829dbd3c3acf8 f23fcda3812d41959d6e55f740735272
+msgid "**Symptoms**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:420
+#: f5b50260512a4bed964ac0a614bdf8f4
+msgid "Some models show \"exception\" or \"failed\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:421
+#: ff428a6f40ba43e68e94dec9d4af55e4
+msgid "Only 1-2 models work"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:423
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:447
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:473
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:498
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:547
+#: 4a27530f6e8f46e9a891e524e251dd88 69b60559e65d4cca8fb42c14a156ea19
+#: 81518b40730e422da19c4d9d72298276 9ae1ff77c2354b02b7ea1330cf935d97
+#: cc1fd3336bba4f6387e364fe6fedc486
+msgid "**Causes**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:424
+#: 504c612a42d24e7cb759f5d94e953283
+msgid "Insufficient data points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:425
+#: 49a2aca7b1f04a469ccefddfed183434
+msgid "Poor quality data (not converged)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:426
+#: e70f614ad0904b9d82101177b6ae503c
+msgid "Inappropriate strain range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:428
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:452
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:478
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:503
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:529
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:552
+#: 020b644526894247b62f4b0cda3f14b3 079930028ab64501866dffde3e091d5c
+#: 56e8766b0c014ab297e7fac6453fe2bd a03b92e1d2c84a458c9e197cb7384bc8
+#: b080d42c83e0480bb61214cd714830cb c6dfa42ec7294b8b93149b48771fcd4e
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:439
+#: 517dd2bdbdff4a1391cd4db627b1ef07
+msgid "**Note**: It's normal for 1-2 models to fail. Use the models that work."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:441
+#: dca0ab048d404c768869a4946f661f91
+msgid "Issue 2: \"Unrealistic B₀ values\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:444
+#: ccc6a6cf336b448f9b5a24459482fd17
+msgid "B₀ >> or << literature values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:445
+#: 710480c0082d46d4be619bd705273508
+msgid "Negative B₀ (unphysical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:448
+#: 81a545f7a349456fbde772c37f8a2bf5
+msgid "Unconverged k-points or mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:449
+#: f2a6a5d983874523889b581e61efc6f9
+msgid "Too few data points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:450
+#: b17578bba97843e19c770260d0bac449
+msgid "Structural instability"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:467
+#: 57b1ce2cf9c94c35b677c584d2aa0d95
+msgid "Issue 3: \"Different EOS models give very different results\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:470
+#: 20519bd8b2f24f89b2b42ecfdc3e3ae6
+msgid "V₀ varies > 5% between models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:471
+#: 1867c11e1c174ef0b9b9c39d32d6b7f3
+msgid "B₀ varies > 10% between models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:474
+#: 1b61a382025a4dac9e1e60add2fc2b98
+msgid "Insufficient strain range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:475
+#: e3afcbeb518b4e01aaf3abc71f555ee1
+msgid "Poor fit quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:489
+#: 40e3779275f54925b902b59ab80a674e
+msgid ""
+"**When to worry**: If Birch-Murnaghan and Vinet differ significantly, "
+"something is wrong."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:491
+#: 135cb8cba4fe4c8fab7fcde1b4bd1fa6
+msgid "Issue 4: \"E-V curve is not smooth\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:494
+#: 7f13319761a24fb294e232427b23e6ae
+msgid "Jagged E-V data points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:495
+#: 1c396a816fca4f648167164ad0310be2
+msgid "Points don't fall on smooth curve"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:496
+#: 0e131312460442fe97537b6bd3faedc3
+msgid "Large RMS error"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:499
+#: 8d58d59cc49f4fd3855fc7d089abbf26
+msgid "Unconverged SCF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:500
+#: ddc36ae54a9a434890bbca94f3b6fa13
+msgid "Inconsistent k-point sampling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:501
+#: bef3d54eda0a41718230eb8407c56172
+msgid "Poor numerical precision"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:518
+#: 71087d60ac1a419ca1920900fa5962da
+msgid "Issue 5: \"Workflow takes too long\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:521
+#: ae9c8c4addc04df4b25cac705fcbf925
+msgid "EOS calculation runs for hours"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:523
+#: 6cb420a9edea497196afae22f086c54d
+msgid "**Expected runtimes** (7 points, Si, 4-core):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:524
+#: 499e4ad47e8c4699b18b96d3f1afc4e8
+msgid "Basic (SZ, 200 Ry, 3×3×3): ~10 min"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:525
+#: 5f8f89d0a89f4b92a57e4f5ccffd6fd4
+msgid "Standard (DZP, 300 Ry, 4×4×4): ~30 min"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:526
+#: a9a7286b9a0e46c184a43ee156223583
+msgid "Tight (DZP, 350 Ry, 6×6×6): ~60 min"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:527
+#: bd78f5453d5e4982b9b54f0e1d4554c1
+msgid "Very tight (TZP, 400 Ry, 8×8×8): ~120 min"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:541
+#: 77a96284ebf54b1fb28955f7c304c2e8
+msgid "Issue 6: \"No output files generated\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:544
+#: 840a9fe8ff2e47498b39da14fd8039ce
+msgid "No eos_summary.txt or eos_fit.png"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:545
+#: 26410d11f41348ac875ee49d212447e8
+msgid "Workflow completes but no analysis files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:548
+#: f8fe55e9f5ba471b9d6fd75dc722ffb5
+msgid "matplotlib not installed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:549
+#: f7b3473c713545968ba9bd2a9e9300c5
+msgid "Workflow failed before postprocessing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:550
+#: 0e8799afb92249a89a72b9a4d8b14874
+msgid "File write permissions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:566
+#: 99c07cc72de141b5be3694926d28dd86
+msgid "Understanding Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:568
+#: 27153990511c45b9a70ed7d8161617e3
+msgid "Bulk Modulus (B₀)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:570
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:604
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:617
+#: 571f4f249dd44737a4e37a1fa1696c87 65c0de058a454dfb9c396c1ba1f70c3b
+#: f4713aa9f81a42a0a49f14dad3b0be22
+msgid "**Physical meaning**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:571
+#: 134c589144af49499ed98e361bb2934d
+msgid "Resistance to uniform compression"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:572
+#: d7114aa02b514a928b55361dfdc4f050
+msgid "Higher B₀ = harder to compress"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:573
+#: d8dbeb1193fd47b58aef66b6ceb368f0
+msgid "Units: GPa (gigapascals)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:575
+#: 50435683473b4cc49fcce4fa72b9c0a9
+msgid "**Formula**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:580
+#: fb7801fbebe34225b892b69c93a3e5aa
+msgid "**Typical values**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:596
+#: 07ee7f76c3754ef58608afd5d7effecd
+msgid "**Using B₀**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:597
+#: 6688147e62484a279e930b36f6c437d5
+msgid "Mechanical stability indicator"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:598
+#: 564b0c3604b5420783318aa9b7c29aa3
+msgid "Compare with experimental values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:599
+#: 3e9b9920011d49438513673cc750be56
+msgid "Predict behavior under pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:600
+#: 5849271d35dc4516a6e4da751b98aefa
+msgid "Screen hard materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:602
+#: 11f86829ced94596ad4d2a19a5761b74
+msgid "Equilibrium Volume (V₀)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:605
+#: 3d1d6054bd234052be885e603cc7d70c
+msgid "Volume at zero external pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:606
+#: 1aac1290ebae47f1a9906be9959c1607
+msgid "Corresponds to energy minimum"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:607
+#: cfb952f7eeab4f2f9d88c58aa1dba165
+msgid "Temperature-dependent (EOS at 0 K)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:609
+#: a23b342ebbc84395acf5c48fa64c697c
+msgid "**Using V₀**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:610
+#: 28f13ae3e029466e88569e9e84cb7ec1
+msgid "Reference for thermal expansion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:611
+#: b68afa310849459b98cddd42b5014d90
+msgid "Compare with experiment (extrapolate to 0 K)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:612
+#: a09c3e54dd2a46559ff8b75b7d4ca7a8
+msgid "Input for phonon calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:613
+#: 5a021ee0eb65493f92b2b15d2c2b393a
+msgid "Basis for defect calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:615
+#: 92109701dd59483c928df3a7ae405e74
+msgid "Pressure Derivative (B₁)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:621
+#: 24e7e12e435146f6a032ca2fabe314cb
+msgid "How bulk modulus changes with pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:622
+#: ffc69f11d1264fef85da8c643de286f8
+msgid "Dimensionless"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:623
+#: dc804f608dfb47179815401ad86d72d7
+msgid "Typically 3-5 for most materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:625
+#: c21af59eebe54fb19bd0a4690844de6d
+msgid "**Significance**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:626
+#: 916043c2fda747e5af1ec010bc7804ab
+msgid "B₁ ~ 4: \"Normal\" material"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:627
+#: 22689b3dd2664f718f6b5178118c93c9
+msgid "B₁ < 3: Unusual softening under pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:628
+#: 643d67a6b6ca477a8cc71420e13ea5c9
+msgid "B₁ > 6: Unusual hardening under pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:632
+#: 776bfe5d23fe4c1a8b4f752c84269842
+msgid "Advanced Customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:634
+#: e5e3fc01b9a741c8b495ba4f820839b0
+msgid "Custom Initial Relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:656
+#: 1b544eb4cc8c4a4492f76079698200fe
+msgid "Postprocessing Only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:658
+#: 969c769c16b34e93a39a361b3053a741
+msgid "If you already have E-V data:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:680
+#: 763b686f8b0044b6ba7d0397f41848bc
+msgid "Comparing Multiple Materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:703
+#: 211a12edba784ccaafbaf397f0981ddf
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:705
+#: f430d6489b93403aa012d007da27828a
+msgid "After Completing This Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:707
+#: cdb9446945364bd5af2f29dd0b0ee30a
+msgid "**Validate your setup**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:708
+#: 21f0d9000a7d45d2992a76ac725ed851
+msgid "Compare Si results with literature (B₀ ~ 98 GPa)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:709
+#: cc0eeb43079b4547a9e7d47b22f7fc65
+msgid "Check fit quality (RMS < 0.01 eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:711
+#: 1373000d58434009834bfd302c64bc01
+msgid "**Apply to your material**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:712
+#: 503c972ca64c4691a512e025b34bd5f6
+msgid "Use converged parameters from tutorials/02-convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:713
+#: 3cb07191cbc6431ca073fc511600a8a7
+msgid "Run basic example first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:714
+#: 80e84aae44164ddd97958c73d29fca10
+msgid "Validate against literature if available"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:716
+#: 999f2338ff574bdc95ff177344d15fd3
+msgid "**Use V₀ for further calculations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:717
+#: 56c4760b0b2748a5aa6d5f3e8119f4ab
+msgid "Phonon calculations (tutorials/05-vibrational-properties/01-phonons/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:718
+#: 9361dc18263849e5bd049c46ff8464ce
+msgid "Surface studies (tutorials/06-surfaces-and-adsorption/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:719
+#: 4be981131739467fb47f45cb67ed9b73
+msgid "Defect calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:721
+#: 2b906188459c4da88e9d3f9859c9239e
+msgid "**Advanced EOS workflows**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:722
+#: 5e99f6f08ba24f46ab90da1a22aee41a
+msgid ""
+"EOS with basis convergence (tutorials/03-advanced-workflows/02-eos-basis-"
+"convergence/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:723
+#: 6e76cf462d7747d9820eb78a12b214ef
+msgid ""
+"Temperature-dependent properties (tutorials/05-vibrational-"
+"properties/02-qha/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:727
+#: 88e64b8826f947efb510670e319b7fe7
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:729
+#: ef6058d778814b38bf60eab60cd152f4
+msgid "Foundational Papers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:731
+#: e0de98b5e98c46228854a9a41bfb59bd
+msgid "**Birch-Murnaghan EOS**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:732
+#: bda379d3a2d54f4baf623bf71e0f2f7d
+msgid ""
+"Birch, F. (1947). \"Finite Elastic Strain of Cubic Crystals\". *Physical "
+"Review*, 71(11), 809–824."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:734
+#: 8c11c3df61ba4580a143a43771df0235
+msgid "**Murnaghan EOS**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:735
+#: 7ab1274814ff41349ad165285dbafedc
+msgid ""
+"Murnaghan, F. D. (1944). \"The Compressibility of Media under Extreme "
+"Pressures\". *PNAS*, 30(9), 244–247."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:737
+#: 11afff6955e54a50be45d0b8e5dc3cf7
+msgid "**Vinet EOS**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:738
+#: 2b3f709cd4cb497d9803f2abeb7d70be
+msgid ""
+"Vinet, P., et al. (1989). \"A universal equation of state for solids\". "
+"*J. Phys.: Condens. Matter*, 1, 1941."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:740
+#: eebae3a0b3b848d9a432f4d3bdbe11d2
+msgid "Online Resources"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:742
+#: 5f472f49894c446c8a78aee81a4db4c9
+#, python-format
+msgid ""
+"[Wikipedia: Birch–Murnaghan equation of "
+"state](https://en.wikipedia.org/wiki/Birch%E2%80%93Murnaghan_equation_of_state)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:743
+#: b7f937a48be2447b993297948c960d4d
+msgid ""
+"[Wikipedia: Murnaghan equation of "
+"state](https://en.wikipedia.org/wiki/Murnaghan_equation_of_state)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:744
+#: dfb4bf43ed2f41f0b788d0ec96b96906
+msgid "[Materials Project EOS Documentation](https://docs.materialsproject.org/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:748
+#: b6d5017b7ff0444b920e38c24dc7dc89
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:750
+#: fdc02f90abf74d6d9bc7e078f4b26327
+msgid "**What we covered**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:751
+#: 10db51e2feaa4cd6b06400324cb1bcb3
+msgid "✅ EOS theory and physical meaning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:752
+#: 9f3b1176cfb3488fa3851e6129dd0d14
+msgid "✅ Running multi-volume workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:753
+#: d9aa8d77f9a345e9b0ad8716c97c690c
+msgid "✅ Fitting E-V data to EOS models"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:754
+#: 400f997465b342cc961279a1bcb41778
+msgid "✅ Extracting bulk modulus and equilibrium volume"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:755
+#: 53197372c817444696d07e7ab202e72f
+msgid "✅ Choosing appropriate parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:756
+#: ef01e96179f04685acdde712939aa89a
+msgid "✅ Validating and interpreting results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:757
+#: 3855dd40e38b48729f36ed2527fa91bf
+msgid "✅ Troubleshooting common issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:759
+#: 6485f0e26b5a40c8a6289644aed21a50
+msgid "**Key takeaways**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:760
+#: f3605f17bb0d4a62a6580ddaf179a60b
+msgid "Always converge parameters first (tutorials/02-convergence)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:761
+#: 965ca9793ee34fb2b6e6c76b1575548c
+#, python-format
+msgid "7-9 points with ±5-6% strain is standard"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:762
+#: 80946c0743a04d3e8335e7e9546af2e3
+msgid "Compare multiple EOS models for reliability"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:763
+#: 347bbe67659b4d748ea37e63a92f79a7
+msgid "Validate B₀ against literature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:764
+#: f98f9487d8a74ce5b5d173fd1ea1838b
+msgid "Use dry-run mode to preview workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:766
+#: de099ef6a65041fc9bb969ccea32d214
+msgid ""
+"**Ready for**: Production EOS calculations, basis-dependent EOS studies "
+"(next tutorial), thermal property calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README-SiestaEosFlowMaker.md:770
+#: 90dc2192d9e94ba6abf28e8219660fec
+msgid "*Tutorial created: 2024-10-22* *Last updated: 2024-10-22*"
+msgstr ""
+

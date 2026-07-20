@@ -87,8 +87,36 @@ def generate_elastic_deformations(
     strains = [strain for strain in strains if (abs(strain) > 1e-10).any()]
 
     if np.linalg.matrix_rank([strain.voigt for strain in strains]) < 6:
-        # TODO: check for sufficiency of input for nth order
-        raise ValueError("strain list is insufficient to fit an elastic tensor")
+        raise ValueError(
+            "strain list is insufficient to fit an elastic tensor: the strains "
+            "do not span all six independent Voigt directions (matrix rank < 6). "
+            "Provide strain states covering every Voigt component."
+        )
+
+    # An order-n finite-difference fit evaluates the (n-1)-th derivative of the
+    # stress with respect to the strain magnitude, which requires at least
+    # ``order`` distinct non-zero magnitudes per strain state.
+    underdetermined = [
+        (state, n_mags)
+        for state, magnitudes in zip(strain_states, strain_magnitudes, strict=True)
+        if (n_mags := len({m for m in magnitudes if abs(m) > 1e-10})) < order
+    ]
+    if underdetermined:
+        state, n_mags = underdetermined[0]
+        raise ValueError(
+            f"strain list is insufficient to fit an order-{order} elastic "
+            f"tensor: every strain state needs at least {order} distinct "
+            f"non-zero magnitudes, but strain state {state} has only "
+            f"{n_mags} ({len(underdetermined)} state(s) affected)."
+        )
+
+    if order > 2 and len(strain_states) < 14:
+        logger.warning(
+            f"Only {len(strain_states)} strain states provided for an "
+            f"order-{order} fit; the generic 3rd-order expansion requires 14. "
+            "This is only sufficient for high-symmetry structures where the "
+            "missing components are related by symmetry."
+        )
 
     if sym_reduce:
         strain_mapping = symmetry_reduce(strains, structure, symprec=symprec)

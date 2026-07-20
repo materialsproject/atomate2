@@ -1,0 +1,800 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:1
+#: 281a2aa2b6974c9b95c2af71a90511f8
+msgid "Tutorial: Defect Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:3
+#: 55b9f2d279774538bcfe27197c2b351a
+msgid ""
+"**Category**: 02-workflows/08-defects **Difficulty**: Advanced **Time**: "
+"Varies (dry-run ~5 min, full calculations ~hours to days)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:9
+#: 34aed2422fc64b2f9ec9909d4e63fd21
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:11
+#: 9c47d7b9b0b94537be403cc9fc8c6ee8
+msgid ""
+"This tutorial category demonstrates defect formation energy calculations "
+"using SIESTA with pymatgen-analysis-defects integration. Learn how to "
+"compute formation energies for vacancies, substitutions, and "
+"interstitials with proper finite-size corrections."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:13
+#: 845aa7f504e24eb99ffa1806faff6514
+msgid "**What Defect Calculations Tell You**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:14
+#: 04f18d4013fa414e8c1a72e34409991c
+msgid "**Formation energy (Ef)**: Energy cost to create a defect (eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:15
+#: 7bc5729477564f9599e9e910d9e0152d
+msgid "**Charge transition levels**: Defect ionization energies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:16
+#: 57186bb05c9c435da2d5ed7416ce32c0
+msgid "**Defect concentrations**: Thermodynamic equilibrium populations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:17
+#: 2caec1aa21fd4091b5315a74f8b96ead
+msgid "**Doping limits**: Maximum achievable carrier concentrations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:18
+#: ab7b1796cc1648488f2ee07fd667e6cf
+msgid "**Compensation mechanisms**: Competing defect reactions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:22
+#: 8ef2e6c74df2488c8aeb289a7d589f29
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:24
+#: d6e7321c35fb4a7b9dfddc5a8e956af8
+msgid "Using `DefectFlowMaker` for automated defect workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:25
+#: 588b8ec244934f5d9e49b17f94d9faf2
+msgid "Vacancy, substitution, and interstitial calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:26
+#: 5b6cb77d56124120bd7df1df287e7049
+msgid "Charged defect calculations with proper corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:27
+#: 25f67e11bbe948bf9b0b5ade69c9accd
+msgid "Finite-size corrections (FNV, Freysoldt, Kumagai)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:28
+#: 00048a7b3f6b46d6b77b008a7ad3e5d6
+msgid "Chemical potential handling for non-stoichiometric conditions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:29
+#: 481f150a53ef40c08c57a5e8837e8017
+msgid "Defect concentration vs temperature/Fermi level"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:33
+#: 3fc365d0553e4c9cb51a61118eebb7b8
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:35
+#: ce3846a5a0cb417c9674a6b71fadb420
+msgid ""
+"**Required**: [01-basics/01-RelaxMaker](../../01-basics/01-RelaxMaker/) "
+"completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:36
+#: a5dea0d06da4477aaeec92f758590458
+msgid "**Required**: Understanding of defect chemistry and thermodynamics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:37
+#: b5b06c146aae4ffe8fc03940ea56c30e
+msgid ""
+"**Recommended**: [01-convergence](../01-convergence/) - Converged "
+"parameters essential!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:38
+#: 3e33ecdfd45c457fb75f1e99029c17a6
+msgid "**Recommended**: Familiarity with pymatgen-analysis-defects package"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:39
+#: 7081c7789bd346a8b52611fe12d7f798
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:43
+#: bf6de49ac1824e018b5c037668f7656b
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:45
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:259
+#: 385a5221619242adbd498d506db524ee 3fc739a66b814615927c73b25bc863ee
+msgid "Defect Formation Energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:47
+#: a9d9df6bcba4429881fd9ab7a3341fd4
+msgid "The formation energy of defect D in charge state q at Fermi level EF:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:49
+#: de42c2b0e08f406a848519a5de71dfb1
+#, python-brace-format
+msgid ""
+"$ E_f[D^q] = E_{tot}[D^q] - E_{host} - \\sum_i n_i \\mu_i + q(E_F + "
+"E_VBM) + E_{corr} $"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:53
+#: f5c5ec99054a42f892d1fff469bf1684
+msgid "Where:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:54
+#: 68ffcebd70964a56a10083cce8617bf6
+msgid "**E_tot[D^q]**: Total energy of defective supercell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:55
+#: 59386e7c7f0b4afdabdea71d8472bea3
+msgid "**E_host**: Total energy of pristine supercell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:56
+#: f4b0cee8bfb245b08372051609e28d72
+msgid "**n_i**: Number of atoms added (positive) or removed (negative)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:57
+#: a3b691365f3c49b1b5da8f15f7fd186f
+msgid "**μ_i**: Chemical potential of species i"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:58
+#: 96f870d6ecfc4317866f669907080519
+msgid "**E_F**: Fermi level (0 = VBM, E_gap = CBM)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:59
+#: e841b898ebaf4ad2ab4edf3aa80c333e
+msgid "**E_VBM**: Valence band maximum energy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:60
+#: 585aecc811ee4de09816f29e44a63d45
+msgid "**E_corr**: Finite-size correction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:62
+#: 9b34a2d23bda4c5f9c8a70dc1ac23c0a
+msgid "Defect Types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:64
+#: 0a5ab6a5b3eb47c296e6e79c58fb6597
+msgid "**Vacancy**: Remove atom from lattice site"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:65
+#: 050d21323667456984df5115608eee51
+msgid "Example: V_O in MgO (oxygen vacancy)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:66
+#: b71f7abcfd19468d8c26e98027bc1dbb
+msgid "Formation reaction: O_O → V_O + ½O2(g)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:68
+#: 1f4a35aaa1dd45619fdd8b583fb5d7ae
+msgid "**Substitution**: Replace host atom with dopant"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:69
+#: e075b7ae48a94ada9d1e65a0bbfd2e1f
+msgid "Example: Al_Mg in MgO (Al on Mg site)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:70
+#: 58d60a86c12044499e868c28b04988f7
+msgid "Formation reaction: Mg_Mg + Al → Al_Mg + Mg"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:72
+#: ea1d87db90474cb9a828771ed5de8099
+msgid "**Interstitial**: Add atom to empty site"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:73
+#: 724f4ea10692415ca0db6d160ce905ef
+msgid "Example: Li_i in MgO (interstitial Li)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:74
+#: 284e153951574060ac17b193726fac80
+msgid "Formation reaction: Li → Li_i"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:76
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:207
+#: 2c668771d4fb4a20b89759f44f2ac669 d7a0f93f5b664ec4ac8b74e541cfa2bd
+msgid "Charge States"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:78
+#: 986ac5cf96e747dc99cc11d99cb3151d
+msgid "Defects can be neutral or charged:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:79
+#: 541db62c5f8e48e499a4fc011e3a56b9
+msgid "**Vacancy**: Often positive (missing electrons)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:80
+#: 2d6ead9c89ad43ceb7b4d653a34b004e
+msgid "V_O in oxides: 0, +1, +2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:81
+#: 1a70594b95b44e86beac6d097f0926c1
+msgid "**Substitutional dopants**: Determined by valence difference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:82
+#: 0e69ec6bdb664cb2840a69bd74f8c8af
+msgid "Al_Mg in MgO: -1 (Al³⁺ on Mg²⁺ site)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:83
+#: 1a6117e06ec841f49dedb006bf77e890
+msgid "**Interstitials**: Often positive"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:84
+#: e6de2697ff1245d4ad548f9184b689f5
+msgid "Li_i: 0, +1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:86
+#: 6dc4014e785243dea40c822bf6dcec5c
+msgid "Supercell Size Requirements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:88
+#: 7dceea01d29a457781fb1e9a272e8c5c
+msgid "**Minimum size**: ~10 Å separation between periodic defect images"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:89
+#: 36eb7d35c3d04237b3533cc7e06fab56
+msgid "Typical: 3×3×3 to 5×5×5 supercells"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:90
+#: 6f73e15e9d9a42ae9a8addfb6ed488d3
+msgid "Larger for charged defects (need to test convergence)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:92
+#: e1a1f97946434cacbbc1fc496ffff194
+msgid "**Why**: Avoid spurious defect-defect interactions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:94
+#: f4348f21e70e4a128e86629ef3610f7a
+msgid "Finite-Size Corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:96
+#: 30422e5b51e34e4ab7dc90682ce64aaa
+msgid "**Problem**: Periodic boundary conditions → artificial interactions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:98
+#: 2cf786bfd3e348bd8fc07dc12278feaf
+msgid "**Correction schemes**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:99
+#: 2355435c2e3147208af536716695b554
+msgid ""
+"**FNV** (Freysoldt-Neugebauer-Van de Walle): Electrostatic + potential "
+"alignment"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:100
+#: 6fb86f40ca7047b1b5061c49c9195d49
+msgid "**Freysoldt**: Similar, different implementation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:101
+#: 20f96f2a2afe48188b3d18be40e2333e
+msgid "**Kumagai**: More sophisticated for anisotropic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:103
+#: 5a39f6d07ca4497fb3724e565f8c852e
+msgid "**When needed**: Essential for charged defects, minor for neutral"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:107
+#: 6d2d1ccc47b44228889d4ae89d20b5f6
+msgid "Tutorial Subdirectories"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:109
+#: 336d8484f41245b58b18d891afc9d8ec
+msgid "[01-DefectFlowMaker](01-DefectFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:110
+#: 8ae3c338594c44ee93b061b517a07109
+msgid "**Description**: Complete automated defect workflow **Tutorial Files**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:112
+#: 6c161bf691234f729482e55f019acb51
+msgid "`DefectFlowMaker_01_basic_vacancy.py` - Simple vacancy (neutral)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:113
+#: db4e5eca88df4e28b77684c8f02a0b2c
+msgid "`DefectFlowMaker_02_charged_vacancy.py` - Charged vacancy with corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:114
+#: 034aafe5ab83447aa7292ad220007caf
+msgid "`DefectFlowMaker_03_all_vacancies.py` - All vacancy types in compound"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:115
+#: bca7c57a6ab741d58656118f4a2c5fc7
+msgid "`DefectFlowMaker_04_substitution_dopant.py` - Substitutional doping"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:116
+#: 37b546ee34094ce6b0b5489624af2239
+msgid "`DefectFlowMaker_05_interstitial.py` - Interstitial defects"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:117
+#: d45f7bda47904cc3a7736364324bbf08
+msgid "`CorrectionComparisonFlowMaker.py` - Compare correction schemes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:119
+#: 53c6712a2e394083b3ef5f0cde5bb075
+msgid "**Features**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:120
+#: 045c9ddfba9d47efb99017e54bf1b8b4
+msgid "Automatic defect generation from structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:121
+#: 1935f5e697f24c3387d4d5a9ab8e31dc
+msgid "Bulk reference calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:122
+#: 50cb7fed1c77483d8376d578b16bc139
+msgid "Defect supercell relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:123
+#: ebd1e91d4e124aa8b38bfa02c5c082c0
+msgid "Finite-size corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:124
+#: 053bacf4200f4d44898a331ec1e1ba74
+msgid "Formation energy calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:125
+#: 3ab7832baff845409dec2c79b745fdd9
+msgid "Charge transition level analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:129
+#: e56e9dd7ea2c4c86ab4d9c0ebac96d33
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:131
+#: 42ab8508c27f4f4489ae98874c068751
+msgid "Example 1: Simple Vacancy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:154
+#: 6bbc1e47baa849b493809fda308a6a06
+msgid "Example 2: Charged Vacancy with Corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:169
+#: 7a1acfd9c9b147979441a1bfd3e51f6a
+msgid "Example 3: Substitutional Dopant"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:186
+#: d666c548f8d04979a0a5ddc63a290ff9
+msgid "Example 4: All Vacancies in Compound"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:205
+#: 6f68a585aaaa4b1085aa17d9f1540efb
+msgid "Configuration Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:223
+#: 7319647afbed4c77b93e4ddbdbdc2af0
+msgid "Supercell Size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:239
+#: a0b5fecf233044caa30857d73e8a0b0c
+msgid "Correction Schemes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:257
+#: 19b73341a5ef4bbd810159f39cc117d0
+msgid "Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:270
+#: 52acdb723c1a4652963090fa6a77fc9d
+msgid "Analyzing Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:295
+#: ae11cb98ed844252b763b9a7689e1dee
+msgid "Charge Transition Levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:311
+#: 4fc158dc673e49a98927e26e03690478
+msgid "**Interpretation**: Fermi level where defect changes charge state"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:315
+#: a7c4ad399f1b4aa4ae1392f4b857a312
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:317
+#: 6ab22b8333a44b4c8666eaddc9d07ba2
+msgid ""
+"✅ **Large supercells**: ≥3×3×3 for neutral, ≥4×4×4 for charged defects ✅ "
+"**Converged parameters**: Use converged k-points, basis, cutoff ✅ **Test "
+"supercell convergence**: Compare 3×3×3 vs 4×4×4 vs 5×5×5 ✅ **Use "
+"corrections for charged defects**: freysoldt or kumagai scheme ✅ **Tight "
+"relaxation**: MD.MaxForceTol < 0.02 eV/Å for defect supercells ✅ **Same "
+"parameters**: Bulk and defect calculations must use identical settings ✅ "
+"**Chemical potentials**: Consider O-rich vs O-poor limits"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:325
+#: 6b54713b02fb4195bf47a6d8ab63b690
+msgid ""
+"❌ **Don't use small supercells**: < 2×2×2 gives spurious interactions ❌ "
+"**Don't mix parameters**: Bulk and defect must match exactly ❌ **Don't "
+"skip corrections**: Essential for charged defects ❌ **Don't ignore band "
+"gap errors**: GGA underestimates gaps → affects Ef ❌ **Don't forget "
+"chemical potential limits**: μ must respect stability"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:333
+#: 23b5b84740a84d9f889e71cf98351abc
+msgid "Chemical Potentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:335
+#: f717674037cd4986904acbacf63ef130
+msgid "Formation energy depends on chemical environment:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:337
+#: f820f947f51b42278df515fc9781a1a3
+msgid "**Example: Oxygen vacancy in MgO**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:339
+#: 5baa1c0c8c4b4b539f19d42b5b987b9e
+msgid "O-rich limit (μ_O = ½E[O2]):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:345
+#: 52e39edefef64cb198f7513e1cb4cab4
+msgid "O-poor limit (μ_O determined by stability):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:352
+#: a315e5edadf8465aa172fffd269267c7
+msgid "**Range**: μ_O(poor) ≤ μ_O ≤ μ_O(rich)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:356
+#: 38bb787df46947d3909e69dd2267a6b5
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:358
+#: 17bebe9f48fb4eb3b9293c363a940bc4
+msgid "**Problem**: Formation energies change significantly with supercell size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:360
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:370
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:380
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:390
+#: 1d49b7d7c315433f9f83d9b78c838bf7 63c1dc50e8a64655a562eeceddb92a65
+#: b18df27ef89440778f77c91447ea564c d0e8d87bf36c4f04aa0f4f5e2c477b4a
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:361
+#: 8e13e594bffd4ae2858f0cb950670e83
+msgid "Increase supercell: 3×3×3 → 4×4×4 → 5×5×5"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:362
+#: cc020aaafaff458099bfdf6d63357950
+msgid "Check defect-defect separation > 10 Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:363
+#: db03ad9ed82d4227b78c76235deac387
+msgid "Enable finite-size corrections for charged defects"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:364
+#: c6a215e0ec194d69b79889e9f529b01b
+msgid "Test correction scheme convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:368
+#: 37fc1da576a44a1a867d5450ad6df195
+msgid "**Problem**: Charged defect energies unrealistic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:371
+#: 159f63144cbf4a03b1c14c3be42aa84e
+msgid "**Enable corrections**: `correction_scheme=\"freysoldt\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:372
+#: 3d6115a6135c4681b6c96cc4c7952ed2
+msgid "Check band gap: GGA underestimates → affects charge states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:373
+#: 739de28448524cf9aaca953794cacb2f
+msgid "Verify VBM/CBM alignment between bulk and defect"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:374
+#: f04d72cd0d694d939eed3a4e1cbff9a9
+msgid "Use scissor correction for band gap (advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:378
+#: fdb1e37c8d2f48719fadabbbf8f71fa7
+msgid "**Problem**: Different correction schemes give different results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:381
+#: 14fd54832281454195b30fdb2cc8f6f8
+msgid "Normal variation: ~0.1-0.3 eV difference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:382
+#: 8368502be313412ea1b07d520c6aa7c3
+msgid "Large difference (> 0.5 eV) → supercell too small"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:383
+#: 311dfb4b26e042f8bf5e449aca91f0b1
+msgid "Test all three schemes, report range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:384
+#: 68bfc07a70c841479624cbf0d945be48
+msgid "Kumagai most robust for anisotropic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:388
+#: b7045ac87d944870902c07873be85a17
+msgid "**Problem**: Defect relaxation doesn't converge"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:391
+#: be6735b0595148c1a31b525c26a6a7f4
+msgid "Loosen tolerance: `MD.MaxForceTol=\"0.05 eV/Ang\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:392
+#: c5413f81bcbb4ef39f759da04a7e466b
+msgid "Enable custodian: Automatic error recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:393
+#: 1f8dbdd3ee9a4a9084cfd5ec0ad92d8f
+msgid "Check for structural reconstruction (may need different initial guess)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:394
+#: bf21b3d72d0148ffb54d995f3fb09a73
+msgid "Increase MD.NumCGSteps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:398
+#: 719415fa3b5f4bcb9b59aeb459dd9d44
+msgid "Defect Concentrations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:400
+#: 48937ca0281d4a5abd65fb3d3ec8c722
+msgid "From formation energies, compute equilibrium concentrations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:402
+#: 28ddfa02aed04ea19e0f1cf6e1eacbb8
+msgid "**Dilute limit**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:404
+#: 2b9f7e24ae524ba8822e5d7fa276904c
+msgid "$ c_D = N_{\\text{sites}} \\exp\\left(-\\frac{E_f}{k_B T}\\right) $"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:420
+#: 6a884af7496846909c7f039541b2c8a6
+msgid "**Example**: Ef = 2.5 eV at 1000 K → c ≈ 10⁻⁶ (1 ppm)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:424
+#: 4a7dcdb9708c4e3096e893a7e9485c72
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:426
+#: 59ee73143c2b437e8162798876f1f6b6
+msgid "After completing defect calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:428
+#: 4f875a52b29746519f87446f36f2ed82
+msgid "**Compare with experiments**: Literature defect formation energies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:429
+#: 39ca17a5de4e43eaacdc99fefe21e0f9
+msgid "**Doping study**: Systematic substitutional dopants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:430
+#: 41902f21e8074c06af006077eaf91375
+msgid ""
+"**Defect migration**: [05-barriers](../05-barriers/) - NEB for vacancy "
+"hopping"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:431
+#: 914345448f754940a411e7fd5faefb76
+msgid ""
+"**Optical transitions**: Defect-related absorption/emission (future "
+"tutorials)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:435
+#: ef0755b8d58748e3b54504d57e89e7d0
+msgid "Related Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:437
+#: d1612c5c79614a9e93b37a82ec595fcb
+msgid "[05-barriers](../05-barriers/) - Defect migration barriers (NEB)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:438
+#: 1a0337e23e174a8f9f7ed51c1f836e4a
+msgid "[01-convergence](../01-convergence/) - Parameter convergence (critical!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:439
+#: a56ed3d84b7849f58f93d809196efb33
+msgid ""
+"[03-advanced-features/05-charged-calculations](../../03-advanced-"
+"features/05-charged-calculations/) - Charged species"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:443
+#: ca3d1fad7b8d41158929508eb951f75c
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:445
+#: a416d5d02adc4078ab309667ec712ffc
+msgid ""
+"**Defect formation energies**: Freysoldt et al., Rev. Mod. Phys. 86, 253 "
+"(2014)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:446
+#: 52ca257ee9f3499fbdc3beed171b71c9
+msgid ""
+"**Finite-size corrections**: Freysoldt et al., Phys. Rev. Lett. 102, "
+"016402 (2009)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:447
+#: 57c50aa04b5c484caa9508cf9a261bd9
+msgid "**Kumagai correction**: Kumagai & Oba, Phys. Rev. B 89, 195205 (2014)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:448
+#: ac997ae6eef145c89d3d520f424e9aca
+msgid ""
+"**Charge transition levels**: Lany & Zunger, Phys. Rev. B 78, 235104 "
+"(2008)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:449
+#: b4041a484ede43a6a7074cd116728ed5
+msgid ""
+"**pymatgen-analysis-defects**: https://github.com/materialsproject"
+"/pymatgen-analysis-defects"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/08-defects/README.md:453
+#: c2e751c84b33438b80e55efb0e3b8231
+msgid ""
+"*Back to [02-workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+

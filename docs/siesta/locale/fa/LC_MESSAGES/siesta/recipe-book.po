@@ -1,0 +1,1302 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:3
+#: cc2a6017dfcd4abe81fc4cddffd799cd
+msgid "Recipe Book: One-Line Workflows"
+msgstr "کتاب دستورالعمل: جریان‌های کار تک‌خطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:5
+#: d585497ff5d04eb28a64ab75e03195f2
+msgid ""
+"The **Recipe Book** is the fastest and easiest way to set up "
+"atomate2siesta workflows. It provides high-level \"recipes\" that "
+"transform complex multi-step calculations into simple one-liners."
+msgstr ""
+"**کتاب دستورالعمل** سریع‌ترین و ساده‌ترین راه برای راه‌اندازی جریان‌های "
+"کار atomate2siesta است. این کتاب «دستورالعمل‌های» سطح بالایی ارائه می‌دهد"
+" که محاسبات پیچیده چند مرحله‌ای را به تک‌خطی‌های ساده تبدیل می‌کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:9
+#: cf8b85cb2dc14630aa2117fe0266500a
+msgid "Quick Navigation"
+msgstr "ناوبری سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:12
+#: 572ee677dad145a6a0f5dbc513b47437
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:14
+#: 798825c198544128b6ed99a04dc53cc2
+msgid ""
+"The Recipe Book achieves **significant code reduction** by encapsulating "
+"best practices and expert knowledge into easy-to-use functions. What "
+"normally requires 50+ lines of boilerplate code can be reduced to a "
+"single line."
+msgstr ""
+"کتاب دستورالعمل با کپسوله‌سازی بهترین شیوه‌ها و دانش تخصصی در توابع "
+"آسان‌استفاده، **کاهش کد ۹۰-۹۸٪** را حاصل می‌کند. آنچه معمولاً نیاز به بیش"
+" از ۵۰ خط کد پیش‌فرض دارد، می‌تواند به یک خط کاهش یابد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:17
+#: 9a3a6cd645b14d2dbbceb2ae29864da6
+msgid "Key Benefits"
+msgstr "مزایای کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:19
+#: 4cae6d763a944720890a0520db42eb53
+msgid "⚡ **10x Faster Setup**"
+msgstr "⚡ **راه‌اندازی ۱۰ برابر سریع‌تر**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:20
+#: c00cd2307b9243b39d258f0661c5bd07
+msgid "Reduce 50+ lines of setup code to 1 line"
+msgstr "کاهش بیش از ۵۰ خط کد راه‌اندازی به ۱ خط"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:22
+#: 77ddf508550e45f4990e9eba10e82489
+msgid "**Smart Defaults**"
+msgstr "**پیش‌فرض‌های هوشمند**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:23
+#: 683ad6e79eaa45a8bef36a725f3e4a42
+msgid "Automatic parameter detection based on your structure"
+msgstr "تشخیص خودکار پارامترها بر اساس ساختار شما"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:25
+#: 72c646d8cdf24c6fac9e5a642a816087
+msgid "📚 **Best Practices**"
+msgstr "📚 **بهترین شیوه‌ها**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:26
+#: 24a1472751a14c0d8a17955b38fe037d
+msgid "Encodes expert knowledge and proven workflows"
+msgstr "رمزگذاری دانش تخصصی و جریان‌های کار اثبات‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:28
+#: 8ba45c835015452a8e58622c85adbf2c
+msgid "🎨 **Flexible**"
+msgstr "🎨 **انعطاف‌پذیر**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:29
+#: 6ba274a93fae423e8df9381ff95e8e79
+msgid "Easy to customize while maintaining simplicity"
+msgstr "سفارشی‌سازی آسان با حفظ سادگی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:31
+#: 5ade1ccd59c84721b75414abca33f73c
+msgid "📊 **Comprehensive**"
+msgstr "📊 **جامع**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:32
+#: 304ecb10cfce4b1eb3e8939c09f4f6ed
+msgid "Covers all major material properties"
+msgstr "پوشش تمام خواص اصلی مواد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:34
+#: d72975267a704a43b74bef6df1855ac0
+msgid "✅ **Production-Ready**"
+msgstr "✅ **آماده برای تولید**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:35
+#: 8584c8c2df7a48bb8c1f4427265f20f3
+msgid "fully documented with comprehensive tutorials"
+msgstr "۱۰۰٪ مستندسازی‌شده با ۱۶ آموزش جامع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:38
+#: 17afa59aa3144c05b0d1baea4a92d707
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:41
+#: 8f310e386e44455abb700bbbc445ed0d
+msgid "The Ultimate One-Liner"
+msgstr "نهایت کد تک‌خطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:58
+#: d608dfd917f04d9e9c5770aa09577dc1
+msgid "That's it! This automatically:"
+msgstr "همین! این به‌طور خودکار:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:60
+#: 415d5ba8fc7a40bda53810a1e333c03c
+msgid "✅ Analyzes your material type (metal/semiconductor/insulator)"
+msgstr "✅ نوع ماده شما را تحلیل می‌کند (فلز/نیمه‌هادی/عایق)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:61
+#: dea228aca4a94d5899ecd10399753ac5
+msgid "✅ Selects optimal SIESTA parameters"
+msgstr "✅ پارامترهای بهینه SIESTA را انتخاب می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:62
+#: d80b5f5e22624b86ae34b698cc48fd94
+msgid "✅ Calculates electronic properties (bands, DOS)"
+msgstr "✅ خواص الکترونی (نوارها، DOS) را محاسبه می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:63
+#: 10ccb090e2bd47fcb119ad12e39052ed
+msgid "✅ Calculates mechanical properties (elastic constants, bulk modulus)"
+msgstr "✅ خواص مکانیکی (ثابت‌های الاستیک، مدول حجمی) را محاسبه می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:64
+#: 89ea2171239140e3af429f47dbd674fe
+msgid "✅ Calculates thermal properties (phonons, QHA, thermal expansion)"
+msgstr "✅ خواص حرارتی (فونون‌ها، QHA، انبساط حرارتی) را محاسبه می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:65
+#: 14ad14da915e41648380bd1e43293583
+msgid "✅ Generates publication-quality plots"
+msgstr "✅ نمودارهای با کیفیت انتشار تولید می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:68
+#: ff49b67472de4d1397bce1bf9fa9231b
+msgid "All Recipes"
+msgstr "تمام ۳۹ دستورالعمل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:70
+#: 9555bc5895cd4f6f98b2f9a4f63f9673
+msgid "The Recipe Book is organized into **6 categories**:"
+msgstr "کتاب دستورالعمل شامل **۳۹ دستورالعمل** سازماندهی‌شده در **۶ دسته** است:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:73
+#: f77183125617491f9c5802ab6095dafb
+msgid "Complete Workflows (2 recipes)"
+msgstr "جریان‌های کار کامل (۲ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:79
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:121
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:143
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:169
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:193
+#: 0264fb78ecc94e21904a1549fedc5c82 0fc968b1fc93402bbf61de1c34c2d3e5
+#: 684c4d1aa16542e0ad8aba2d2f667173 8f7257fdd1d845b9b7249dcd5352ebbe
+#: a9d8a05c1eec4361b3f634aadae04c1d f8c252241bd14e8681d366da05ee5b46
+msgid "Recipe"
+msgstr "دستورالعمل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:80
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:122
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:144
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:170
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:194
+#: 0f926c507d06481d9840e2f7bc6fe7c9 377b92d7db164bebb8a3014adb6be0a2
+#: 473fc42c9f43411baf01f6553d6e1651 5a3774703527405f885be3e9b3e1bc98
+#: 735d9079499f4899a376478b5ed9f285 8fe467da9b6b42e48a82fb2e4693d84f
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:81
+#: 27b1f2c291fd401185fcb8870d76d805
+msgid "``complete_material_study()``"
+msgstr "``complete_material_study()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:82
+#: 863897251c9048ac930906ced99fc50d
+msgid "Full characterization: electronic + mechanical + thermal"
+msgstr "مشخصه‌یابی کامل: الکترونی + مکانیکی + حرارتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:83
+#: 2701d39db38b4feb8d943e22ae5c8512
+msgid "``quick_characterization()``"
+msgstr "``quick_characterization()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:84
+#: 8fc34a27dfac421f82c9e1cd87eb49b8
+msgid "Fast essential properties (1-2 hours)"
+msgstr "خواص ضروری سریع (۱-۲ ساعت)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:87
+#: 15f05bc946f94d00b1e379cc01d98410
+msgid "Electronic Properties (9 recipes)"
+msgstr "خواص الکترونی (۹ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:95
+#: c8962f3186074c1eb19e600c52b3835d
+msgid "``band_structure_workflow()``"
+msgstr "``band_structure_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:96
+#: 1695ef2d5e8d4ff7986b88745e044bf5
+msgid "Relaxation + band structure calculation"
+msgstr "آرام‌سازی + محاسبه ساختار نواری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:97
+#: a591f98295ec4975adde9b36cb10c66e
+msgid "``band_structure_uniform()``"
+msgstr "``band_structure_uniform()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:98
+#: 8f110f5fd83c4944b4f664a1b82334a1
+msgid "Uniform k-point band structure"
+msgstr "ساختار نواری با نقاط k یکنواخت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:99
+#: e2cfa58bcdcc41449f61109104b3464e
+msgid "``band_structure_line_mode()``"
+msgstr "``band_structure_line_mode()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:100
+#: 6d220fc6d0ab4ac1bc7e70ce8b2d3a64
+msgid "Line-mode band structure (publication quality)"
+msgstr "ساختار نواری حالت خطی (کیفیت انتشار)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:101
+#: 360b5045c95c4db8a9a1c2c7650fdd35
+msgid "``dos_workflow()``"
+msgstr "``dos_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:102
+#: c5d41fe7695f45cfb489aed265d2baab
+msgid "Density of states calculation"
+msgstr "محاسبه چگالی حالت‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:103
+#: b8fe305b488c4525a88ffadb6ba63b16
+msgid "``projected_dos()``"
+msgstr "``projected_dos()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:104
+#: 3767b052c89e446db429a0a0957ee59a
+msgid "Element/orbital-projected DOS"
+msgstr "DOS تصویرشده به عنصر/اوربیتال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:105
+#: 06950e020b2a455d94cbf542c7260bbe
+msgid "``band_structure_and_dos()``"
+msgstr "``band_structure_and_dos()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:106
+#: e2b71471218849daa44c9d62c649ded8
+msgid "Combined bands + DOS"
+msgstr "نوارها + DOS ترکیبی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:107
+#: c0d8a0ed9e184a83914ce416350754f7
+msgid "``optical_properties()``"
+msgstr "``optical_properties()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:108
+#: ca87670baa514cec9af764aedb1918c3
+msgid "Optical absorption, dielectric function"
+msgstr "جذب نوری، تابع دی‌الکتریک"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:109
+#: 8f2fbf37c386475c83c3120ac413fcdd
+msgid "``electronic_structure_metals()``"
+msgstr "``electronic_structure_metals()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:110
+#: 3345b27a581d4b7499e365f813efa050
+msgid "Optimized for metallic systems"
+msgstr "بهینه‌شده برای سیستم‌های فلزی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:111
+#: 92f3bb431f0146be9cf49b063c632ad8
+msgid "``electronic_structure_insulators()``"
+msgstr "``electronic_structure_insulators()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:112
+#: 4318af9ed3c5438088c01e252175c881
+msgid "Optimized for insulators/semiconductors"
+msgstr "بهینه‌شده برای عایق‌ها/نیمه‌هادی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:115
+#: 6ebfae1639a745c8b9c261a7590c5afc
+msgid "Mechanical Properties (6 recipes)"
+msgstr "خواص مکانیکی (۶ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:123
+#: b6797b8cf8024cdcb5961ee98c027d75
+msgid "``elastic_constants_workflow()``"
+msgstr "``elastic_constants_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:124
+#: 139ae1cc1152473a9ff2cdcd3cf1d3c1
+msgid "Full elastic tensor"
+msgstr "تانسور الاستیک کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:125
+#: a593a178a2bc453b9ff91eeb5a0410ba
+msgid "``elastic_moduli()``"
+msgstr "``elastic_moduli()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:126
+#: 2bcde2071ad04d8287df00985107c376
+msgid "Bulk/shear/Young's moduli"
+msgstr "مدول‌های حجمی/برشی/یانگ"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:127
+#: 5641b0b43f264173863f1252f51034ca
+msgid "``bulk_modulus_quick()``"
+msgstr "``bulk_modulus_quick()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:128
+#: 686fcf19b90f4cfbb163dc15329df2ce
+msgid "Fast bulk modulus estimate"
+msgstr "تخمین سریع مدول حجمی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:129
+#: cf0f59c11d1c4c80b6589e73fddee176
+msgid "``equation_of_state()``"
+msgstr "``equation_of_state()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:130
+#: 00751b3eac104f7cb378f5d049ce33ec
+msgid "EOS fitting with multiple models"
+msgstr "برازش EOS با مدل‌های متعدد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:131
+#: 4c653269e2e24eeb8ac0cd1c64393051
+msgid "``stress_strain_curve()``"
+msgstr "``stress_strain_curve()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:132
+#: 1b7a63ca3a0b4c87b4563ee0b439edfa
+msgid "Uniaxial stress-strain"
+msgstr "تنش-کرنش تک‌محوری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:133
+#: 3af241dd26c244a3963bbadfd68e0cd7
+msgid "``hardness_estimation()``"
+msgstr "``hardness_estimation()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:134
+#: 530474b7426549f397195aeb4b3b2bf6
+msgid "Vickers hardness prediction"
+msgstr "پیش‌بینی سختی ویکرز"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:137
+#: d7b397b9ad7b41dcaf765c6f615c7f31
+msgid "Thermal Properties (8 recipes)"
+msgstr "خواص حرارتی (۸ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:145
+#: 7370688468c2402c97d6ecd82d209224
+msgid "``phonon_workflow()``"
+msgstr "``phonon_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:146
+#: a4fea97b4db342a2ac63102e88f63a76
+msgid "Phonon calculation with automatic plotting"
+msgstr "محاسبه فونون با رسم خودکار نمودار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:147
+#: cf7dd32f4d2f4c4591c09da88fddeb0c
+msgid "``phonon_with_custom_params()``"
+msgstr "``phonon_with_custom_params()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:148
+#: ef481f7650744b7e86628eca00f33376
+msgid "Separate relaxation/force parameters"
+msgstr "پارامترهای جداگانه آرام‌سازی/نیرو"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:149
+#: ae036387014d43a4a0e9460b0f11946e
+msgid "``gruneisen_parameters()``"
+msgstr "``gruneisen_parameters()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:150
+#: 74d1b6b1ee0244219c3935606f9154ae
+msgid "Grüneisen parameters and mode analysis"
+msgstr "پارامترهای گرونایزن و تحلیل مُد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:151
+#: b4c29ffb169344738b5b4d5e558c5af5
+msgid "``thermal_expansion()``"
+msgstr "``thermal_expansion()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:152
+#: 189176a782834c81b1848b8c7a57c9a3
+msgid "Temperature-dependent thermal expansion"
+msgstr "انبساط حرارتی وابسته به دما"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:153
+#: 99552e0052f34ef195e7f832f25c58d7
+msgid "``qha_workflow()``"
+msgstr "``qha_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:154
+#: e139d64846e2472cbad8e439b9ef65d3
+msgid "Quasi-harmonic approximation"
+msgstr "تقریب شبه‌هارمونیک"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:155
+#: 43b2ae9907e34cd383010bfb6cefba45
+msgid "``thermodynamic_properties()``"
+msgstr "``thermodynamic_properties()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:156
+#: fe7f204e32df49538660dd94c9ebd53e
+msgid "Cp, Cv, entropy, free energy"
+msgstr "Cp، Cv، آنتروپی، انرژی آزاد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:157
+#: e660164e271d4baca8f4fceb4b0795aa
+msgid "``debye_temperature()``"
+msgstr "``debye_temperature()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:158
+#: ef17c4a642414b25b5601920cd1633e3
+msgid "Debye temperature estimation"
+msgstr "تخمین دمای دبای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:159
+#: 86f91b380c0a4b699d84d29e5ad8d278
+msgid "``thermal_conductivity()``"
+msgstr "``thermal_conductivity()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:160
+#: 760289048ac5461db765bf5a23774fb4
+msgid "Lattice thermal conductivity (Grüneisen-based)"
+msgstr "رسانایی حرارتی شبکه (بر اساس گرونایزن)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:163
+#: 2b3dc410165e4c97ab79f665879c4741
+msgid "Surface & Catalysis (7 recipes)"
+msgstr "سطح و کاتالیز (۷ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:171
+#: b2759ef39f0847c59ceb078ddee71cd9
+msgid "``surface_energy_workflow()``"
+msgstr "``surface_energy_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:172
+#: 37d6bf87e7e5451ea77604d77a118290
+msgid "Multi-termination surface energies"
+msgstr "انرژی‌های سطح چندپایانه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:173
+#: 00e4370170d14e10aa88967d0c3a935c
+msgid "``surface_stability()``"
+msgstr "``surface_stability()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:174
+#: 15b27f909d7b44d9be61b9e89ed50fa2
+msgid "Wulff construction and shapes"
+msgstr "ساختار وولف و اشکال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:175
+#: 5cdb29d002dc4dd68be75534c97712f3
+msgid "``adsorption_site_scanning()``"
+msgstr "``adsorption_site_scanning()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:176
+#: dc523cc5877a475a87433aafd95ad721
+msgid "Grid-based site scanning"
+msgstr "اسکن مکان مبتنی بر شبکه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:177
+#: a46e6c38a13f460e9215a24a5146a4b4
+msgid "``adsorption_energy()``"
+msgstr "``adsorption_energy()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:178
+#: bfe521ba8d004522b22044b1e0b3502e
+msgid "Single adsorbate binding energy"
+msgstr "انرژی پیوند جذب‌شونده منفرد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:179
+#: fbb2941fcb6543ca9579b04ad59618e7
+msgid "``reaction_barrier_neb()``"
+msgstr "``reaction_barrier_neb()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:180
+#: 3229601cce214fba9a045409e934af55
+msgid "Nudged elastic band transition states"
+msgstr "حالت‌های گذار نوار الاستیک تلنگرزده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:181
+#: 33722d4d98af4b25bfbf1c86fc6ab9db
+msgid "``surface_phase_diagram()``"
+msgstr "``surface_phase_diagram()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:182
+#: aa2037b6e089499db8f212647821e5f1
+msgid "Temperature/pressure stability"
+msgstr "پایداری دما/فشار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:183
+#: 55b7fcb27ef44c02b04cd72049298ba0
+msgid "``catalysis_workflow()``"
+msgstr "``catalysis_workflow()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:184
+#: d561198333774485888f93456b74f389
+msgid "Complete catalytic cycle analysis"
+msgstr "تحلیل چرخه کامل کاتالیزوری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:187
+#: 9786a109f9654561af8edd5fe57b4f9f
+msgid "Convergence Testing (7 recipes)"
+msgstr "تست همگرایی (۷ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:195
+#: df5efb1325064edaa5ae657aa981de33
+msgid "``kpoints_convergence()``"
+msgstr "``kpoints_convergence()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:196
+#: 530f6aabbc174571af3be271e150c40b
+msgid "K-point mesh convergence"
+msgstr "همگرایی شبکه نقاط k"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:197
+#: 863170889aa14e838becadfb7df3e2f1
+msgid "``mesh_cutoff_convergence()``"
+msgstr "``mesh_cutoff_convergence()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:198
+#: 8f1cda3893d54ba2951ed657a63193a6
+msgid "Real-space grid convergence"
+msgstr "همگرایی شبکه فضای واقعی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:199
+#: bc1096dedaaa4b95be1f4610e89d544d
+msgid "``basis_convergence()``"
+msgstr "``basis_convergence()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:200
+#: 690bcf02fca74a08b1b492b9b1c5638c
+msgid "Basis size convergence (SZ → DZ → DZP → TZP)"
+msgstr "همگرایی اندازه پایه (SZ → DZ → DZP → TZP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:201
+#: 25d3e1581d714ec9b05c462424d25abd
+msgid "``pao_energy_shift_convergence()``"
+msgstr "``pao_energy_shift_convergence()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:202
+#: d1b7667c0858430bbc9bade18b41ca43
+msgid "Energy shift parameter tuning"
+msgstr "تنظیم پارامتر جابجایی انرژی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:203
+#: c88c14914f90436da9906c8e7fe8def1
+msgid "``full_convergence_study()``"
+msgstr "``full_convergence_study()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:204
+#: c843a98415e84b75b44b825ceeb6a58e
+msgid "All parameters (comprehensive)"
+msgstr "تمام پارامترها (جامع)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:205
+#: 921370df9fa146d786f1219b4c36c091
+msgid "``accuracy_vs_cost()``"
+msgstr "``accuracy_vs_cost()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:206
+#: b55239e4aa674b8cac77552129d154b0
+msgid "Pareto frontier analysis"
+msgstr "تحلیل مرز پارتو"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:207
+#: 3366b19bf98941b49ee2558e0a6c4d2c
+msgid "``recommended_parameters()``"
+msgstr "``recommended_parameters()``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:208
+#: 0a80ab359c0f4546a0169e777e757fd8
+msgid "Automatic optimal parameter suggestion"
+msgstr "پیشنهاد خودکار پارامتر بهینه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:211
+#: b0fc0f9e94fd47ac8436bf79f06c2537
+msgid "Code Reduction Examples"
+msgstr "نمونه‌های کاهش کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:214
+#: 32ea662de18e49ce9f237901cef94915
+#, python-format
+msgid "Example 1: Band Structure (98% reduction)"
+msgstr "نمونه ۱: ساختار نواری (کاهش ۹۸٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:216
+#: 5af32d4382ea4b0db6b206c383c986ce
+msgid "**Without Recipe Book** (52 lines):"
+msgstr "**بدون کتاب دستورالعمل** (۵۲ خط):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:262
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:317
+#: 12c40237495a4abd94161d349f3d032e 3274ae66a8f64ea289a2f1fc5a369786
+msgid "**With Recipe Book** (1 line):"
+msgstr "**با کتاب دستورالعمل** (۱ خط):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:274
+#: 1654fc7c1031487992e5081131bbb453
+#, python-format
+msgid "**Result**: 52 lines → 1 line (98% reduction)"
+msgstr "**نتیجه**: ۵۲ خط ← ۱ خط (کاهش ۹۸٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:277
+#: 15f0017f9e1b4a62b7d5ec2752230876
+#, fuzzy, python-format
+msgid "Example 2: Phonon Calculation (high reduction)"
+msgstr "نمونه ۲: محاسبه فونون (کاهش ۹۵٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:279
+#: 0f069e0842c340e3878f9117bd0924f2
+msgid "**Without Recipe Book** (45 lines):"
+msgstr "**بدون کتاب دستورالعمل** (۴۵ خط):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:329
+#: 8c34a67b58944bfeb3a26fa2aed58a1f
+#, fuzzy, python-format
+msgid "**Result**: 45 lines → 1 line (high reduction)"
+msgstr "**نتیجه**: ۴۵ خط ← ۱ خط (کاهش ۹۵٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:332
+#: 6e256cc463364ec8b692358a3d664dbc
+msgid "Structure Analysis"
+msgstr "تحلیل ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:334
+#: 45b0e9bde2ac4a3fbf51011590b41a1b
+msgid ""
+"Before running calculations, analyze your structure to see what the "
+"Recipe Book recommends:"
+msgstr ""
+"قبل از اجرای محاسبات، ساختار خود را تحلیل کنید تا ببینید کتاب دستورالعمل "
+"چه چیزی را توصیه می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:346
+#: 160e30f5d11340149fce6d00a104f7d9
+msgid "**Output**:"
+msgstr "**خروجی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:380
+#: bf9a92c795b3422eb82150d2a7a8bf45
+msgid ""
+"**Note**: Computational estimates (time, memory, cores) are hidden by "
+"default as they are rough heuristics. To show them:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:388
+#: 81007290aff84df7aa213dc57f8fa275
+msgid ""
+"Computational estimates are **very rough order-of-magnitude guesses** "
+"based on simple heuristics. Actual time/memory can vary significantly "
+"based on:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:390
+#: d3e10b0aef8f444fbc67c7b3c2b3a09a
+msgid "Hardware speed and architecture"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:391
+#: dd0cf15bb72a4f37bf58aa29b95fc8f0
+msgid "Basis set and cutoff settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:392
+#: 2bfe03f08fe64cadbbc6559bf573b2ae
+msgid "System complexity and convergence difficulty"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:393
+#: f7accd7afe224e3fba06173f5dbe118f
+msgid "Parallelization efficiency"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:395
+#: 427b5b67e2e946b29d5ac86150a8811e
+msgid ""
+"Use estimates only for rough planning, not for accurate resource "
+"allocation."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:398
+#: 13eba9253ac143fd85a80465f0eeb65b
+msgid "Customization"
+msgstr "سفارشی‌سازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:400
+#: 9406f1e82d27495c8d57dec406073454
+msgid "While recipes provide smart defaults, you can still customize them:"
+msgstr ""
+"در حالی که دستورالعمل‌ها پیش‌فرض‌های هوشمند ارائه می‌دهند، همچنان "
+"می‌توانید آنها را سفارشی کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:403
+#: a2e6d9bd32cb48ec9cdc1f911264c6d4
+msgid "Method 1: Override Parameters"
+msgstr "روش ۱: بازنویسی پارامترها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:417
+#: 5dbbd2707d6c470ea1a3dbe8420112e2
+msgid "Method 2: Apply Tier Preset"
+msgstr "روش ۲: اعمال پیش‌تنظیم سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:427
+#: fa96ce5e58a24551859c2179fa5f40b2
+msgid "Method 3: Modify Returned Flow"
+msgstr "روش ۳: تغییر جریان برگشتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:442
+#: d0052c0a07aa42428d0c26b09ba5eca5
+msgid "Method 4: Select Properties"
+msgstr "روش ۴: انتخاب خواص"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:454
+#: 35c298e227144d3e95c3fea55e1de319
+msgid "Method 5: Control Phonon Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:469
+#: b5b61732255443868898b9b63215358a
+msgid "Tutorials"
+msgstr "آموزش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:471
+#: 269f751d28a243249cfcd2481ba5cce1
+#, fuzzy
+msgid ""
+"The Recipe Book is fully documented with comprehensive tutorials covering"
+" all recipes:"
+msgstr ""
+"کتاب دستورالعمل **۱۰۰٪ مستندسازی‌شده** با **۱۶ آموزش جامع** است که تمام "
+"۳۹ دستورالعمل را پوشش می‌دهد:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:477
+#: ad8a8e2dec8f4b8cb05abed71226cf0d
+msgid "Tutorial"
+msgstr "آموزش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:478
+#: e8b257786cf04f2d9b4c764592679dd0
+msgid "Recipes Covered"
+msgstr "دستورالعمل‌های پوشش‌داده‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:479
+#: abb19f3f41804090a63d42bbae83aa8d
+msgid "``01_basic_usage/``"
+msgstr "``01_basic_usage/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:480
+#: a15cb2c0f71e4fa1a10f3471a14d90f3
+msgid "Getting started, structure analysis"
+msgstr "شروع، تحلیل ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:481
+#: eedfd5ac7db34c1bab423187e63f7769
+msgid "``02_complete_workflows/``"
+msgstr "``02_complete_workflows/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:482
+#: 56817667479a43a49a8d53befcf26b08
+msgid "complete_material_study, quick_characterization"
+msgstr "complete_material_study، quick_characterization"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:483
+#: ef7af5f9f9474b78baca346b7b6c2ec2
+msgid "``03_electronic_recipes/``"
+msgstr "``03_electronic_recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:484
+#: dde030af96844d6eaa6f04eeab02a39d
+msgid "All 9 electronic property recipes"
+msgstr "تمام ۹ دستورالعمل خواص الکترونی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:485
+#: 5b5fe39810ff4ce5ab4fe647f4127b29
+msgid "``04_mechanical_recipes/``"
+msgstr "``04_mechanical_recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:486
+#: 2f91c876660c47dd8e387238cfd4c86b
+msgid "All 6 mechanical property recipes"
+msgstr "تمام ۶ دستورالعمل خواص مکانیکی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:487
+#: f94f3fb016894aad8827df0087c8e200
+msgid "``05_thermal_recipes/``"
+msgstr "``05_thermal_recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:488
+#: 4697b96f310c41a5a9f9e911f687d936
+msgid "All 8 thermal property recipes"
+msgstr "تمام ۸ دستورالعمل خواص حرارتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:489
+#: cfe8a931605a41f8a32f5cbe294e11b5
+msgid "``06_catalysis_recipes/``"
+msgstr "``06_catalysis_recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:490
+#: 0be83d4b728849a3807c93bc9795804f
+msgid "All 7 surface/catalysis recipes"
+msgstr "تمام ۷ دستورالعمل سطح/کاتالیز"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:491
+#: 0876f61dde904f3b8d8b72c7079b1691
+msgid "``07_convergence_recipes/``"
+msgstr "``07_convergence_recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:492
+#: 2fb5f4ddbe7f4b0da0ba0ec9e9dc2bf6
+msgid "All 7 convergence testing recipes"
+msgstr "تمام ۷ دستورالعمل تست همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:493
+#: 7fedb2f6462f4b339463433becacf56f
+msgid "``08_combined_recipes/``"
+msgstr "``08_combined_recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:494
+#: 534d2e0ae9b14ea4b1e6d78cb7684f7e
+msgid "Multi-property workflows"
+msgstr "جریان‌های کار چند خاصیتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:496
+#: 3502a29bbe714375891371f676e8c37b
+msgid "**Tutorial Location**: ``tutorials/08-recipe-book/``"
+msgstr "**موقعیت آموزش**: ``tutorials/08-recipe-book/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:498
+#: e340f6b82253495597f5024a0cecffff
+msgid "**Total Documentation**: extensive"
+msgstr "**مستندات کل**: بیش از ۷,۹۰۰ خط در ۱۶ فایل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:501
+#: 3fcc0124f9254545a3ee0a320df8bf99
+msgid "Recipe Book vs Traditional Approach"
+msgstr "کتاب دستورالعمل در مقابل رویکرد سنتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:507
+#: 0350b15a3ffc4886a333315559ec2f51
+msgid "Aspect"
+msgstr "جنبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:508
+#: 164bb9f7f8a241219b004a62238dc478
+msgid "Traditional Approach"
+msgstr "رویکرد سنتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:509
+#: ff97b54c70ae480a8a8551337b6a3c9a
+msgid "Recipe Book"
+msgstr "کتاب دستورالعمل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:510
+#: 7daafe5803a24f64a2912b56fab85d82
+msgid "**Lines of Code**"
+msgstr "**خطوط کد**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:511
+#: fb7a21d515b34ac1a5846e1052ee2eaf
+msgid "50-100 lines"
+msgstr "۵۰-۱۰۰ خط"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:512
+#: 8f4a4a96545748dcb6698639ba876177
+msgid "1-5 lines"
+msgstr "۱-۵ خط"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:513
+#: d06bcefe74b245b5952f95ee8b4ce17f
+msgid "**Setup Time**"
+msgstr "**زمان راه‌اندازی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:514
+#: 397d65bb0b654883a60ee3baa573f96c
+msgid "30-60 minutes"
+msgstr "۳۰-۶۰ دقیقه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:515
+#: a36488ea54a54c2ca5495e5bdcf4fe24
+msgid "30 seconds"
+msgstr "۳۰ ثانیه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:516
+#: 52126fa7f9db41fe95cd7a71f41a5dcc
+msgid "**Parameter Selection**"
+msgstr "**انتخاب پارامتر**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:517
+#: 2ea2e5bd49c549d085377c54e98409be
+msgid "Manual research"
+msgstr "تحقیق دستی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:518
+#: 39e44ed7db6844e883efe46bbef97cd0
+msgid "Automatic based on structure"
+msgstr "خودکار بر اساس ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:519
+#: 5a9dd60f61dd4c9494340a609c31842d
+msgid "**Best Practices**"
+msgstr "**بهترین شیوه‌ها**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:520
+#: 0db03cdeffcf4b569459235d6e1a7e02
+msgid "Must know them"
+msgstr "باید بدانید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:521
+#: 08fb6f8eaa704ab6912cc10ae46229f6
+msgid "Built-in"
+msgstr "داخلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:522
+#: d04083c81b36458ab1568d45af6fa014
+msgid "**Error Prone**"
+msgstr "**مستعد خطا**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:523
+#: 0918570848074263b23ba25ea840ebc5
+msgid "Yes (typos, inconsistencies)"
+msgstr "بله (غلط‌های تایپی، ناسازگاری‌ها)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:524
+#: 1fda3a7b449d4d4da60df86b2ff6aaf4
+msgid "No (tested recipes)"
+msgstr "خیر (دستورالعمل‌های آزمایش‌شده)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:525
+#: ff781092ab29467e9e6be847f0121a72
+msgid "**Customization**"
+msgstr "**سفارشی‌سازی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:526
+#: 27db0f115c0f4dfcb9859494e82edbe0
+msgid "Full control"
+msgstr "کنترل کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:527
+#: b497dfe1a16248bbbfeefa9c54bfa415
+msgid "Easy overrides available"
+msgstr "بازنویسی‌های آسان موجود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:528
+#: 98ad1cf3828f4192b417987b97dce19a
+msgid "**Learning Curve**"
+msgstr "**منحنی یادگیری**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:529
+#: a23dbfe14c904418b8f0c535b424d118
+msgid "Steep"
+msgstr "تند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:530
+#: 09302c0c060f48dd911b6878463f571e
+msgid "Gentle"
+msgstr "ملایم"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:531
+#: ca818b6c3dd74b4f8c9ef02e21e858eb
+msgid "**Production Ready**"
+msgstr "**آماده برای تولید**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:532
+#: 323daa19c84d48ad9952968fcc589a7f
+msgid "Requires validation"
+msgstr "نیاز به اعتبارسنجی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:533
+#: 9c0bd4d4ebc0425da5f4d665edd2a217
+msgid "Pre-validated"
+msgstr "از پیش اعتبارسنجی‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:536
+#: 49587008730240d4a4eb6fc142235765
+msgid "When to Use Recipe Book"
+msgstr "چه زمانی از کتاب دستورالعمل استفاده کنیم"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:538
+#: 7e643929f3a1493da2e1036e0680bc1f
+msgid "✅ **Use Recipe Book When**:"
+msgstr "✅ **زمانی از کتاب دستورالعمل استفاده کنید که**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:540
+#: cb353daf4f374a1aa31ab21a3bbd2b07
+msgid "Starting a new project (fastest setup)"
+msgstr "شروع پروژه جدید (سریع‌ترین راه‌اندازی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:541
+#: b0656ad7066c4577a855c1c636486699
+msgid "Running standard calculations (bands, phonons, etc.)"
+msgstr "اجرای محاسبات استاندارد (نوارها، فونون‌ها، و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:542
+#: 1217d390fb5b40418f1946125f1bbc4d
+msgid "Need reliable defaults"
+msgstr "نیاز به پیش‌فرض‌های قابل اعتماد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:543
+#: 6dafec0fc6c647f5989d285a09c673fc
+msgid "Want publication-quality outputs"
+msgstr "خواستن خروجی‌های با کیفیت انتشار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:544
+#: 033c51c514d346249511aa217b39d2a5
+msgid "Limited SIESTA experience"
+msgstr "تجربه محدود SIESTA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:545
+#: 1999effe2e51471f806f210d30b8ed44
+msgid "Time-sensitive projects"
+msgstr "پروژه‌های حساس به زمان"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:547
+#: 120d9d228f7f48c3832064d5c96b26b9
+msgid "⚠️ **Use Traditional Approach When**:"
+msgstr "⚠️ **زمانی از رویکرد سنتی استفاده کنید که**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:549
+#: 5ea307645d3c42148fbbcfc868c156bf
+msgid "Very specialized calculations"
+msgstr "محاسبات بسیار تخصصی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:550
+#: 84d6e25a16e44c8297f5de6d207cc20b
+msgid "Need complete low-level control"
+msgstr "نیاز به کنترل کامل سطح پایین"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:551
+#: 26436ef3c78a441a945ca9098456c9cf
+msgid "Developing new workflow types"
+msgstr "توسعه انواع جدید جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:552
+#: c21280e732da42e589f857fee72d070d
+msgid "Benchmarking different settings"
+msgstr "آزمون مقایسه‌ای تنظیمات مختلف"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:553
+#: bcac5a61ffba4db0982491a61896dd4d
+msgid "Research on methodology itself"
+msgstr "تحقیق روی خود روش‌شناسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:557
+#: 8fd35eaa7280459fbe33b33f881de9c0
+msgid ""
+"**Best Practice**: Start with Recipe Book for rapid prototyping, then "
+"customize specific parameters if needed. You get both speed and "
+"flexibility."
+msgstr ""
+"**بهترین شیوه**: با کتاب دستورالعمل برای نمونه‌سازی سریع شروع کنید، سپس "
+"پارامترهای خاص را در صورت نیاز سفارشی کنید. هم سرعت و هم انعطاف‌پذیری را "
+"به‌دست می‌آورید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:560
+#: 93cdec2148cb40d6a3ec140ddbb42b16
+msgid "Implementation Details"
+msgstr "جزئیات پیاده‌سازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:562
+#: ed7d345261204f749f8a81e22151fff0
+msgid "**Location**: ``src/atomate2/siesta/recipes/``"
+msgstr "**موقعیت**: ``src/atomate2/siesta/recipes/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:564
+#: dfc5a016ec394d0dbb6cdcbc5c8dc967
+msgid "**Modules**:"
+msgstr "**ماژول‌ها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:566
+#: 01ede5287bdd4baeb5a5c7320ca31d64
+msgid "``complete.py`` - Complete workflow recipes (2 recipes)"
+msgstr "``complete.py`` - دستورالعمل‌های جریان کار کامل (۲ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:567
+#: 018690b3835e42ccbecebf88b9e520f6
+msgid "``electronic.py`` - Electronic properties (9 recipes)"
+msgstr "``electronic.py`` - خواص الکترونی (۹ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:568
+#: 2f86accaa7b34ca6a4232bbe7cbd0398
+msgid "``mechanical.py`` - Mechanical properties (6 recipes)"
+msgstr "``mechanical.py`` - خواص مکانیکی (۶ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:569
+#: e8deeab3ace248029f5ea5e47dae9953
+msgid "``thermal.py`` - Thermal properties (8 recipes)"
+msgstr "``thermal.py`` - خواص حرارتی (۸ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:570
+#: a5c6cb5722db4df29fef728692098c50
+msgid "``catalysis.py`` - Surface and catalysis (7 recipes)"
+msgstr "``catalysis.py`` - سطح و کاتالیز (۷ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:571
+#: 0fb1d58330564d6ba3c27f98e6401aac
+msgid "``convergence.py`` - Convergence testing (7 recipes)"
+msgstr "``convergence.py`` - تست همگرایی (۷ دستورالعمل)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:573
+#: c8c04e6030624c10a5c0b484eab8802d
+msgid "**Testing**: comprehensive test coverage (fully passing)"
+msgstr "**آزمایش**: ۱۶۴ تست با پوشش ~۷۵٪ (نرخ موفقیت ۱۰۰٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:576
+#: 8ebf0626e8c44c1babea6a7ae3e7c8b4
+msgid "Performance Metrics"
+msgstr "معیارهای عملکرد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:578
+#: 30bb86d39b52448c898e90ec4e188b7e
+msgid "**Code Reduction**:"
+msgstr "**کاهش کد**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:580
+#: e22d9f6bd7b44925b0bfe396bae7b235
+#, python-format
+msgid "Average: 92% reduction (50 lines → 4 lines)"
+msgstr "میانگین: کاهش ۹۲٪ (۵۰ خط ← ۴ خط)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:581
+#: 0f947149e1f8412d9fe30ea7ca4fb1fe
+#, python-format
+msgid "Best case: 98% reduction (52 lines → 1 line)"
+msgstr "بهترین حالت: کاهش ۹۸٪ (۵۲ خط ← ۱ خط)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:582
+#: 07b68b2a23ba46a69e1888c4fca47b33
+#, python-format
+msgid "Worst case: 85% reduction (20 lines → 3 lines)"
+msgstr "بدترین حالت: کاهش ۸۵٪ (۲۰ خط ← ۳ خط)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:584
+#: aa64561631274547ad48dde7b79d1abb
+msgid "**Time Savings**:"
+msgstr "**صرفه‌جویی در زمان**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:586
+#: ff971d14b8ea4e4cb9f48bde6272defd
+#, python-format
+msgid "Setup time: 30 minutes → 30 seconds (99% reduction)"
+msgstr "زمان راه‌اندازی: ۳۰ دقیقه ← ۳۰ ثانیه (کاهش ۹۹٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:587
+#: 6ec4ca40d0b345889a10dcc00d4d16ed
+msgid "Learning curve: Weeks → Hours"
+msgstr "منحنی یادگیری: هفته‌ها ← ساعت‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:588
+#: 2217f488bf684e9a810d288c8fd1dc33
+msgid "Debugging time: Minimal (pre-tested recipes)"
+msgstr "زمان اشکال‌زدایی: حداقل (دستورالعمل‌های از پیش آزمایش‌شده)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:590
+#: d83a2dd70f744a2ebd5d6522a819e3ec
+msgid "**Accuracy**:"
+msgstr "**دقت**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:592
+#: f886bdfa64bd46589f1f77fb01776771
+msgid "Same results as manual workflows (validated)"
+msgstr "نتایج یکسان با جریان‌های کار دستی (اعتبارسنجی‌شده)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:593
+#: ac40ef699ce8449aaf418f1c4368616c
+msgid "Best-practice parameters included"
+msgstr "پارامترهای بهترین شیوه شامل شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:594
+#: fe82017c739f43818782a854432dddef
+#, fuzzy
+msgid ""
+"Automatic error handling via custodian (enabled by default with "
+"max_errors=10)"
+msgstr "مدیریت خودکار خطا از طریق custodian"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:597
+#: e37774d5309c4461b29f47f7750a6761
+msgid "Status"
+msgstr "وضعیت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:601
+#: e956f5365b0c4bd988a4fc0fc696c409
+#, python-format
+msgid "**Status**: ✅ Production-ready with 100% documentation coverage"
+msgstr "**وضعیت**: ✅ آماده برای تولید با پوشش مستندات ۱۰۰٪"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:603
+#: 9ccb8c3c2bcb4ba8b48567f133646e0a
+msgid "recipes across 6 categories"
+msgstr "۳۹ دستورالعمل در ۶ دسته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:604
+#: 998cbef806754e0ab79506ed2c67c0e3
+msgid "comprehensive tutorials"
+msgstr "۱۶ آموزش جامع (بیش از ۷,۹۰۰ خط)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:605
+#: b7a3ed03b4de4acabfa5a876e87093b3
+msgid "comprehensive tests (fully passing)"
+msgstr "۱۶۴ تست (نرخ موفقیت ۱۰۰٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:606
+#: f8d026fef0bf49ecb1aa16d1b8411830
+#, python-format
+msgid "~75% code coverage"
+msgstr "~۷۵٪ پوشش کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:607
+#: 0f2902f9908d4fbebb540b93277702b0
+msgid ""
+"First computational materials science package with complete recipe "
+"documentation"
+msgstr "اولین بسته علم مواد محاسباتی با مستندات کامل دستورالعمل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:610
+#: 3d90c4cb2214401c932cef3ad3fb25d8
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:612
+#: 29e5da75411745178fb5f8317017ee3b
+msgid "``tutorials/08-recipe-book/`` - Complete tutorial series"
+msgstr "``tutorials/08-recipe-book/`` - سری آموزشی کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:613
+#: 0969df0f1a5647869e89442ed8a6e035
+msgid ":doc:`usage` - Basic usage patterns"
+msgstr ":doc:`usage` - الگوهای استفاده پایه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:614
+#: 8d8dc0b7848d446fb39e239757e4117e
+msgid ":doc:`tier-system` - Material-specific presets"
+msgstr ":doc:`tier-system` - پیش‌تنظیم‌های اختصاصی مواد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:615
+#: d5874927d3624686a25a941027509f4d
+msgid ":doc:`advanced-workflows` - Complex multi-step calculations"
+msgstr ":doc:`advanced-workflows` - محاسبات پیچیده چند مرحله‌ای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/recipe-book.rst:616
+#: f52bf2d5838f4f2d9a90316327f26a68
+#, fuzzy
+msgid ""
+"`GitHub Recipe Book "
+"<https://github.com/materialsproject/atomate2/tree/main/docs/siesta"
+"/tutorials-md/03-advanced-features/08-recipe-book>`_ - Tutorial source "
+"code"
+msgstr ""
+"`کتاب دستورالعمل GitHub <https://github.com/arsalan-"
+"akhtar/atomate2siesta/tree/main/tutorials/08-recipe-book>`_ - کد منبع "
+"آموزشی"
+

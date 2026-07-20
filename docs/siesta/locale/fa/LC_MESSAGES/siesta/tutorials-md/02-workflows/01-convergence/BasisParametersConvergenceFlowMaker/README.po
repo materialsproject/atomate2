@@ -1,0 +1,1112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:1
+#: 7fcee1be33e746d1a744ce05664093b6
+msgid "Tutorial: Basis Parameters Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:3
+#: 8e88d68be4424d519a57fc5358a03252
+msgid ""
+"**Category**: "
+"02-workflows/01-convergence/BasisParametersConvergenceFlowMaker "
+"**Difficulty**: Intermediate **Time**: ~15-20 min (simple grid), ~1-2 "
+"hours (full grid)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:9
+#: cbf9dde48cde4a62a0bf25fdd1d38251
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:11
+#: 74d0eea923d14f4cb80b92d2e1e32b01
+msgid ""
+"This tutorial demonstrates systematic optimization of SIESTA basis set "
+"parameters (`PAO.EnergyShift` and `PAO.SplitNorm`) using "
+"`BasisParametersConvergenceFlowMaker`. These parameters control how "
+"SIESTA generates numerical atomic orbitals (PAOs) and significantly "
+"affect both accuracy and computational cost."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:13
+#: 3adde8b5d0c043eabab33add6328bb7b
+msgid ""
+"**Key Goal**: Find optimal parameter combination that minimizes energy "
+"while maintaining reasonable basis size."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:17
+#: c13cd3dacb174dc2afc60cb68fecd30e
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:19
+#: 7dc9cfebf7a24af3a3039ffc93ce236d
+msgid "PAO.EnergyShift: Orbital confinement energy optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:20
+#: 75f8621239394b6b9b02ceae5dfe4623
+msgid "PAO.SplitNorm: Basis splitting threshold tuning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:21
+#: 4bea0d44690243889fcff0db36634720
+msgid "2D parameter grid convergence testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:22
+#: d0d6fdde9a8148f1a7f1433499eff306
+msgid "Accuracy vs. basis size trade-offs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:23
+#: c9924586fc9f45a0a4143d883a981c28
+msgid "Automatic convergence plots and analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:24
+#: 780c9ab416e244dc91c6879a95813f92
+msgid "When custodian is essential (difficult systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:28
+#: adc7765d23084072bf9abd8397ad4e99
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:30
+#: 2f7098c29d5f44dcbc233cb7e2964999
+msgid ""
+"**Required**: [K-points and Mesh Cutoff Convergence](../../README.md#1-k"
+"-points-convergence) completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:31
+#: 29473b6c1e5446b6823f0a7624e5651d
+msgid "**Recommended**: Basic understanding of atomic orbital basis sets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:32
+#: 08ebd6cb87ee4130a2b6b1946514c796
+msgid "**Structure files**: Si_mp-149_primitive.cif, MgO_mp-1265_primitive.cif"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:36
+#: d041948b7bd5443b98c14c7b01f6e010
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:38
+#: 705b60f22f3d4d2d98cb9d60d2c2831d
+msgid "PAO.EnergyShift"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:40
+#: 8468a717795d4fbba579441b30618c41
+msgid ""
+"**Purpose**: Controls orbital confinement energy (how tightly orbitals "
+"are confined)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:42
+#: 774f44c40b3d433abf3b551f9c787362
+msgid "**Units**: Ry (Rydberg) or meV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:43
+#: 9cba36ebcb264167a52dafbeda416a82
+msgid "1 Ry = 13.6057 eV = 13605.7 meV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:45
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:60
+#: 87f733b3c73c4e0bba01749499b970a5 c899d4c2607b4a0f82ff749d584c1571
+msgid "**Effect**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:46
+#: 0411a9cd28044d4fa41e6a36840f7d49
+msgid ""
+"**Lower** (0.005 Ry): Larger, more extended orbitals → more accurate → "
+"larger basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:47
+#: a91f095aa5404fc28930dcf43e2723ff
+msgid ""
+"**Higher** (0.02 Ry): Smaller, more confined orbitals → less accurate → "
+"smaller basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:49
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:64
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:439
+#: 1eee07da0dd64c52a558cbc74dbde2d6 2e3cb983571145f29bc170edfb4b3d8e
+#: 5f3af07ed02241729d572b1a62e54fb8
+msgid "**Typical values**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:50
+#: a42da696fa6d4171bcb6f0e8ac1767b0
+msgid "Standard: 0.01 Ry (136 meV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:51
+#: a94047c0ad054a219b02d2ca5206665f
+msgid "Tight: 0.005 Ry (68 meV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:52
+#: 92516687694b4ea9828908b601c4f836
+msgid "Loose: 0.02 Ry (272 meV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:54
+#: a01525fc433b401e9f4611885265f232
+msgid "PAO.SplitNorm"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:56
+#: b29f08161f454c899f972d866f61ecca
+msgid ""
+"**Purpose**: Controls basis splitting (single-ζ → double-ζ, polarization "
+"orbitals)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:58
+#: 1b5e8479e57c4b868130863fa1fab0da
+msgid "**Units**: Dimensionless (norm threshold)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:61
+#: 5fd9c4daaf1b46278aa43d5cd7ee04a4
+msgid "**Lower** (0.10): More split orbitals → larger basis → better flexibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:62
+#: a7401985e1314389a5bff95f693cc1e2
+msgid ""
+"**Higher** (0.30): Fewer split orbitals → smaller basis → reduced "
+"flexibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:65
+#: 8cef7ef296fb4a319e283f8a0507120c
+msgid "Standard: 0.15"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:66
+#: 8b1f8ff514594b0dad2e3e15f4fbf831
+msgid "Range: 0.10-0.30"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:68
+#: eff56a24dd8c413aa021cdd6a79b7c2d
+msgid "The Trade-off"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:80
+#: 8a1f8347160642bdb431e8e81f1459a8
+msgid ""
+"**Goal**: Find the \"sweet spot\" where energy is converged but basis "
+"size is manageable."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:84
+#: 1c7e8896b7ae46f68603e57e9a0f8197
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:86
+#: 878b06540c354607b61f11e585379825
+msgid "This directory contains **2 examples** demonstrating different scenarios:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:88
+#: 6fda3b3cb68e4c04b105c05de23c637c
+msgid "1. `BasisParametersConvergenceFlowMaker_01_full_grid.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:90
+#: 58fe04f2e24f4be1b18b1b458e03e7fa
+msgid ""
+"**Description**: Large 5×5 parameter grid for Silicon (easy, covalent "
+"system)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:92
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:107
+#: ec19d5cea2ef4e439a57ac765d564110 f653b9e54f054c6bb146e3d94e09900f
+msgid "**Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:93
+#: 52eb4fa57b554ece90fbcb3eb9abdbea
+msgid "Structure: Si_mp-149_primitive.cif (covalent semiconductor)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:94
+#: 6ec3f16cd6f3461fad832e79c16fb93d
+msgid "Energy shifts: [0.005, 0.01, 0.015, 0.02, 0.025] Ry (5 values)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:95
+#: 81c2b6809cbd4fb5bbf0db8111da229e
+msgid "Split norms: [0.10, 0.125, 0.15, 0.175, 0.20] (5 values)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:96
+#: 7f1d20f91b1245ddaac20cacff644575
+msgid "**Total jobs**: 25 SCF calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:97
+#: a142be18f15540ec8d5809fcb28444d6
+msgid "**Custodian**: Disabled (Si converges easily)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:99
+#: 0956792d53fc4f098cd818823a528113
+msgid ""
+"**Why this works without custodian**: Silicon is a well-behaved covalent "
+"semiconductor with easy SCF convergence."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:101
+#: dc3017eeb7b14709bc3c5bb931ddbe34
+msgid "**Time**: ~1-2 hours for full 5×5 grid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:103
+#: af41046f807445f188efa9735a0d574d
+msgid "2. `BasisParametersConvergenceFlowMaker_02_with_custodian.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:105
+#: a080c08acb504db9a7ccf5546fd486b9
+msgid ""
+"**Description**: Smaller 3×3 grid for MgO (hard, ionic system) with "
+"automatic error recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:108
+#: 2c6311e3792e4949a7524c7c84baf832
+msgid "Structure: MgO_mp-1265_primitive.cif (ionic oxide)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:109
+#: 27fec0a891964474939ded4b1343e258
+msgid "Energy shifts: [0.01, 0.02, 0.03] Ry (3 values)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:110
+#: bae877010ef14b148791c3130564b8c4
+msgid "Split norms: [0.10, 0.15, 0.20] (3 values)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:111
+#: 0a1e58ec3ada4a16907a81522ef8cc11
+msgid "**Total jobs**: 9 SCF calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:112
+#: d080a1666c474d208e2d7d5066419868
+msgid "**Custodian**: **Enabled** (essential for MgO!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:113
+#: 76f07217fb4a4e838d5676f299314f84
+msgid "**Max errors**: 10 recovery attempts per job"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:115
+#: ba5ef9369486471bb26de0555ca3744c
+msgid ""
+"**Why custodian is required**: MgO is an ionic oxide with difficult SCF "
+"convergence, especially with coarse parameters (2×2×2 k-points, 150 Ry "
+"mesh cutoff). Without custodian, calculations will fail."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:117
+#: ec724d8a20ed4f66b1f473fb9838ee2a
+msgid "**Time**: ~30-45 minutes for 3×3 grid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:121
+#: b5f679db90d7412dac2c507c0d54a43f
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:123
+#: 9badaaa7d2774f409df3ac644c6381fd
+msgid "Example 1: Simple Grid (Silicon, No Custodian)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:147
+#: 28019b26f44f4dee880ff15df76d74bb
+msgid "Example 2: With Custodian (MgO, Automatic Error Recovery)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:174
+#: dd59bf53b96c4f47a946bcba1cd5786b
+msgid "Expected Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:176
+#: 78af51231d16433d8e83a9b34a8baa25
+msgid "Automatic Plots (4 Visualizations)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:178
+#: 32fce292f0634e608929804e044ae42d
+msgid "The workflow generates comprehensive convergence analysis:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:180
+#: fdc3971ba4df43b0bcb6521f2a0333f0
+msgid "1. **Energy vs. Parameters** (`basis_params_convergence.png`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:181
+#: b13d82edfd1e4c62a705b4560aed1032
+msgid "Four-panel plot showing:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:182
+#: 9d1bb0bebb6b44bf8254a618671361ac
+msgid "**Top-left**: Energy vs. EnergyShift (for each SplitNorm value)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:183
+#: 4f329b9ab7374e9eb6ea1e312ba588b8
+msgid "**Top-right**: Energy vs. SplitNorm (for each EnergyShift value)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:184
+#: 8e561f97e07c428590bbe4de42f03422
+msgid "**Bottom-left**: 2D energy landscape heatmap (color shows energy)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:185
+#: a47cc04f2e32422f943936d2563a669f
+msgid ""
+"**Bottom-right**: Basis quality map (marker size = basis size, color = "
+"forces)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:187
+#: 961a8b931a794adbb9b5613e37a67002
+msgid "2. **Basis Functions Visualization** (`basis_functions_visualization.png`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:188
+#: 53f91303fa9749c4b0db049ab09f49f5
+msgid "Three-panel plot showing:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:189
+#: 96e27700c0f44f7e9b449d8a0dbaae7d
+msgid "Orbital extent (how far orbitals extend)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:190
+#: 2ea5104c202648638f5e707a01d9787a
+msgid "Split-valence distribution (ζ-level distribution)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:191
+#: 61fc0914676345bfb8b551e646e421d0
+msgid "Bonding overlap (orbital overlap between atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:193
+#: 1b528ea77fa0467288705c7817d05001
+msgid "3. **Real Basis Functions** (from ion.xml files)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:194
+#: 5b6bdae20876488f8976280ee0c10a92
+msgid "Actual radial wavefunctions for each parameter combination"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:195
+#: 1ed14573caff4e208494b8e33e6c3f92
+msgid "Helps visualize how orbitals change with parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:197
+#: af2a61a10e5a4781a05b4c16bfba85fb
+msgid "Summary File (`basis_params_summary.txt`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:218
+#: a182a569eab441d895dc573e6fa52456
+msgid "Timing Information"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:220
+#: 6e25f606a9884ebabf53607a7f05c07a
+msgid ""
+"When custodian is enabled, timing is extracted from "
+"`siesta_compressed/siesta.times.gz`. When disabled, timing comes from "
+"`siesta.out`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:222
+#: 6cd4f6c5caf04f7d9b7efcbda1a1c804
+msgid "**Note**: Timing extraction works correctly in both modes."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:226
+#: f4c39586bae54f58958c6ba239858d17
+msgid "Common Parameters for Different Materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:228
+#: 1118ab56173c4755ace197be17de80f6
+msgid "Covalent Systems (Si, C, Diamond)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:235
+#: 952bb8a1eacd448cb27777c2f7e58d1e
+msgid "**Expected optimal**: ES ≈ 0.01-0.015 Ry, SN ≈ 0.15"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:237
+#: 03fdda1727274e8fa16a4adc21dfefa6
+msgid "Ionic Systems (MgO, NaCl, ZnO)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:244
+#: f03759eb23c64d4680b6831d44800b43
+msgid ""
+"**Expected optimal**: ES ≈ 0.005-0.01 Ry, SN ≈ 0.15-0.20 **Why tighter**:"
+" Ionic bonds require more localized, flexible basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:247
+#: aa67c5af687f4d3795fae6baa0654931
+msgid "Metallic Systems (Al, Cu, Au)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:254
+#: 2a89091f5ea14509a8a1eed6469e7b05
+msgid ""
+"**Expected optimal**: ES ≈ 0.015-0.02 Ry, SN ≈ 0.15 **Why looser**: "
+"Delocalized electrons, less sensitive to basis quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:259
+#: add67b4665734b20b16d68100e4192a5
+msgid "Running the Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:261
+#: e534b3cb4894445183a6b65fc74ea824
+msgid "1. Without Custodian (Silicon)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:268
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:286
+#: 3d34a5b271534da2881948b1e51c4bc3 77ff3a79e165419892677b9131b3f0bd
+msgid "**What happens**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:269
+#: 3794dcff7cba44aaa266b150408a0102
+msgid "25 SCF calculations run in parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:270
+#: b027e9b10a5246a5b1fc73be910adc60
+msgid "All should converge successfully (Si is easy)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:271
+#: 92dc97865ef7499aa710460888118540
+msgid "Generates 4 plots + summary file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:272
+#: def7b9ea55de457dad2a259e1777407f
+msgid "Output in `01/job_*/` directories"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:274
+#: 5ed20dc8b2934a48ac75e340be8735e2
+msgid "**Check results**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:280
+#: 07815acb34e4436db161c07f64d5d077
+msgid "2. With Custodian (MgO)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:287
+#: 5ccbcc0e710e4e71b4bfe4f41a2fc700
+msgid "9 SCF calculations run in parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:288
+#: f52d822f302c4aabaf6e901453e072d3
+msgid "Some may initially fail (ionic system is hard)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:289
+#: 541ed5b00b994d24a7cea963ea139f64
+msgid "**Custodian automatically recovers** via:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:290
+#: 2c942b61ecd5470f9626d3e2063d7a2c
+msgid "Removing old DM files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:291
+#: 711fa71ebf534fa799139839160449d3
+msgid "Adjusting SCF mixing parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:292
+#: a6dbb26d7fb441fa8e1f6c1c4f8cfc23
+msgid "Increasing MaxSCFIterations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:293
+#: 0a67cdff11fa4425993e9c3cf4b751a7
+msgid "Changing mixer weight"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:294
+#: e9586e3c161b4082bf4cc72d2fe36507
+msgid "All calculations succeed after recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:295
+#: 705ef085473847e18d2d2a8ab695cbb0
+msgid "Output files compressed in `siesta_compressed/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:297
+#: fb4d5f4a2d2d48dc8a472f81a14c3a94
+msgid "**Check custodian activity**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:303
+#: 03622549ab9b4c4a807612e4c6609759
+msgid "You'll see: `\"SCFConvergenceHandler\"` if recovery was triggered!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:307
+#: b8ef9c1f3f114d7baea2dffbe76122a3
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:309
+#: a151d86cbbc04699ad3286c0c1b33555
+msgid "Issue 1: \"SCF Not Converged\" (Without Custodian)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:311
+#: 1887c5da024d43d9a7787cb975b9366d
+msgid "**Symptoms**: Job fails with \"SCF cycle did not converge\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:313
+#: dcb584dbd94a4c20a85528463c7e707a
+msgid "**Cause**: Parameters too tight or system too difficult"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:315
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:361
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:383
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:396
+#: 0c5f74217ba040c087f99c3f19e3aff3 0cb86e28ef804daf8817496ee069ce1a
+#: b320d2b839ad46c1b3feb67c93011f90 ed141cacdb444c059665a5145b6409d7
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:316
+#: 8bed42e1d88f47268f43f7c4ec2ba1d6
+msgid "**Enable custodian** (recommended):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:325
+#: d97980eb1737446f9cf9b954fc7e1fe7
+msgid "**Use easier parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:331
+#: 977972617a5842d2bfc8077a0859f2e9
+msgid "**Improve k-points/cutoff**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:338
+#: bb5b0d751c3c4da0a77c7d9eecf89a9e
+msgid "Issue 2: \"Could Not Find Timing\" (With Custodian)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:340
+#: 10428c985d314180a570eb8eec6b19be
+msgid ""
+"**Symptoms**: Log shows `\"Could not find timing for ... Available "
+"parameter mappings: []\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:342
+#: 9e77928097a847d695900cc40b64dd0d
+msgid "**Cause**: Timing in compressed file with different format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:344
+#: 191884bdb9414e41a7303e8cdc031ffb
+msgid "**Solution**: The code checks:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:345
+#: f65f48cc1ca14a718af02fad2af1cd0f
+msgid "`siesta.out` (uncompressed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:346
+#: 88dd831104904df5b0d3657331939324
+msgid "`siesta.out.gz` (compressed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:347
+#: 1a268af4e9264aea8771d0eaf6772ac5
+msgid "`siesta_compressed/siesta.times.gz` (custodian compressed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:348
+#: 60c2946b7ad44e6795d621d9e0b0a6ec
+msgid ""
+"Recognizes both `\"Elapsed wall time\"` and `\"Total elapsed wall-clock "
+"time\"` formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:350
+#: 13fa19bd47444ef68d08b0997a05c4f4
+msgid "If you still see this error, update your atomate2siesta installation!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:352
+#: 54f8b636f33140b193b7d4072658495a
+msgid "Issue 3: \"Energy Landscape is Noisy\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:354
+#: 63c54399ba2b4108b11644da53f6d024
+msgid "**Symptoms**: 2D heatmap shows irregular energy surface"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:356
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:392
+#: 6082f05b58064373bd2c1b248606dddd cf8251c8b3af4efeabb62e8113d0034b
+msgid "**Causes**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:357
+#: 8b3328a4714e48c196f86a7e9f657e1d
+msgid "K-points not converged"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:358
+#: 3ff12b51e2044a46a4c2ac37d5b8ff7a
+msgid "Mesh cutoff not converged"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:359
+#: 6a838ee9d88e4d36b3ca39e88559631c
+msgid "SCF convergence issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:362
+#: 1fda63fecb6c4b8e8ede5458b0f22def
+msgid "**Run k-points/cutoff convergence first**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:363
+#: e0b9198562874155b099a9c679d17a80
+msgid "See [Main Convergence README](../README.md#detailed-tutorial-guides)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:364
+#: 584ed90d967945f5b560da8c7ebdf581
+msgid "Get converged k-points and cutoff values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:365
+#: d4c5f8a4bd8342a5a20cc827be612a0b
+msgid "Use those in your basis parameter tests"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:367
+#: 8dbefc3d75b64175803ab514ade8aadd
+msgid "**Tighten SCF tolerance**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:377
+#: 0fd62d33b66344efb17f6cabed74ad76
+msgid "Issue 4: \"Basis Too Large\" (> 1000 Orbitals)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:379
+#: 37dc475b99754a14ad7c0599c04ba1f0
+msgid "**Symptoms**: SIESTA reports huge number of orbitals, very slow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:381
+#: 8053e26d10b44606971a9484cd272340
+msgid "**Cause**: EnergyShift too low or SplitNorm too low"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:384
+#: bea6a0cdbb8f4d5dba1a83ea597f1b43
+msgid "Increase EnergyShift (tighter confinement)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:385
+#: 04333d33054940838ad088e7ba6f5964
+msgid "Increase SplitNorm (less splitting)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:386
+#: 969533d82cfd4631992b1b916d5fb01c
+msgid "Check if such large basis is actually necessary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:388
+#: 7fb21ca3199f4cd3ae95b07b50eb3b0f
+msgid "Issue 5: \"All Parameters Give Same Energy\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:390
+#: 0407a769815d48a3a80786579382b36e
+msgid "**Symptoms**: Energy barely changes across parameter grid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:393
+#: fbd7ff139a024cb49fa6f00e09557798
+msgid "System already converged with DZP basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:394
+#: 0d6458416f2745be8f5870ac2590ae0e
+msgid "k-points/cutoff are the limiting factor"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:397
+#: b863f8cb965d49bb9e7634238a8a0bc5
+msgid "This is actually good news! Use standard parameters (ES=0.01, SN=0.15)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:398
+#: 07abe0dc068f4a1c936809870d57d8c9
+msgid "Focus on converging k-points and cutoff instead"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:402
+#: 49f0e5ff32e54b4c9ac72f70b3a54a5f
+msgid "Interpreting Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:404
+#: a0c1fea13f7a4b018d9f92d3965e414a
+msgid "How to Read the 2D Heatmap"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:406
+#: 9ebdf41aab8f47c0a2ba02ec1736a39c
+msgid ""
+"**X-axis**: PAO.EnergyShift (Ry) **Y-axis**: PAO.SplitNorm **Color**: "
+"Total energy (darker = lower = better)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:410
+#: 97482b321d494247b6bf3f948110793c
+msgid "**What to look for**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:411
+#: c28df71a19ee4328a234dafa4930b71b
+msgid "**Minimum energy point**: Darkest spot (optimal parameters)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:412
+#: 546d4b1f19f24c0ab26996836dc8b9cf
+msgid "**Flat region around minimum**: Good! Shows parameters are stable"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:413
+#: ba384b722abb4fc0a59ef2f9c0e6ced4
+msgid "**Sharp gradients**: Bad! Energy very sensitive to small changes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:414
+#: 5e19ecbfdfd54fb382debd7f9a59d06f
+msgid "**Monotonic decrease**: Need tighter parameters (extend grid)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:416
+#: a0b1d0b7c84046a5988a426163701534
+msgid "Example Interpretation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:432
+#: 264ab37c296b427782c42757ee6ce472
+msgid "Basis Size Considerations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:434
+#: ba55bc3b75e247619079626325a3289f
+msgid "Check SIESTA output:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:440
+#: c6a4308ab2d54f54ae2b2035561c5519
+msgid "DZ: ~100-200 orbitals (for small systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:441
+#: 77dbf6d29e374073b3332b2f1ab7f33e
+msgid "DZP: ~200-400 orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:442
+#: ad97de98e3724474aaac16b71db1e575
+msgid "TZP: ~400-800 orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:444
+#: a9dd71628a824b1492705a20eb088304
+msgid "**With parameter variations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:445
+#: 8188fa64b2de4b90913ada38b6b14ba8
+msgid "Lower EnergyShift: +20-50% more orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:446
+#: db53ba9068614463a9dc26825da01594
+msgid "Lower SplitNorm: +10-30% more orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:448
+#: 058e6d03be0e45518c28f909e90e0462
+msgid ""
+"**Acceptable**: 100-500 orbitals for most systems **Warning**: > 1000 "
+"orbitals may indicate over-optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:453
+#: 1c4ec905096f45ff8a085edb5670721d
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:455
+#: 2f7de9d7c63f4bc48ad0a57123e3af56
+msgid ""
+"✅ **Converge k-points and cutoff first**: Don't test basis parameters "
+"with unconverged k-points!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:457
+#: 6797e24431424019a008333de894d048
+msgid "✅ **Start with 3×3 grid**: Quick test to identify optimal region"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:459
+#: 4bbb0292bb8a49ac82b3f71494050007
+msgid ""
+"✅ **Use custodian for difficult systems**: Ionic compounds, metals, "
+"magnetic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:461
+#: 68f49e0d56164c6fac5b109d7c15eec7
+msgid ""
+"✅ **Check basis size**: Note number of orbitals for each parameter "
+"combination"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:463
+#: 964ace3113ca46119237f1264784fee9
+msgid "✅ **Material-specific ranges**: Ionic needs tighter than metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:465
+#: a5ded72e45194f0d8f64e1c800279311
+msgid ""
+"✅ **Document your choice**: Save convergence plots and summary for your "
+"paper"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:467
+#: 7dbcbf990f6f45c1a61dfc3b2fcef5b7
+msgid "✅ **Verify SCF convergence**: All calculations must converge properly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:469
+#: f681adfedd8945599dc84ad93190b094
+msgid "✅ **Balance accuracy vs. cost**: Tightest parameters not always necessary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:473
+#: b7832aa62aaa42b5a36973fa21432005
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:475
+#: 82d0ec1848c94cc5aad3de11856ecebc
+msgid "After completing basis parameter convergence:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:477
+#: f9a3f1c266104077ad1077cbe2fffeb4
+msgid "**Use converged parameters** in production calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:478
+#: 7102e5ba28f941d786dd6cee67c98e0d
+msgid "**Test different basis sizes**: DZ vs. DZP vs. TZP with optimal parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:479
+#: 6244447ff4904f93aa120e6196d205a1
+msgid ""
+"**Apply to workflows**: [EOS](../../02-equation-of-states/), [Elastic "
+"Constants](../../04-mechanical/), [Phonons](../../06-vibrational-"
+"properties/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:480
+#: cf0d1c9d7ee34aed91ab968228b6c41e
+msgid ""
+"**Material-specific presets**: See [Tier System](../../../03-advanced-"
+"features/01-tier-system/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:484
+#: a7f086dfc96f4dee9aad89b2a419b825
+msgid "Advanced: Custom Parameter Ranges"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:486
+#: e59053faa6d14b75817ec8c1774fc68a
+msgid "For advanced users wanting to explore specific regions:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:504
+#: 6b4c628c7a9e47989c42e9f7db4df963
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:506
+#: 3b9e589d49974ca186f27ec09725a889
+msgid "**SIESTA Manual**: Section on PAO basis generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:507
+#: 2e82a26074694084870186cb1047ae2e
+msgid ""
+"**Junquera et al.** (2001). \"Numerical atomic orbitals for linear-"
+"scaling calculations.\" *Phys. Rev. B* 64, 235111."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:508
+#: 9ca929a375ea47328f3676f7b7661f6d
+msgid ""
+"**Artacho et al.** (2008). \"The SIESTA method; developments and "
+"applicability.\" *J. Phys.: Condens. Matter* 20, 064208."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:512
+#: b0e61fcb2ccb4d2b8563b599cd33f221
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:514
+#: 875cb7d996374340b9e8d01de69b83d2
+msgid "**Key Takeaways**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:515
+#: d83a44736c594e40a9953c1d0bb46a01
+msgid "PAO.EnergyShift and PAO.SplitNorm significantly affect accuracy and cost"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:516
+#: f57a97ff34624e5eb28f0dcd13796d6b
+msgid "Silicon (covalent): Converges easily without custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:517
+#: 65acd856b54c4d869baf2eac364327ad
+msgid "MgO (ionic): **Requires custodian** for automatic error recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:518
+#: afe958449e4a4d2bb17e605ce2a2b22d
+msgid "Optimal parameters: Usually ES ≈ 0.01 Ry, SN ≈ 0.15 (material-dependent)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:519
+#: f1e074d6c9ef4db8a4b07dc95fd50392
+msgid "Always converge k-points and cutoff before testing basis parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:521
+#: 23d49938ef9d4bd2932be021d365027c
+msgid "**When to use custodian**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:522
+#: 390b812627b149708b91828fbf8b5e50
+msgid "✅ Ionic compounds (MgO, NaCl, oxides)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:523
+#: 97725a8d5c8c47abb9fc3b81fac8e056
+msgid "✅ Magnetic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:524
+#: 76c93b5dd41e4cefa989e193caa64815
+msgid "✅ Difficult SCF convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:525
+#: 0549050d106b4718bd214dd9683f714a
+msgid "✅ Production workflows (high success rate)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md:529
+#: 3f52b08e7c584e5fa296570c8e2d2762
+msgid ""
+"*Back to [Convergence Studies](../README.md) | [Main Tutorial "
+"Index](../../../README.md)*"
+msgstr ""
+

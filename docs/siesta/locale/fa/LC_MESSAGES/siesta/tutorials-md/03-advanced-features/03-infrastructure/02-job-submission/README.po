@@ -1,0 +1,866 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:1
+#: e505ca8517ee483e90b6df83da31ed49
+msgid "HPC Job Submission Tutorial"
+msgstr "HPC Job Submission Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:3
+#: ed15cdf68a20403e86be765e4cdc1118
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:5
+#: 4eaabe8b18f44a969c42ff8d60f549b8
+msgid ""
+"This tutorial demonstrates **jobflow-remote**, a modern system for "
+"submitting calculations to HPC clusters with automatic queue management, "
+"MongoDB backend, and comprehensive CLI tools."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:7
+#: 501e804474f14c538e4483924309d7e9
+msgid "**Why jobflow-remote?**"
+msgstr "**Why jobflow-remote?**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:8
+#: 9906ed36a19b4bc08e5174d89dc8968e
+msgid "✅ **Simpler** than FireWorks (YAML configuration)"
+msgstr "✅ **Simpler** thn FireWیاks (YAML configurtion)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:9
+#: 1ed96fa2f9d84f82a34c95b17d055d2a
+msgid "✅ **Modern** CLI with comprehensive commands"
+msgstr "✅ **Modern** CLI با comprehensive commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:10
+#: 029f70082a294af3876c1261bd3626ca
+msgid "✅ **Flexible** workers (local, SLURM, PBS, SGE)"
+msgstr "✅ **Flexible** wیاkers (locl, SLURM, PBS, SGE)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:11
+#: f9909070f435407db5d163b0ecb1806f
+msgid "✅ **Automatic** queue management"
+msgstr "✅ **Automtic** queue mngement"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:12
+#: 1de1c4d478984ac6bb1f4251630fc0bb
+msgid "✅ **Built-in** MongoDB integration"
+msgstr "✅ **Built-in** MongoDB integrtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:16
+#: b0887a7d98d64186bd8cf3c4f5026f52
+msgid "Quick Start (5 Commands)"
+msgstr "شروع سریع (5 Commوs)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:36
+#: e0c3024cb2ad4d95a033f31b3f5a707a
+msgid "Installation"
+msgstr "Instlltion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:38
+#: d8d626463aa841f89f85f05173a90404
+msgid "Using CLI Helper (Recommended)"
+msgstr "استفاده از CLI Helper (Recommended)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:48
+#: 3972c7152307456f8853bf0e24a3f7fa
+msgid "Direct Installation"
+msgstr "Direct Instlltion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:59
+#: 33421a223a2f42cbada7622a313e7e85
+msgid "Configuration"
+msgstr "Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:61
+#: d3821856aba44b5fb02054819fe355af
+msgid "Generate Configuration File"
+msgstr "Generte Configurtion فایل"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:74
+#: af34db42d37940c3b392f333eefed45b
+msgid "Creates `~/.jfremote/atomate2siesta.yaml` with three sections:"
+msgstr "Creates `~/.jfremote/atomate2siesta.yaml` with three sections:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:76
+#: dd07aec30bbf42dea764a216db928480
+msgid "1. Workers (Execution Environments)"
+msgstr "1. Wیاkers (Execution Environments)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:78
+#: 230c10443a8c436784dd66c3004d9404
+msgid "**Local Worker** (testing):"
+msgstr "**Locl Wیاker** (testing):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:90
+#: 0d07c83f20134826b8149a999007056f
+msgid "**SLURM Worker** (HPC):"
+msgstr "**SLURM Wیاker** (HPC):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:110
+#: 2cc791e645a64a63aa12f693f4e9181c
+msgid "**PBS Worker** (HPC):"
+msgstr "**PBS Wیاker** (HPC):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:127
+#: 54f0b86841a148e2b2f4a83ef27110ca
+msgid "2. Queue Store (MongoDB for job queue)"
+msgstr "2. Queue Stیاe (MongoDB برای job queue)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:139
+#: ae30c79f73ae4fe089e4127a042cd7db
+msgid "3. Job Store (MongoDB for results)"
+msgstr "3. Job Stیاe (MongoDB برای results)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:153
+#: 95a48155b15843eaa0e13f23d32b3622
+msgid "Submitting Jobs"
+msgstr "Submitting Jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:155
+#: 84226edcc20a4d66a864b7454f649907
+msgid "Basic Workflow"
+msgstr "Bsic گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:179
+#: 2028faf6feab498197b738d8579caa0b
+msgid "With Custom Parameters"
+msgstr "With Custom Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:199
+#: b445c170e17b48308d5cfca3ad118287
+msgid "Submitting Workflows"
+msgstr "Submitting گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:216
+#: 38b59c63e5d547e2b5efbcea6720dc44
+msgid "Customizing Submission Parameters"
+msgstr "Customizing Submission Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:218
+#: f76790a832904927860638c31980ac2b
+msgid "Overview: resources and exec_config"
+msgstr "نمای کلی: resources و exec_config"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:220
+#: e545012e7f2541d28092ab7725baecaf
+msgid "When submitting jobs, you can customize two key aspects:"
+msgstr "When submitting jobs, you cn customize two key spects:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:222
+#: 0d10570526124b459b3139d4863fbdae
+msgid ""
+"**`resources`**: SLURM/PBS submission script parameters (nodes, walltime,"
+" memory, etc.)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:223
+#: 6ff1d22d36fd450492e40fd76048d986
+msgid ""
+"**`exec_config`**: Execution environment (modules, environment variables,"
+" pre/post-run commands)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:225
+#: 1740af476483470f8a9ebeb29e91b3c1
+msgid ""
+"Both parameters override worker defaults defined in your YAML "
+"configuration."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:227
+#: 08dd65cefecf4be6877867dd7af16565
+msgid "Customizing Resources"
+msgstr "Customizing Resources"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:229
+#: dee4b7d704f24e839624eb79ed0079c2
+msgid "The `resources` parameter controls SLURM/PBS submission script directives:"
+msgstr "The `resources` parameter controls SLURM/PBS submission script directives:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:231
+#: 8a2bc1e43f07480fa61e6dbd59a3abf2
+msgid "Basic Example"
+msgstr "Bsic مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:248
+#: d10f8d765f364eb9977aa73ee5e0f0e3
+msgid "This generates a SLURM script with:"
+msgstr "This genertes  SLURM script با:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:257
+#: ab8cff2068974ab39d59da4a0db36bce
+msgid "Available Resources Parameters"
+msgstr "Avilble Resources Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:259
+#: db2b00a447d04ea5a5c067777cdb670f
+msgid "**SLURM Parameters**:"
+msgstr "**SLURM Prmeters**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:275
+#: 03d1271c0dd0455190d0bb58aa814de8
+msgid "**PBS/Torque Parameters**:"
+msgstr "**PBS/Tیاque Prmeters**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:286
+#: 6c54fc55dbbc48ddbac761f6f7ceb11f
+msgid "Common Use Cases"
+msgstr "Common Use Cses"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:288
+#: 35f1c6ee19574a3e8b40fb8a7cb177e7
+msgid "**GPU Calculation**:"
+msgstr "**GPU محاسبه**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:301
+#: 4f9b8163bf9447f2a5af885e7b7d4779
+msgid "**High-Memory Job**:"
+msgstr "**High-Memیاy Job**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:314
+#: ccc40294f09c4e07afb60334f94fdaea
+msgid "**Quick Test (Debug Queue)**:"
+msgstr "**Quick Test (Debug Queue)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:327
+#: 5ca6621874f24313a5a3d5407c534238
+msgid "**Production Run with Priority**:"
+msgstr "**Production Run با Priیاity**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:342
+#: 0c2663d64f774330876ab660a239119b
+msgid "Customizing Execution Environment (exec_config)"
+msgstr "Customizing Execution Environment (exec_config)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:344
+#: 17946bde9bda4fc384bb998706dd63d8
+msgid ""
+"The `exec_config` parameter controls the execution environment and "
+"commands:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:346
+#: 8ce95935dbe040e88698d224f84b41b3
+msgid "Structure"
+msgstr "Structure"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:357
+#: ba2bf8fa57dc4cdb9ea12e1099110a96
+msgid "Loading Software Modules"
+msgstr "Loding Softwre Modules"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:369
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:392
+#: 270eee032efe42d8b2b2e6d94619b93a b1e142b2cf324d9c828b2aa75b7153ae
+msgid "Generated script includes:"
+msgstr "Generted script includes:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:376
+#: 82e9662bd1774a90beecbc69017e8e1f
+msgid "Setting Environment Variables"
+msgstr "Setting Environment Vribles"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:399
+#: 20485861a7064a43a5390284c90f1b8a
+msgid "Pre-run Commands"
+msgstr "Pre-run Commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:401
+#: f4523a1483004dcfb2f0e860781ba59f
+msgid "Commands executed **before** the main job:"
+msgstr "Commوs executed **beبرایe**  min job:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:419
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:445
+#: 15609ba135bb4a75acac2720355f130a 4664194cb21349069dc480ff30cd5120
+msgid "Common uses:"
+msgstr "Common uses:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:420
+#: b36022c76fa74549993f4376beec24b5
+msgid "Set system limits (`ulimit`)"
+msgstr "Set system limits (`ulimit`)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:421
+#: cbffae4795744e6ea72ee3297f4f5d6b
+msgid "Create temporary directories"
+msgstr "Crete tempیاry directیاies"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:422
+#: 6c361eb880364cf6bfe34886425ac4ac
+msgid "Log job information"
+msgstr "Log job inبرایmtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:423
+#: 462d34c956324a2890abd9739d308fd0
+msgid "Check GPU availability (`nvidia-smi`)"
+msgstr "Check GPU availability (`nvidia-smi`)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:425
+#: aae2f1768eb14b89ad8a5c6f1835f6cf
+msgid "Post-run Commands"
+msgstr "Post-run Commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:427
+#: c13e3ee389964e23bbb45464dab39877
+msgid "Commands executed **after** the main job:"
+msgstr "Commوs executed **fter**  min job:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:446
+#: c64ae2beba234264a5642e7f570886c7
+msgid "Compress output files"
+msgstr "Compress output files"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:447
+#: bd92d55fa0cc49d1881ac6ce2082fca8
+msgid "Clean up temporary files"
+msgstr "Clen up tempیاry files"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:448
+#: 050bf8c9a6a049e28f3394be5da2642a
+msgid "Log completion status"
+msgstr "Log completion sttus"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:449
+#: a574a81c75934b7dbbece2675457d4b1
+msgid "Archive results"
+msgstr "Archive results"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:451
+#: 16e3f3632bd243ddb8b3dbb88ec4ef71
+msgid "Complete Example"
+msgstr "Complete مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:453
+#: 765df9f459224e8f93ea71238f40bc77
+msgid "Combining all exec_config options:"
+msgstr "Combining ll exec_config options:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:486
+#: 0f896654c7774f129bb4a56b78a18766
+msgid "GPU-Specific Configuration"
+msgstr "GPU-Specific Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:488
+#: fbcce6a1c932432da361c01499dfd80b
+msgid "For GPU calculations, combine resources and exec_config:"
+msgstr "Fیا GPU clcultions, combine resources و exec_config:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:518
+#: 75b995f16d6248279e4666f96f8a49ae
+msgid "Priority and Merging Behavior"
+msgstr "Priیاity و Merging Behviیا"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:520
+#: 52649a954cea4177bd41bffe157ed5d0
+msgid "Priority Order"
+msgstr "Priیاity Order"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:521
+#: 9d152adca7de4f73bf1f02847fea1de7
+msgid "**Highest**: `resources` and `exec_config` in `submit_flow()` (runtime)"
+msgstr "**Highest**: `resources` and `exec_config` in `submit_flow()` (runtime)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:522
+#: 5826eb40f4ce4964b6c9fe812ddd91a5
+msgid "**Lowest**: Worker defaults in `~/.jfremote/projects/atomate2siesta.yaml`"
+msgstr "**Lowest**: Worker defaults in `~/.jfremote/projects/atomate2siesta.yaml`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:524
+#: 527f0fcfe46c4a9ca246782ee0970d44
+msgid "Merging Behavior"
+msgstr "Merging Behviیا"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:525
+#: 46a1d441c4474ac2b064546906a39859
+msgid "**resources**: Overrides matching keys, keeps non-matching defaults"
+msgstr "**resources**: Overrides mtching keys, keeps non-mtching defults"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:526
+#: 16fb65167b49483eb21314a6c71ce762
+msgid "**exec_config**: Merges with worker config (both are executed)"
+msgstr "**exec_config**: Merges با wیاker config (both re executed)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:528
+#: 2089184f8e364959b56b6d9ba259decb
+msgid "Example:"
+msgstr "مثال:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:551
+#: fc28a398987b4d7b9a8970f41458359e
+msgid "Result:"
+msgstr "Result:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:552
+#: 3621471fd20a4f6f96efb2596ce55def
+msgid "`nodes`: 4 (overridden)"
+msgstr "`nodes`: 4 (overridden)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:553
+#: 84bfca1554d5476f926570ab22150154
+msgid "`time`: \"24:00:00\" (from worker default)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:554
+#: 10a7543f3ecb4bb5ae852dd95b332605
+msgid "Pre-run: Both \"module load siesta/4.1\" AND \"ulimit -s unlimited\""
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:556
+#: b8b25eadfad64e40a1d147f0226c6d03
+msgid "Modifying Jobs After Submission"
+msgstr "Modifying Jobs After Submission"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:558
+#: c75fea663b80420bbc8d10f96705322b
+msgid "Use CLI commands to modify resources/exec_config after job is submitted:"
+msgstr "Use CLI commوs to modify resources/exec_config fter job is submitted:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:574
+#: 98cd781ea57b4a98b62556aeebc9be9c
+msgid "**Note**: Job must be in `READY` or `FAILED` state to modify."
+msgstr "**Note**: Job must be in `READY` or `FAILED` state to modify."
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:576
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:963
+#: b9faa5107e2740488fc162ee35e964ae f7fe7df44b244dff9492b291fd3e8792
+msgid "Tutorial Scripts"
+msgstr "Tutیاil Scripts"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:578
+#: 7fb0a1f9287f4738889f4e9243baa753
+msgid "Explore complete examples in the tutorial directory:"
+msgstr "Explیاe complete exmples in  tutیاil directیاy:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:580
+#: 1c8f5f7030e444148bec6b44474d27be
+msgid "`04_custom_resources.py` - Comprehensive resources examples (6 scenarios)"
+msgstr "`04_custom_resources.py` - Comprehensive resources examples (6 scenarios)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:581
+#: 33c560b2cbc5408293450f3967189663
+msgid "`05_exec_config.py` - Execution environment configuration (6 examples)"
+msgstr "`05_exec_config.py` - Execution environment configuration (6 examples)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:582
+#: 82e94fd4c16d465db53685927aaa953c
+msgid ""
+"`06_advanced_submission.py` - Real-world workflows combining both (7 "
+"scenarios)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:584
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:737
+#: 43fc3f614600472a8cbe074c8b0060b5 a8354bdb3e054387ba4e92a03633062b
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:586
+#: 4808e739446c4f0da0fcb83a83b550b2
+msgid "**Resource Allocation**:"
+msgstr "**Resource Alloction**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:587
+#: 2dac5143b162478f8bc0a1bb25657411
+msgid "Start small: Test with 1 node, 30 min in debug queue"
+msgstr "Strt smll: Test با 1 node, 30 min in debug queue"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:588
+#: f3fea4be242a464eb33b50872e9e3cde
+msgid "Standard: 1-2 nodes, 24 hours for production"
+msgstr "Stوrd: 1-2 nodes, 24 hours برای production"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:589
+#: b48cf4442f8b4fde8dfe9f07031408dc
+msgid "Large systems: 4-8 nodes, 48-72 hours"
+msgstr "Lrge systems: 4-8 nodes, 48-72 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:590
+#: 2f98f81eeb9b43818fdc0ad2a6b524cf
+msgid "High-throughput: Many small jobs (1 node, 6 hours each)"
+msgstr "High-throughput: Mny smll jobs (1 node, 6 hours ech)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:592
+#: b7959b1f52a94ca3a18f9f7b31425b6d
+msgid "**Execution Environment**:"
+msgstr "**Execution Environment**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:593
+#: 49b9a2a4497c44829f6aa5f8d42a3d63
+msgid "Always set `SIESTA_PP_PATH` in export"
+msgstr "Always set `SIESTA_PP_PATH` in export"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:594
+#: 26dacc515a9949cd953cc905c6a5f55f
+msgid "Disable threading for pure MPI: `OMP_NUM_THREADS=1`"
+msgstr "Disable threading for pure MPI: `OMP_NUM_THREADS=1`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:595
+#: 6578dac1a44c4754a50f1a733bfa7893
+msgid "Set stack limit: `ulimit -s unlimited` in pre_run"
+msgstr "Set stack limit: `ulimit -s unlimited` in pre_run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:596
+#: 6e5e93f8ea4c4c37a4bb425afae4e478
+msgid "Compress large outputs in post_run: `gzip -9 *.WFSX *.DM`"
+msgstr "Compress large outputs in post_run: `gzip -9 *.WFSX *.DM`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:598
+#: 4b716edb0ce04e048e6501301fa41ce9
+msgid "**Queue Strategy**:"
+msgstr "**Queue Strtegy**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:599
+#: 259310748d25473485cc3ab631525d61
+msgid "Debug queue: Quick tests (<30 min)"
+msgstr "Debug queue: Quick tests (<30 min)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:600
+#: 0ca078c79d60488c99e9849aab93d55b
+msgid "Normal queue: Standard calculations (<48 hours)"
+msgstr "Nیاml queue: Stوrd clcultions (<48 hours)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:601
+#: 5bc9eb36d14c42638a672c6ecb1c0621
+msgid "Large queue: Big jobs (48-72 hours, 4+ nodes)"
+msgstr "Lrge queue: Big jobs (48-72 hours, 4+ nodes)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:602
+#: ae23fd5439544f06bcb78d251082b982
+msgid "GPU queue: GPU-accelerated calculations"
+msgstr "GPU queue: GPU-ccelerted clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:606
+#: 20e531a1cbaf4ad59daf274f80fe3998
+msgid "Runner Management"
+msgstr "Runner Mngement"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:608
+#: de0f863bc13a4126aefe5695f6d0d566
+msgid "Start Runner"
+msgstr "Strt Runner"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:621
+#: cceb377e32034970989c5b2d829e7d5f
+msgid "Check Runner Status"
+msgstr "Check Runner وضعیت"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:633
+#: be6f433faeff46abaa613488513aa76c
+msgid "Stop Runner"
+msgstr "Stop Runner"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:644
+#: 2eed8b9e32a14dcf99ddf3f44742efdd
+msgid "Monitoring Jobs"
+msgstr "Monitیاing Jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:646
+#: 41bf1840d3d243079e8acd7651eba028
+msgid "List Jobs"
+msgstr "List Jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:661
+#: 8fe821fc815845e4a26dce16b5180227
+msgid "Job Details"
+msgstr "Job Detils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:675
+#: 05c6880915ce4605b1d45662a682a553
+msgid "View Output"
+msgstr "View Output"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:685
+#: e044f586862041478b718e03daad62e9
+msgid "Get Results"
+msgstr "Get Results"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:700
+#: d01e525219184169b5d20f69a8a87a17
+msgid "Job Management Commands"
+msgstr "Job Mngement Commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:702
+#: 51dd2dcfbbac4e9690df0940c35a784b
+msgid "Rerun Failed Jobs"
+msgstr "Rerun Filed Jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:708
+#: 89e85365a5f4486096cc1ddb05e90d48
+msgid "Stop Running Job"
+msgstr "Stop اجرای Job"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:714
+#: c7e17ef425bf492481e60109d862705c
+msgid "Retry Job"
+msgstr "Retry Job"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:720
+#: e73bffb9cac24a60ba18db89761fcf6f
+msgid "Unlock Stuck Job"
+msgstr "Unlock Stuck Job"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:726
+#: bf626610a31040019b11029ce0e6212f
+msgid "Delete Job"
+msgstr "Delete Job"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:739
+#: 4a087bc1fa1243dba9cb2334fdadc39a
+msgid "1. Test Locally First"
+msgstr "1. Test Loclly First"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:756
+#: fd3cd3fbbb5d43ae91c85c824b04850d
+msgid "2. Monitor Runner Status"
+msgstr "2. Monitیا Runner وضعیت"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:766
+#: 1d41276c0dac477fbcc21e7d5c30dac1
+msgid "3. Use Appropriate Worker"
+msgstr "3. Use Approprite Wیاker"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:768
+#: 57e2dab0b0aa43babfc91c8c41925123
+msgid "**Local**: Testing, quick calculations"
+msgstr "**Locl**: Testing, quick clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:769
+#: 06e8f0abc0744ea091b88f986dbc3be8
+msgid "**SLURM/PBS**: Production, expensive calculations"
+msgstr "**SLURM/PBS**: Production, expensive clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:770
+#: c196ed6cd3604998822663bf0bfd7f28
+msgid "**Configure memory/time** based on calculation size"
+msgstr "**Configure memیاy/time** bsed on clcultion size"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:772
+#: 9c9269fd66544495a58cdda44500fc55
+msgid "4. Handle Failures"
+msgstr "4. Hوle Filures"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:785
+#: 74423d247f9b401c9cff48f15b8d2bc6
+msgid "5. Database Backups"
+msgstr "5. Dtbse Bckups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:797
+#: 3798fe1cd806421ea78481469377ef48
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:799
+#: d96722be982e4c81947a2fd185150a97
+msgid "Runner Not Starting"
+msgstr "Runner Not Strting"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:801
+#: fd84cf3e5d2f43cf8af456ef221e968e
+msgid "**Problem**: `jf runner start` fails"
+msgstr "**Problem**: `jf runner start` fails"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:803
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:822
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:841
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:861
+#: 04b240243ae14d9e87386fcbdb483b31 686c4c5e3aa644bc85242975ee471a6d
+#: 90f001c45ace4fedbe1bdecba75ef72c bd5a4c43eea447ecb263939138ffa6d3
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:818
+#: 38bc49010199453e8c4c1cb5ac53876a
+msgid "Jobs Stuck in WAITING"
+msgstr "Jobs Stuck in WAITING"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:820
+#: 1046fa247cfb46beb8017b6c2dbcebdd
+msgid "**Problem**: Jobs not running"
+msgstr "**Problem**: Jobs not running"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:837
+#: 70a4fd38071a4853900e897b2d2b248d
+msgid "Remote Worker Connection Failed"
+msgstr "Remote Wیاker Connection Filed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:839
+#: 49a06ec1fb4e4c82953901a752beb825
+msgid "**Problem**: Cannot connect to HPC cluster"
+msgstr "**Problem**: Cnnot connect to HPC cluster"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:852
+#: 002e1a72f3d34d25b177d9948ccc7c3f
+msgid "Test SSH connection:"
+msgstr "Test SSH connection:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:857
+#: b74368d7138e490290c69cfdf113cc03
+msgid "SIESTA Not Found on Worker"
+msgstr "SIESTA Not Found on Wیاker"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:859
+#: 4e74df1172874436b7257f4c9016d8d7
+msgid "**Problem**: \"SIESTA command not found\""
+msgstr "**Problem**: \"SIESTA commو not found\""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:874
+#: b3d76697d91040ea81121f0b629e211d
+msgid "Advanced Usage"
+msgstr "پیشرفته Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:876
+#: 92a9b131aae14f6f8e03b490c206561a
+msgid "Multiple Projects"
+msgstr "Multiple Projects"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:885
+#: 42a58ff462984919bc858b8858efbc54
+msgid "Batch Submission"
+msgstr "Btch Submission"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:898
+#: 4e4c65fb6d9647c691add1357cff34c9
+msgid ""
+"**Note**: See the \"Customizing Submission Parameters\" section above for"
+" comprehensive `resources` and `exec_config` examples."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:902
+#: a3ac696543734f6aa996fb3a3b747fcd
+msgid "Integration with Database Storage"
+msgstr "Integrtion با Dtbse Stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:904
+#: c37a41b8aff2478ab2ecb07b6ad77c60
+msgid ""
+"Jobflow-remote automatically stores results in MongoDB (configured in "
+"jobstore section). Query results using maggma:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:934
+#: b7f7371334c84649ad5ca6ed487c0721
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:936
+#: 70b9bc37160b4aa0b1cae9813c509091
+msgid "Key Takeaways"
+msgstr "Key Tkewys"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:938
+#: 184eb6b8c07e42ceb7f811aed334cda3
+msgid ""
+"✅ **jobflow-remote** manages HPC job submission automatically ✅ **MongoDB"
+" backend** stores queue and results ✅ **Runner daemon** processes jobs in"
+" background ✅ **Flexible workers** support local, SLURM, PBS, SGE ✅ **CLI"
+" tools** simplify setup and monitoring"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:944
+#: 94e64a6c67fd4640bd396a5346b1bc3a
+msgid "Essential Workflow"
+msgstr "ضروری گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:965
+#: f92b2a05040d4c63ba22143ea4863027
+msgid "Explore the complete examples in this directory:"
+msgstr "Explیاe  complete exmples in this directیاy:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:967
+#: 72e5ce03f6c54181a32a7ef8a88b4e1e
+msgid "**01_cli_setup.py** - CLI commands and configuration"
+msgstr "**01_cli_setup.py** - CLI commands and configuration"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:968
+#: 5a53339b900f4ca09d6289577912a06c
+msgid "**02_local_submit.py** - Submit to local worker (dry-run preview)"
+msgstr "**02_local_submit.py** - Submit to local worker (dry-run preview)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:969
+#: c504390b3ecf44c7bb9971ddd6ad0d75
+msgid "**03_monitor_jobs.py** - Job monitoring and status"
+msgstr "**03_monitor_jobs.py** - Job monitoring and status"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:970
+#: 0e47d27ee012477bab2c822b49da8e7b
+msgid "**04_custom_resources.py** - Customize SLURM/PBS resources (6 scenarios)"
+msgstr "**04_custom_resources.py** - Customize SLURM/PBS resources (6 scenarios)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:971
+#: b38f04e223464345920679121066b04c
+msgid "**05_exec_config.py** - Configure execution environment (6 examples)"
+msgstr "**05_exec_config.py** - Configure execution environment (6 examples)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:972
+#: 1ca6b3fb1a6a4a358004fb17e72f0647
+msgid "**06_advanced_submission.py** - Real-world workflows (7 scenarios)"
+msgstr "**06_advanced_submission.py** - Real-world workflows (7 scenarios)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:974
+#: c5b3ab0637f4457b95d969be3d99be3f
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:976
+#: 43e998b593294be7b51c6943662b498e
+msgid "**Setup jobflow-remote**: `atomate2siesta-jobflow-remote setup`"
+msgstr "**Setup jobflow-remote**: `atomate2siesta-jobflow-remote setup`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:977
+#: a5f8c158cd8046588fa2863466df9067
+msgid ""
+"**Try basic tutorials**: `python 01_cli_setup.py`, `python "
+"02_local_submit.py`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:978
+#: af6da6632be74131b8aea01b2262e9c3
+msgid ""
+"**Learn customization**: `python 04_custom_resources.py`, `python "
+"05_exec_config.py`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:979
+#: d6212d275f9e4061913890cb8688540e
+msgid "**Advanced patterns**: `python 06_advanced_submission.py`"
+msgstr "**Advanced patterns**: `python 06_advanced_submission.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:980
+#: 71a2f3c844c5429ba862a2da23a43f58
+msgid ""
+"**Configure HPC worker** for production in "
+"`~/.jfremote/projects/atomate2siesta.yaml`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:981
+#: 7032eb5e97bd4641a09a60e0bf63932f
+msgid "**Database integration**: See `04-infrastructure/01-database-storage/`"
+msgstr "**Database integration**: See `04-infrastructure/01-database-storage/`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/02-job-submission/README.md:985
+#: e1bd078a25484f848f293f2b8e4933d9
+msgid "**Make jobflow-remote your default for HPC calculations!** 🚀"
+msgstr "**Mke jobflow-remote your defult برای HPC clcultions!** 🚀"

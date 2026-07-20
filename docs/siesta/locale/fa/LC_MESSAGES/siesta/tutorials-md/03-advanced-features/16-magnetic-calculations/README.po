@@ -1,0 +1,681 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:1
+#: b1e1594db58d4c43835767d4d0b2d262
+msgid "Tutorial: Magnetic Calculations in atomate2siesta"
+msgstr "آموزش: Mgnetic محاسبهs in tomte2siest"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:3
+#: b5f65c179ff344eebc40997aaf2b41d7
+msgid ""
+"This tutorial covers magnetic calculations in atomate2siesta, including "
+"automatic magnetic moment detection, various magnetic ordering types, and"
+" practical examples."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:5
+#: f6949244bbd142be8c9aef5c590778c3
+msgid "Contents"
+msgstr "Contents"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:7
+#: ca20a66ea3de4ec2b05b8b29426def39
+msgid ""
+"**`01-automatic-moments/`** - Automatic detection and initialization (7 "
+"examples)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:8
+#: 5984d44091634c8b98722fb20c24fbae
+msgid ""
+"**`02-antiferromagnetic/`** - Antiferromagnetic (AFM) calculations (9 "
+"examples)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:9
+#: 45cefa648121472ba4361aab34804ee4
+msgid ""
+"**`03-2d-materials/`** - 2D magnetic materials (9 examples: graphene, "
+"CrI₃, etc.)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:11
+#: 308e47cee5d8447fbd54f206923334e2
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:13
+#: 842f24c9b44447a6a2e007546dd433d2
+msgid "atomate2siesta automatically handles magnetic calculations by:"
+msgstr "tomte2siest utomticlly hوles mgnetic clcultions by:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:14
+#: c3f1d0f5556442b297549dfea69e039c
+msgid ""
+"Detecting magnetic elements (3d/4d transition metals, lanthanides, "
+"actinides)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:15
+#: d1d65402d29842b69fdb038a99c18bc3
+msgid "Assigning physically reasonable initial magnetic moments"
+msgstr "Assigning physiclly resonble initil mgnetic moments"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:16
+#: 851026f37cf94f66be73c332597c2ce0
+msgid "Writing the `DM.InitSpin` block in SIESTA input files"
+msgstr "Writing the `DM.InitSpin` block in SIESTA input files"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:17
+#: 3611f30b91d14e928b12a74325981b7b
+msgid "Supporting various magnetic orderings (FM, AFM, FiM, custom)"
+msgstr "Suppیاting vrious mgnetic یاderings (FM, AFM, FiM, custom)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:19
+#: 9e49e50c3d8844aeb0529daf1655d556
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:21
+#: 33081b544cde4aa8a5c4c8111c5f0272
+msgid "Automatic Ferromagnetic (Default)"
+msgstr "Automtic Ferromgnetic (Defult)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:34
+#: 24590523afb648ffbda96548a6de3f61
+msgid "Antiferromagnetic Ordering"
+msgstr "Antiferromgnetic Ordering"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:47
+#: ece42c53ff814ee39c5a20a6937fb7d6
+msgid "Supported Magnetic Elements"
+msgstr "Suppیاted Mgnetic Elements"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:49
+#: 5d005dbeb97343e680f68d3f8f0c6298
+msgid "3d Transition Metals (Commonly Magnetic)"
+msgstr "3d Trnsition Metls (Commonly Mgnetic)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:50
+#: 0ffda0237b9444faabfda7163911f1d1
+msgid "**Cr** (Z=24): 4.0 μB"
+msgstr "**Cr** (Z=24): 4.0 μB"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:51
+#: 973aa94bf83b471883c1a8b6a990d96a
+msgid "**Mn** (Z=25): 5.0 μB"
+msgstr "**Mn** (Z=25): 5.0 μB"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:52
+#: 43422a5610304612b1787217dce6605f
+msgid "**Fe** (Z=26): 4.0 μB"
+msgstr "**Fe** (Z=26): 4.0 μB"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:53
+#: f81f5d6d43ec4dd08732291389e36b28
+msgid "**Co** (Z=27): 3.0 μB"
+msgstr "**Co** (Z=27): 3.0 μB"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:54
+#: 1a01d75afbeb49f58cbb21c84362d0f3
+msgid "**Ni** (Z=28): 2.0 μB"
+msgstr "**Ni** (Z=28): 2.0 μB"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:56
+#: 987aaab60e5641ff85c81a6f2fa36d67
+msgid "4d Transition Metals"
+msgstr "4d Trnsition Metls"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:57
+#: 2a540ab0d26f4828b35b105d79b38230
+msgid "Mo, Tc, Ru, Rh (Z=42-45): 1.0 μB (default)"
+msgstr "Mo, Tc, Ru, Rh (Z=42-45): 1.0 μB (defult)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:59
+#: 7503d414942f453c8749902a6e1e2bf3
+msgid "Lanthanides"
+msgstr "Lnthnides"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:60
+#: f5273e911c404786bea5c247b16208de
+msgid "La through Tm (Z=57-69): 1.0 μB (default)"
+msgstr "L through Tm (Z=57-69): 1.0 μB (defult)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:61
+#: f71a61fc3fa145d482893c70d8b49da8
+msgid "**Gd** (Z=64): 7.0 μB (highest)"
+msgstr "**Gd** (Z=64): 7.0 μB (highest)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:63
+#: f83c230521b64bd99db2caf8b4177900
+msgid "Actinides"
+msgstr "Actinides"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:64
+#: 79d50c49b1d449a0821e86381d9ab5f2
+msgid "Ac through Es (Z=89-99): 1.0 μB (default)"
+msgstr "Ac through Es (Z=89-99): 1.0 μB (defult)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:66
+#: 719ec93d6a8640f79b75634aa1ffb3de
+msgid "Magnetic Ordering Types"
+msgstr "Mgnetic Ordering Types"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:68
+#: 42b8227a8ad440c6a16863acdfab3bb9
+msgid "1. Ferromagnetic (FM)"
+msgstr "1. Ferromgnetic (FM)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:69
+#: bed040398655436596585c76c911f02d
+msgid "All magnetic moments aligned parallel (same direction)."
+msgstr "All mgnetic moments ligned prllel (sme direction)."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:75
+#: f228475b4069482893e5a559eb5f1730
+msgid "**Example materials**: Fe, Co, Ni metals"
+msgstr "**مثال mterils**: Fe, Co, Ni metls"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:77
+#: cc261a49ad5441ac9842c11b1a6b7677
+msgid "2. Antiferromagnetic (AFM)"
+msgstr "2. Antiferromgnetic (AFM)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:78
+#: 46ad876ae72c4aebbbeb8cac2b5e1a4a
+msgid "Magnetic moments alternate between up and down."
+msgstr "Mgnetic moments lternte between up و down."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:84
+#: c3daac2f80a7454388bf93d657cdd740
+msgid "**Example materials**: NiO, MnO, FeO, Cr₂O₃"
+msgstr "**مثال mterils**: NiO, MnO, FeO, Cr₂O₃"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:86
+#: c856d9dfb50e43c69a1add75192be220
+msgid "3. Ferrimagnetic (FiM)"
+msgstr "3. Ferrimgnetic (FiM)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:87
+#: dbee940f325142d1b037c74955cbe3ae
+msgid "Like AFM but with unequal moment magnitudes on different sublattices."
+msgstr "Like AFM but با unequl moment mgnitudes on different sublttices."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:93
+#: 658e1afc4d354e92bd84752d1c29c7c5
+msgid "**Example materials**: Fe₃O₄ (magnetite), ferrites"
+msgstr "**مثال mterils**: Fe₃O₄ (mgnetite), ferrites"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:95
+#: e1a0cc62dd1043f3947182eae87dec90
+msgid "4. Custom Patterns"
+msgstr "4. Custom Ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:96
+#: b8c5a708d5ca40f1bccffe72f1e196cd
+msgid "User-defined magnetic configurations for complex structures."
+msgstr "User-defined mgnetic configurtions برای complex structures."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:98
+#: a9ede31b01d5488eb3662fde0bfa096c
+msgid "Key Functions"
+msgstr "Key Functions"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:100
+#: d670c75e55f04f7e806975464a69e48a
+msgid "`get_default_initial_magnetic_moments(structure)`"
+msgstr "`get_default_initial_magnetic_moments(structure)`"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:101
+#: 654d575846984310a153e5657872f392
+msgid "Automatically detect magnetic elements and assign default moments."
+msgstr "Automticlly detect mgnetic elements و ssign defult moments."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:110
+#: da9bc3e384154861a8782e45d2128468
+msgid "`set_magnetic_ordering(structure, ordering, ...)`"
+msgstr "`set_magnetic_ordering(structure, ordering, ...)`"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:111
+#: f7237d0da0cc4fd1b3970ecd5fc15cae
+msgid "Set specific magnetic ordering patterns."
+msgstr "Set specific mgnetic یاdering ptterns."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:130
+#: e68fd358fe454476874a8a04d703263a
+msgid "`get_magnetic_structure_info(structure)`"
+msgstr "`get_magnetic_structure_info(structure)`"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:131
+#: dfcd4a7ac63f49b0a42f43db1668da9a
+msgid "Analyze structure and get magnetic information."
+msgstr "Anlyze structure و get mgnetic inبرایmtion."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:141
+#: 5ce3c7cb5a4e4e25a79b54246859c306
+msgid "`pymatgen_to_ase(..., magnetic_ordering=\"AFM\")`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:142
+#: e8d5f609fd8d4bc7964ab9ad40627ef2
+msgid "Convert structure with specific magnetic ordering."
+msgstr "Convert structure با specific mgnetic یاdering."
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:151
+#: 6c77b60695b94611999c85011e8c247e
+msgid "DM.InitSpin Block"
+msgstr "DM.InitSpin Block"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:153
+#: 5a1dcf6e69714d8faba28148f0640f97
+msgid "SIESTA uses the `DM.InitSpin` block to set initial magnetic moments:"
+msgstr "SIESTA uses the `DM.InitSpin` block to set initial magnetic moments:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:162
+#: 168c5194d0ff4a6f834724963930d043
+msgid ""
+"This block is automatically generated from the magnetic moments set on "
+"the ASE Atoms object."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:164
+#: 776e664296e7403f8ae91aeb94a5be52
+msgid "Tips and Best Practices"
+msgstr "نکتهs و بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:166
+#: 134b0ea2fcf3423cb56740ffc589e28d
+msgid "**Start with defaults**: Let the system auto-detect and assign moments"
+msgstr "**Strt با defults**: Let  system uto-detect و ssign moments"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:167
+#: 8f83f2b8d6bd4424a4057dddc4e7f9f9
+msgid "**For oxides**: AFM is often the ground state (NiO, MnO, etc.)"
+msgstr "**Fیا oxides**: AFM is often  ground stte (NiO, MnO, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:168
+#: 27fde055bb07456d8bdf8b1651217fef
+msgid "**For metals**: FM is typically preferred (Fe, Co, Ni)"
+msgstr "**Fیا metls**: FM is typiclly preferred (Fe, Co, Ni)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:169
+#: eb29aa7e3a914e05a8b4365e34a34b7f
+msgid "**Check convergence**: Test different initial configurations"
+msgstr "**Check convergence**: Test different initil configurtions"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:170
+#: 73f4a57d1f5a4d1da057fa413a54b86c
+msgid "**Use 2D presets**: For 2D magnetic materials, use `2d_magnetic` preset"
+msgstr "**Use 2D presets**: For 2D magnetic materials, use `2d_magnetic` preset"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:172
+#: e21fda757b7a4b509a51bee8c53d66c1
+msgid "Common Magnetic Materials"
+msgstr "Common Mgnetic Mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 42668bc0fa884086805539326dfc9e48
+msgid "Material"
+msgstr "Mteril"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 703a0e153a7e49cea63ee100bfa5f3ab
+msgid "Formula"
+msgstr "Fیاmul"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 6435521030e74139a795cfff7100f124
+msgid "Ordering"
+msgstr "Ordering"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 34c0ecc08b094bdf88ca535e4f2da7ef
+msgid "Ground State"
+msgstr "Ground Stte"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 4fea743acae149bd8ff918059c9d9c24
+msgid "Iron"
+msgstr "Iron"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 94b253dbdafd4bed96bc18d3f55ca37c
+msgid "Fe"
+msgstr "Fe"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 2831f27dfe4a4e3ca931c9c2b42778ce 2b3e411f40bf4558aee3121b1861176f
+#: 522b246704f1412a89fbda1d534b8887
+msgid "FM"
+msgstr "FM"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: a886339cd4314076bf5f05384997a5db
+msgid "BCC, magnetic"
+msgstr "BCC, mgnetic"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 45976a56c73842cba5e3104803a092bd
+msgid "Nickel"
+msgstr "Nickel"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 952bb1f4530a4a8d843da1f47e434fee
+msgid "Ni"
+msgstr "Ni"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 2497184cebf14b978cf366ed1eecca7b
+msgid "FCC, magnetic"
+msgstr "FCC, mgnetic"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 0731c029b3d04ee3b1af2e4c9cac51ac
+msgid "Nickel oxide"
+msgstr "Nickel oxide"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: d3fb3fafd99e4f0d8c6b3edf95bb40b1
+msgid "NiO"
+msgstr "NiO"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 6f588220eb9648a8af64cf057ea0468c
+msgid "AFM (Type II)"
+msgstr "AFM (Type II)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 22a15945af2d4cd792ef807bf5db6779 53b4506a1aa7439bb5fce2425a80c9d5
+#: ca3e6ae4121c4513b02fe5ff371b42ac
+msgid "Rock salt"
+msgstr "Rock slt"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: af726036ef9b4837857ec9f89699fff9
+msgid "Iron oxide"
+msgstr "Iron oxide"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: f0c599a63e204ac7a47e0ff07155d309
+msgid "FeO"
+msgstr "FeO"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 00945929c9b94d33970742cfb73c1979 1b00e56595a948e09c778196a592c280
+#: cd69f132ab514ec3a0d57dfb1e9e7812 e00f5228bbd04ad4af53f00e376c1876
+msgid "AFM"
+msgstr "AFM"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 9d47d14072884b28af0b731b83bd811d
+msgid "Manganese oxide"
+msgstr "Mngnese oxide"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 2871d7ef84484743ac822539265f3983
+msgid "MnO"
+msgstr "MnO"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: b131e44f6f144ef7b2991a5e9bdd36e6
+msgid "Magnetite"
+msgstr "Mgnetite"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 62995fb78384419294a0ff1d9fd302f7
+msgid "Fe₃O₄"
+msgstr "Fe₃O₄"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: e6568c70a40945d38134a6dc9cc643d0
+msgid "FiM"
+msgstr "FiM"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 8a93bf98a45a408384450ca091cca31e
+msgid "Inverse spinel"
+msgstr "Inverse spinel"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 7e19e5d1f0124815b33e381f990693fa
+msgid "Chromium"
+msgstr "Chromium"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: e898b80143a04b45869f70094db6188c
+msgid "Cr"
+msgstr "Cr"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 55a2c91c67264184a0fd15e804f5c5f5
+msgid "BCC"
+msgstr "BCC"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 326d53d7e29a46d795541d877e893e64
+msgid "Chromium(III) oxide"
+msgstr "Chromium(III) oxide"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 2f78bb5eff504bfca071482744beaf77
+msgid "Cr₂O₃"
+msgstr "Cr₂O₃"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: c1e6644d79a846a3bdc628657aee116f
+msgid "Corundum"
+msgstr "Cیاundum"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 081125a219af49e88ef5b97b55442cf8
+msgid "Cobalt"
+msgstr "Coblt"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: 789c329ae6304d008854cea5e3d539f3
+msgid "Co"
+msgstr "Co"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md
+#: a0f605e9d1404770955100ed712c677a
+msgid "HCP, magnetic"
+msgstr "HCP, mgnetic"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:186
+#: 9e490d80423b4f4dab56c9f3d874ef54
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:188
+#: 123f4c3f88684e97a0f1d1378ed71cc8
+msgid "Spin-Orbit Coupling (SOC)"
+msgstr "Spin-Orbit Coupling (SOC)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:189
+#: 22fc44bd548b4e789c869e2fc9716cdf
+msgid "For heavy elements, enable SOC in spin settings:"
+msgstr "Fیا hevy elements, enble SOC in spin settings:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:198
+#: 771cceb4694e4c0da0127cd551a08fd7
+msgid "Non-Collinear Magnetism"
+msgstr "Non-Colliner Mgnetism"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:199
+#: a0fd7c020e00462e9997e346f105233f
+msgid "For complex magnetic textures:"
+msgstr "Fیا complex mgnetic textures:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:207
+#: cdc54139cd09408ca28d95fe5daa7fe9
+msgid "Constrained Magnetic Moments"
+msgstr "Constrined Mgnetic Moments"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:208
+#: 8e4679489ffe42df8dadd7c136ff0493
+msgid "Fix total magnetization:"
+msgstr "Fix totl mgnetiztion:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:217
+#: dbb5b781f5094016b9414e41d2a1350c
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:219
+#: 9e27d4a8e9b34c6597ae363746e4913c
+msgid "Issue: SCF not converging with magnetic moments"
+msgstr "Issue: SCF not converging با mgnetic moments"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:220
+#: b72355f776044d5abd79b55e07c4fc31
+msgid ""
+"**Solution**: Try different initial configurations (FM vs AFM) or reduce "
+"mixer weight:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:229
+#: da80e0c22c674c81afe224c1c38a0895
+msgid "Issue: Wrong magnetic ground state"
+msgstr "Issue: Wrong mgnetic ground stte"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:230
+#: ed385c72c9a348cfae43cbe60d150a48
+msgid "**Solution**: Test multiple configurations and compare energies:"
+msgstr "**Solution**: Test multiple configurtions و compre energies:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:239
+#: a7a28159b1764acebf912d4d7438f3df
+msgid "Issue: Magnetic moments collapse to zero"
+msgstr "Issue: Mgnetic moments collpse to zero"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:240
+#: 9b1d4e0e94cb45c79649728501fa6279
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:241
+#: 1106865cc6b84b5aadb77bf478344756
+msgid "Ensure `Spin: polarized` is set"
+msgstr "Ensure `Spin: polarized` is set"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:242
+#: d3ac073870b647478e7b5d3d5e382e15
+msgid "Check if material is actually magnetic"
+msgstr "Check if mteril is ctully mgnetic"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:243
+#: 75509e0ed597478abc311d66ea5e87f1
+msgid "Try larger initial moments"
+msgstr "Try lrger initil moments"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:244
+#: 017c4686bd38425c81731b0425243425
+msgid "Check pseudopotentials support magnetism"
+msgstr "Check pseudopotentils suppیاt mgnetism"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:246
+#: 281197721fcb47f0b7ea9fb822a8a50b
+msgid "Example Workflows"
+msgstr "مثال گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:248
+#: d6409b1270f04a73a5413f3faeac016e
+msgid "See the individual tutorial files for complete working examples of:"
+msgstr "See  individul tutیاil files برای complete wیاking exmples of:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:249
+#: 84b91fd4bfe047fb9d0849fb2193ee42
+msgid "Automatic magnetic moment detection"
+msgstr "Automtic mgnetic moment detection"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:250
+#: 13b6273e17d54b4b8e309e0041653119
+msgid "FM, AFM, and FiM calculations"
+msgstr "FM, AFM, و FiM clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:251
+#: 79677b06546e446f85e538494e7f9c5d
+msgid "Custom magnetic patterns"
+msgstr "Custom mgnetic ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:252
+#: b839820c98fc4579972c30461c91576a
+msgid "2D magnetic materials (CrI₃, VSe₂)"
+msgstr "2D mgnetic mterils (CrI₃, VSe₂)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:253
+#: 160bec1efb6f4ce19150be44c03729e4
+msgid "Magnetic oxide calculations (NiO, Fe₂O₃)"
+msgstr "Mgnetic oxide clcultions (NiO, Fe₂O₃)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:255
+#: 4680fd538fdd4ee8aee831b91310d6c1
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:257
+#: ff22a7b9445548d3aef93a22b5a15342
+msgid "SIESTA Manual: Spin polarization section"
+msgstr "SIESTA Mnul: Spin polriztion section"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:258
+#: e474413c0f564be4920a2d8e074bca39
+msgid "[DFT magnetism tutorial](https://docs.materialsproject.org/)"
+msgstr "[DFT magnetism tutorial](https://docs.materialsproject.org/)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:259
+#: 2d721fe0166e4be199edd4a2cb44f2a4
+msgid "Pymatgen magnetic ordering analysis"
+msgstr "Pymtgen mgnetic یاdering nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:261
+#: 2b88c07eba214a6892ca0474630a0bf6
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:263
+#: c122de99b85f4161b21b47529324a6dd
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:264
+#: 73d48990970b46caa38906636b007ee3
+msgid "Try the Recipe Book for quick magnetic workflows"
+msgstr "Try  Recipe Book برای quick mgnetic wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:265
+#: dd0de40d658f4a67ae28e9dbb0b1e2f7
+msgid "Explore DFT+U for strongly correlated systems (Tutorial 08)"
+msgstr "Explیاe DFT+U برای strongly cیاrelted systems (Tutیاil 08)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:266
+#: 7a8fc28b1a1742b8838c810ee95a49a1
+msgid "Learn about phonon calculations in magnetic materials (Tutorial 15)"
+msgstr "Lern bout phonon clcultions in mgnetic mterils (Tutیاil 15)"
+
+#: ../../source/tutorials-md/03-advanced-features/16-magnetic-calculations/README.md:270
+#: 2a740b66b18a48718c2e4df7f42265eb
+msgid ""
+"**Tutorial version**: 1.0 **Last updated**: November 5, 2025 "
+"**Requires**: atomate2siesta v1.0.0+"
+msgstr ""

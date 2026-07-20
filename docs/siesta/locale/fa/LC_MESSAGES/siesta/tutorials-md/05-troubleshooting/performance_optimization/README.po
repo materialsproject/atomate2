@@ -1,0 +1,624 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:1
+#: 8e2352c4d664484781a57bac85b0abec
+msgid "Performance Optimization"
+msgstr "Perبرایmnce Optimiztion"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:3
+#: 4ef58bbec8f64b6eb361dd1f1807da0f
+msgid ""
+"**Category**: troubleshooting/performance_optimization **Difficulty**: "
+"Intermediate **Time**: 50 minutes total"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:7
+#: d3a2b129613146df8b225777acc94838
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:9
+#: 22bcdfd4b68f4f8cbd565b7590bbcca0
+msgid ""
+"This section provides strategies for optimizing SIESTA calculation "
+"performance. Learn how to balance computational cost with accuracy, use "
+"parallelization effectively, and reduce overall calculation time."
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:11
+#: cf668c27b1744458a44d8d18fbc96f67
+msgid "Available Tutorials"
+msgstr "Avilble Tutیاils"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:13
+#: 15b0806a1acd480d82b01839f12db018
+msgid "01_parallel_efficiency.py"
+msgstr "01_parallel_efficiency.py"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:15
+#: 5367eb7b54ec4c22900dd6b03102fa05
+msgid "**Parallel Efficiency**"
+msgstr "**Prllel Efficiency**"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:17
+#: 64455e6eae7343e19d9878b5febd5aa9
+msgid "K-point parallelization (for dense k-meshes)"
+msgstr "K-point prlleliztion (برای dense k-meshes)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:18
+#: 359a664de9e24fdb881db18144497a9e
+msgid "Basis parallelization (for large systems)"
+msgstr "Bsis prlleliztion (برای lrge systems)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:19
+#: 4001df315a0648638dc328781d90fc32
+msgid "Memory vs speed tradeoffs"
+msgstr "Memیاy vs speed trdeoffs"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:20
+#: c38f9c4f81814aeaab90486f26a04b6c
+msgid "HPC resource allocation guidelines"
+msgstr "HPC resource lloction guidelines"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:21
+#: c29fd014cbbc4f219e5565c698c3c047
+msgid "Performance benchmarking"
+msgstr "Perبرایmnce benchmrking"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:22
+#: 07d19e922c0e4d8c8029e0d0fc3416ce
+msgid "Quick optimization checklist"
+msgstr "Quick optimiztion checklist"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:24
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:37
+#: 7dca384c69e54479951f30d9f4075be9 80a4d0f3ce53459eb3d299ddf6e71fe3
+msgid "**Time**: 25 minutes"
+msgstr "**زمان**: 25 minutes"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:26
+#: fd405b76619b45a3b6788b92af65e3c9
+msgid "02_computational_cost_reduction.py"
+msgstr "02_computational_cost_reduction.py"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:28
+#: 2a3fd83998154fd287c8d220a2ebecb8
+msgid "**Computational Cost Reduction**"
+msgstr "**Computtionl Cost Reduction**"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:30
+#: 52e997c274ad444ba5887a7f4952f011
+msgid "Understanding cost factors"
+msgstr "درک cost fctیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:31
+#: 908c4cb4cbd049018d0bc4a29136bc07
+msgid "Using tier presets for cost control"
+msgstr "استفاده از tier presets برای cost control"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:32
+#: 4a4a2d3272c342a9a89cf32346dacdfb
+msgid "When to use tight vs loose convergence"
+msgstr "When to use tight vs loose convergence"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:33
+#: b0492ffea43c47268e53796698baa9c5
+msgid "Calculation hierarchy strategy"
+msgstr "محاسبه hierrchy strtegy"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:34
+#: 3c137277dc4b49e78fae75c9e93426c8
+msgid "Cost vs accuracy tradeoffs"
+msgstr "Cost vs ccurcy trdeoffs"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:35
+#: b710495f7b604d4aac4744003ab8f192
+msgid "Practical cost reduction tips"
+msgstr "Prcticl cost reduction tips"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:39
+#: 18cd94f85a184ce7a9e8680a25f51731
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:41
+#: c436a706dc3d4a558591b0fe392a6232
+msgid "Cost Factors (in order of impact)"
+msgstr "Cost Fctیاs (in یاder of impct)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: c48e4da3b1204f5c867f79010d9fb057
+msgid "Factor"
+msgstr "Fctیا"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 7ba72d74e200430ebaf35b530f9f0158
+msgid "Scaling"
+msgstr "Scling"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 5b82749f42594cdb891f545b2e4ef801
+msgid "Impact"
+msgstr "Impct"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 95e12fc8c28d47618085aafe945344cb
+msgid "System size"
+msgstr "System size"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: d4750eead1d64f8eb1cd19b0e08793e0
+msgid "O(N³)"
+msgstr "O(N³)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 3667e5ad7122422d8f8a8419a893a6a3
+msgid "Largest impact"
+msgstr "Lrgest impct"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 0395f64b313647519bae5657ffdc917f
+msgid "K-points"
+msgstr "K-points"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 527d827078fb4d1d8697cffc9995f865
+msgid "O(N_k)"
+msgstr "O(N_k)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: c3347c20a029470e8e08a9c474d51539
+msgid "Linear with k-point count"
+msgstr "Liner با k-point count"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 293f10489cfd43de893760ea9f312ac3
+msgid "Mesh cutoff"
+msgstr "Mesh cutoff"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: ba2f651e0ca84af79348eb82042156ef
+msgid "O(N_grid)"
+msgstr "O(N_grid)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: fbc8fd6346fc4a9db707c3ecf12d8b8e
+msgid "Higher cutoff = finer grid"
+msgstr "Higher cutoff = finer grid"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 39312fd6b9de4c99a3fcf6a90e598e40
+msgid "Basis size"
+msgstr "Bsis size"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: abf772b344964fe2bfa04a6115e7d5d6
+msgid "O(N_orb³)"
+msgstr "O(N_یاb³)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: af707e73c6e84bafb157cedcb8ec5a22
+msgid "TZP ~3-5x slower than DZP"
+msgstr "TZP ~3-5x slower thn DZP"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:50
+#: aec9859554ef40458b2cbf827fe520d6
+msgid "Recommended Tier Usage"
+msgstr "Recommended Tier Usge"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 9eee4b1bdc674f36b78af4ec1d42928a
+msgid "Application"
+msgstr "Appliction"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 9824ac62f5214a53a941050f8bbc25ce
+msgid "Tier"
+msgstr "Tier"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 4065a77e86f249f69c40a57d6d622601
+msgid "Relative Cost"
+msgstr "Reltive Cost"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: ac3538c6914240939c67def21bbef33e
+msgid "Quick screening"
+msgstr "Quick screening"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 1e763f9e1f7c4a0c9f9f78ce1318deee
+msgid "basic_dirty"
+msgstr "bsic_dirty"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 0e70bbc5fc574f3a991df14925bf9dd9
+msgid "1x"
+msgstr "1x"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: f4d19a5e740042cdb6443c4f3f0cb86d
+msgid "Initial structure"
+msgstr "Initil structure"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: eb901a042be84ed79e137687c4f82b1a
+msgid "basic"
+msgstr "bsic"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 20be9637d5d44c199de14668f555a56e
+msgid "5x"
+msgstr "5x"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 3115a0bcd04f4191b1b7af97e41d2b82
+msgid "Production"
+msgstr "Production"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: f4d4c0284de24700b45901989eaa7be3
+msgid "intermediate"
+msgstr "intermedite"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 5b14887d8d63488d84cc95c6b47a1fe2
+msgid "20x"
+msgstr "20x"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 37f15d7530994e0eb2897a2633a9690f
+msgid "High accuracy"
+msgstr "High ccurcy"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 7778357a3b964041b827a3ef08290ed5
+msgid "advanced"
+msgstr "dvnced"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 46adcfd456a447d08ed486857fec4e16
+msgid "100x"
+msgstr "100x"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 2769e244f50247c0b4df0b81f21e4404
+msgid "Publication"
+msgstr "Publiction"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: b7c050832a40460e8c7233b7b5e33bb3
+msgid "expert"
+msgstr "expert"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 6237b3bcddd24181ac513c436ce83224
+msgid "500x"
+msgstr "500x"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:60
+#: 967f6ada0931429e82c3951a9c38ac9e
+msgid "Parallelization Guidelines"
+msgstr "Prlleliztion Guidelines"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 92bdf68ab69f4a24b6d8148c87fd03c9
+msgid "System Size"
+msgstr "System Size"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 2ab64d398b7044a98a79f45b4ab69efc
+msgid "Cores"
+msgstr "Cیاes"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 308dcedcdfb149feb709fb192b31b378
+msgid "Strategy"
+msgstr "Strtegy"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 661b18e445c9499db0f6b23e2afedc3c
+msgid "< 20 atoms"
+msgstr "< 20 toms"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: f65f01af8175495a87b759da44c18f93
+msgid "4-16"
+msgstr "4-16"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: b02c98bb52d543efb79005c7173a8572
+msgid "K-point parallel"
+msgstr "K-point prllel"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: fb05430fe1f24ee682302c39ccdef77d
+msgid "20-100 atoms"
+msgstr "20-100 toms"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: d67e0216c2ef48548ff522283a395a7b
+msgid "16-64"
+msgstr "16-64"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 538c5ffb8e2f43e8a39fb1262a87b1c3
+msgid "Hybrid"
+msgstr "Hybrid"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: c96e98d3bd3a441eab6a76db57751296
+msgid "100-500 atoms"
+msgstr "100-500 toms"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: a676968aa1ee4efaa5c662f8566db2f4
+msgid "64-256"
+msgstr "64-256"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: cf137cb0ecca4a29a1536c6c3d8d08a4
+msgid "Basis parallel"
+msgstr "Bsis prllel"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 3e4ff9f5847c41c58a612f4e2b975eab
+msgid "> 500 atoms"
+msgstr "> 500 toms"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 87666b124a154950a68485ca7ba00f38
+msgid "256+"
+msgstr "256+"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: fac540f8426d49a5aedbcacc32d8eb1d
+msgid "Basis parallel + OrderN"
+msgstr "Bsis prllel + OrderN"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:69
+#: 41f68454177e42478cfea7ea53b85295
+msgid "Key Optimization Strategies"
+msgstr "Key Optimiztion Strtegies"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:71
+#: 9118b66f58914d18b1f4817a93a0c7dd
+msgid "1. Use Tier Presets"
+msgstr "1. Use Tier Presets"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:81
+#: ee3a825f462144cd8b44893e5f931cc0
+msgid "2. Follow Calculation Hierarchy"
+msgstr "2. Follow محاسبه Hierrchy"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:83
+#: 6c5b8c4dc587402789f5a9523234f917
+msgid "Screening (1 min) → Convergence (30 min) → Production (hours)"
+msgstr "Screening (1 min) → همگرایی (30 min) → Production (hours)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:85
+#: 7e9f81cbafaf46be9590c06940c2fe54
+msgid "3. Use Symmetry (default, free speedup)"
+msgstr "3. Use Symmetry (defult, free speedup)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:87
+#: 572932b289b14016adeed2b583609404
+msgid "Reduces k-points by 2-48x"
+msgstr "Reduces k-points by 2-48x"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:88
+#: 0cbf82192016416f906afac7945e7a7f
+msgid "No accuracy loss"
+msgstr "No ccurcy loss"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:90
+#: c986bae125634b8ea19eba73224b7f29
+msgid "4. Enable Restart Files"
+msgstr "4. Enble Restrt فایلs"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:98
+#: aa17d1b508b14d1687abd680a5ff4c8f
+msgid "5. Memory Optimization"
+msgstr "5. Memیاy Optimiztion"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:107
+#: 0e0e27939743454eac784def42f4b89c
+msgid "Performance Checklist"
+msgstr "Perبرایmnce Checklist"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:109
+#: f323e212015049cea9cbf01ed577a83f
+msgid "Before running:"
+msgstr "Beبرایe running:"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:110
+#: 5dfab15beac24a7a8a1bb3033ccdf353
+msgid "Completed convergence tests"
+msgstr "Completed convergence tests"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:111
+#: 76c8ba642fa8451ea945f111371566d4
+msgid "Using appropriate tier preset"
+msgstr "استفاده از pproprite tier preset"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:112
+#: bfb026e0ca49463e884722fcb78b685e
+msgid "Symmetry enabled (default)"
+msgstr "Symmetry enbled (defult)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:113
+#: d9b77ca720194fc39fc381d75bd8ca50
+msgid "Tested with dry_run=True"
+msgstr "Tested با dry_run=True"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:115
+#: 3155bbd1be8b422daf77e74309f0b746
+msgid "For HPC:"
+msgstr "Fیا HPC:"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:116
+#: 4aa25c0aa57444f7b8c2dbb5caad8c5b
+msgid "Cores match k-point count (k-parallel)"
+msgstr "Cیاes mtch k-point count (k-prllel)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:117
+#: 2c5e8eefdeeb404e872157502c5ed6e1
+msgid "Memory allocation appropriate (4-8 GB/core)"
+msgstr "Memیاy lloction pproprite (4-8 GB/cیاe)"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:118
+#: cdb7031f5dfc49479e255ca25550ed8c
+msgid "Wall time estimated correctly"
+msgstr "Wll time estimted cیاrectly"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:120
+#: 886c003fbba840188e4aac30819676cf
+msgid "Post-calculation:"
+msgstr "Post-clcultion:"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:121
+#: 9827d76f3ff84dd8a54cb0c89e60f305
+msgid "Check timer output for bottlenecks"
+msgstr "Check timer output برای bottlenecks"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:122
+#: 3d969a5cdd694dcd9c6957bcb5973a93
+msgid "Verify parallel efficiency > 70%"
+msgstr "Verify prllel efficiency > 70%"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:123
+#: c1a3635a8c4140f7bd292336e1ed3a97
+msgid "Document optimal parameters"
+msgstr "Document optiml prmeters"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:125
+#: 7db162336a2f4aea9b0c6051dffd77ce
+msgid "Common Bottlenecks"
+msgstr "Common Bottlenecks"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: b428c85c32cf46ac85a1132169ee439c
+msgid "Bottleneck"
+msgstr "Bottleneck"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 308c1bce2b984b1cbaaebd3f94bb96af
+msgid "Symptom"
+msgstr "Symptom"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 480d686ff075485ca90e5e0eb1cf1451
+msgid "Solution"
+msgstr "Solution"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: ddb41d692c134a2c9283943474207b4b
+msgid "SCF iterations"
+msgstr "SCF itertions"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: e4884119ab474e8eac7dca37f6a0e2bf
+msgid "compute_dm dominates"
+msgstr "compute_dm domintes"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: e3362532dcc0480cbe7c8e5ea4f98d14
+msgid "Better initial guess"
+msgstr "Better initil guess"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 7a1bd19bdd1544a396bf2ac85707d4cb
+msgid "Real-space grid"
+msgstr "Rel-spce grid"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 2ff192f18d5648878021b8312182f5f0
+msgid "cellxc dominates"
+msgstr "cellxc domintes"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: a7b53fa5c6be4e418c77a12ecc8f6664
+msgid "Lower mesh cutoff"
+msgstr "Lower mesh cutoff"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 8a2172a916294518a56733f47653312f
+msgid "Diagonalization"
+msgstr "Digonliztion"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 4a045c5ceb1d40e9b629d2d6b6d32fae
+msgid "Slow with many atoms"
+msgstr "Slow با mny toms"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 886cd1de5fff48e3a1f538d5f2a6386f
+msgid "Use OrderN"
+msgstr "Use OrderN"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: 185d05ab81c34eedbed9e7d620e60f24
+msgid "I/O"
+msgstr "I/O"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: fe582f7ec4d04cd197bdbf924b7490e3
+msgid "Waiting for file writes"
+msgstr "Witing برای file writes"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md
+#: fba985b26f244af683445cb589291f99
+msgid "Disable outputs"
+msgstr "Disble outputs"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:134
+#: 884f1954cc3842538c697fa58182117f
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:136
+#: bc919447505b4a1ebec79753af83755c
+msgid "After optimizing performance:"
+msgstr "After optimizing perبرایmnce:"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:138
+#: cc8bb4395bb74b809e6ecc1ac5669fe2
+msgid "`../debugging_workflows/` - Troubleshoot issues"
+msgstr "`../debugging_workflows/` - Troubleshoot issues"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:139
+#: d0567acbc2bb4cf9a252f5f5ad20530f
+msgid "`../../02-workflows/01-convergence/` - Convergence testing"
+msgstr "`../../02-workflows/01-convergence/` - Convergence testing"
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:140
+#: ed0627850ca8495ebc395ed08e648c90
+msgid ""
+"`../../03-advanced-features/07-tier-based-parameters/` - Tier system "
+"details"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/performance_optimization/README.md:144
+#: 195dcb74d4f8465c9cf89c4f17bbc9a8
+msgid "*Back to Troubleshooting Index*"
+msgstr "*Bck to عیب‌یابی Index*"

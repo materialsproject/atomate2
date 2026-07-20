@@ -1,0 +1,1015 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:3
+#: 3cb1228f48794adfbb0db006b52f69b0
+msgid "Contributing"
+msgstr "مشارکت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:5
+#: 28a1e05e729e4cc49870dd37e566bd4e
+msgid ""
+"Thank you for your interest in contributing to atomate2siesta! This guide"
+" will help you get started."
+msgstr ""
+"از علاقه شما به مشارکت در atomate2siesta متشکریم! این راهنما به شما کمک "
+"می‌کند تا شروع کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:10
+#: f009f883854f4ba387a8ab112b4fe89c
+msgid "Getting Started"
+msgstr "شروع کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:13
+#: 20ce56b38a134b07b1cff316c9681f44
+msgid "Development Installation"
+msgstr "نصب توسعه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:15
+#: 33ff41aa915e494397caa6b65eb28961
+msgid "Clone the repository and install in development mode:"
+msgstr "مخزن را کلون کرده و در حالت توسعه نصب کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:23
+#: ce1c64668f084c958ca80c9f96080f20
+msgid "This installs atomate2siesta with all development dependencies:"
+msgstr "این atomate2siesta را با تمام وابستگی‌های توسعه نصب می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:25
+#: 365db1815b774a40bba0bf818d01d41e
+msgid "**dev**: Pre-commit hooks, code formatters"
+msgstr "**dev**: قلاب‌های پیش از commit، قالب‌بندهای کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:26
+#: b57cf2028f6248e58acc32ae643c9f51
+msgid "**tests**: pytest, coverage tools"
+msgstr "**tests**: pytest، ابزارهای پوشش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:27
+#: ea46fd3847c844c9b14693c6890e4769
+msgid "**docs**: Sphinx documentation tools"
+msgstr "**docs**: ابزارهای مستندسازی Sphinx"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:30
+#: 41ec9d7db2744f4987c527f8d0f7d22b
+msgid "Pre-commit Hooks"
+msgstr "قلاب‌های پیش از Commit"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:32
+#: cd3a790a0ef4414b814f0873ddb5bf08
+msgid "Set up pre-commit hooks for code quality:"
+msgstr "قلاب‌های پیش از commit را برای کیفیت کد راه‌اندازی کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:38
+#: 31286c130e3a48c1b07a3b5407362032
+msgid "The hooks will automatically run:"
+msgstr "قلاب‌ها به طور خودکار اجرا خواهند شد:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:40
+#: c3bdda8e85774abdb2224079521f5824
+msgid "``ruff`` - Python linter and formatter"
+msgstr "``ruff`` - Linter و قالب‌بند Python"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:41
+#: 1a914a0672b24fe99608d207fe3fccfb
+msgid "``mypy`` - Type checking"
+msgstr "``mypy`` - بررسی نوع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:42
+#: 0b36db4ee68943ebba975151b882eb90
+msgid "``trailing-whitespace`` - Remove trailing spaces"
+msgstr "``trailing-whitespace`` - حذف فضاهای خالی انتهایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:43
+#: 8fd8aa1bc49e44a8911d43716481f55e
+msgid "``end-of-file-fixer`` - Ensure files end with newline"
+msgstr "``end-of-file-fixer`` - اطمینان از پایان فایل‌ها با خط جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:48
+#: 45a7c15cac0745028bf1f652c1a3e23e
+msgid "Development Workflow"
+msgstr "جریان کار توسعه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:51
+#: ec1ef5c613a941dbb1d1a1612f9a793f
+msgid "1. Create a Branch"
+msgstr "۱. ایجاد یک شاخه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:53
+#: 0892d114a7a34348a6439745e9a27da9
+msgid "Create a feature branch for your changes:"
+msgstr "یک شاخه ویژگی برای تغییرات خود ایجاد کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:59
+#: 76c49c85243a4a60a17bea1fe2a1bed1
+msgid "Use descriptive branch names:"
+msgstr "از نام‌های توصیفی برای شاخه‌ها استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:61
+#: b37b7d458b1f428abb3a5d387367dd40
+msgid "``feature/phonon-animations`` - New feature"
+msgstr "``feature/phonon-animations`` - ویژگی جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:62
+#: 56bd12dec34c4ef9a5c3ed7a0aed6ac9
+msgid "``fix/scf-convergence-bug`` - Bug fix"
+msgstr "``fix/scf-convergence-bug`` - رفع اشکال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:63
+#: ae692dfb00584db39339ea9a1bb03877
+msgid "``docs/tutorial-update`` - Documentation"
+msgstr "``docs/tutorial-update`` - مستندسازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:64
+#: 172a93a4a17246768a9028757c55361d
+msgid "``test/parser-coverage`` - Test improvements"
+msgstr "``test/parser-coverage`` - بهبودهای تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:67
+#: 800e8632d825452e97227bc158c40688
+msgid "2. Make Changes"
+msgstr "۲. انجام تغییرات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:69
+#: 789fc1f17ec7472a85ef8224b6e19cf2
+msgid "Follow the project conventions:"
+msgstr "قراردادهای پروژه را دنبال کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:71
+#: 160d452fcccd4754b1a58721688e5efb
+msgid "**Code Style**:"
+msgstr "**سبک کد**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:73
+#: 748fd03c247743f4b886d2895e37d56c
+msgid "Follow PEP 8 conventions"
+msgstr "قراردادهای PEP 8 را دنبال کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:74
+#: c75f07e826544213a8cd7498314550c0
+msgid "Use type hints for all functions"
+msgstr "از راهنماهای نوع برای تمام توابع استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:75
+#: 8e0613cdd8e042028be8da21727cf72f
+msgid "Maximum line length: 88 characters (Black default)"
+msgstr "حداکثر طول خط: ۸۸ کاراکتر (پیش‌فرض Black)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:76
+#: 07449b9713904b4a851d254c0fc1c44d
+msgid "Use docstrings for all public functions"
+msgstr "از رشته‌های مستند برای تمام توابع عمومی استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:78
+#: a32cb1e0e6d14545bf17f7b159f281aa
+msgid "**Naming Conventions**:"
+msgstr "**قراردادهای نام‌گذاری**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:80
+#: 3e3faf75289442b7b1b5a6621b54efca
+msgid "Classes: ``PascalCase`` (e.g., ``RelaxMaker``)"
+msgstr "کلاس‌ها: ``PascalCase`` (مثلاً ``RelaxMaker``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:81
+#: 98c0beeabe41467db4f8e44185cb5df1
+msgid "Functions/variables: ``snake_case`` (e.g., ``make_structure``)"
+msgstr "توابع/متغیرها: ``snake_case`` (مثلاً ``make_structure``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:82
+#: 3dd212756ac340aeb5ffdf2a8d9f8a0a
+msgid "Constants: ``UPPER_CASE`` (e.g., ``DEFAULT_CUTOFF``)"
+msgstr "ثابت‌ها: ``UPPER_CASE`` (مثلاً ``DEFAULT_CUTOFF``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:83
+#: 895b8c01b6bd4d3cad9b51d7140ea24a
+msgid "Private methods: ``_leading_underscore``"
+msgstr "متدهای خصوصی: ``_leading_underscore``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:85
+#: b9189ca58c4541afaf23db70bd41f2c6
+msgid "**Documentation**:"
+msgstr "**مستندسازی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:87
+#: 0014cf5582594dbb8438036bd2fff453
+msgid "Add docstrings to all public APIs"
+msgstr "رشته‌های مستند را به تمام APIهای عمومی اضافه کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:88
+#: 51a2476944cd4a078d7fd7583cc7c065
+msgid "Follow NumPy docstring format"
+msgstr "از قالب رشته مستند NumPy پیروی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:89
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:155
+#: 699b52732c6a459184ad59e969537aef d7167fcea9ef45c6817b2b80b792338b
+msgid "Include examples in docstrings"
+msgstr "مثال‌ها را در رشته‌های مستند قرار دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:90
+#: 6d5863b6a10e4b728aa77a8e01c413a9
+msgid "Update relevant tutorials"
+msgstr "آموزش‌های مرتبط را به‌روزرسانی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:93
+#: e51eca2aa148474fb45c8c35703b9ac9
+msgid "3. Write Tests"
+msgstr "۳. نوشتن تست‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:95
+#: 3a6fbf3614424acc977474a8cc14e55c
+msgid "All new features must include tests:"
+msgstr "تمام ویژگی‌های جدید باید شامل تست‌ها باشند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:123
+#: 44faa108882f4b488ce11342d3055604
+msgid "**Testing Patterns**:"
+msgstr "**الگوهای تست**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:125
+#: a6cc01a27d0240beb5bd96a4ae78d417
+msgid "Use fixtures from ``tests/conftest.py``"
+msgstr "از fixtureهای ``tests/conftest.py`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:126
+#: 88cd3c4269d3420982fd179e5c79ec6b
+msgid "Mock SIESTA execution (don't run real calculations)"
+msgstr "اجرای SIESTA را شبیه‌سازی کنید (محاسبات واقعی را اجرا نکنید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:127
+#: f7118fca59e74c659729cbb39dd967ca
+msgid "Test edge cases (None values, empty structures)"
+msgstr "موارد لبه‌ای را تست کنید (مقادیر None، ساختارهای خالی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:128
+#: 4b5350a1eb2946b6a9e11fafe8079343
+msgid "Use parametrize for multiple test cases"
+msgstr "از parametrize برای موارد تست چندگانه استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:129
+#: 805c4a24ba97447badfe2506ffe4e19a
+#, fuzzy, python-format
+msgid "Aim for >80% coverage for new code"
+msgstr "هدف پوشش بیش از 80 درصد برای کد جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:131
+#: f6fa9434204745768f2b428d6407e803
+msgid "**Run Tests**:"
+msgstr "**اجرای تست‌ها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:148
+#: 39a041502a204791be2a99299f8a402c
+msgid "4. Update Documentation"
+msgstr "۴. به‌روزرسانی مستندات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:150
+#: 825346c24d9b448894ae0922c48a6306
+msgid "Update relevant documentation files:"
+msgstr "فایل‌های مستندات مرتبط را به‌روزرسانی کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:152
+#: ce71804aeaae4a08a0e77c83eff42302
+msgid "**Code Documentation**:"
+msgstr "**مستندات کد**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:154
+#: af782352753447be9a514f3d8c2690ee
+msgid "Add/update docstrings"
+msgstr "رشته‌های مستند را اضافه/به‌روزرسانی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:156
+#: 57ee2b7df43f4cf1ad5c3311d726b8e3
+msgid "Document parameters and return types"
+msgstr "پارامترها و انواع برگشتی را مستند کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:158
+#: a977261e95084945aed519346b81ccfb
+msgid "**User Documentation**:"
+msgstr "**مستندات کاربر**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:160
+#: 4b06856dcf304409b57e2c1b8d4eebba
+msgid "Update ``docs/source/features.rst`` for new features"
+msgstr "``docs/source/features.rst`` را برای ویژگی‌های جدید به‌روزرسانی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:161
+#: 8a0bcaf01ce64e3aaed1b1098c256ae5
+msgid "Create tutorial if needed (``tutorials/XX-feature-name/``)"
+msgstr "در صورت نیاز آموزش ایجاد کنید (``tutorials/XX-feature-name/``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:162
+#: 8ec3e7e6fe6e458f83efcaa15c3bd9c8
+#, fuzzy
+msgid "Update ``ATOMATE2SIESTA.md`` for architecture changes"
+msgstr "``ATOMATE2_SIESTA.md`` را برای تغییرات معماری به‌روزرسانی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:164
+#: ac55238ce1fb4ffb8b677dc73b5eab29
+msgid "**Developer Documentation**:"
+msgstr "**مستندات توسعه‌دهنده**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:166
+#: f6e7ff16420c49ebabe5fbffbf8a5923
+msgid "Update changelog for feature additions"
+msgstr "changelog را برای افزودن ویژگی‌ها به‌روزرسانی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:167
+#: 7408434eafe6499a9a327341d01e0220
+msgid "Document test strategies and coverage improvements"
+msgstr "استراتژی‌های تست و بهبودهای پوشش را مستند کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:170
+#: f5fd8d4221d5468ca7f9f90748017202
+msgid "5. Run Quality Checks"
+msgstr "۵. اجرای بررسی‌های کیفیت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:172
+#: 570ae7cc7f8c4294af88a4f144b84caa
+msgid "Before committing, run quality checks:"
+msgstr "قبل از commit کردن، بررسی‌های کیفیت را اجرا کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:192
+#: 161aae05eb5e491b9701178b53549c61
+msgid "6. Commit Changes"
+msgstr "۶. ثبت تغییرات (Commit)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:194
+#: 70c710cfe49046d2b662055bb8f1bc70
+msgid "Write clear commit messages:"
+msgstr "پیام‌های واضح commit بنویسید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:201
+#: b2ccbb5cc6eb469d9d1d26594a5d4b8e
+msgid "**Commit Message Format**:"
+msgstr "**قالب پیام Commit**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:203
+#: 4c992f78b9dd47fdb7cac15d8cf80a6a
+msgid "``feat:`` - New feature"
+msgstr "``feat:`` - ویژگی جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:204
+#: 62e333bade93440597790f62e5a396d5
+msgid "``fix:`` - Bug fix"
+msgstr "``fix:`` - رفع اشکال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:205
+#: 7dc4a620565b471bae21601e6725870c
+msgid "``docs:`` - Documentation changes"
+msgstr "``docs:`` - تغییرات مستندسازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:206
+#: 6475eab6929c422895cd1903bdd53f12
+msgid "``test:`` - Test additions/changes"
+msgstr "``test:`` - افزودن/تغییرات تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:207
+#: 27fb3ba4166c469082ee6f67e9a2449a
+msgid "``refactor:`` - Code refactoring"
+msgstr "``refactor:`` - بازسازی کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:208
+#: 6d6ac59d106f4ba4a4adbea38ee0faaf
+msgid "``perf:`` - Performance improvements"
+msgstr "``perf:`` - بهبودهای عملکرد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:209
+#: fe4ddb86773a4ad58421840e1b82aea8
+msgid "``chore:`` - Maintenance tasks"
+msgstr "``chore:`` - وظایف نگهداری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:211
+#: 87decf3e87244695b2d120f3c6898d7a
+msgid "**Good Commit Messages**:"
+msgstr "**پیام‌های خوب Commit**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:213
+#: 310b75fef4ff4890b3a9905c7bcc93b0
+msgid "``feat: add thermal expansion plotting function``"
+msgstr "``feat: add thermal expansion plotting function``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:214
+#: cd03bce1decb423e9255ca0b0beb34c1
+msgid "``fix: correct PAO.BasisSize parameter matching``"
+msgstr "``fix: correct PAO.BasisSize parameter matching``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:215
+#: 0e0a39bd7c064b63999e8caf38295c13
+msgid "``test: add parser edge case coverage``"
+msgstr "``test: add parser edge case coverage``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:216
+#: 8c696bd699f14ec797643ec209d68030
+msgid "``docs: update test coverage achievements``"
+msgstr "``docs: update test coverage achievements``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:219
+#: 4729719af65d41c5b3deddfac55d3432
+msgid "7. Push and Create PR"
+msgstr "۷. Push و ایجاد درخواست Pull"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:221
+#: defb1f082778453f9300ce25ef701ef8
+msgid "Push your branch and create a pull request:"
+msgstr "شاخه خود را push کرده و یک درخواست pull ایجاد کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:227
+#: 1eca25bbe4f540c099da24b1810924b5
+msgid "On GitHub:"
+msgstr "در GitHub:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:229
+#: 7bb54884482142348ee1bff73c9d8d5d
+msgid "Create pull request with clear description"
+msgstr "درخواست pull با توضیحات واضح ایجاد کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:230
+#: 8bcb8e38b60f43a185cb75ab293c75a5
+msgid "Reference related issues"
+msgstr "به مسائل مرتبط ارجاع دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:231
+#: f526dd1b79354272b2406be23f89b153
+msgid "Add examples/screenshots if relevant"
+msgstr "در صورت ارتباط، مثال‌ها/اسکرین‌شات‌ها اضافه کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:232
+#: b42b0403c42f4fc8a48a3ba5bb320ae0
+msgid "Wait for CI checks to pass"
+msgstr "منتظر موفقیت بررسی‌های CI باشید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:233
+#: fbeb56993a8e462db9b1a1314571404f
+msgid "Address review comments"
+msgstr "به نظرات بررسی پاسخ دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:238
+#: 9c8e2e6a1caa44c1a2632ba135c3eb74
+msgid "Contribution Areas"
+msgstr "حوزه‌های مشارکت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:241
+#: 44f60aaee7724dd3a5aa7d8b0d404108
+msgid "Where to Contribute"
+msgstr "کجا مشارکت کنیم"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:243
+#: 9a2dd15fdb764808ad3488b77d18aaae
+msgid "**High Priority**:"
+msgstr "**اولویت بالا**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:245
+#: 7c3b62d85b9442709440cdb14b2fef8c
+msgid ""
+"**Core Job Tests** - RelaxMaker, StaticMaker, BandStructureMaker "
+"(CRITICAL)"
+msgstr "**تست‌های Job اصلی** - RelaxMaker، StaticMaker، BandStructureMaker (حیاتی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:246
+#: 10393c12d5344a4791149193003f0854
+msgid "**Flow Tests** - Workflow composition and integration"
+msgstr "**تست‌های Flow** - ترکیب و یکپارچه‌سازی جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:247
+#: 02b7b28276b34a2d87aa555c4f939496
+msgid "**Input Set Tests** - FDF file generation and parameter merging"
+msgstr "**تست‌های مجموعه ورودی** - تولید فایل FDF و ادغام پارامتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:248
+#: 83c7d6f6867c4d46b54fdc69b996d495
+msgid "**Documentation** - Tutorial updates and examples"
+msgstr "**مستندسازی** - به‌روزرسانی آموزش‌ها و مثال‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:250
+#: b2617ca81a374c9588bcc6ebe5ef6a3d
+msgid "**Medium Priority**:"
+msgstr "**اولویت متوسط**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:252
+#: f99093c407a840cd9124386bd21a488b
+msgid "**Feature Testing** - Adsorption, surface energy, phonons"
+msgstr "**تست ویژگی** - جذب سطحی، انرژی سطح، فونون‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:253
+#: c7e547cf480a4625a126490c2cd6e404
+msgid "**Dataclass Validation** - Edge cases and parameter validation"
+msgstr "**اعتبارسنجی Dataclass** - موارد لبه‌ای و اعتبارسنجی پارامتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:254
+#: 5578ad3e6b9d4ea4add3f542b191aa43
+msgid "**Performance Optimization** - Profiling and improvements"
+msgstr "**بهینه‌سازی عملکرد** - پروفایلینگ و بهبودها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:255
+#: 705f9179019a4115bb38928b3c9141fd
+msgid "**Tutorial Creation** - Missing tutorials (Tutorial 19, etc.)"
+msgstr "**ایجاد آموزش** - آموزش‌های گم‌شده (آموزش ۱۹، و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:257
+#: 3f58e06003bc4cd39088c8094f3d2d98
+msgid "**Feature Requests**:"
+msgstr "**درخواست‌های ویژگی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:259
+#: 245ae61be69e4e96a5d00908aa6666fd
+msgid "**Phonon Animations** - Mode visualization"
+msgstr "**انیمیشن‌های فونون** - تصویرسازی حالت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:260
+#: 1ab1f10c3ea6488badd93599670ed720
+msgid "**Optical Properties** - Enhanced analysis"
+msgstr "**ویژگی‌های نوری** - تحلیل پیشرفته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:261
+#: 5eea8cd8e8a143c3a675c7beeee57e8d
+msgid "**Defect Calculations** - Point defects workflow"
+msgstr "**محاسبات نقص** - جریان کار نقص نقطه‌ای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:262
+#: 6796a6f55f264e2787b566f8e726faf2
+msgid "**Machine Learning Potentials** - Integration with ML tools"
+msgstr "**پتانسیل‌های یادگیری ماشین** - یکپارچه‌سازی با ابزارهای ML"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:265
+#: ed63ac7e3fbf4899b7acc6491a86ed14
+msgid "Reporting Bugs"
+msgstr "گزارش اشکالات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:267
+#: e3a5ce27595d4f9f94f653d99e22ddfb
+msgid "Found a bug? Please report it:"
+msgstr "اشکالی پیدا کردید؟ لطفاً آن را گزارش کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:269
+#: f63a95a2eb534561b7fab99185a22aae
+#, fuzzy
+msgid "Check existing issues: https://github.com/materialsproject/atomate2/issues"
+msgstr "**مسائل GitHub**: https://github.com/materialsproject/atomate2/issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:270
+#: 1fac3740fc384711954a0c6f06154092
+msgid ""
+"If new, create issue with: * Clear description of problem * Steps to "
+"reproduce * Expected vs actual behavior * Environment (OS, Python "
+"version, SIESTA version) * Minimal example code"
+msgstr ""
+"اگر جدید است، مسئله را با موارد زیر ایجاد کنید: * توضیح واضح مشکل * مراحل"
+" بازتولید * رفتار مورد انتظار در مقابل رفتار واقعی * محیط (سیستم‌عامل، "
+"نسخه Python، نسخه SIESTA) * کد مثال حداقلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:278
+#: e7f9cbdc45414c359c5ed30e6c77c736
+msgid "Requesting Features"
+msgstr "درخواست ویژگی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:280
+#: 9dc374f9282f4f489a04d87e17b204ce
+msgid "Have a feature idea?"
+msgstr "ایده ویژگی دارید؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:282
+#: 74e155740c4f43f0abfbfe2b60aa12f3
+#, fuzzy
+msgid "Open discussion: https://github.com/materialsproject/atomate2/discussions"
+msgstr "بحث باز کنید: https://github.com/materialsproject/atomate2/discussions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:283
+#: 4b952db7cbc644e1bda3b8ef8de8a671
+msgid ""
+"Provide: * Use case description * Proposed API/interface * Example usage "
+"* Why it's valuable"
+msgstr ""
+"ارائه دهید: * توضیح مورد استفاده * API/رابط پیشنهادی * مثال استفاده * چرا"
+" ارزشمند است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:292
+#: 670631184ed9440e8162e0268e7ff46d
+msgid "Code Review Process"
+msgstr "فرآیند بررسی کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:295
+#: b63e3f345e4541c0b43af827a770fcb1
+msgid "What Reviewers Look For"
+msgstr "بررسی‌کنندگان به دنبال چه هستند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:297
+#: bc537ad1ce52423e9dbff3a947c18c88
+msgid "**Correctness**: Does the code work as intended?"
+msgstr "**صحت**: آیا کد همانطور که قصد شده کار می‌کند؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:298
+#: 8e0569886dac4b309283950a3da3431b
+msgid "**Tests**: Are there sufficient tests? Do they cover edge cases?"
+msgstr "**تست‌ها**: آیا تست‌های کافی وجود دارد؟ آیا موارد لبه‌ای را پوشش می‌دهند؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:299
+#: 4200ff4c6209413abdea2ef1955a7346
+msgid "**Documentation**: Are docstrings clear? Is user documentation updated?"
+msgstr ""
+"**مستندسازی**: آیا رشته‌های مستند واضح هستند؟ آیا مستندات کاربر "
+"به‌روزرسانی شده است؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:300
+#: f1be1e995d4a4280890e577461f7eff2
+msgid "**Style**: Does code follow project conventions?"
+msgstr "**سبک**: آیا کد از قراردادهای پروژه پیروی می‌کند؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:301
+#: 993d063955ba4e0fb26adac4587c0d93
+msgid "**Performance**: Are there obvious performance issues?"
+msgstr "**عملکرد**: آیا مشکلات عملکرد آشکاری وجود دارد؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:302
+#: 0b9973799d004e609d311dc2b4dccff8
+msgid "**Compatibility**: Does it break existing functionality?"
+msgstr "**سازگاری**: آیا عملکرد موجود را خراب می‌کند؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:305
+#: 86ce2d4418484058962de705fda26410
+msgid "Review Timeline"
+msgstr "جدول زمانی بررسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:307
+#: 9726b28534cc463f8fb8aeeb35fd64e6
+msgid "Initial review: Usually within 1-3 days"
+msgstr "بررسی اولیه: معمولاً در عرض ۱-۳ روز"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:308
+#: 1e091ad8403147e3a1e2b58785c010cc
+msgid "Follow-up: Within 1-2 days of addressing comments"
+msgstr "پیگیری: در عرض ۱-۲ روز پس از رسیدگی به نظرات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:309
+#: eeeb714ba22e4f1c9aa3bea01aa415f1
+msgid "Merge: After approval and passing CI checks"
+msgstr "ادغام: پس از تایید و موفقیت بررسی‌های CI"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:314
+#: e219535946f9439bbb237b6e5e8b8c46
+msgid "Testing Guidelines"
+msgstr "راهنماهای تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:317
+#: 5d25f8ce17c947c58ad47adb6a526de0
+msgid "Testing Philosophy"
+msgstr "فلسفه تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:319
+#: 9309a389e04b499bb6e8e65d02ac75fa
+msgid "**Mock-based testing**: Don't run real SIESTA calculations in tests"
+msgstr "**تست مبتنی بر Mock**: محاسبات واقعی SIESTA را در تست‌ها اجرا نکنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:320
+#: 4b046791c38141a290e9922ea955b11b
+msgid "**Fast execution**: Test suite should complete in < 30 seconds"
+msgstr "**اجرای سریع**: مجموعه تست باید در کمتر از ۳۰ ثانیه تکمیل شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:321
+#: 9620523c522a48c0b7da75991f2a5414
+msgid "**Clear naming**: Test names describe what they test"
+msgstr "**نام‌گذاری واضح**: نام‌های تست آنچه را که تست می‌کنند توضیح می‌دهند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:322
+#: 794fbbf769314de2a87dbf3e4dd98abf
+msgid "**Edge cases**: Test None, empty, and error conditions"
+msgstr "**موارد لبه‌ای**: موارد None، خالی و شرایط خطا را تست کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:323
+#: 4194a8f091714c7fafe982879406335e
+msgid "**Fixtures**: Use shared fixtures from ``conftest.py``"
+msgstr "**Fixtureها**: از fixtureهای مشترک از ``conftest.py`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:326
+#: de8ca73d23d740bc862089657ca12159
+msgid "Coverage Goals"
+msgstr "اهداف پوشش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:328
+#: 92bd99f6c4b04cacb611ca35a93e62ca
+msgid "**Current Status**:"
+msgstr "**وضعیت فعلی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:330
+#: 74bef99b02e64ce9a6870540cb0b77b8
+msgid "Overall: 44% (target: 80%)"
+msgstr "کلی: ۴۴% (هدف: ۸۰%)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:331
+#: 8616e63f5fbd4a768e0cc72058eee7dd
+msgid "Tier system: 100% ✅"
+msgstr "سیستم سطح: ۱۰۰% ✅"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:332
+#: 87dfcbb4057b4415b63a4b196ec43849
+msgid "Schemas: 87-97% ✅"
+msgstr "طرح‌ها: ۸۷-۹۷% ✅"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:333
+#: aac221fbff914b3d8a425c4e867165d1
+msgid "File client: 86% ✅"
+msgstr "کلاینت فایل: ۸۶% ✅"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:334
+#: a630ebecdabf43f68f9adbec9d9f73bd
+msgid "Parser: 39% 🔄"
+msgstr "تجزیه‌کننده: ۳۹% 🔄"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:335
+#: d782dcbc0d5d49f99c1132d2760a5ac8
+msgid "Jobs/Flows: ~15% ⏭️"
+msgstr "Jobها/Flowها: ~۱۵% ⏭️"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:337
+#: cccf7407b0bd4d00b79cde5cfa92bf3e
+msgid "**Target Coverage by Component**:"
+msgstr "**پوشش هدف بر اساس جزء**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:339
+#: cef1ad3b786c4f88b4287f0d409291ba
+msgid "Critical infrastructure (jobs, flows, sets): 70-80%"
+msgstr "زیرساخت حیاتی (jobها، flowها، مجموعه‌ها): ۷۰-۸۰%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:340
+#: 5c790ec3dbb04b799350994e682fab11
+msgid "Workflows (phonons, surfaces, etc.): 75%"
+msgstr "جریان‌های کار (فونون‌ها، سطوح، و غیره): ۷۵%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:341
+#: 175b572161bf4e29a5cf6b7ac33a30b9
+#, fuzzy
+msgid "Utilities and helpers: many"
+msgstr "ابزارها و کمکی‌ها: ۶۰-۷۰%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:342
+#: c02556f493ea490e9d251ac70b5a861b
+msgid "Dataclass validation: 60%"
+msgstr "اعتبارسنجی Dataclass: ۶۰%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:345
+#: 1706099a15bb41b0a7b66e8bdee479b4
+msgid "Test Organization"
+msgstr "سازماندهی تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:373
+#: e67a581ba14e406bb1b76d1875feed2e
+msgid "Documentation Guidelines"
+msgstr "راهنماهای مستندسازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:376
+#: 0aa10a6a485349eda47af585a3592723
+msgid "Docstring Format"
+msgstr "قالب رشته مستند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:378
+#: 0bf9eae872994fc4a71220f4c293c056
+msgid "Use NumPy-style docstrings:"
+msgstr "از رشته‌های مستند به سبک NumPy استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:433
+#: c527169350e54fa19289d5bc6c70f358
+msgid "Tutorial Structure"
+msgstr "ساختار آموزش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:435
+#: ed993315ea59454bb18300d5be8d8680
+msgid "Each tutorial should include:"
+msgstr "هر آموزش باید شامل موارد زیر باشد:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:437
+#: 77d2812d960c4790b989734a8cbb5e0e
+msgid "**Overview**: What the tutorial covers"
+msgstr "**بررسی کلی**: آموزش چه موضوعاتی را پوشش می‌دهد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:438
+#: 44f1bffed4764310a3f05f242dcde12e
+msgid "**Prerequisites**: Required knowledge/previous tutorials"
+msgstr "**پیش‌نیازها**: دانش مورد نیاز/آموزش‌های قبلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:439
+#: 9eaae25d53cb466f931a5d72263eeda4
+msgid "**Theory** (optional): Background physics/chemistry"
+msgstr "**تئوری** (اختیاری): پیش‌زمینه فیزیک/شیمی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:440
+#: a570df6c8ae640baa59fd689b6ffe969
+msgid "**Setup**: Environment and structure preparation"
+msgstr "**راه‌اندازی**: آماده‌سازی محیط و ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:441
+#: 2f1dc33f9ac64ba08bf5bf342bf1c88b
+msgid "**Step-by-step**: Code examples with explanations"
+msgstr "**گام به گام**: مثال‌های کد با توضیحات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:442
+#: cfd5a06a35474c0daa684c3393fefb8a
+msgid "**Results**: Expected output and interpretation"
+msgstr "**نتایج**: خروجی مورد انتظار و تفسیر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:443
+#: 071f5629220b4ede972e1f8f3f4f6067
+msgid "**Exercises** (optional): Try-it-yourself tasks"
+msgstr "**تمرین‌ها** (اختیاری): وظایف خودتان امتحان کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:444
+#: 679bfc600f994264b20ac1639773f86e
+msgid "**Next Steps**: What to learn next"
+msgstr "**مراحل بعدی**: چه چیزی بعداً یاد بگیریم"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:449
+#: 8eed6acb84964dd88efb97ff7fe21ad1
+msgid "Getting Help"
+msgstr "دریافت کمک"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:452
+#: fd921513b391428b9b06aa232eaefb09
+msgid "Resources"
+msgstr "منابع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:454
+#: 860145f8d4c243c0892151b3a4c05913
+#, fuzzy
+msgid "**Documentation**: https://materialsproject.github.io/atomate2/"
+msgstr "**مستندات**: https://materialsproject.github.io/atomate2"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:455
+#: 6b8c6d8fddc045e48a7b5353bd75543f
+msgid "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "**مسائل GitHub**: https://github.com/materialsproject/atomate2/issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:456
+#: 6d2003eb3e484175a377ebd391a98b7e
+#, fuzzy
+msgid "**Discussions**: https://github.com/materialsproject/atomate2/discussions"
+msgstr "**بحث‌ها**: https://github.com/materialsproject/atomate2/discussions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:459
+#: 1aea4841b98f4c65939e0f6f4292e8e9
+msgid "Contact"
+msgstr "تماس"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:461
+#: d80ebbf578b546b2869e4c8b357afa99
+msgid "**Maintainer**: Arsalan Akhtar (sr.arsalan.akhtar@gmail.com)"
+msgstr "**نگهدارنده**: Arsalan Akhtar (sr.arsalan.akhtar@gmail.com)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:462
+#: 6dd553661f224a9e882e7ed5ee0817d3
+msgid "**Issues**: Use GitHub issue tracker"
+msgstr "**مسائل**: از ردیاب مسائل GitHub استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:463
+#: d45da3ebdad94a56b0943205b7cd47cb
+msgid "**Feature Discussions**: Use GitHub discussions"
+msgstr "**بحث‌های ویژگی**: از بحث‌های GitHub استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:468
+#: b5a4805b0a11411281b488c4c410dba2
+msgid "Code of Conduct"
+msgstr "قوانین رفتاری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:471
+#: 590919c1c138447dbe141adf3caef994
+msgid "Be Respectful"
+msgstr "محترمانه باشید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:473
+#: 2411a0ec34fc46e4bd0b1bc9bcaf2708
+msgid "Treat all contributors with respect"
+msgstr "با تمام مشارکت‌کنندگان با احترام رفتار کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:474
+#: f8e69d69190a4501af4ba659ccb323a8
+msgid "Welcome newcomers and help them learn"
+msgstr "به تازه‌واردان خوشامد بگویید و به یادگیری آنها کمک کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:475
+#: a57761210f224f75955d47c3d386e739
+msgid "Be patient with questions"
+msgstr "در برابر سوالات صبور باشید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:476
+#: 4dfa332c9b794889af52dc40665df79a
+msgid "Provide constructive feedback"
+msgstr "بازخورد سازنده ارائه دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:479
+#: 6ae2aded9e3e4f1c83750d84a2cb99dd
+msgid "Be Professional"
+msgstr "حرفه‌ای باشید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:481
+#: f9b2c2980c1d496ca144c4c79f162af3
+msgid "Focus on the code, not the person"
+msgstr "روی کد تمرکز کنید، نه روی شخص"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:482
+#: b84a467fd9e94b55b52a8a0f4ebb884d
+msgid "Accept criticism gracefully"
+msgstr "انتقاد را با وقار بپذیرید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:483
+#: 78ccb5daa4db4f11b0c541e69267fb60
+msgid "Acknowledge contributions"
+msgstr "مشارکت‌ها را تصدیق کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:484
+#: 801697cdd0ff4d2db0e500dd1478f2fc
+msgid "Give credit where due"
+msgstr "در جای مناسب اعتبار بدهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:487
+#: 8600bea634c149eebf94f00636612fc3
+msgid "Be Collaborative"
+msgstr "مشارکتی باشید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:489
+#: 676cbd516f54450d81d3e78b2b0456e8
+msgid "Share knowledge and best practices"
+msgstr "دانش و بهترین روش‌ها را به اشتراک بگذارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:490
+#: 669995a0faf242149dc0826821fdb011
+msgid "Help others learn and improve"
+msgstr "به دیگران در یادگیری و بهبود کمک کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:491
+#: ad4c5cc410644ce9979e62c2bf664c99
+msgid "Review PRs thoughtfully"
+msgstr "درخواست‌های Pull را با دقت بررسی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:492
+#: 5d87937996cb4ea095d99aecb1cfb572
+msgid "Contribute to discussions"
+msgstr "در بحث‌ها مشارکت کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:497
+#: c062783cb8e949f289ada8fa93a4a2de
+msgid "Recognition"
+msgstr "شناسایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:499
+#: d8c51e67516a423395ee8fd55743bcb3
+msgid "Contributors are recognized in:"
+msgstr "مشارکت‌کنندگان در موارد زیر شناسایی می‌شوند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:501
+#: c264279ccb654840b79ecc1dad3ea7a5
+msgid "``CONTRIBUTORS.md`` file (if exists)"
+msgstr "فایل ``CONTRIBUTORS.md`` (در صورت وجود)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:502
+#: e62e06abacb54688ab326be145006250
+msgid "Release notes"
+msgstr "یادداشت‌های انتشار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:503
+#: 3ea1b199ab7243b7ab1df7e99f6275c7
+msgid "Commit history"
+msgstr "تاریخچه commit"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:504
+#: 23ed49f4ef3e4765bda195dc7011c848
+msgid "Co-authorship on papers (for significant contributions)"
+msgstr "هم‌نویسندگی در مقالات (برای مشارکت‌های قابل توجه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:506
+#: 3aec432180fc45e99b1e10fcd3a6783e
+msgid "Thank you for contributing to atomate2siesta! 🎉"
+msgstr "از مشارکت شما در atomate2siesta متشکریم! 🎉"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:512
+#: 675c680e3fea43e38d09b26fc81b6964
+msgid ":doc:`changelog` - Release history"
+msgstr ":doc:`changelog` - تاریخچه انتشار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/contributing.rst:513
+#: 08103e6346a74af5a9953ad80824cc88
+msgid ":doc:`features` - Feature documentation"
+msgstr ":doc:`features` - مستندات ویژگی‌ها"
+
+#~ msgid ""
+#~ "Check existing issues: https://github.com"
+#~ "/arsalan-akhtar/atomate2siesta/issues"
+#~ msgstr ""
+#~ "مسائل موجود را بررسی کنید: "
+#~ "https://github.com/arsalan-akhtar/atomate2siesta/issues"
+

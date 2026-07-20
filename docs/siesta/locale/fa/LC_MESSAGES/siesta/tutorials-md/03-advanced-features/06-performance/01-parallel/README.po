@@ -1,0 +1,622 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:1
+#: c5c5f65c7a2e4c85b96f566a133d39b3
+msgid "Parallel Computation Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:3
+#: b08254426e3c4a3a999c25d7da7ecadf
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:5
+#: b0163e39db054d748e9ce9920150e8b5
+msgid ""
+"Configure SIESTA's MPI parallelization for optimal performance on multi-"
+"processor systems. These are expert-level parameters that require "
+"`tier=\"expert\"`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:7
+#: 4e542f0e31aa4684a7a76d6088affd3b
+msgid "Tutorial Scripts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: b34b0988027647a4806722265bef5ce6
+msgid "Script"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 28fef6808dca4ee6965186ac837454b5 f53df8628b58456d8cb7972f2819a617
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:62
+#: b6a854b3329f49a28e0dfb2aa06e8fa9 f4efb3d1bd7349b1af07a0732f31b5aa
+msgid "Key Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: bc98b225e63d41dcad60d26d08fb5e72
+msgid "`01_basic_parallel_grid.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 30c0b035ca8947ef92efb572827cc00d
+msgid "2D processor grid configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 1fba759fb4fe451ebe1a3549050cf812
+msgid "BlockSize, ProcessorY"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 2631a8be30aa4a588bf52089b58fe2d4
+msgid "`02_on_decomposition.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 9dc01b9d69bd4ea79b6fad15c67e0fa1
+msgid "O(N) domain/spatial decomposition"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: ef0f1376219d4fa3879952e078704288
+msgid "UseDomainDecomposition, RcSpatial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:14
+#: 1acd56b523a541548d26c9de8a84f0cc
+msgid "**Run the tutorials:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:24
+#: a68dba9a81f84b3cba553e7786207759
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:26
+#: d3d1fdc86eda48539e75bb36ec36af9c
+msgid "Basic Processor Grid (Diagonalization)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:37
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:55
+#: b29cfd02ff844454bc5d0db3f7e5cddf f7403b25174749dfa4a4721cc2c865cc
+msgid "**When to use:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:38
+#: 058eef126ec64c4ba365c8dffcac8d9e
+msgid "< 1000 atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:39
+#: e645a2de84cf4f179e742699cd59673d
+msgid "Non-square processor counts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:40
+#: f0415ae7863b4767bebed0da33b0cc80
+msgid "Default diagonalization solver"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:42
+#: 51e4b3288eec477088ed6d898ea13848
+msgid "O(N) Domain Decomposition (Large Systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:56
+#: babcf9a387bd4f398c4c9e53726dcb6b
+msgid "1000 atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:57
+#: d8b669689c21421dadb0754fb4d77e3d
+msgid "O(N) solvers (OMM, PEXSI)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:58
+#: 61d28bbbcceb4038b316ad6f7b3a8b8a
+msgid "Need to scale to many processors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 72ab3975652748c4b047a9c21236a8e6
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 756ba93f3e824f9181b8c5b8c90d9530
+msgid "Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 9a9ee91de61240f593450e4fc51a3181
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 3646e2a4abb94b5a8c37ff6a06b1e886
+msgid "`BlockSize`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 727c20678e3648d6869bf3b0701e5529 e4acf8e6dc6c4541a04b873a11bba280
+msgid "int"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 9f3f8d0feda64768a2b9cc851d7e6945 edf3c3a9b3d843f09de2d02c9862544a
+#: f949c64cb9674c488315c3b6f60bb6f0
+msgid "Auto"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: f0db1a97329f465ba50a7e1e01075c5e
+msgid "Block size for 2D matrix distribution (16-64 typical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 44cfb340fc164fe895aa17b433996e78
+msgid "`ProcessorY`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: e09d910bee4f43d8bba65846780d0c1e
+msgid "Y-dimension of 2D processor grid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 688d7df4bd7d42fe96023ca454cc1aad
+msgid "`UseDomainDecomposition`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 1129da6386ab4bf88c1a0d8b913b03d1 50f4eb1e84214fc19ccc81f64937b8e2
+msgid "bool"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 1d55cf27af5a4c8ba65b776cdfd17567
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 2d801ea4163a41dea3c8d75d9edeab13
+msgid "Group orbitals/atoms by processor (O(N) only)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: f61fea0fafac46039114c8210b1a1a7f
+msgid "`UseSpatialDecomposition`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 05b192a0d1a14ab3909ddbe1edaf203d
+msgid "True"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: e26cd35ecf534d8a8cb60ce5645114ed
+msgid "Distribute real-space grid across processors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 3f96fc1e94234cd2bc5db5db36bcff5c
+msgid "`RcSpatial`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: e786e0131e3940339301c268f3ff40a6
+msgid "float"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 442daf2a23fd45cc92a2cb5ff964fc3f
+msgid "Communication radius in Bohr (10-30 typical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:74
+#: 544f645bf128493594d899d5aa031142
+msgid "Scaling Guidelines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: b5cac5e2544d4dd5bfce2099a6e9b2c8
+msgid "System Size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: c93fbc9299a74fa48b43b05eaff27383
+msgid "Processors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: aec35b1eafda49b98e3bdcc6bd87a9ba
+msgid "Method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: a9a150a3b7a04ef38386f201920078c8
+msgid "Settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 0c6d82dc06524d36aa3f8c5b656b2743
+msgid "< 500 atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 105e279e4d5c414996ca8fe399e2cba9
+msgid "4-32"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 646875b62be84bc78e3ca36671254a34
+msgid "Diagonalization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 52f49633e6304fb8b0aa609c22fe7815
+msgid "Default (automatic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: cc4f7ee77fa3453abb0884042f5a8ed8
+msgid "500-2000"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 39d9a4eda2b84ae196f677493e105c9c
+msgid "32-128"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 259f1db2622f44a7a3b06a23ea78beb6 d3f07439518a47aea867a1db6bd67adf
+msgid "OMM"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 986d612db7a94d83be2e14e94a076caa
+msgid "Spatial decomposition"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 276073096008467ab8846ef6741b36e6
+msgid "2000-10000"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 5c0fdff4e9e7418a89b476f7a1426439
+msgid "128-512"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 82f50ff9af59480e94f210d4a2ef392b
+msgid "Domain + spatial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 6cc1c3cd4f514cec855d1623b7bcdf39
+msgid "> 10000"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 6ae35bb2189c4deba452df6866308c8b
+msgid "512+"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: 520bc456989b4a80bf4bc621b8af1246
+msgid "PEXSI"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md
+#: b1cbcd0306ba47348b7bf731e7b993da
+msgid "Domain + spatial + tuned RcSpatial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:85
+#: b985f70d481c426ebecf32e5d444c37c
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:87
+#: f3ecab7e63ab42c8a9470d1b2964bd8f
+msgid "1. Processor Grid Selection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:89
+#: 5c67b985bc804e89816a7db4c1b4872d
+msgid "**Square grids** (ProcessorY = √N):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:90
+#: 369974074dba4a359b6fa54e0b55ff71
+msgid "✅ Best for most cases (balanced communication)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:91
+#: ed59355625e34371b4e99ba1a67bc255
+msgid "Example: 16 procs = 4×4, 64 procs = 8×8"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:93
+#: 173451df4e1b4519b29cd85c929be14f
+msgid "**Rectangular grids**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:94
+#: 45d9c8db4df24a6890d5a5477a3fa46d
+msgid "✅ Flexibility for any processor count"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:95
+#: 8b8c671788b64b1080e52ed326e89e45
+msgid "Example: 12 procs = 3×4, 24 procs = 4×6"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:97
+#: 9fe02b0e9aec493a947c69bdded2c148
+msgid "2. Block Size Selection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:99
+#: d3cecd95ea7541bdbcf6a40010e5dc86
+msgid "**Small blocks (16-32):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:100
+#: 137c5fe8e2dd4d89a0b7a91b0183dfd1
+msgid "Better load balancing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:101
+#: 28cc25a5910e449487358b4b4c078678
+msgid "More communication overhead"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:102
+#: b350683bbd844e0886c5df861c499465
+msgid "Good for small-medium systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:104
+#: 32e4e55e3b744aecaec62bce77ec7378
+msgid "**Large blocks (64-128):**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:105
+#: 2ea393b4098f4518b76a723b21905650
+msgid "Less communication"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:106
+#: b7294f7768124ceeaa0d5ab30d5816ec
+msgid "Potential load imbalance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:107
+#: cc46193ce762457aa3c1bb521fd53bac
+msgid "Good for GPUs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:109
+#: ac10455681764817ab39bf6eb8156158
+msgid "3. Start Simple, Then Tune"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:111
+#: 03a9f6281715428dbca8bd193a114a21
+msgid "**Start**: Use default settings (no manual config)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:112
+#: d166324332024949b6dbe7979946ab38
+msgid "**Profile**: Check parallel efficiency in output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:113
+#: 692ad4878d5b429ab2d3a1bcddc2ae89
+msgid "**Tune**: If efficiency < 70%, adjust parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:114
+#: ee48cb6f57584d7dbd2105dda1283d14
+msgid "**Test**: Benchmark different configurations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:118
+#: 5ffe4fbceafe4b1d8bd7ff33ebce0da8
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:120
+#: 2d85b025c82e4fb99e30a7704a41d02b
+msgid "Poor Scaling (efficiency < 70%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:122
+#: 41a55caa7f034918971dfc335734f6e8
+msgid "**Symptoms:** Time doesn't decrease with more processors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:124
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:133
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:142
+#: 4be5a92b427c4968808c75c5c64bcbd4 5b8e84c32c6840ae87edfbff61bfe4c3
+#: bca9642a629a461d8fa2069ed5cea888
+msgid "**Solutions:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:125
+#: 643393c229f44cef8722ad6889b91124
+msgid "Reduce BlockSize for better load balance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:126
+#: 7a7aa803dfda4d909174253af6bbf5cb
+msgid "Adjust ProcessorY for square/rectangular grid"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:127
+#: 5dc4cbf1146b43ef8ad0f8bd6a4dc2ac
+msgid "Enable spatial decomposition"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:129
+#: c05bae69daad46e5b7839337bdc6d564
+msgid "Memory Overflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:131
+#: 20a3b64228ee4e90afd98d0cfa6ec467
+msgid "**Symptoms:** Out-of-memory errors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:134
+#: 04fffe149b4d42fc828c23801e1820a9
+msgid "Use more processors (reduces memory/process)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:135
+#: a36a1e3465ad423799f61c51eac81e3b
+msgid "Enable O(N) decomposition"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:136
+#: cd56c0c8cb984fcba9fcc7bfdc66fd6b
+msgid "Reduce BlockSize"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:138
+#: af0e001b05c946899548bf9f5df98788
+msgid "Communication Bottlenecks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:140
+#: 206cf85114234119b6085d99551c2b4f
+msgid "**Symptoms:** Scaling stops at certain processor count"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:143
+#: 10e8725828c3480081744d5e2c95cf41
+msgid "Increase BlockSize to reduce message count"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:144
+#: 3bcfe27fefc04f99bd16d74d795479a2
+msgid "Use faster interconnect (InfiniBand)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:145
+#: 18b895c43bc941c9addd4f19e180754c
+msgid "Check ProcessorY for optimal grid layout"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:149
+#: c667ebc6ba7844528479ea6dfe552631
+msgid "Performance Profiling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:151
+#: 304a9829ac534b95965a0fb2f5addb19
+msgid "Enable detailed timers to check parallel efficiency:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:160
+#: 6c34a16339b64ecaba4e51da0f2e7dd1
+msgid "Look for in output file:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:169
+#: 55db2ac754b4406095790a9033d3f8c9
+msgid "Advanced: Hybrid MPI+OpenMP"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:171
+#: 6a2b4a9aa87847389ea3c0c890ce50d9
+msgid "Combine MPI with OpenMP threading for better memory efficiency:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:179
+#: b691e1c8233b44e18ceb7cc388255426
+msgid "**Benefits:**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:180
+#: 568f283a58d94256a6b95bffd9d758ad
+msgid "Reduced memory (shared within node)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:181
+#: 5740c86618b14323964fd0f771bab2e0
+msgid "Fewer MPI processes = less communication"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:182
+#: a3b1865da1754126a89fd7af06d5173a
+msgid "Good for memory-limited systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:186
+#: d3c6604f81ed48558236e24cee41cca0
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:188
+#: 3d622f3e25ef42a98a0d8150f40b433a
+msgid "**SIESTA Manual**: Section 6.27 (Parallel Options)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:189
+#: a672d6b58b0945ee9ca9d3baedce4ca0
+msgid ""
+"**Tier System**: `tutorials/03-advanced-features/01-parameter-systems/01"
+"-tier-system/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:190
+#: 19af351c8901461f9038472c2ebb5ea5
+msgid "**Expert Parameters**: Requires `tier=\"expert\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:191
+#: 09fd11dea8984c8abe764942118af806
+msgid ""
+"**ParallelOptions dataclass**: "
+"`src/atomate2/siesta/dataclass/parallel_options.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/06-performance/01-parallel/README.md:195
+#: 7d65f655c3bc48c8943b3eee50b131af
+msgid ""
+"**Summary:** Start with defaults, profile efficiency, then tune "
+"BlockSize/ProcessorY for < 1000 atoms or enable O(N) decomposition for "
+"larger systems."
+msgstr ""
+

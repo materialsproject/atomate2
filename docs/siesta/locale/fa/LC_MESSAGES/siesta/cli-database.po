@@ -1,0 +1,627 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:3
+#: fbd66ef311cb41deb3fa77d907e13839
+msgid "Database CLI Reference"
+msgstr "مرجع رابط خط فرمان پایگاه داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:5
+#: fea0927e1e2243b7ad2723981a3cca14
+msgid ""
+"The ``atomate2siesta-database`` command-line interface provides tools for"
+" testing, managing, and querying MongoDB databases used for "
+"atomate2siesta workflow storage."
+msgstr ""
+"رابط خط فرمان ``atomate2siesta-database`` ابزارهایی را برای تست، مدیریت و"
+" پرس‌وجو پایگاه‌های داده MongoDB که برای ذخیره‌سازی گردش کارهای "
+"atomate2siesta استفاده می‌شوند، فراهم می‌کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:8
+#: 552f3d3f1db148c0ae43a6d36d9eea05
+msgid "Installation"
+msgstr "نصب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:10
+#: 752c3bc487a34407814d4a19404d11df
+msgid "The CLI is automatically installed with atomate2siesta:"
+msgstr "رابط خط فرمان به طور خودکار با atomate2siesta نصب می‌شود:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:17
+#: 5d1d503cb6dd491cb8541b0d1d0adbf7
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:37
+#: aca6dd91c9a74390add9fa2223f5ec40
+msgid "Commands"
+msgstr "دستورات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:40
+#: eaee6f64ae4c41aba23390c11b4d9966
+msgid "test"
+msgstr "تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:42
+#: c24dfb4d96aa484c9323279cc57e779c
+msgid "Test MongoDB connection and display database statistics."
+msgstr "تست اتصال MongoDB و نمایش آمارهای پایگاه داده."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:44
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:85
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:127
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:208
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:246
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:287
+#: 268abd6b3c634f48a431a2091fd713ef 6465f61027254c0ba3f879f5eb70d647
+#: a44af463403e4692827291fc3494be2f ac093aad199c43ad9916a9e0720a568d
+#: d160513fc17a4a0ebac6d11e3479f243 e53131571b9f49798fb08958e06093bd
+msgid "**Usage:**"
+msgstr "**استفاده:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:50
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:91
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:214
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:252
+#: 07c659c7187c4870811057eeb0cfd389 35053de2d1df40f5bd298536b37b05d9
+#: 515d11dbfcbe4fea9636f61a75ddda58 d1daaa04a3e64be28092f2f9b3cc24c2
+msgid "**Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:93
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:139
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:216
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:254
+#: 2b8065cbaa24450c83b63ad1f7a49c2a 8dfb1db2645748788daec264d547e5db
+#: 96da4a4892dc4f649344a6611f437574 9fd27f1db73d438094c6de20f5027753
+#: c0f34e9d20e841c1a5b499869f7b0d2f
+msgid "``--host TEXT``: MongoDB host address (default: localhost)"
+msgstr "``--host TEXT``: آدرس میزبان MongoDB (پیش‌فرض: localhost)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:53
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:140
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:217
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:255
+#: 08784e5eb31e4230ac9c143fc5ce7088 1d165ed30b734fea950c3d8b7533feb3
+#: 360692fcffbe413082908395fc2796fc 75ed3ca0a756468e952c7bd3e649b1b2
+#: c5933539eba94fa497efb1d706bbc000
+msgid "``--port INTEGER``: MongoDB port (default: 27017)"
+msgstr "``--port INTEGER``: پورت MongoDB (پیش‌فرض: ۲۷۰۱۷)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:54
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:95
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:141
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:218
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:256
+#: 0ee213bafc0a43c6ae250196d9189eef 7c365ff0b2cf47c9ac1c13351fb4d831
+#: 8dc17a07fb0f45b3961aee743673986d a9101f83b9994698baf0bf2a0eca5181
+#: ca981d7cfab345fca8e3b97fba799fbc
+msgid "``--database TEXT``: Database name (default: atomate2siesta)"
+msgstr "``--database TEXT``: نام پایگاه داده (پیش‌فرض: atomate2siesta)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:55
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:96
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:142
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:257
+#: 45658a3b46aa4887b80dd9ba300c8c2a 8696b93e85304aeba001dff19bc4c090
+#: b5ef43172b464a16834aa76cd4beaa5e cfc11b7a1674449899c79a037dd039ae
+msgid "``--collection TEXT``: Collection name (default: tasks)"
+msgstr "``--collection TEXT``: نام مجموعه (پیش‌فرض: tasks)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:57
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:99
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:158
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:220
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:260
+#: 24644e2352e34ef382768edecbeba26d 7a1b4b007c8047eba46ae8ef9fe7bc81
+#: 900be03515d142689ea330a135d995af d3ef0759893f476db46c6833dc20342a
+#: ed4ee710834a4aa2b5f087fa663c7b20
+msgid "**Examples:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:70
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:233
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:293
+#: 553fabdf93474565bf0adf8de78c48b4 c011fb0798ab4b658931cabc2cc50fb1
+#: f6faacabe3a044bf84ac5194a4651f3f
+msgid "**Output:**"
+msgstr "**خروجی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:72
+#: 3c9db562427649e697107e36cc3f0e5f
+msgid "Connection status (PyMongo and Maggma)"
+msgstr "وضعیت اتصال (PyMongo و Maggma)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:73
+#: 478fe521d80445df940c3783e23caf6a
+msgid "Document count"
+msgstr "تعداد اسناد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:74
+#: b1d9aa3b5ae44135bb463e5b2fff88a6
+msgid "Database size"
+msgstr "حجم پایگاه داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:75
+#: 8a1cf7caf40e40959539723e307460a3
+msgid "Storage size"
+msgstr "حجم ذخیره‌سازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:76
+#: 857a5dc2012346e49a0c621707ff6ed2
+msgid "Index count"
+msgstr "تعداد ایندکس‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:81
+#: 900fbebc275240688472ffcc4192e06f
+msgid "list"
+msgstr "لیست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:83
+#: 4315e73fb0f64f0485a1abca561a60f0
+msgid "List recent documents in the database with key metadata."
+msgstr "نمایش اسناد اخیر در پایگاه داده به همراه فراداده‌های کلیدی."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:97
+#: 150f90ac9cbe484d9fdb63f393b0f19e
+msgid "``--limit INTEGER``: Maximum number of documents to display (default: 10)"
+msgstr "``--limit INTEGER``: حداکثر تعداد اسناد برای نمایش (پیش‌فرض: ۱۰)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:112
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:189
+#: 7e89f4a65a65435cb7497e86ddc9be08 c85ae192f5f7422bacba849539aceb54
+msgid "**Output Table Columns:**"
+msgstr "**ستون‌های جدول خروجی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:114
+#: 594b199091dd4684a9c045f5ff29b0ed
+msgid "UUID (first 36 characters)"
+msgstr "UUID (۳۶ کاراکتر اول)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:115
+#: 1a25e44232a9421bba648894897a97fe
+msgid "Chemical formula"
+msgstr "فرمول شیمیایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:116
+#: 068080361532401f84abc5b2d8dee124
+msgid "Calculation state (successful, failed, etc.)"
+msgstr "وضعیت محاسبه (موفق، ناموفق و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:117
+#: 8dd343dc7e1444378cc52c21fd31536a
+msgid "Total energy (eV)"
+msgstr "انرژی کل (eV)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:118
+#: e24d16f8b51541a991938b82a077bf7d
+msgid "Calculation type"
+msgstr "نوع محاسبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:123
+#: 26e33cf38ece4a639f2a9b4a830dcf36
+msgid "query"
+msgstr "پرس‌وجو"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:125
+#: c769e376001245ffad73d43dd963102a
+#, fuzzy
+msgid "Query documents with flexible filters and display detailed results."
+msgstr "پرس‌وجو اسناد بر اساس فرمول شیمیایی و نمایش نتایج جزئی."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:133
+#: 421b085588e94713bc9d75d33b03bb8d
+msgid "**Arguments:**"
+msgstr "**آرگومان‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:135
+#: 6a45c48c1c30471e9257deda40fa84e4
+#, fuzzy
+msgid ""
+"``FORMULA``: Chemical formula to search for (e.g., Si, Fe2O3, Al2O3) - "
+"optional"
+msgstr "``FORMULA``: فرمول شیمیایی برای جستجو (مثل Si، Fe2O3، Al2O3)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:137
+#: e077c1d251bb437f8ba95a3192f5a843
+#, fuzzy
+msgid "**Connection Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:144
+#: 20279d880c254a1eadee8cdc198ce67d
+#, fuzzy
+msgid "**Query Filter Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:146
+#: 248272b81e75497bb28c445a9eb9ab03
+msgid "``--formula TEXT``: Filter by chemical formula"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:147
+#: ab507b91229645d18b0403bab3c798e5
+#, fuzzy
+msgid "``--state TEXT``: Filter by calculation state (successful, failed, etc.)"
+msgstr "وضعیت محاسبه (موفق، ناموفق و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:148
+#: cab178ebc39b43ab8e34276b98d0dd5e
+msgid ""
+"``--calc-type TEXT``: Filter by calculation type (relax, static, bands, "
+"etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:149
+#: 65714bfde61645a9ac64cc861a83f51e
+msgid "``--energy-min FLOAT``: Minimum energy threshold (eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:150
+#: 4b25f5dd94884437b5e84c938675a7bf
+msgid "``--energy-max FLOAT``: Maximum energy threshold (eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:151
+#: 53f79b57395a45d783516cb96f734fd4
+msgid ""
+"``--latest INTEGER``: Show N most recent calculations (sorted by "
+"completion time)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:153
+#: cc62a587b24940e2ae967fe18148ba17
+#, fuzzy
+msgid "**Export Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:155
+#: b45a389f9a534ec4906a483bf2e0edd3
+msgid "``--export TEXT``: Export format (json or csv)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:156
+#: b670cc44c87941f4b8b2a403a5559f0d
+msgid ""
+"``--output TEXT``: Output filename (without extension, default: "
+"query_results)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:191
+#: 2483168f9a8044ada14d2ccecf743d5e
+msgid "UUID"
+msgstr "شناسه UUID"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:192
+#: a7c1bb8b2e7847088e0ab21c40e9b71f
+#, fuzzy
+msgid "Formula"
+msgstr "فرمول شیمیایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:193
+#: a8b42acd6e0941fc80b1edfea9207fe0
+#, fuzzy
+msgid "State"
+msgstr "آمار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:194
+#: 8fc8bd02f5a446f4bceb60d92a67b857
+#, fuzzy
+msgid "Calc Type"
+msgstr "نوع محاسبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:195
+#: 8baea61dc3ee4d16a308b64ad1f2eff7
+#, fuzzy
+msgid "Energy (eV)"
+msgstr "انرژی کل (eV)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:196
+#: 2baa592c9648484f9ea91a9b8f6dc647
+#, fuzzy
+msgid "K-points"
+msgstr "شبکه نقاط K"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:197
+#: 6cf34625a603405287306e78c0a89594
+msgid "Basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:198
+#: 03e7bf7582134b868a813b2c07a4b8cc
+msgid "Mesh Cutoff (Ry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:199
+#: d6e4f048ea324a089ef038559b514421
+#, fuzzy
+msgid "Completion Time"
+msgstr "اتصال ناموفق"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:204
+#: 61085276bec448e783f3f98a3826301f
+msgid "stats"
+msgstr "آمار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:206
+#: 58069e8dd1ff4e4eb81213f7340d3ff2
+msgid "Display comprehensive statistics for all collections in the database."
+msgstr "نمایش آمارهای جامع برای تمام مجموعه‌ها در پایگاه داده."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:235
+#: 1e51930d689a4be6af0bbde6b0165cfe
+msgid "Collection-level statistics (documents, size, avg doc size)"
+msgstr "آمارهای سطح مجموعه (اسناد، حجم، میانگین حجم سند)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:236
+#: abc62bb57ede4d3a9b068fa0a51f4d8a
+msgid "Database-level statistics (total data size, storage size, indexes)"
+msgstr "آمارهای سطح پایگاه داده (حجم کل داده‌ها، حجم ذخیره‌سازی، ایندکس‌ها)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:237
+#: 5c358f61939e43d8b2078774659e6d8c
+msgid "Summary totals"
+msgstr "جمع کل خلاصه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:242
+#: 1e4028b0c25047f58c29e17dc2b7ed80
+msgid "clear"
+msgstr "پاک‌سازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:244
+#: b0a988f33ab2468fad2abb9dbd2849cf
+msgid "Clear all documents from a collection (USE WITH CAUTION)."
+msgstr "پاک‌سازی تمام اسناد از یک مجموعه (با احتیاط استفاده کنید)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:258
+#: 3dc1248972474840891b3ee22d19c04e
+msgid "``--force``: Skip confirmation prompt"
+msgstr "``--force``: نادیده گرفتن پیام تأیید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:278
+#: e45510b066b047e1814c4dfe341a6a36
+msgid ""
+"This command permanently deletes all documents in the specified "
+"collection. Use with extreme caution, especially with ``--force`` flag."
+msgstr ""
+"این دستور به طور دائم تمام اسناد در مجموعه مشخص شده را حذف می‌کند. با "
+"احتیاط زیادی، به ویژه با پرچم ``--force`` استفاده کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:283
+#: fdfade067b1444a2b678b3c2cf613ea0
+msgid "config"
+msgstr "پیکربندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:285
+#: 320d4a8ba4724ace9020388d202e73b8
+msgid "Show example configuration files for jobflow and Python usage."
+msgstr "نمایش فایل‌های پیکربندی نمونه برای jobflow و استفاده در Python."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:295
+#: 1c9ddf67ded24e0f98a25a23c8230f24
+msgid "Example ``~/.jobflow.yaml`` configuration"
+msgstr "نمونه پیکربندی ``~/.jobflow.yaml``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:296
+#: 9f5f403cc23c4f9c9a608714b0cd71d9
+msgid "Example Python code for using MongoStore"
+msgstr "نمونه کد Python برای استفاده از MongoStore"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:297
+#: d8cdf15e2c48427788dc3de7961d3259
+msgid "Setup instructions"
+msgstr "دستورالعمل‌های راه‌اندازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:299
+#: 991027f604d04367a7d99c8c0c8649f8
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:306
+#: 1474403672b14009a2b15efe36baa19a
+msgid "Common Use Cases"
+msgstr "موارد کاربرد رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:309
+#: 43a87b7143554e11b2fe9818639f9bae
+msgid "Initial Setup and Testing"
+msgstr "راه‌اندازی اولیه و تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:327
+#: 9852b61a3d6c427c9e5d6c401f7e2b91
+msgid "Monitoring Running Workflows"
+msgstr "نظارت بر گردش کارهای در حال اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:341
+#: 148062bbff9949138bfce16d8ccfe63f
+msgid "Production Database Management"
+msgstr "مدیریت پایگاه داده تولیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:355
+#: 8594da8082914464ad87ac271ed7efaf
+msgid "Development and Testing"
+msgstr "توسعه و تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:369
+#: 663c33b88ae64ed8968b0f844f8a27f1
+msgid "Remote Database Access"
+msgstr "دسترسی به پایگاه داده راه دور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:382
+#: 04fd9ed321af471cb658e8c7db480041
+msgid "Integration with Python"
+msgstr "یکپارچه‌سازی با Python"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:384
+#: a3a9b41cd1184d06b8cd31b75af6b434
+msgid "The CLI complements Python-based database operations:"
+msgstr "رابط خط فرمان مکمل عملیات پایگاه داده مبتنی بر Python است:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:411
+#: ca802ae87f7d4eb69b2c73953420f096
+msgid "Error Handling"
+msgstr "مدیریت خطا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:414
+#: 93ada0190c6648b8bc7ba2f1440d9ee9
+msgid "Connection Failed"
+msgstr "اتصال ناموفق"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:421
+#: a9e825a3ea534a68820b396bafa9e386
+msgid "**Solution:** Start MongoDB service:"
+msgstr "**راه‌حل:** راه‌اندازی سرویس MongoDB:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:423
+#: b8a64c2998e546dfa8b032cbbe3886ec
+msgid "macOS: ``brew services start mongodb-community``"
+msgstr "macOS: ``brew services start mongodb-community``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:424
+#: e99c29ee31fd48d9aca9092ea827e696
+msgid "Linux: ``sudo systemctl start mongodb``"
+msgstr "Linux: ``sudo systemctl start mongodb``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:427
+#: 013fd16d67db43ee94d6eea3bf485467
+msgid "Module Not Found"
+msgstr "ماژول پیدا نشد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:434
+#: e12a6d0f71304be39de543e0ad0aa860
+msgid "**Solution:** Install required packages:"
+msgstr "**راه‌حل:** نصب بسته‌های موردنیاز:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:441
+#: 397e7eb2ac6f445091d17d0eac48d971
+msgid "Permission Denied"
+msgstr "دسترسی رد شد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:448
+#: 553b829fea97409eaffad24ffd0fd10f
+msgid ""
+"**Solution:** Provide credentials in connection string or configure "
+"MongoDB authentication properly."
+msgstr ""
+"**راه‌حل:** اعتبارنامه‌ها را در رشته اتصال قرار دهید یا احراز هویت "
+"MongoDB را به درستی پیکربندی کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:451
+#: 593cec26e18f4488bdc1921ef23a63de
+msgid "Environment Variables"
+msgstr "متغیرهای محیطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:453
+#: 2e2b318746a84fdd9d9a43e49e4fc6a1
+msgid "You can set default values using environment variables:"
+msgstr "می‌توانید مقادیر پیش‌فرض را با استفاده از متغیرهای محیطی تنظیم کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:463
+#: e1e963ee8b464a0cb239be4020ec0fda
+msgid "Command-line options always override environment variables."
+msgstr "گزینه‌های خط فرمان همیشه متغیرهای محیطی را لغو می‌کنند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:466
+#: 21a14d1ac3a44ed4aa042920c38f4762
+msgid "Tips and Best Practices"
+msgstr "نکات و بهترین شیوه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:468
+#: ad70053c9a6a45cc81fedeac4fef9280
+msgid ""
+"**Regular Monitoring**: Use ``stats`` command regularly to monitor "
+"database growth"
+msgstr ""
+"**نظارت منظم**: از دستور ``stats`` به طور منظم برای نظارت بر رشد پایگاه "
+"داده استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:469
+#: 47625324af3c423e82938f2499ce846c
+msgid "**Backup Before Clear**: Always backup before using ``clear`` command"
+msgstr ""
+"**پشتیبان‌گیری قبل از پاک‌سازی**: همیشه قبل از استفاده از دستور ``clear``"
+" پشتیبان بگیرید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:470
+#: ced74bea9fe24beba4ca5078bad4f964
+msgid ""
+"**Use Descriptive Databases**: Use different database names for "
+"dev/test/production"
+msgstr ""
+"**استفاده از پایگاه‌های داده توصیفی**: از نام‌های پایگاه داده متفاوت برای"
+" توسعه/تست/تولید استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:471
+#: 3803f0e214d64db1b035676487a53868
+msgid "**Index Important Fields**: Create indexes for frequently queried fields"
+msgstr "**ایندکس‌گذاری فیلدهای مهم**: برای فیلدهای پرجستجو ایندکس ایجاد کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:472
+#: 4822be4bec4c45db85c994b6d6cc53d2
+msgid ""
+"**SSH Tunnels for Remote Access**: Use SSH tunneling for secure remote "
+"database access"
+msgstr ""
+"**تونل‌های SSH برای دسترسی راه دور**: از تونل‌سازی SSH برای دسترسی ایمن "
+"به پایگاه داده راه دور استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:473
+#: bd3255fd39414aca96db86e849511c8b
+msgid ""
+"**Test Connection First**: Always run ``test`` before attempting "
+"operations on a new database"
+msgstr ""
+"**ابتدا اتصال را تست کنید**: همیشه قبل از تلاش برای انجام عملیات روی یک "
+"پایگاه داده جدید، ``test`` را اجرا کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:476
+#: a2496abda4bf4d19bf0a7d21d5b22db2
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:478
+#: e378f2375e814d20942c487ae285343e
+msgid "Tutorial 13: Database Storage"
+msgstr "آموزش ۱۳: ذخیره‌سازی پایگاه داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:479
+#: 15dea0f8fba3497e86483725adadeb2e
+msgid "`MongoDB Documentation <https://docs.mongodb.com/>`_"
+msgstr "`مستندات MongoDB <https://docs.mongodb.com/>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:480
+#: 8a18cb79d4b74a41b888dddebdfd3130
+msgid "`Maggma Documentation <https://materialsproject.github.io/maggma/>`_"
+msgstr "`مستندات Maggma <https://materialsproject.github.io/maggma/>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-database.rst:481
+#: 9e8b0518438647cca110b9ab70f1d762
+msgid "`Jobflow Database Guide <https://materialsproject.github.io/jobflow/>`_"
+msgstr ""
+"`راهنمای پایگاه داده Jobflow "
+"<https://materialsproject.github.io/jobflow/>`_"
+
+#~ msgid "Calculation state"
+#~ msgstr "وضعیت محاسبه"
+

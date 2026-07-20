@@ -1,0 +1,294 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials/basic.rst:3 f4d5a53830604bc6a889236a18287c50
+msgid "Basic Learning Paths"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:5 31e6a3e9efdd480d95b38f6bffcc6b81
+msgid ""
+"Introduction to fundamental atomate2siesta workflow concepts and simple "
+"calculations."
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:10 2a704295864a4c8bac6a2b666f156e05
+msgid "Tutorial 01: Relaxation Basics"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:12 ../../source/tutorials/basic.rst:57
+#: ../../source/tutorials/basic.rst:104 ../../source/tutorials/basic.rst:147
+#: ../../source/tutorials/basic.rst:193 183603c5c9734275b403151ea27bcb6b
+#: 5b0441f3a7bd458481b2f122a5ba9f5f 76cdd98723e3487dada7eb77f232d94e
+#: 840ac8ba33a349519f3224a7b4397703 8b3e5b64115945b7b3f142fa8cdf666c
+msgid "**Learning Objectives**:"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:14 f10458d944c143cdb5efb36bd42c2a68
+msgid "Understand the Maker pattern"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:15 a17065d7e9274c0f9e5217914b1d4818
+msgid "Create and run a simple relaxation workflow"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:16 c3debbb300404954904f682752df8c21
+msgid "Access results from calculations"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:18 ../../source/tutorials/basic.rst:63
+#: ../../source/tutorials/basic.rst:110 ../../source/tutorials/basic.rst:153
+#: ../../source/tutorials/basic.rst:199 2c93953a5e8b4b4488a12fa0feff4679
+#: 47a4a0558141456eb0257686b7105dcf 9ef437ae6fd84806bc74d6810c510b80
+#: b97d048264cb43b395b4558ff099c6db c2a8f2ad2710487bbd5a9811284689ad
+msgid "**Key Concepts**:"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:20 00c23f10ce1f47d9b37a3b63e381f647
+msgid "``RelaxMaker`` class"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:21 e084eea05ed44d78a50b90bc6db65c74
+msgid "Fixed vs. variable cell relaxation"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:22 acff330f5d5949c69a287f7b269f391a
+msgid "``run_locally()`` function"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:23 a76b9000ea3f453a82dcefb7ed1ccf0d
+msgid "Result schemas"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:25 ../../source/tutorials/basic.rst:71
+#: ../../source/tutorials/basic.rst:117 ../../source/tutorials/basic.rst:160
+#: ../../source/tutorials/basic.rst:206 3a3e68f6a33a492eb2cf2f4886fcfbc3
+#: 3d52ab86eb4240e68daa3e1a4f373277 9f207aed203747e29702a0cb8b918532
+#: dfc615351c554c9bb8e29574b10791be e050c79cf78d477692d3ef83945f1590
+msgid "**Example**:"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:46 de28fe93c59047cd9d0900fb575e1846
+msgid "📁 **Location**: ``tutorials/01-basics/01-relaxation/``"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:48 9471a670f12e47208a162d142abf8f77
+msgid "⏱️ **Time**: 10 minutes"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:50 ../../source/tutorials/basic.rst:97
+#: 785ac44e47f643f791b33d4e192613b4 d9d6c37d071a4d52a5b857868766f3fe
+msgid "⭐ **Difficulty**: Beginner"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:55 c186dfc1143e41e097951a3e5153da3f
+msgid "Tutorial 02: Relaxation Parameters"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:59 a090d9d65af347628f5793af95d064e3
+msgid "Customize SIESTA parameters using ``user_params``"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:60 f0ffc34ef7e04f38816343323c46dc1c
+msgid "Understand common input parameters"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:61 5ae4a6f9629d4a12bbea6b5e44e38f05
+msgid "Use powerups to modify workflows"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:65 bb9991ee5de4475b9d26a886de468e70
+msgid "``user_params`` dictionary"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:66 90a9c56705e84cac8706c66824fbdfb9
+msgid "PAO basis sets (SZ, DZ, DZP, TZP)"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:67 c231ee2909c9405f8390d3e2948005f6
+msgid "K-point sampling"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:68 1b8b22315e0445869b5ff575bdc87798
+msgid "Mesh cutoff"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:69 c5261e05529d4babad9ed91778bdcfc2
+msgid "``update_user_siesta_settings()`` powerup"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:93 a3e713fa354345558254b8b43cefa52f
+msgid "📁 **Location**: ``tutorials/01-basics/02-relaxation-parameters/``"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:95 344ec275149543758dfa4d4bd0bfb0f9
+msgid "⏱️ **Time**: 15 minutes"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:102 0b8c0c9eb034448e819f5276b823be85
+msgid "Tutorial 03: Band Structure"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:106 cdff15509f904abf8c11b91b631d7050
+msgid "Calculate electronic band structures"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:107 8618937b0ac64feeb519e135e86d43e8
+msgid "Understand band gap determination"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:108 c10e863dd6254ef1976c27a6902574f4
+msgid "Visualize electronic properties"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:112 774bde680b1c44798ff0f50e9a7a1245
+msgid "``BandStructureMaker`` class"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:113 4d80b3ecba3f4225ab1312d7a2291efb
+msgid "High-symmetry k-path generation"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:114 f404a1b2ca9741adaaa70c0b19979e14
+msgid "SCF + non-SCF workflow pattern"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:115 b2e6b0fbac22495b94febb2063e397f3
+msgid "Band gap analysis"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:136 d6dc93094d5b4bf0b14efa481d349078
+msgid "📁 **Location**: ``tutorials/01-basics/03-band-structure/``"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:138 34b09c7394454f779046f572e7967ffc
+msgid "⏱️ **Time**: 20 minutes"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:140 ../../source/tutorials/basic.rst:186
+#: ../../source/tutorials/basic.rst:225 6fc5e062b3eb427399dccaf66ba9ca20
+#: cc1dfdaa5c6e4b829ebcfb9e1e9f4f03 d13aa26b15e840d2b5c9d4ea10136d1b
+msgid "⭐ **Difficulty**: Intermediate"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:145 652079b8cc72412b866597273606f20a
+msgid "Tutorial 04: Lua Scripts"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:149 436040290f7a478d83890a289609597f
+msgid "Use Lua scripting for advanced SIESTA features"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:150 815f470111b249c582910f4a6703f81a
+msgid "Implement custom constraints"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:151 cececbaefacb4a39b8f303039cda8b96
+msgid "Access FLOS library capabilities"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:155 2bc4a897093c43fd8fccfd5f43fe38f7
+msgid "Lua scripting in SIESTA"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:156 a55a35ce4dbf44d8a108a6cc58433dca
+msgid "FLOS library (Forces, Lattice, Optimization, Structure)"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:157 79d428cf59464e1eb7a58829b8333666
+msgid "Custom geometry constraints"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:158 7c7792ef888d4314b6c1aff8216f1e2f
+msgid "Variable cell relaxation with custom stress control"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:182 bb3ca98c19b249bc8ae926c4cb8443b4
+msgid "📁 **Location**: ``tutorials/01-basics/04-lua-scripts/``"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:184 94af2eeb06f64cc2b5155d37eae352f5
+msgid "⏱️ **Time**: 30 minutes"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:191 60705426550f4e429f7e133d9d1782cd
+msgid "Tutorial 05: Multi-Step Workflows"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:195 6fe32d21508245e6a553f96881612af0
+msgid "Compose multi-step workflows"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:196 2b5bf5cd7230446387ece44d40286eb4
+msgid "Pass outputs between jobs"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:197 b2fb618e7e3c4312bc861be1e39e6343
+msgid "Use Flow for complex calculations"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:201 5efde5ac02114605a98a0db6f22f16ec
+msgid "``Flow`` composition"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:202 8dd931ebf71849dd93bdcdb5dc26eb6f
+msgid "Job dependencies"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:203 2b810122648c4ae592ee185a74952293
+msgid "Output passing (``prev_dir``)"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:204 39e87778edc34b308007a253633acf6d
+msgid "Workflow orchestration"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:221 cee8e0b0faf044fe9f3dd6abc8fa71ae
+msgid "📁 **Location**: ``tutorials/01-basics/05-workflows/``"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:223 84c8856f8bff475f9609c3d1316f905e
+msgid "⏱️ **Time**: 25 minutes"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:230 c050d7f7191d42cf8f3cf7124a123b63
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:232 c524048e988047d488195d079de62d6a
+msgid "After completing the basic tutorials:"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:234 4a9abb9ea9684cf985b38f7d61dad9e7
+msgid "**Convergence Studies** (Tutorials 06-08) - Learn to optimize parameters"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:235 ec9153a182bc4e39b2d7af55504d64ac
+msgid "**Advanced Workflows** (Tutorials 09-18) - Complex multi-step calculations"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:236 98b0aff536dd4a5eaa3885de116cdd41
+msgid "**Infrastructure** (Tutorials 13-15) - Production setup"
+msgstr ""
+
+#: ../../source/tutorials/basic.rst:238 d5b96da52be4405da7e2613a4fd04493
+msgid "See :doc:`index` for full tutorial listing."
+msgstr ""

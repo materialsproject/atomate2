@@ -1,0 +1,1419 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:1
+#: 0088d63384e1455fbcadf050ac1140f8
+msgid "Tutorial: Multi-Step Workflows"
+msgstr "آموزش: Multi-Step گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:3
+#: bb3425daa0bb4682b296e3ee5c6da7d4
+msgid ""
+"**Category**: 01-basics **Difficulty**: Beginner **Time**: ~5 min (dry-"
+"run), ~30-45 min (full calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:9
+#: 486f93b487eb425ea194653a1bfa23ae
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:11
+#: 36fdb31485a244c9be8436dc6fd4fe82
+msgid ""
+"Learn how to create multi-step workflows by chaining multiple jobs "
+"together. This tutorial demonstrates using Flow makers to automatically "
+"run calculations with different parameters and compare results."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:15
+#: 96d6f1758aed42f782d7e5d307715175
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:17
+#: 3ea6796ae53844caa7c6de53a8161f67
+msgid "Creating multi-job workflows with Flow makers"
+msgstr "Creating multi-job workflows with Flow makers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:18
+#: d21ff18ddf8f4d20a826325ea093a266
+msgid "`DifferentBasisRelaxMaker` for basis set comparison"
+msgstr "`DifferentBasisRelaxMaker` for basis set comparison"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:19
+#: 11c6799e903c4401baa83c540baec394
+msgid "Job dependencies and data flow"
+msgstr "Job dependencies و dt flow"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:20
+#: b974501cf9bb430ba684eef6ae931788
+msgid "Automatic result comparison"
+msgstr "Automtic result comprison"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:21
+#: 8da39b00a3754d38bc92f6d7332f79cf
+msgid "Applying powerups to entire workflows"
+msgstr "Applying powerups to entire wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:22
+#: b26b6bcea8964abaadf8b9804e799ac1
+msgid "Sequential vs parallel job execution"
+msgstr "Sequentil vs prllel job execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:26
+#: 64355edab8da4511ad9a2fcdc25495ee
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:28
+#: 671cec4ce76547388279b8851c2bf0f6
+msgid "**Required**: [01-relaxation](../01-RelaxMaker/) completed"
+msgstr "**Required**: [01-relaxation](../01-RelaxMaker/) completed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:29
+#: 485a2a7358f84b7caba6a34bcbf51157
+msgid "**Required**: [02-relaxation-parameters](../02-BandStructureMaker/)"
+msgstr "**Required**: [02-relaxation-parameters](../02-BandStructureMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:30
+#: a60669bca9a04989ad4dbc3360af7040
+msgid "**Recommended**: Understanding of SIESTA basis sets"
+msgstr "**Recommended**: درک of SIESTA bsis sets"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:34
+#: 7d734b7c6a934e17a6e71a94bc030793
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:36
+#: 13364903dcdc4e2c8530f5153e2f5985
+msgid "What is a Workflow (Flow)?"
+msgstr "What is a Workflow (Flow)?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:38
+#: 9795aaad22044779857e53d1334a9057
+msgid ""
+"A **workflow** (or **flow**) is a collection of jobs with dependencies. "
+"Jobs can run:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:40
+#: 326b28ce26104439afc863b95901ca76
+msgid "**Sequentially**: Job B waits for Job A to finish"
+msgstr "**Sequentilly**: Job B wits برای Job A to finish"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:41
+#: 1a727bd48e0546558b8c907ddb807fa8
+msgid "**In parallel**: Independent jobs run simultaneously"
+msgstr "**In prllel**: Independent jobs run simultneously"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:42
+#: 7f9c7a80827e48638a81907e25af2f44
+msgid "**Conditionally**: Job C runs only if Job B succeeds"
+msgstr "**Conditionlly**: Job C runs only if Job B succeeds"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:44
+#: e4d18aaf297749808f26d55984c3c841
+msgid "**Single Job**:"
+msgstr "**Single Job**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:50
+#: c3f267aec49f463daf1cef791508d885
+msgid "**Workflow (Flow)**:"
+msgstr "**Workflow (Flow)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:56
+#: 4e2c73498e0b41908fad5120341617f4
+msgid "Restart Techniques (NEW!)"
+msgstr "Restrt Techniques (NEW!)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:58
+#: f95bcedc98924f89a67a2d85cc533e10
+msgid "SIESTA provides powerful restart capabilities for faster calculations:"
+msgstr "SIESTA provides powerful restrt cpbilities برای fster clcultions:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:60
+#: 9e892830fc3e4b4abfc6ebe23a88ce0a
+msgid "**Density Matrix (DM) Restart**:"
+msgstr "**Density Mtrix (DM) Restrt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:61
+#: ffd48597613a4b76a63d8a4adcc42035
+msgid "**What**: Reuse converged electronic structure from previous calculation"
+msgstr "**Wht**: Reuse converged electronic structure from previous clcultion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:62
+#: 242b4f12cfd847f7b21744652d72dad3
+#, python-format
+msgid "**Benefit**: 50-70% fewer SCF iterations"
+msgstr "**Benefit**: 50-70% fewer SCF itertions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:63
+#: cfbc691b55c543d69e554a1fb9389ddd
+msgid ""
+"**Use when**: Refining k-points, tightening tolerance, adding post-"
+"processing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:64
+#: 38c739db0126401484d37240dbe6c650
+msgid "**Tutorial**: `02_restart_from_dm.py`"
+msgstr "**Tutorial**: `02_restart_from_dm.py`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:66
+#: ce91dcd710b341b2a595c5777e7eb827
+msgid "**Geometry (XV) Restart**:"
+msgstr "**Geometry (XV) Restrt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:67
+#: 51e52353979a42acb50966a48c2e49b0
+msgid "**What**: Continue geometry optimization from previous atomic positions"
+msgstr "**Wht**: Continue geometry optimiztion from previous tomic positions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:68
+#: c9b0e5552d864173a4feb0c02eae4335
+#, python-format
+msgid "**Benefit**: 50-70% fewer relaxation steps"
+msgstr "**Benefit**: 50-70% fewer relxtion steps"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:69
+#: d3c391090f694b1c997c8e601ce8aca8
+msgid ""
+"**Use when**: Two-stage relaxation (loose→tight), resuming interrupted "
+"jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:70
+#: 628aa2237c93445fb1bb897e8ac962fb
+msgid "**Tutorial**: `03_restart_from_xv.py`"
+msgstr "**Tutorial**: `03_restart_from_xv.py`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:72
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:244
+#: 8d84f440a3d44703924c1870a5239a27 e8757674f9eb438389d0f54d588727f4
+msgid "**Combined DM + XV**:"
+msgstr "**Combined DM + XV**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:73
+#: 20190d99a6744c1a937a7d20630d36d9
+msgid "Maximum efficiency: faster SCF AND fewer geometry steps"
+msgstr "Mximum efficiency: fster SCF AND fewer geometry steps"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:74
+#: 25fc852a4d994ad2ad0bc099a258bcab
+msgid "Ideal for multi-stage high-accuracy workflows"
+msgstr "Idel برای multi-stge high-ccurcy wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:78
+#: 8700773504a44515a5b3271154823e63
+msgid "Restart Techniques: Detailed Guide"
+msgstr "Restrt Techniques: Detiled Guide"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:80
+#: 11d1345a61c14d15859b64a3286fc0ff
+msgid "Density Matrix (DM) Restart"
+msgstr "Density Mtrix (DM) Restrt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:121
+#: e9aa33585d1a44b5b6d67ae85ee89f15 ea257176e2b34eb2846adbeec6aa371b
+msgid "**Physics Background**:"
+msgstr "**Physics Bckground**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:84
+#: 55a0affb4b9b4a4a900130d3ed6769e5
+msgid ""
+"The density matrix contains the self-consistent electronic structure "
+"solution. By starting with a converged DM from a similar calculation, "
+"SIESTA can:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:85
+#: 4f808fcf28984b84bba3ea9786bc482a
+#, python-format
+msgid "Skip many SCF iterations (typically 50-70% reduction)"
+msgstr "Skip mny SCF itertions (typiclly 50-70% reduction)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:86
+#: 822dff11892c4f648f432f3465022c92
+msgid "Achieve better initial guess for difficult-to-converge systems"
+msgstr "Achieve better initil guess برای difficult-to-converge systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:87
+#: 7739b42169794017a9c1ffbbad485d76
+msgid "Maintain consistent orbital character across parameter changes"
+msgstr "Mintin consistent یاbitl chrcter cross prmeter chnges"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:89
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:128
+#: 0da4c4fd544649d8951230e5ba1a1f51 296498f583894676910a0238a7833430
+msgid "**When to Use**:"
+msgstr "**When to Use**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:90
+#: 81b08f3fe195484384584399ed1028ed
+msgid "✓ Refining k-point mesh (2×2×2 → 4×4×4)"
+msgstr "✓ Refining k-point mesh (2×2×2 → 4×4×4)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:91
+#: efc328a1be7a4881a5a7f652eab7421e
+msgid "✓ Tightening SCF convergence criteria"
+msgstr "✓ Tightening SCF convergence criteri"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:92
+#: 6f7b35c48b30429bb8193455f0b58bda
+msgid "✓ Small geometry adjustments"
+msgstr "✓ Smll geometry djustments"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:93
+#: 5eb432a245734405ab007668536a3e93
+msgid "✓ Adding post-processing (DOS, bands) to converged structure"
+msgstr "✓ Adding post-processing (DOS, bوs) to converged structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:94
+#: b30e66514ffb478c97cb0a392a84d0cd
+msgid "✗ Large structural changes (DM won't match well)"
+msgstr "✗ Lrge structurl chnges (DM won't mtch well)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:95
+#: 089b59890d8549808f0d89611a4e2df6
+msgid "✗ Changing number of atoms (DM incompatible)"
+msgstr "✗ Chnging number of toms (DM incomptible)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:96
+#: 5110f8efa3a54842abdc5fecba792fec
+msgid "✗ Changing basis set (orbital count changes)"
+msgstr "✗ Chnging bsis set (یاbitl count chnges)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:98
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:136
+#: ebf9b233d4334f85af1dbf561884ece8 f5b099fe34cd49c881bd81fa0a41ff08
+msgid "**Key Parameters**:"
+msgstr "**Key Prmeters**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:106
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:145
+#: 12c8daa107394755bdc124ae05869958 945288d413284bc9bf5f6aadbc626943
+msgid "**File Dependency**:"
+msgstr "**فایل Dependency**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:112
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:151
+#: 651ffa20cfb84f2ab4540390577825dd 86cd11d8e4e54cad9df9c7ac6adb71d8
+msgid "**Expected Performance**:"
+msgstr "**Expected Perبرایmnce**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:113
+#: 445fbeea3eae42fc8fa3e4a79768e93f
+msgid "Coarse job: ~10-15 SCF iterations"
+msgstr "Corse job: ~10-15 SCF itertions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:114
+#: 7771704234d948fc9f9fe137ff7a09bb
+msgid "Fine job with DM: ~3-5 SCF iterations (vs 10-15 without)"
+msgstr "Fine job با DM: ~3-5 SCF itertions (vs 10-15 باout)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:115
+#: e2ac8b0a1c4c4e56b29abc53b4d6ed79
+msgid "Total time saving: 30-50%"
+msgstr "Totl time sving: 30-50%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:119
+#: 7a7ffe518d4240c9b9cf59204f8ba97f
+msgid "Geometry (XV) Restart"
+msgstr "Geometry (XV) Restrt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:123
+#: b2fa333f0cf04d30ac1fe5929864c1c9
+msgid ""
+"The XV file contains atomic positions and velocities from the last "
+"geometry optimization step. By continuing from a partially optimized "
+"structure:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:124
+#: 2f1c8620be964238b07ebbb5cccc1181
+#, python-format
+msgid "Skip redundant relaxation steps (typically 50-70% reduction)"
+msgstr "Skip redundnt relxtion steps (typiclly 50-70% reduction)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:125
+#: 7a8e84f23212411da7d011dfbc3fae56
+msgid "Maintain optimization momentum (CG history)"
+msgstr "Mintin optimiztion momentum (CG histیاy)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:126
+#: 20c20b6bb0f849d2852361cd75286504
+msgid "Reach tight convergence faster"
+msgstr "Rech tight convergence fster"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:129
+#: bbf7912c31a84f4aaffde11c2ae0d9fe
+msgid "✓ Two-stage relaxation (loose → tight convergence criteria)"
+msgstr "✓ Two-stge relxtion (loose → tight convergence criteri)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:130
+#: 59e31a2434a548af9e06862b47a07ab4
+msgid "✓ Interrupted calculations (power loss, time limit exceeded)"
+msgstr "✓ Interrupted clcultions (power loss, time limit exceeded)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:131
+#: 15041d395f0b40c69dc5d8b462242657
+msgid "✓ Refining pre-optimized geometry with better parameters"
+msgstr "✓ Refining pre-optimized geometry با better prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:132
+#: 0ec616a4f8784e30b788f470c61ddc9f
+msgid "✓ Continuing MD simulations with velocities"
+msgstr "✓ Continuing MD simultions با velocities"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:133
+#: 16c3bcdc537a4dc28421d0fb4f7d8757
+msgid "✗ Starting from unoptimized structure (no benefit)"
+msgstr "✗ Strting from unoptimized structure (no benefit)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:134
+#: 188b7d8bf51c415eb4c7352251c89f5c
+msgid "✗ Large parameter changes requiring re-optimization"
+msgstr "✗ Lrge prmeter chnges requiring re-optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:152
+#: 0e79e117b5104e4c8332a697dd73c8be
+msgid "Quick relax: ~15-20 steps to 0.04 eV/Å"
+msgstr "Quick relx: ~15-20 steps to 0.04 eV/Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:153
+#: 652daccfaa104380998f8f36745d59fc
+msgid "Fine relax with XV: ~5-10 steps to 0.01 eV/Å (vs 25-35 from scratch)"
+msgstr "Fine relx با XV: ~5-10 steps to 0.01 eV/Å (vs 25-35 from scrtch)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:154
+#: 3bf4b731489c47e2bbde673e13ca446c
+msgid "Total time saving: 40-60%"
+msgstr "Totl time sving: 40-60%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:158
+#: 70bb0a9b57a246e688b7c4f4af4371b5
+msgid "Analysis Techniques"
+msgstr "Anlysis Techniques"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:160
+#: bc44ee84f2ab4c18b700c2cfab488e66
+msgid "DM Restart Analysis"
+msgstr "DM Restrt Anlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:162
+#: 8495262ad2de40a184c00c1ee9e8d674
+msgid "**1. Compare SCF Iterations**:"
+msgstr "**1. Compre SCF Itertions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:171
+#: 3bc82de2c2d4406790f50cf5e66c1c7a
+msgid "**2. Verify DM File Was Read**:"
+msgstr "**2. Verify DM فایل Ws Red**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:176
+#: 9c3eddd84f6d4a3dbe3837796b9e47a3
+msgid "**3. Compare Final Energies**:"
+msgstr "**3. Compre Finl Energies**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:182
+#: 5a906ca2ba5545dd904a63c691515215
+msgid "**4. Check DM File Sizes**:"
+msgstr "**4. Check DM فایل Sizes**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:190
+#: aeb3413e0fd04ea0975be02ef316cbcf
+msgid "XV Restart Analysis"
+msgstr "XV Restrt Anlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:192
+#: 1505aeebc871425583bffa0fce44154f
+msgid "**1. Compare Total Relaxation Steps**:"
+msgstr "**1. Compre Totl Relxtion Steps**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:203
+#: 1f89895c1c4744268360bcdf4355b38e
+msgid "**2. Verify XV File Was Read**:"
+msgstr "**2. Verify XV فایل Ws Red**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:208
+#: cd917dbe6cfe4eb2b7b270676a9687f8
+msgid "**3. Compare Final Structures**:"
+msgstr "**3. Compre Finl Structures**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:217
+#: 297fc3360e2044fcb38730a0b688b625
+msgid "**4. Track Force Convergence**:"
+msgstr "**4. Trck Fیاce همگرایی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:230
+#: bf3aa5422ee8430bb47212c1de0a595f
+msgid "Best Practices for Restart Workflows"
+msgstr "بهترین روش‌ها برای Restrt گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:232
+#: eb94b8f4fb1d4072b3caa5506985418c
+msgid "**DM Restart**:"
+msgstr "**DM Restrt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:233
+#: cf2b27b87ffd44e6a57160d4d34d416a
+msgid "**Identical basis**: PAO.BasisSize must match exactly"
+msgstr "**Identicl bsis**: PAO.BsisSize must mtch exctly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:234
+#: c01e453f8196437d8132eda3ac658d00
+msgid "**Compatible geometry**: Similar atomic positions (< 0.5 Å displacement)"
+msgstr "**Comptible geometry**: Similr tomic positions (< 0.5 Å displcement)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:235
+#: 75ac61f4d5804db19a07a5b8a80e6056
+msgid "**Progressive refinement**: Gradually increase k-points, tighten tolerance"
+msgstr "**Progressive refinement**: Grdully increse k-points, tighten tolernce"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:236
+#: 68d1205d7c6c499da7bc2c6525516d6a
+msgid "**Check convergence**: Verify energies match between jobs (< 1 meV)"
+msgstr "**Check convergence**: Verify energies mtch between jobs (< 1 meV)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:238
+#: d591b3ecec984dd2b4730644d880370c
+msgid "**XV Restart**:"
+msgstr "**XV Restrt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:239
+#: e43e9f2dec88483b83be35b955bd4a4d
+msgid ""
+"**Sequential tolerances**: Loose → Medium → Tight (e.g., 0.1 → 0.04 → "
+"0.01 eV/Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:240
+#: 2918d4c822194a1a996794977fa42186
+msgid "**Consistent parameters**: Keep basis, k-points, mesh cutoff same"
+msgstr "**Consistent prmeters**: Keep bsis, k-points, mesh cutoff sme"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:241
+#: f630c1dc91914e51989e11a479fbc984
+msgid "**Monitor progress**: Check if second stage needs fewer steps"
+msgstr "**Monitیا progress**: Check if second stge needs fewer steps"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:242
+#: 71fa222fc4ec44f68331bbea5492f5d7
+msgid "**Appropriate step limits**: MD.NumCGsteps should allow convergence"
+msgstr "**Approprite step limits**: MD.NumCGsteps should llow convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:245
+#: 7cefb30235df46abb9221d07d281b152
+msgid "Use for maximum efficiency in multi-stage workflows"
+msgstr "Use برای mximum efficiency in multi-stge wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:246
+#: 48ed1eb5e7f740439f9da585d9d41191
+msgid "Example: Quick relax (saves XV+DM) → Fine relax (reads both)"
+msgstr "مثال: Quick relx (sves XV+DM) → Fine relx (reds both)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:247
+#: 9540f3f275bd43c48672e6914dd159b8
+msgid "Ideal for high-accuracy production calculations"
+msgstr "Idel برای high-ccurcy production clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:251
+#: 024d0edeaa4e4a87964169832264cddd
+msgid "Benefits of Workflows"
+msgstr "Benefits of گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:253
+#: d27d871fb2c3491eb626ba59e1718980
+msgid ""
+"✓ **Automatic job chaining**: No manual setup between steps ✓ **Data flow"
+" between jobs**: Results automatically passed ✓ **Efficient resource "
+"usage**: Parallel execution when possible ✓ **Reproducible "
+"calculations**: Entire workflow defined in code ✓ **Parameter studies**: "
+"Test multiple settings systematically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:259
+#: 44eacfa657b645149f243708635b90a9
+msgid "Common Workflow Types"
+msgstr "Common گردش کار Types"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:261
+#: e64da00529c64b669de9fde5d5373e22
+msgid "**Convergence Testing**:"
+msgstr "**همگرایی Testing**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:262
+#: c5a9408ec8894ceca3eae663228fc608
+msgid "Test multiple k-point meshes"
+msgstr "Test multiple k-point meshes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:263
+#: 20159625447d4ffb826651e39ba6822f
+msgid "Vary mesh cutoff values"
+msgstr "Vry mesh cutoff vlues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:264
+#: 1b36a1b377e94fe19279f949f119fedc
+msgid "Compare basis sets (this tutorial)"
+msgstr "Compre bsis sets (this tutیاil)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:266
+#: e4f8294ff16a492db90f135b4c35fefc
+msgid "**Sequential Refinement**:"
+msgstr "**Sequentil Refinement**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:267
+#: 254eeafe11034736b5c3c2e34471ce55
+msgid "Coarse calculation → Fine calculation"
+msgstr "Corse clcultion → Fine clcultion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:268
+#: 7eb589c5a59f47ea822735fb95697926
+msgid "Quick relax → Accurate relax"
+msgstr "Quick relx → Accurte relx"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:269
+#: 0eb4ad47832c494f9ed40f5e520ea4f7
+msgid "Static → Band structure"
+msgstr "Sttic → Bو structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:271
+#: 6fce5838c3064be795f4cd7ccdf2c6f3
+msgid "**Property Mapping**:"
+msgstr "**Property Mpping**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:272
+#: fd0fc58fae5540228701ca561e330bbe
+msgid "Same structure, different properties"
+msgstr "Sme structure, different properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:273
+#: c2c51ec766504a7297d14a544faac719
+msgid "Multiple structures, same property"
+msgstr "Multiple structures, sme property"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:274
+#: b4dbdf1ece96432b815fb8a47cf4ec5a
+msgid "High-throughput screening"
+msgstr "High-throughput screening"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:276
+#: b6d44c5e00934d69a246b8cf56b56eff
+msgid "**Multi-step Calculations**:"
+msgstr "**Multi-step محاسبهs**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:277
+#: 4fef85ab94104c82a99e7c73de5c7b29
+msgid "Relax → DOS"
+msgstr "Relx → DOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:278
+#: feb07a6db77e454795ad099b1df488fb
+msgid "Relax → Band structure → DOS"
+msgstr "Relx → Bو structure → DOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:279
+#: a8f36f98af5e4a05ade379959bcb3ea3
+msgid "Relax → Phonons → Thermal properties"
+msgstr "Relx → فونون‌ها → Therml properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:283
+#: 7fbc6aa33298430b870db98786f9d50f
+msgid "DifferentBasisRelaxMaker"
+msgstr "DifferentBasisRelaxMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:285
+#: e053babfe0754f06883c259a3fab9e43
+msgid ""
+"This tutorial uses `DifferentBasisRelaxMaker` which automatically creates"
+" multiple relaxation jobs with different basis sets."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:287
+#: 7f7e293047234dc78971b701bce41ff7
+msgid "**Default Basis Sets Tested**:"
+msgstr "**Defult Bsis Sets Tested**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:288
+#: 26e5e3c9c09348cc9ef023303bce9d0e
+msgid "**SZ** (Single-Zeta) - Minimal basis, fastest"
+msgstr "**SZ** (Single-Zet) - Miniml bsis, fstest"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:289
+#: f3cf8e373dcd41f091233f3169f30afb
+msgid "**DZ** (Double-Zeta) - Standard basis"
+msgstr "**DZ** (Double-Zet) - Stوrd bsis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:290
+#: 38ea83c8420b41adb4fa81996d99d213
+msgid "**DZP** (Double-Zeta + Polarization) - High accuracy"
+msgstr "**DZP** (Double-Zet + Polriztion) - High ccurcy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:292
+#: 4dbf95dc0e0a4d5590104599838a221e
+msgid "**Purpose**: Determine minimum basis set needed for converged results."
+msgstr "**Purpose**: Determine minimum bsis set needed برای converged results."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:309
+#: 692ce3ee0f0d4f75a389a90844729e3b
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:311
+#: 3f9c8b14e0fe4985a55f416a20b657dc
+msgid "Workflow Creation"
+msgstr "گردش کار Cretion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:313
+#: 8dd6310e8ac34844873459352253661e
+msgid "The tutorial uses default settings (SZ, DZ, DZP), but you can customize:"
+msgstr "The tutیاil uses defult settings (SZ, DZ, DZP), but you cn customize:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:325
+#: 92c9ecdd98404802b7522a7016ca3d3f
+msgid "Common Parameters"
+msgstr "Common Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:327
+#: 0eb0ce7af4d84421b06824a36a6fb9c6
+msgid "Parameters can be applied to all jobs in the workflow:"
+msgstr "Prmeters cn be pplied to ll jobs in  wیاkflow:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:338
+#: 00a7d6322a79433ca23dd7175608b4c2
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:340
+#: eafaee2784ab48da99fa5ee6101ee521
+msgid "This directory contains three workflow tutorials:"
+msgstr "This directیاy contins three wیاkflow tutیاils:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:342
+#: 7349f0a3e3ad4628845bef9c2978a8fa
+msgid "**`01_sequential.py`** - Basic multi-job workflow (basis set comparison)"
+msgstr "**`01_sequential.py`** - Basic multi-job workflow (basis set comparison)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:343
+#: 6ce5e159102b455aa911949e2c895854
+msgid ""
+"**`02_restart_from_dm.py`** - Using previous density matrix for faster "
+"SCF ⭐ NEW!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:344
+#: 9e8da1f6a4e64ead9621c61759484581
+msgid ""
+"**`03_restart_from_xv.py`** - Using previous geometry for continued "
+"relaxation ⭐ NEW!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:346
+#: 92763c4291a64efa99f9179bee794e28
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:348
+#: 22a2426b9621493d8573b392a6b17fb6
+msgid "Tutorial 1: Sequential Workflow (Basis Comparison)"
+msgstr "Tutیاil 1: Sequentil گردش کار (Bsis Comprison)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:366
+#: 50531a30760b490ea1023129d6337e14
+msgid "Tutorial 2: DM Restart (Fast SCF Convergence)"
+msgstr "Tutیاil 2: DM Restrt (Fst SCF همگرایی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:384
+#: 98c199fc0f984106b848c47ec5ed6169
+msgid "Tutorial 3: XV Restart (Geometry Continuation)"
+msgstr "Tutیاil 3: XV Restrt (Geometry Continution)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:405
+#: 1ab8d1bfdecb48e8845e34720a90d698
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:407
+#: f434b43f9f4546c4bedf1f27c61bda1d
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:430
+#: 3fe61edd3c8a4c4bb1439bd1ecdd4a4b
+msgid "**Directory Structure**:"
+msgstr "**Directیاy Structure**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:445
+#: 1553a77bcf7b4dee83810dfceb5fe7d9
+msgid "Local Mode"
+msgstr "Locl Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:463
+#: 19ee306e07a749e59365f6ae76a8c93c
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:465
+#: 1a66d1e162cc4f57979ecac25fd2c2bb
+msgid "Extract Final Energies"
+msgstr "Extrct Finl Energies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:488
+#: 5035da65478244438ec61510d9392591
+msgid "Compare Structures"
+msgstr "Compre Structures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:501
+#: c7f4a4309c7941c3bad814789d118485
+msgid "Convergence Analysis"
+msgstr "همگرایی Anlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:503
+#: 0abd4a21f83d4120a5ad1d72def7d459
+msgid "**Good Convergence**:"
+msgstr "**Good همگرایی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:509
+#: 16d846b02d0b4166978c05c798add4f7
+msgid "→ **Conclusion**: DZ sufficient (< 20 meV/atom difference)"
+msgstr "→ **Conclusion**: DZ sufficient (< 20 meV/tom difference)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:511
+#: d88112cec2b74acfb3e8a4a938490f51
+msgid "**Poor Convergence**:"
+msgstr "**Poیا همگرایی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:517
+#: a5afbfa0dc1247b1810ab71e47af103d
+msgid "→ **Conclusion**: Need DZP or higher"
+msgstr "→ **Conclusion**: Need DZP یا higher"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:519
+#: 22bdeda81bf6483581906e14681874d5
+msgid "Decision Criteria"
+msgstr "Decision Criteri"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:521
+#: ca17cb235c4d49dba490a67c7fc9c88e
+msgid "**Energy Difference Thresholds**:"
+msgstr "**Energy Difference Thresholds**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:522
+#: 072e11ea850c4640a954eb05db5be11f
+msgid "< 10 meV/atom: Excellent convergence"
+msgstr "< 10 meV/tom: Excellent convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:523
+#: 05ad1244f49e4d14aea42413d345f6f1
+msgid "10-25 meV/atom: Good convergence (acceptable for most purposes)"
+msgstr "10-25 meV/tom: Good convergence (cceptble برای most purposes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:524
+#: 02871b672fdd40e5a8ce5d02f5a2bcb9
+msgid "25-50 meV/atom: Marginal convergence (use with caution)"
+msgstr "25-50 meV/tom: Mrginl convergence (use با cution)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:525
+#: 06ded38027f547df8d94d219c2d70e12
+msgid "50 meV/atom: Poor convergence (use higher basis)"
+msgstr "50 meV/tom: Poیا convergence (use higher bsis)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:529
+#: e0bdf2c486374cc7a1e21dc339302183
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:531
+#: 5763a3c097c84af5b52eab7da6a7e746
+msgid "Issue 1: \"Jobs running too long\""
+msgstr "Issue 1: \"Jobs running too long\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:533
+#: 38fe7c96598d4066962e1bff57f17a6f
+msgid "**Symptoms**: Workflow takes hours to complete"
+msgstr "**Symptoms**: گردش کار tkes hours to complete"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:535
+#: 9664f6ececa640e79666bdcd7050f885
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:536
+#: 2a6738f2d0d64d688af239dc0010bd88
+msgid "**Run in parallel**: If resources allow"
+msgstr "**Run in prllel**: If resources llow"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:537
+#: 34b8f01dd85941ea8a99dc4736dce78b
+msgid ""
+"Requires HPC cluster setup (see [04-infrastructure](../../../03-advanced-"
+"features/03-infrastructure/))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:538
+#: ea91d2d122ed43cd8529d4169d4546a8
+msgid "Use `RUN_MODE = \"submit\"` with jobflow-remote"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:540
+#: e8714a7d72e24de883556fe1f41dbaca
+msgid "**Reduce system size**: Test with smaller structure first"
+msgstr "**Reduce system size**: Test با smller structure first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:542
+#: 8c9f4542d4614a35b933f72256d08eb2
+msgid "**Use dry-run**: Verify setup before running"
+msgstr "**Use dry-run**: Verify setup beبرایe running"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:544
+#: f80f17d1fe894974a5f6a51ef7b60c00
+msgid "Issue 2: \"Can't compare results\""
+msgstr "Issue 2: \"Cn't compre results\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:546
+#: 65d00e29e3f74773bd2b74fdd2c8e1b3
+msgid "**Symptoms**: Different job folders have different structures"
+msgstr "**Symptoms**: Different job folders hve different structures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:548
+#: 720bbed62a854b718c3b150244609dd0
+msgid "**Solution**: Ensure all jobs used same initial structure"
+msgstr "**Solution**: Ensure ll jobs used sme initil structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:555
+#: fc76576f7b7e446b849f1641b379f025
+msgid "Issue 3: \"Basis sets not applied\""
+msgstr "Issue 3: \"Bsis sets not pplied\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:557
+#: baf641b80360421aa41c60774bc0251b
+msgid "**Symptoms**: All jobs use same basis"
+msgstr "**Symptoms**: All jobs use sme bsis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:559
+#: 0fa4c8e6e02d41a0848e248c66ac132a
+msgid "**Solution**: Check powerups didn't override basis settings"
+msgstr "**Solution**: Check powerups didn't override bsis settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:574
+#: 5d930e03d48e4a358a638925117aa846
+msgid "Issue 4: \"Workflow stopped after first job\""
+msgstr "Issue 4: \"گردش کار stopped fter first job\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:576
+#: 90355ed28fd549428e473c9313effb01
+msgid "**Symptoms**: Only job_*_SZ folder has results"
+msgstr "**Symptoms**: Only job_*_SZ folder hs results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:578
+#: a281f6b2d9dd45b0a6a36755c3ecd82a
+msgid "**Possible Causes**:"
+msgstr "**Possible Cuses**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:579
+#: 4613e3102e0f413b9ac271114e54cfb5
+msgid "**First job failed**: Check siesta.out for errors"
+msgstr "**First job filed**: Check siest.out برای errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:580
+#: 7216c227a23542c3b212eef07ef0ad6d
+msgid "**Resource limits**: Ran out of time/memory"
+msgstr "**Resource limits**: Rn out of time/memیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:581
+#: 477d795d2dd148dea55c7196ad35f3c7
+msgid "**Dependency issue**: Jobs waiting for failed job"
+msgstr "**Dependency issue**: Jobs witing برای filed job"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:583
+#: 2f5255d484da4f828275e38738c0e8d1
+msgid "**Debug**:"
+msgstr "**Debug**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:592
+#: ac285fdf6d6544208b4ce4f28420ac35
+msgid "Issue 5: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:594
+#: 006eecfc00b94a32828411b0a2dad9ad
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:596
+#: c4fcf045f45b46d281b8dc5f10fbc836
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:598
+#: 8ee1a068f27c440f92eb49e8a389429f
+#, fuzzy
+msgid "**Solution**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:613
+#: bfaa005818724ea5afbe5f65fbb6a535
+msgid ""
+"**Note**: Block parameters like `%block DM.InitSpin`, `%block "
+"Geometry.Constraints`, and `%block DFTU.Proj` should be specified "
+"**directly** in `user_params`, NOT nested in `fdf_arguments`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:617
+#: 2df4949f9dfc4741bebb3a826ea6c5c8
+msgid "Available Flow Makers"
+msgstr "Available Flow Makers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:619
+#: 61499ba4bcb2496d81aaddf7c6b27614
+msgid "atomate2siesta provides many workflow types:"
+msgstr "tomte2siest provides mny wیاkflow types:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:621
+#: 06d2e8bf8d7c4f69976c101f9ebaefd1
+msgid "Convergence Studies"
+msgstr "همگرایی Studies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:623
+#: 74e4cafb5def45bb821f4e5d685e9f64
+msgid "**DifferentBasisRelaxMaker**:"
+msgstr "**DifferentBasisRelaxMaker**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:624
+#: fcb50610f37e4f5a829a3322b6a76fab
+msgid "Compare basis sets (SZ, DZ, DZP, TZP)"
+msgstr "Compre bsis sets (SZ, DZ, DZP, TZP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:625
+#: 91883bc6110b4c828e72d44c64b995d2
+msgid "This tutorial"
+msgstr "This tutیاil"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:627
+#: 532881f9f7c64152b6c8d324e7718047
+msgid ""
+"**ConvergenceMaker** (see "
+"[02-convergence](../../../02-workflows/01-convergence/)):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:628
+#: 86d6222907ef40b9b59aed4ad4b4b404
+msgid "K-points convergence"
+msgstr "K-points convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:629
+#: 8d82ea43bc1b43adb05d0a9a53fe862e
+msgid "Mesh cutoff convergence"
+msgstr "Mesh cutoff convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:630
+#: 3f4600c4f4d641eda18168021ef44ea0
+msgid "Systematic parameter testing"
+msgstr "Systemtic prmeter testing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:632
+#: a4d11285a39f43b7863025ec909cbe91
+msgid "Property Calculations"
+msgstr "Property محاسبهs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:634
+#: 91fde093051c4f97ad63ea9d51b2467a
+msgid "**BandStructureWorkflow**:"
+msgstr "**BوStructureگردش کار**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:635
+#: 97832863751d4e008b0e645b158728f6
+msgid "Relax → Static → Band structure"
+msgstr "Relx → Sttic → Bو structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:636
+#: 8bcd5997c93d4015b4293ed68d0555bf
+msgid "Automatic high-symmetry path"
+msgstr "Automtic high-symmetry pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:638
+#: e85abaac7a144da086a9714d09ac59a5
+msgid ""
+"**PhononMaker** (see [16-phonon-calculations](../../../02-workflows/06"
+"-vibrational-properties/)):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:639
+#: b9ae9143ba01441ba007ececd46f6aa7
+msgid "Relax → Force constants → Phonon bands"
+msgstr "Relx → Fیاce constnts → فونون bوs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:640
+#: 84f86bcd4d164656867a647a5bbe2346
+msgid "Thermal properties calculation"
+msgstr "Therml properties clcultion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:642
+#: 2788bb427d044b84af600dbe0399bbda
+msgid ""
+"**EOSMaker** (see [09-equation-of-state](../../../02-workflows/01"
+"-equation-of-state/)):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:643
+#: 1bec6c314ae44240ba7ad1aedf2bd2bd
+msgid "Multiple volumes → Fit equation of state"
+msgstr "Multiple volumes → Fit eqution of stte"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:644
+#: 448bdf3754fe4ed5a47e7b9dd513bd4f
+msgid "Bulk modulus, equilibrium volume"
+msgstr "Bulk modulus, equilibrium volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:646
+#: 97453288ee3c49ad95d09455647ee65b
+msgid "Advanced Workflows"
+msgstr "پیشرفته گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:648
+#: 97e116bdd11a4234bbb21dca7d6c2397
+msgid "**NudgedElasticBandMaker**:"
+msgstr "**NudgedElasticBandMaker**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:649
+#: 6e70eef8247d48dc9d0bb635dc533a8a
+msgid "Reaction path calculations"
+msgstr "Rection pth clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:650
+#: 874ac5a042a84b3ba8a9646187cc89bc
+msgid "Transition state search"
+msgstr "Trnsition stte serch"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:652
+#: 3a89a8506ee84434b4c5dfeed59c18d9
+msgid "**ElasticConstantsMaker**:"
+msgstr "**ElasticConstantsMaker**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:653
+#: 86214e0cffd346ca965ecf29be55befd
+msgid "Multiple deformations → Elastic tensor"
+msgstr "Multiple deبرایmtions → Elstic tensیا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:654
+#: 3717fb2a54bc47cfbbaa64937acb3143
+msgid "Mechanical properties"
+msgstr "Mechnicl properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:656
+#: 87451d8a5a0a40a1ba92a9e2fd1ac979
+msgid ""
+"**SurfaceEnergyMaker** (see [17-surface-energy](../../../02-workflows/03"
+"-surfaces-and-adsorption/01-surface-energy/)):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:657
+#: 4abba880f27a477cad70549fbcac063c
+msgid "Multiple surface orientations"
+msgstr "Multiple surfce یاienttions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:658
+#: df8cdb0625b443168c4617d69e73922e
+msgid "Convergence vs slab thickness"
+msgstr "همگرایی vs slb thickness"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:662
+#: 7cfda23ba1b94c8f96db8db7498da8df
+msgid "Workflow Execution Modes"
+msgstr "گردش کار Execution Modes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:664
+#: f95b08444b4d4db6b4508a604f4362d1
+msgid "Sequential Execution"
+msgstr "Sequentil Execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:666
+#: 0f756034253848db93018253a32aeb5c
+msgid "Jobs run one after another:"
+msgstr "Jobs run one fter nor:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:672
+#: 7d1dc18e3fc34afd87ee1ecf8bf3fdfc
+msgid "**When**: Using `run_locally` (local mode)"
+msgstr "**When**: Using `run_locally` (local mode)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:674
+#: b1bf976737724e6c97fe50ef988b99b9
+msgid "Parallel Execution"
+msgstr "Prllel Execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:676
+#: 356ee4ad63e14f3aa0ea5580daa67d1b
+msgid "Independent jobs run simultaneously:"
+msgstr "Independent jobs run simultneously:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:684
+#: 1f9a9b23a42b44f0bdaf20aaada884b5
+msgid "**When**: Using jobflow-remote with cluster (submit mode)"
+msgstr "**When**: استفاده از jobflow-remote با cluster (submit mode)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:686
+#: ffddeb48e3b54a80af6da8b0182de704
+msgid "Hybrid (Sequential + Parallel)"
+msgstr "Hybrid (Sequentil + Prllel)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:688
+#: fd3cb42d9ce34a72873443dfda38a445
+msgid "Mixed dependencies:"
+msgstr "Mixed dependencies:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:695
+#: 5776b58c72ef4a1da2e3057ff038eaaa
+msgid "**When**: Complex workflows with dependencies"
+msgstr "**When**: Complex wیاkflows با dependencies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:699
+#: b1d2fc22dbe04aa3ad5e0fe05f27ae30
+msgid "Creating Custom Workflows"
+msgstr "ایجاد Custom گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:701
+#: 595ca14060ca4faaa5f94134e0d70f52
+msgid "Basic Pattern"
+msgstr "Bsic Pttern"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:715
+#: bb09f3ca49614ae891516da042f598ea
+msgid "Workflow with Multiple Parameters"
+msgstr "گردش کار با Multiple Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:732
+#: b5fa3dec934f4998ae10fe88ec7b4cfb
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:734
+#: 75c297ceb1d9403eaf284c5930528083
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:736
+#: 7842f89a098f4c3081e589ada6d79630
+msgid ""
+"**Convergence studies**: "
+"[02-convergence](../../../02-workflows/01-convergence/) category"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:737
+#: 8cae0624a14c4d868008ca2a2515bedf
+msgid ""
+"**Advanced workflows**: [03-advanced-workflows](../../../02-workflows/) "
+"category"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:738
+#: 3187f732599144f28250d080821d06ae
+msgid ""
+"**HPC submission**: [04-infrastructure/02-job-submission](../../../03"
+"-advanced-features/03-infrastructure/02-job-submission/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:739
+#: e14538c70c9a433cba026fcd0ead3f7e
+msgid "**Custom workflows**: Learn Flow and jobflow patterns"
+msgstr "**Custom workflows**: Learn Flow and jobflow patterns"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:743
+#: 5349caa72de4448b908cc89028daf6e8
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:745
+#: f78dd2411ac443209c664781ce4120c6
+msgid ""
+"When using workflows with custom FDF block parameters, use the `\"%block "
+"ParamName\"` syntax **directly** in `user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:747
+#: 679eaf590f1e4b3b9731505345de81c4
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:749
+#: f982980a2049450ab6c1b4b8c68a6947
+#, fuzzy
+msgid "Correct Usage in Workflows"
+msgstr "ایجاد Custom گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:771
+#: f662677201d64cbd9ecb7cc753053d5e
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:785
+#: ab701b19c161451a87622f6f0dd170b5
+msgid "**Common block parameters for workflows**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:786
+#: f561c25d057a4ac2bc8e30c99ec25f84
+msgid "`\"%block DM.InitSpin\"` - Initial magnetic moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:787
+#: ab0a99ad4dbe4b9f8f789ca2272bfcc6
+msgid "`\"%block Geometry.Constraints\"` - Fix atoms during relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:788
+#: d31271a0e4e04111920b86cc863df62b
+msgid "`\"%block DFTU.Proj\"` - DFT+U projectors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:790
+#: acf2e78b76474f349d301fc8c428a06d
+msgid ""
+"For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-"
+"features/02-fdf-block-inputs/)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:794
+#: 960a02bc90a44c5db76e6698216c8908
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:796
+#: 3b51946ced8d407dbcb7da8388897c68
+msgid ""
+"✅ **Start with dry-run**: Verify workflow structure before running ✅ "
+"**Apply common parameters carefully**: Don't override workflow-specific "
+"settings ✅ **Use descriptive job names**: Helps identify jobs in complex "
+"workflows ✅ **Check job dependencies**: Ensure jobs run in correct order "
+"✅ **Monitor parallel jobs**: Watch for resource conflicts on shared "
+"systems ✅ **Save results systematically**: Use clear naming conventions ✅"
+" **Block parameters**: Use `\"%block ParamName\"` directly in "
+"`user_params` - NO `fdf_arguments` wrapper!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:806
+#: f8b262d87f3d488c973e31c797672e35
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:808
+#: e816aa478f534cd2bb89d312e794ac97
+msgid "**Workflow Design**:"
+msgstr "**گردش کار Design**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:809
+#: d959dfe3405a4becb5c66043d61bb6bc
+msgid "**Modularity**: Break complex tasks into simple jobs"
+msgstr "**Modulrity**: Brek complex tsks into simple jobs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:810
+#: 26f1bb0f7377491c802f254f74fb933f
+msgid "**Reusability**: Use makers instead of custom functions"
+msgstr "**Reusbility**: Use mkers insted of custom functions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:811
+#: 37a89ef8672343f7aab356773fda5a8b
+msgid "**Clarity**: Name jobs descriptively"
+msgstr "**Clrity**: Nme jobs descriptively"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:812
+#: ae201726f79e4cf3a3a24e6f9947c2ed
+msgid "**Testing**: Test workflow with small system first"
+msgstr "**Testing**: Test wیاkflow با smll system first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:814
+#: 4f5c16589b8f4253820526b0574b7d22
+msgid "**Parameter Studies**:"
+msgstr "**Prmeter Studies**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:815
+#: bc9ba987ed09409cb901373d8841556b
+msgid "**One variable at a time**: Easier to analyze"
+msgstr "**One vrible t  time**: Esier to nlyze"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:816
+#: fbb3a54e2e5a48f3870cf441ed915224
+msgid "**Systematic ranges**: Linear or logarithmic spacing"
+msgstr "**Systemtic rnges**: Liner یا logrithmic spcing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:817
+#: 64882c33b8a84f7d9e50fa4e04b4d1ae
+msgid "**Document choices**: Why these parameters?"
+msgstr "**Document choices**: Why se prmeters?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:818
+#: 5e54dfbced53475caf01d9acacd38138
+msgid "**Plot results**: Energy vs parameter curves"
+msgstr "**Plot results**: Energy vs prmeter curves"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:820
+#: 7515cdd288684f93bec474236707322c
+msgid "**Resource Management**:"
+msgstr "**Resource Mngement**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:821
+#: 8f55129f52e145e8af39a7def4b262da
+msgid "**Estimate time**: How long will workflow take?"
+msgstr "**Estimte time**: How long will wیاkflow tke?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:822
+#: 33d26f44ba3640649cb2d1b32aba637e
+msgid "**Check disk space**: Multiple jobs = many files"
+msgstr "**Check disk spce**: Multiple jobs = mny files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:823
+#: c9d19c68371d439db1234b5e5dd60ab4
+msgid "**Parallel wisely**: Don't overload system"
+msgstr "**Prllel wisely**: Don't overlod system"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:824
+#: 5ab0d3f8c87e4057a4c9ef0dec92cf4a
+msgid "**Clean up**: Remove intermediate files"
+msgstr "**Clen up**: Remove intermedite files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:828
+#: 1d923602619c460ab6a8e6c5e5fa885b
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid ""
+#~ "✅ **Start with dry-run**: Verify "
+#~ "workflow structure before running ✅ "
+#~ "**Apply common parameters carefully**: Don't"
+#~ " override workflow-specific settings ✅ "
+#~ "**Use descriptive job names**: Helps "
+#~ "identify jobs in complex workflows ✅ "
+#~ "**Check job dependencies**: Ensure jobs "
+#~ "run in correct order ✅ **Monitor "
+#~ "parallel jobs**: Watch for resource "
+#~ "conflicts on shared systems ✅ **Save "
+#~ "results systematically**: Use clear naming "
+#~ "conventions"
+#~ msgstr ""
+

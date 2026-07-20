@@ -1,0 +1,140 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:1
+#: 2323c75380c2406e9a6a1a3ee05e521b
+msgid "Band Structure Workflows"
+msgstr "ساختار نواری گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:3
+#: 517ee70340ba418c85fb854dded4079f
+msgid ""
+"This section covers electronic band structure calculations using SIESTA "
+"workflows."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:5
+#: 6534ca3b39fa492db13dfeef0e0fe9b0
+msgid "Available Tutorials"
+msgstr "Avilble Tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:7
+#: 396ef07bbcf942d5ae2bdb92bd90b548
+msgid "01-BandStructureFlowMaker"
+msgstr "01-BandStructureFlowMaker"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:9
+#: 717700e8e5184ece86bc69682bc33d14
+msgid "Complete workflow for band structure calculations including:"
+msgstr "Complete wیاkflow برای bو structure clcultions including:"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:10
+#: 1bfe68b4ccb74c5aab8ec59c48cc2372
+msgid "Optional structure relaxation"
+msgstr "اختیاری structure relxtion"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:11
+#: 828f067514da4a73b8ab05bea9184995
+msgid "Self-consistent field (SCF) calculation"
+msgstr "Self-consistent field (SCF) clcultion"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:12
+#: 12fbad33a26a418db6ee62a1400fc4bf
+msgid "Band structure along high-symmetry k-path"
+msgstr "Bو structure long high-symmetry k-pth"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:13
+#: 35fe05cdeb1b49d68430ad8eceff4171
+msgid "Automatic band gap analysis"
+msgstr "Automtic bو gp nlysis"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:14
+#: 7133577886c445ce805a347a236217b4
+msgid "Publication-quality plotting"
+msgstr "Publiction-qulity plotting"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:16
+#: 165c12b6335542f1a5b35eb95085b237
+msgid "**Tutorials:**"
+msgstr "**Tutیاils:**"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:17
+#: 283745f6a5104c84a1b0ddace0b7b4e1
+msgid "`01_basic.py` - Complete workflow with relaxation"
+msgstr "`01_basic.py` - Complete workflow with relaxation"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:18
+#: 6e17788cca3d469f9bbfdf329694f8f8
+msgid "`02_skip_relaxation.py` - Skip relaxation for pre-relaxed structures"
+msgstr "`02_skip_relaxation.py` - Skip relaxation for pre-relaxed structures"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:19
+#: bb6105035944418c960bfc424056e60d
+msgid "`03_custom_parameters.py` - High-accuracy settings (TZP, 400 Ry)"
+msgstr "`03_custom_parameters.py` - High-accuracy settings (TZP, 400 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:20
+#: 838c3e367761439a81662c1c3a1deb60
+msgid "`04_with_tier_preset.py` - Using tier presets"
+msgstr "`04_with_tier_preset.py` - Using tier presets"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:21
+#: 74855a5fadd4434599f31787799f0d4d
+msgid "`05_dry_run.py` - Preview workflow without running SIESTA"
+msgstr "`05_dry_run.py` - Preview workflow without running SIESTA"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:23
+#: 8bc8050b24fa483eb886b98bd81f90bc
+msgid "Quick Example"
+msgstr "Quick مثال"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:36
+#: 21b7b505779a403e8a30fea972e50bb3
+msgid "Key Outputs"
+msgstr "Key Outputs"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:38
+#: 13b9871fdcc449ec886c84d45f22a920
+msgid "**band_structure_summary.txt**: Band gap, VBM, CBM information"
+msgstr "**bو_structure_summry.txt**: Bو gp, VBM, CBM inبرایmtion"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:39
+#: f219674c4567480e8bb02821f135e333
+msgid "**band_structure.png**: Band dispersion plot"
+msgstr "**bو_structure.png**: Bو dispersion plot"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:41
+#: 33a4bde5324d419b878bac7e84d8456d
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:43
+#: 2cc25bda7e0e4446ae0196829fe2a481
+msgid ""
+"`01-basics/02-BandStructureMaker/`: Single band structure job (no "
+"workflow)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/README.md:44
+#: 680d2990b6fa40e29bc9f77f0cdfc9dc
+msgid "`01-basics/05-DOSMaker/`: Density of states calculations"
+msgstr "`01-basics/05-DOSMaker/`: Density of states calculations"

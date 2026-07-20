@@ -1,0 +1,869 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:1
+#: 7376f23620a64ce281cf182ef147ef9e
+msgid "Structure Manipulation Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:3
+#: 2105aca90c4c411ca54aa87f1e2ccbfa
+msgid ""
+"This directory contains comprehensive tutorials for the `atomate2siesta-"
+"structure` command-line tool, which provides 16 subcommands organized "
+"into 4 tiers for crystal structure manipulation and analysis."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:5
+#: 729f726a195247a0bce59c3ba75194ca
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:7
+#: bfc76a5a770a4aa2b1eb9c5d99a91c9a
+msgid "The structure manipulation commands enable researchers to:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:8
+#: 16afb5f2ce864053b9efcab8fed60951
+msgid "**Validate and convert** structures between formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:9
+#: caf5e1590e6f493ebda4f07a0867c6b7
+msgid "**Create and modify** crystal structures programmatically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:10
+#: e88166152164420abce7249a7051dfab
+msgid "**Analyze and compare** structures quantitatively"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:11
+#: 80ca6e01e5fe4b678e6f2b5dcae2d943
+msgid "**Prepare structures** for DFT calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:13
+#: 9005138ee62242fb9dc226d55442f10e
+msgid ""
+"All tutorials use practical examples with real crystal structures and "
+"demonstrate command-line usage with expected outputs."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:15
+#: c67d35e1f4974ff99ebdb4cfeaccc77c
+msgid "Tutorial Organization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:17
+#: c0c33462d8b34fb6ab60041a660a5944
+msgid "Tutorial 1: Structure Comparison Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:18
+#: ae3b7a29cf9640f48c167052f64cc75d
+msgid "**File**: `01_structure_comparison.py` (287 lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:20
+#: eddfc473678042e1813e4d58c98b69a4
+msgid ""
+"Learn how to compare structures quantitatively using the `compare` "
+"command."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:22
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:57
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:106
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:158
+#: 13d13e0f68304b7ab02be4becd6ebdbf 37977c704acc487492ad9d3cc4495c46
+#: 88f1c799621e4263885be810f598242d c2557ed1f30246afafe6447ac1d62f94
+msgid "**Topics Covered**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:23
+#: 6dfcd527f6ee460abc0c861b77c9c0f2
+msgid "Before/after optimization comparison"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:24
+#: 6d76d8be90a1403f8a04b98706fd68f8
+msgid "Format conversion verification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:25
+#: e505e8b3701149bda2b7b559c917417c
+msgid "Standardization result validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:26
+#: 8ab43c2cae4e4916849a479d116fa164
+msgid "Supercell generation verification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:27
+#: 1083f97ba44a4637ba73315d4b2ee768
+msgid "Tolerance-based comparison"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:28
+#: 203f765a47944c4ca66065d89a0b9615
+msgid "Composition comparison"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:30
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:67
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:117
+#: c32fcee398cb4e9d80eec395b7eeaf04 e8eb24558d004b49aaf4a10b95e56a7b
+#: f74247dd12374196a9c2bfacf6e7e053
+msgid "**Example Usage**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:42
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:82
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:132
+#: 9c50085cdc2746a087c17a9f15a64dc4 cfc33bd319fe4a3a8c336f2b5b81c249
+#: fc870d3060a148569009b86f3a58ff15
+msgid "**Key Commands**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:43
+#: abbef91b875b43069711f187b7e8cd50
+msgid "`compare` - Quantitative structure comparison (RMSD, lattice, composition)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:45
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:94
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:146
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:208
+#: 31af61ab39df4f58a55e3e98d0997ac4 5badaaa1a9334f5182c1af2b9d5fd855
+#: 760b4f99ebdc464486c9281559dc2b4f b30aee2b9aa94533988b5846d27267f0
+msgid "**Run Tutorial**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:52
+#: b82e354ecea346da98ecd464b86b9bc4
+msgid "Tutorial 2: Cell Standardization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:53
+#: 2c2dda047f0c4b57bd7e8d897bcbae47
+msgid "**File**: `02_cell_standardization.py` (389 lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:55
+#: beeab92dcf7f4bfba7f3ad76c958c8a2
+msgid "Master cell standardization for DFT efficiency and database comparison."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:58
+#: fe8ce52f9ebc4768a6800be6642f05f9
+msgid "Conventional → Primitive (DFT efficiency: 8→2 atoms = 4× speedup)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:59
+#: c41e92e8fe2a44b7b311102e10ad6b53
+msgid "Primitive → Conventional (visualization)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:60
+#: 21b738c0061c48b6894fcfc5a0c2ce13
+msgid "International standard settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:61
+#: 29e0f84acb6b4179ae4a1d1d2e158a39
+msgid "Symmetry analysis workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:62
+#: 4aefa06de1cb4a94a54cd57ab69623b2
+msgid "Custom symmetry precision"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:63
+#: 3818b5f6e07a4d439bdf9e3d8b80a96a
+msgid "Workflow integration diagrams"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:64
+#: d9fc2e65247d43e19f081fc320c28798
+msgid "Before/after comparison"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:65
+#: 913d9a043f64426e96bbd0e0dc6c5813
+msgid "Multi-format output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:83
+#: 22db013b6f4e48829b59fc3f0beed0d1
+msgid ""
+"`standardize` - Cell standardization "
+"(primitive/conventional/international)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:85
+#: 7606d35fae94472b8891d02145bd2d88
+msgid "**Computational Savings**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:101
+#: b3bb5cd153f549389a769f0820076c8d
+msgid "Tutorial 3: Surface Preparation Pipeline"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:102
+#: 45519e476c024e2ea1ffbc604710c39d
+msgid "**File**: `03_surface_preparation.py` (570+ lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:104
+#: 1ac08c255f2b46c49fa1a37de45b6113
+msgid "Complete workflow for preparing surface slabs for DFT calculations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:107
+#: f1a9f11c4c2244f19e9741c41078a2f9
+msgid "Basic surface slab generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:108
+#: 00380f5b819b4d598c3bda50970dba3c
+msgid "Multiple surface orientations (100, 110, 111)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:109
+#: 3db7371b59a143968e4ccbc7d542d79a
+msgid "Vacuum thickness optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:110
+#: 2b46a366f8494e27b459da7ec461823f
+msgid "Symmetric vs asymmetric slabs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:111
+#: d095869e460644b7b1902182fdfcebf8
+msgid "Complete surface preparation pipeline"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:112
+#: 401a3db934884143a1323bae801dec0f
+msgid "Surface termination analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:113
+#: fd0ca6459551400bb1f988c34ee598e6
+msgid "Layer-by-layer convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:114
+#: 6763d65561cc49d9877af4bcc4e9cb7d
+msgid "Integration with DFT workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:115
+#: 2d56e055ff03414dbdcf59f4d46d16bb
+msgid "Advanced surface features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:133
+#: a05dc31f6492439594959a6f4a485f9e
+msgid "`slab` - Surface slab generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:134
+#: 042a36cc485f41b48ca593f340993e28
+msgid "`standardize` - Reduce to primitive surface cell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:135
+#: 70cc955ee195453b962a47ec2a34cc0f
+msgid "`optimize-cell` - Orthogonalize for better k-points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:137
+#: 5e6814d6a2de4d34bf7546e675b3ef5c
+msgid "**Surface Guidelines**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:153
+#: 202872e3741e4271bcd754982bc39bec
+msgid "Tutorial 4: Complete Structure Manipulation Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:154
+#: 55936af55ead4b2fb3ab2bb7e9faa077
+msgid "**File**: `04_complete_workflow.py` (650+ lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:156
+#: b88fe86ff41a404d9c807d42a95ce5a4
+msgid ""
+"End-to-end workflows combining multiple commands for real research "
+"scenarios."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:160
+#: e94d003348e24894a9e8ef309bc9ab05
+msgid "**Workflow 1: Materials Discovery Pipeline**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:161
+#: 666b1a791e5f441792a65baab21f050d
+msgid "Generate derivative structures (perovskite screening)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:162
+#: f8e9b6dc5ee346668209dca3bf1305c8
+msgid "Batch validation and standardization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:163
+#: f491181f9fec474b8480b9fbc2d9e74d
+msgid "Systematic comparison with reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:164
+#: e79d9a2fb55d4f10a2970834faa07d88
+msgid "DFT workflow generation for top candidates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:166
+#: 097b3939a6624f64989b4f5c8edf287e
+msgid "**Workflow 2: Surface Adsorption Study**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:167
+#: 651cb31d7b06444b9a06c033dabbcdff
+msgid "Bulk → Surface → Adsorbate → Attach → Optimize → DFT"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:168
+#: b529884c7a79477f8e2654f872d19c24
+msgid "CO adsorption on Cu(111) for catalysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:169
+#: 959815c75460481e99d689732c84db50
+msgid "Multiple adsorption sites (top/bridge/hollow)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:170
+#: fb43c0535cde4fdd8f25b8e9863c2b76
+msgid "Complete bash script with error handling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:172
+#: 621bcd99fc8b4ea28977dc59762e9fa7
+msgid "**Workflow 3: Structure Database Curation**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:173
+#: 64a95ea860bd4543a3b77c97917b2fcc
+msgid "Download → Validate → Standardize → Compare → Archive"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:174
+#: 6ca2c4a2e2e041b78e2ce7606ed2a19e
+msgid "Transition metal oxide database"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:175
+#: 770ff5e2f8aa4ac9b4fe9d971e91c288
+msgid "Python script with quality assurance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:176
+#: 9717428745464820a97bedff750f73c0
+msgid "Automated report generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:178
+#: f9373023c4bc48768d8a4d7d1cb70a2c
+msgid "**Workflow 4: Multi-System Comparison**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:179
+#: dc69278a27d84a07b848cca346f42cad
+msgid "Compare SiO2 polymorphs (quartz, cristobalite, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:180
+#: 7e5e3d2e52224fe3bbb594c4aa4d958e
+msgid "Pairwise comparison matrix"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:181
+#: f0da6d2fa10041beb8ab4c7526605737
+msgid "Density trend analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:182
+#: fa622ebc305546f2927f410452d7b38d
+msgid "Summary report generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:184
+#: 9c314676290f470d93b4d0450d09a0ee
+msgid "**Example Workflows**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:202
+#: 9c56c2ef5507479d8acad7c8454fe541
+msgid "**Key Integration Patterns**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:203
+#: d819eb3a20444666b938d9c1ad333986
+msgid "Command chaining with bash scripts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:204
+#: 2e1b987888a64c91b0deb44ad804b8df
+msgid "Error handling and validation checkpoints"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:205
+#: 80ecf11e7a714268a7639a8eb6ddb3e7
+msgid "Python wrappers for complex logic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:206
+#: 3fa8370b9c8d47e897355b7896fac9e1
+msgid "Automated DFT workflow generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:215
+#: 075da046715d4eaea2477c7736ef48ee
+msgid "Command Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:217
+#: 5c4a36fbaca04787ad82c145eb31aa42
+msgid "Tier 1: Basic Information and Conversion (4 commands)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:225
+#: 75b8c34e52cc410ca8e2465c3108dfa7
+msgid "Tier 2: Structure Generation and Modification (4 commands)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:233
+#: d9ed411cc2e74f5bb6f7b8b953819d0f
+msgid "Tier 3: Composition and Organization (5 commands)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:242
+#: 526b2a605a314e15b78625217d68307a
+msgid "Tier 4: Analysis and Optimization (3 commands)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:251
+#: 581bd9ca7374430fa9522e29bc277af1
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:253
+#: e7ae2f76485842a4bd32b1f60245b1c2
+msgid "1. Run All Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:262
+#: 9b88a06855354317ad969ef2dca03284
+msgid "2. Interactive Learning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:263
+#: ba741b3318d342bfb9fbb867354159b0
+msgid ""
+"Start with Tutorial 1 and work sequentially through all tutorials. Each "
+"tutorial builds on concepts from previous ones."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:265
+#: dee82109dc044e0a95cfd8643548e906
+msgid "3. Copy-Paste Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:266
+#: c7439702972443b0b2fd7c9b6f3f5ad0
+msgid ""
+"All command examples in tutorials can be copy-pasted directly into your "
+"terminal. Structure files are created programmatically by each tutorial."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:270
+#: abe902cc62714be6b2efd7c74e21afce
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:272
+#: bf2affca3e7d4843a129f538d7cd0d65
+msgid "Required Packages"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:277
+#: 71ce8420301543ab8fffbd930ddee0e6
+msgid "Verify Installation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:282
+#: abfdee00887340d1bf892185e489d069
+msgid "You should see the help message with all 16 subcommands listed."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:286
+#: cff041e249aa4c6b972e35c6f27b07c1
+msgid "Typical Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:288
+#: 11b36e0768e9453bbbf00753e0b141d2
+msgid "DFT Calculation Preparation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:300
+#: 6c8de9470f714e32b30fac829bebe0a9
+msgid "Surface Energy Calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:313
+#: d1156d60fba84214a62fc5a67cd26e02
+msgid "Format Conversion Pipeline"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:325
+#: 9ca85c97fa9d4ab6aa81ff1aff9a7571
+msgid "Materials Screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:342
+#: 668cb2a0432f45478992f680207997d3
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:344
+#: 1c708aa660f44928b55ff2f175c97cb4
+msgid "1. Always Validate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:350
+#: 39416ac2746443dfb55b37f1aaba800e
+msgid "2. Compare Before/After"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:356
+#: 698c5acc223f4655a7b7cf3bcdfc2a48
+msgid "3. Use Primitive Cells for DFT"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:362
+#: 289a692389304f7895a23e820ea6252c
+msgid "4. Standardize Before Database Submission"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:368
+#: c98d80adcfec47f0bc40b5d358f0acba
+msgid "5. Check Orthogonality for Surfaces"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:376
+#: c1137754dcf04f0cbc5ee842b68aa096
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:378
+#: cf1828e4edb24be884c5b3bb9d653a53
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:380
+#: 6fe3128c8fb54d7985aec4f7d8b6681a
+msgid "**Issue**: \"Structure file not found\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:386
+#: 29e1d48ba3ce43238f157c9a6870b2a9
+msgid "**Issue**: \"Invalid structure\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:392
+#: ca79c8c7671c49c6992a34bad030216c
+msgid "**Issue**: \"Standardization changed atom count unexpectedly\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:398
+#: d93a59d938da49a2becc4f9c3a3060fd
+msgid "**Issue**: \"RMSD too high after transformation\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:406
+#: 799432c0a705490881665271f1416471
+msgid "Additional Resources"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:408
+#: 13698b82128948749de29c1dd81007cb
+msgid "Full Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:419
+#: 3ff06d9171164fc9a74ae379fcebd739
+msgid "Online Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:420
+#: 4d39dd53532b4cb59aab162c8a63e232
+msgid "**CLI Reference**: `docs/source/cli-tools.rst`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:421
+#: afcccfe73ce94f68adf9538b5aa710d5
+msgid "**Project Docs**: `docs/source/index.rst`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:422
+#: 45fdd7e32a9545cfa27f9fa0386394c0
+msgid "**Main README**: `../README.md`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:424
+#: f18be8c44354491b97cf8af244f47369
+msgid "Related Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:425
+#: d46570510a2c48068061d7ced8670c59
+msgid "**01-basics**: Basic relaxation and band structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:426
+#: cb1a67e187894b0685682edd3cc4918e
+msgid "**03-advanced-workflows**: EOS, elastic constants, NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:427
+#: a033eef3bd304df9b310ce22efa4ef1f
+msgid "**06-surfaces-and-adsorption**: Surface energy workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:428
+#: be4a428725e8421d8dab5b4806c14db6
+msgid "**08-recipe-book**: High-level workflow system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:432
+#: 70c076c3043f48859e562c9a3164107b
+msgid "Tutorial Statistics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: bbfdada918e349f3b4ac93f0682c92a6
+msgid "Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: dcce63a09ce140778e5475b46cacf132
+msgid "Lines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: e7acdb6e0a864109aa037f71154b8c5a
+msgid "Topics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: c763fa3b0ccf453f971d2fe6d992a038
+msgid "Commands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 29936dc8863b4e11a2d9fba58b0729bd
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: bbefbac1581242b5856916a67b3b9275
+msgid "01_structure_comparison.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 81f818946bb0455487347d4078217a8b
+msgid "287"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 551d1fc3b9014044b69bb78326384549 e84b46748f8143f2ab56384e4206cd5e
+msgid "6"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 160a66c2c72d407aa928aab77f8b03b3 d5320bc71d1a49d39e26108110cf0d7a
+msgid "1"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: e7a9c855339544bab8831c6bf661aab1
+msgid "02_cell_standardization.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: b77925f84365470b98def6bd7090003e
+msgid "389"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: aa0d19462e3543fc8d138372599b040a b084ae1ecaa8416b922589c6170268be
+msgid "8"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 876b1d0174434d72babc3ef215b9a3af
+msgid "03_surface_preparation.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 0bdf2ac1e7de49bf8813c756872981b1
+msgid "570+"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 58fc2f3f8b744d5590f0dba2f93a9f38 f322d73be8ab415c9c225de787e8cb40
+msgid "9"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: f75cc025ee6f4ad8adf75b6f9f9642bf
+msgid "3"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: c0629a09ec7846d887047aedc43bbf13
+msgid "04_complete_workflow.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 8e630db63ae140f6b74da05982c7796c
+msgid "650+"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 6f18fbea592347c693470503903e189f
+msgid "4 workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 1c203ac1c5e0479a8369a81715eadeab
+msgid "16"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: e68fac05c08e44728ba7b80066ef6bfc
+msgid "4"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 594f3fff22884d4984cc1101f7346537
+msgid "**Total**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: b3258973066246a5af7f048e26ab0d3d
+msgid "**~1,900**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 5afe3cc2913e4954829206446420f1ad a3c474e7efad422c8fc728891b5eedff
+msgid "**27**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md
+#: 684c78327d9b438889904c85eb49220e
+msgid "**16**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:444
+#: 444fbe3b6e4a4d76a54a7d5e38d58bb9
+msgid "Contributing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:446
+#: e2a31214000c4539a052ceb407f60004
+msgid "If you find errors or have suggestions for improving these tutorials:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:448
+#: 629596abcf644ec380cc50bb50792951
+msgid "Open an issue: https://github.com/materialsproject/atomate2/issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:449
+#: 8bbfbc6ddf434ac1bcba475e41f40d4c
+msgid "Submit a pull request with improvements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:450
+#: bd58af55b27e4508a7399b73de22d63d
+msgid "Share your own workflow examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:454
+#: e07649ae873445e9a3bbbeeff9c60823
+msgid "License"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:456
+#: 493209859b4a4d9b8b536686d8bbc947
+msgid ""
+"These tutorials are part of the atomate2siesta project and are "
+"distributed under the same license."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:460
+#: f854afa1ffa249bfa0a8b9e313b27d51
+msgid "Contact"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:462
+#: b332815c1fb14231a1554deb8c8923d0
+msgid ""
+"For questions about these tutorials or the `atomate2siesta-structure` "
+"command:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:463
+#: d9ace76a8e774346a216062e4d37ffbe
+msgid "GitHub: https://github.com/materialsproject/atomate2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:464
+#: e2369fdf6fac49eabd64487d2cc7d8cf
+msgid "Documentation: See `docs/` directory"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/04-structure-tools/02-manipulation/README.md:468
+#: a27c112a4f1946ae815efe01213c5a4c
+msgid "**Happy structure manipulation!** 🔬⚛️"
+msgstr ""
+

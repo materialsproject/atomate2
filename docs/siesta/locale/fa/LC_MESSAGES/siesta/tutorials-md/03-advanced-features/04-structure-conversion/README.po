@@ -1,0 +1,206 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:1
+#: d3eb56c7f67845169c0c9890cb3bfde8
+msgid "Structure File Conversion Tutorial"
+msgstr "Structure فایل Conversion Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:3
+#: 8b50c1ab2ee348ecb8953513b94f009f
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:5
+#: e6740cb0ea034ca1a9d60c4320d17240
+msgid ""
+"Pymatgen provides comprehensive structure conversion capabilities used "
+"throughout atomate2siesta."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:7
+#: 8d4d39fb7098480089173511f92a59fe
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:9
+#: bb36cc5add28475690e971957bd863c2
+msgid "Reading Structures"
+msgstr "Reding Structures"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:21
+#: 644dc7fa565c4987affec823dccf207a
+msgid "Writing Structures"
+msgstr "Writing Structures"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:31
+#: 924c9988a6ae4b8c851f1baf6ac75877
+msgid "Supported Formats"
+msgstr "Suppیاted Fیاmts"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 6adff5227c974cc5a0122a0a8d60c825
+msgid "Format"
+msgstr "Fیاmt"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: b33c4992435d49369418c4ade8a7b640
+msgid "Extension"
+msgstr "Extension"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: f7cc2875005c4952b6bae155b60ae54e
+msgid "Use Case"
+msgstr "Use Cse"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: b2177173d9bd49be91775bbc428c27ec
+msgid "CIF"
+msgstr "CIF"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 29dd46b57d154e35b011bde2d63007fc
+msgid ".cif"
+msgstr ".cif"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 70c2fb92ead1409ea292e9ed78eccdc3
+msgid "Standard crystallographic"
+msgstr "Stوrd crystllogrphic"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 2d20631bc8464a1d9dadaf13747148c8
+msgid "XSF"
+msgstr "XSF"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 9bde56654a6d472d831fbdd51488a998
+msgid ".xsf"
+msgstr ".xsf"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 8c9d97ebe1044dd4b9979c82deadfca9
+msgid "XCrySDen visualization"
+msgstr "XCrySDen visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 074f414fb649474bb0b2cd0df568c4e1 390a101cae7245d8b385bd964680c8fa
+msgid "POSCAR"
+msgstr "POSCAR"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 08200cd358e447238092b12d3c9a33c0
+msgid "VASP compatibility"
+msgstr "VASP comptibility"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 453cc2ad628042b4b335475a7d26f614
+msgid "JSON"
+msgstr "JSON"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: b377e1e5c2f441b58aaf2a78d65caf8e
+msgid ".json"
+msgstr ".json"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 6e173eaaed6a4ba9a69d63d04df3fd52
+msgid "Python-friendly"
+msgstr "Python-friendly"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 83637aa0faf54e1d8214af57a888a8a9
+msgid "YAML"
+msgstr "YAML"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 378826d52a9a46e58e0748fef3081c83
+msgid ".yaml"
+msgstr ".yml"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md
+#: 853a8255348748caac166fd3f58ac330
+msgid "Human-readable"
+msgstr "Humn-redble"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:41
+#: 32640035367745b4918d982c21bb63b6
+msgid "SIESTA-Specific"
+msgstr "SIESTA-Specific"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:53
+#: e047432ae0764400b726398700cc5e62
+msgid "CLI Conversion Tool (v1.0.1+)"
+msgstr "CLI Conversion Tool (v1.0.1+)"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:55
+#: 31fb56e3fb2f4494b008b542a61bf99f
+msgid ""
+"The `atomate2siesta-structure convert` command provides automatic format "
+"detection:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:71
+#: ebc998ab1e3c40dfac0f3def4f6b3a15
+msgid ""
+"**Supported input formats:** `.fdf`, `.xv`/`.XV`, `.cif`, `.xsf` "
+"(automatic detection)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:73
+#: 19751ac33103419f9fce7573ecd03f20
+msgid ""
+"**Supported output formats:** CIF, XSF, JSON, pickle (sisl/ASE/pymatgen),"
+" FDF"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:75
+#: 4b7bf669a5ed4addbd1c26d3156aa9cd
+msgid "Dry-Run for All Formats"
+msgstr "Dry-Run برای All Fیاmts"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:77
+#: fa02884d7c394f2897b60a44c87baaa5
+msgid "atomate2siesta dry-run mode supports all formats:"
+msgstr "tomte2siest dry-run mode suppیاts ll برایmts:"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:91
+#: 3de47feb8b81434f8d386030c49a0107
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:93
+#: b23c9afbe7ab4cbbbc5bdb7af6cc3235
+msgid "Pymatgen docs: https://pymatgen.org/"
+msgstr "Pymatgen docs: https://pymatgen.org/"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:94
+#: 08690709f9e748758bd8144a4d225c72
+msgid "Dry-run tutorial: `04-infrastructure/05-dry-run-preview/`"
+msgstr "Dry-run tutorial: `04-infrastructure/05-dry-run-preview/`"
+
+#: ../../source/tutorials-md/03-advanced-features/04-structure-conversion/README.md:96
+#: d1e756ca3b6d43e496b3b3065366abbc
+msgid ""
+"**Use pymatgen's built-in conversion + dry-run mode for all format "
+"needs!**"
+msgstr ""

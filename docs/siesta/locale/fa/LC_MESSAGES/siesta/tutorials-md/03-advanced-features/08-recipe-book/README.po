@@ -1,0 +1,635 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:1
+#: f02fe515328348aea985769e2b906740
+msgid "Recipe Book: One-Line Workflows"
+msgstr "Recipe Book: One-Line گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:3
+#: 8ae5a6cef2ec40abb8e211354e8806c2
+msgid ""
+"The **Recipe Book** is the fastest, easiest way to set up atomate2siesta "
+"workflows. It provides high-level \"recipes\" that turn complex multi-"
+"step calculations into simple one-liners."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:5
+#: ee4ecf28fde4460c988f87744d5f0006
+msgid "**📁 Tutorial Structure** (Streamlined Dec 2025):"
+msgstr "**📁 Tutیاil Structure** (Stremlined Dec 2025):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:6
+#: 8aa8af073dc0429ba02db92ffc1f333c
+msgid "`01_basic_usage/` - 7 essential examples (12-27 lines each)"
+msgstr "`01_basic_usage/` - 7 essential examples (12-27 lines each)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:7
+#: 603ec65d7a2e46d892647dbde781940d
+msgid "`03_electronic_recipes/` - Band structure & DOS (37 lines)"
+msgstr "`03_electronic_recipes/` - Band structure & DOS (37 lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:8
+#: 015ca59b2b8f41318fe040b30b7d30b5
+msgid "`04_mechanical_recipes/` - Elastic & EOS (43 lines)"
+msgstr "`04_mechanical_recipes/` - Elastic & EOS (43 lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:9
+#: 659682eca4874a37abd87bfd68b7a2fe
+msgid "`05_thermal_recipes/` - Phonons & QHA (43 lines)"
+msgstr "`05_thermal_recipes/` - Phonons & QHA (43 lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:10
+#: 559230f2d7c441fb9d91d1e50741e345
+msgid "`06_catalysis_recipes/` - Surfaces & adsorption (48 lines)"
+msgstr "`06_catalysis_recipes/` - Surfaces & adsorption (48 lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:11
+#: 2005f7cd900743b8907f03c3f311c791
+msgid "`07_convergence_recipes/` - K-points & basis (42 lines)"
+msgstr "`07_convergence_recipes/` - K-points & basis (42 lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:12
+#: e123cdeb84014399a0eb4e0c7436c508
+msgid "`08_combined_recipes/` - High-throughput (52 lines)"
+msgstr "`08_combined_recipes/` - High-throughput (52 lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:14
+#: 0c1c67e39dbb4b51bf7ca2bc938ad0b2
+msgid "**Total**: 14 files, 433 lines (minimal context, maximum clarity)"
+msgstr "**Totl**: 14 files, 433 lines (miniml context, mximum clrity)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:16
+#: 9b97356767394dcf8c155e6b33c8288b
+msgid "🎯 Key Benefits"
+msgstr "🎯 Key Benefits"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:18
+#: 672b7471edbe41d58065ef9d6cb01b56
+msgid "**⚡ 10x faster**: Reduce 50+ lines of setup code to 1 line"
+msgstr "**⚡ 10x fster**: Reduce 50+ lines of setup code to 1 line"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:19
+#: 058809a412a6408eac3be75d09964632
+msgid "**Smart defaults**: Automatic parameter detection based on your structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:20
+#: 011618cfc33a4ee4b5992cd922c747a7
+msgid "**📚 Best practices**: Encodes expert knowledge and proven workflows"
+msgstr "**📚 Best prctices**: Encodes expert knowledge و proven wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:21
+#: 251a6f05558544cd91979d77ee1cc351
+msgid "**🎨 Flexible**: Easy to customize while keeping simplicity"
+msgstr "**🎨 Flexible**: Esy to customize while keeping simplicity"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:22
+#: 4fa845cd20864ca4869671a994b7e14a
+msgid "**📊 Comprehensive**: Covers all major material properties"
+msgstr "**📊 Comprehensive**: Covers ll mjیا mteril properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:24
+#: b296d273610d435e88d21eb5162c0b8e
+msgid "📖 Table of Contents"
+msgstr "📖 Tble of Contents"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:26
+#: f8b52eb504634201abc65c8414c47e2e
+msgid "[Quick Start](#quick-start)"
+msgstr "[شروع سریع](#quick-strt)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:27
+#: bfb4f47098384c24b8d6f13e99887f1c
+msgid "[Structure Analysis](#structure-analysis)"
+msgstr "[Structure Anlysis](#structure-nlysis)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:28
+#: e2b406a889ac441587523127d2af0de0
+msgid "[Complete Characterization](#complete-characterization)"
+msgstr "[Complete Chrcteriztion](#complete-chrcteriztion)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:29
+#: 58346316ef3d4f04a6c8d019be20ad57
+msgid "[Electronic Properties](#electronic-properties)"
+msgstr "[Electronic Properties](#electronic-properties)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:30
+#: 2aa14df6ce5045bb89fd6ce8d639eb77
+msgid "[Mechanical Properties](#mechanical-properties)"
+msgstr "[Mechnicl Properties](#mechnicl-properties)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:31
+#: 6da3da3f928549159966d227df69702f
+msgid "[Thermal Properties](#thermal-properties)"
+msgstr "[Therml Properties](#rml-properties)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:32
+#: 85c04954bca2493fab364a924e7c6497
+msgid "[Surface & Catalysis](#surface--catalysis)"
+msgstr "[Surfce & Ctlysis](#surfce--ctlysis)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:33
+#: f1e61c150d2b46bb8e89f1a98928ac17
+msgid "[Convergence Testing](#convergence-testing)"
+msgstr "[همگرایی Testing](#convergence-testing)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:34
+#: 0875e7cc58ed4822a9bfe2eafd8d5b50
+msgid "[Application-Specific Recipes](#application-specific-recipes)"
+msgstr "[Appliction-Specific Recipes](#ppliction-specific-recipes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:35
+#: 343ec96ae5464461a37c0a7f949350ee
+msgid "[Customization](#customization)"
+msgstr "[Customiztion](#customiztion)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:39
+#: 0078484977494ecd8ed23cd4e3eed66a
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:41
+#: 966824f549cd4e3f99a8a88ac410fe85
+msgid "The Ultimate One-Liner"
+msgstr "The Ultimte One-Liner"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:58
+#: 00d1b09809144a33a674704a171b7f40
+msgid "That's it! This automatically:"
+msgstr "Tht's it! This utomticlly:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:59
+#: cf2ff8084c0244f98e8696719ee4c096
+msgid "✅ Analyzes your material type (metal/semiconductor/insulator)"
+msgstr "✅ Anlyzes your mteril type (metl/semiconductیا/insultیا)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:60
+#: 472309cc8b7f40dc8c6884ad3b59c90a
+msgid "✅ Selects optimal SIESTA parameters"
+msgstr "✅ Selects optiml SIESTA prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:61
+#: 7bb96fd611ff46d5bd312b84d1899567
+msgid "✅ Calculates electronic properties (bands, DOS)"
+msgstr "✅ Clcultes electronic properties (bوs, DOS)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:62
+#: 62e2d152d40345b689760e938905f482
+msgid "✅ Calculates mechanical properties (elastic constants, bulk modulus)"
+msgstr "✅ Clcultes mechnicl properties (elstic constnts, bulk modulus)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:63
+#: 8f267ac040df44cf867683ae630f22f4
+msgid "✅ Calculates thermal properties (phonons, QHA, thermal expansion)"
+msgstr "✅ Clcultes rml properties (phonons, QHA, rml expnsion)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:64
+#: eeb55e0907d64c608817c8a0b847b310
+msgid "✅ Generates publication-quality plots"
+msgstr "✅ Genertes publiction-qulity plots"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:68
+#: 9d1aacc885fd4f22a214e1f61393fd43
+msgid "Structure Analysis"
+msgstr "Structure Anlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:70
+#: 2ce8f1af15f8451bb96a7216a2a49f98
+msgid ""
+"Before running calculations, you can analyze your structure to see what "
+"the Recipe Book recommends:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:82
+#: 4351d63c55da4731a434d1bbd7319e2e
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:122
+#: bc1c7a57a321421fa0b47c2b5d5bcdbe
+msgid "Complete Characterization"
+msgstr "Complete Chrcteriztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:124
+#: c6ddba692bab465c9cf864e76039e330
+msgid "Full Material Study"
+msgstr "Full Mteril Study"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:131
+#: 8123ce0af93548f39c363d9459213428
+msgid "Quick Characterization"
+msgstr "Quick Chrcteriztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:133
+#: 6bb231b8281145ce829d42b2d439209e
+msgid "For preliminary studies (~1-2 hours):"
+msgstr "Fیا preliminry studies (~1-2 hours):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:140
+#: 88144ae5983745fb8e67156f59e36bff
+msgid "Selective Properties"
+msgstr "Selective Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:142
+#: e374ebb766c94222861bb4285412331a
+msgid "Choose which property categories to calculate:"
+msgstr "Choose which property ctegیاies to clculte:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:161
+#: 3a6a519bf6834546ab2c16af3903b7a4
+msgid "Electronic Properties"
+msgstr "Electronic Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:163
+#: 3a90480036c54b16ac6b169e98191fc1
+msgid "Complete Electronic Structure"
+msgstr "Complete Electronic Structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:172
+#: 44c10f89430247ccbf04eba9f6b63184
+msgid "Band Structure Only"
+msgstr "ساختار نواری Only"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:181
+#: a4de8203f6984e06baa135919a1e8ba9
+msgid "Density of States"
+msgstr "چگالی حالت‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:190
+#: 6e9cd82b95ba47468cef83751634f802
+msgid "Optical Properties"
+msgstr "Opticl Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:199
+#: 8eab8e3d19ae42d7a05dd53ce12fea39
+msgid "Material-Specific Electronic Calculations"
+msgstr "Mteril-Specific Electronic محاسبهs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:213
+#: ccaf0ab312304857b7e0e2c5c721ce2f
+msgid "Mechanical Properties"
+msgstr "Mechnicl Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:215
+#: 1f30aa13b6e74684a3a3e3bce23468d6
+msgid "Complete Mechanical Characterization"
+msgstr "Complete Mechnicl Chrcteriztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:224
+#: 3980dcbed7a54006b0b61ccc883c5b4e
+msgid "Elastic Constants Only"
+msgstr "Elstic Constnts Only"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:233
+#: 3c47582fe72a41fcbe26cb8f41bb9889
+msgid "Equation of State (EOS) and Bulk Modulus"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:243
+#: e9f9da1274114ff3879ee9390a4f2f44
+msgid "Pressure-Dependent EOS"
+msgstr "Pressure-Dependent EOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:256
+#: e7e6105221d14ff6930b347f562fef7e
+msgid "Hardness Estimation"
+msgstr "Hrdness Estimtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:267
+#: 118bd8411be64170ac95eec5940a2198
+msgid "Thermal Properties"
+msgstr "Therml Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:269
+#: f89e1976870a4098a6e8fa9278fde1cf
+msgid "Complete Thermal Characterization"
+msgstr "Complete Therml Chrcteriztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:278
+#: 1b0be736b74b4610bc9449a4d39218db
+msgid "Phonons Only"
+msgstr "فونون‌ها Only"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:290
+#: aa057fe9d2c54d30ae4038194dc8ea83
+msgid "Grüneisen Parameters"
+msgstr "Grüneisen Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:299
+#: 98d3cc91e85d4c7282435681c25fb84e
+msgid "Quasi-Harmonic Approximation"
+msgstr "Qusi-Hrmonic Approximtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:311
+#: 80de67c23c514b0798ea38211a3eff02
+msgid "Thermal Expansion"
+msgstr "Therml Expnsion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:320
+#: 10a68a285d954f38af4a43fc33a6c95a
+msgid "High-Temperature Properties"
+msgstr "High-Temperture Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:332
+#: 4bdc17e908e94bcc924c2b974e6e10e9
+msgid "Vibrational Stability Check"
+msgstr "Vibrtionl Stbility Check"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:343
+#: e93648c53fc24588bbf49b8dc8da1744
+msgid "Surface & Catalysis"
+msgstr "Surfce & Ctlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:345
+#: 807fefff918d418ea4e331bece621a88
+msgid "Surface Energy Calculation"
+msgstr "Surfce Energy محاسبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:359
+#: 9d60b333738e4337a205a6766334dd73
+msgid "Adsorption Site Scanning"
+msgstr "Adsیاption Site Scnning"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:377
+#: c0578248e604426b8da40d6e7f8247fd
+msgid "Complete Catalysis Study"
+msgstr "Complete Ctlysis Study"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:395
+#: 4b20e6c4db624aeb9f45fc06941804c2
+msgid "Convergence Testing"
+msgstr "همگرایی Testing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:397
+#: 4712533f028546c6bfc8c0529bb895b6
+msgid "Complete Convergence Suite"
+msgstr "Complete همگرایی Suite"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:410
+#: ccb88a0a3fe2446c881681de87dcfe06
+msgid "K-Points Convergence"
+msgstr "K-Points همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:423
+#: 644dbb25cde84739ad23c42ff0a1c6e1
+msgid "Mesh Cutoff Convergence"
+msgstr "Mesh Cutoff همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:435
+#: 7edb26fac7f54bc68c035adde6229040
+msgid "Basis Convergence"
+msgstr "Bsis همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:449
+#: 2fcfce89bbbe4699b37ee8c635b6a93f
+msgid "Quick vs Complete Convergence"
+msgstr "Quick vs Complete همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:463
+#: 0a04e6a01735493ca3ba112effe43d1e
+msgid "Application-Specific Recipes"
+msgstr "Appliction-Specific Recipes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:465
+#: 3f8410b1baf644a5bf117976588e50f1
+msgid "Battery Cathode Screening"
+msgstr "Bttery Cthode Screening"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:474
+#: f1f94a4ee621495ba36e9481860113c2
+msgid "Thermoelectric Analysis"
+msgstr "Thermoelectric Anlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:483
+#: cd2c839010934058b651ed6358040658
+msgid "High-Temperature Ceramics"
+msgstr "High-Temperture Cermics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:495
+#: f49ea72759f441e58326f87d4194341b
+msgid "Magnetic Materials"
+msgstr "Mgnetic Mterils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:504
+#: b3e69a811d544b5cb03af66bc177bc2c
+msgid "Semiconductor Devices"
+msgstr "Semiconductیا Devices"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:513
+#: 638f580812144d6b83b1045fdd29ff26
+msgid "Phase Transitions"
+msgstr "Phse Trnsitions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:524
+#: 8462c7365f594c38b1b1f3d73e03a3c0
+msgid "Customization"
+msgstr "Customiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:526
+#: 1b5a98a2794142039920722491015283
+msgid "Override Auto Parameters"
+msgstr "Override Auto Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:541
+#: ea7792411f144b34be47929665321ec6
+msgid "Choose Tier and Preset"
+msgstr "Choose Tier و Preset"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:552
+#: e1be51be01a64ba2a7ea466241b2dcfa
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:554
+#: 35f7a8f1bd9e4e81b20a82e9fec66477
+msgid "Preview workflows without running calculations:"
+msgstr "Preview wیاkflows باout running clcultions:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:566
+#: e318fec62045496c8de93fc908a21b85
+msgid "Selective Workflow Steps"
+msgstr "Selective گردش کار Steps"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:586
+#: 035466bd10b049d7b3bbeea4f3206140
+msgid "Comparison: Before vs After"
+msgstr "Comprison: Beبرایe vs After"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:588
+#: 53c11288a4ae423b974f283417c1bdb5
+msgid "Before Recipe Book (50+ lines)"
+msgstr "Beبرایe Recipe Book (50+ lines)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:629
+#: 127b04805fa340f4955a23857bf4a5b0
+msgid "After Recipe Book (1 line!)"
+msgstr "After Recipe Book (1 line!)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:638
+#: fed8433326694e7990339ff4d57af316
+msgid ""
+"**Result**: **50x less code**, automatic parameter selection, best "
+"practices built-in!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:642
+#: 32e5ed5d670b4db5ba9cd6dcb0a6d292
+msgid "Examples in This Directory"
+msgstr "مثال‌ها in This Directیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:644
+#: 1285a765df3045a98b4aa6476c6ea582
+msgid "`01_basic_usage.py` - Simple examples of main recipes"
+msgstr "`01_basic_usage.py` - Simple examples of main recipes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:645
+#: cbb81c61654a4945b57d654460a33594
+msgid "`02_electronic_properties.py` - Electronic structure workflows"
+msgstr "`02_electronic_properties.py` - Electronic structure workflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:646
+#: 18f086551fa84051beedc69a3230cedc
+msgid "`03_mechanical_properties.py` - Mechanical property calculations"
+msgstr "`03_mechanical_properties.py` - Mechanical property calculations"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:647
+#: b50d2a078cdd432591e03fddb48c6212
+msgid "`04_thermal_properties.py` - Phonons and thermal expansion"
+msgstr "`04_thermal_properties.py` - Phonons and thermal expansion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:648
+#: 4679bb48b5bd435ab1af7462d7804cbc
+msgid "`05_convergence_testing.py` - Parameter convergence"
+msgstr "`05_convergence_testing.py` - Parameter convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:649
+#: b7890565ed784a6baed19415cf12c46b
+msgid "`06_application_recipes.py` - Domain-specific workflows"
+msgstr "`06_application_recipes.py` - Domain-specific workflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:650
+#: 6a7d354a87714695935e5319a639c07c
+msgid "`07_customization.py` - Advanced customization"
+msgstr "`07_customization.py` - Advanced customization"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:654
+#: 90d7d7eba96d4a63af99fb73437a02e0
+msgid "Tips & Best Practices"
+msgstr "نکتهs & بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:656
+#: 5946c5d97aca4c259be5377b80e2ad0a
+msgid ""
+"**Start with analysis**: Always run `RecipeBook.print_analysis()` first "
+"to see recommendations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:658
+#: 773510bec828453ba1327fa7ea41e39a
+msgid ""
+"**Use dry-run mode**: Preview workflows before running expensive "
+"calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:663
+#: 0f027b1645f24cde8618ffa8008988d8
+msgid "**Test convergence for important calculations**:"
+msgstr "**Test convergence برای impیاtnt clcultions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:668
+#: a417f10daf6247b69a26d48a1b8d8411
+msgid ""
+"**Choose appropriate recipes**: Use application-specific recipes when "
+"available"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:673
+#: d93bf3b5f815426b8c702d9f85abd679
+msgid ""
+"**Customize when needed**: Auto params are good, but you can always "
+"override:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:683
+#: 61bb5267257c4fceb24f3310c8565a69
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:685
+#: 4352eac1268c4af1a23c29b4023d7e2a
+msgid "\"ImportError: cannot import name 'RecipeBook'\""
+msgstr "\"ImpیاtErrیا: cnnot impیاt nme 'RecipeBook'\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:687
+#: 3bae46d8c0a149089ecdd0a7e42bae3c
+msgid "Make sure you have the latest atomate2siesta:"
+msgstr "Mke sure you hve  ltest tomte2siest:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:692
+#: 49ec64226e1e48ca872f701c108d56a7
+msgid "\"Structure analysis failed\""
+msgstr "\"Structure nlysis filed\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:694
+#: 1421e364621d4705b42d4d123fc8a111
+msgid "Some complex structures may need manual parameters:"
+msgstr "Some complex structures my need mnul prmeters:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:703
+#: cb1fae22785d4f57b9d41857557070c0
+msgid "\"Calculation taking too long\""
+msgstr "\"محاسبه tking too long\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:705
+#: 4d4843e99209471cbd0cea0ba240cf82
+msgid "Use quick recipes for preliminary studies:"
+msgstr "Use quick recipes برای preliminry studies:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:713
+#: ba451e61089341e5b51b76c95986bbd2
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:715
+#: 437b7464228748f2b2b46e9d4aad2477
+msgid "Check individual example scripts in this directory"
+msgstr "Check individul exmple scripts in this directیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:716
+#: 67c7d37f633149cb80b464a6ecb3a162
+msgid "Read the main atomate2siesta documentation"
+msgstr "Red  min tomte2siest documenttion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:717
+#: cec3c57b82ec4adf9fec8695ecc2613b
+msgid "Explore the recipe source code: `src/atomate2/siesta/recipes/`"
+msgstr "Explore the recipe source code: `src/atomate2/siesta/recipes/`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book/README.md:719
+#: 1afcfc9997044066aef43133a859ec2b
+msgid "Happy calculating! 🚀"
+msgstr "Hppy clculting! 🚀"
+
+#~ msgid "Bulk Modulus via EOS"
+#~ msgstr "Bulk Modulus vi EOS"
+

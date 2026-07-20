@@ -1,0 +1,1675 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1
+#: 3e53774d0b8c46a3b36a93f65f233a4b
+msgid "Tutorial: FDF Block-Style Inputs"
+msgstr "آموزش: FDF Block-Style Inputs"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:3
+#: cbd999d5109a45bd9b91bf2d98b07a9d
+msgid ""
+"**Category**: 07-advanced-features **Difficulty**: Intermediate **Time**:"
+" ~5 min (dry-run), varies by example (local/submit)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:9
+#: e1c7d90faa6647bcb1b30f7aa49a9c74
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:11
+#: 99513dd9acea4b2cbfd2e4fe80076e1a
+msgid ""
+"Learn to use SIESTA's FDF (Flexible Data Format) block-style inputs for "
+"advanced features like electric fields, custom k-point paths, geometry "
+"constraints, MD stress targets, PDOS projections, and spin "
+"initialization."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:13
+#: 5778476af4bd4806b2b39f84eb3586db
+msgid ""
+"This consolidates 7 example scripts into a single configurable tutorial "
+"demonstrating all major FDF block types."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:17
+#: c822a3a9e1f24d7a9ff2166c8c4ebf4c
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:19
+#: a2414789601d47ffba3f601e27685f38
+msgid "FDF block format and syntax"
+msgstr "FDF block برایmt و syntx"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:20
+#: ac2e3a56f29e4341ad754b209f9a465c
+msgid "List-based input specification in atomate2siesta"
+msgstr "List-bsed input specifiction in tomte2siest"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:21
+#: ab002e75bb6d45fca1791acd93881423
+msgid "External electric field application"
+msgstr "Externl electric field ppliction"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:22
+#: d0c5fd8b91974d3f857f5b1b17fbf1b3
+msgid "Custom k-point path definition (band structure)"
+msgstr "Custom k-point pth definition (bو structure)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:23
+#: eb138ed2577b46d7ad8f196cd662c98c
+msgid "Geometry constraints (fix atoms, constrain directions)"
+msgstr "Geometry constrints (fix toms, constrin directions)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:24
+#: 32aa3dbfebeb4c95a60a768d65f08514
+msgid "MD target stress specification"
+msgstr "MD trget stress specifiction"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:25
+#: 3e3c7cc8122c4e2fabbc7d4d0d9d0b00
+msgid "PDOS (Projected Density of States) configuration"
+msgstr "PDOS (Projected چگالی حالت‌ها) configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:26
+#: d5caef1caa634d23b0beab0ee94b05f2
+msgid "Initial spin magnetization (DM.InitSpin)"
+msgstr "Initil spin mgnetiztion (DM.InitSpin)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:27
+#: aafe0b8eb43446e9a16a328c6a85270a
+msgid "Combining multiple FDF blocks in one calculation"
+msgstr "Combining multiple FDF blocks in one clcultion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:31
+#: f20f96e45f5e4b4c9b5786d6bc9cefe8
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:33
+#: a352ca23b7e34df2968c87dcf4f16cfc
+msgid "**Required**: [01-relaxation](../../01-basics/01-relaxation/) completed"
+msgstr "**مورد نیاز**: [01-relxtion](../../01-bsics/01-relxtion/) completed"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:34
+#: 37b004b99cdb45a28d1d3642bcbc3b03
+msgid "**Recommended**: Basic understanding of SIESTA FDF format"
+msgstr "**Recommended**: Bsic understوing of SIESTA FDF برایmt"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:35
+#: 8c33c145dd2747c6891f2b6759a30d4d
+msgid "**Recommended**: Familiarity with k-point meshes and band structures"
+msgstr "**Recommended**: Fmilirity با k-point meshes و bو structures"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:39
+#: b0b0a9de24d44824acd87ec0373a483c
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:41
+#: 891a8fff9de3492d92143f9ba91bf0cd
+msgid "FDF Block Format"
+msgstr "FDF Block Fیاmt"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:43
+#: ac793ef379964039b41f592683c8848b
+msgid "**In SIESTA FDF files**:"
+msgstr "**In SIESTA FDF files**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:52
+#: e47f88a96ed2420bb6d109a8d339e6e3
+msgid "**In atomate2siesta (Python)**:"
+msgstr "**In tomte2siest (Python)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:63
+#: 050907323089421ca988b5321b155275
+msgid ""
+"**Key Rule**: FDF blocks are specified as **lists of strings** in "
+"`fdf_arguments` dictionary."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:65
+#: a8dd5cb096e04a579c527477aa105e28
+msgid "Common FDF Blocks"
+msgstr "Common FDF Blocks"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:67
+#: 1eea60fdf6f9430d86134bef29a4275c
+msgid "**ExternalElectricField**: Apply uniform electric field"
+msgstr "**ExternlElectricField**: Apply uniبرایm electric field"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:68
+#: 28db5980a20d40dd8740785d7f37c1ec
+msgid "**BandLinesScale**: Define custom k-point paths"
+msgstr "**BوLinesScle**: Define custom k-point pths"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:69
+#: 983ed3762e7140f0b41d8d8095f993d1
+msgid "**GeometryConstraints**: Fix atoms or constrain motion"
+msgstr "**GeometryConstrints**: Fix toms یا constrin motion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:70
+#: 3a8c677911e348f5a96a8957f50a0765
+msgid "**MD.TargetStress**: Target stress tensor for variable-cell MD"
+msgstr "**MD.TrgetStress**: Trget stress tensیا برای vrible-cell MD"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:71
+#: 7eaadd228cdd40ed8a7a2ea9080b0b72
+msgid "**ProjectedDensityOfStates**: PDOS energy range and resolution"
+msgstr "**ProjectedDensityOfSttes**: PDOS energy rnge و resolution"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:72
+#: 78519b65828f467a8fc92567c66a5e0b
+msgid "**PDOS.kgrid_Monkhorst_Pack**: K-point mesh for PDOS"
+msgstr "**PDOS.kgrid_Monkhیاst_Pck**: K-point mesh برای PDOS"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:73
+#: 49ccffd15e1e4780ae2deefaea7c2d95
+msgid "**DM.InitSpin**: Initial spin polarization per atom"
+msgstr "**DM.InitSpin**: Initil spin polriztion per tom"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:77
+#: 23ba75323c3347369e0bc009bb9e9575
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:79
+#: 29d86aca547e46f18e2d4b6364626f4a
+msgid "Example Types"
+msgstr "مثال Types"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:81
+#: 8f689ddb8fb44b039ba4909feb49a334
+msgid "1. Electric Field (Graphene)"
+msgstr "1. Electric Field (Grphene)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:85
+#: 8c6703c675424802bc98e8319e96e28e
+msgid "Apply perpendicular electric field (0.1 V/Å)"
+msgstr "Apply perpendiculr electric field (0.1 V/Å)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:86
+#: 933c4dc7d2484c798e3d4e1d111f4045
+msgid "Graphene bilayer example"
+msgstr "Grphene bilyer exmple"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:87
+#: 4a00382f0e19498c8b1dcced4126c886
+msgid "Field format: `Ex Ey Ez units`"
+msgstr "Field format: `Ex Ey Ez units`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:88
+#: 08de8f5971a245959bc7a294d603a116
+msgid "Enables electrostatic potential output"
+msgstr "Enbles electrosttic potentil output"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:90
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:104
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:117
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:131
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:145
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:159
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:173
+#: 0ab0283f39d1430aafd808977ff823a4 16476c25a2a942b18e9660b2ce748610
+#: 600722b0bfee4cc797c58bb7b49994d7 7fae334b4cd54126bbce2ca18c7e0497
+#: b6d2467887e34d0399122b52457285a5 b77ef52d06b846a38ee46f681b29e699
+#: d80495baf84049558c8e42b29dd29290
+msgid "**Use Cases**:"
+msgstr "**Use Cses**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:91
+#: e77449175e6d410399116ad94fa8511a
+msgid "2D materials under applied bias"
+msgstr "2D mterils under pplied bis"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:92
+#: f30264e755c44a55ba28a12caf5f5e71
+msgid "Polar materials and ferroelectrics"
+msgstr "Polr mterils و ferroelectrics"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:93
+#: 555b1e1966f1429f9f5897a6614b1032
+msgid "Field-effect calculations"
+msgstr "Field-effect clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:95
+#: 6f81cee0a9c64275ac1ff3025e7330f3
+msgid "2. Custom K-Point Path (Silicon)"
+msgstr "2. Custom K-Point Pth (Silicon)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:99
+#: c686637706f34fb88ff4dfe9b78adb7e
+msgid "Define high-symmetry path for band structure"
+msgstr "Define high-symmetry pth برای bو structure"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:100
+#: d8c832210e0e44ac930e03c2536922b6
+msgid "Silicon FCC example (Γ-X-W-K-Γ-L)"
+msgstr "Silicon FCC exmple (Γ-X-W-K-Γ-L)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:101
+#: 94f703d93c1c48e9ad26a2df4af0a7d8
+msgid "Automatic path from high-symmetry-seekpath"
+msgstr "Automtic pth from high-symmetry-seekpth"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:102
+#: 533edfcaf1f144cea00d09ee56e5d430
+msgid "40 points per segment"
+msgstr "40 points per segment"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:105
+#: a2efa621270d48139c5e7a9d21925dd7
+msgid "Non-standard Brillouin zones"
+msgstr "Non-stوrd Brillouin zones"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:106
+#: ffd4febd920e4f5b9925f594e4545205
+msgid "Specific k-point paths for analysis"
+msgstr "Specific k-point pths برای nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:107
+#: 5df9121e66d44c189dbc5d13021f33c8
+msgid "Custom band structure plots"
+msgstr "Custom bو structure plots"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:109
+#: d4f1525bc77f491e9785ca9970cde254
+msgid "3. Geometry Constraints (Graphene Relaxation)"
+msgstr "3. Geometry Constrints (Grphene Relxtion)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:113
+#: 1bb5f84357aa496b9050a889f3c4d083
+msgid "Fix bottom 2 layers of graphene"
+msgstr "Fix bottom 2 lyers of grphene"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:114
+#: fbbbcff6dfd74970b2a2a7278da8e7e2
+msgid "Allow top layers to relax"
+msgstr "Allow top lyers to relx"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:115
+#: 6d92419d2f2449558ccaa42ac3648dc9
+msgid "Constraint format: `position from atom1 to atom2`"
+msgstr "Constraint format: `position from atom1 to atom2`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:118
+#: a4225c02acbd460b81ccaff3b85577b8
+msgid "Surface relaxation (fix substrate)"
+msgstr "Surfce relxtion (fix substrte)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:119
+#: db060147e0d94123aee77ce9d11b28bf
+msgid "Defect calculations (fix boundaries)"
+msgstr "Defect clcultions (fix boundries)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:120
+#: b62dd6da78d6416498f8559965f13547
+msgid "Selective atomic relaxation"
+msgstr "Selective tomic relxtion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:122
+#: 780d4b84bd1346a1b26f92f7bdbfe163
+msgid "4. MD Target Stress (Silicon)"
+msgstr "4. MD Trget Stress (Silicon)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:126
+#: c725d720316d483d893ae2e388744354
+msgid "Variable-cell MD to achieve target stress"
+msgstr "Vrible-cell MD to chieve trget stress"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:127
+#: f0b3a7aeb180454a949369060567713d
+msgid "Hydrostatic pressure (0.5 GPa)"
+msgstr "Hydrosttic pressure (0.5 GP)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:128
+#: 01086cfac8a9499cb9764c53a0303719
+msgid "Stress tensor: 6 components (xx, yy, zz, xy, xz, yz)"
+msgstr "Stress tensیا: 6 components (xx, yy, zz, xy, xz, yz)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:129
+#: 57fc42df17384d44997dd297472f4b9a
+msgid "10 ps MD with 2 fs timestep"
+msgstr "10 ps MD با 2 fs timestep"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:132
+#: e9b66bd6f44f48e28e50f399e721f4a3
+msgid "Equilibrate under pressure"
+msgstr "Equilibrte under pressure"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:133
+#: 22bb19e922614dfabc7e919d36a74ae5
+msgid "NPT ensemble simulations"
+msgstr "NPT ensemble simultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:134
+#: b2337832ab034695b69837b9332342f3
+msgid "Stress-strain calculations"
+msgstr "Stress-strin clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:136
+#: 84fa20a261ad460293b318cdd4048075
+msgid "5. PDOS Projection (Silicon)"
+msgstr "5. PDOS Projection (Silicon)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:140
+#: 2871b65eb3744e66bdca9e6e243b38d9
+msgid "Project DOS onto specific orbitals"
+msgstr "Project DOS onto specific یاbitls"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:141
+#: 1c82f6d8988f4c68aaaa461f438e24ae
+msgid "Energy range: -15 to +10 eV"
+msgstr "Energy rnge: -15 to +10 eV"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:142
+#: 6c759103a7354cc8ad37c92df5e104f0
+msgid "0.1 eV resolution, 250 points"
+msgstr "0.1 eV resolution, 250 points"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:143
+#: 855c87fe07394d029739ae044b18efd7
+msgid "Dedicated k-point mesh (6×6×6)"
+msgstr "Dedicted k-point mesh (6×6×6)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:146
+#: 7f522a2bbb904cee987912a49eef1996
+msgid "Orbital contribution analysis"
+msgstr "Orbitl contribution nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:147
+#: 1cfbc2bd25204d75839b43febdb0a5a6
+msgid "Band character identification"
+msgstr "Bو chrcter identifiction"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:148
+#: cba7044fe82e44d6ad3e425cd65e56d1
+msgid "Chemical bonding studies"
+msgstr "Chemicl bonding studies"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:150
+#: 3dfc9455f5cf40b39a952cc7bde2a040
+msgid "6. Initial Spin (Iron BCC)"
+msgstr "6. Initil Spin (Iron BCC)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:154
+#: 33ce8df28a5c43f69d607d0bd2f540f3
+msgid "Set initial spin polarization"
+msgstr "Set initil spin polriztion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:155
+#: b3459c9a1b504dc99ffb0769a0ff41ae
+msgid "Ferromagnetic Fe: 2 μB per atom"
+msgstr "Ferromgnetic Fe: 2 μB per tom"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:156
+#: 4c983c8ca0254e748df5c182d8245907
+msgid "Accelerates SCF convergence"
+msgstr "Accelertes SCF convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:157
+#: 1c181cb2bbd148a3ab342aea1b54415b
+msgid "Format: `atom_index spin_value`"
+msgstr "Format: `atom_index spin_value`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:160
+#: 25b2cf22cb4b49b3b80c68ff3e1361f1
+msgid "Magnetic materials initialization"
+msgstr "Mgnetic mterils initiliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:161
+#: 1f65d02d63014c0686086a8bbbc5204b
+msgid "Antiferromagnetic ordering"
+msgstr "Antiferromgnetic یاdering"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:162
+#: 4984f5c3e16a40749a42418d5103d37f
+msgid "Faster convergence for spin-polarized systems"
+msgstr "Fster convergence برای spin-polrized systems"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:164
+#: 211aba6058364db284343f8fa96c8cfc
+msgid "7. Multiple Blocks Combined (Comprehensive)"
+msgstr "7. Multiple Blocks Combined (Comprehensive)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:168
+#: fde39389aa3d4738bccef6c1fef39a5d
+msgid "Combines 4 FDF blocks simultaneously"
+msgstr "Combines 4 FDF blocks simultneously"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:169
+#: 282dedcbfe6c418a8a7e722967960d3d
+msgid "Electric field + constraints + spin + PDOS"
+msgstr "Electric field + constrints + spin + PDOS"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:170
+#: 68e00dd8f269492899ed45249d66d8d9
+msgid "Demonstrates block compatibility"
+msgstr "Demonstrtes block comptibility"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:171
+#: 5af025ecafe5497180002d9168b0bbc6
+msgid "Iron slab with complex setup"
+msgstr "Iron slb با complex setup"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:174
+#: f312924eee1044d19b972ef4cc585a87
+msgid "Production calculations"
+msgstr "Production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:175
+#: c88b0414cce549eda4fd2b5fae418bdb
+msgid "Complex material setups"
+msgstr "Complex mteril setups"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:176
+#: 94b2ab9d1e134792a33809dbcd3cb048
+msgid "Learning block interactions"
+msgstr "Lerning block interctions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:180
+#: 60a0163481f5449593856f83b9938657
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:202
+#: 5ee198f6fcfa461a8cf214b393a1463a
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:204
+#: 68b8450a8b6842d688fb4ec2ddf0c04e
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:217
+#: 4d05d13f92214a19b71fccaa57e32bd9
+msgid "Local/Submit Mode"
+msgstr "Locl/Submit Mode"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:219
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:858
+#: 9a739498a921441bb97566b684350d01 d0532a85a78d480b9cc1b8cc938c2fa0
+msgid "**Electric Field**:"
+msgstr "**Electric Field**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:226
+#: 079864f669344bab8324e00f5e3540e4
+msgid "**K-Point Path**:"
+msgstr "**K-Point Pth**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:233
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:863
+#: 7b5eaae347714a73a1e661b92f383c25 a4603e8583c345548bcf1a5bf046329a
+msgid "**Constraints**:"
+msgstr "**Constrints**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:240
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:868
+#: 292534cea0be447fbe9dab860c52fbaf 8d26b92d5e2c4d44be9151a591687c44
+msgid "**MD Stress**:"
+msgstr "**MD Stress**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:247
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:873
+#: 5ad25e5f9fa64563aca7689ac5bbccbb 7460ae0fdff84ebfaef43ac070eecace
+msgid "**PDOS**:"
+msgstr "**PDOS**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:254
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:878
+#: 05f566445532484b8da8145f6b41055b 22066df183cd4224be2aea13208d8c0a
+msgid "**Spin**:"
+msgstr "**Spin**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:263
+#: e2abc58077264eef9d099ca50e239f9b
+msgid "Understanding FDF Blocks"
+msgstr "درک FDF Blocks"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:265
+#: 38ccc962b117435a977085da01305c7a
+msgid "Block 1: ExternalElectricField"
+msgstr "Block 1: ExternlElectricField"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:267
+#: c03bac531b1941c390ce35c3f9e34eb0
+msgid "**Purpose**: Apply uniform electric field to system"
+msgstr "**Purpose**: Apply uniبرایm electric field to system"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:269
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:303
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:349
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:409
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:462
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:523
+#: 1de6a470a05a4b2c86f07ae6ba93eb32 34f44edd0e4d4b05a8035bec0863f1a0
+#: 52530be6a4ab4103a818fcaac9005694 ac7b9f3870934f6e9213c1fa50a2a8ac
+#: b335a38adb7f40cf8b090d4896eeefa2 c03398b70e294553a13d9358578c46f7
+msgid "**Format**:"
+msgstr "**Fیاmt**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:278
+#: 6118380f178c479da57ffc78986c309e
+msgid "**Units**: `V/Ang`, `V/Bohr`, `Ry/Bohr/e`, `Har/Bohr/e`"
+msgstr "**Units**: `V/Ang`, `V/Bohr`, `Ry/Bohr/e`, `Har/Bohr/e`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:280
+#: 24688b696b044550b8c2890ce3da7720
+msgid "**Example - Graphene**:"
+msgstr "**مثال - Grphene**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:286
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:328
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:398
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:438
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:502
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:569
+#: 4b7ada5010db45c089e5e823fac6a70e 4e0e017886c94214a141b4cf8089d6dd
+#: 87802b41b3744b26805b3002839cd57a c05f215a87e64180acd8d4d86c18a136
+#: d2f111641f8042ba80ea9111239c9874 f7e0e4599cb74b038f6d2cae07db2a4f
+msgid "**Important**:"
+msgstr "**مهم**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:287
+#: 9207887cbee344ca8bb13bf1036a50a4
+msgid "Field is uniform across entire cell"
+msgstr "Field is uniبرایm cross entire cell"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:288
+#: f4deb8443a844bafb06beb891d0386c6
+msgid "For 2D materials, apply perpendicular to plane"
+msgstr "Fیا 2D mterils, pply perpendiculr to plne"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:289
+#: 592db895f40e4f04bda0d696b244dabe
+msgid "May require increased SCF iterations (`MaxSCFIterations: 200`)"
+msgstr "May require increased SCF iterations (`MaxSCFIterations: 200`)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:290
+#: 46785c51881d4ec7b4f94eae46e1aaeb
+msgid ""
+"Consider saving electrostatic potential: `SaveElectrostaticPotential: "
+"True`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:292
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:575
+#: b3773f69ed7641ff94afeb2e8047647f cfc3890f35a54b1481356d315d4943ba
+msgid "**Validation**:"
+msgstr "**Vlidtion**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:293
+#: baeed8c35c244e27969b285c1d7d0419
+msgid "Check dipole moment change"
+msgstr "Check dipole moment chnge"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:294
+#: 781f74a424c846f085747a32541a2d67
+msgid "Verify band shifts (field × distance)"
+msgstr "Verify bو shifts (field × distnce)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:295
+#: 9a7bc831cbdb46f9a014ebd211f6214d
+msgid "Ensure SCF converges"
+msgstr "Ensure SCF converges"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:299
+#: 119c8f4401654741bcf1d8f04e59c932
+msgid "Block 2: BandLinesScale"
+msgstr "Block 2: BوLinesScle"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:301
+#: 545c9b0f04e34cef99b00056d913813a
+msgid "**Purpose**: Define custom k-point path for band structure calculations"
+msgstr "**Purpose**: Define custom k-point pth برای bو structure clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:316
+#: 80533169ede34d1aa5f12f0a7f12e531
+msgid "**Example - Silicon FCC (Γ-X-W-K-Γ-L)**:"
+msgstr "**مثال - Silicon FCC (Γ-X-W-K-Γ-L)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:329
+#: 508b514cecef4127845246ce9048603b
+msgid "First line: number of bands + starting k-point"
+msgstr "First line: number of bوs + strting k-point"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:330
+#: c92eaff17d174432a8d75107adf2c40f
+msgid "Subsequent lines: number of points + ending k-point"
+msgstr "Subsequent lines: number of points + ending k-point"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:331
+#: 14d470a2e23647a9bea75829018552f8
+msgid "Coordinates in reciprocal lattice units (typically)"
+msgstr "Coیاdintes in reciprocl lttice units (typiclly)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:332
+#: e76d368fadb84351931fac5542d14b53
+msgid "Use `\\\\Gamma` for Γ symbol (LaTeX-like)"
+msgstr "Use `\\\\Gamma` for Γ symbol (LaTeX-like)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:334
+#: 87b92bdebe11451fa176c5eadf7c5deb
+msgid "**Automation**:"
+msgstr "**Automtion**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:345
+#: 92c2c98592db4afea4fb5246c3db0f53
+msgid "Block 3: GeometryConstraints"
+msgstr "Block 3: GeometryConstrints"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:347
+#: b7aa4ff7f588453dba51f8ff1af7e033
+msgid "**Purpose**: Fix atoms or constrain motion directions"
+msgstr "**Purpose**: Fix toms یا constrin motion directions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:358
+#: 348b36398f944983bdcb2e8cefdf131c
+msgid "**Constraint Types**:"
+msgstr "**Constrint Types**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:360
+#: 591db9e520824c3d99e24fbbd8cf3cb0
+msgid "**1. Fix Atoms (all directions)**:"
+msgstr "**1. Fix Atoms (ll directions)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:369
+#: eb48d0a348544a5fb53aa9bcb0bd3de0
+msgid "**2. Fix Specific Directions**:"
+msgstr "**2. Fix Specific Directions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:378
+#: a3fbbbb4b34b4f648acce1112910c745
+msgid "**3. Constrain Along Vector**:"
+msgstr "**3. Constrin Along Vectیا**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:384
+#: 9e0824d2150d49069d493002c8c92d59
+msgid "**Common Use Cases**:"
+msgstr "**Common Use Cses**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:385
+#: 4abbed7a954944a180ab516594e2cb65
+msgid "**Surface relaxation**: Fix bottom layers"
+msgstr "**Surfce relxtion**: Fix bottom lyers"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:386
+#: 9e8701b72b7f4e9499ef56657a350107
+msgid "**Defect studies**: Fix boundary atoms"
+msgstr "**Defect studies**: Fix boundry toms"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:387
+#: 64b4c21591f14651bcab6a12dfd8c8b3
+msgid "**2D materials**: Fix in-plane motion for out-of-plane relaxation"
+msgstr "**2D mterils**: Fix in-plne motion برای out-of-plne relxtion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:389
+#: 2e482971ef3a4b0f987d09baa5ef5e79
+msgid "**Example - Graphene on Substrate**:"
+msgstr "**مثال - Grphene on Substrte**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:399
+#: abd57533dc854ba981075afd0a0fe4d6
+msgid "Atom indices start at 1 (not 0!)"
+msgstr "Atom indices strt t 1 (not 0!)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:400
+#: cc100e23c24741d287fece927e16bf64
+msgid "Constrained atoms still included in SCF"
+msgstr "Constrined toms still included in SCF"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:401
+#: 5fdfbc4befd245bfb424ca91b4f34fc0
+msgid "Forces on fixed atoms should be ~0 after relaxation"
+msgstr "Fیاces on fixed toms should be ~0 fter relxtion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:405
+#: 70331f56399a439e871215c3e7390790
+msgid "Block 4: MD.TargetStress"
+msgstr "Block 4: MD.TrgetStress"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:407
+#: 81c5da6f55f64be795e59011b2d5e158
+msgid "**Purpose**: Target stress tensor for variable-cell MD (NPT ensemble)"
+msgstr "**Purpose**: Trget stress tensیا برای vrible-cell MD (NPT ensemble)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:418
+#: 54febad5732e4914bc8d0f58025bf163
+msgid "**Units**: `GPa`, `Ry/Bohr**3`, `eV/Ang**3`"
+msgstr "**Units**: `GPa`, `Ry/Bohr**3`, `eV/Ang**3`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:420
+#: 934229b425294cf9a6d428dba0cc6fed
+msgid "**Examples**:"
+msgstr "**مثال‌ها**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:422
+#: 8a03a454718f4d7694e74550a1c797ef
+msgid "**1. Hydrostatic Pressure (0.5 GPa)**:"
+msgstr "**1. Hydrosttic Pressure (0.5 GP)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:428
+#: fe3b9bb6012245929c2f6feaa67887a0
+msgid "**2. Uniaxial Stress (1 GPa in z)**:"
+msgstr "**2. Unixil Stress (1 GP in z)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:433
+#: 5c42c86bf27d41379f983ae61b5f12d2
+msgid "**3. Shear Stress**:"
+msgstr "**3. Sher Stress**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:439
+#: 9cf78c60246548bcbccc097f63bf1282
+msgid "Requires `MD.VariableCell: True`"
+msgstr "Requires `MD.VariableCell: True`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:440
+#: 76d0fd144b4f4894b487a6e275719edd
+msgid "Use with Parrinello-Rahman or similar algorithms"
+msgstr "Use با Prrinello-Rhmn یا similr lgیاithms"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:441
+#: fe108f375e4546559b58743be5102726
+msgid "Stress components: (xx, yy, zz, xy, xz, yz)"
+msgstr "Stress components: (xx, yy, zz, xy, xz, yz)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:442
+#: de30cb919e2445c5be18638f31f08ceb
+msgid "Negative values = compression (convention depends on SIESTA version)"
+msgstr "Negtive vlues = compression (convention depends on SIESTA version)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:444
+#: 8beb375c95874a9aa883e1805239dd53
+msgid "**Typical MD Settings**:"
+msgstr "**Typicl MD Settings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:458
+#: a827749c9e99447a9f6c13adffeb282d
+msgid "Block 5: ProjectedDensityOfStates (PDOS)"
+msgstr "Block 5: ProjectedDensityOfSttes (PDOS)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:460
+#: b0f7756a3f5c4244b7283786a1eea499
+msgid "**Purpose**: Calculate orbital-projected density of states"
+msgstr "**Purpose**: Clculte یاbitl-projected density of sttes"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:471
+#: 6801b3d866cc4b06aad0f2d71439a293
+msgid "**Parameters**:"
+msgstr "**Prmeters**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:472
+#: c2404e42509642efbc252622dd671720
+msgid "`Emin`: Lower energy bound"
+msgstr "`Emin`: Lower energy bound"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:473
+#: c030e6878b4647d9bf5c032da849c021
+msgid "`Emax`: Upper energy bound"
+msgstr "`Emax`: Upper energy bound"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:474
+#: aee01ef6391f46cf83f7099bc873903c
+msgid "`dE`: Energy resolution (broadening)"
+msgstr "`dE`: Energy resolution (broadening)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:475
+#: 8b727f59110c4159a576b17dcd7f2196
+msgid "`nE`: Number of points"
+msgstr "`nE`: Number of points"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:476
+#: 4f3aef465fe84d079711fc892f4a4bd3
+msgid "`units`: `eV`, `Ry`, `Har`"
+msgstr "`units`: `eV`, `Ry`, `Har`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:478
+#: dde29653831c46a89796c1954d1e3fdc
+msgid "**Example - Silicon PDOS**:"
+msgstr "**مثال - Silicon PDOS**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:486
+#: e4eb6b864ff346ea93fc898649029047
+msgid "**Dedicated K-Point Mesh**:"
+msgstr "**Dedicted K-Point Mesh**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:498
+#: e461d0b283bc436e98043eda2f523510
+msgid "**Output Files**:"
+msgstr "**Output فایلs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:499
+#: 09bfe9907f83488ca34c6b40a9ace346
+msgid "`SystemLabel.PDOS` - Total DOS"
+msgstr "`SystemLabel.PDOS` - Total DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:500
+#: d4530660ebd14bae9b45f6e615a16565
+msgid "`SystemLabel.PDOS.n.orbital` - Orbital projections (e.g., 1s, 2p)"
+msgstr "`SystemLabel.PDOS.n.orbital` - Orbital projections (e.g., 1s, 2p)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:503
+#: bbf6470d2f6143909ecc09d51fabbdef
+msgid "Requires dense k-point mesh (often denser than SCF)"
+msgstr "Requires dense k-point mesh (often denser thn SCF)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:504
+#: cb3d7c57e8a74226953370c4f1fa36d1
+msgid "Use `PDOS.kgrid_Monkhorst_Pack` for separate PDOS mesh"
+msgstr "Use `PDOS.kgrid_Monkhorst_Pack` for separate PDOS mesh"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:505
+#: 142eccf4b4bc48db9ee4de1b838e867e
+msgid "Energy range should cover valence + conduction bands"
+msgstr "Energy rnge should cover vlence + conduction bوs"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:506
+#: 4cee41dceb1c45ed854430957425b037
+msgid "Resolution trade-off: smaller dE = smoother, more points"
+msgstr "Resolution trde-off: smller dE = smoor, mیاe points"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:508
+#: cd4442dd637347729d11c60ad05a7e19
+msgid "**Analysis**:"
+msgstr "**Anlysis**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:519
+#: dd83f8bdf313497398293e102a892c15
+msgid "Block 6: DM.InitSpin"
+msgstr "Block 6: DM.InitSpin"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:521
+#: ef127f159edc44b482d8a6870b56bf6a
+msgid "**Purpose**: Set initial spin polarization per atom (magnetic systems)"
+msgstr "**Purpose**: Set initil spin polriztion per tom (mgnetic systems)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:533
+#: 44321333f74d4f6fa5fa3e0f9069afa8
+msgid "**Units**: Bohr magnetons (μB)"
+msgstr "**Units**: Bohr mgnetons (μB)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:535
+#: 3750cbb3867549db96b09b7a8d9ddcf7
+msgid "**Example - Ferromagnetic Iron (2 atoms)**:"
+msgstr "**مثال - Ferromgnetic Iron (2 toms)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:546
+#: 70bff25755664910b6c55d29fbe1030d
+msgid "**Example - Antiferromagnetic**:"
+msgstr "**مثال - Antiferromgnetic**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:559
+#: 72a94703445642eab7eba72098292c7a
+msgid "**Programmatic Generation**:"
+msgstr "**Progrmmtic Genertion**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:570
+#: e50ad85bd5c24b17a0d89db6849bb986
+msgid "Requires `Spin: polarized` or `Spin: spin-orbit`"
+msgstr "Requires `Spin: polarized` or `Spin: spin-orbit`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:571
+#: 9459594790ec4e919e570b7431529e35
+msgid "Initial guess only (converges to self-consistent solution)"
+msgstr "Initil guess only (converges to self-consistent solution)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:572
+#: 9509769e11cc44ce9243c48e604fd03e
+msgid "Accelerates convergence for magnetic systems"
+msgstr "Accelertes convergence برای mgnetic systems"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:573
+#: 71f85e859ffe432d87a37000f37853a8
+msgid "Large values may cause SCF instability (use ~actual magnetic moment)"
+msgstr "Lrge vlues my cuse SCF instbility (use ~ctul mgnetic moment)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:584
+#: 051c43e1d06a4dedb120875a3c7accdd
+msgid "Block 7: Multiple Blocks Combined"
+msgstr "Block 7: Multiple Blocks Combined"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:586
+#: 3a5a91de9e8146d090693d1f6889847f
+msgid "**Purpose**: Use several FDF blocks in one calculation"
+msgstr "**Purpose**: Use severl FDF blocks in one clcultion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:588
+#: cf969932c52c4e668896645b7b216c1b
+msgid "**Example - Iron Slab (Complex Setup)**:"
+msgstr "**مثال - Iron Slb (Complex Setup)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:614
+#: eda75218ebb7466ab5de35887e12d815
+msgid "**Compatibility Considerations**:"
+msgstr "**Comptibility Considertions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:615
+#: 9690b54da38248a7ba6453b2037b1309
+msgid "✅ **Compatible**: Constraints + Electric field"
+msgstr "✅ **Comptible**: Constrints + Electric field"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:616
+#: 34de07ccdde64557b314770a4c0736ce
+msgid "✅ **Compatible**: Spin + PDOS"
+msgstr "✅ **Comptible**: Spin + PDOS"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:617
+#: 20f1c7ca4426437fb900766e98a471d9
+msgid "✅ **Compatible**: Most blocks can coexist"
+msgstr "✅ **Comptible**: Most blocks cn coexist"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:618
+#: f8bf861f97a64d019e437a7759c90c23
+msgid ""
+"⚠️ **Careful**: BandLines + PDOS (both define k-points, separate "
+"calculations)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:619
+#: c0e583cbd8214ec8b893997bce31d53f
+msgid ""
+"⚠️ **Careful**: MD.TargetStress + GeometryConstraints (constraints limit "
+"cell motion)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:621
+#: e304ee1bf0344804a84efb452b52336b
+msgid "**Best Practices**:"
+msgstr "**بهترین روش‌ها**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:622
+#: 90a67c2397704187a299c95769b5b7b6
+msgid "Test blocks individually first"
+msgstr "Test blocks individully first"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:623
+#: cd6a03b52886445d88740ae5c632c859
+msgid "Combine incrementally"
+msgstr "Combine incrementlly"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:624
+#: 855286e34b2a473a871615247787e05c
+msgid "Check for parameter conflicts"
+msgstr "Check برای prmeter conflicts"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:625
+#: d6e45c60475b414497b6f25565e0319c
+msgid "Verify all blocks appear in `input.fdf`"
+msgstr "Verify all blocks appear in `input.fdf`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:629
+#: ded19f2bb89e43dea873ef4c48ea0e8a
+msgid "Debugging FDF Blocks"
+msgstr "Debugging FDF Blocks"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:631
+#: 133043f438dd42029aadeb3f51d71a13
+msgid "Verification Steps"
+msgstr "Verifiction Steps"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:633
+#: de17a4c7d05e4dc3b27d3d3ee1251baf
+msgid "**1. Check Generated FDF File**:"
+msgstr "**1. Check Generted FDF فایل**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:642
+#: 230f0a91d9a54fff9b53e895eefa490d
+msgid "**2. Look for Block Syntax**:"
+msgstr "**2. Look برای Block Syntx**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:650
+#: 5d0dae4f91f64f1ba10f383d7d0d4235
+msgid "**3. Common Errors**:"
+msgstr "**3. Common Errیاs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:652
+#: 149cbcf62de94e1bb642c1b7e8f94ce0
+msgid "**Error: Block not appearing in FDF**"
+msgstr "**Errیا: Block not ppering in FDF**"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:665
+#: 9f8f7803ba214f3f9917ccb2472108a1
+msgid "**Error: Syntax in block content**"
+msgstr "**Errیا: Syntx in block content**"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:674
+#: 3add831594fb4f2fbd3d94078e2a1149
+msgid "**Error: Atom indexing**"
+msgstr "**Errیا: Atom indexing**"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:683
+#: 1d051e0e9c08451a9ff3495f426becb6
+msgid "Validation Techniques"
+msgstr "Vlidtion Techniques"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:685
+#: 4596a23abb404bd1826a1d602bbc794c
+msgid "**1. Electric Field**: Check dipole moment change"
+msgstr "**1. Electric Field**: Check dipole moment chnge"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:691
+#: 145ae913e6164a639368d6c99cfaab73
+msgid "**2. Constraints**: Check forces on fixed atoms"
+msgstr "**2. Constrints**: Check برایces on fixed toms"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:697
+#: fb3995a4b08248e2986b8e603ca76574
+msgid "**3. Spin**: Verify initial vs. final magnetization"
+msgstr "**3. Spin**: Verify initil vs. finl mgnetiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:703
+#: eeb3f53baf0a424d9d9012ff77a18f10
+msgid "**4. PDOS**: Check output files exist"
+msgstr "**4. PDOS**: Check output files exist"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:711
+#: d568216e2ecb4587b2d05c1f4b148698
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:713
+#: eed06c8018654816a67f00424b237049
+msgid "Issue 1: FDF Block Not Recognized"
+msgstr "Issue 1: FDF Block Not Recognized"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:715
+#: 7857a14463ed4491801f7e7b4bcf61c1
+msgid "**Symptoms**: Block doesn't appear in generated `input.fdf`"
+msgstr "**Symptoms**: Block doesn't appear in generated `input.fdf`"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:717
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:738
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:763
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:783
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:807
+#: 7c69a0d2d8d84b958c8d3b62224e44a4 9bf502b374964d2abd908109199744e0
+#: 9ea5cc620368461b8b6f1ff52fef3e5b a5f7fc5be2ea4f60b22d7b6c400b5c30
+#: f332908c52f74240b831cddf6a3c501c
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:718
+#: a4a63e6af98747038933efee9459a8df
+msgid "Ensure block name is a **list of strings**:"
+msgstr "Ensure block nme is  **list of strings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:724
+#: 2ef022bd321649f58267f136e9b3a5ec
+msgid "Check spelling (case-sensitive):"
+msgstr "Check spelling (cse-sensitive):"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:730
+#: a00f0abf6e79407aab164d42694aad1d
+msgid "Verify in `fdf_arguments` dictionary (not other params)"
+msgstr "Verify in `fdf_arguments` dictionary (not other params)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:732
+#: a32c9163b320484fbf57536ffcdaaf24
+msgid "Check atomate2siesta version supports block"
+msgstr "Check tomte2siest version suppیاts block"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:734
+#: ed98632d33144337830693ab09aebc87
+msgid "Issue 2: SCF Not Converging with Electric Field"
+msgstr "Issue 2: SCF Not Converging با Electric Field"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:736
+#: 02ad374d41b34df1820b478005fbc3ae
+msgid "**Symptoms**: SCF cycles exceed max iterations"
+msgstr "**Symptoms**: SCF cycles exceed mx itertions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:739
+#: eba45b7c1362423ca02bec263d780552
+msgid "Increase max iterations:"
+msgstr "Increse mx itertions:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:744
+#: 54cdb0df23b845548b99be68a3f7b60e
+msgid "Reduce electric field strength (start small: 0.01 V/Å)"
+msgstr "Reduce electric field strength (strt smll: 0.01 V/Å)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:746
+#: f8559164d94b43148d7e5cdc91648515
+msgid "Tighten DM tolerance:"
+msgstr "Tighten DM tolernce:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:751
+#: 5b0de1b0df0e477f9146c6beeda673ed
+msgid "Use mixing schemes:"
+msgstr "Use mixing schemes:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:759
+#: 9cc79bf84cad4d5cad4d20e21519e47c
+msgid "Issue 3: Constraints Not Working"
+msgstr "Issue 3: Constrints Not Wیاking"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:761
+#: 867fed9be83440a8ad528c07b4425157
+msgid "**Symptoms**: \"Fixed\" atoms still moving"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:764
+#: d478a223fb6b438f8ecf73bff76e9d3b
+msgid "Check atom indexing (1-based, not 0-based!)"
+msgstr "Check tom indexing (1-bsed, not 0-bsed!)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:770
+#: 8b3465aee51748a89301d3f991b9c5e0
+msgid "Verify constraint appears in FDF:"
+msgstr "Verify constrint ppers in FDF:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:775
+#: b8da0b1294c445429b1a7bee8095e112
+msgid "Check relaxation type (CG, Broyden support constraints)"
+msgstr "Check relxtion type (CG, Broyden suppیاt constrints)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:777
+#: 239b403fcd2746dab330c102b43c50f4
+msgid "Inspect forces (should be ~0 on constrained atoms)"
+msgstr "Inspect برایces (should be ~0 on constrined toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:779
+#: 127cbb917e1a4df4aeafb4cbcc4c974e
+msgid "Issue 4: PDOS Files Empty or Missing"
+msgstr "Issue 4: PDOS فایلs Empty یا Missing"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:781
+#: 93572a017e144e3f825a63a97552e646
+msgid "**Symptoms**: No `.PDOS` files generated"
+msgstr "**Symptoms**: No `.PDOS` files generated"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:784
+#: aa51716394364792adef4498db27559f
+msgid "Ensure PDOS block syntax correct:"
+msgstr "Ensure PDOS block syntx cیاrect:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:790
+#: 79660cd747f94bcfaa8cab885d0d7c45
+msgid "Check k-point mesh is adequate:"
+msgstr "Check k-point mesh is dequte:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:799
+#: af8693b7f5884429b169f1af351c5d26
+msgid "Verify calculation completed successfully"
+msgstr "Verify clcultion completed successfully"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:801
+#: d343d38259c942ae82b4abccf11cb158
+msgid "Check energy range includes relevant states"
+msgstr "Check energy rnge includes relevnt sttes"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:803
+#: 962ff0c15cfc48b7bd68e5ae23f1dd1b
+msgid "Issue 5: Spin Initialization Ignored"
+msgstr "Issue 5: Spin Initiliztion Ignیاed"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:805
+#: f569c1c8dc2a48c6a11d735ea60c6907
+msgid "**Symptoms**: Calculation converges to non-magnetic solution"
+msgstr "**Symptoms**: محاسبه converges to non-mgnetic solution"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:808
+#: 97e408793d604e4b908d4094b4593b49
+msgid "Enable spin polarization:"
+msgstr "Enble spin polriztion:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:813
+#: 06bdf4270a3b4b3cba6ae7241cae889b
+msgid "Check initial spin values are reasonable (~actual magnetic moment)"
+msgstr "Check initil spin vlues re resonble (~ctul mgnetic moment)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:815
+#: 1cf183ea1f56468099efdb61926c3c4e
+msgid "May need to constrain total spin:"
+msgstr "My need to constrin totl spin:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:821
+#: c2e27a1c4c8e41af9e162123d44f8299
+msgid "Verify system is actually magnetic (check literature)"
+msgstr "Verify system is ctully mgnetic (check literture)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:825
+#: 7851199e4f7a4ceb859b0519b9dc2959
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:827
+#: d565c42a741a4467979e3f6a953dbd17
+msgid "FDF Block Usage"
+msgstr "FDF Block Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:829
+#: 71f7235520b94850a7dddb080cfa44bf
+msgid "**1. Start Simple**:"
+msgstr "**1. Strt Simple**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:830
+#: 9dae50e0c8844b25bcc5af65af49392f
+msgid "Test one block at a time"
+msgstr "Test one block t  time"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:831
+#: 891837c7426a4023b9b148eb2fa288ff
+msgid "Verify in dry-run mode first"
+msgstr "Verify in dry-run mode first"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:832
+#: 9eacf3cab62f42e8803f9055b4d4f384
+msgid "Check generated `input.fdf` carefully"
+msgstr "Check generated `input.fdf` carefully"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:834
+#: aa5d6a56088444bf9661eb72ffa8c6d9
+msgid "**2. Use Dry-Run for Debugging**:"
+msgstr "**2. Use Dry-Run برای Debugging**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:840
+#: edb60d57e6894e31bf5b19b927392bf3
+msgid "**3. List Format is Critical**:"
+msgstr "**3. List Fیاmt is Criticl**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:851
+#: b4b45e919fff40c8843e4eda6ca3dc81
+msgid "**4. Combine Logically**:"
+msgstr "**4. Combine Logiclly**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:852
+#: 3da0539ccb8347f486f4de56f0872838
+msgid "Group related blocks (e.g., PDOS + PDOS k-grid)"
+msgstr "Group relted blocks (e.g., PDOS + PDOS k-grid)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:853
+#: 200a385c23e34cec81f733760bf11caf
+msgid "Avoid conflicting settings (e.g., constraints + free cell MD)"
+msgstr "Avoid conflicting settings (e.g., constrints + free cell MD)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:854
+#: aad1e0e20c9240198ac0a3a60850b7db
+msgid "Document complex combinations"
+msgstr "Document complex combintions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:856
+#: 78b5d420210b41dea847743b4bd13ead
+msgid "Parameter Selection"
+msgstr "Prmeter Selection"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:859
+#: 0f9346d8595d4976b5b5b1b8492ff871
+msgid "2D materials: 0.01-0.5 V/Å typical"
+msgstr "2D mterils: 0.01-0.5 V/Å typicl"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:860
+#: 28035c2498d0488bb23cd3acbb331add
+msgid "3D materials: Smaller fields (0.001-0.1 V/Å)"
+msgstr "3D mterils: Smller fields (0.001-0.1 V/Å)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:861
+#: bd547728ad864679bddc2900c9ff013a
+msgid "Increase SCF iterations if needed"
+msgstr "Increse SCF itertions if needed"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:864
+#: fd4e0ebc385f471c8b918145451e8a57
+msgid "Surface: Fix bottom 1-2 layers"
+msgstr "Surfce: Fix bottom 1-2 lyers"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:865
+#: 0d50fb290c7a4988be1eda5afe022060
+msgid "Defects: Fix atoms > 10 Å from defect"
+msgstr "Defects: Fix toms > 10 Å from defect"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:866
+#: 8bfcfc6b13ae4ab8be5543402da63bf7
+msgid "Always verify force convergence"
+msgstr "Alwys verify برایce convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:869
+#: 3194cc3a0a9b4a138c334a2d4959cbea
+msgid "Start with hydrostatic (equal diagonal components)"
+msgstr "Strt با hydrosttic (equl digonl components)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:870
+#: d6ba11ea8a864e589f62725c109a79bf
+msgid "Use realistic pressures (< 10 GPa for most materials)"
+msgstr "Use relistic pressures (< 10 GP برای most mterils)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:871
+#: 2f85fb07bf2c4be6bbc94a7d83871e92
+msgid "Monitor stress evolution during MD"
+msgstr "Monitیا stress evolution during MD"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:874
+#: b18cb62a813546049e80ec16478b3d47
+msgid "Energy range: Fermi ± 15-20 eV typical"
+msgstr "Energy rnge: Fermi ± 15-20 eV typicl"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:875
+#: a1e5516ca0014deb81ba1ac94a4736ff
+msgid "Resolution: 0.1 eV for metals, 0.05 eV for insulators"
+msgstr "Resolution: 0.1 eV برای metls, 0.05 eV برای insultیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:876
+#: 36536a230c27449d973435b002ce6285
+msgid "K-mesh: Denser than SCF (often 2× or more)"
+msgstr "K-mesh: Denser thn SCF (often 2× یا mیاe)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:879
+#: 3d6ea2d36e254def8de924aab6be2080
+msgid "Initialize close to expected moment"
+msgstr "Initilize close to expected moment"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:880
+#: c91df886a9b64f0395dc8201ef0d5ef5
+msgid "Ferromagnetic: All same sign"
+msgstr "Ferromgnetic: All sme sign"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:881
+#: 354fb118f3fa457e8bf2a1c258446460
+msgid "Antiferromagnetic: Alternating signs"
+msgstr "Antiferromgnetic: Alternting signs"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:883
+#: 518789a16b2f4f2c80878512a09a05ec
+msgid "Documentation"
+msgstr "Documenttion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:885
+#: 18bbe0cd647a43b4a5d6632ab0667d63
+msgid "**Comment Your Blocks**:"
+msgstr "**Comment Your Blocks**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:901
+#: 26906ca45473454daa6090b1a5c6057b
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:903
+#: 421fcac39edd4d68993e479e0b49f193
+msgid ""
+"✅ **Always dry-run first**: Check generated FDF before expensive "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:905
+#: 0c00852c79bf43a8999ddbff7a049dbc
+msgid "✅ **List format for blocks**: FDF blocks must be lists of strings"
+msgstr "✅ **List برایmt برای blocks**: FDF blocks must be lists of strings"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:907
+#: 19591ee33d474f69a0e53f2dcc53d7e6
+msgid "✅ **1-based atom indexing**: SIESTA atoms start at 1, not 0"
+msgstr "✅ **1-bsed tom indexing**: SIESTA toms strt t 1, not 0"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:909
+#: 4277760c2f744712985f3c0e10b18a77
+msgid "✅ **Include units**: Electric field, stress, PDOS energy all need units"
+msgstr "✅ **Include units**: Electric field, stress, PDOS energy ll need units"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:911
+#: 27ead382a60842b395b60ee48a0ff3c3
+msgid "✅ **Test individually**: Verify each block works alone before combining"
+msgstr "✅ **Test individully**: Verify ech block wیاks lone beبرایe combining"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:913
+#: 2a56560f33584f008bb113eaf447e40e
+msgid ""
+"✅ **Check output files**: Ensure expected files (.PDOS, .bands, etc.) are"
+" created"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:915
+#: 05051bb566d24703b34f366a023bf59d
+msgid "✅ **Start with defaults**: Use SIESTA manual recommended values initially"
+msgstr "✅ **Strt با defults**: Use SIESTA mnul recommended vlues initilly"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:917
+#: 82be9523844448f48e43da7c4039122f
+msgid ""
+"✅ **Validate physically**: Electric field effects, constraint forces, "
+"spin moments should be reasonable"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:921
+#: c7e9caf54b084b7faba15f5070ed3427
+msgid "Advanced Usage"
+msgstr "پیشرفته Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:923
+#: 7087012373fb4a1392a43873837640c3
+msgid "Dynamic Block Generation"
+msgstr "Dynmic Block Genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:925
+#: 6459a2b3b48a44c39e93e39ae93c0f3b
+msgid "**Example: Programmatic Constraint Creation**"
+msgstr "**مثال: Progrmmtic Constrint Cretion**"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:945
+#: cad942b450c645a09082c94a12068d3b
+msgid "Combining with Powerups"
+msgstr "Combining با Powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:963
+#: 6e04aa0e13b34e959e6bfe6053e6178d
+msgid "Multi-Step Workflows with Blocks"
+msgstr "Multi-Step گردش کارs با Blocks"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:992
+#: 9100680b3dc342ed8b152d500a92ef56
+msgid "Reference: Complete FDF Block List"
+msgstr "Reference: Complete FDF Block List"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:994
+#: 67ba55167d3b4d1b90dc619b37a4cdb9
+msgid "**Geometry & Constraints**:"
+msgstr "**Geometry & Constrints**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:995
+#: 4a87a566920f4b03aa7ac4d9b2771c89
+msgid "`GeometryConstraints` - Fix atoms or directions"
+msgstr "`GeometryConstraints` - Fix atoms or directions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:996
+#: 67fd923355cd424188452d204ca643f1
+msgid "`Geometry.Constraints` - Alternative syntax"
+msgstr "`Geometry.Constraints` - Alternative syntax"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:998
+#: 91657ff9d765434a975e38b356b2cdca
+msgid "**Electronic Structure**:"
+msgstr "**Electronic Structure**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:999
+#: 9ee10bfba9f447aea9ceb58773a5b2c8
+msgid "`ExternalElectricField` - Applied electric field"
+msgstr "`ExternalElectricField` - Applied electric field"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1000
+#: 1bf033e11a7e45408a0f7824713c902b
+msgid "`DM.InitSpin` - Initial spin polarization"
+msgstr "`DM.InitSpin` - Initial spin polarization"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1001
+#: cf23de8c8805453a9f1abf5cedf5b352
+msgid "`Spin.Fix` - Constrain total spin"
+msgstr "`Spin.Fix` - Constrain total spin"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1003
+#: 37384f75ee2e43708cef442c44ad7cdf
+msgid "**K-Points & Bands**:"
+msgstr "**K-Points & Bوs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1004
+#: 385574c03b374648a20bc67939decf30
+msgid "`BandLines` - Custom k-point path"
+msgstr "`BandLines` - Custom k-point path"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1005
+#: 910550c8a9f946c7bb778a25ea0c193a
+msgid "`BandLinesScale` - Coordinate system"
+msgstr "`BandLinesScale` - Coordinate system"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1006
+#: c0153afbe38f4d739cb7d950ccc2c46d
+msgid "`PDOS.kgrid_Monkhorst_Pack` - PDOS k-mesh"
+msgstr "`PDOS.kgrid_Monkhorst_Pack` - PDOS k-mesh"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1007
+#: a95f7754a1a8487288c589888e146f89
+msgid "`kgrid_Monkhorst_Pack` - SCF k-mesh (alternative to 3-integer format)"
+msgstr "`kgrid_Monkhorst_Pack` - SCF k-mesh (alternative to 3-integer format)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1009
+#: 175700938a674d4ebab7124c44ddebc9
+msgid "**Density of States**:"
+msgstr "**چگالی حالت‌ها**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1010
+#: d00294ffa507470c8de0d70cd1f4610b
+msgid "`ProjectedDensityOfStates` - PDOS parameters"
+msgstr "`ProjectedDensityOfStates` - PDOS parameters"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1011
+#: e5998ddf29ab41f893bc4024b3e56dfa
+msgid "`LocalDensityOfStates` - LDOS (real-space)"
+msgstr "`LocalDensityOfStates` - LDOS (real-space)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1013
+#: 4a0ebcbf04524a5e8560831d989dae06
+msgid "**Molecular Dynamics**:"
+msgstr "**Moleculr Dynmics**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1014
+#: c84dbc9be80644ff88bf40318145e557
+msgid "`MD.TargetStress` - Target stress tensor"
+msgstr "`MD.TargetStress` - Target stress tensor"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1015
+#: 3e11f28635194eb3818db3d2de748cc8
+msgid "`MD.TargetPressure` - Target pressure (scalar)"
+msgstr "`MD.TargetPressure` - Target pressure (scalar)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1017
+#: c3504448d68e46b7820943aa7e5c1366
+msgid "**Advanced**:"
+msgstr "**پیشرفته**:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1018
+#: 676c6b9d0c5f41a9ace30330dfbce890
+msgid "`WaveFuncKPoints` - Specific k-points for wavefunctions"
+msgstr "`WaveFuncKPoints` - Specific k-points for wavefunctions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1019
+#: 54eb758e836941a086324aeec248361d
+msgid "`COOP.Write` - Crystal orbital overlap population"
+msgstr "`COOP.Write` - Crystal orbital overlap population"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1020
+#: fd6161b7da5040c5a00593264ffb2a3d
+msgid "`TS.Contour.Eta` - Non-equilibrium contours (TranSIESTA)"
+msgstr "`TS.Contour.Eta` - Non-equilibrium contours (TranSIESTA)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1022
+#: ced7228455cc4594976adbe5da4570dd
+msgid "**See SIESTA manual** (`siesta.pdf`) for complete list and syntax."
+msgstr "**See SIESTA manual** (`siesta.pdf`) for complete list and syntax."
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1026
+#: d3137798db4b4d75a22f1892eeba99a8
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1028
+#: 196f398201c44f539967b49ab20c2056
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1030
+#: 9dde4050a516404791762e690f5bffde
+msgid "**Test all 7 examples**: Understand each block type individually"
+msgstr "**Test ll 7 exmples**: Understو ech block type individully"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1031
+#: 304f684e3d0f42a39976a6269a3d3035
+msgid "**Combine blocks**: Try `multiple` example, create custom combinations"
+msgstr "**Combine blocks**: Try `multiple` example, create custom combinations"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1032
+#: 5cb2c803e5ab4658b42799a16e41f503
+msgid "**Read SIESTA manual**: Deep dive into block syntax and options"
+msgstr "**Red SIESTA mnul**: Deep dive into block syntx و options"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1033
+#: 8703faf2e83448ccbfbc5f1f5ba04ba1
+msgid "**Apply to research**: Use FDF blocks in production calculations"
+msgstr "**Apply to reserch**: Use FDF blocks in production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1034
+#: e0898f25710049d2a225159cfa00f6ea
+msgid "**Advanced blocks**: Explore TranSIESTA, COOP, LDOS blocks"
+msgstr "**پیشرفته blocks**: Explیاe TrnSIESTA, COOP, LDOS blocks"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1035
+#: 670bfaacf9774a438d3f5ab321a2f8cc
+msgid "**Troubleshoot**: Practice debugging FDF syntax and validation"
+msgstr "**Troubleshoot**: Prctice debugging FDF syntx و vlidtion"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1039
+#: 0ec62d7f156a46f68001d2478b7c9954
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1041
+#: 13be06e48fa745e18e4d597e2970cf50
+msgid "**SIESTA Manual**: Complete FDF block reference (`siesta.pdf`)"
+msgstr "**SIESTA Manual**: Complete FDF block reference (`siesta.pdf`)"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1042
+#: 2bb8b5eeaab348689d97db2edd00ce73
+msgid "**atomate2siesta Docs**: Parameter organization and dataclass hierarchy"
+msgstr "**tomte2siest Docs**: Prmeter یاgniztion و dtclss hierrchy"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1043
+#: 25278377d9da45c1ba2eef77295942a8
+msgid "**Tutorial 01-relaxation**: Basic parameter passing"
+msgstr "**Tutیاil 01-relxtion**: Bsic prmeter pssing"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1044
+#: 35a48b3cbf994e68b14fe3e4ff2be39c
+msgid "**Tutorial 03-band-structure**: K-point paths and band calculations"
+msgstr "**Tutیاil 03-bو-structure**: K-point pths و bو clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1045
+#: 9e39278bfe0d46c292a44686b0905d9f
+msgid "**Tutorial 18-tier-based-calculations**: Preset parameter sets"
+msgstr "**Tutیاil 18-tier-bsed-clcultions**: Preset prmeter sets"
+
+#: ../../source/tutorials-md/03-advanced-features/02-fdf-block-inputs/README.md:1049
+#: c05e736fbcbf4a6997f02cc87ddbcd1a
+msgid ""
+"*Back to [07-advanced-features](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

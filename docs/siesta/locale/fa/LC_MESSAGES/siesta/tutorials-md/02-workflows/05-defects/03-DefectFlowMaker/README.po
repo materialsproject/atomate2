@@ -1,0 +1,1598 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:1
+#: 5894ad5bb8c7404d80579b6f79b89ec8
+msgid "Tutorial: Defect Formation Energy Calculations"
+msgstr "آموزش: Defect Fیاmtion Energy محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:3
+#: ae44e3efb24b4ade8dc399cbb3427c79
+msgid ""
+"**Category**: 02-workflows/05-defects/03-DefectFlowMaker **Difficulty**: "
+"Intermediate **Time**: ~5 min (dry-run), ~2-6 hours (full calculation) "
+"**Status**: Complete! (v1.0.0) - Full defect analysis with formation "
+"diagrams, CTLs, Brouwer, SRH ✅"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:10
+#: 64f22bec45b34a2fbe85cd938e57e4d5
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:12
+#: 7e0af0e60de949cb81d4f7346312ac0a
+msgid ""
+"This tutorial demonstrates **defect formation energy** calculations using"
+" `DefectFlowMaker`. Learn how to calculate formation energies for point "
+"defects (vacancies, interstitials, substitutions) with automatic finite-"
+"size corrections."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:14
+#: 5951af27bfb940fc9ff1576c7a5fcbed
+msgid "**What Defect Formation Energy Tells You**:"
+msgstr "**Wht Defect Fیاmtion Energy Tells You**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:15
+#: 37313882a39e4868be90a918afda8d58
+msgid "**E_f**: Energy cost to create a defect (eV)"
+msgstr "**E_f**: Energy cost to crete  defect (eV)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:16
+#: 250522bec868400a87a1548dcc9f57f8
+msgid ""
+"**Stability**: Which defects form spontaneously (E_f < 0) vs under "
+"special conditions"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:17
+#: d211a43f4ae34ce1898f5d71e39449d4
+msgid ""
+"**Concentrations**: Defect populations at thermal equilibrium (via "
+"Boltzmann)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:18
+#: 2144ff3830ba4562a31d5cb424a24e38
+msgid "**Doping**: Whether dopants prefer substitutional or interstitial sites"
+msgstr "**Doping**: Wher dopnts prefer substitutionl یا interstitil sites"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:19
+#: 47607f8f850f4dbdadad93d8a713dd6b
+msgid "**Material properties**: How defects affect conductivity, color, magnetism"
+msgstr "**Mteril properties**: How defects ffect conductivity, colیا, mgnetism"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:21
+#: 4223cec05f6541da8237cd88e4075f75
+msgid "**Formula (charged defects)**:"
+msgstr "**Fیاmul (chrged defects)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:26
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:104
+#: 8b8adb4e914742648d15532e9edd72e0 a25ecad2d8f343a8a4479affce576fdb
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:27
+#: 1bb5f7ce73e84d1b88b3b7c36c9cec57
+msgid "`E_defect(q)`: Total energy of defect supercell with charge q"
+msgstr "`E_defect(q)`: Total energy of defect supercell with charge q"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:28
+#: c7a38dca0aac428ba9f9b5a7f0202282
+msgid "`E_host`: Total energy of pristine host supercell"
+msgstr "`E_host`: Total energy of pristine host supercell"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:29
+#: e6fd09bff6a94cdca6e2cd2f826acdbd
+msgid "`n_i·μ_i`: Chemical potential terms (species removed/added)"
+msgstr "`n_i·μ_i`: Chemical potential terms (species removed/added)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:30
+#: 9cfb0a50f78f4466a33db681369e9595
+msgid "`q·E_F`: Fermi level term (electron reservoir)"
+msgstr "`q·E_F`: Fermi level term (electron reservoir)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:31
+#: cf6e3b5a1b1d45d8801dbc0f225ec1a2
+msgid "`E_corr(q)`: Finite-size correction (electrostatic)"
+msgstr "`E_corr(q)`: Finite-size correction (electrostatic)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:35
+#: f0cea9d74db2413a907265118f2805b0
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:37
+#: 8e2fc4169f064d839b362831a09403f6
+msgid "Creating defect structures manually"
+msgstr "ایجاد defect structures mnully"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:38
+#: 6aa211ddf1e54dbf9f1470588a0fba55
+msgid "Using `DefectFlowMaker` for formation energy calculations"
+msgstr "Using `DefectFlowMaker` for formation energy calculations"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:39
+#: a765610d34ea42b6a75e91ebcfdc2a25
+msgid "Understanding Lany-Zunger finite-size corrections"
+msgstr "درک Lny-Zunger finite-size cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:40
+#: f8ee4667997e4ed8b9572d60d58578d6
+msgid "Analyzing formation energies and corrections"
+msgstr "Anlyzing برایmtion energies و cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:41
+#: 79fbddbb79924aafad71acb02de850d1
+msgid "Setting up for charged vs neutral defects"
+msgstr "راه‌اندازی برای chrged vs neutrl defects"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:45
+#: e227f55f9078477fb776d3b972666333
+msgid "Current Status"
+msgstr "وضعیت فعلی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:47
+#: 1ddf03ab85f34c3a92ac23d21c2c540d
+msgid "**Complete Feature Set (v1.0.0)**:"
+msgstr "**Complete Feture Set (v1.0.0)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:49
+#: 4be0e965638f47f8b690810fb4861602
+msgid ""
+"**Core Formation Energy Calculations**: ✅ `DefectFlowMaker` - Basic "
+"formation energy workflow ✅ `DefectDocument` - Complete result schema "
+"with metadata ✅ Automatic correction for charged defects (q ≠ 0) ✅ "
+"Defect-optimized relaxation parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:55
+#: 1537be1b5964479f929bd861ca915604
+msgid ""
+"**Advanced Corrections & Generation**: ✅ **Ghost atoms for vacancies** - "
+"SIESTA-specific requirement for proper basis ✅ **Multiple correction "
+"schemes** - Lany-Zunger, Makov-Payne, Freysoldt ✅ "
+"**`CorrectionComparisonFlowMaker`** - Compare all corrections (unique "
+"feature!) ✅ **Automatic defect generation** - One-liner API with symmetry"
+" reduction ✅ **Automatic chemical potentials** - O2, H2, N2, metals"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:62
+#: 3b2c74622155467e93659f0beca5a37b
+msgid ""
+"**Complete Defect Analysis**: ✅ **Formation energy diagrams** - E_f vs "
+"E_F plots with CTLs ✅ **Charge transition levels (CTLs)** - Automatic "
+"identification ✅ **Defect concentrations** - Self-consistent Fermi level "
+"solver ✅ **Brouwer diagrams** - vs Fermi level and temperature ✅ "
+"**Interactive Plotly plots** - HTML output with tooltips ✅ **SRH "
+"recombination** - Lifetime and capture analysis"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:70
+#: c3acd3ca127e41a880de8dcbc57b9b15
+msgid ""
+"**Ghost Atoms**: SIESTA vacancies now use ghost atoms (zero-charge atoms "
+"with basis functions) instead of complete removal. This is critical for:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:71
+#: 65b80bf052794103926676ff869999d1
+msgid "Proper basis set completeness"
+msgstr "Proper bsis set completeness"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:72
+#: 778cab46b7874c62a144d6be2b44a7f1
+msgid "Accurate grid sampling at vacancy sites"
+msgstr "Accurte grid smpling t vcncy sites"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:73
+#: e7f4de0070e54180b622b82fadefc148
+msgid "Better SCF convergence for charged vacancies"
+msgstr "Better SCF convergence برای chrged vcncies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:75
+#: 663cfed9bbce4f5295e74937463aabd2
+msgid ""
+"**CorrectionComparisonFlowMaker**: NEW unique feature that compares all "
+"available correction schemes on the same calculation, providing "
+"uncertainty quantification and automated recommendations. No other defect"
+" workflow framework offers this!"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:79
+#: 49aa9ac4ce8c4e99af32b966281cc57c
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:81
+#: 0c6852146c954204a62e4d317e82b949
+msgid ""
+"**Required tutorials**: "
+"[01-basics/01-RelaxMaker](../../../01-basics/01-RelaxMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:82
+#: ec727a93c44c4074be2cd9ab29fef2c5
+msgid "**Required knowledge**:"
+msgstr "**مورد نیاز knowledge**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:83
+#: 3c105790676e4abf849b24d9292cf803
+msgid "Point defect concepts (vacancy, interstitial, substitutional)"
+msgstr "Point defect concepts (vcncy, interstitil, substitutionl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:84
+#: 19470587af1b4077b9d4aac56152569b
+msgid "Charge states and Fermi level"
+msgstr "Chrge sttes و Fermi level"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:85
+#: b6e0da1ad58b4e39bb326cb3d869f61c
+msgid "Dielectric constants"
+msgstr "Dielectric constnts"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:86
+#: b893c778c31b43fca67fa8c3413e816a
+msgid "**Recommended**:"
+msgstr "**Recommended**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:87
+#: 4160c52fe45c4d66bcc40dcdd17c9658
+msgid ""
+"[01-convergence](../../01-convergence/) - Converged parameters critical "
+"for accurate formation energies"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:88
+#: 194b9a7116794737a90fa881adba899d
+msgid "pymatgen basics for structure manipulation"
+msgstr "pymtgen bsics برای structure mnipultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:89
+#: 2befa258822d4911aed62e48a1b6d97d
+msgid "**Structure files**: Located in [00-structures](../../../00-structures/)"
+msgstr "**Structure files**: Locted in [00-structures](../../../00-structures/)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:93
+#: da803e921fb74cff9c73f7593cc39025
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:95
+#: f78750007c364c2cac707977ef6ee3e2
+msgid "Finite-Size Corrections"
+msgstr "Finite-Size Cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:97
+#: ee230b57a29049ec9b2ddf42f63b5923
+msgid ""
+"DFT calculations use periodic boundary conditions → charged defects "
+"interact with their periodic images → spurious electrostatic energy."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:99
+#: a42ff30356334cdfb6f5484fed0210f0
+msgid "**Lany-Zunger Correction**:"
+msgstr "**Lny-Zunger Cیاrection**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:105
+#: d55e4735169c44dea9b1da8f802fafac
+msgid "`q`: Charge state of defect"
+msgstr "`q`: Charge state of defect"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:106
+#: 7feda792eedd49b491602229570f6653
+msgid "`α_M`: Madelung constant (~2.84 for cubic lattices)"
+msgstr "`α_M`: Madelung constant (~2.84 for cubic lattices)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:107
+#: 91119f26b2c64db3ad1ffd24562fc5f0
+msgid "`ε`: Static dielectric constant"
+msgstr "`ε`: Static dielectric constant"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:108
+#: 1e5f2d62ceaf4e549d536972459a635a
+msgid "`L`: Characteristic supercell length"
+msgstr "`L`: Characteristic supercell length"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:110
+#: 5f762a314801410f8d425bd13aec7d13
+msgid "**When to use**:"
+msgstr "**When to use**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:111
+#: be8155cd77024b0982daccd4135573a9
+msgid "✅ Quick estimates"
+msgstr "✅ Quick estimtes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:112
+#: 5556240ba08a49c0ac4de2bce346c77c
+msgid "✅ Initial screening of defects"
+msgstr "✅ Initil screening of defects"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:113
+#: 53acac39c10340a2bba1364c9946714a
+msgid "✅ When dielectric constant is known"
+msgstr "✅ When dielectric constnt is known"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:115
+#: 22f135fe0f594ff6b1b82dd5f1caf0c8
+msgid "**Limitations**:"
+msgstr "**Limittions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:116
+#: dad40ccdba52495f91b69d12332fca3b
+msgid "Assumes isotropic dielectric (not accurate for layered materials)"
+msgstr "Assumes isotropic dielectric (not ccurte برای lyered mterils)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:117
+#: b24e3ef98fcc49dcb5fa385337ef2655
+msgid "Point charge model (less accurate than Gaussian)"
+msgstr "Point chrge model (less ccurte thn Gussin)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:118
+#: 5d35f2ff723b480ca8101f24e6eed2d9
+msgid "No potential alignment"
+msgstr "No potentil lignment"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:120
+#: 79f27e183cd147d88464a21d4d5c8b01
+msgid ""
+"**More sophisticated corrections** are available: Freysoldt and Makov-"
+"Payne include potential alignment. See `CorrectionComparisonFlowMaker` "
+"for automated comparison of all correction schemes."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:122
+#: 2e996019dde642b7837017c8fbd3ab9c
+msgid "Dielectric Constant"
+msgstr "Dielectric Constnt"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:124
+#: f14eb6d99ba34d9fb01a33898bb4f36f
+msgid "**Critical parameter** for corrections! Must be converged."
+msgstr "**Criticl prmeter** برای cیاrections! Must be converged."
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:126
+#: be6cbf2a0dd9491ab030ecfece34b9ae
+msgid "**How to get ε_static**:"
+msgstr "**How to get ε_sttic**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:127
+#: d4b744068eea42b8a32d877e5c7b201c
+msgid "**DFT calculation**: Use SIESTA's DFPT (future tutorial)"
+msgstr "**DFT clcultion**: Use SIESTA's DFPT (future tutیاil)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:128
+#: c856180b950d4a0983722edcd0528874
+msgid "**Experiments**: Tabulated values for common materials"
+msgstr "**Experiments**: Tbulted vlues برای common mterils"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:129
+#: 4b80c84542954ba691ae80c07ddf96f4
+msgid "**Literature**: Published values"
+msgstr "**Literture**: Published vlues"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:131
+#: 86804dd3dd634e5eb4385a7f34ca1f10
+msgid "**Example values**:"
+msgstr "**مثال vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:132
+#: dc19864c730a4993bcfc37f00d3d9dfc
+msgid "MgO: ε ≈ 9.8"
+msgstr "MgO: ε ≈ 9.8"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:133
+#: 2de2fe42409d4a149ef20d301b817ee8
+msgid "ZnO: ε ≈ 8.5"
+msgstr "ZnO: ε ≈ 8.5"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:134
+#: 9f6ff457e48f49288cf08501218b5438
+msgid "Si: ε ≈ 11.7"
+msgstr "Si: ε ≈ 11.7"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:135
+#: 8068435bd6874e6b9c56b11754ec35e5
+msgid "GaN: ε ≈ 10.4"
+msgstr "GN: ε ≈ 10.4"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:137
+#: 4263009c569f4475866e5fcae533bd64
+msgid "**For this tutorial**: We'll use known values from literature."
+msgstr "**Fیا this tutیاil**: We'll use known vlues from literture."
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:139
+#: b830a1342a75484697b31a56e7d6d058
+msgid "Convergence Requirements"
+msgstr "همگرایی Requirements"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:141
+#: 9e5699f4b9f94476a5f0fd86b84f6067
+msgid "Formation energies are **very sensitive** to:"
+msgstr "Fیاmtion energies re **very sensitive** to:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:143
+#: 9eb2bca9291c41ee8047bc7cddc9f12f
+msgid "**Supercell size**: ≥10 Å separation between defect images"
+msgstr "**Supercell size**: ≥10 Å seprtion between defect imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:144
+#: ddfab1b7c41949dc848d803c39890d52
+msgid "**K-points**: Must converge to ~10 meV/atom"
+msgstr "**K-points**: Must converge to ~10 meV/tom"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:145
+#: 8c5d9ff3439a466d9e48a8f828d1b73d
+msgid "**Basis size**: DZP minimum, TZP recommended"
+msgstr "**Bsis size**: DZP minimum, TZP recommended"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:146
+#: 153239186e234e72957bc1e1979d27a5
+msgid "**Cutoff energy**: 300-400 Ry typical"
+msgstr "**Cutoff energy**: 300-400 Ry typicl"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:148
+#: eac05a2fac044c8088058ee142d11e8d
+msgid ""
+"**Always** run convergence tests first! See "
+"[01-convergence](../../01-convergence/)."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:152
+#: 7c47f74aff67436da95196a8aee652d3
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:154
+#: e1342d6043464dda9eafbedd0f2ab579
+msgid "**Total**: 17 tutorials organized in 3 groups"
+msgstr "**Totl**: 17 tutیاils یاgnized in 3 groups"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:156
+#: bbd168d687cd4cc2981a6d3eb0969f45
+msgid "Group 1: DefectFlowMaker Tutorials (Basic Formation Energies)"
+msgstr "Group 1: DefectFlowMaker Tutorials (Basic Formation Energies)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:158
+#: 6daf8a119a5349778c74cf321e7905e6
+msgid "DefectFlowMaker_01_basic_vacancy.py"
+msgstr "DefectFlowMaker_01_basic_vacancy.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:160
+#: dafd07f46f02488fa5f83cd5a3ebb67d
+msgid ""
+"**File**: "
+"[DefectFlowMaker_01_basic_vacancy.py](DefectFlowMaker_01_basic_vacancy.py)"
+" **Description**: Oxygen vacancy in MgO (neutral, q=0) WITH GHOST ATOMS "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:163
+#: 5ab9080fa90c44dea863936c664d7808
+msgid "Creating vacancies with ghost atoms (SIESTA-specific)"
+msgstr "ایجاد vcncies با ghost toms (SIESTA-specific)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:164
+#: 204f27da385941d3a82a290cf10bc60d
+msgid "Basic DefectFlowMaker usage"
+msgstr "Basic DefectFlowMaker usage"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:165
+#: db423314fb3d418db690c75ed2429934
+msgid "Formation energy calculation (no correction for q=0)"
+msgstr "Fیاmtion energy clcultion (no cیاrection برای q=0)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:166
+#: cef58b97a9844d2888bccc113c912bbf
+msgid "Dry-run mode for preview"
+msgstr "Dry-run mode برای preview"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:168
+#: 41d55a817d22413b9141bc7f38e55e4e
+msgid "DefectFlowMaker_02_charged_vacancy.py"
+msgstr "DefectFlowMaker_02_charged_vacancy.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:170
+#: ed924ff34b7b4720a75936466697e34b
+msgid ""
+"**File**: "
+"[DefectFlowMaker_02_charged_vacancy.py](DefectFlowMaker_02_charged_vacancy.py)"
+" **Description**: Oxygen vacancy with +2 charge (V_O^2+) WITH GHOST ATOMS"
+" **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:173
+#: 408ecd5edd2741c9973e4bd2792976a7
+msgid "Ghost atoms for charged vacancies (critical for SIESTA!)"
+msgstr "Ghost toms برای chrged vcncies (criticl برای SIESTA!)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:174
+#: d8132300dc1a47b29242293de22ac6ec
+msgid "Charged defect with Lany-Zunger correction"
+msgstr "Chrged defect با Lny-Zunger cیاrection"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:175
+#: a4851fdabf6b4573b9aee68eda27e1d3
+msgid "Demonstrates automatic correction"
+msgstr "Demonstrtes utomtic cیاrection"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:176
+#: 68bedef0a73840bbbb1f5e3aa4ed68f0
+msgid "Shows correction metadata and analysis"
+msgstr "Shows cیاrection metdt و nlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:178
+#: d745a1cbc4c8478ba16414cb36516648
+msgid "DefectFlowMaker_03_all_vacancies.py"
+msgstr "DefectFlowMaker_03_all_vacancies.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:180
+#: f7953be8e7fe4445a09b5889ac3871f2
+msgid ""
+"**File**: "
+"[DefectFlowMaker_03_all_vacancies.py](DefectFlowMaker_03_all_vacancies.py)"
+" **Description**: All symmetry-unique vacancies in MgO **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:183
+#: a488e81f82534e0a82d175a95becc0bd
+msgid "Automatic generation of V_Mg and V_O"
+msgstr "Automtic genertion of V_Mg و V_O"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:184
+#: 7155d18081d94e62b4710714c227ac47
+msgid "Multiple charge states demonstration"
+msgstr "Multiple chrge sttes demonstrtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:185
+#: a37ccfb34f3848169f5ce32324cbf053
+msgid "Comparison of formation energies"
+msgstr "Comprison of برایmtion energies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:187
+#: 17ddbaff5c5f4e469f74f219c56b11c4
+msgid "DefectFlowMaker_04_substitution_dopant.py"
+msgstr "DefectFlowMaker_04_substitution_dopant.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:189
+#: d8f5a5fa46bb47fd95a43fbd9122a2cf
+msgid ""
+"**File**: "
+"[DefectFlowMaker_04_substitution_dopant.py](DefectFlowMaker_04_substitution_dopant.py)"
+" **Description**: Li dopant on Mg sites **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:192
+#: fc13561afe4f4a2cbf805a7c547f4795
+msgid "Substitutional defect creation"
+msgstr "Substitutionl defect cretion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:193
+#: ac57b44fa91c4313857322c261e85dfa
+msgid "Acceptor dopant demonstration (Li_Mg)"
+msgstr "Acceptیا dopnt demonstrtion (Li_Mg)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:194
+#: ae1ab23edc6a49ecb83a053f7ea83e9e
+msgid "Charge states for substitutions"
+msgstr "Chrge sttes برای substitutions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:196
+#: abebaa30dfff4655a9de5fe8b33ce0b9
+msgid "DefectFlowMaker_05_antisites.py"
+msgstr "DefectFlowMaker_05_antisites.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:198
+#: f5ba6552cad94d329df82fbdbe33c0c1
+msgid ""
+"**File**: "
+"[DefectFlowMaker_05_antisites.py](DefectFlowMaker_05_antisites.py) "
+"**Description**: Antisite defects (Mg_O, O_Mg) **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:201
+#: d614c641f1f94427a472abeb9a08b1b0
+msgid "Atom swapping defects"
+msgstr "Atom swpping defects"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:202
+#: 8eac31416e014e1c9fbbd9bfe395ef84
+msgid "High formation energy demonstration"
+msgstr "High برایmtion energy demonstrtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:203
+#: a354eeed52484771a4011cd00709e6a1
+msgid "Automatic antisite generation"
+msgstr "Automtic ntisite genertion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:205
+#: 604bb18f22984563abd286b1904cd820
+msgid "DefectFlowMaker_06_interstitials.py"
+msgstr "DefectFlowMaker_06_interstitials.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:207
+#: 91efd6fd26ad422c9994f2c5bf71d022
+msgid ""
+"**File**: "
+"[DefectFlowMaker_06_interstitials.py](DefectFlowMaker_06_interstitials.py)"
+" **Description**: Li interstitials at high-symmetry sites **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:210
+#: 74825ee7744e490fb6fa350391f5669f
+msgid "Interstitial defect creation"
+msgstr "Interstitil defect cretion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:211
+#: 60fa6ebab87448129e62c18a555b25ea
+msgid "Automatic site detection"
+msgstr "Automtic site detection"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:212
+#: 04f80f5fd07a47eba0f09e67a3959416
+msgid "Tetrahedral/octahedral sites"
+msgstr "Tetrhedrl/octhedrl sites"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:214
+#: d8a08588fde5445e9e5677b90a5635b1
+msgid "DefectFlowMaker_08_slab2d_vt_automatic.py"
+msgstr "DefectFlowMaker_08_slab2d_vt_automatic.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:216
+#: 2de8fa8ef538470a8279c82088280541
+msgid ""
+"**File**: "
+"[DefectFlowMaker_08_slab2d_vt_automatic.py](DefectFlowMaker_08_slab2d_vt_automatic.py)"
+" **Description**: 2D slab corrections (Slab2D + automatic VBM/CBM "
+"extraction) **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:219
+#: 758e9e6cdcad45e58a79fbc2ef6f7820
+msgid "Anisotropic dielectric corrections for 2D materials"
+msgstr "Anisotropic dielectric cیاrections برای 2D mterils"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:220
+#: b62d0c300eb84f1da2ec53af35aa30b9
+msgid "Automatic band edge extraction from calculations"
+msgstr "Automtic bو edge extrction from clcultions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:221
+#: 186304c39d0a47d993413e4beb9963b4
+msgid "Dielectric profile customization"
+msgstr "Dielectric profile customiztion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:223
+#: 028d0080315f4579bb8a6576d05e8511
+msgid "DefectFlowMaker_09_makov_payne_rho_automatic.py"
+msgstr "DefectFlowMaker_09_makov_payne_rho_automatic.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:225
+#: 86130975901a43b088def5a520d7af40
+msgid ""
+"**File**: "
+"[DefectFlowMaker_09_makov_payne_rho_automatic.py](DefectFlowMaker_09_makov_payne_rho_automatic.py)"
+" **Description**: Makov-Payne quadrupole correction with automatic charge"
+" density **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:228
+#: cf8dcb6d521141fa82603d37f2eacdbc
+msgid "Quadrupole term correction for anisotropic defects"
+msgstr "Qudrupole term cیاrection برای nisotropic defects"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:229
+#: 95498927b60a45c89636f92ff80e5e7a
+msgid "Automatic charge density extraction"
+msgstr "Automtic chrge density extrction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:230
+#: a11228fa706749b4a719f29a80fcb8de
+msgid "Gaussian charge distribution model"
+msgstr "Gussin chrge distribution model"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:232
+#: e3b48b00a5134872bd6a4a0927929e7b
+msgid "CorrectionComparisonFlowMaker.py"
+msgstr "CorrectionComparisonFlowMaker.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:234
+#: c7c23b3222344e6aaaccde53d572aceb
+msgid ""
+"**File**: "
+"[CorrectionComparisonFlowMaker.py](CorrectionComparisonFlowMaker.py) "
+"**Description**: Compare ALL correction schemes (UNIQUE KILLER FEATURE!) "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:237
+#: 08a3ff1fe3bf41c49b3535170ff0d406
+msgid "Apply all 6 correction schemes to same calculation"
+msgstr "Apply ll 6 cیاrection schemes to sme clcultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:238
+#: 1c7127f036c3471fbf6d419ba52a0c3f
+msgid "Statistical analysis (mean, std, range)"
+msgstr "Sttisticl nlysis (men, std, rnge)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:239
+#: 413d89ce47064559b2d9364b74b464cd
+msgid "Automated recommendations"
+msgstr "Automted recommendtions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:240
+#: c4caa4cde920414cb82c0618e506b871
+msgid "Uncertainty quantification"
+msgstr "Uncertinty quntifiction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:241
+#: 005d71caba6848f7a7210438b6964eb7
+msgid "Diagnostic plots for each correction"
+msgstr "Dignostic plots برای ech cیاrection"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:243
+#: 2ff8cb66df1c484eb210232c796d53f9
+msgid "Group 2: FormationEnergyDiagramFlowMaker Tutorials (Complete Analysis)"
+msgstr "Group 2: FormationEnergyDiagramFlowMaker Tutorials (Complete Analysis)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:245
+#: 4449d0c5a3434623a08f1889d259f5b0
+msgid "FormationEnergyDiagramFlowMaker_00_basic.py (START HERE)"
+msgstr "FormationEnergyDiagramFlowMaker_00_basic.py (START HERE)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:247
+#: 700daf75d26745519b44ba0966a23620
+msgid ""
+"**File**: "
+"[FormationEnergyDiagramFlowMaker_00_basic.py](FormationEnergyDiagramFlowMaker_00_basic.py)"
+" **Description**: Complete formation energy diagram workflow "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:250
+#: 9f6606d9c603422ba97bc4ca3cb17e06
+msgid "One-liner defect generation + formation energy diagram"
+msgstr "One-liner defect genertion + برایmtion energy digrm"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:251
+#: d1a33539b748436d89ec0fa74f29194e
+msgid "Automatic chemical potential calculation"
+msgstr "Automtic chemicl potentil clcultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:252
+#: b228d5a6df324c2eaded032744b212e2
+msgid "Automatic bandgap extraction"
+msgstr "Automtic bوgp extrction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:253
+#: c6a3f5f9cdfc4ccfb8c33350f231c92b
+msgid "Formation energy vs Fermi level plots"
+msgstr "Fیاmtion energy vs Fermi level plots"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:254
+#: a715c1d87aa2434dbc043ad9ed0b8e1e
+msgid "Charge transition level (CTL) identification"
+msgstr "Chrge trnsition level (CTL) identifiction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:256
+#: 0b5879f1796447749a4c769dae62573d
+msgid "FormationEnergyDiagramFlowMaker_01_defect_concentrations.py"
+msgstr "FormationEnergyDiagramFlowMaker_01_defect_concentrations.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:258
+#: 02c8a734cf7c499091e8d192b752fe80
+msgid ""
+"**File**: "
+"[FormationEnergyDiagramFlowMaker_01_defect_concentrations.py](FormationEnergyDiagramFlowMaker_01_defect_concentrations.py)"
+" **Description**: Defect concentration calculations **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:261
+#: e2c433789ba4416ab372ac74a65e7fa6
+msgid "Built-in concentration analysis (include_concentration_analysis=True)"
+msgstr "Built-in concentrtion nlysis (include_concentrtion_nlysis=True)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:262
+#: 655b835efa7c4fce87bd489d17141526
+msgid "Self-consistent Fermi level solver"
+msgstr "Self-consistent Fermi level solver"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:263
+#: 6da4838ab09b4290b577b79ace6470cb
+msgid "Carrier concentrations (n, p)"
+msgstr "Crrier concentrtions (n, p)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:264
+#: 54c759887f534c169ac3f6c471b31e6d
+msgid "Defect concentrations vs Fermi level"
+msgstr "Defect concentrtions vs Fermi level"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:265
+#: 4e4b200218d24790b40c6574da962ff7
+msgid "Temperature-dependent analysis"
+msgstr "Temperture-dependent nlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:267
+#: aebfaa84e2904130b751e16f0fff8813
+msgid "FormationEnergyDiagramFlowMaker_02_brouwer_diagrams.py"
+msgstr "FormationEnergyDiagramFlowMaker_02_brouwer_diagrams.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:269
+#: fadff52e3ae84b0dbe1225a0b546ab0c
+msgid ""
+"**File**: "
+"[FormationEnergyDiagramFlowMaker_02_brouwer_diagrams.py](FormationEnergyDiagramFlowMaker_02_brouwer_diagrams.py)"
+" **Description**: Brouwer diagrams for defect chemistry **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:272
+#: 8fe6ae95bf3c4ac1b9ad7ca31a3ba9b9
+msgid "Brouwer diagram vs Fermi level"
+msgstr "Brouwer digrm vs Fermi level"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:273
+#: 90b7b57dcb2a4554a19528d7430748a6
+msgid "Brouwer diagram vs temperature"
+msgstr "Brouwer digrm vs temperture"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:274
+#: 06619ab5061e4e65bdbb57ce234b80c8
+msgid "Charge state population analysis"
+msgstr "Chrge stte popultion nlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:275
+#: 8455a56e7982478ea96ed4162b0b0300
+msgid "Publication-quality matplotlib plots"
+msgstr "Publiction-qulity mtplotlib plots"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:277
+#: 395418ab1473472db3946cf9102a1450
+msgid "FormationEnergyDiagramFlowMaker_03_interactive_plots_and_json_export.py"
+msgstr "FormationEnergyDiagramFlowMaker_03_interactive_plots_and_json_export.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:279
+#: 0203bef8d70e49b98df221a3ec10b6b4
+msgid ""
+"**File**: "
+"[FormationEnergyDiagramFlowMaker_03_interactive_plots_and_json_export.py](FormationEnergyDiagramFlowMaker_03_interactive_plots_and_json_export.py)"
+" **Description**: Interactive Plotly diagrams and JSON export "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:282
+#: 34640723b8064623a4fc842563b4028c
+msgid "Interactive Plotly plots with hover tooltips"
+msgstr "Interctive Plotly plots با hover tooltips"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:283
+#: 071064df5698478fb51079d925c426a6
+msgid "Zoom/pan capabilities"
+msgstr "Zoom/pn cpbilities"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:284
+#: d70ffeb0273f44aa8eaf726be81621a9
+msgid "HTML output for browser viewing"
+msgstr "HTML output برای browser viewing"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:285
+#: f00842c32d594096aa8672d52d7a98f2
+msgid "JSON export with complete data"
+msgstr "JSON expیاt با complete dt"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:286
+#: d945a94c0029408cbda36864e1197b17
+msgid "Formation energy arrays vs Fermi level"
+msgstr "Fیاmtion energy rrys vs Fermi level"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:288
+#: a2a8d59775c84ccba58bbfb393592def
+msgid "FormationEnergyDiagramFlowMaker_04_srh_recombination_analysis.py"
+msgstr "FormationEnergyDiagramFlowMaker_04_srh_recombination_analysis.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:290
+#: 357a04cea55441d38f471294267ce6bf
+msgid ""
+"**File**: "
+"[FormationEnergyDiagramFlowMaker_04_srh_recombination_analysis.py](FormationEnergyDiagramFlowMaker_04_srh_recombination_analysis.py)"
+" **Description**: Shockley-Read-Hall (SRH) recombination analysis "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:293
+#: 304b53df2092471db8abcc9b7fde1f32
+msgid "Built-in SRH analysis (include_srh_analysis=True)"
+msgstr "Built-in SRH nlysis (include_srh_nlysis=True)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:294
+#: 6203663a2c724402b935c6124bc3e248
+msgid "Effective mass inputs for carriers"
+msgstr "Effective mss inputs برای crriers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:295
+#: f354bb10483346f09bd43afb091f7183
+msgid "Capture cross-sections (σ_n, σ_p)"
+msgstr "Cpture cross-sections (σ_n, σ_p)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:296
+#: 88b3abc2ba574d7a91eacae598b63e95
+msgid "Lifetime calculations"
+msgstr "Lifetime clcultions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:297
+#: da0446a906784369a3a8ba4ac124b1aa
+msgid "Recombination rate analysis"
+msgstr "Recombintion rte nlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:299
+#: 888d31a0c8ba429a9556957dc1889895
+msgid "Group 3: Generator Tutorials (Low-Level Defect Generation)"
+msgstr "Group 3: Genertیا Tutیاils (Low-Level Defect Genertion)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:301
+#: 0d9e6d90de0f4801be64b4c7bc112462
+msgid "Generator_01_vacancy.py"
+msgstr "Generator_01_vacancy.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:303
+#: e7969c782306427691553af1258bc172
+msgid ""
+"**File**: [Generator_01_vacancy.py](Generator_01_vacancy.py) "
+"**Description**: SiestaVacancyGenerator - Programmatic vacancy generation"
+" **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:306
+#: bb772bce4d32437283c0cf0282561862
+msgid "Direct use of SiestaVacancyGenerator class"
+msgstr "Direct use of SiestVcncyGenertیا clss"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:307
+#: 38d0654458a64798bdb877a27545e463
+msgid "Symmetry-based site identification"
+msgstr "Symmetry-bsed site identifiction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:308
+#: c77553caa2c74df787f231bf3d72d456
+msgid "Ghost atom insertion control"
+msgstr "Ghost tom insertion control"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:309
+#: 2bb6c6ed7e1e4ff49044d26421c33f85
+msgid "MoS2 monolayer examples (with/without symmetry)"
+msgstr "MoS2 monolyer exmples (با/باout symmetry)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:310
+#: b7b71b44576d4a728857f618e6a068ed
+msgid "Batch vacancy generation"
+msgstr "Btch vcncy genertion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:312
+#: 01bf430e913e46a68d6a1fd158ae4d3a
+msgid "Generator_02_substitution.py"
+msgstr "Generator_02_substitution.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:314
+#: ab40e0b36bfa41c39a8ba0194115920c
+msgid ""
+"**File**: [Generator_02_substitution.py](Generator_02_substitution.py) "
+"**Description**: SiestaSubstitutionGenerator - Programmatic substitution "
+"generation **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:317
+#: ea225911fc4243ef9f113a20b0758276
+msgid "Direct use of SiestaSubstitutionGenerator class"
+msgstr "Direct use of SiestSubstitutionGenertیا clss"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:318
+#: 96bb7b8d157d4e2d8d463d4447c5aa7f
+msgid "Dopant and antisite generation"
+msgstr "Dopnt و ntisite genertion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:319
+#: 8fdc4dde513f4f0abd3dc27ce2e9cdd1
+msgid "Species-specific substitutions"
+msgstr "Species-specific substitutions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:320
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:331
+#: 291f6f4c3e9748f29e0862d5cc5f8ef6 448745e162b14aee9eb9a58a1c005ab5
+msgid "MoS2 monolayer examples"
+msgstr "MoS2 monolyer exmples"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:321
+#: 4b972a43b320468c94dcdee9d613574f
+msgid "Multiple dopant handling"
+msgstr "Multiple dopnt hوling"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:323
+#: f0dec2dae6ec4ac2ad5604393e20f21f
+msgid "Generator_03_interstitial.py"
+msgstr "Generator_03_interstitial.py"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:325
+#: 16d4feb67d254cc68b4f2db9ee668848
+msgid ""
+"**File**: [Generator_03_interstitial.py](Generator_03_interstitial.py) "
+"**Description**: SiestaInterstitialGenerator - Programmatic interstitial "
+"generation **Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:328
+#: 5ef7926a3c974382a00b502b16b289ab
+msgid "Direct use of SiestaInterstitialGenerator class"
+msgstr "Direct use of SiestInterstitilGenertیا clss"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:329
+#: 6b0d11f26dea49138241c0884de93cfd
+msgid "High-symmetry site detection (Voronoi analysis)"
+msgstr "High-symmetry site detection (Vیاonoi nlysis)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:330
+#: b9d8481986474dff9eced50262a9add6
+msgid "Tetrahedral and octahedral sites"
+msgstr "Tetrhedrl و octhedrl sites"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:332
+#: 5786e1394b794e319a481926b9787490
+msgid "Distance-based site filtering"
+msgstr "Distnce-bsed site filtering"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:336
+#: 9985ebe024ea483e9952901b3282011c
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:338
+#: e9017af19aba4c5189fc0439e94ec010
+msgid "Example 0: One-Liner API (RECOMMENDED - START HERE)"
+msgstr "مثال 0: One-Liner API (RECOMMENDED - START HERE)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:340
+#: 90fd1e9b2f8a43b19fa7206bd21f2c1f
+msgid "The easiest way to generate defects is using `from_pristine_structure()`:"
+msgstr "The easiest way to generate defects is using `from_pristine_structure()`:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:377
+#: 1ee9479f95824e518154defa207e842e
+msgid "**What just happened?**"
+msgstr "**Wht just hppened?**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:378
+#: dbaeab55fff8497d938f835a6310a115
+msgid "✅ Automatic symmetry reduction (found 2 unique sites: Mg, O)"
+msgstr "✅ Automtic symmetry reduction (found 2 unique sites: Mg, O)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:379
+#: 1f4cafc4a14b4bc7b94b7d57e1cc6908
+msgid "✅ Automatic supercell creation (2×2×2)"
+msgstr "✅ Automtic supercell cretion (2×2×2)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:380
+#: d7348df7b4b24f698b1bb55cf804fc87
+msgid "✅ Automatic ghost atom insertion (for vacancies)"
+msgstr "✅ Automtic ghost tom insertion (برای vcncies)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:381
+#: bb126baf70584581adc541313947b80b
+msgid "✅ Generated 4 flows: V_Mg(q=0), V_Mg(q=+2), V_O(q=0), V_O(q=+2)"
+msgstr "✅ Generted 4 flows: V_Mg(q=0), V_Mg(q=+2), V_O(q=0), V_O(q=+2)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:382
+#: 314db182811f4c6d98b6677421e8ea6c
+msgid "✅ **Code reduction**: ~200 lines → 10 lines (95%!)"
+msgstr "✅ **Code reduction**: ~200 lines → 10 lines (95%!)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:384
+#: c73a692b83f4485886ac8eff85ca3ae2
+msgid "**Other defect types**:"
+msgstr "**Or defect types**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:405
+#: cd100645e5a44d7b84c32f2534695cea
+msgid "**See tutorials 05_01-05_04 for full examples with run_locally()!**"
+msgstr "**See tutیاils 05_01-05_04 برای full exmples با run_loclly()!**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:409
+#: 468262ca674347b8a9423534cdf87207
+msgid "Example 1: Neutral Oxygen Vacancy (q=0) WITH GHOST ATOMS (Manual)"
+msgstr "مثال 1: Neutrl Oxygen Vcncy (q=0) WITH GHOST ATOMS (Mnul)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:454
+#: d6e7bfc8c0074879894a470bf36fe926
+msgid "**Expected output** (q=0):"
+msgstr "**Expected output** (q=0):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:460
+#: 2c273de95d164080a08b12dd9a141d31
+msgid "Example 2: Charged Oxygen Vacancy (q=+2) WITH GHOST ATOMS"
+msgstr "مثال 2: Chrged Oxygen Vcncy (q=+2) WITH GHOST ATOMS"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:500
+#: 2ffe21276a6c4b6c9e0f6605968afee7
+msgid "**Expected output** (q=+2):"
+msgstr "**Expected output** (q=+2):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:508
+#: 024de2e62faa4dbeb81e7c5ed8504401
+msgid ""
+"**Note**: Correction lowers formation energy (removes spurious repulsion "
+"between periodic +2 charges)."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:512
+#: c6ecd351462b416499818e0527750478
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:514
+#: 7f553cebcce5482c8784a156f7857b6c
+msgid "1. Dry-Run Mode (Preview)"
+msgstr "1. Dry-Run Mode (Preview)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:532
+#: 45d3882e5a0e47b5960a985064b7e7d7
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:540
+#: d8e26ae104ba4c30a5110f33b6ef98fb
+msgid "**Check files**:"
+msgstr "**Check files**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:546
+#: 78b4683c56204f4e840f153c198667f9
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:555
+#: 4261b5d5faa846d090fb40e10c6754c2
+msgid "**What happens**:"
+msgstr "**Wht hppens**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:556
+#: c666e5fc15f545d6adae0f3e6d2c2707
+msgid "Relax defect supercell (fixed-cell, tight forces)"
+msgstr "Relx defect supercell (fixed-cell, tight برایces)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:557
+#: 87575919fbfd4dfeb16ce89b22ffbfe7
+msgid "Calculate host supercell energy (static SCF)"
+msgstr "Clculte host supercell energy (sttic SCF)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:558
+#: ca37c569c8014da7a8f7494dfc1cd106
+msgid "Apply Lany-Zunger correction (if q ≠ 0)"
+msgstr "Apply Lny-Zunger cیاrection (if q ≠ 0)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:559
+#: 135e048bc1484798aa00c1af876e248c
+msgid "Create DefectDocument with all metadata"
+msgstr "Crete DefectDocument با ll metdt"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:561
+#: 05d0758aeea44b94956e61017622f3f5
+msgid "**Time**: 2-6 hours depending on:"
+msgstr "**زمان**: 2-6 hours depending on:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:562
+#: 3fd2bc8b582b4809ac21c38fe27e7d07
+msgid "Supercell size (64-216 atoms typical)"
+msgstr "Supercell size (64-216 toms typicl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:563
+#: 7aea51581001464f8c9b0b03e1dc1242
+msgid "K-point density"
+msgstr "K-point density"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:564
+#: 832a4fad7caa4b259585c282f6b38c46
+msgid "Basis size and cutoff"
+msgstr "Bsis size و cutoff"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:565
+#: 6eb45db97c4d4b0aaa4d4799aa1b0dce
+msgid "SCF convergence"
+msgstr "SCF convergence"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:569
+#: 9c5986a78a22404da8586feac5c61066
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:571
+#: d1168c951ce44768823d8e7ddab7a0a6
+msgid "DefectDocument Fields"
+msgstr "DefectDocument Fields"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:573
+#: 5f1b7b6c75824c7088e37cac83a7260b
+msgid "After calculation, access results:"
+msgstr "After clcultion, ccess results:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:599
+#: 4d8ceb5cde8d4f1ba295428be4583704
+msgid "Analyzing Corrections"
+msgstr "Anlyzing Cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:618
+#: dec319eb081f490ea8248fb9bcf7a21d
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:620
+#: 932496bbae734773a7ff5e1ce9f9286a
+msgid "Issue 1: \"Formation energy too high/low\""
+msgstr "Issue 1: \"Fیاmtion energy too high/low\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:622
+#: f0eab76f03be46b2ac02645421f638d7
+msgid "**Symptoms**: E_f unrealistic compared to experiments"
+msgstr "**Symptoms**: E_f unrelistic compred to experiments"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:624
+#: 1f0139e1a1794ba09d40847f2964cb76
+msgid "**Causes & Solutions**:"
+msgstr "**Cuses & Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:626
+#: a987d05df60e4763811e9b5d2b322c56
+msgid "**Unconverged parameters**:"
+msgstr "**Unconverged prmeters**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:627
+#: 9a193cbd43594bdc8fa143a68449ae2b
+msgid "Run [01-convergence](../../01-convergence/) first!"
+msgstr "Run [01-convergence](../../01-convergence/) first!"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:628
+#: d77d08a686404c2586331d5e2e0871de
+msgid "Formation energies very sensitive to k-points"
+msgstr "Fیاmtion energies very sensitive to k-points"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:636
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:654
+#: 124a90621d7e4eb19e7824a36c9eff2d 211c6bb9bfc54113abf604ccc49505f1
+msgid "**Supercell too small**:"
+msgstr "**Supercell too smll**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:637
+#: f183db123fc64bd68edd5097b9ed1e1e
+msgid "Need ≥10 Å separation between defects"
+msgstr "Need ≥10 Å seprtion between defects"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:638
+#: 9dd714624fa94d66a83918f238659671
+msgid "Increase supercell size (2×2×2 → 3×3×3)"
+msgstr "Increse supercell size (2×2×2 → 3×3×3)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:640
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:659
+#: 59b4180545354053bda07dcbbec24343 5f0e291334ce4286ab10a7965a9ccb2c
+msgid "**Wrong dielectric constant**:"
+msgstr "**Wrong dielectric constnt**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:641
+#: f35d3f4256444143b0590350f00abb93
+msgid "ε_static is critical for corrections!"
+msgstr "ε_sttic is criticl برای cیاrections!"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:642
+#: 2ac7b7347e514d48a0632da6bb736c05
+msgid "Use converged DFT value or reliable experimental value"
+msgstr "Use converged DFT vlue یا relible experimentl vlue"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:644
+#: 798aebd9cd3045abb0046f5f0e5faef7
+msgid "**GGA limitations**:"
+msgstr "**GGA limittions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:645
+#: 1aeffce0331f4946a29a8632fba448f5
+msgid "PBE may overestimate/underestimate E_f by 0.5-1 eV"
+msgstr "PBE my overestimte/underestimte E_f by 0.5-1 eV"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:646
+#: 8f108734d6ae48fda41a034e06d095e8
+msgid "Compare trends, not absolute values"
+msgstr "Compre trends, not bsolute vlues"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:648
+#: 8623332a68d64431be052adc6e9c8f08
+msgid "Issue 2: \"Correction too large\""
+msgstr "Issue 2: \"Cیاrection too lrge\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:650
+#: bb65160ff0494385bb0a582535b515d7
+msgid "**Symptoms**: Correction > 1 eV for moderate charges"
+msgstr "**Symptoms**: Cیاrection > 1 eV برای moderte chrges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:652
+#: 4748de6c778b4b2686beb3a43ed99f84
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:655
+#: 4dc3fc47bb9845089052178c35a2f95a
+msgid "Correction ∝ q²/L → large for small L"
+msgstr "Cیاrection ∝ q²/L → lrge برای smll L"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:656
+#: 39d8ec81db344e7a9ba007dc8e435e6a
+msgid "Solution: Increase supercell size"
+msgstr "Solution: Increse supercell size"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:657
+#: f014faec45a14c5f9f4397e9003e4b02
+msgid "Target: Correction < 0.5 eV for well-converged systems"
+msgstr "Trget: Cیاrection < 0.5 eV برای well-converged systems"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:660
+#: 20caf1d4d37540d5b28c54228228afbe
+msgid "Check ε value from literature"
+msgstr "Check ε vlue from literture"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:661
+#: 8740762ddbbf466189f26d9f194800ad
+msgid "Run DFPT calculation to get accurate ε"
+msgstr "Run DFPT clcultion to get ccurte ε"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:663
+#: 2049ddd5a8ba4416a45dd8abfe8143fe
+msgid "Issue 3: \"Cannot import DefectFlowMaker\""
+msgstr "Issue 3: \"Cannot import DefectFlowMaker\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:665
+#: 58fde2b705164c1397622b301b8361b1
+msgid "**Symptoms**: ImportError when running tutorial"
+msgstr "**Symptoms**: ImpیاtErrیا when running tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:667
+#: a41596330cdd43d787d76d046059f33f
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:673
+#: 4bdbf856e7654cb78f91c677af706dc1
+msgid "If import fails, defect module may not be installed. Check:"
+msgstr "If impیاt fils, defect module my not be instlled. Check:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:680
+#: 605ea3eba97f48989df4368a785edaf8
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:682
+#: 339c8f78a0614af7af5645d7be3b5db1
+msgid "1. Always Use Adequate Supercell"
+msgstr "1. Alwys Use Adequte Supercell"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:698
+#: 6c78a274368b4aa9a6c92ecdacf9a482
+msgid "2. Converge All Parameters First"
+msgstr "2. Converge All Prmeters First"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:700
+#: 059d8c210b3045009ba55b5c87ac8a24
+msgid "**Before calculating formation energies**:"
+msgstr "**Beبرایe clculting برایmtion energies**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:701
+#: bb2d4dbfb58741f89d27b18177c26435
+msgid "Run k-point convergence (target: 10 meV/atom)"
+msgstr "Run k-point convergence (trget: 10 meV/tom)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:702
+#: 183ced191429433cb64ada1547ccb6bd
+msgid "Run basis convergence (DZP vs TZP)"
+msgstr "Run bsis convergence (DZP vs TZP)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:703
+#: 5922b4b91bfb4e148ab037049edcaa19
+msgid "Run cutoff convergence (300-400 Ry)"
+msgstr "Run cutoff convergence (300-400 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:705
+#: 04d2c8ba6ea64b83b39caf8e85beb365
+msgid "See [01-convergence](../../01-convergence/) tutorials."
+msgstr "See [01-convergence](../../01-convergence/) tutیاils."
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:707
+#: bc3418cb5f8c4fde9da6cef6e3946c8e
+msgid "3. Use Consistent Settings"
+msgstr "3. Use Consistent Settings"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:728
+#: 067aa8539ca14874bb4eaf3a74e75831
+msgid "4. Test Supercell Convergence"
+msgstr "4. Test Supercell همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:740
+#: f05d1e1aa16a44fda914642667843f6d
+msgid "Current Capabilities & Limitations"
+msgstr "Current Cpbilities & Limittions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:742
+#: 93e849c344bd4738b5b43e0c110f2527
+msgid "**✅ Complete Feature Set (v1.0.0)**:"
+msgstr "**✅ Complete Feture Set (v1.0.0)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:743
+#: 38f9af05579e43c9b71d12ff426702ae
+msgid "✅ **Ghost atoms for vacancies** - Automatic insertion (SIESTA-specific)"
+msgstr "✅ **Ghost toms برای vcncies** - Automtic insertion (SIESTA-specific)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:744
+#: 3809f80b35884b62bc9fe95c539616b2
+msgid "✅ **CorrectionComparisonFlowMaker** - Compare all correction schemes"
+msgstr "✅ **CorrectionComparisonFlowMaker** - Compare all correction schemes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:745
+#: f7519e7d7c0747e39eb583edc5870910
+msgid "✅ **Automatic defect generation** - One-liner API with symmetry reduction"
+msgstr "✅ **Automtic defect genertion** - One-liner API با symmetry reduction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:746
+#: 3c7c543462d84c43a945b3c36d43ebbf
+msgid "✅ **Multiple corrections** - Lany-Zunger, Makov-Payne, Freysoldt"
+msgstr "✅ **Multiple cیاrections** - Lny-Zunger, Mkov-Pyne, Freysoldt"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:747
+#: 667a010e56934bfd905b3c3e02a273ab
+msgid ""
+"✅ **Automatic chemical potentials** - O2, H2, N2, F2, Cl2, Br2, I2 + 7 "
+"metals"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:748
+#: 1249984f5d434c6c970fe840f5c342a0
+msgid "✅ **Formation energy diagrams** - E_f vs E_F plots with CTLs"
+msgstr "✅ **Fیاmtion energy digrms** - E_f vs E_F plots با CTLs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:749
+#: c07f2472ac844541b8eb5ce134185283
+msgid "✅ **Charge transition levels** - Automatic CTL identification"
+msgstr "✅ **Chrge trnsition levels** - Automtic CTL identifiction"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:750
+#: 038ea9fb3fae4114aff557c66b6b1057
+msgid "✅ **Defect concentrations** - Self-consistent Fermi solver"
+msgstr "✅ **Defect concentrtions** - Self-consistent Fermi solver"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:751
+#: 895140c514094b8bb2e6a0dad1484dd1
+msgid "✅ **Brouwer diagrams** - vs Fermi level and temperature"
+msgstr "✅ **Brouwer digrms** - vs Fermi level و temperture"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:752
+#: 797a3f154a0d4714be558a5a510ad350
+msgid "✅ **Interactive plots** - Plotly HTML output"
+msgstr "✅ **Interctive plots** - Plotly HTML output"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:753
+#: 386cc36f18dd45d2982e70aebbefd83c
+msgid "✅ **SRH recombination** - Lifetime and capture analysis"
+msgstr "✅ **SRH recombintion** - Lifetime و cpture nlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:755
+#: 18ac264160394d38b61b745a17b9d1fe
+msgid "**Remaining Limitations (Future)**:"
+msgstr "**Remining Limittions (Future)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:756
+#: 332d018d671f43d8ba39348503a25f54
+msgid "❌ No Kumagai-Oba correction (anisotropic dielectrics)"
+msgstr "❌ No Kumgi-Ob cیاrection (nisotropic dielectrics)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:757
+#: 4acb9b2f39214a3c9d01554b71d1cd20
+msgid "❌ No Gaussian charge model"
+msgstr "❌ No Gussin chrge model"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:759
+#: 32f5205c1cee4c7fa5667d1ffb21ef63
+msgid "**Current Capabilities**:"
+msgstr "**Current Cpbilities**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:760
+#: 3df78890ef6c4cf69100544e36be4865
+msgid ""
+"Use `FormationEnergyDiagramFlowMaker` for complete defect analysis (17 "
+"tutorials!)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:761
+#: 4f6ebcc4908a42a0a07c986708cec588
+msgid "Use `from_pristine_structure()` for automatic defect generation"
+msgstr "Use `from_pristine_structure()` for automatic defect generation"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:762
+#: b5a7f5814de549c3a986be1e560db87d
+msgid "All CTL and concentration analysis automated"
+msgstr "All CTL و concentrtion nlysis utomted"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:766
+#: 384bd9d1fcf54469a42796b1b545c63e
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:768
+#: 53f36a25ddd44d6284e7052a32d2002c
+msgid "After completing DefectFlowMaker tutorials:"
+msgstr "After completing DefectFlowMaker tutorials:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:770
+#: 0c812d290aed4cd380c81a5d31aedc9a
+msgid ""
+"**FormationEnergyDiagramFlowMaker**: Complete defect analysis with CTLs, "
+"Brouwer diagrams, SRH (5 tutorials!)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:771
+#: 8ff1492da4eb4d979e2bd1c03ae49770
+msgid ""
+"**Combine with NEB**: Calculate defect migration barriers "
+"([01-NebDirectFlowMaker](../01-NebDirectFlowMaker/))"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:772
+#: 4dba6a1a77c74b408fd11ae005fe58ef
+msgid "**Advanced corrections**: Kumagai-Oba for anisotropic materials (future)"
+msgstr "**پیشرفته cیاrections**: Kumgi-Ob برای nisotropic mterils (future)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:773
+#: 2d2a9ae2fca947fa8d07a32e4bd4267b
+msgid "**Gaussian charge model**: More accurate charge distribution (future)"
+msgstr "**Gussin chrge model**: Mیاe ccurte chrge distribution (future)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:777
+#: 711a3633cfbf40e8a0767993fdc41c7c
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:779
+#: d7145e977fbe40b498562ea99eac3a04
+msgid "**Lany-Zunger correction**: Lany & Zunger, PRB 78, 235104 (2008)"
+msgstr "**Lny-Zunger cیاrection**: Lny & Zunger, PRB 78, 235104 (2008)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:780
+#: 2aae95ca73f145f5b1ef8f300174cfa5
+msgid "**Defect formation energies**: Freysoldt et al., RMP 86, 253 (2014)"
+msgstr "**Defect برایmtion energies**: Freysoldt et l., RMP 86, 253 (2014)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:781
+#: a9bdf5e4539e4a48883b3996177864b2
+msgid ""
+"**Point defects review**: Alkauskas et al., J. Appl. Phys. 119, 181101 "
+"(2016)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/03-DefectFlowMaker/README.md:785
+#: 91504cb9d8de45e88d021ec3545714cf
+msgid ""
+"*Back to [05-defects](../README.md) | [02-workflows](../../README.md) | "
+"[Main Tutorial Index](../../../README.md)*"
+msgstr ""

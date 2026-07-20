@@ -1,0 +1,736 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:1
+#: 8c7339b3468e477a8f73a2a1345102fb
+msgid "Tutorial 10: Grid Output Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:3
+#: 78c09e72e2604c76a57b5bae03edcc9c
+msgid ""
+"**Level**: Advanced **Time**: 20 minutes **Dataclass Module**: `Grids` "
+"(ADVANCED tier)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:7
+#: 3f483659ad5d4764824383ec6b568686
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:9
+#: 4870507e65bc4501a86c62e096786076
+msgid ""
+"This tutorial demonstrates how to configure grid-based output for charge "
+"densities, potentials, and other electronic structure quantities using "
+"the `Grids` dataclass module."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:11
+#: 56ef8b752a1c4bd288246f05984d0081
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:13
+#: e1a7a1c659704443a4681c6778521448
+msgid "How to save various charge densities and potentials to grid files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:14
+#: 847cc8fdd700401d92a54629ee2718bd
+msgid "Configure grid output file formats (binary, formatted, netcdf, cube)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:15
+#: 7552b307ceca495e8a13cc970e61d9b6
+msgid "Enable specialized analyses like Bader charge analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:16
+#: 906f4f324fd243ba958a88d4f2c0e165
+msgid "Use direct SIESTA FDF parameter names or Python attributes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:18
+#: b7b38bfe92ff4e3a85b580a0d3781753
+msgid "Background"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:20
+#: d851aca552a84606a5a02f12bc826d0f
+msgid ""
+"SIESTA can output various electronic structure quantities on real-space "
+"grids for visualization and post-processing. The `Grids` module provides "
+"control over:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:22
+#: 7340e734cfa74446bdf86e01eca99015
+msgid "**Charge densities**: Total, deformation, initial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:23
+#: cc905621b1a64914b900819945a6144c
+msgid "**Potentials**: Electrostatic, XC, total Kohn-Sham, neutral atom"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:24
+#: 4e60e695dc3045049b098b54bbe9dff7
+msgid "**Special outputs**: Ionic charge, total charge, Bader charge analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:26
+#: 421023f076dd4d579af2250212f614fb
+msgid "Available Grid Output Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:28
+#: 4b8fa210322243a3b0a8d856081f2a77
+msgid "Charge Densities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 09b1abf65c00423f9462de055e3fca36 12aebff69ed943bcbbe1430134f921cb
+#: 363bf909144448f68feb0db66d064412 b576bcbd466a485aa3a40575de6865d6
+msgid "Parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 2ba2223745734cee84c2d99200d5db10 53384deeda3d413983c7a801f8c0d460
+#: 6e72689712b443c5adf51036520e6a6d fedade6806f54e55b301576dd9a2f52c
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 02b7e084faf44fb7af377b7dcd878217 7daa7cdb82a64105855e4427d786fcbb
+#: adcc44c186344dd38f14d09a290da751 c08beb4c077e47e0bbd8a6fb92f20b41
+msgid "Default"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 38c45699bc944ca1a492122d2c374543
+msgid "`save_rho`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: ff213f1ac0d340f4b4e282d9edcfcfe6
+msgid "Total electron charge density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 0cdd874c47cb46eeb5b4df481c041846 32e136323a094cb6985d32ecf0ec6ff1
+#: 3619bf2dd96a4123889cdcbcc7c6a853 379896f41480477da7a3a5c7914b05aa
+#: 37bb3521987948fc918e559f58ee2382 40f1cdd98cca427b8470e56b3f747221
+#: 4747bb8a81504e879c73b01213a889bc 752a77e5f03b47b8b351823192f42969
+#: 7fe86ec9ef7148e4a95960fbd450e071 878d7fdcd56843569fc4fcf8774fc4de
+#: 98f85d1bf87f439a9f0348c30abaf269
+msgid "False"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 398ca3ed1e1b454fb32c57d3643484b7
+msgid "`save_delta_rho`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: bdde4972f4914523a89b5f0a0dc76e5c
+msgid "Deformation charge density (SCF - atomic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: ccc1a71ff4fd496e8ccce8b8115f3e0c
+msgid "`save_initial_charge_density`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 9e93dff054a048b4bb8818d5f71425ea
+msgid "Initial non-SCF charge density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:36
+#: 549d98a4d171420c87e03583e1f56709
+msgid "Potentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: e53d15ad5fa24a65b061035791c3ca24
+msgid "`save_rho_xc`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: a29c1afc656d4ec5b4a15cb0fadf820b
+msgid "Exchange-correlation potential"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 9b8ee29f76804dd1afc05913a1b2327d
+msgid "`save_electrostatic_potential`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: d8a8dd89b12e452e98a5d12d23d5e11b
+msgid "Total electrostatic potential (Hartree + external)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 65317de4af764762adaf286eee277fdd
+msgid "`save_neutral_atom_potential`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 08541fbfc87d459091bf301b2d82bcf0
+msgid "Superposition of neutral-atom potentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: b9a7e0f129994a76a274f34adfffdeff
+msgid "`save_total_potential`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 20663da77f964a2499f66a95f468dfa6
+msgid "Total Kohn-Sham potential (electrostatic + XC)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:45
+#: 41713fac7b0b4aaaa644772c308e810b
+msgid "Charge Distributions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 718dae33f6d34e88ab13b2827756dbc3
+msgid "`save_ionic_charge`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 2d694b0f672d481b9354f8d41fd15276
+msgid "Ionic charge distribution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: c1079d721a464290a5e795a2871e5567
+msgid "`save_total_charge`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 2cc1cab2857a484f823699fcd3b65d5f
+msgid "Total charge (electronic + ionic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:52
+#: 5aa35d02d2674897b34762f1ea1b0573
+msgid "Special Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 4578acc7d8d74c8b91bc6bcd99e2cd1e
+msgid "`save_grid_func_format`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 91f38471ae6c48dda8ec0f96c9f30ee7
+msgid "File format: \"binary\", \"formatted\", \"netcdf\", \"cube\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 1a1d4fdb54b94559979d576869c06a30
+msgid "\"binary\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 6dee2c8de3014478b29a96685688a95d
+msgid "`save_bader_charge`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: c7ee0179cc5c4441a7b7011a86c68bf1
+msgid "Enable Bader charge analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 5ab2162c14594c6a96a49431f38a79ff
+msgid "`analyze_charge_density_only`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md
+#: 002a8d2053314900b43babf798af220b
+msgid "Only perform charge analysis then stop"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:60
+#: b4f57040d1af42c98ff25f1d05f7e4b3
+msgid "Tutorial Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:62
+#: 86728a57329d48f698155fb1fcd18c30
+msgid "Example 1: Basic Charge Density Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:64
+#: 2955ea29382a4cba9412b082fb44efb1
+msgid "Save total and deformation charge densities in binary format."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:66
+#: 09dcc72bde6a49868b197de8843ca0f8
+msgid "**File**: `01_basic_charge_density.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:68
+#: e5bf86fb6dfa46e891cf5f49ebd82e96
+msgid "Example 2: Potentials for Visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:70
+#: bb5520e1c2d6460293f36d09e90505fe
+msgid "Save various potentials in NetCDF format for visualization tools."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:72
+#: 19b284aaddd04d69b65b6cc6667c8512
+msgid "**File**: `02_potentials_netcdf.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:74
+#: 0d05ae707f2a4a22b7d582a0cd92815d
+msgid "Example 3: Bader Charge Analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:76
+#: c8c03d52486048a7bbc7503f53a4d95e
+msgid "Enable Bader charge analysis for charge transfer calculations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:78
+#: 93f944699d154c7dacc9b930d5ab8da1
+msgid "**File**: `03_bader_analysis.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:80
+#: 992575f574f9497b926349ce12f2e1e9
+msgid "Running the Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:91
+#: f053b95828624cc2aca9969214270570
+msgid "Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:93
+#: 9793eae43f224c06b52a5f5de90bb500
+msgid "Grid files are written in the calculation directory:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:95
+#: f20bf6a341334d1795648a8f2d45b1ee
+msgid "**Binary format**: `.RHO`, `.DRHO`, `.VH`, `.VT` files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:96
+#: 79f6f2f7a3b64a39acc9d64629ebc8a3
+msgid "**Formatted format**: `.RHO.ascii`, `.DRHO.ascii`, etc."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:97
+#: 194a36697381456a8675185c5f4e7117
+msgid "**NetCDF format**: `.RHO.nc`, `.DRHO.nc`, etc."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:98
+#: 1c1c34dee25349cda3ad292f10fb12e3
+msgid "**Cube format**: `.RHO.cube`, `.DRHO.cube` (Gaussian cube format)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:100
+#: f308ca3f190d4b6593f0180bf6bfbd43
+msgid "Visualization Tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:102
+#: cfbf39ef02e44799a9cf186ea80b7da9
+msgid "Grid files can be visualized with:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:104
+#: a796a68a671c4d8dbf43225118d9689e
+msgid "**XCrySDen**: Reads all SIESTA formats"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:105
+#: 274aad993cb9447cbb0eb39d08a39df7
+msgid "**VESTA**: Reads cube files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:106
+#: 397e4a2851f24264b0179fcc6abb662c
+msgid "**VMD**: Reads cube files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:107
+#: 78da15f2db8e43e4a10a7a395e6fca32
+msgid "**Python**: Use `pymatgen` or `ASE` to read grid files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:109
+#: f9500c16b3a9449aba393d099b9d97e3
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:111
+#: 8653a2dddf1c423f8f25c6f6111b4db7
+msgid "1. File Format Selection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:124
+#: 08f6c90dfecb4afc942513feea7c0d67
+msgid "2. Disk Space Considerations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:126
+#: dacb6738b2f74e9594a2d293b6d5e1d8
+msgid "Grid files can be large! For a 50x50x50 grid:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:127
+#: 75b2a95064b048bdbd0b34211e37c7bb
+msgid "Binary: ~1 MB per quantity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:128
+#: c1ceaf82d213462bb08ff47448cf99b5
+msgid "Formatted: ~5 MB per quantity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:129
+#: 8a5082580b9d4cf4ba7c7690edf7015c
+msgid "NetCDF: ~1.5 MB per quantity (with compression)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:131
+#: 2ec71eda44af4fde98b381a215e38de6
+msgid "3. Common Visualization Tasks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:133
+#: f4a47dc8479d42c2a6076c30682ac0bd
+msgid "**Charge Transfer Analysis**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:142
+#: a92aee5682fb4eefb7a802ac84299ba8
+msgid "**Electrostatic Potential Mapping**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:151
+#: c85388139faf4312b95543e97ba39fb5
+msgid "**Bader Charge Analysis**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:160
+#: 718f6d8574b447f1be850f697d4a20d2
+msgid "Parameter Naming Flexibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:162
+#: 776b6e6a2378478e80807a4676fc9281
+msgid "The module accepts both SIESTA FDF and Python parameter names:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:187
+#: 1000cd14a9534283ac0fb2cd99c31df3
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:189
+#: 3723a0410fff4b2c9c8bc49e49ebbf3a
+msgid "Issue 1: Large Grid Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:191
+#: 40abb0f37778451eac401fb754abddb0
+msgid "**Problem**: Grid files consuming too much disk space"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:193
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:202
+#: 0ec5a38dc1ef414993016be708e97c1d 3403bb5ffbd5445caaa27f6cf2525b6f
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:194
+#: a120a1c80181449abf60c28ff8f21932
+msgid "Use binary format instead of formatted"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:195
+#: b18eab5da0b44a7f8b36e612ad822039
+msgid "Only save needed quantities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:196
+#: 937c1071e6c24cc28a3eb5a5de54837b
+msgid "Consider coarser mesh cutoff for visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:198
+#: 592d19b4951948a0b9dc8dfffa56176f
+msgid "Issue 2: Bader Analysis Not Working"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:200
+#: 645a9a42bf59440e8e48eee52ef2e1cb
+msgid "**Problem**: Bader charge analysis produces no output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:211
+#: 4e8afa5982564a6faf3f9d70b226c48b
+msgid "Issue 3: Visualization Tool Can't Read Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:213
+#: 07a63473511041f4945443b5fbfe34ff
+msgid "**Problem**: XCrySDen/VESTA can't open grid files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:215
+#: 491990b35221436baa7bca0ec54e0046
+msgid "**Solution**: Use appropriate format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:216
+#: f414ab8d5ff745e79f587934ed675eef
+msgid "XCrySDen: Use binary or formatted (default SIESTA)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:217
+#: e8c57d27617846199bc1214c4801d055
+msgid "VESTA/VMD: Use cube format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:219
+#: 3f590d67c41e4ddfaab5a7b5ad608a4c
+msgid "Integration with Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:221
+#: d7f904dd63cd4b11b8be8a496af1cd70
+msgid "With RelaxMaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:235
+#: 01a2749710ea4a25ad5dd99d255c6ce5
+msgid "With StaticMaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:249
+#: 4c67a3e372334bf8beff40b7988bd31f
+msgid "Performance Considerations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:251
+#: 5b5326d6a3c44655afbb4b4316d249c8
+msgid "Grid Output vs Calculation Time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:253
+#: 5d55e07fe3be47099eac0232b5282e74
+msgid ""
+"Grid output adds minimal computational cost (<1% typically), but I/O time"
+" can be significant:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:255
+#: 00e34162b121496cbf99c0ad353797f2
+msgid "**Binary format**: Fastest I/O"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:256
+#: c19876d3054047638b44248a85744a48
+msgid "**NetCDF format**: Moderate I/O, best compression"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:257
+#: 4ee817780d524fe7bff30f8560349966
+msgid "**Formatted/Cube**: Slowest I/O, largest files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:259
+#: 283f17cf23a241ebb6d55a0e1dedf85f
+msgid "When to Use Grid Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:261
+#: 849b79156171446e81acd731001f6a13
+msgid "**Always save**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:262
+#: 665104c1e4a644dbbcb8b43f10e516cc
+msgid "For publication-quality charge density plots"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:263
+#: 89af4ee3902d4298a05d088d55bd1891
+msgid "When performing Bader/Mulliken analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:265
+#: 3584f4cb989644f7a6d368d16a43f5e1
+msgid "**Optional**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:266
+#: 121c25214a5e4e5a9debc0a26729e9ef
+msgid "For routine calculations (can regenerate)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:267
+#: a579491aaf3c4d76ad89a8e1bdfb5a63
+msgid "When disk space is limited"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:269
+#: 064845cce2054223a5c2e10cffdb9428
+msgid "Advanced Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:271
+#: 156162287c38464ead80f93cdf7c5e49
+msgid "Analyze Charge Density Only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:273
+#: 2de00c6caa4b4764ae5ce4df94bdbe7c
+msgid "Stop after charge density analysis without full SCF:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:282
+#: b49e38bdf53b47a1bc623e55f9e56593
+msgid "Useful for:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:283
+#: 85c1023b3ea34ac49fca673fc5367251
+msgid "Post-processing existing density matrix"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:284
+#: 09a28c3852524e2186652ae2f2aa783b
+msgid "Quick charge analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:285
+#: c87d86f6d66140ab832dd13b6fd5f227
+msgid "Debugging charge distributions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:287
+#: 1dcba3fbfb47477ea496f7d42ac52ebb
+msgid "Further Reading"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:289
+#: b2fb90f806eb4216b10560944cba2d2e
+msgid ""
+"**SIESTA Manual**: Section 6.24 - Output of charge densities and "
+"potentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:290
+#: 7731e80bbeb9407a8448284ccde3e029
+msgid "**Bader Analysis**: http://theory.cm.utexas.edu/henkelman/code/bader/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:291
+#: 2869c684f6a94410a8f3ade058189a39
+msgid "**XCrySDen**: http://www.xcrysden.org/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:292
+#: 757a0f6f8abe4f63b81d38b9d8804bbc
+msgid "**Cube Format**: https://gaussian.com/cubegen/"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:294
+#: 2c668adaa49b4fee9578be13d0e84969
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:296
+#: 6856bf2f5f6a4e5fbc03b362950299b2
+msgid "**Tutorial 11**: Denchar visualization configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:297
+#: a4923603bacc4a619728b7b839342a27
+msgid ""
+"**Tutorial 05**: DOS calculations (complementary electronic structure "
+"output)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:298
+#: c2654cd618ec4b469e0fc148528b37a8
+msgid "**Tutorial 07**: Optical properties (another ADVANCED tier module)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:300
+#: e95a4f3b8bb34397b88a6d605007de11
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:302
+#: 4a52b02a2fcc4fdb920c2876134b5b53
+msgid "You've learned how to:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:303
+#: 06511739de194d028ec5839a19f754a7
+msgid "✅ Configure grid-based output for charge densities and potentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:304
+#: cef7511e53b745f2bf8b1b29e5a08a2f
+msgid "✅ Select appropriate file formats for visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:305
+#: ace3682fb8b740bd8a56858c70c6d396
+msgid "✅ Enable Bader charge analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:306
+#: 28864ce474874965a52f3f5a6dec1831
+msgid "✅ Use both SIESTA FDF and Python parameter names"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:307
+#: a6894cb6638241f6b0007f84b1e3ea57
+msgid "✅ Integrate grid output with atomate2 workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/05-output-viz/01-grid/README.md:309
+#: 61ac3f948f0b4fe68fb1ac908eaca425
+msgid ""
+"Grid output is essential for visualizing electronic structure and "
+"performing charge transfer analysis!"
+msgstr ""
+

@@ -1,0 +1,304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:1
+#: cc06927f4cc741e8a15fe51adf9448db
+msgid "Optical Properties Calculations"
+msgstr "Opticl Properties محاسبهs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:3
+#: 3e322ee944494394b092c72663e62b24
+msgid ""
+"Direct SIESTA FDF format for optical properties calculations including "
+"dielectric function, absorption, and refractive index."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:5
+#: c4c8a21dae1b42edab7b1105de9854f7
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:7
+#: f167f1dd2a8044ff86a38835ea3405e5
+msgid "SIESTA calculates optical properties from electronic structure:"
+msgstr "SIESTA clcultes opticl properties from electronic structure:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:9
+#: b1268f0bee5b4ccc993c23c4941e1fe4
+msgid "**Dielectric function** ε(ω): Real and imaginary parts"
+msgstr "**Dielectric function** ε(ω): Rel و imginry prts"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:10
+#: 75c8258c4258452fbc920ebbcde2de5b
+msgid "**Absorption coefficient** α(ω)"
+msgstr "**Absیاption coefficient** α(ω)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:11
+#: 88a7e672c04749a182a2d665d43b17a6
+msgid "**Refractive index** n(ω)"
+msgstr "**Refrctive index** n(ω)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:12
+#: a6f5b21a6f3b4312a9f549a1735b84da
+msgid "**Reflectivity** R(ω)"
+msgstr "**Reflectivity** R(ω)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:14
+#: 6bc6672974dc44d088c86f2c66fdd18f
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:30
+#: 6d79bf9a16644611a0c4e1557182fe26
+msgid "Key Parameters"
+msgstr "Key Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: f18fff42a7d24834ab984cecd4ddbb23
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 31002a32c6e14ce080cab25c7ffb8478
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: ff5c29498800420ba0ff98438cb9aea7
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 52587a20ec3149899a8ff0d541c2c326
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 68b9f54e11584104abe0971d67daf797
+msgid "OpticalCalculation"
+msgstr "Opticlمحاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 3fbfabb376ce4e98802e567f7c071980
+msgid "bool"
+msgstr "bool"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 85c707c5846f4da3bdc1864d159d9861
+msgid "false"
+msgstr "flse"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 86e03653bb9545489cfadb242824aa97
+msgid "Enable optical calculation"
+msgstr "Enble opticl clcultion"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 5ba187f4f0de4529949baf025eaf2717
+msgid "Optical.Energy.Minimum"
+msgstr "Opticl.Energy.Minimum"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 3f4c252ca33a4f7996c5c845ae00e476 7c994577fe3a4a8aa672b004946eae5e
+#: c625acaeace84c82b044bd2b97b0e656 c86804845634403889497591bd6c7d0e
+#: d94d1fe584d94795a7d91d5292e4ae87
+msgid "str"
+msgstr "str"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 21dc91b0f3fd497cb0cd3be1d775f5a2 db9583511cd44228bf7bbcb260260979
+msgid "\"0.0 eV\""
+msgstr "\"0.0 eV\""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: be3a2acfbd174ca99e5456cb416c52f7
+msgid "Minimum photon energy"
+msgstr "Minimum photon energy"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: e63c1ab159304d60a2fbeb860415e9df
+msgid "Optical.Energy.Maximum"
+msgstr "Opticl.Energy.Mximum"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 94ff997c225a4f17aa75976ae8aaa4e3
+msgid "\"10.0 eV\""
+msgstr "\"10.0 eV\""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 437c5d8000d14b059b20431873b89e69
+msgid "Maximum photon energy"
+msgstr "Mximum photon energy"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 65b42fbb981a4ad8857513b4644ca927
+msgid "Optical.Broaden"
+msgstr "Opticl.Broden"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 3c23cedf7d554ef5aa04a75c905126c4
+msgid "\"0.1 eV\""
+msgstr "\"0.1 eV\""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 37f44ae7b7ce4be49721c4d7575ea237
+msgid "Spectral broadening"
+msgstr "Spectrl brodening"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: cf30091d8fc84668998fe54794b87b73
+msgid "Optical.Scissor"
+msgstr "Opticl.Scissیا"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: b362539e5d50458ab26d659e99e775f0
+msgid "Band gap correction"
+msgstr "Bو gp cیاrection"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: aad34c4774ba41a19388e8f58d10d060
+msgid "Optical.NumberOfBands"
+msgstr "Opticl.NumberOfBوs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 9f60a4342aba4e33ae5a0a56d7a5253e
+msgid "int"
+msgstr "int"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 24187a12a1cd41499c3fca7afabb5519
+msgid "All"
+msgstr "All"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 6910e751125d450096b09e084cac1885
+msgid "Number of bands to include"
+msgstr "Number of bوs to include"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 0b3fb74c20124c9bbbb0d2f41bfc1f87
+msgid "Optical.PolarizationType"
+msgstr "Opticl.PolriztionType"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 4beda509080147a288d03993d8c07494
+msgid "\"unpolarized\""
+msgstr "\"unpolrized\""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md
+#: 50fb96f95ce64698a841b7d2284d547c
+msgid "Polarization (unpolarized/polarized)"
+msgstr "Polriztion (unpolrized/polrized)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:42
+#: 776c003416234e06b855437feb9aaa56
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:44
+#: d72fbd28cea04271876e60bba150caef
+msgid "UV-Vis spectrum (0-5 eV)"
+msgstr "UV-Vis spectrum (0-5 eV)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:54
+#: a3a67cb568e2418cb7bedf496edfe8a9
+msgid "Wide energy range with band gap correction"
+msgstr "Wide energy rnge با bو gp cیاrection"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:64
+#: 70da53ff026942c191f33fd6a6ddb466
+msgid "High resolution spectrum"
+msgstr "High resolution spectrum"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:75
+#: 1722e07e1acd465dbde2a56a428a9e87
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:77
+#: 28db20f097b14fafa50cfff85913a668
+msgid "SIESTA generates:"
+msgstr "SIESTA genertes:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:79
+#: 2b4a02c1096a4972b3f7be7aada68cbb
+msgid "**siesta.EPSIMG** - Imaginary part of dielectric function"
+msgstr "**siest.EPSIMG** - Imginry prt of dielectric function"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:80
+#: 3c971ff343914c23b2ee17709c873b37
+msgid "**siesta.EPSREAL** - Real part of dielectric function"
+msgstr "**siest.EPSREAL** - Rel prt of dielectric function"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:82
+#: 9cd83e18e2ee4fe1a942adc270572af7
+msgid "Important Notes"
+msgstr "مهم توجهs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:84
+#: fbcf03e94b294d3384679bfa94c4b06b
+msgid ""
+"**Dense k-grids required**: Optical properties need much denser k-point "
+"sampling than ground state calculations (typically 8×8×8 or higher)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:86
+#: dc7c05815e484319a17e9bfa242726d4
+msgid ""
+"**Band gap correction**: LDA/GGA underestimate band gaps. Use "
+"`Optical.Scissor` to shift conduction bands"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:88
+#: e3722244f42e4bff96e11afe8ea12683
+msgid "**Convergence**: Test convergence with respect to:"
+msgstr "**همگرایی**: Test convergence با respect to:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:89
+#: ba33533284494eccb0bb9396204ae897
+msgid "k-point density"
+msgstr "k-point density"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:90
+#: 7288536a0e864702be234a4b43b5b92b
+msgid "Number of unoccupied bands"
+msgstr "Number of unoccupied bوs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:91
+#: 447c1e3510df4ac9a45bc4419a5417e0
+msgid "Energy cutoff"
+msgstr "Energy cutoff"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:93
+#: 59bba62978fe44218b759ffe22eeb382
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:95
+#: 9a8156a8c90f4f9fb923f817b4b607c7
+msgid "**SIESTA Manual**: Section on Optical Properties"
+msgstr "**SIESTA Mnul**: Section on Opticl Properties"
+
+#: ../../source/tutorials-md/03-advanced-features/07-optical-properties/README.md:96
+#: 34fdb843154d4bb19dfe6d69d48a1e59
+msgid "**Dataclass**: `src/atomate2/siesta/dataclass/optical_properties.py`"
+msgstr "**Dataclass**: `src/atomate2/siesta/dataclass/optical_properties.py`"

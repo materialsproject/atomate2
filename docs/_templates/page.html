@@ -1,0 +1,25 @@
+{% extends "!page.html" %}
+
+{#- Language switcher for the translated SIESTA documentation.
+    Only the siesta pages are translated (Persian/Farsi), so the switcher is
+    shown on those pages only. The English build lives at the site root and the
+    Farsi build under /fa/, so cross-language links are computed from the page
+    depth and the build language rather than hardcoded (the same source file is
+    rendered into both builds). -#}
+{% block content %}
+{%- if pagename == 'user/codes/siesta' or pagename.startswith('siesta/') %}
+  {%- set depth = pagename.count('/') %}
+  {%- set root = '../' * depth %}
+<div class="lang-switcher" role="navigation" aria-label="Language">
+  <span class="lang-switcher__label">🌐</span>
+  {%- if language == 'fa' %}
+  <a class="lang-switcher__link" href="{{ root }}../{{ pagename }}.html">English</a>
+  <span class="lang-switcher__link lang-switcher__link--active" lang="fa" dir="rtl">فارسی</span>
+  {%- else %}
+  <span class="lang-switcher__link lang-switcher__link--active">English</span>
+  <a class="lang-switcher__link" href="{{ root }}fa/{{ pagename }}.html" lang="fa" dir="rtl">فارسی</a>
+  {%- endif %}
+</div>
+{%- endif %}
+{{ super() }}
+{% endblock %}

@@ -1,0 +1,1398 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:3
+#: 26491a93efde4ffd84513024d4718f4a
+msgid "Jobflow Remote CLI Reference"
+msgstr "مرجع رابط خط فرمان Jobflow Remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:5
+#: c06fb899a22f41798fd65227406c25b7
+msgid ""
+"Comprehensive guide to managing jobflow-remote configurations with "
+"``atomate2siesta-jobflow-remote``."
+msgstr ""
+"راهنمای جامع برای مدیریت پیکربندی‌های jobflow-remote با استفاده از "
+"``atomate2siesta-jobflow-remote``."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:8
+#: 244639c3d198409f9f79dfdcd42a54ff
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:10
+#: 642960ca92da425cacf9299cbc021b3f
+msgid ""
+"The ``atomate2siesta-jobflow-remote`` CLI provides comprehensive tools "
+"for managing jobflow-remote configurations. It simplifies:"
+msgstr ""
+"رابط خط فرمان ``atomate2siesta-jobflow-remote`` ابزارهای جامعی برای "
+"مدیریت پیکربندی‌های jobflow-remote فراهم می‌کند. این ابزار ساده‌سازی "
+"می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:12
+#: 9517f9e4122f4c8dab4c9adf67f18824
+msgid "Installing and setting up jobflow-remote"
+msgstr "نصب و راه‌اندازی jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:13
+#: 59e453df86624823890d3b8124bdf9ce
+msgid "Managing multiple project configurations"
+msgstr "مدیریت چندین پیکربندی پروژه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:14
+#: 24e799da79b7460dbc2f9faad9b9620b
+msgid "Updating MongoDB connection settings"
+msgstr "به‌روزرسانی تنظیمات اتصال MongoDB"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:15
+#: bf487aa121b648b39f2e9d02688ea645
+msgid "Adding descriptive comments to configuration files"
+msgstr "افزودن توضیحات توصیفی به فایل‌های پیکربندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:16
+#: 9c676460511c4151bbc253a7b0b74165
+msgid "Viewing project details and worker information"
+msgstr "مشاهده جزئیات پروژه و اطلاعات کارگر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:18
+#: 60948f4d095840e7b027a794da32c467
+#, fuzzy
+msgid ""
+"For complete jobflow-remote documentation, see: "
+"https://matgenix.github.io/jobflow-remote/"
+msgstr "`مستندات رسمی <https://matgenix.github.io/jobflow-remote/>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:21
+#: 3821fb4b24e444c8943d4eb6d99c40a8
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:23
+#: 0348f90ebf954aa9aee16aae1b3ace7e
+msgid "**Multi-project support**: Manage multiple jobflow-remote projects"
+msgstr "**پشتیبانی چند پروژه**: مدیریت چندین پروژه jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:24
+#: be7cdb894ec54e299a61fb2a28d9e27b
+msgid "**Safe updates**: Automatic backups before modifications"
+msgstr "**به‌روزرسانی‌های ایمن**: پشتیبان‌گیری خودکار قبل از تغییرات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:25
+#: 8f73912eb16449bd919ba0313a27467f
+msgid "**Self-documenting configs**: Add inline comments to YAML files"
+msgstr "**پیکربندی‌های خودمستند**: افزودن توضیحات درون‌خطی به فایل‌های YAML"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:26
+#: 429ab2e4501943b9a68c8df589004ebf
+msgid "**Project discovery**: List and inspect all configured projects"
+msgstr "**کشف پروژه**: فهرست و بازرسی تمام پروژه‌های پیکربندی‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:27
+#: 7cfcb3d9aa724be78f9c73e6639cc018
+msgid "**Selective updates**: Update specific settings without touching others"
+msgstr ""
+"**به‌روزرسانی‌های انتخابی**: به‌روزرسانی تنظیمات خاص بدون دست‌زدن به "
+"سایرین"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:30
+#: d9502db82fc546fe9345f6faac7e6287
+msgid "Installation"
+msgstr "نصب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:32
+#: e2117ace7c5942be8dc8932837e5d81e
+msgid "The CLI is included with atomate2siesta:"
+msgstr "رابط خط فرمان به همراه atomate2siesta ارائه می‌شود:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:38
+#: b1d10a0d8a914a5d978941db6b44113e
+msgid "Verify installation:"
+msgstr "تأیید نصب:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:45
+#: 289eaa1790184e7eb77afb8bb6b87432
+msgid "Available Commands"
+msgstr "دستورات موجود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:51
+#: 3dbcffa6873c4cbeb63ec02401ba60c6
+msgid "Command"
+msgstr "دستور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:52
+#: d6aae2b7f6fe40db87b6a5c9e3c27f1f
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:53
+#: bf435aa4ae3d4fc1a1f1dde2659cbc7e
+msgid "``install``"
+msgstr "``install``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:54
+#: c24cf82905dc44edb21b496974dd800d
+msgid "Install jobflow-remote package"
+msgstr "نصب بسته jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:55
+#: 39c7c6647e874828acdffdd8bfcb21bd
+msgid "``setup``"
+msgstr "``setup``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:56
+#: 9c5b1788ad124e90ba5c79a5f6c058de
+msgid "Generate or update project configuration"
+msgstr "تولید یا به‌روزرسانی پیکربندی پروژه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:57
+#: e4a66f829fbe444983a013c1f8880579
+msgid "``update``"
+msgstr "``update``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:58
+#: 13f000a05a6047f480e2fd6ed5bfda17
+msgid "Update existing project configuration"
+msgstr "به‌روزرسانی پیکربندی موجود پروژه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:59
+#: 2cf5d4d955f64fa48fd0a3285f02b128
+msgid "``info``"
+msgstr "``info``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:60
+#: b903bd13a2144831adf5828331c62bd6
+msgid "Show project information and list all projects"
+msgstr "نمایش اطلاعات پروژه و فهرست تمام پروژه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:61
+#: 8f194fca00ab4d61b3492d5f5e397249
+msgid "``test``"
+msgstr "``test``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:62
+#: 71216d54d5124e36af6ac95742dc47df
+msgid "Submit test job to verify setup"
+msgstr "ارسال کار آزمایشی برای تأیید راه‌اندازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:63
+#: 9ad7d851711045bf9346240d4100889a
+msgid "``runner``"
+msgstr "``runner``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:64
+#: baaff6ba9a7648c8860cbd6288180ef8
+msgid "Display runner management commands"
+msgstr "نمایش دستورات مدیریت اجراکننده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:67
+#: 52d042ef92c349db9be07b088a9e09f8
+msgid "Command Details"
+msgstr "جزئیات دستورات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:70
+#: e29d0e7a33a147e7a0254bd22c197d76
+msgid "1. Install Command"
+msgstr "۱. دستور Install"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:72
+#: a4f3e4590e1a43368fb4287560066a5b
+msgid "Install jobflow-remote package (stable or development version)."
+msgstr "نصب بسته jobflow-remote (نسخه پایدار یا توسعه)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:74
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:117
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:231
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:340
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:400
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:449
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:474
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:593
+#: 2535b05de2f9491384f61d6856c75cba 29e6b3cf38f54aef98707f4add9c6585
+#: 61b12fd1c75947a89ecf37702c3e5289 898cd6cbf51144bca70f634050cff8bb
+#: abcdc7ca31544e6b9230ebc6fcb0a277 c143036985974b14a60de1945c43da52
+#: c49f0d0b3e20457dbdaf08d7ec70d19c db7bc3a7a1c54c7289f031cf4d75679d
+msgid "**Basic Usage:**"
+msgstr "**استفاده پایه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:84
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:136
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:250
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:350
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:493
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:614
+#: 04e98bc07896420c88692f6134957638 37eeba4219b54297bd77f247aa58560f
+#: 7ccccbb452cc4f3fa6908c54ef15f09d a101379f6abc462bb789c7e84bdc434d
+#: be7e76a942584406a5889707469f3e90 c4d2973663474f798976205a175429dc
+msgid "**Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:86
+#: e635d6be0e304b21925f97b3f24f6830
+msgid "``--dev``: Install latest development version from GitHub"
+msgstr "``--dev``: نصب آخرین نسخه توسعه از GitHub"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:88
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:523
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:727
+#: 2555e525500746abbe1cc99ba911ea9b 703f42343c894ce09bc0bd769b30e7db
+#: 9a6df11168114f7f8e9af8364f0f472a
+msgid "**Example Output:**"
+msgstr "**خروجی نمونه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:113
+#: c37fdbde27754dd6b1d709f03a8d6197
+msgid "2. Setup Command"
+msgstr "۲. دستور Setup"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:115
+#: adb8e4961483433888f1c7ddf526d9ed
+msgid "Generate new project configuration or update existing ones."
+msgstr "تولید پیکربندی پروژه جدید یا به‌روزرسانی پیکربندی‌های موجود."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:138
+#: 9a22f2e835c74b628870a5a61c7ba66e
+msgid "``--project-name TEXT``: Project name (default: \"atomate2siesta\")"
+msgstr "``--project-name TEXT``: نام پروژه (پیش‌فرض: \"atomate2siesta\")"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:139
+#: 175b59bedbcb4f9ca28c23d138fc1b9d
+msgid "``--worker-name TEXT``: Worker name (default: \"local_shell\")"
+msgstr "``--worker-name TEXT``: نام کارگر (پیش‌فرض: \"local_shell\")"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:140
+#: 145f16d526b54904b16afb50587ae47c
+msgid "``--database TEXT``: MongoDB database name (default: \"atomate2siesta\")"
+msgstr "``--database TEXT``: نام پایگاه داده MongoDB (پیش‌فرض: \"atomate2siesta\")"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:141
+#: 1650354f8ef74953bf7931705d8e6fc3
+msgid "``--host TEXT``: MongoDB host (default: \"localhost\")"
+msgstr "``--host TEXT``: میزبان MongoDB (پیش‌فرض: \"localhost\")"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:142
+#: d5b3c51c348e4184ab426ae7c9f9cb4b
+msgid "``--port INTEGER``: MongoDB port (default: 27017)"
+msgstr "``--port INTEGER``: پورت MongoDB (پیش‌فرض: ۲۷۰۱۷)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:143
+#: 0bb4f8e0c9404b219cb3b2e107e65755
+msgid "``--update``: Update existing config instead of generating new one"
+msgstr "``--update``: به‌روزرسانی پیکربندی موجود به‌جای تولید پیکربندی جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:144
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:257
+#: 2e6a376f95874a73b34b1550f31a206d 3a2eb7bdb3894a9797a5b31f023f734e
+msgid "``--backup/--no-backup``: Create backup before updating (default: True)"
+msgstr "``--backup/--no-backup``: ایجاد پشتیبان قبل از به‌روزرسانی (پیش‌فرض: True)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:146
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:259
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:406
+#: 9a81106ca41b41e6ae19145fd2e5aeeb aa92fab09a034f01abd41ad80b91bb6b
+#: ce76e6a741cb4c6b8fc32101889e4071
+msgid "**What It Does:**"
+msgstr "**کارکرد:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:148
+#: 43bdf2198ccf40bd9afa6712bb07288f
+msgid "**New Configuration Mode** (without ``--update``):"
+msgstr "**حالت پیکربندی جدید** (بدون ``--update``):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:150
+#: a52d1cb24fd041f58176444f61576680
+msgid "Runs ``jf project generate <project_name>``"
+msgstr "اجرای ``jf project generate <project_name>``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:151
+#: bdb37de68261411c93cba9f06b4c2062
+msgid "Creates ``~/.jfremote/<project_name>.yaml``"
+msgstr "ایجاد ``~/.jfremote/<project_name>.yaml``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:152
+#: 28e630fcc35848fdbfa14d08d4dc2e7d
+msgid "Displays configuration instructions"
+msgstr "نمایش دستورالعمل‌های پیکربندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:154
+#: 603ed3b282e049e8aa3981149e24ed1f
+msgid "**Update Mode** (with ``--update``):"
+msgstr "**حالت به‌روزرسانی** (با ``--update``):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:156
+#: 2f29c830cd00497f9b04c28b6ebb2ae9
+msgid "Creates timestamped backup of existing config"
+msgstr "ایجاد پشتیبان با مُهر زمانی از پیکربندی موجود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:157
+#: c06ff13b74a341bd85fa637f6711e55b
+msgid "Updates MongoDB settings in:"
+msgstr "به‌روزرسانی تنظیمات MongoDB در:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:159
+#: e65d45196c5a43018fb5b337346b6b58
+msgid "``queue.store``"
+msgstr "``queue.store``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:160
+#: 895671c1c5674ce1b95c1249598de471
+msgid "``jobstore.docs_store``"
+msgstr "``jobstore.docs_store``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:161
+#: 138145a919f14ebda03ce163c5fc182e
+msgid "``jobstore.additional_stores`` (if present)"
+msgstr "``jobstore.additional_stores`` (در صورت وجود)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:163
+#: e0cf958d4f334adda1f4f7dc254653d3
+msgid "Preserves all other settings (workers, etc.)"
+msgstr "حفظ تمام تنظیمات دیگر (کارگرها و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:165
+#: 25257ae084c64049992f3f4afdafcee1
+msgid "**Example: Generate New Project**"
+msgstr "**مثال: تولید پروژه جدید**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:195
+#: 5706f82e8a274cc9ba915fdc42fa76aa
+msgid "**Example: Update Existing Configuration**"
+msgstr "**مثال: به‌روزرسانی پیکربندی موجود**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:227
+#: 2d7df4ebd6d7481c92fe89a1b7de7dd6
+msgid "3. Update Command"
+msgstr "۳. دستور Update"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:229
+#: 1e4184bd12e148259495f4f770d35a72
+msgid ""
+"Dedicated command for updating existing configurations with advanced "
+"features."
+msgstr "دستور اختصاصی برای به‌روزرسانی پیکربندی‌های موجود با ویژگی‌های پیشرفته."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:252
+#: c29725f53b434f2a81ef82905fd3d18a
+msgid "``--project-name TEXT``: Project to update (default: \"atomate2siesta\")"
+msgstr ""
+"``--project-name TEXT``: پروژه مورد نظر برای به‌روزرسانی (پیش‌فرض: "
+"\"atomate2siesta\")"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:253
+#: 9e2550c151d74b5694bc74654deea6b6
+msgid "``--database TEXT``: MongoDB database name to update"
+msgstr "``--database TEXT``: نام پایگاه داده MongoDB برای به‌روزرسانی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:254
+#: 70415897664b4f5394f5db527ec09901
+msgid "``--host TEXT``: MongoDB host to update"
+msgstr "``--host TEXT``: میزبان MongoDB برای به‌روزرسانی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:255
+#: aa96bb1b24a9445c88a63fa55dae5fcf
+msgid "``--port INTEGER``: MongoDB port to update"
+msgstr "``--port INTEGER``: پورت MongoDB برای به‌روزرسانی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:256
+#: 3d0ad18d21f941d4a27fde358db047f7
+msgid "``--add-comments``: Add descriptive comments to all config entries"
+msgstr "``--add-comments``: افزودن توضیحات توصیفی به تمام ورودی‌های پیکربندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:261
+#: 5a9b85ca28954f1394b10deacecf0e19
+msgid "Creates timestamped backup (unless ``--no-backup``)"
+msgstr "ایجاد پشتیبان با مُهر زمانی (مگر اینکه ``--no-backup`` استفاده شود)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:262
+#: c4c82f2bbd58403fa2fc8c3d272d857a
+msgid "Loads existing configuration"
+msgstr "بارگذاری پیکربندی موجود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:263
+#: 8f48b252960f41ecbda8c00274390ca3
+msgid "Updates specified MongoDB settings (if provided)"
+msgstr "به‌روزرسانی تنظیمات مشخص‌شده MongoDB (در صورت ارائه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:264
+#: 6bea19dc56fc4114b811fa9c46cfe6ae
+msgid "Optionally rewrites entire file with inline comments"
+msgstr "بازنویسی اختیاری کل فایل با توضیحات درون‌خطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:265
+#: 5084a148215a4590bbb9332652d4c2c5
+msgid "Preserves all other configuration (workers, etc.)"
+msgstr "حفظ تمام پیکربندی‌های دیگر (کارگرها و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:267
+#: d08a503f0b794585bbc42c8137ccaa93
+msgid "**Example: Add Comments to Configuration**"
+msgstr "**مثال: افزودن توضیحات به پیکربندی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:289
+#: 33fc419cd73741c48cb9a74e938ff095
+msgid "**Before adding comments:**"
+msgstr "**قبل از افزودن توضیحات:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:306
+#: 62e3f3f5caac436c82c46b8d2428663e
+msgid "**After adding comments:**"
+msgstr "**بعد از افزودن توضیحات:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:336
+#: 34a94aa3b8aa4b4b904ef51e9cb4d910
+msgid "4. Info Command"
+msgstr "۴. دستور Info"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:338
+#: 74d1e1a9f0074c6db4de78e6e881ed97
+msgid ""
+"Display jobflow-remote installation status, list all projects, and show "
+"detailed project information."
+msgstr ""
+"نمایش وضعیت نصب jobflow-remote، فهرست تمام پروژه‌ها و نمایش اطلاعات "
+"تفصیلی پروژه."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:352
+#: 765f9dab60d64a2ba7aa17ac95b93138
+msgid "``--project-name TEXT``: Show details for a specific project"
+msgstr "``--project-name TEXT``: نمایش جزئیات برای یک پروژه خاص"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:354
+#: 25af8df8980c434a806a7eb4cd794705
+msgid "**Example: List All Projects**"
+msgstr "**مثال: فهرست تمام پروژه‌ها**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:396
+#: 0a30ba46c0134057a3efd48b8850dcf0
+msgid "5. Test Command"
+msgstr "۵. دستور Test"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:398
+#: fea98d84cb16414a887fc648e4fa4a64
+msgid "Submit a test job to verify jobflow-remote setup."
+msgstr "ارسال کار آزمایشی برای تأیید راه‌اندازی jobflow-remote."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:408
+#: ddc0cc0aeaf34757b943d111d667f35d
+msgid "Creates simple test flow: ``add(1, 2) + 3``"
+msgstr "ایجاد جریان آزمایشی ساده: ``add(1, 2) + 3``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:409
+#: 410f691d959f4686b74c8924b13d964c
+msgid "Submits to jobflow-remote"
+msgstr "ارسال به jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:410
+#: e870e6ae3def4317a53362eb6528d5a3
+msgid "Returns job ID"
+msgstr "بازگشت شناسه کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:411
+#: d4d061a73db14c53a9988ee4b1f5871d
+msgid "Displays commands to check job status"
+msgstr "نمایش دستورات برای بررسی وضعیت کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:413
+#: b3754b2dc110425987391bfbb65cf1a7
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:445
+#: 9b309469e0184ec5bf9ecf120fd4d304
+msgid "6. Runner Command"
+msgstr "۶. دستور Runner"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:447
+#: ab3573f861c048b99a66bafd7fda2bb1
+msgid "Display runner management and job control commands."
+msgstr "نمایش دستورات مدیریت اجراکننده و کنترل کار."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:455
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:500
+#: 003cda02952547efa23896a1e92832b8 1c0931ec114a421a843f23450664a950
+msgid "**What It Shows:**"
+msgstr "**چه چیزی نمایش می‌دهد:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:457
+#: 534b6bae36d147d5b4aaab3e86249937
+msgid "Runner daemon commands (start, stop, status, restart, logs)"
+msgstr "دستورات شبح اجراکننده (start, stop, status, restart, logs)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:458
+#: e1b8df8508254e7f856e3fbd70f0b795
+msgid "Job management commands (list, info, output, cancel, retry)"
+msgstr "دستورات مدیریت کار (list, info, output, cancel, retry)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:459
+#: 58928e5ae80c401091f9e88153277c46
+msgid "Useful tips for common operations"
+msgstr "نکات مفید برای عملیات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:464
+#: 788005c457b14b7fb77a8faa0cb07b9a
+msgid "Job Management Commands"
+msgstr "دستورات مدیریت کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:466
+#: 0f9ea873a09b4864afa18391a233d4d0
+msgid ""
+"The CLI provides powerful tools for inspecting and modifying jobflow-"
+"remote jobs, including SIESTA FDF parameter modification."
+msgstr ""
+"رابط خط فرمان ابزارهای قدرتمندی برای بازرسی و تغییر کارهای jobflow-remote"
+" فراهم می‌کند، از جمله تغییر پارامترهای FDF در SIESTA."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:470
+#: cbb210c8fb204e4ca795196be8520807
+msgid "7. Job Inspect Command"
+msgstr "۷. دستور Job Inspect"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:472
+#: 742af55137bf49fa8f1657964849baea
+msgid ""
+"Inspect job details and SIESTA FDF parameters stored in the jobflow-"
+"remote database."
+msgstr ""
+"بازرسی جزئیات کار و پارامترهای FDF در SIESTA که در پایگاه داده jobflow-"
+"remote ذخیره شده‌اند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:495
+#: b7ec906e992e471588d523fb1699aaae
+msgid "``--full``: Show full job details including FDF parameters"
+msgstr "``--full``: نمایش جزئیات کامل کار شامل پارامترهای FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:496
+#: 7fa8531cf51f4c668c9fddbab7a6b995
+msgid "``--fdf-only``: Show only FDF parameters"
+msgstr "``--fdf-only``: نمایش فقط پارامترهای FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:497
+#: 8e72c6418744477c95139cb1a958fd50
+msgid ""
+"``--show-all-defaults``: Show what tier preset contributes (includes "
+"default parameters)"
+msgstr "``--show-all-defaults``: نمایش سهم پیش‌تنظیم سطح (شامل پارامترهای پیش‌فرض)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:498
+#: 1597b1b1a8ac4398a34a6e0491c3bd95
+msgid ""
+"``--show-actual-fdf``: Show the actual generated siesta.fdf file from job"
+" run directory"
+msgstr ""
+"``--show-actual-fdf``: نمایش فایل واقعی تولیدشده siesta.fdf از دایرکتوری "
+"اجرای کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:502
+#: fd5ad2ba5d7e4d4fb8766867c2a89045
+msgid ""
+"**Basic job information** (always shown): - Job name, index, UUID - State"
+" (READY, RUNNING, COMPLETED, FAILED) - Worker assignment - Run directory "
+"path"
+msgstr ""
+"**اطلاعات پایه کار** (همیشه نمایش داده می‌شود): - نام کار، شاخص، UUID - "
+"وضعیت (READY, RUNNING, COMPLETED, FAILED) - تخصیص کارگر - مسیر دایرکتوری "
+"اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:508
+#: 3573c492c9744f619220fc4808d4ca1b
+msgid ""
+"**FDF parameters** (with ``--full`` or ``--fdf-only``): - User-"
+"configurable parameters from job definition - These are the parameters "
+"you can modify with ``job modify-db`` - Does NOT include SIESTA defaults "
+"or auto-generated blocks"
+msgstr ""
+"**پارامترهای FDF** (با ``--full`` یا ``--fdf-only``): - پارامترهای "
+"قابل‌پیکربندی کاربر از تعریف کار - این‌ها پارامترهایی هستند که می‌توانید "
+"با ``job modify-db`` تغییر دهید - شامل پیش‌فرض‌های SIESTA یا بلوک‌های "
+"خودکار تولیدشده نمی‌شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:513
+#: 4b4bece50de9400e8e619c5d10a8f50b
+msgid ""
+"**Tier defaults** (with ``--show-all-defaults``): - Parameters "
+"contributed by tier preset (basic, intermediate, advanced, expert) - "
+"Shows what the tier preset adds beyond user parameters - Helps understand"
+" complete parameter set"
+msgstr ""
+"**پیش‌فرض‌های سطح** (با ``--show-all-defaults``): - پارامترهای ارائه‌شده "
+"توسط پیش‌تنظیم سطح (basic, intermediate, advanced, expert) - نمایش آنچه "
+"پیش‌تنظیم سطح فراتر از پارامترهای کاربر اضافه می‌کند - کمک به درک مجموعه "
+"کامل پارامترها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:518
+#: ce41459fda794657b1352cb979e4b8d5
+msgid ""
+"**Actual FDF file** (with ``--show-actual-fdf``): - Complete generated "
+"siesta.fdf file from job run directory - Includes all parameters: user "
+"params + tier defaults + SIESTA defaults - Retrieved via multiple methods"
+" (local file, SSH, jobflow-remote download)"
+msgstr ""
+"**فایل واقعی FDF** (با ``--show-actual-fdf``): - فایل کامل تولیدشده "
+"siesta.fdf از دایرکتوری اجرای کار - شامل تمام پارامترها: پارامترهای کاربر"
+" + پیش‌فرض‌های سطح + پیش‌فرض‌های SIESTA - بازیابی از طریق روش‌های متعدد "
+"(فایل محلی، SSH، دانلود jobflow-remote)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:575
+#: cffb8432e1124e209776f27a41a9f58e
+msgid "8. Job Modify-DB Command"
+msgstr "۸. دستور Job Modify-DB"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:577
+#: a238bbf9260248d4958a980cbb4128cc
+msgid "Modify job FDF parameters directly in the MongoDB database (RISKY method)."
+msgstr "تغییر پارامترهای FDF کار مستقیماً در پایگاه داده MongoDB (روش پرخطر)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:581
+#: c0bece7f3ec7405dbf247bc693be7193
+msgid "**⚠️  DANGER - DATABASE MODIFICATION ⚠️**"
+msgstr "**⚠️  خطر - تغییر پایگاه داده ⚠️**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:583
+#: 9eea95174abd47168cfc99330b3d38f1
+msgid ""
+"This command modifies jobs DIRECTLY in the MongoDB database! This can "
+"cause:"
+msgstr ""
+"این دستور کارها را مستقیماً در پایگاه داده MongoDB تغییر می‌دهد! این "
+"می‌تواند باعث شود:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:586
+#: 4000ba0505e64b09b27d37a846a280f7
+msgid "Job execution failures"
+msgstr "شکست‌های اجرای کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:587
+#: 846d1ca2697343df9f22d54c2094e98f
+msgid "Data corruption"
+msgstr "خرابی داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:588
+#: 9c6e6933de1d4a72862cb7c5f9cd42ca
+msgid "Loss of reproducibility"
+msgstr "از دست دادن قابلیت بازتولید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:589
+#: 9958fbba762043d9949140eb96ad273d
+msgid "Broken workflow tracking"
+msgstr "شکست ردیابی جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:591
+#: c0b2b2f0ec99451a85000ee4b3aa0102
+msgid "Use ONLY when you understand the risks and have database backups."
+msgstr ""
+"فقط زمانی استفاده کنید که خطرات را درک می‌کنید و پشتیبان از پایگاه داده "
+"دارید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:616
+#: 66c7c83a20564ca1a5b1cb627f24ce18
+msgid ""
+"``-p, --param TEXT``: Parameter to modify (format: ``key=value``). Can be"
+" used multiple times."
+msgstr ""
+"``-p, --param TEXT``: پارامتر برای تغییر (قالب: ``key=value``). می‌تواند "
+"چندین بار استفاده شود."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:617
+#: 090d313d6bc6467c8f70d483eead1bb4
+msgid "``--force``: Skip safety confirmation prompts (USE WITH EXTREME CAUTION)"
+msgstr ""
+"``--force``: نادیده گرفتن پیام‌های تأیید ایمنی (با احتیاط شدید استفاده "
+"کنید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:618
+#: db65b2614ce54f63bef43dfcc3daea71
+msgid ""
+"``--backup / --no-backup``: Create backup before modification (default: "
+"True)"
+msgstr "``--backup / --no-backup``: ایجاد پشتیبان قبل از تغییر (پیش‌فرض: True)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:620
+#: f1115cb84ec2431fb2919754d5ebfdfa
+msgid "**Parameter Syntax:**"
+msgstr "**نحو پارامتر:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:622
+#: 2751d08f154f43fb89ec077d42abb69e
+msgid "**Single-line parameters:**"
+msgstr "**پارامترهای تک‌خطی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:631
+#: 350c9fe1c7f44e0db6e680c6928e7ffc
+msgid "**Block parameters (use Python list syntax):**"
+msgstr "**پارامترهای بلوکی (از نحو لیست Python استفاده کنید):**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:639
+#: 4b247c789b78444ab9c5e0afff2b844c
+msgid "**Numeric and boolean values:**"
+msgstr "**مقادیر عددی و بولی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:648
+#: c8def87c179b4db39dd2f4907f41e535
+msgid "**Case Sensitivity:**"
+msgstr "**حساسیت به حروف بزرگ و کوچک:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:650
+#: 14f9fb2627c24b5190e207398cfb14d4
+msgid ""
+"Parameter names are **case-insensitive** for validation, but you should "
+"use standard SIESTA capitalization for clarity:"
+msgstr ""
+"نام پارامترها برای اعتبارسنجی **حساس به حروف بزرگ و کوچک نیست**، اما باید"
+" از بزرگ‌نویسی استاندارد SIESTA برای وضوح استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:664
+#: 3a37ec5c4eb543a9ba326e43274446e6
+msgid "**What Gets Modified:**"
+msgstr "**چه چیزی تغییر می‌کند:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:666
+#: 51f5f24c4039468ca2025fc584d35d62
+msgid "The command updates the MongoDB document at:"
+msgstr "دستور سند MongoDB را در این مسیر به‌روزرسانی می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:672
+#: 6ec415ef55f24e65afdd9a8f0b133755
+msgid "**Internal parameters are automatically filtered out:**"
+msgstr "**پارامترهای داخلی به‌طور خودکار فیلتر می‌شوند:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:674
+#: 18d51d090f624348b7e8d2921b03c9fd
+msgid ""
+"``tier``, ``xc``, ``mesh_cutoff``, ``kpts``, ``kgrid_cutoff`` "
+"(atomate2siesta internal)"
+msgstr ""
+"``tier``, ``xc``, ``mesh_cutoff``, ``kpts``, ``kgrid_cutoff`` (داخلی "
+"atomate2siesta)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:675
+#: f34d26f810094d5e8b8b67c9f913582e
+msgid "``a2s_*``, ``atomate2siesta_*`` (prefixed internal parameters)"
+msgstr "``a2s_*``, ``atomate2siesta_*`` (پارامترهای داخلی با پیشوند)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:676
+#: 4434a6cb12e04670b2654079d0cbbaab
+msgid "``fdf_arguments`` (handled separately)"
+msgstr "``fdf_arguments`` (به‌طور جداگانه مدیریت می‌شود)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:678
+#: 5957bf4e8f1f4a718d153539ea56c9b6
+msgid "These are NOT modified to prevent deserialization errors."
+msgstr "این‌ها تغییر نمی‌یابند تا از خطاهای غیرسریال‌سازی جلوگیری شود."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:680
+#: b2b18e8c6b6442b0ac9bc0cb663435db
+msgid "**Parameter Validation:**"
+msgstr "**اعتبارسنجی پارامتر:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:682
+#: 95eef27164014e23822f0788a891147a
+msgid ""
+"All parameters are validated against the **dataclass registry** (456 "
+"registered parameters):"
+msgstr ""
+"تمام پارامترها در برابر **رجیستری کلاس داده** اعتبارسنجی می‌شوند (۴۵۶ "
+"پارامتر ثبت‌شده):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:699
+#: 314ea7c130bc4232a6553635d8da02e5
+msgid "**Example Workflow:**"
+msgstr "**جریان کار نمونه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:786
+#: d7d0f68b145941dda699ef5580c9ab7b
+msgid "**Safety Features:**"
+msgstr "**ویژگی‌های ایمنی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:788
+#: 8d5fe10118b64a338177b7dcd039f612
+msgid "**Double confirmation**: Two separate confirmation prompts"
+msgstr "**تأیید دوگانه**: دو پیام تأیید جداگانه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:789
+#: 79ff06d6f81f450f94de2c1fcb7eaab4
+msgid ""
+"**Automatic backup**: Creates timestamped backup in ``jobs_backup`` "
+"collection"
+msgstr ""
+"**پشتیبان‌گیری خودکار**: ایجاد پشتیبان با مُهر زمانی در مجموعه "
+"``jobs_backup``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:790
+#: 92be665338cb44cba0bb5cd93aabb1eb
+msgid "**Preview changes**: Shows exactly what will be modified before applying"
+msgstr "**پیش‌نمایش تغییرات**: نمایش دقیق آنچه قبل از اعمال تغییر می‌یابد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:791
+#: fd8fd6d6b4bb4c1c9f471a42908f9c81
+msgid "**Parameter validation**: Validates against 456 registered FDF parameters"
+msgstr "**اعتبارسنجی پارامتر**: اعتبارسنجی در برابر ۴۵۶ پارامتر ثبت‌شده FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:792
+#: 1752c91d1f4d4bf7803ffe7cda592cc9
+msgid ""
+"**Internal param filtering**: Prevents corruption by filtering internal "
+"parameters"
+msgstr ""
+"**فیلتر پارامترهای داخلی**: جلوگیری از خرابی با فیلتر کردن پارامترهای "
+"داخلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:793
+#: fb3b85f6bfb14aea829e915c405cb0ab
+msgid "**Error detection**: Catches typos and suggests corrections"
+msgstr "**تشخیص خطا**: شناسایی اشتباهات تایپی و پیشنهاد تصحیح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:795
+#: 54f2a5b6fccc4d8aaed6ea6753860913
+msgid "**Backup Management:**"
+msgstr "**مدیریت پشتیبان:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:797
+#: d4eeea2e079a4851a2f1301ffa61de45
+msgid "Backups are stored in MongoDB collection ``jobs_backup``:"
+msgstr "پشتیبان‌ها در مجموعه MongoDB با نام ``jobs_backup`` ذخیره می‌شوند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:807
+#: f2b2527b621542bca113521ea3d429d9
+msgid "**When to Use:**"
+msgstr "**چه موقع استفاده کنیم:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:809
+#: 02ad54846735423c97669b0fb2617c58
+msgid "✅ **Safe scenarios:**"
+msgstr "✅ **سناریوهای ایمن:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:811
+#: bac908de51234c02a573dff0d029432a
+msgid "Job is in READY state (not running)"
+msgstr "کار در وضعیت READY است (در حال اجرا نیست)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:812
+#: 179b4fda03024d91aba12d2ce0caad04
+msgid "You have database backups"
+msgstr "شما پشتیبان از پایگاه داده دارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:813
+#: db0badf3ec7741189d42481b3308041f
+msgid "You need to fix a parameter typo"
+msgstr "نیاز به اصلاح اشتباه تایپی پارامتر دارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:814
+#: 7e912253dd5b4dfb9cc47de0b06e2b1e
+msgid "You want to adjust convergence parameters"
+msgstr "می‌خواهید پارامترهای همگرایی را تنظیم کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:815
+#: c9e7b225841a42c1b9cc8c30b56459de
+msgid "You understand MongoDB and jobflow-remote"
+msgstr "MongoDB و jobflow-remote را می‌فهمید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:817
+#: d5aed4646d8e4632b0ae1771ac0b50e9
+msgid "✗ **Unsafe scenarios:**"
+msgstr "✗ **سناریوهای ناایمن:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:819
+#: 9355b21248954cbb8d14469b3da8b828
+msgid "Job is RUNNING or COMPLETED"
+msgstr "کار در حالت RUNNING یا COMPLETED است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:820
+#: 3aa35d346633400f868dd35098e3ff3e
+msgid "No database backups"
+msgstr "بدون پشتیبان پایگاه داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:821
+#: e8269a612c0d48619a5d4d9113fc8dfb
+msgid "You don't understand the parameter system"
+msgstr "سیستم پارامتر را نمی‌فهمید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:822
+#: 2554feacb8ec456e90cf89f56d26d612
+msgid "You're not sure what you're doing"
+msgstr "مطمئن نیستید چه کاری می‌کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:824
+#: b66704861946429ea5d2d0181bcd7db1
+msgid "**Troubleshooting:**"
+msgstr "**عیب‌یابی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:826
+#: 08c0463fbacd44fd8ab24fdb2b1a5aea
+msgid "**Error: Unknown FDF parameter(s): mesh_cutoff, tier, xc**"
+msgstr "**خطا: پارامتر(های) ناشناخته FDF: mesh_cutoff, tier, xc**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:828
+#: 9f3b62054b4d4740a76cbbb146cd289a
+msgid ""
+"This error occurred in earlier versions when internal parameters weren't "
+"filtered. The current version automatically filters these out."
+msgstr ""
+"این خطا در نسخه‌های قبلی زمانی رخ می‌داد که پارامترهای داخلی فیلتر "
+"نمی‌شدند. نسخه فعلی به‌طور خودکار این‌ها را فیلتر می‌کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:831
+#: 47cdbe3b6ce2446dbe84985461b77993
+msgid "**Solution:** Update to latest version."
+msgstr "**راه‌حل:** به‌روزرسانی به آخرین نسخه."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:833
+#: 156a1b52892e488981049157a0612271
+msgid "**Error: No documents modified**"
+msgstr "**خطا: هیچ سندی تغییر نکرد**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:835
+#: fa32c4bcb2d94816ba6a96a22da8ac5b
+msgid "The query couldn't find the job in the database."
+msgstr "پرس‌وجو نتوانست کار را در پایگاه داده پیدا کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:837
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1116
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1137
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1165
+#: 434a682e8aab478eb543f92f87a12134 8b2e56750ac949e78aebfed7b96b24e1
+#: a6c50561f828453a96956659c16e9f1e d14d4172af46460bae2b48ec0bf904de
+msgid "**Solution:**"
+msgstr "**راه‌حل:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:847
+#: dabf8a9598ba43289616ae2001b4ce7b
+msgid "**Error: Duplicate key error in jobs_backup**"
+msgstr "**خطا: خطای کلید تکراری در jobs_backup**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:849
+#: 0129f3d79f4e4ca79a3365627083878e
+msgid "The backup collection already has this job (from previous modification)."
+msgstr "مجموعه پشتیبان از قبل این کار را دارد (از تغییر قبلی)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:851
+#: 6a801fba12bd48478c5b722ff9e6d593
+msgid ""
+"**Solution:** This is now automatically handled by removing ``_id`` and "
+"adding timestamps."
+msgstr ""
+"**راه‌حل:** این مورد اکنون به‌طور خودکار با حذف ``_id`` و افزودن مُهر "
+"زمانی مدیریت می‌شود."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:854
+#: ee4fd6c288864f45913deb9d6d74fc1f
+msgid "Use Case 9: Inspecting Failed Jobs"
+msgstr "مورد استفاده ۹: بازرسی کارهای شکست‌خورده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:856
+#: 6485e9a84fa44388a4f2145e9ad2701e
+msgid ""
+"**Scenario:** A job failed and you need to understand why and fix "
+"parameters."
+msgstr ""
+"**سناریو:** یک کار شکست خورد و شما نیاز دارید دلیل آن را بفهمید و "
+"پارامترها را اصلاح کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:878
+#: 926582a2921748ca889d2c036ebdd2bc
+msgid "Use Case 10: Enabling Spin-Polarized Calculations"
+msgstr "مورد استفاده ۱۰: فعال‌سازی محاسبات اسپین‌قطبیده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:880
+#: 1b763f302cb948cca61fa364d9abe0ae
+msgid "**Scenario:** You need to enable spin polarization for a magnetic system."
+msgstr "**سناریو:** نیاز دارید قطبش اسپین را برای یک سیستم مغناطیسی فعال کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:903
+#: 5a001ad690e64207bd70056863741b5b
+msgid "Use Case 11: Batch Parameter Modification"
+msgstr "مورد استفاده ۱۱: تغییر دسته‌ای پارامترها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:905
+#: cd431a2db4b94dca8721a7bf43f79a69
+msgid ""
+"**Scenario:** You need to modify multiple parameters at once for "
+"convergence."
+msgstr ""
+"**سناریو:** نیاز دارید چندین پارامتر را به‌طور همزمان برای همگرایی تغییر "
+"دهید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:921
+#: c0ac7a6e1d994eb0ba82ff88988053e1
+msgid "Use Case 12: Comparing User Params vs Tier Defaults"
+msgstr "مورد استفاده ۱۲: مقایسه پارامترهای کاربر در برابر پیش‌فرض‌های سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:923
+#: ba0376b487224a7e879e03192b115872
+msgid "**Scenario:** You want to understand what the tier preset contributes."
+msgstr "**سناریو:** می‌خواهید بفهمید پیش‌تنظیم سطح چه چیزی ارائه می‌دهد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:942
+#: 7d03ba2e3a1e4f7f82bf4277a2fedc7b
+msgid "Common Use Cases"
+msgstr "موارد استفاده رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:945
+#: c344252e01214ff1b68a46d5d75a4779
+msgid "Use Case 1: Setting Up a New Project"
+msgstr "مورد استفاده ۱: راه‌اندازی پروژه جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:947
+#: 3153d4796c0c42958cd7667f810dbace
+msgid "**Scenario:** You need to set up jobflow-remote for the first time."
+msgstr "**سناریو:** نیاز دارید jobflow-remote را برای اولین بار راه‌اندازی کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:976
+#: 21d1cab3e67e42c4be75bc436fc7c9c4
+msgid "Use Case 2: Managing Multiple HPC Clusters"
+msgstr "مورد استفاده ۲: مدیریت چندین خوشه HPC"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:978
+#: 2f1a26ebe2f94362bb646de4e60aa945
+msgid ""
+"**Scenario:** You have three HPC systems and want separate configurations"
+" for each."
+msgstr ""
+"**سناریو:** شما سه سیستم HPC دارید و برای هر کدام پیکربندی جداگانه "
+"می‌خواهید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1003
+#: e4ba8d30e9d84753be3ad691559b4e3a
+msgid "Use Case 3: Migrating MongoDB Database"
+msgstr "مورد استفاده ۳: مهاجرت پایگاه داده MongoDB"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1005
+#: a905af0b58fc4dbe96a607461c6e3ad8
+msgid "**Scenario:** Your MongoDB server is moving to a new host."
+msgstr "**سناریو:** سرور MongoDB شما به میزبان جدیدی منتقل می‌شود."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1038
+#: 8b5595cc078b417d935695b8df979df5
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1041
+#: 9dfb1a64770e41b49c38465c73dbc0ad
+msgid "1. Always Use Backups"
+msgstr "۱. همیشه از پشتیبان استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1052
+#: f27408378f82477493c1c2604009d590
+msgid "2. Add Comments Early"
+msgstr "۲. زودتر توضیحات اضافه کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1063
+#: 658c82f6222a4adf95e7eb87de59f7e0
+msgid "3. Verify After Updates"
+msgstr "۳. بعد از به‌روزرسانی تأیید کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1075
+#: 5a7da5682a564d88944ea6739ff0b572
+msgid "4. Document Worker Configurations"
+msgstr "۴. پیکربندی‌های کارگر را مستند کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1077
+#: 6f422174e773480abfbf079690436cec
+msgid "Use descriptive worker names and add comments:"
+msgstr "از نام‌های توصیفی کارگر استفاده کنید و توضیحات اضافه کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1091
+#: 922149c583304c13855d2be089ed83d4
+msgid "5. Use Project-Specific Commands"
+msgstr "۵. از دستورات اختصاصی پروژه استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1104
+#: 246e33150cb94275bfb5d39d016f8ea7
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1107
+#: 032aa83339a44079b693dba09a103e90
+msgid "Configuration file not found"
+msgstr "فایل پیکربندی پیدا نشد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1109
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1130
+#: 8ef3ef334bb84edda49a81062e66b5ce f1def913ef7e49539832e7c880f60e52
+msgid "**Error:**"
+msgstr "**خطا:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1128
+#: cc6bb97344b04a2c8a10bf78a31d92c0
+msgid "jobflow-remote is not installed"
+msgstr "jobflow-remote نصب نیست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1151
+#: f5c38306c34641998e9007e85faf6358
+msgid "MongoDB connection fails after update"
+msgstr "اتصال MongoDB بعد از به‌روزرسانی شکست می‌خورد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1153
+#: c6438cff61814c8cbc34ff7696966a3d
+msgid "**Symptoms:** ``jf project check --errors`` shows connection errors."
+msgstr "**علائم:** ``jf project check --errors`` خطاهای اتصال را نشان می‌دهد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1155
+#: 5be182111e624957b08f419c2927326f
+msgid "**Diagnosis:**"
+msgstr "**تشخیص:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1183
+#: 61d468e23d0d4be4b516aefa52b3dd10
+msgid "Summary"
+msgstr "خلاصه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1185
+#: 68c0f71e632e474ca99c40188e5142ce
+msgid ""
+"The ``atomate2siesta-jobflow-remote`` CLI provides comprehensive tools "
+"for managing jobflow-remote configurations and jobs:"
+msgstr ""
+"رابط خط فرمان ``atomate2siesta-jobflow-remote`` ابزارهای جامعی برای "
+"مدیریت پیکربندی‌ها و کارهای jobflow-remote فراهم می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1187
+#: bed3bf3407ed48daa9072c323548c830
+msgid "**Setup & Configuration Commands:**"
+msgstr "**دستورات راه‌اندازی و پیکربندی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1189
+#: b646a8c8698d49c18849701c3d457f93
+msgid "``install`` - Install jobflow-remote"
+msgstr "``install`` - نصب jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1190
+#: ce328f38d1b840109085210622ddc93d
+msgid "``setup`` - Generate/update project configurations"
+msgstr "``setup`` - تولید/به‌روزرسانی پیکربندی‌های پروژه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1191
+#: a6d9264c4d7a445280843be7c129f855
+msgid "``update`` - Advanced configuration updates with inline comments"
+msgstr "``update`` - به‌روزرسانی‌های پیشرفته پیکربندی با توضیحات درون‌خطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1192
+#: 5559b34dd5394a629139774af0785d2e
+msgid "``info`` - List and inspect all projects"
+msgstr "``info`` - فهرست و بازرسی تمام پروژه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1193
+#: 6525160b30744411ac459537442f2c2f
+msgid "``test`` - Submit test job to verify setup"
+msgstr "``test`` - ارسال کار آزمایشی برای تأیید راه‌اندازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1194
+#: f3fe4498fa9c4de38b165dd4fa0234f0
+msgid "``runner`` - Display runner management commands"
+msgstr "``runner`` - نمایش دستورات مدیریت اجراکننده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1196
+#: 853f06143921424e979dcc76da71e47f
+msgid "**Job Management Commands:**"
+msgstr "**دستورات مدیریت کار:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1198
+#: bc4f2101c180450c8d2c1a321fd5ca4a
+msgid "``job inspect`` - View job details and FDF parameters"
+msgstr "``job inspect`` - مشاهده جزئیات کار و پارامترهای FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1199
+#: 632a19014a67491391143df5d3dbe7fa
+msgid "``job modify-db`` - Modify job parameters directly in MongoDB (risky)"
+msgstr "``job modify-db`` - تغییر پارامترهای کار مستقیماً در MongoDB (پرخطر)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1201
+#: 0aaf9b9b5b1e4d9589929ba5ac9c297a
+msgid "**Key Features:**"
+msgstr "**ویژگی‌های کلیدی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1203
+#: 64df7fa7a151448c80d3cda11447bf86
+msgid "**Multi-project management**: Handle multiple HPC clusters"
+msgstr "**مدیریت چند پروژه**: مدیریت چندین خوشه HPC"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1204
+#: 046a500578034ac0a7df28b3b50be3dc
+msgid "**Automatic backups**: Safe updates with timestamped backups"
+msgstr ""
+"**پشتیبان‌گیری خودکار**: به‌روزرسانی‌های ایمن با پشتیبان‌های دارای مُهر "
+"زمانی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1205
+#: 524170c149cf4a9d84e6dece18212515
+msgid "**Self-documenting configs**: Inline comments for all settings"
+msgstr "**پیکربندی‌های خودمستند**: توضیحات درون‌خطی برای تمام تنظیمات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1206
+#: a2d915104c50450a9ce4b5a3b301be95
+msgid ""
+"**Safe MongoDB updates**: Update database settings without breaking "
+"configs"
+msgstr ""
+"**به‌روزرسانی‌های ایمن MongoDB**: به‌روزرسانی تنظیمات پایگاه داده بدون "
+"خراب کردن پیکربندی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1207
+#: 15b6101d93214681aae8c69382739ddd
+msgid ""
+"**Job parameter inspection**: View FDF params, tier defaults, actual FDF "
+"files"
+msgstr ""
+"**بازرسی پارامترهای کار**: مشاهده پارامترهای FDF، پیش‌فرض‌های سطح، "
+"فایل‌های واقعی FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1208
+#: a9238aaecbcd48c3a316a27788ac0440
+msgid ""
+"**In-place parameter modification**: Modify running/failed jobs without "
+"recreating flows"
+msgstr ""
+"**تغییر پارامتر در محل**: تغییر کارهای در حال اجرا/شکست‌خورده بدون "
+"بازسازی جریان‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1209
+#: 9fe9afb5330d41d3aeca278427245847
+msgid ""
+"**Parameter validation**: 456 registered FDF parameters with typo "
+"detection"
+msgstr "**اعتبارسنجی پارامتر**: ۴۵۶ پارامتر ثبت‌شده FDF با تشخیص اشتباهات تایپی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1210
+#: 0e13439003ba47d2a1a442112a327255
+msgid "**Internal param filtering**: Prevents deserialization errors"
+msgstr "**فیلتر پارامترهای داخلی**: جلوگیری از خطاهای غیرسریال‌سازی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1211
+#: 430c378234f84aa7a1a795bdac0d664b
+msgid "**Case-insensitive**: Accepts Mesh.Cutoff, mesh.cutoff, MESH.CUTOFF"
+msgstr ""
+"**حساس به حروف بزرگ و کوچک نیست**: Mesh.Cutoff، mesh.cutoff، MESH.CUTOFF "
+"را می‌پذیرد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1213
+#: 88d1f37ff1564a25b75889b7c5771240
+msgid "**Best Practices:**"
+msgstr "**بهترین شیوه‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1215
+#: e17be6c98d3e4f30a675faeda0e406e8
+msgid "**For Setup:**"
+msgstr "**برای راه‌اندازی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1217
+#: d213af78cfdc46cf83fe35e06b4306ae
+msgid "Always use backups (enabled by default)"
+msgstr "همیشه از پشتیبان استفاده کنید (به‌طور پیش‌فرض فعال است)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1218
+#: 9d59ae2c77f24ebf9799088da062a771
+msgid "Add comments after initial setup for documentation"
+msgstr "بعد از راه‌اندازی اولیه برای مستندسازی توضیحات اضافه کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1219
+#: 405dc8c6f1384831a9d3d4f1b33f168d
+msgid "Verify configurations after updates with ``jf project check``"
+msgstr "پیکربندی‌ها را بعد از به‌روزرسانی با ``jf project check`` تأیید کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1220
+#: 8b79a51926994e3e98511be5c40cc992
+msgid "Use descriptive worker names"
+msgstr "از نام‌های توصیفی کارگر استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1221
+#: a37a2b4134d64a13b55e99db383f4935
+msgid "Keep recent backups"
+msgstr "پشتیبان‌های اخیر را نگه دارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1223
+#: a8442c08bbab48969c14b7d3c7917b6e
+msgid "**For Job Modification:**"
+msgstr "**برای تغییر کار:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1225
+#: 8158e38ff43848488d0c8aad14ec58ac
+msgid ""
+"**Inspect before modifying**: Use ``job inspect --full`` to see current "
+"params"
+msgstr ""
+"**قبل از تغییر بازرسی کنید**: از ``job inspect --full`` برای مشاهده "
+"پارامترهای فعلی استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1226
+#: 278565797edf4769b4954dc717fe33a8
+msgid "**Use backups**: Never disable backup creation"
+msgstr "**از پشتیبان استفاده کنید**: هرگز ایجاد پشتیبان را غیرفعال نکنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1227
+#: 73b6972f17f2437fa995a772acc2b887
+msgid "**Validate changes**: Check with ``job inspect`` after modification"
+msgstr "**تغییرات را اعتبارسنجی کنید**: بعد از تغییر با ``job inspect`` بررسی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1228
+#: fb160930675f4fdd8e78ef5414f3dcd7
+msgid "**Understand risks**: Direct DB modification can cause data corruption"
+msgstr "**خطرات را بفهمید**: تغییر مستقیم پایگاه داده می‌تواند باعث خرابی داده شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1229
+#: b598685845cd41c0b909d105a9afe04c
+msgid "**Only modify READY jobs**: Don't modify RUNNING or COMPLETED jobs"
+msgstr ""
+"**فقط کارهای READY را تغییر دهید**: کارهای RUNNING یا COMPLETED را تغییر "
+"ندهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1230
+#: af4744cbe1fb4c19983d924d982a3ec5
+msgid ""
+"**Case doesn't matter**: Use standard capitalization (Mesh.Cutoff) for "
+"clarity"
+msgstr ""
+"**حروف بزرگ و کوچک مهم نیست**: از بزرگ‌نویسی استاندارد (Mesh.Cutoff) برای"
+" وضوح استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1231
+#: 0d6243f272bd4ff9bd92c7255760aa96
+msgid ""
+"**Check tier defaults**: Use ``--show-all-defaults`` to understand preset"
+" contributions"
+msgstr ""
+"**پیش‌فرض‌های سطح را بررسی کنید**: از ``--show-all-defaults`` برای درک "
+"سهم پیش‌تنظیم‌ها استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1234
+#: 16abbd6dd7b643f0bfc2708e70535213
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1236
+#: 818fa3fbeea9431495360d6020efe898
+msgid "`Official Documentation <https://matgenix.github.io/jobflow-remote/>`_"
+msgstr "`مستندات رسمی <https://matgenix.github.io/jobflow-remote/>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1237
+#: aafba6d692b742d09f10a6fe577ed67a
+msgid "`GitHub Repository <https://github.com/Matgenix/jobflow-remote>`_"
+msgstr "`مخزن GitHub <https://github.com/Matgenix/jobflow-remote>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1238
+#: fb9724ac40b3438993b5bad8e7d0952d
+msgid ":doc:`cli-database` - Database CLI Reference"
+msgstr ":doc:`cli-database` - مرجع رابط خط فرمان پایگاه داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-jobflow-remote.rst:1239
+#: 0c4f7e30d23244868f362910e159d60b
+msgid ":doc:`cli-cluster-setup` - Cluster Setup CLI"
+msgstr ":doc:`cli-cluster-setup` - رابط خط فرمان راه‌اندازی خوشه"
+

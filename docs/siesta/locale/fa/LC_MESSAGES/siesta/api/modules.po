@@ -1,0 +1,5422 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:2
+#: b1249c74baee4d1e8a032ede11b5fcd6
+msgid "API Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:8
+#: 21b825a7dad64d06bb0e1aa05c2e2c43
+msgid "Jobs"
+msgstr ""
+
+#: atomate2.siesta.jobs.base:1 b6bf6ffaefa0489ea12016c16dcf8668 of
+msgid "Defines the base SIESTA Maker."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.display_welcome_banner:2
+#: e25023c5ceee44afa091e9812b46d359 of
+msgid "Display the atomate2siesta welcome banner and configuration settings."
+msgstr ""
+
+#: 7f0bf63d29904676b2431c95169c84c7
+#: atomate2.siesta.jobs.base.display_welcome_banner:4 of
+msgid ""
+"This function prints the logo and current SIESTA configuration. It must "
+"be called explicitly (importing the package has no stdout side effects); "
+"gate the call on ``SETTINGS.SIESTA_SHOW_BANNER`` where a banner is "
+"wanted."
+msgstr ""
+
+#: 94ac151def93418386c2d2e9fe7ba943 9fa10e739c5a411f9a5807325ed101cc
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:1
+#: atomate2.siesta.jobs.core.SiestaPhononMaker:1 of
+msgid "Bases: :py:class:`~jobflow.core.maker.Maker`"
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:2 fe9eeef86332449aba291f99824d8079
+#: of
+msgid "Base Siesta job maker."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst
+#: 06023035999342238315320f1ec0ec6d 06818bf55df94569a6d64c73d67e77c4
+#: 08352840be8d45ddba0e330fd40a5e1b 0a7320ed1dd242669cdb288029cd5060
+#: 0e551c8b415849e69219b3391df5d91c 107d03237c314059b9136ee228dae44e
+#: 11fd6c54097141ae9fd015eebbb9bb13 126768b953624196b10c3f2e03e4f55b
+#: 15975bceb87d42e5bc301176140f0937 18d244f765d847a4ac5f94abfe4510fd
+#: 1f9868889bd4458991888e7aff78090b 228d14b282cc48a99cd106bad2155942
+#: 24e7a39e07054c7eb732fbd8014725ac 253e31576fc54aa0a12c6ab8d678883d
+#: 284f2c9ff9e44c678c292c5c6a2ecfd5 2bc1ff4d1e4e417aade8159f0fbca364
+#: 2d9e857ab0c842019432c8a9ea67e0be 2e077ceca079499abcec8049964c6710
+#: 2e4c0f3cb7984affadf37586c0da329c 2e891fdb6500421b96077b185d0ec4fd
+#: 3e0e1e49069e45459cbcde19ef82b29a 3ea93611cd5f4d3d949a874d6d451fd2
+#: 3f35863b508f456faec915355978c56b 47fc0b09525749aa813867e44d1529d4
+#: 54f1464d6ce545f28b80c07b1273f843 56ed5a52447f45b1ba489db089c36ea2
+#: 5addeb8ac923495d8c91bdea612c21b4 6a0c09296de24f98b8e1c3dff7f3dce2
+#: 6cb7a63cf87d40a99a2f983b17d45f06 6fd3f9a815cf4e3094879a746561b0ea
+#: 7ef2fb5af263436195ebc0e80a39769d 8013e3aff6804afaaa843a880369f444
+#: 8071b06b09f840f99a32fe9eaa47745b 8092c58fc6df49df95397bce1efd0f74
+#: 819fadd374a64d3c827a0067720f4976 81f0a249a087479eaf95588286d94313
+#: 830e3fa312b34ffe94098dbbc2fd111b 8318ca39d22645769865e3fc88c66ab3
+#: 84da5551ea234345a30cdbdb0cdffdc2 869b6f7307454921a000420f0cb77748
+#: 8a44ab85d3504ab28eb1e89605305d40 8b0de7fa951a492d8fcf7cef08fbf820
+#: 8c1820dd110644608d49e2361d2bb82b 8de2ea6a43b1471bb55212e9aae76f3b
+#: 8e3bb6e94e264b808c01f4f5889c22d8 8f145c60fcbd4b3fa4fbe7987e2397d0
+#: 946c38a81815450ba4a4d6b375816f33 96337f18a9f8417bb2e7eaac0f7553b6
+#: 99b407c45bf447faae1bafa7bf4a3e08 9a6937fe68fe41b6b1b2ef33b87fa51e
+#: 9bae2e96cc3f440fa0b839385b2e8dce 9d6cb9b044fd415a8441e3124d32af2e
+#: a12e09209dda4201961a54fa1915a284 a820f5cae55848c59b602a5e62f2906b
+#: aad916d589444e9c8fd26b8238028bbc af63f7dac6314a2ca834eae8961230ea
+#: afb57142313b422782c4f68ee5ac17bb b01e7f917ea2440782b7a6a68cce7fc8
+#: b07968833af9400abcc13cc474968434 b2c5771bbef94f0192b7ddb149c4cb1c
+#: b5fbc0d3ae804dd9b9fea65eb04ccab4 b851a6a0783a4ce78d18eec8bdc36e17
+#: c61560a1c83447b6a91c17571b055fb8 c70bc1ef875c4ae087dcc1751cc22fdd
+#: ca496d6d503f48c299a1cf8530f86cce cd6715d623484bfe8beeff63c98fac93
+#: d30bde2ed8074fc0b465b5d8c50f7c1c d96c5bdd6b1749b1b3eeaec128ded9cc
+#: dcae116c2aba42e99005e64bc50f339f dd6b89267dc442e6af2f11fcd7677f1a
+#: df2a100df6564e6a95e6971f3b2e58b4 df8f796b0c994604af91659d366bff92
+#: e0d30700879e4e729e8d08f2e59a8eec e5eba7c23efa48a0a8145bd07944fcd8
+#: e87ae3c23c374a278d75148d659e06f3 ed42c84aa66c4771b07fb9e83f2959ab
+#: ed6a8f3a46c14590bec482717dcd66a3 f012b6fae63c4989b973381a62f936b9
+#: f6d27886c5514808ab806d29e9b04d24 fa24b55daf454f60ac8fb51372ddd3c0
+#: fcd53a8ce7bc40b8ab9d0204676bd67c fdeeb1b63c1443af9b2eeab67653bc78
+msgid "Parameters"
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:4 ef88cf2b2f1146e2a89259332f3e88c8
+#: of
+msgid "The job name."
+msgstr ""
+
+#: 4046f523cf314d519abdddaa83787521 atomate2.siesta.jobs.base.BaseSiestaMaker:6
+#: of
+msgid "A generator used to make the input set."
+msgstr ""
+
+#: 1cb00b5b73fc4dbf837192a302b2e784 atomate2.siesta.jobs.base.BaseSiestaMaker:8
+#: of
+msgid "Keyword arguments that will get passed to :obj:`.write_siesta_input_set`."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:10
+#: deb42338027341abb970b1c398b50927 of
+msgid "Keyword arguments that will get passed to :obj:`.copy_siesta_outputs`."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:12
+#: ededa9839d774212af13f6b2597d4230 of
+msgid "Keyword arguments that will get passed to :obj:`.run_siesta`."
+msgstr ""
+
+#: 0b60c1cbe18f4ead903ac0d4fe0994ab
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:14 of
+msgid "Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`."
+msgstr ""
+
+#: ad531005108b41808bc760a45dfaaed2
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:16 of
+msgid "Keyword arguments that will get passed to :obj:`.should_stop_children`."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:18
+#: c26c513e567b493489369ed0ec582fc5 of
+#, python-brace-format
+msgid ""
+"Additional data to write to the current directory. Given as a dict of "
+"{filename: data}. Note that if using FireWorks, dictionary keys cannot "
+"contain the \".\" character which is typically used to denote file "
+"extensions. To avoid this, use the \":\" character, which will "
+"automatically be converted to \".\". E.g. ``{\"my_file:txt\": \"contents "
+"of the file\"}``."
+msgstr ""
+
+#: 4c2e335259ea4748b4e42298b390859f
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:24 of
+msgid ""
+"Whether the job output (TaskDoc) should be stored in the JobStore through"
+" the response."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:27
+#: e5019275e77442e5bc8f80d22192caed of
+msgid ""
+"Whether to use custodian for automatic error detection and recovery. When"
+" enabled, SIESTA calculations will be automatically retried with "
+"corrected parameters if errors are detected."
+msgstr ""
+
+#: 585e4de6c7684aa7b144dabf6f9b0358
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:31 of
+msgid ""
+"List of error handlers to use with custodian. If None, uses default "
+"handlers (SCF, Memory, Time, Numerical). Only used if use_custodian=True."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:34
+#: d2be5432efa4457a93af1899aea52cc9 of
+msgid ""
+"Maximum number of errors to correct before giving up. Only used if "
+"use_custodian=True."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:37
+#: ee5d4f54ce304303a534af9e621957ff of
+msgid ""
+"Whether to enforce strict convergence checking for relaxation "
+"calculations. If True, validator will fail if geometry does not converge "
+"(forces above tolerance). If False (default), non-converged relaxations "
+"are allowed (useful for dirty/fast calculations). This is independent of "
+"use_custodian: - use_custodian=False, strict_convergence=False: Fast, may"
+" not converge (dirty mode) - use_custodian=True, "
+"strict_convergence=False: Auto-recovery, lenient (default) - "
+"use_custodian=False, strict_convergence=True: Must converge or fail "
+"(strict) - use_custodian=True, strict_convergence=True: Auto-recovery + "
+"strict check (paranoid)"
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:46
+#: da13cd431ab14526ba25da769323892a of
+msgid ""
+"If True, skip SIESTA calculation and generate all input files without "
+"running. This generates complete SIESTA input files (siesta.fdf, "
+"structure.fdf, pseudopotentials) and saves the structure, allowing full "
+"validation of calculation setup before running expensive calculations."
+msgstr ""
+
+#: abd486c081b0462dbd684430935dfcc0
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:51 of
+msgid ""
+"Base directory to save dry-run outputs. A subdirectory will be created "
+"for each calculation using the label. Only used if dry_run=True."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:54
+#: dfed5059c2c444349cfcf00bff95fc0d of
+msgid ""
+"Output format for structure file (e.g., \"cif\", \"xsf\", \"json\"). Only"
+" used if dry_run=True."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:57
+#: b8b63f7c90e24dc0ae2c279511ae7dfc of
+msgid ""
+"Custom label for dry-run output directory and structure file. If None, "
+"automatically generated from maker name and formula. Only used if "
+"dry_run=True."
+msgstr ""
+
+#: 9d69bddc50384361ae87347738f422f4
+#: atomate2.siesta.jobs.base.BaseSiestaMaker:60 of
+#, python-brace-format
+msgid ""
+"Configuration for jobflow-remote resource management. When set, this dict"
+" is propagated to jobs via ``job.update_config()`` to control HPC "
+"resources. Format: ``{\"resources\": {\"ntasks_per_node\": 4, \"time\": "
+"\"02:00:00\", ...}}``. Useful for heterogeneous workflows where different"
+" jobs need different resources (e.g., small molecule reference vs large "
+"supercell). When None (default), jobs use the default jobflow-remote "
+"worker resources."
+msgstr ""
+
+#: 689d1d34e4bb4781ad709fa0521e682c
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.make:2 of
+msgid "Run an SIESTA calculation or create dry-run preview."
+msgstr ""
+
+#: 562c6d8bab9247f3a3b42cfe0c9247c1
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.make:4 of
+msgid "A pymatgen Structure object to create the calculation for."
+msgstr ""
+
+#: 3f747adf82f24a64ba8ae041177e7f5d 93420d5df84f498ab58ada91bc91a30a
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.make:6
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker.make:9 of
+msgid "A previous SIESTA calculation directory to copy output files from."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.make:8
+#: faa7b480c4bc48a88686700af7ce3c3d of
+msgid "An additional directory to copy files from."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst
+#: 062e9004dd9d4d18a816c886b03528d1 063db2d3d81742fbab79fc3dad4d8894
+#: 0a72305204124594a45a8a46b92baf15 0d197827122d459e8cb69b300a6046ef
+#: 0dae5bd3988846cd9079d5e3673b609f 0db8a29dd37440779adb65d5a43af253
+#: 1873652be83e48239a16f6ae5b0681a2 1b4f22b93aa14576a2a828a71333526c
+#: 28d621472fd543de87042c349826ba8f 306f7325e8f9472a8a8333eead685e25
+#: 357a30a503ba42ae821b35a5d70e23f4 3772d8e539654a109f9ec2e7af2e41da
+#: 40723816852e42f0ab76a03d74b57149 46a344207634420d9486e56d7d9e5980
+#: 46ea884539fb4f8abe7a4d19426f3b7f 4850318181ff4cc5b63b90f9d98661f0
+#: 534510dd2b384d77b64ba6608840e362 554ad14218c540feaab7d6f53fcc92b5
+#: 5ad4eaead33c41f4aff619543c4962f2 62195851633d465ab2aa05f3fe07d6b3
+#: 64434fa1d7be44a1a30ced01cc9e6bbf 73f3c090199e4825afc1d662c5a97304
+#: 744e41be098c4319a6afa491a7ea72dd 77a3240d1f1d4201b5058e9df1ce8375
+#: 77ea5d1963ed4aa4b48fc30cd3ff3ff5 7b3a5b7458a34d918aac9bc3043edc25
+#: 84f291dfb15f477db289a2b97c5f50de 915f2c6e495b4aaa92f504fc9989080d
+#: 94403d8fc4d3456cacac119e83e9b4c9 97b7775c8e354edc98639878112975b6
+#: 9f857afe3bd249d2a88724052df511f4 c13be06dcef14ecfa7c8456eaefb9bec
+#: c2ca8cde412b4d66ae2d7bcc0b2b8fbb c8a2cb5045be4e74bbfd73363e10a14a
+#: d25b249d7d76432e93b70bee265efcec d33f85839a924cd29f9a8b068de9cef6
+#: d3c15103339f404abd3a518040c8ab19 d4414807110f4d749d90da780eb55038
+#: d501563371ef4b0e8c5f00e256a24ba8 d7e70f282ee54108aeda3d394b83d6b6
+#: da7ae540b7904679acb4fbf61db4e0d9 de83b603621a4ae392a4a3d76f6c145b
+#: df517a5a6ecc488f8de9fb14d15e44bf f9912f464eab46cca1494d1cede5050e
+#: fbbc5982e5614dfea4be402e13e5d03a
+msgid "Returns"
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.make:11
+#: f271683432234ca7abdd9a9be7ebbff4 of
+msgid "A jobflow Response containing the calculation results or dry-run output."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst
+#: 01aa474141cb4b19baa5708632fb0266 07f338665e6c4ad18a384c46b63c758b
+#: 0c87abd772f44e83a32eac73f9fb0b58 1011c067a45d490098b58e29fd4b0a78
+#: 10e318a8945542918880e8a7232c987b 157102d3ceba4aec8e1acdd32ebfa1e6
+#: 18d0d78f3e3243948f8c725b5ee6a6cc 1f6f7204d7374079b83a7cf46c88fcfd
+#: 20cbbe0cedc84133add7d432b6286ba8 20e0ab686fed4a68b20a96ec4294b357
+#: 22d58b8662e342ff89d3b876e976fdd9 2382538f85264f26a297e3459dd3bfbf
+#: 26be8ffae67b472c8f2b85f9b54e1d00 282c0412cba24610a61c28c78098ed3f
+#: 2b2a70de5ba24ed3870f2c7c5af82ebb 2b41c8ec13fa47c2a345bdfca145c9b3
+#: 2c1802b5218e42e486eec18475b3e174 2d8a83be55874125906078aa37b2fff6
+#: 2e65e3e41fcd4af99f146740b8e2d75a 32c2773fbd4e4106b637a33391e0920f
+#: 357a4ce8f819486bb3600a58f0450992 3b5888c1911c4b38ba1b02f2ae559dd8
+#: 3bdd0be1f7b24ca6aa0a17dd5a12a084 47018414eae94f8886bd2dcc355d80f0
+#: 4de758b4f04a4d068d854006135d859f 5b10613bbd9f41159d70f4cb483ed665
+#: 5ee527114d604ac9960edc72f481195f 62807948d0f8445babbac6590b35c09e
+#: 690449382b214e0ea0383105f5c7beef 6b0667f380d84d6e8cf909088c38ebee
+#: 80e097514bfa495cb3adbe889d5428a1 84f8eac7131f4270a3025294a3abc2ae
+#: 864911689a734c2796e17682c9c43707 870955919ee14b62bd40cf17ead395d1
+#: 8a212811f0f34991a30f71017bcfb9e2 920321d87c95403bbc25d42fa4c8e71d
+#: 99e3ef1773f1462b9d2ef521e88dabcd 9f718c9331404b26aea58227aa1688e7
+#: a2094727292d460194d6522f88d77949 a37ea180f54147caa3cf72ffd1df12b2
+#: a9fc142dac7140b699750e2a21faa049 aaf5be6c59374a2d8457ea6405916a8b
+#: adc82d2c3a204b938aae4831fb223e2a b4daf95d7c0747d29348eaf442d1f31d
+#: b51f297d95334433bed7e9914917538d b6d59568127d479aa77ce0da2bf2599f
+#: bdd486144843451db3d8188e2e8bbc0f c52690179ec0409eb77da5d1647aec52
+#: c7a6b3f37a4847708d067bea10bd9aaf cddccb9057f14e73950a8502bba85916
+#: d37a39c60cb9417f8a7e6dbcfb46e8ce dee110adbfa3484987519e77028be51f
+#: e70a340126cf4ba19854fa798e323f18 e72a1a05464f415282efda7ecc4ff763
+#: f13f49bd735245ea8c456a641d1afcbb f328b7bf075442c49e87211fe05035e4
+#: f56950430de342db9b1e86526414314a f63fee2db8f441f28099abb2bf0a6f84
+msgid "Return type"
+msgstr ""
+
+#: 3fa8224eccef441f962f13e8f60a75d3
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:2 of
+msgid ""
+"Run post-processing steps after the SIESTA calculation, specifically for "
+"phonon calculations."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:4
+#: b1c1d1becb464e06952a2b30fcdca44b of
+msgid ""
+"This method checks if the `input_set_generator` is an instance of "
+"`PhononSetGenerator`, which indicates that the job is related to phonon "
+"calculations. If it is a phonon job, the method will proceed to run the "
+"`vibra` command to perform vibrational analysis."
+msgstr ""
+
+#: a8501fdfc83e43f0805e4421a09e34be
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:8 of
+msgid ""
+"PhononSetGenerator is typically used for generating inputs for phonon-"
+"related calculations in SIESTA. After the main SIESTA calculation is "
+"completed, vibrational modes can be analyzed using the `vibra` binary."
+msgstr ""
+
+#: 3c151fa09c3f45009a128acce2ee8104
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:12 of
+msgid ""
+"The `vibra` command reads the SIESTA input and output files (e.g., "
+"`siesta.fdf`) and produces vibrational analysis results (e.g., "
+"`siesta.vibra.out`)."
+msgstr ""
+
+#: 392aabf35e1e413583f9b49efe62439f
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:17 of
+msgid ""
+"This method does not return any values but performs actions that involve "
+"running post-SIESTA calculations for phonon jobs."
+msgstr ""
+
+#: 1928300f9fc840da99a294cb492464fb 8b35a910c8e042a1a479524812bdab8a
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:19
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:18
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:88
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:84
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:22
+#: cd8da4752c5b45bda37bec2ef0a8ccd7 d1f5eca58c004ec48e17d04a85619856
+#: ec74ae2dff4b4eac82bb4a92cab58f50 of
+msgid "Notes"
+msgstr ""
+
+#: 835e758029ac4d93b16a51a93303e151
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:23 of
+msgid "This method should be called after the SIESTA calculation has finished."
+msgstr ""
+
+#: atomate2.siesta.jobs.base.BaseSiestaMaker.run_post_siesta:24
+#: cf5a515fe68e431aa7a852ea0657b791 of
+msgid ""
+"The `run_vibra` function will use the same keyword arguments "
+"(`run_siesta_kwargs`) passed to the main `run_siesta` method."
+msgstr ""
+
+#: atomate2.siesta.jobs.core:1 db817b17c2f6490aa625c6b0d49ac8c4 of
+msgid "Define all Core SIESTA jobs."
+msgstr ""
+
+#: 0ae03031c7354bf9affb30bf0b00e137 12818f8c2e924e5788fef622e295f329
+#: 2713948eb6434becbba966256d7a0136 3c3d5c2516ad4d40b1eca8367bcb5902
+#: 58cf1383957649c88c6cbb87e75b1c8b
+#: atomate2.siesta.jobs.core.BandStructureMaker:1
+#: atomate2.siesta.jobs.core.DOSMaker:1 atomate2.siesta.jobs.core.LuaMaker:1
+#: atomate2.siesta.jobs.core.OpticalMaker:1
+#: atomate2.siesta.jobs.core.PDOSMaker:1
+#: atomate2.siesta.jobs.core.PhononMaker:1
+#: atomate2.siesta.jobs.core.RelaxMaker:1
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker:1
+#: atomate2.siesta.jobs.core.StaticMaker:1 b0716eac0787493980ec48b7b22970a7
+#: b3111750181647efbccb17a8774a9ff5 c928e4267daa49fbad4fe0644ae5d389
+#: e47b05b8daca401e8cdb954f830a3018 of
+msgid "Bases: :py:class:`~atomate2.siesta.jobs.base.BaseSiestaMaker`"
+msgstr ""
+
+#: atomate2.siesta.jobs.core.StaticMaker:2 cce97ed3ab744983ba82aad50ea2f5bd of
+msgid "SIESTA Static (Single-Point) Energy Calculation."
+msgstr ""
+
+#: 3724f9dca2f747a0b53a1f87e82dda86 atomate2.siesta.jobs.core.StaticMaker:4 of
+msgid ""
+"Performs a self-consistent field (SCF) calculation to determine the "
+"electronic structure and total energy of a fixed geometry. This is the "
+"foundation for most DFT calculations and provides essential properties "
+"without geometry optimization."
+msgstr ""
+
+#: 53e7b48293054ee9b7b124325cd39e43 atomate2.siesta.jobs.core.StaticMaker.scf:2
+#: of
+msgid "Create a SCF maker."
+msgstr ""
+
+#: 0a864dc408a0453289a6cdf6c42f5230 2383bba2fbb6466fa3cadd64fdaee416
+#: 450883007df4408985075c314fa941e6 642e79ca70a843b2b86ac5f691370c01
+#: atomate2.siesta.jobs.core.LuaMaker.fixed_cell_relaxation:4
+#: atomate2.siesta.jobs.core.LuaMaker.neb:4
+#: atomate2.siesta.jobs.core.LuaMaker.variable_cell_relaxation:4
+#: atomate2.siesta.jobs.core.StaticMaker.scf:4 of
+msgid ""
+"Parameters are split into two groups: - Maker parameters: dry_run, "
+"dry_run_output_dir, dry_run_format, dry_run_label, etc. - "
+"InputSetGenerator parameters: user_params, etc."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.RelaxMaker:2 ee39611bfe214fd88c6bfe2affa0338f of
+msgid "SIESTA Structure Relaxation (Geometry Optimization)."
+msgstr ""
+
+#: 18df4766761b4baf8d4df27e1309e367 atomate2.siesta.jobs.core.RelaxMaker:4 of
+msgid ""
+"Optimizes atomic positions and optionally lattice parameters to find the "
+"minimum energy configuration. Uses conjugate gradient or similar "
+"algorithms to iteratively reduce forces and stresses until convergence "
+"criteria are met."
+msgstr ""
+
+#: 324f5597db154cefbea23684d40ece70 97fa919f42244eb0b4da009f3d62c7d9
+#: atomate2.siesta.jobs.core.LuaMaker.fixed_cell_relaxation:2
+#: atomate2.siesta.jobs.core.RelaxMaker.fixed_cell_relaxation:2 of
+msgid "Create a fixed cell relaxation maker."
+msgstr ""
+
+#: 773bd53951be446789f26eeb68724fe0 81f1700482f24df788661114c7a1a72d
+#: atomate2.siesta.jobs.core.RelaxMaker.fixed_cell_relaxation:4
+#: atomate2.siesta.jobs.core.RelaxMaker.variable_cell_relaxation:4 of
+msgid ""
+"Parameters are split into two groups: - Maker parameters: use_custodian, "
+"custodian_handlers, custodian_max_errors, etc. - InputSetGenerator "
+"parameters: user_params, etc."
+msgstr ""
+
+#: 0c25aa90195a471a87ab67929e3df0e7 53923767e2bf4134804ece4f4e944fd8
+#: atomate2.siesta.jobs.core.LuaMaker.variable_cell_relaxation:2
+#: atomate2.siesta.jobs.core.RelaxMaker.variable_cell_relaxation:2 of
+msgid "Create a variable cell relaxation maker."
+msgstr ""
+
+#: 7893657c793948749f48e4c83ae948eb atomate2.siesta.jobs.core.LuaMaker:2 of
+msgid "SIESTA Lua Scripting Interface for Advanced Dynamics and NEB Calculations."
+msgstr ""
+
+#: 25e7333df57547d0a47c807bf2d087b8 atomate2.siesta.jobs.core.LuaMaker:4 of
+msgid ""
+"Enables custom optimization algorithms and advanced molecular dynamics "
+"through SIESTA's Lua scripting interface. This provides fine-grained "
+"control over ionic movement, relaxation algorithms, and reaction pathway "
+"calculations beyond the built-in MD options."
+msgstr ""
+
+#: 57133cf338254460b97ca0ffb9d229b5 atomate2.siesta.jobs.core.LuaMaker.neb:2 of
+msgid "Create a fixed cell neb maker."
+msgstr ""
+
+#: 6a988da4194247cca73fa0e9d2f6bb30
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker:2 of
+msgid "SIESTA Socket Communication for High-Throughput Energy Calculations."
+msgstr ""
+
+#: 511b47d8efb54f6793ad52f6bdcbb8ed
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker:4 of
+msgid ""
+"Accelerates batch calculations by maintaining a persistent SIESTA process"
+" connected via socket protocol. Eliminates repeated initialization "
+"overhead (basis generation, pseudopotential loading) when computing "
+"properties for multiple structures with identical calculation parameters."
+msgstr ""
+
+#: 736e3cf1f5894b1294d9f064d92dd710
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker.make:2 of
+msgid "Run multiple SIESTA calculation with the socket."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker.make:4
+#: d0a93d8a6a044d138b6d52f15f186a2c of
+msgid ""
+"Calculate the properties for multiple structures using the same "
+"parameters using socket communication to speed up the calculations."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.SocketIOStaticMaker.make:7
+#: cd4ce226b8654ce0973ab08b9720e93a of
+msgid "The list of structure objects to run SIESTA on"
+msgstr ""
+
+#: atomate2.siesta.jobs.core.BandStructureMaker:2
+#: b2bab1d1cf11409bb9df4281e05b27b1 of
+msgid "SIESTA Electronic Band Structure Calculation."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.BandStructureMaker:4
+#: e3ada5f20b6547eb9e55b7948218b6c4 of
+msgid ""
+"Computes electronic eigenvalues along high-symmetry k-paths in the "
+"Brillouin zone to visualize band dispersion, band gaps, and electronic "
+"character. Requires a prior SCF calculation to generate converged "
+"Hamiltonian and density matrix."
+msgstr ""
+
+#: 158ce4bf1e734a90ad3e833c149f3d26
+#: atomate2.siesta.jobs.core.BandStructureMaker.bandstructure_calculation:2 of
+msgid "Create a bandstructure calculation maker."
+msgstr ""
+
+#: 26ef4eb582164bafa3772886b555d4a2 6d6738abbc414cc28580b9df72599ed7
+#: atomate2.siesta.jobs.core.BandStructureMaker.bandstructure_calculation:4
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:4
+#: atomate2.siesta.jobs.core.OpticalMaker.optical_calculations:4
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:4
+#: atomate2.siesta.jobs.core.PhononMaker.fc_calculations:4
+#: ba9a470a9e7a437083d2d3c7ef83578c d54b212f229c4889a4c13b6f9bebfef7
+#: d8de90948d4d4dbeb4b72711136566d9 of
+msgid ""
+"Parameters are split into two groups: - Maker parameters: dry_run, "
+"use_custodian, custodian_handlers, etc. - InputSetGenerator parameters: "
+"user_params, etc."
+msgstr ""
+
+#: 84f39def868b4230899b51c65a1eefa7 atomate2.siesta.jobs.core.DOSMaker:2 of
+msgid "SIESTA Total Density of States (DOS) Calculation."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.DOSMaker:4 bbb77d4529394c08a96ebf34b5d30f61 of
+msgid ""
+"Computes the total electronic density of states by sampling eigenvalues "
+"on a dense k-point mesh and applying Gaussian/Lorentzian broadening. "
+"Provides energy-resolved information about electronic structure "
+"complementary to band structure calculations."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:2
+#: fcc75ea978524676917de880a86b32c2 of
+msgid "Create a DOS calculation maker."
+msgstr ""
+
+#: 4d74433c20284ccb823096e8e08cc150
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:8 of
+msgid "Positional arguments passed to DOSSetGenerator"
+msgstr ""
+
+#: 615b7fd2b71d4556a11d62ca472011d9 96cd0bae2a174cd4bb1aac5cd2ed801c
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:9
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:9 of
+msgid "Enable dry-run mode (generate input files without running SIESTA)"
+msgstr ""
+
+#: 0f528c5fe2864dc38fec77ee0412afb8
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:11
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:11
+#: b28fea27893744519034e9845ddef94b of
+msgid "Keyword arguments (user_params, etc.)"
+msgstr ""
+
+#: 5b140fc4947845ce97350c308b32f64a
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:13 of
+msgid "Configured DOS calculation maker"
+msgstr ""
+
+#: 0da35b3ae14c4324838a3da14c21b943 151e57446995458ebb4ed6e7e8a76bf8
+#: 2a61b2cbaf844b1ea50a7840e6dab724 463d46f4b5d34a97a491a855e2b6cd93
+#: 4d46b491073c4a77b8df7feaf7a334b6 4f2ccdf5334443f5b8d20605638a019a
+#: 6a8eba9c290447719889206d34d44236 6cb3028db47b4a22802872e26be3702c
+#: 81a321f39f1b4fd2b9d1fb128b4247de 82eb3daea1ec497898d77bc392b36b22
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:29
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:22
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:54
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:29
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:17
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:27
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:46
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:30
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:65
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:51
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:42
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:44
+#: atomate2.siesta.jobs.core.DOSMaker.dos_calculation:17
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:17
+#: cdc6d70aa6a240a1b35b61f39c6ccd89 cf53ffcc06d744dd893924a1ca65ab1a
+#: e7f8028a9cae4ceca094cc1aac7f301f e97e0bc48fd642f486f760fe759b6856 of
+msgid "Examples"
+msgstr ""
+
+#: 2c137d12aa404635ad025cdbda4caf39 atomate2.siesta.jobs.core.PDOSMaker:2 of
+msgid "SIESTA Projected Density of States (PDOS) Calculation."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.PDOSMaker:4 fdf6450d414b40faaae9dc48c45e1018 of
+msgid ""
+"Decomposes total DOS into orbital-resolved contributions from individual "
+"atoms, revealing which atomic orbitals contribute to specific energy "
+"regions. Essential for understanding chemical bonding, orbital "
+"interactions, and atom-specific electronic character."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:2
+#: e5f84423acec479fa99f987cf9384313 of
+msgid "Create a PDOS calculation maker."
+msgstr ""
+
+#: 954969b61cb04dcd82353f48a7e65653
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:8 of
+msgid "Positional arguments passed to PDOSSetGenerator"
+msgstr ""
+
+#: 8c82519639894ea7a7c4725371779eda
+#: atomate2.siesta.jobs.core.PDOSMaker.pdos_calculation:13 of
+msgid "Configured PDOS calculation maker"
+msgstr ""
+
+#: 14094b8811b0460aa4ef2ad9b25ae30e atomate2.siesta.jobs.core.PhononMaker:2 of
+msgid "SIESTA Phonon Force Constants Calculation."
+msgstr ""
+
+#: 79151e2a41d74b12a76e330c3b9c6d38 atomate2.siesta.jobs.core.PhononMaker:4 of
+msgid ""
+"Computes interatomic force constants for vibrational analysis by "
+"calculating forces on atoms displaced from equilibrium positions in a "
+"supercell. This is the core calculation step for phonopy-based phonon "
+"workflows, providing the force data needed to build the dynamical matrix."
+msgstr ""
+
+#: 58602f5c66d042daa284d9b03839f740
+#: atomate2.siesta.jobs.core.PhononMaker.fc_calculations:2 of
+msgid "Create a phonon force constants calculation maker."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.OpticalMaker:2 f1fa2f3751b044679b112f80a599bd6d of
+msgid "SIESTA Optical Properties Calculation."
+msgstr ""
+
+#: 8767d202264147c9b30507d3852083ee atomate2.siesta.jobs.core.OpticalMaker:4 of
+msgid ""
+"Computes optical response functions (dielectric function, absorption "
+"coefficient, refractive index) by calculating momentum matrix elements "
+"between occupied and unoccupied states. Uses the random phase "
+"approximation (RPA) to determine how the material interacts with "
+"electromagnetic radiation."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.OpticalMaker.optical_calculations:2
+#: b76618101c5d4482878e443be49dabc1 of
+msgid "Create an optical properties calculation maker."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.OpticalMaker.optical_calculations:8
+#: c9c277d8482d4730ace125d13177435c of
+msgid "Positional arguments passed to OpticalSetGenerator"
+msgstr ""
+
+#: atomate2.siesta.jobs.core.OpticalMaker.optical_calculations:9
+#: d92c1613dc1a481197cb9ea5af82486b of
+msgid "Keyword arguments passed to OpticalSetGenerator"
+msgstr ""
+
+#: 15ca8a358f9e423f8410c0ab0e523005
+#: atomate2.siesta.jobs.core.OpticalMaker.optical_calculations:11 of
+msgid "Configured optical calculation maker"
+msgstr ""
+
+#: atomate2.siesta.jobs.core.SiestaPhononMaker:2
+#: f5481b04fe0846e295edc4fb69a532a8 of
+msgid "SIESTA Phonon Calculation with Automatic Plotting and Analysis."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.SiestaPhononMaker:4
+#: f54945d744b5460a95994790c4cdeee1 of
+msgid ""
+"High-level wrapper for complete phonon workflows combining structure "
+"relaxation, force constants calculation via phonopy, and automatic "
+"generation of publication- quality plots and comprehensive text "
+"summaries. Provides fine-grained control over relaxation and force "
+"calculation parameters for maximum accuracy."
+msgstr ""
+
+#: atomate2.siesta.jobs.core.SiestaPhononMaker.make:2
+#: b21c306212cb448c9e9ddaccbb65981c of
+msgid "Create phonon calculation workflow with optional plotting."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker.make:4
+#: atomate2.siesta.jobs.core.SiestaPhononMaker.make:4
+#: ea593cdf60794346a513de3accceb413 ff34cf2d2b4c46d3b4527f56c94a2824 of
+msgid "Input structure"
+msgstr ""
+
+#: 26b55a6cdf444320bd998c22e3c5f5a2
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker.make:6
+#: atomate2.siesta.jobs.core.SiestaPhononMaker.make:6
+#: c19a0b9bd2aa413a8a32c0469c4398bb of
+msgid "Previous directory"
+msgstr ""
+
+#: atomate2.siesta.jobs.core.SiestaPhononMaker.make:9
+#: ba9649a1700443e89d7733fcbfb313cd of
+msgid "Phonon calculation workflow with plotting jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:21
+#: f03ffca97b7e406fa17fba8f7d259019
+msgid "Flows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:24
+#: dffdb8a5fd924c1bb36335a6c21d0806
+msgid "Convergence Workflows"
+msgstr ""
+
+#: 7bf8f0f162884b95b2cbe1324dc18585 atomate2.siesta.flows.convergence:1 of
+msgid "Convergence workflows for SIESTA calculations."
+msgstr ""
+
+#: 04e8a0b4d3ef4cd4947d6968f2e2527c 12fa51b39660437aadf481e83febaf93
+#: 1efb76c360924b9985cfef01fa175ed7 38519a4480a847d0aa18881494e092a1
+#: 3fff14380c584b289e689925b19adb3a 414be78d2b394d2195c128d2af525b6d
+#: 4a2c7b769f124cc9b842c857734651f4 587cece0cb294759a139a663bfaa8476
+#: 5d5498780c024083870bd41ecb3a5434 6c599350d76c427ca6ec220b6b2a5ce8
+#: 90c32175b82a40b9abcfc16f4f1969dc ae23b1936cb1460190cb4f2095b7893c
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:1
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker:1
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker:1
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:1
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:1
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:1
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:1
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:1
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:1
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:1
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:1
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:1
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:1
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:1
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:1
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:1
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:1
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:1
+#: b496d9a5bb014e96952f28b715256967 c02742f1929b40c4b58170b9c7f0b0cb
+#: c92e2418019e499da92634ed9a92b317 de9c78d6c4d6410fa190be82f23a726d
+#: f505b7a7afbe4e4c9d066e7a311aca98 f9bf0bd3a77d4bfea16054d11852cb2e of
+msgid "Bases: :py:class:`~atomate2.siesta.flows.base.BaseSiestaFlowMaker`"
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:2
+#: bfbedc16daba4546930f2711484fc00e of
+msgid "Workflow for converging mesh cutoff parameter."
+msgstr ""
+
+#: 7c30aaad38174a608ef99347aa8d6a21
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:4
+#: of
+msgid ""
+"This workflow: 1. Runs static calculations with different mesh cutoff "
+"values in parallel 2. Collects the total energies from each calculation "
+"3. Plots convergence (absolute energies and energy differences)"
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:9
+#: b934b953b9194e5189b41721d3081ea7 of
+msgid ""
+"The mesh cutoff determines the fineness of the real-space grid used in "
+"SIESTA. Typical convergence criterion: energy difference < 1-5 meV."
+msgstr ""
+
+#: 3f7939fbeda048848ed0a3a6b959c09e 834a98cbd24c4718be44a558bf6a99d9
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:12
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:12
+#: of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates to the static_maker."
+msgstr ""
+
+#: 6d973f312bab4fab9f1f060186a1ff06 9eba3b94ba0749e4a2380802a27d4b2e
+#: ab2d85b7f9344e788496c9bb3b8d0d51
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:29
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:15
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:15
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:30
+#: f66d4a737da143b1a3dea08974508355 of
+msgid "Name of the workflow."
+msgstr ""
+
+#: 7239d5835d814970885c4b33b4004ded 7f817fe9495f4c7ba0fc857aa2cf0f8e
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:17
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:17
+#: of
+msgid "Maker for static calculations."
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:19
+#: d995bc19307340fbbef28f748ec0272f of
+msgid "List of mesh cutoff values to test (in Ry)."
+msgstr ""
+
+#: 1b1663a8bdd245458c2d469b976166a7 429faeac92cd40c999665eea56c9c3bc
+#: 662c481c5b5c4f4dba2cd0992aad5139 69bf5bb139774c2fbf2ed7a8a30882a1
+#: 6d499dd72d064da49b58a0da2fe6b33d
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:45
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:21
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:21
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:46
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:22
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:43
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:34
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:36
+#: bb1e10adc9234d5980db23931440f601 e13a8a15ac2048f88cc3fda067dcb5f3
+#: e22622d36f084e0fb279618df50b342f of
+msgid "If True, skip SIESTA calculations and only save structures (inherited)."
+msgstr ""
+
+#: 5fe7224c340e47cc89e2e103f7d63466 7555d8d8c35841a1b45d1960ae3f1ed7
+#: 82301d5ab3854342baf446ea4b4745da 874b8efae65449f0a05916ab6b568b2b
+#: 928b30a24dc442279cfae039842bc18a 93167558c1a543ce9440fd42a742b7b2
+#: 93b9685c7d8344eea31721ec3d106d56
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:23
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:23
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:48
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:24
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:45
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:36
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:38
+#: of
+msgid "Directory to save dry-run structures (inherited)."
+msgstr ""
+
+#: 1691ef52539043c6adb01a2e0cc467a3 59e17a9bf36d4dc6880592a5653786a4
+#: 68d4d03a61904de99f75f4b7cfe9a205 938cf31fbf294d6987eef28579e919a6
+#: a965af8372f943edbb9084d9afe73631
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:25
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:25
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:50
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:26
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:47
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:38
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:40
+#: d5bd7a6dd6384ffca17b2ac246b72212 f32ca7006c0b458eb55d1a644bab991a of
+msgid "Output format for dry-run structures (inherited)."
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker:27
+#: dbebaee694904abe9c8c7ccf9195e76f of
+msgid ""
+">>> from atomate2.siesta.flows.convergence import "
+"MeshCutoffConvergenceFlowMaker >>> from pymatgen.core import Structure "
+">>> structure = Structure.from_file(\"structure.cif\") >>> maker = "
+"MeshCutoffConvergenceFlowMaker( ...     mesh_cutoffs=[100, 150, 200, 250,"
+" 300, 350, 400] ... ) >>> flow = maker.make(structure)"
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker.make:2
+#: c7296ff951ec41eb95179fd4cab0d3a7 of
+msgid "Create convergence flow for mesh cutoff."
+msgstr ""
+
+#: 48836cf112ea40efa0c3126bfefc4332 a9777f4cc09f471a8395487fddce5eb4
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker.make:4
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker.make:4
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker.make:4
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker.make:4
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker.make:4
+#: e167b341024c4616b0532744c5b391b0 e59f6cfede9543beaaed31345c9ea03f
+#: f860eaaccd6e45fdb664292e13187285 of
+msgid "Structure to calculate"
+msgstr ""
+
+#: 08f832e8ddeb41408e6f1747eabde4fc 54026d223350424a85c07e3cafff7088
+#: 6fa7b55115e24b29bddff340bbb4620a 8cd0c4a618b5401aab8c2993f87c78d6
+#: adbf1c47fdb44dc9b77a024aeca81b58
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker.make:5
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker.make:5
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker.make:5
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker.make:5
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker.make:5
+#: of
+msgid "Previous directory (optional)"
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.mesh_cutoff.MeshCutoffConvergenceFlowMaker.make:7
+#: f28c1a86a2e844f0a2bebe5f4e805ec2 of
+msgid "Flow with mesh cutoff convergence jobs"
+msgstr ""
+
+#: 4cd07fb140bc42c99ea4314a13001379
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:2 of
+msgid "Workflow for converging k-points sampling."
+msgstr ""
+
+#: 7de050f6d04140eaabfc24f57472e015
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:4 of
+msgid ""
+"This workflow: 1. Runs static calculations with different k-point grids "
+"in parallel 2. Collects the total energies from each calculation 3. Plots"
+" convergence (absolute energies and energy differences)"
+msgstr ""
+
+#: 50015b04f1a0403d9c5a80e0a2a6a36b
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:9 of
+msgid ""
+"K-points determine the sampling of the Brillouin zone. Typical "
+"convergence criterion: energy difference < 1-5 meV."
+msgstr ""
+
+#: 47e114cbad844cccb2e1c9ced76fe41e
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:19 of
+msgid "List of k-point grids to test (e.g., [[2,2,2], [4,4,4]])."
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker:27
+#: b406fb8209514455bbbaf6a00a0cdd30 of
+msgid ""
+">>> from atomate2.siesta.flows.convergence import "
+"KpointsConvergenceFlowMaker >>> from pymatgen.core import Structure >>> "
+"structure = Structure.from_file(\"structure.cif\") >>> maker = "
+"KpointsConvergenceFlowMaker( ...     kpoints_list=[[2,2,2], [4,4,4], "
+"[6,6,6], [8,8,8], [10,10,10]] ... ) >>> flow = maker.make(structure)"
+msgstr ""
+
+#: 9dbb0e195e7d44699cfd23166b785293
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker.make:2
+#: of
+msgid "Create convergence flow for k-points."
+msgstr ""
+
+#: 0c6a5245950742f59af3f6ee7fd2ba3f
+#: atomate2.siesta.flows.convergence.kpoints.KpointsConvergenceFlowMaker.make:7
+#: of
+msgid "Flow with k-points convergence jobs"
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:2
+#: b6b03753feb8487487b63abd0b7758ff of
+msgid ""
+"Combined workflow for converging both mesh cutoff and k-points with "
+"intelligent stopping."
+msgstr ""
+
+#: 90a6d479427c476d8724fe83ea1f8ed4
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:4
+#: of
+msgid "This workflow performs two-stage adaptive convergence testing:"
+msgstr ""
+
+#: 103c9fb532e14cd895935ba08156ba86
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:6
+#: of
+msgid ""
+"**Stage 1: Mesh Cutoff Convergence** - Tests mesh cutoff values "
+"sequentially - Stops when convergence criteria are met - Uses coarse "
+"k-points for speed"
+msgstr ""
+
+#: 1b83e2a35a214aa58cc058525cfa3130
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:11
+#: of
+msgid ""
+"**Stage 2: K-points Convergence** - Tests k-point grids sequentially - "
+"Uses the converged mesh cutoff from Stage 1 - Stops when convergence "
+"criteria are met"
+msgstr ""
+
+#: 745866fefb134f3a964d4b6738f17c20
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:16
+#: of
+msgid ""
+"**Convergence Criteria**: Multiple properties can be tested for "
+"convergence: - Energy difference (ΔE) - always tested - Fermi energy "
+"difference (ΔEf) - optional - Maximum forces (F_max) - optional - Maximum"
+" stress (σ_max) - optional - Band gap difference (ΔGap) - optional"
+msgstr ""
+
+#: 283c459b31ad466b875e5f273b11bb53
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:24
+#: of
+msgid ""
+"The workflow stops testing when ALL specified criteria are satisfied for "
+"two consecutive parameter values."
+msgstr ""
+
+#: 73e5bb7306bc4f6bb4f81301e9925171
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:27
+#: of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates."
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:31
+#: b6dd5b26326348079b5feaa9016cc9fe of
+msgid "Maker for static calculations (shared by both stages)."
+msgstr ""
+
+#: 0634c080b7e849599cc34f83bb892318
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:33
+#: of
+msgid ""
+"List of mesh cutoff values to test in Stage 1 (in Ry). Tests stop when "
+"convergence criteria are met."
+msgstr ""
+
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:36
+#: cf3909db7b704ef2972f31eaac08743f of
+msgid ""
+"List of k-point grids to test in Stage 2. Tests stop when convergence "
+"criteria are met."
+msgstr ""
+
+#: af4dd3b729ff4988a0f2b50b1391d1d6
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:39
+#: of
+msgid "Coarse k-points to use during mesh cutoff convergence (Stage 1)."
+msgstr ""
+
+#: a0807397d04945ae8e33ebb8dc24ebcc
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:41
+#: of
+msgid "Criteria for determining convergence and stopping tests."
+msgstr ""
+
+#: 6980e3b0bf25401389bb5b3333bbd665
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:43
+#: of
+msgid ""
+"Number of consecutive converged points required before stopping (default:"
+" 2)."
+msgstr ""
+
+#: 7b6b659d46794e5389ea28f902cb8319
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker:47
+#: of
+msgid ""
+">>> from atomate2.siesta.flows.convergence import ( ...     "
+"MeshKpointConvergenceFlowMaker, ...     ConvergenceCriteria, ... ) >>> "
+"from pymatgen.core import Structure >>> >>> # Define convergence criteria"
+" >>> criteria = ConvergenceCriteria( ...     energy_tol=1.0,      # 1 meV"
+" energy difference ...     fermi_tol=0.01,      # 0.01 eV Fermi energy "
+"difference ...     force_tol=0.01,      # 0.01 eV/Å maximum force ..."
+"     stress_tol=0.05,     # 0.05 eV/Å³ maximum stress ... ) >>> >>> "
+"structure = Structure.from_file(\"structure.cif\") >>> maker = "
+"MeshKpointConvergenceFlowMaker( ...     mesh_cutoffs=[200, 250, 300, 350,"
+" 400, 450, 500], ...     kpoints_list=[[2,2,2], [4,4,4], [6,6,6], "
+"[8,8,8], [10,10,10]], ...     stage1_kpoints=[4, 4, 4], ...     "
+"convergence_criteria=criteria, ... ) >>> flow = maker.make(structure) >>>"
+" >>> # Workflow will stop testing when all criteria are met >>> # No need"
+" to test all 7 mesh cutoffs if converged at 350 Ry!"
+msgstr ""
+
+#: 89f54b35eb1145df8eef68da96e07476
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker.make:2
+#: of
+msgid "Create combined convergence flow with intelligent stopping."
+msgstr ""
+
+#: 29f51464179349b5bb918955acb7b383
+#: atomate2.siesta.flows.convergence.combined.MeshKpointConvergenceFlowMaker.make:7
+#: of
+msgid "Flow with two-stage adaptive convergence"
+msgstr ""
+
+#: 4cd8d45feda2462fbc6964a4d8a9f278 85d4334f129246d08e2b43afbb8d015e
+#: a9b60ee0773846a79a9f977be01b88fd
+#: atomate2.siesta.flows.convergence.combined.ConvergenceCriteria:1
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:1
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:1 of
+msgid "Bases: :py:class:`object`"
+msgstr ""
+
+#: 00f063402e594beebb52f49dc925fc05
+#: atomate2.siesta.flows.convergence.combined.ConvergenceCriteria:2 of
+msgid "Convergence criteria for stopping tests."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:32
+#: a2f95136591c44b09cb103e38c89343f
+msgid "Basis Convergence Workflows"
+msgstr ""
+
+#: 5372670fec0e46f89b89034cb0cb63d4 atomate2.siesta.flows.basis:1 of
+msgid "Basis-related convergence workflows for SIESTA."
+msgstr ""
+
+#: 2725a31933724bb4909608d2afad0163
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:2
+#: of
+msgid "Workflow for testing PAO.EnergyShift and PAO.SplitNorm convergence."
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:4
+#: ca55aa755fef4db0a544582192789be4 of
+msgid ""
+"This workflow systematically tests different combinations of "
+"PAO.EnergyShift and PAO.SplitNorm parameters to find optimal basis "
+"generation settings."
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:7
+#: c670c144c001445bbd7fb9ec7834afe6 of
+msgid "Workflow steps:"
+msgstr ""
+
+#: 00fc0d581e924d6999bb14cdba47d670
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:9
+#: of
+msgid "Runs SCF calculations with different (EnergyShift, SplitNorm) combinations"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:10
+#: f86bbb619c4f46b8b5c6ba759d735657 of
+msgid "Collects total energies and forces for each combination"
+msgstr ""
+
+#: 835927705c1c4692a27c8d07a0986b72
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:11
+#: of
+msgid "Creates convergence plots:"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:13
+#: ed15895baea8422eaa4c6d3d8bef5994 of
+msgid "Energy vs EnergyShift (for each SplitNorm)"
+msgstr ""
+
+#: 7241bbefb9dc4427990e7286ad262713
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:14
+#: of
+msgid "Energy vs SplitNorm (for each EnergyShift)"
+msgstr ""
+
+#: 8f3c9d2496b043e9b4d99a1c42471ac5
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:15
+#: of
+msgid "2D energy landscape heatmap"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:16
+#: c5ac1973a35843519bad081656944888 of
+msgid "Basis quality map with force indicators"
+msgstr ""
+
+#: a17ef37cd0e442b9bf2efca481a20b4e
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:18
+#: of
+msgid "Generates detailed summary with recommendations"
+msgstr ""
+
+#: 2368c903a99f40ff8db01146aa9f2aa4
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:20
+#: of
+msgid ""
+"These parameters control SIESTA's numerical atomic orbital (PAO) "
+"generation:"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:22
+#: c428f995d66448ddb4cd78227df4f67b of
+msgid ""
+"PAO.EnergyShift: Confinement energy for basis orbitals (Ry) Lower values "
+"→ more extended orbitals → larger, more accurate basis"
+msgstr ""
+
+#: 63ef1e47201e4a458740e5b630784e0a
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:24
+#: of
+msgid ""
+"PAO.SplitNorm: Threshold for split-valence orbital generation Higher "
+"values → more split orbitals → better description of bonding"
+msgstr ""
+
+#: 25112f721aee4450a37703185d49fae9 3c2bcca5307f4b6990bd746bf3ac93c4
+#: 4c4e6cdaf403404eabdb62b8511206cf 5261eabcb1dd4ea28c94992db845ced0
+#: 705b662ea8ac43f1929c855651fb41b8 8972b301dc23482b8da26840b1850005
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker:13
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker:28
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:58
+#: atomate2.siesta.flows.neb:40
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:96
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:25
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:36
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:46
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:28
+#: cecaa963336d4d4783530e26afc9f35b d2868207ee964c2d9178e7e9bd3cd776
+#: e75080df8bb44b3d9c1270cffec1ee13 of
+msgid "Example"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker.make:2
+#: f45dc2076bee4f628fbb4a2e0c24691f of
+msgid "Create basis parameters convergence flow."
+msgstr ""
+
+#: 7c0ead8513a9487c8f50ea76ec3e6b7d
+#: atomate2.siesta.flows.basis.parameters.BasisParametersConvergenceFlowMaker.make:7
+#: of
+msgid "Flow with SCF jobs for each parameter combination"
+msgstr ""
+
+#: 0bc03ef3f7544261bf2e08dfbcd83bac
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:2 of
+msgid "Maker to test convergence with different basis set sizes."
+msgstr ""
+
+#: a25fd648101d4d6eb0afec73304a3f41
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:4 of
+msgid ""
+"This workflow runs SCF calculations with different basis sizes (SZ, DZ, "
+"DZP, TZP, etc.) using fixed PAO.EnergyShift and PAO.SplitNorm parameters."
+" It helps determine the minimum basis size needed for converged results."
+msgstr ""
+
+#: 1a2162cb73d84d5b9f5840cb39619e51 29251ee5091444b19b4b33acdccfe8b1
+#: 2ed5195c43684dfb9576a23d9a67491e 3287712d5d2545ba9239b154b2d17779
+#: 49458cdbc8a24fb6bf5274efe5ab81d1
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:15
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:8
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:26
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:7
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:10 of
+msgid "Name of the workflow"
+msgstr ""
+
+#: 73af4c44dd1c4b3aa1f35099f1b8063a
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:10 of
+msgid "List of basis sizes to test (e.g., [\"SZ\", \"DZ\", \"DZP\", \"TZP\"])"
+msgstr ""
+
+#: 46d4b9203c3240f699a6513ea35a86ee
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:12 of
+msgid "PAO.EnergyShift value (Ry) - fixed for all basis sizes"
+msgstr ""
+
+#: 2ed9033470824348937607d8019af3fa
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:14 of
+msgid "PAO.SplitNorm value - fixed for all basis sizes"
+msgstr ""
+
+#: 1b617906f6d3417391ccaabba72d7fb1 237cbe3c8f844571bb901faa588d4bea
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:16
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:34 of
+msgid "K-points grid [nk1, nk2, nk3]"
+msgstr ""
+
+#: 9672f81edd3a4a8493ba9cff53ecf5fe
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker:18 of
+msgid "Maker for static calculations (if None, uses default StaticMaker)"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker.make:2
+#: ee765d70ffe941afa4570d6505e6d843 of
+msgid "Create a flow to test basis size convergence."
+msgstr ""
+
+#: 3b9011b9256948b485c88cab45f09bdf 84baf1a284e64ce0adafeb0c2db63519
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker.make:4
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker.make:4 of
+msgid "Structure to run calculations on"
+msgstr ""
+
+#: a2619cb26f484002b7a70d2435c44c45 ab33ce18fd1e409d895e1a8c111bb4e5
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker.make:6
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker.make:6 of
+msgid "Previous directory for continuation jobs"
+msgstr ""
+
+#: 537258c50b1c47679707871238627470
+#: atomate2.siesta.flows.basis.size.BasisSizeConvergenceFlowMaker.make:9 of
+msgid "Jobflow Flow with all basis size jobs and analysis"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:2
+#: d21f83f2d3a64033823cac04ae40cd97 of
+msgid "Comprehensive basis convergence: tests both basis sizes AND parameters."
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:4
+#: e3fa668ebe5348e2821ce9c99e438060 of
+msgid ""
+"This workflow runs the full BasisParametersConvergenceMaker for each "
+"basis size, providing complete convergence information for systematic "
+"basis optimization."
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:7
+#: ff4655d60d414b96aecccae0f85c4366 of
+msgid ""
+"For each basis size (SZ, DZ, DZP, etc.), it tests: - Multiple "
+"PAO.EnergyShift values - Multiple PAO.SplitNorm values - All combinations"
+" in parallel"
+msgstr ""
+
+#: 94b5fd3b6d664806ad4578a6f3f48e1c
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:12 of
+msgid ""
+"This is the most comprehensive basis convergence study, suitable for "
+"establishing optimal settings for production calculations."
+msgstr ""
+
+#: 6a2f0e06af0447e49f38d0e9733ad11f
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:17 of
+msgid "List of basis sizes to test"
+msgstr ""
+
+#: a9e3c748970b41348ca6c2d32db3edea
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:19 of
+msgid "PAO.EnergyShift values to test (Ry)"
+msgstr ""
+
+#: 9be4972063e7450b8d0c9d45a9252960
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:21 of
+msgid "PAO.SplitNorm values to test"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:23
+#: e663ba01251443faa478634c3640c25a of
+msgid "K-points grid"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker:25
+#: e7fb5da70c304864b68f4e4d7a9a1cd2 of
+msgid "Maker for static calculations"
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker.make:2
+#: f5c0887421b8471e9a13e05190f34fa4 of
+msgid "Create comprehensive basis convergence flow."
+msgstr ""
+
+#: atomate2.siesta.flows.basis.complete.CompleteBasisConvergenceFlowMaker.make:9
+#: b69ff0dfae2343838bb8a39bc3b6400d of
+msgid "Jobflow Flow with all basis size/parameter combinations"
+msgstr ""
+
+#: 98dfceb9aa2449f88707ae240d5ecaa6
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker:2 of
+msgid "A Flow (maker) to run SCF calculations with different basis sizes."
+msgstr ""
+
+#: 017bbf1cb6a145759a59a27dca686f51
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker:4 of
+msgid "Create a complete Flow:"
+msgstr ""
+
+#: 45a9ecdb791041a2a360dc715e3b36fb
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker:6 of
+msgid "Runs SCF jobs for different basis sizes in parallel."
+msgstr ""
+
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker:7
+#: b76c9adc3cd24c4b9d58586b2f795b41 of
+msgid "Gathers the results to print energies."
+msgstr ""
+
+#: 108bac70d4334555816ed68906955295
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker:8 of
+msgid "Plots the energies vs. basis size."
+msgstr ""
+
+#: 2c9e2d21754d40baab5a1b6d0e431cde
+#: atomate2.siesta.flows.basis.core.DifferentBasisSCFAdvanceFlowMaker.make:2 of
+msgid "Create a Flow with SCF jobs for different basis sizes."
+msgstr ""
+
+#: 6e1618d725c848e28ebcb0da5652f369
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker:2 of
+msgid "Workflow for testing EOS parameters with different basis sets."
+msgstr ""
+
+#: 3f0fcb12901c43b1b237b02b8fc32286
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker:4 of
+msgid ""
+"This workflow: 1. Runs EOS calculations with different basis sets in "
+"parallel 2. Collects equilibrium volume (V₀), energy (E₀), and bulk "
+"modulus (B₀) 3. Plots the convergence of these parameters with basis set "
+"quality 4. Generates a summary comparing all basis sets"
+msgstr ""
+
+#: 4823d991561b467a9ee52be8f2a00287
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker:10 of
+msgid "This helps determine the optimal basis set for accurate bulk properties."
+msgstr ""
+
+#: 3e710d7053304876954b7c7ae8900916
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker.make:2 of
+msgid "Create EOS convergence flow for different basis sets."
+msgstr ""
+
+#: 13b4df2b48bd4f9bbe4b9f66f6f08359
+#: atomate2.siesta.flows.basis.eos.EOSBasisConvergenceFlowMaker.make:7 of
+msgid "Flow with EOS jobs for each basis set"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:40
+#: 010094c589a7466fae2d2b3daf2ba9db
+msgid "Phonon Workflows"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon:1 b91ee8813a014592a38bb195e62c7254 of
+msgid "Phonon-related workflows."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:1
+#: f9fca767be064cffac99a98e909d9ed4 of
+msgid "Bases: :py:class:`~atomate2.siesta.jobs.phonon.phonopy.PhonopyMaker`"
+msgstr ""
+
+#: 280592586e3a44efae1a73c2259835be
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:2 of
+msgid "SIESTA-specific phonon calculation workflow using phonopy."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:4
+#: fb9606ff853e4637982df3aa82be907a of
+msgid ""
+"This is a convenience class that sets up sensible defaults for SIESTA "
+"phonon calculations. It uses: - Variable-cell relaxation for initial "
+"structure optimization - High-quality static calculations for forces - "
+"Automatic supercell generation"
+msgstr ""
+
+#: 8c33c7eb215f4db19692012560aa4950
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:12 of
+msgid "Minimum supercell length in Angstroms (default: 6.0)"
+msgstr ""
+
+#: 79b749af6d014dc384cd1162cf03f763
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:14 of
+msgid "Atomic displacement in Angstroms (default: 0.01)"
+msgstr ""
+
+#: 837833352cd74c769111df528016ee3e
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:16 of
+msgid ""
+"Maker for structure relaxation. Default uses variable-cell relaxation "
+"with tight convergence."
+msgstr ""
+
+#: 9f361626cddf446fa8b94b2d2c2c2af7
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:19 of
+msgid "Maker for force calculations. Default uses DZP basis and 300 Ry cutoff."
+msgstr ""
+
+#: a7a46b0a8fd048029f6c1bae105188b0
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:21 of
+msgid "K-point mesh for force calculations. If None, uses automatic generation."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker:23
+#: c1a01ffda97f4a25b8dd0e74b94a1324 of
+msgid "Q-point mesh for phonon DOS (default: (50, 50, 50))"
+msgstr ""
+
+#: 993968593fe54565b28086e9d871b2b4
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker.make:2 of
+msgid "Create phonon calculation workflow."
+msgstr ""
+
+#: ade6dc5af45e4389a49195bd4d6c319e
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker.make:4 of
+msgid ""
+"Input structure (should be relaxed or will be relaxed if relax_maker "
+"provided)"
+msgstr ""
+
+#: 533ad7ab507c4b11977bd56e307fabd5
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker.make:6 of
+msgid "Previous directory for reusing files"
+msgstr ""
+
+#: 09bdc851e54f4ecab35fc85109d513a7
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker.make:8 of
+msgid "Override the supercell matrix for this specific calculation"
+msgstr ""
+
+#: 79525148f49346ae85b7cde773284d68
+#: atomate2.siesta.flows.phonon.phonopy_maker.SiestaPhononFlowMaker.make:11 of
+msgid "Phonon calculation workflow"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:2
+#: b630dcc75c3c484dbd5184b5a6b87bf1 of
+msgid "Test phonon convergence with respect to supercell size and displacement."
+msgstr ""
+
+#: 51210a1d8dab4033aa02e81be1391a60
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:4 of
+msgid ""
+"This workflow runs multiple phonon calculations with different parameters"
+" to determine optimal settings for converged phonon properties."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:9
+#: ff9f98c86707423bb7b92b291f956166 of
+msgid "List of supercell matrices to test"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:11
+#: e4319b2a96e3400ab66ff772bce926f9 of
+msgid "List of displacement values to test"
+msgstr ""
+
+#: 5f3979058c3742d7af4d741f236e2c94
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker:13 of
+msgid "Base phonon maker to use (settings will be updated for each test)"
+msgstr ""
+
+#: 6cc8fecbae1f4e248c93e80b981c2576
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker.make:2
+#: of
+msgid "Create phonon convergence testing workflow."
+msgstr ""
+
+#: af94ca1214814982b6701c64f5aa67fc
+#: atomate2.siesta.flows.phonon.phonopy_maker.PhononConvergenceFlowMaker.make:9
+#: of
+msgid "Convergence testing workflow"
+msgstr ""
+
+#: 8060d9d6ad1845b198a2f37cfd0f4de7
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:1 of
+msgid ""
+"Bases: :py:class:`~atomate2.siesta.flows.base.BaseSiestaFlowMaker`, "
+":py:class:`~atomate2.common.flows.gruneisen.BaseGruneisenMaker`"
+msgstr ""
+
+#: 9c027e21b56e4bd69c6e14b9b38b5712
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:2 of
+msgid "Maker to calculate Grüneisen parameters using SIESTA."
+msgstr ""
+
+#: 0d149fe760914c0fbf0f574bdb6c96b2
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:4 of
+msgid ""
+"This workflow calculates mode-dependent Grüneisen parameters by computing"
+" phonon frequencies at three different volumes (V₀, V₀(1+δ), V₀(1-δ)) and"
+" using finite differences to approximate the derivatives."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:8
+#: efa466a12e7a4893855dc17927505dab of
+msgid "Name of the Grüneisen workflow. Defaults to \"siesta gruneisen\"."
+msgstr ""
+
+#: 7ab60be7db844988ac14a7239039b870
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:10 of
+msgid ""
+"Maker to optimize the structure before phonon calculations. If None, no "
+"optimization is performed."
+msgstr ""
+
+#: 02acab1287b949d8abf067ed448699ed
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:13 of
+msgid "Maker to use for phonon frequency calculations at different volumes."
+msgstr ""
+
+#: 377abddbfd3242988388154f203f538b
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:15 of
+msgid ""
+"Percentage volume change for finite difference calculations. Default is "
+"0.01 (1% volume change)."
+msgstr ""
+
+#: 8a881cb329d54004b3fcdb9a917dac89
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:18 of
+msgid "Whether to use symmetry in phonon calculations. Default is True."
+msgstr ""
+
+#: 14bb425a07ab474983668b992ed03466
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:20 of
+msgid "Symmetry precision for spglib. Default is 1e-4."
+msgstr ""
+
+#: 40548fd141b243b189ca8460c0302030
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:22 of
+msgid ""
+"Additional keyword arguments passed to the Grüneisen parameter "
+"calculation in phonopy."
+msgstr ""
+
+#: 9156c91220bd4de18bd02ae4be0c5aa4
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:25 of
+msgid "Additional keyword arguments for frequency/eigenvector generation."
+msgstr ""
+
+#: 6cb665148ab949ffb9063e0e2cb698ba
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:30 of
+msgid "Calculate Grüneisen parameters for silicon:"
+msgstr ""
+
+#: 7c3521dbc39a4a7d8847d71ab644cfdd
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker:46 of
+msgid "Using custom volume changes and phonon settings:"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:2
+#: d779cd363a2244b0a6a9a69236ae06c2 of
+msgid "Create the Grüneisen parameter calculation workflow."
+msgstr ""
+
+#: 4961f03649664b2888a84cba4eff0bef
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:4 of
+msgid ""
+"This method creates a workflow that: 1. Optionally optimizes the input "
+"structure 2. Creates three structures with volumes V₀, V₀(1+δ), V₀(1-δ) "
+"3. Calculates phonons for each volume 4. Computes Grüneisen parameters "
+"from frequency changes"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:10
+#: c2452c9dbcaa4099acfe79d2b9452268 of
+msgid "Input structure for which to calculate Grüneisen parameters."
+msgstr ""
+
+#: 7df76db1cd5b40fbb69d2a00a504dca3
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:12 of
+msgid "Previous calculation directory for restarting."
+msgstr ""
+
+#: 7941eaaa0a814d0097733f57e59dcc55
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:15 of
+msgid "A flow containing the complete Grüneisen parameter workflow."
+msgstr ""
+
+#: 40ed6af6e91a486d8d227b9f166562c6
+#: atomate2.siesta.flows.phonon.gruneisen.SiestaGruneisenFlowMaker.make:20 of
+msgid ""
+"The Grüneisen parameter characterizes the change in phonon frequency with"
+" volume and is crucial for: - Thermal expansion coefficient calculations "
+"- Understanding anharmonicity - Predicting temperature-dependent "
+"properties"
+msgstr ""
+
+#: 2d9b6808eeb7480ab1e4a4adbad1cc80 8fa6f836a93e4c2489fc03387182cdfb
+#: atomate2.siesta.flows.phonon.SiestaGruneisenFlowMaker.prev_calc_dir_argname:2
+#: atomate2.siesta.flows.phonon.SiestaQhaFlowMaker.prev_calc_dir_argname:2 of
+msgid "Name of argument to pass previous calculation directory."
+msgstr ""
+
+#: 2e76aebcc6e94945ac04cc1eb202c8b7 a0f471fb802548018549eb8021d1f4b6
+#: atomate2.siesta.flows.phonon.SiestaGruneisenFlowMaker.prev_calc_dir_argname:4
+#: atomate2.siesta.flows.phonon.SiestaQhaFlowMaker.prev_calc_dir_argname:4 of
+msgid ""
+"The argument name for previous calculation directory in SIESTA, which is "
+"\"prev_dir\"."
+msgstr ""
+
+#: aba80efd659243c781c4a23bd60b01f4
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:1 of
+msgid ""
+"Bases: :py:class:`~atomate2.siesta.flows.base.BaseSiestaFlowMaker`, "
+":py:class:`~atomate2.common.flows.qha.CommonQhaMaker`"
+msgstr ""
+
+#: af76d316dd984879b671023317179c23
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:2 of
+msgid "Maker to calculate quasi-harmonic properties using SIESTA."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:4
+#: eb175900d337408a984fae9d28acfb22 of
+msgid ""
+"This workflow combines equation of state (EOS) and phonon calculations to"
+" obtain temperature-dependent thermodynamic properties within the quasi-"
+"harmonic approximation (QHA)."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:8
+#: eadad5d3b5994d88911896cd040d6b73 of
+msgid ""
+"The workflow: 1. Performs an EOS fit to get equilibrium volume and bulk "
+"modulus 2. Calculates phonons at multiple volumes around equilibrium 3. "
+"Constructs the Gibbs free energy surface G(V,T) 4. Extracts temperature-"
+"dependent properties"
+msgstr ""
+
+#: 07ac98c2eadd42578046ef24853254e7
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:14 of
+msgid "Name of the QHA workflow. Defaults to \"siesta qha\"."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:16
+#: c70ba1cae0d6433fb0340339e69da344 of
+msgid ""
+"Maker to optimize the structure before calculations. If None, no "
+"optimization is performed."
+msgstr ""
+
+#: 1e3e9d45342b490f9656a74dbca19a82
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:19 of
+msgid ""
+"Maker for equation of state calculations. If None, uses default "
+"SiestaEosFlowMaker with appropriate settings."
+msgstr ""
+
+#: 175de46647ea4799ac3ae01d89ebb688
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:22 of
+msgid "Maker for phonon calculations at different volumes."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:24
+#: b0460f011b6a4988be2c6dc9f6ff6ab7 of
+msgid ""
+"Number of volumes at which to calculate phonons. Default is 5. Must be at"
+" least 3 for meaningful fitting."
+msgstr ""
+
+#: 427787658a404876831dc6ae89b72da1
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:27 of
+msgid ""
+"Whether to ignore imaginary phonon modes. Default is False. Set to True "
+"for metals or systems with soft modes."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:30
+#: e88a6d486e3145b0ab293043d9697e08 of
+msgid ""
+"Type of EOS to fit. Options: \"vinet\", \"birch_murnaghan\", "
+"\"murnaghan\". Default is \"vinet\"."
+msgstr ""
+
+#: 07e896f29abf4245a9d445f41f6df3cc
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:33 of
+msgid "Pressure(s) in GPa at which to evaluate properties. Default is 0.0."
+msgstr ""
+
+#: 84e6cd7c666b47e7a5a4e57fcc247c3e
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:35 of
+msgid ""
+"Temperature(s) in K at which to evaluate properties. Default is [0, 100, "
+"200, 300, 400, 500, 600, 700, 800, 900, 1000]."
+msgstr ""
+
+#: 36f9a13f28c243b98303948d0f3916f6
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:38 of
+msgid "Whether to skip the QHA analysis step. Default is False."
+msgstr ""
+
+#: 4b8607623caf4bdaacf71a17385eb6a9
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:40 of
+msgid ""
+"Factor to determine volume range for phonon calculations. Volumes will "
+"span [V₀/volume_factor, V₀*volume_factor]. Default is 0.95 (±5% volume "
+"range)."
+msgstr ""
+
+#: 479ef3a791154a0ca558ca8bce5eb984
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:47 of
+msgid "Basic QHA calculation for silicon:"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:63
+#: d6f21ea143c6408ca1d0dba76e3b6651 of
+msgid "Custom temperature range and more phonon calculations:"
+msgstr ""
+
+#: 909a754ec3ce44afb60c14fcf7d4a61a
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker:74 of
+msgid "For metals with soft modes:"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:2
+#: f59989e3d57f4bfaacdd42d32c231aac of
+msgid "Create the quasi-harmonic approximation workflow."
+msgstr ""
+
+#: 9c668b1f76a54d0a9e1f2163908ca830
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:4 of
+msgid ""
+"This method creates a workflow that: 1. Performs structure optimization "
+"(optional) 2. Calculates equation of state to find equilibrium volume 3. "
+"Generates volumes for phonon calculations 4. Calculates phonons at each "
+"volume 5. Performs QHA analysis to extract T-dependent properties"
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:11
+#: c2e8e2ca11e34ff697e9ed5a7d87c058 of
+msgid "Input structure for QHA calculations."
+msgstr ""
+
+#: 805543411908471bb4213fd15a1145d8
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:14 of
+msgid "A flow containing the complete QHA workflow."
+msgstr ""
+
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:19
+#: b49ff1642f874111b5d82c195504b07d of
+msgid ""
+"The quasi-harmonic approximation assumes that phonons are harmonic at "
+"each volume but allows the frequencies to change with volume. This "
+"captures thermal expansion effects while maintaining computational "
+"efficiency compared to fully anharmonic methods."
+msgstr ""
+
+#: 9b8a807bc60f4053b033cca061ff77bf
+#: atomate2.siesta.flows.phonon.qha.SiestaQhaFlowMaker.make:24 of
+msgid ""
+"The resulting properties include: - Thermal expansion coefficient α(T) - "
+"Heat capacities Cv(T) and Cp(T) - Gibbs free energy G(T,P) - Entropy S(T)"
+" - Bulk modulus B(T)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:48
+#: 1c4b9394bb9841b08e88b7953f64246b
+msgid "Elastic Properties Workflows"
+msgstr ""
+
+#: 0d6f331e6918477fb99587f004496ab4 atomate2.siesta.flows.elastic:1 of
+msgid "Flows for calculating elastic constants with SIESTA."
+msgstr ""
+
+#: 060b92ff7c284e169a1ccf1240b1409f
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:1 of
+msgid ""
+"Bases: :py:class:`~atomate2.siesta.flows.base.BaseSiestaFlowMaker`, "
+":py:class:`~atomate2.common.flows.elastic.BaseElasticMaker`"
+msgstr ""
+
+#: 68ebee90d97e4c0eb5e5349af41e1839
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:2 of
+msgid "Maker to calculate elastic constants using SIESTA."
+msgstr ""
+
+#: 1a6af563c9d64d4799574c155cf70515
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:4 of
+msgid "Calculate the elastic tensor of a material using SIESTA. The workflow:"
+msgstr ""
+
+#: 4d216955d3fa4e47a3e0cf590135abf5
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:6 of
+msgid ""
+"**Structural relaxation**: Performs a tight relaxation to achieve ~zero "
+"stress state"
+msgstr ""
+
+#: 63e416ae4bd64bf4a619d90999dd073e
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:7 of
+msgid "**Apply deformations**: Generates strain perturbations on the lattice"
+msgstr ""
+
+#: ab3a145928c740409bcc30c4622e45b3
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:8 of
+msgid ""
+"**Calculate stresses**: Runs SIESTA calculations for each deformed "
+"structure"
+msgstr ""
+
+#: aae98ef5708f4982a4029bc6ea580229
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:9 of
+msgid ""
+"**Fit elastic tensor**: Uses linear elasticity to fit the 6×6 elastic "
+"tensor"
+msgstr ""
+
+#: 54b192a17ba4459ba95e8be030a7944b
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:10 of
+msgid ""
+"**Derive properties**: Calculates bulk modulus, shear modulus, Young's "
+"modulus, etc."
+msgstr ""
+
+#: 36fe4ec545154a0fb811e745a4855518
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:12 of
+msgid "The elastic tensor relates stress (σ) and strain (ε) via Hooke's law:"
+msgstr ""
+
+#: 4f00eff754c8455782ee23ae0f34d642
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:13 of
+msgid "σᵢⱼ = Cᵢⱼₖₗ εₖₗ"
+msgstr ""
+
+#: 284e33ddd61e458a9ced907a490997aa
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:15 of
+msgid ""
+"where C is the 4th-rank elastic tensor (stored as 6×6 matrix in Voigt "
+"notation)."
+msgstr ""
+
+#: 36c9e8f9434448418f72b0de074662ac
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:17 of
+msgid ""
+"From the elastic tensor, we can derive: - Bulk modulus (K): Resistance to"
+" compression - Shear modulus (G): Resistance to shear - Young's modulus "
+"(E): Stiffness in tension - Poisson's ratio (ν): Lateral/axial strain "
+"ratio - Sound velocities - Elastic anisotropy"
+msgstr ""
+
+#: 3aeadc458adf4e4fb685fe234dc252db
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:26 of
+msgid ""
+"It is strongly recommended to symmetrize the input structure first. This "
+"allows the symmetry reduction to minimize the number of required "
+"deformation calculations."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:32
+#: eb26a6614b3f4df6844efa1068b1d786 of
+msgid ""
+"Order of the tensor expansion (2 or 3). Order 2 is standard elasticity. "
+"Order 3 includes third-order elastic constants (for high strain)."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:35
+#: b365cfefe1c646acabb2ce8d313f99a5 of
+msgid "Whether to use symmetry to reduce the number of deformations."
+msgstr ""
+
+#: a19036f6440c467c917bba50f90852a0
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:37 of
+msgid "Symmetry precision for spacegroup operations."
+msgstr ""
+
+#: 21db690c7a5546dcac3b7c6776f9b259
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:39 of
+msgid ""
+"Maker for initial relaxation to zero-stress state. Set to None to skip "
+"(if structure is already relaxed)."
+msgstr ""
+
+#: 940ca379361a41b3901b5fca146b1c4a
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:42 of
+msgid ""
+"Maker for calculating stresses on deformed structures. Typically a static"
+" calculation (ions fixed) or fixed-volume relax."
+msgstr ""
+
+#: ab7b6f2e37164f1ca83d6dda41d2061e
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:45 of
+msgid ""
+"Maximum number of failed deformations to tolerate: - int: absolute number"
+" - float (0-1): fraction of total deformations - None: allow any number "
+"to fail"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:50
+#: cd7814f21b5d42f1a8608914c1076084 of
+msgid "Additional kwargs for deformation generation."
+msgstr ""
+
+#: 8c34bf874a7e472d85f9536fe16d1784
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:52 of
+msgid "Additional kwargs for tensor fitting."
+msgstr ""
+
+#: 936ff8d2028f405aba40caf3ca6b9a6c
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker:54 of
+msgid "Additional kwargs for ElasticDocument creation."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.prev_calc_dir_argname:2
+#: e316acc43e244ebca8d95f224d23262a of
+msgid "Name of argument for previous calculation directory in SIESTA."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.make:2
+#: e967e2e1f2c54facbc539d5f0de68817 of
+msgid "Make flow to calculate elastic constants with automatic result saving."
+msgstr ""
+
+#: ac75d9c306254a0a81853aa9b7bf9cdf
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.make:4 of
+msgid "A pymatgen structure."
+msgstr ""
+
+#: 3a029b9c699648639a8c00d17951247a
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.make:6 of
+msgid "A previous calculation directory to use for copying outputs."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.make:8
+#: c8f1e277de244216a0d733b65b28eb0a of
+msgid "Additional keyword arguments passed to BaseElasticFlowMaker.make()"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.make:10
+#: b30f64282684461db516a534790b0b8f of
+msgid "An elastic constants flow with automatic result export."
+msgstr ""
+
+#: 43a4b794c9134e509d0a31af6dbe76ea
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.stress_sign_correction:2 of
+msgid "Correct the sign AND units of the stress tensor."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.stress_sign_correction:4
+#: fd8609a2a3504837a6a0781a3440eadb of
+msgid ""
+"SIESTA parser converts stress using EV_PER_A3_TO_KBAR but appears to "
+"actually output in a unit that's 100x too small (possibly bar instead of "
+"kbar, or some other unit conversion issue in the parser or TaskDocument)."
+msgstr ""
+
+#: acbb784c2b954e158ca053f993da97fe
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.stress_sign_correction:8 of
+msgid ""
+"The ElasticDocument.from_stresses applies -0.1 assuming input is in kbar."
+" Empirically, we need a factor of -1000 to get correct values: - Silicon "
+"C11 should be ~160 GPa - With factor -10, we get 0.89 GPa (100x too "
+"small) - With factor -1000, we should get ~89 GPa (closer to correct)"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.ElasticFlowMaker.stress_sign_correction:14
+#: bd1d378442de4b19b5e60db0ae9c50f9 of
+msgid "Sign+unit correction factor (-1000.0)."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.save_elastic_results_job:2
+#: fb4fcf9b06ed43bd97c271f27a2ef894 of
+msgid "Job to save elastic constants results with JSON and TXT formats."
+msgstr ""
+
+#: 3ac8b45735e54edba9a08ccc916b3a07
+#: atomate2.siesta.flows.elastic.save_elastic_results_job:4 of
+msgid "The elastic document from fit_elastic_tensor job"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.save_elastic_results_job:6
+#: ee4022d9988c4ad091a1d0ffbd4bd631 of
+msgid "Directory to save results (default: current directory \".\")"
+msgstr ""
+
+#: 314665945e314fddb78f3d48a35815f4
+#: atomate2.siesta.flows.elastic.save_elastic_results_job:9 of
+msgid "Dictionary with paths to saved files"
+msgstr ""
+
+#: 9a507a06713245f2a9f13353c0d081cc
+#: atomate2.siesta.flows.elastic.plot_elastic_tensor_heatmap:2 of
+msgid "Plot elastic tensor as a heatmap."
+msgstr ""
+
+#: 595488afc4e14c7bad2c028523218d58 7b0c237e602346918713392ad0b8c3b9
+#: atomate2.siesta.flows.elastic.plot_elastic_tensor_heatmap:4
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:7
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:9
+#: fd7f5da71c2346d18b61df042e6f7233 of
+msgid "6×6 elastic tensor in IEEE format (GPa)"
+msgstr ""
+
+#: 580836fab4b54a429b2189aba235e3ea 5f9227cee3954574a2b7358b752c8802
+#: 6a1d7ffe558a4c48a8eabeb5799020a2 9bc966d9cf02499d9bb746bd2ae62d13
+#: a5d85eae0758439c9ec4d4ae49575e51
+#: atomate2.siesta.flows.elastic.plot_elastic_tensor_heatmap:6
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:9
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:12
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:10
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:8
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:11
+#: ed7282e02ed0418a9499f8c2ccc827db of
+msgid "Chemical formula"
+msgstr ""
+
+#: 3d630630c5f748d88dcd0f5eabd3ded0 5e962049e2da4ee18b680a0047e186cc
+#: 6e2b84bf06544324bcb5f14d1acc56ec 721a5fffa8ed47bebb5883b77bce66c7
+#: 88531c94624b483a908d131757b9a73c
+#: atomate2.siesta.flows.elastic.plot_elastic_tensor_heatmap:8
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:11
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:14
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:12
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:10
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:13
+#: e96b4d2a80274e1a84c505659a8035fd of
+msgid "Output directory"
+msgstr ""
+
+#: 42dbd82c22ab465eb3f166270ea80472 675482f6f6224a4f8e9bfe6d7cbc2c5a
+#: 6d20ae022d234f9880b1dc0326a62021 837f4e20451e4a71bda9eaedf133c158
+#: atomate2.siesta.flows.elastic.plot_elastic_tensor_heatmap:10
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:13
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:16
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:14
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:12
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:15
+#: cfccd0c01b5d4ecfa1d231338788df83 d1b293a39bfd41fcb652d0fc2af5fa9b of
+msgid "Timestamp for filename"
+msgstr ""
+
+#: 5a9764f418654f03b9a90005b31c97b1 5ca0ac4604774fe59ded3980ac02fcdb
+#: atomate2.siesta.flows.elastic.plot_elastic_tensor_heatmap:13
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:16
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:19
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:17
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:15
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:18
+#: bb983d92225f43339f4e1bd2de60aff5 cda03476d34140059bcb4276cc100ce5
+#: e4ee5260ed99401b9e914d82202c029a fdf6c90f78fe4c76be1265bef136827e of
+msgid "Path to saved plot file, or None if failed"
+msgstr ""
+
+#: 21ae3b0e41c3490d8f3642000c443378
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:2 of
+msgid "Plot mechanical properties as bar chart with reference materials."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:4
+#: c9af5b42b4a64c48908582bd12e26a9a of
+msgid "Bulk modulus (GPa)"
+msgstr ""
+
+#: 5e04d13c10694ae5bddcd4bdf7d71834
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:6 of
+msgid "Shear modulus (GPa)"
+msgstr ""
+
+#: 1dd2ada1a0444357b8a8e25670a37275
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:8 of
+msgid "Young's modulus (Pa)"
+msgstr ""
+
+#: 37f18e1bfa914d28bb5bbd254f7f3e53
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:10 of
+msgid "Poisson's ratio"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:23
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:21
+#: d59fab2a5f884930b3232758eb2d98fc e8245bcc799c48009cf401794d3a0a78 of
+msgid "References"
+msgstr ""
+
+#: 151638ec648e4e5e952216d7e4e58bef 634129c8d4ef4a958a9fe0ccc86f080d
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:24
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:22 of
+msgid "Reference material data from:"
+msgstr ""
+
+#: 11168ef787074613a51f115c13aa229a 3455ad11e9b64607baf50153d1c05993
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:26
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:26 of
+msgid ""
+"Simmons, G. & Wang, H. Single Crystal Elastic Constants and Calculated "
+"Aggregate Properties: A Handbook. MIT Press (1971)."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_mechanical_properties_bar:28
+#: b5b48a6f23b44bd19fa972873f5ddce6 of
+msgid "de Jong, M. et al. Sci. Data 2, 150009 (2015). DOI: 10.1038/sdata.2015.9"
+msgstr ""
+
+#: 958068fd765c44aea27219046dd0b70e
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:2 of
+msgid "Plot stress-strain curves for each deformation type."
+msgstr ""
+
+#: 200ac343fcc7490580b37d4313875835
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:4 of
+msgid "List of deformation matrices"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_stress_strain_curves:6
+#: c78fa8fbdb164b429ca034db5df95e34 of
+msgid "List of stress tensors"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:2
+#: c45c6bbf85ae4268985349f78f63bb27 of
+msgid "Plot 3D surface of directional Young's modulus."
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:4
+#: beb417314a784808a49f01db01b4ec71 of
+msgid ""
+"The directional Young's modulus E(n) for a unit vector n is: 1/E(n) = "
+"Sᵢⱼₖₗ nᵢ nⱼ nₖ nₗ"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_youngs_modulus_3d:7
+#: b76e6a7e00224ba3bcc5a4a7e32b00c0 of
+msgid "where S is the compliance tensor (inverse of elastic tensor)."
+msgstr ""
+
+#: 652383bcfdc84a7b8662bb348280452e
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:2 of
+msgid "Plot 3D surface of directional linear compressibility."
+msgstr ""
+
+#: 24576c54f6bf4d3f9f75a6ac8308a876
+#: atomate2.siesta.flows.elastic.plot_linear_compressibility_3d:4 of
+msgid ""
+"Linear compressibility β(n) = Sᵢⱼₖₖ nᵢ nⱼ Negative linear compressibility"
+" (NLC) is a rare and interesting property."
+msgstr ""
+
+#: 4260a739e4824b49a848ee0a643f80a6
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:2 of
+msgid "Plot Pugh's ratio diagram for ductile/brittle classification."
+msgstr ""
+
+#: 7ea94e9752c44c609b24eae1d3db0519
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:4 of
+msgid "Pugh's criterion: K/G > 1.75 indicates ductile behavior."
+msgstr ""
+
+#: 7d726a9e8264497491840aba5b3dc227
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:6 of
+msgid "Bulk modulus VRH (GPa)"
+msgstr ""
+
+#: 444f1bd80bb54cfd8f04d1a26856ad1e
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:8 of
+msgid "Shear modulus VRH (GPa)"
+msgstr ""
+
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:24
+#: b82dcf767a254c5f9dc872e378f0dd70 of
+msgid ""
+"de Jong, M. et al. Sci. Data 2, 150009 (2015). DOI: 10.1038/sdata.2015.9 "
+"(Materials Project elastic constants database)"
+msgstr ""
+
+#: 333e3d8e8181405dadb940aca0a575d0
+#: atomate2.siesta.flows.elastic.plot_pugh_ratio_diagram:28 of
+msgid ""
+"Every, A.G. & McCurdy, A.K. Landolt-Börnstein, Group III, Vol. 29a, "
+"Second and Higher Order Elastic Constants. Springer (1992)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:56
+#: 25d56492baac47d0bf9fc68dca7f513a
+msgid "Equation of State Workflows"
+msgstr ""
+
+#: atomate2.siesta.flows.eos:1 d69e2296e0eb46e5a0772add36ee91e1 of
+msgid "Equation of State (EOS) workflows for SIESTA."
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.SiestaEosFlowMaker:1
+#: d4b9a81f4a50415f9f02375bebecc9ce of
+msgid ""
+"Bases: :py:class:`~atomate2.siesta.flows.base.BaseSiestaFlowMaker`, "
+":py:class:`~atomate2.common.flows.eos.CommonEosMaker`"
+msgstr ""
+
+#: 69e828a116e24e10b9e03d6e23dc291b
+#: atomate2.siesta.flows.eos.core.SiestaEosFlowMaker:2 of
+msgid "SIESTA Equation of State (EOS) Workflow."
+msgstr ""
+
+#: 9e6f9ae2abe84478b8a21e80bb87647c
+#: atomate2.siesta.flows.eos.core.SiestaEosFlowMaker:4 of
+msgid ""
+"This workflow determines the relationship between a material's energy and"
+" volume, which is fundamental for calculating mechanical properties and "
+"understanding high-pressure behavior."
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.SiestaEosFlowMaker.from_parameters:2
+#: c3d78a1308b54d28a432bd285666fcfe of
+msgid "Creation of SiestaEosFlowMaker from parameters."
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.SiestaEosFlowMaker.from_parameters:4
+#: b724f8cd76734c51bc92dec368aa55b8 of
+msgid ""
+"Dictionary of common parameters for both makers. The one exception is "
+"`species_dir` which can be either a string or a dict with keys "
+"[`initial`, `eos`]. If a string is given, it will be interpreted as the "
+"`species_dir` for the `eos` Maker; the initial double relaxation will be "
+"done then with the default `light` and `tight` species' defaults."
+msgstr ""
+
+#: 3827c22d71cd4ea799490cfcecfcc462
+#: atomate2.siesta.flows.eos.core.SiestaEosFlowMaker.from_parameters:10 of
+msgid "Keyword arguments passed to `CommonEosMaker`."
+msgstr ""
+
+#: 0002e1667af8424da1eb1c00a4d11a34
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:2 of
+msgid ""
+"Full basis convergence testing with EOS: tests all combinations of basis "
+"sizes and PAO parameters (EnergyShift, SplitNorm)."
+msgstr ""
+
+#: 556eb6f93c444ed8821045dcf1d6885b
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:5 of
+msgid ""
+"This comprehensive workflow runs EOS calculations for every combination "
+"of: - Basis sizes (SZ, DZ, DZP, TZP, etc.) - PAO.EnergyShift values "
+"(orbital confinement) - PAO.SplitNorm values (multiple-zeta splitting)"
+msgstr ""
+
+#: 199f8c28454847a09259045eae787b7a
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:10 of
+msgid ""
+"Use this for complete parameter optimization to determine the best basis "
+"settings for accurate bulk properties (V₀, E₀, B₀)."
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:13
+#: e7db51b668f94a6fa5c13039989c604b of
+msgid ""
+"For simple basis comparison with fixed parameters, use "
+"EOSBasisConvergenceMaker instead."
+msgstr ""
+
+#: 3a94f57421c6479e9456cfbd5c126a93
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:15 of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates to child makers (initial_relax_maker, eos_relax_maker, "
+"static_maker)."
+msgstr ""
+
+#: 374d6855c19343318c3d7812fcdd11af
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:18 of
+msgid ""
+"The workflow: 1. Creates EOS calculations for each basis size × "
+"EnergyShift × SplitNorm combination 2. Collects EOS results (equilibrium "
+"volume, energy, bulk modulus) 3. Analyzes convergence for each basis size"
+" 4. Determines optimal PAO parameters for each basis 5. Compares basis "
+"sizes with their optimal parameters 6. Generates comprehensive summary "
+"and recommendations"
+msgstr ""
+
+#: 8c09902d11954acaad7805f9b64e8168
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:28 of
+msgid "List of basis sizes to test (e.g., [\"DZ\", \"DZP\", \"TZP\"])"
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:30
+#: b625dea5f805428faf7f2d4259ac9219 of
+msgid "List of PAO.EnergyShift values to test (in Ry)"
+msgstr ""
+
+#: 3911677cab2d4f66b7ed43b2295e7e04
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:32 of
+msgid "List of PAO.SplitNorm values to test"
+msgstr ""
+
+#: 8f7a8e0606754869a861674075ee77a5
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:36 of
+msgid "Strain range for EOS (e.g., (-0.05, 0.05) for ±5%)"
+msgstr ""
+
+#: 4a393b816241433fb9c36b3d021f4b14
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:38 of
+msgid "Number of strain points for EOS fit"
+msgstr ""
+
+#: 76ec244d782b4b8c8ff61e1929146e99
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:40 of
+msgid "Maker for initial variable-cell relaxation"
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:42
+#: ee4f5857e65d463ebedf46c0031e38eb of
+msgid "Maker for fixed-cell relaxation at each strain"
+msgstr ""
+
+#: 387ebc8f67f6481eabb95a2d6e26b6d2
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker:44 of
+msgid "Maker for static calculations after relaxation (optional)"
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker.make:2
+#: e7e66f3dc7f449288dd42a90ea534b1a of
+msgid "Create EOS parameter convergence workflow."
+msgstr ""
+
+#: 8ca9360cb04f4300914467beb9f7007b
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker.make:4 of
+msgid "A pymatgen Structure object"
+msgstr ""
+
+#: 476424d88777459c8bd575cc5b2ba3ab
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker.make:6 of
+msgid "Previous directory (not used here)"
+msgstr ""
+
+#: 2f5b4feefdb9474daa463a4baeacd420
+#: atomate2.siesta.flows.eos.core.EOSFullBasisConvergenceFlowMaker.make:9 of
+msgid "A Flow containing all EOS jobs and analysis"
+msgstr ""
+
+#: 2b5b7e31343a439a9a7c87a0bb52d8b2
+#: atomate2.siesta.flows.eos.core.collect_eos_parameter_data:2 of
+msgid "Collect EOS results from multiple basis sizes and parameter combinations."
+msgstr ""
+
+#: 7367fb2452d24a0fb8f07d0b4b7db964
+#: atomate2.siesta.flows.eos.core.collect_eos_parameter_data:4 of
+msgid "List of EOS job outputs"
+msgstr ""
+
+#: 893d28af7466490283f1cd2400893d28
+#: atomate2.siesta.flows.eos.core.collect_eos_parameter_data:6 of
+msgid "Metadata for each job (basis_size, energy_shift, split_norm, label)"
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.collect_eos_parameter_data:8
+#: fb67e47311f24744a3607e14e676ba7a of
+msgid "List of basis sizes being tested"
+msgstr ""
+
+#: 3584eca830e8499d899831614d2b6919
+#: atomate2.siesta.flows.eos.core.collect_eos_parameter_data:11 of
+msgid "Dictionary containing collected EOS results"
+msgstr ""
+
+#: 22170f800a52432d8b617e470af4dac4
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_fits_from_data:2 of
+msgid "Plot all EOS fits on a single figure using collected data."
+msgstr ""
+
+#: 18380ec77189495ba85895a6b7e5f46e
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_fits_from_data:4 of
+msgid ""
+"Collected EOS data from collect_eos_parameter_data Must contain: "
+"basis_sizes, labels, all_volumes, all_energies"
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_fits_from_data:7
+#: c480a4df9c634a4e891c2738cbdb0867 of
+msgid "Output filename for plot"
+msgstr ""
+
+#: 1dc7503c7c9543a6af9b7badb6f3878a
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_fits_from_data:10 of
+msgid "Dictionary with plot file path"
+msgstr ""
+
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_timing:2
+#: df43e4bd1ecc48cfa611f1a363f2db1d of
+msgid "Plot timing analysis for EOS parameter convergence study."
+msgstr ""
+
+#: a727bed47c6a4795bb3f0d46209690cb
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_timing:4 of
+msgid ""
+"Collected EOS data from collect_eos_parameter_data Must contain: "
+"basis_sizes, energy_shifts, split_norms, run_times, labels"
+msgstr ""
+
+#: 2c6898e64bc84ed5a8e89f37cb932f08
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_timing:7 of
+msgid "Output filename for timing plot"
+msgstr ""
+
+#: 6cf4cc346f5e495ea699cb7d978f5488
+#: atomate2.siesta.flows.eos.core.plot_eos_parameter_timing:10 of
+msgid "Dictionary with output file path"
+msgstr ""
+
+#: 77eadc193fbd40d7828292222d01bfea
+#: atomate2.siesta.flows.eos.core.write_eos_parameter_summary:2 of
+msgid "Write summary of EOS parameter convergence study."
+msgstr ""
+
+#: 1e5a6d472fb14d608483b97c27788d49
+#: atomate2.siesta.flows.eos.core.write_eos_parameter_summary:4 of
+msgid "Collected EOS data"
+msgstr ""
+
+#: 5e3197d01c5744fe91037511c8b7389f
+#: atomate2.siesta.flows.eos.core.write_eos_parameter_summary:6 of
+msgid "Output filename (auto-generated if None)"
+msgstr ""
+
+#: 2805d63c0ec841f8804d5a0c2b9b3782
+#: atomate2.siesta.flows.eos.core.write_eos_parameter_summary:9 of
+msgid "Dictionary with summary file path"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:64
+#: ea732d73bf354419a448e9a686d7af2a
+msgid "Surface and Adsorption Workflows"
+msgstr ""
+
+#: atomate2.siesta.flows.surface:1 dc36689dcf4f4f8aaff9de434eac4377 of
+msgid "Surface-related flow modules for SIESTA calculations."
+msgstr ""
+
+#: 0da800fdc5894675ac20ae1a59b6501d
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:2 of
+msgid ""
+"Scan adsorption sites on a surface slab with automatic dry-run "
+"propagation."
+msgstr ""
+
+#: 82d336987e964f378e74985ae6848295 aecc04eeba1a4dcbb95210a4ce99d8dd
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:4
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:4 of
+msgid "This workflow:"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:6
+#: dca2e8e535984252aeca874e4c64db02 of
+msgid "Calculates energies of clean slab and isolated adsorbate (once)"
+msgstr ""
+
+#: 06042a4a908f4ba3afc624c7194a8f47
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:7 of
+msgid "Generates a grid of adsorption sites"
+msgstr ""
+
+#: 1742f13956e347509e78e26c5a862b12
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:8 of
+msgid "For each site:"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:10
+#: c43e10bd585c466986bf07c50db194ac of
+msgid "Places adsorbate at specified height"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:11
+#: dd10c088b23e4228bb00ab9228266d1e of
+msgid "Calculates energy of slab+adsorbate"
+msgstr ""
+
+#: 3c6f724bc7014f82b09f718c7d6d9070
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:12 of
+msgid "Computes adsorption energy"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:14
+#: ec707a153985425fb97f33514706645c of
+msgid "Analyzes results and identifies best sites"
+msgstr ""
+
+#: 43df2caac7924fd29f205c3cee844bcf 8b873eb0fc094da3a63c2409791519a9
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:15
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:10 of
+msgid "Generates plots and summary"
+msgstr ""
+
+#: 763cefe27b304996993d1d02dddc95ed
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:17 of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates to child makers (slab_static_maker, adsorbate_static_maker)."
+msgstr ""
+
+#: 0b6b58714b254727aaa821a9c361f83d 406daa3c9ad348d68e8b16c3cdf3ba60
+#: 43c9f7c3d10242bf93c8eb4fd4c89646
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:14
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:20
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:16
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:15
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:10
+#: b132cf07e4ca482bb29fbdda2482bc48 bd8238b3a7b843a1952750268c819134 of
+msgid "Name of the flow."
+msgstr ""
+
+#: 57494c246e524a6186d6bc1c09498798 81b5b67cfb934e248ac78c34847fa42c
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:22
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:22
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:22
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:16
+#: ba5585532e0f4f38b94675e1e5febb59 c7fa3df28a994c6e95c07dbf3140cc3d of
+msgid "Maker for slab energy calculations."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:24
+#: b6ecc3652a9b462b9c9e543e6d87652f of
+msgid "Maker for isolated adsorbate energy calculation."
+msgstr ""
+
+#: 4b2ad6842de84fb6b207ce3a8663f2ec
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:26 of
+msgid "Grid dimensions (nx, ny) for site scanning."
+msgstr ""
+
+#: 62d4584296424be5bf083d0bba0a3bc6
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:28 of
+msgid "Initial adsorbate height above surface (Å). Used if heights is None."
+msgstr ""
+
+#: 31af0368cf37419291ee8c9b50f571f3
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:30 of
+msgid ""
+"Explicit list of heights to scan (Å). If provided, overrides "
+"height/height_min/height_max."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:32
+#: ca146b1b0d054056923f4353d8875249 of
+msgid "Minimum height for automatic range generation (Å)."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:34
+#: c5c50f3ad50e49caae3896c1c8d76b2e of
+msgid "Maximum height for automatic range generation (Å)."
+msgstr ""
+
+#: 33cc1a404b4947a8954d866efd15f4cc
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:36 of
+msgid ""
+"Step size for height range (Å). Required if height_min/height_max "
+"provided."
+msgstr ""
+
+#: 58d3e5368adb4e4a981cc004065451e7
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:38 of
+msgid "Miller indices of the surface for documentation."
+msgstr ""
+
+#: 2299c71db07048b8ae1646721f8d2216
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:40 of
+msgid "Whether to generate adsorption site plots."
+msgstr ""
+
+#: 1af9230447c64c99824dedb86775c6f7
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:42
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:32
+#: bdf55677f5dc472b94455e41cf6350ae of
+msgid "Whether to write text summary file."
+msgstr ""
+
+#: 42268c505d01434dbb467a69debaaa0c
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:44 of
+msgid "Path to custom molecule file (XYZ, CIF, etc.) for adsorbate."
+msgstr ""
+
+#: 96fd1b850c1044be84310cd4442ba7e7
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:46 of
+msgid "List of 3 atom indices defining plane normal for molecular orientation."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:48
+#: cce9e040000e492789668817298f8657 of
+msgid "Target direction vector [x, y, z] for molecule orientation."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:50
+#: e6620bd8bb10426a8fc1a6e563d537b3 of
+msgid "Additional rotation angle in degrees (default: 0.0)."
+msgstr ""
+
+#: 02c6376ef541473490b7b6c435140a07
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:52 of
+msgid "Axis for additional rotation [x, y, z] (default: [0, 0, 1])."
+msgstr ""
+
+#: 5f8a94ef49f14546b5988196b3d08c7f
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:54 of
+msgid "Placement of adsorbate: 'top' or 'bottom' of slab (default: 'top')."
+msgstr ""
+
+#: 7e08455efba6467f9e87c3e5888bff44
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:56 of
+msgid ""
+"If True, generate and save structures without running SIESTA "
+"calculations. Useful for previewing adsorption geometries (inherited from"
+" BaseSiestaFlowMaker)."
+msgstr ""
+
+#: 946b744ed0694ad9ac27c1deb5779a6e
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:59 of
+msgid ""
+"Directory to save structures when dry_run=True (default: "
+"'preview_structures')."
+msgstr ""
+
+#: 0f96fa3b62fe49d4a7f36ae4e1690bdf
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker:61 of
+msgid "File format for saved structures (inherited from BaseSiestaFlowMaker)."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker.make:2
+#: c972794fa868417cb6abf5110824d4f9 of
+msgid "Create adsorption site scanning workflow."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker.make:4
+#: f37292513fae4f718b1f62ad0dff5a34 of
+msgid "Slab structure."
+msgstr ""
+
+#: 4dcf7bc728cc4ec6a3fb5bdc82cba6e7
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker.make:6 of
+msgid "Adsorbate structure or molecule."
+msgstr ""
+
+#: 9f51690fc0f04503b05cc41da068faee
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker.make:8
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker.make:6
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker.make:6
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker.make:6
+#: b57a9c4938c346e0a5f61df3084d9d91 c5621c9f43d54500ab8efc6eb2bab74c
+#: ebc3128013864fb1bc00532ceebd9b68 of
+msgid "Previous directory for restart."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionScanFlowMaker.make:11
+#: b563b78704ec41789f375b52d0d215e9 of
+msgid "Adsorption scan workflow."
+msgstr ""
+
+#: 9ab39883d763472eafda954ec2d41f9b
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:2
+#: of
+msgid "Optimize adsorption geometry at best site from scan."
+msgstr ""
+
+#: 9c888a5805c342f69fac9a00165ab32a
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:4
+#: of
+msgid ""
+"This workflow: 1. Takes scan results as input 2. Places adsorbate at the "
+"best site 3. Relaxes the structure (optionally fixing slab atoms) 4. "
+"Calculates final adsorption energy 5. Reports optimization results"
+msgstr ""
+
+#: 7962cc95b85b46139fb0db2f885105b3
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:11
+#: of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates to child makers (relax_maker, final_static_maker)."
+msgstr ""
+
+#: 3c865a36e02b46dabe195da7338f3493
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:16
+#: of
+msgid "Maker for geometry optimization."
+msgstr ""
+
+#: 2cc0c68c9ac945089b8aa6d7132edba6
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:18
+#: of
+msgid "Maker for final energy calculation."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker:20
+#: c85eed6268d1406d86eed4071adf843c of
+msgid "If True, fix slab atoms during relaxation."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:2
+#: e66f796937904ce1b9ac0c5ef4cb3a42 of
+msgid "Create adsorption optimization workflow."
+msgstr ""
+
+#: 6f317159a74240b7b64861382cfadb35
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:4
+#: of
+msgid "Clean slab structure."
+msgstr ""
+
+#: 74a8f833702e4f6db2cc77e81fd99fab
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:6
+#: of
+msgid "Adsorbate structure."
+msgstr ""
+
+#: 4454c83f8995428198a2b88fd0db70fe
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:8
+#: of
+msgid "Best adsorption site position (fractional)."
+msgstr ""
+
+#: 8962705779eb42e496db0a97de22da28
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:10
+#: of
+msgid "Initial adsorbate height (Å)."
+msgstr ""
+
+#: 9c88857969b04a9ca884b83e437a26dd
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:12
+#: of
+msgid "Clean slab energy (eV)."
+msgstr ""
+
+#: 7057ded4e5484f13a41ec9e44106acb5
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:14
+#: of
+msgid "Isolated adsorbate energy (eV)."
+msgstr ""
+
+#: 131b51e66d044a61b28823ae9932e9a1
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:16
+#: of
+msgid "Initial adsorption energy before optimization (eV)."
+msgstr ""
+
+#: 900fe57730fd487d9405f1212613cbef
+#: atomate2.siesta.flows.surface.adsorption.AdsorptionOptimizationFlowMaker.make:19
+#: of
+msgid "Adsorption optimization workflow."
+msgstr ""
+
+#: 18389516a6964f3fb8eb79c073cf9193
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:2
+#: of
+msgid ""
+"Workflow to test convergence of surface energy with slab thickness and "
+"vacuum."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:4
+#: d705d4e39635478c845d3b7acafd51af of
+msgid ""
+"This workflow systematically tests how surface energy converges with: 1. "
+"**Slab thickness** (number of atomic layers) - ensures bulk-like interior"
+" 2. **Vacuum thickness** - eliminates periodic image interactions"
+msgstr ""
+
+#: 71bb84d265d3451f986b7598613c0d82
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:8
+#: of
+msgid ""
+"The workflow runs calculations in parallel for efficiency and generates: "
+"- Convergence plots (surface energy vs. layers, surface energy vs. "
+"vacuum) - Summary file with recommended parameters - Convergence analysis"
+" with automatic threshold detection"
+msgstr ""
+
+#: 1c0602e392354e8e9995b491e73417ca 6e7e704129fa4d33acce2103c4a6cb02
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:13
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:7 of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates to child makers (bulk_static_maker, slab_static_maker)."
+msgstr ""
+
+#: 1ed49a1838f54e4893c598b40ca42b18
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:18
+#: of
+msgid "Miller index for the surface (e.g., (1, 1, 1) for (111) surface)."
+msgstr ""
+
+#: 2d3550b10f2c4c2da8b51942af497f6e 72fcbe80164248fcac73d4e8ac01c3d7
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:20
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:20
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:14
+#: f4ab80421c0749f389aa9485633e6d91 of
+msgid "Maker for bulk energy calculation."
+msgstr ""
+
+#: 61362018deb74b2ab552dac15d362a05
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:24
+#: of
+msgid ""
+"List of slab thicknesses (number of layers) to test. Default: [4, 6, 8, "
+"10, 12] layers."
+msgstr ""
+
+#: 972e05e1e32546d9a71f28838380fe2a
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:27
+#: of
+msgid ""
+"List of vacuum thicknesses to test (in Ångströms). Default: [10.0, 12.5, "
+"15.0, 17.5, 20.0] Å."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:30
+#: cef8e65eb5c24d6dae937ced205dbbf3 of
+msgid ""
+"Mode for convergence testing: - \"layers\": Test slab thickness with "
+"fixed vacuum (default) - \"vacuum\": Test vacuum thickness with fixed "
+"layers - \"both\": Test both (2D grid of calculations)"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:35
+#: e5d257537e484194944f58ebc49a6328 of
+msgid "Fixed vacuum when testing layer convergence (Å). Default: 15.0."
+msgstr ""
+
+#: 62dab15f35c74edfb73ae9d2cdb775d4
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:37
+#: of
+msgid "Fixed layers when testing vacuum convergence. Default: 8."
+msgstr ""
+
+#: 41232e1e01d545099eeefc0a342a78c4
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:39
+#: of
+msgid "Whether to generate symmetric slabs. Default: False."
+msgstr ""
+
+#: 8ea140e020584f2ab71ff3455bb6416c
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:41
+#: of
+msgid "Convergence threshold for surface energy (J/m²). Default: 0.01."
+msgstr ""
+
+#: 40d2c8a3b3da495d81392e1e29b3f110
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:89
+#: of
+msgid "**Typical Convergence Behavior**:"
+msgstr ""
+
+#: 2dc7910b1a6544b79800209ad4d0c4bd
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:91
+#: of
+msgid ""
+"**Slab thickness**: Surface energy typically converges within 4-8 layers "
+"for simple metals, but may require 10-15 layers for oxides or surfaces "
+"with significant relaxation."
+msgstr ""
+
+#: 6964eb3a858c42dabb839806629983d7
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:95
+#: of
+msgid ""
+"**Vacuum thickness**: Usually 12-15 Å is sufficient for most systems. "
+"Systems with large dipole moments may need 20+ Å."
+msgstr ""
+
+#: 7a3f9462e756407098ed0ca2ac22ad28
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:98
+#: of
+msgid "**Convergence Criteria**:"
+msgstr ""
+
+#: 99440404157e4114a70939feba5c7d78
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:100
+#: of
+msgid "Publication quality: < 0.01 J/m² change"
+msgstr ""
+
+#: 5af0570baafc4a5a9f7f8ff777e3fced
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:101
+#: of
+msgid "Standard calculations: < 0.05 J/m² change"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:102
+#: c4c8b057ecf24813804c90d8cbd809c1 of
+msgid "Quick screening: < 0.1 J/m² change"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:104
+#: bf4ab019e5964d6abc4f02bdc6f9aa65 of
+msgid "**K-point Considerations**:"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:106
+#: d0a1a16231ca4c0a8bbf30cac7d79164 of
+msgid "Slab calculations should use reduced k-points in the vacuum direction."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker:107
+#: fa9721e2d5dd4c2686897599dd7faf6b of
+msgid "If bulk uses [4,4,4], slabs typically use [4,4,1] for (001) surfaces."
+msgstr ""
+
+#: 5014442cb2aa48a3b85ad57ba817d74c
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker.make:2
+#: of
+msgid "Create surface energy convergence workflow."
+msgstr ""
+
+#: 179a1ec61c5c4b7b8faaae9ed10f6938 7d9d088a27b94e4483e4dfdff60457f4
+#: 959549a7a38d4ecf8b62a0f356bbf1c4 aeb1b07cb8d84205a98f963bc5821bdc
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker.make:4
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker.make:4
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker.make:4
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:6
+#: of
+msgid "Bulk structure."
+msgstr ""
+
+#: 0e0c057571fd4a22b4f6185f5d802595
+#: atomate2.siesta.flows.surface.convergence.SurfaceEnergyConvergenceFlowMaker.make:9
+#: of
+msgid "Surface energy convergence workflow."
+msgstr ""
+
+#: 1741dc48b22c453da82f1b296b11a5c6
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:2 of
+msgid "Calculate surface energies for all terminations of a given Miller index."
+msgstr ""
+
+#: 67eafdaff430472b8623cd7208ad16bf
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:6 of
+msgid "Calculates bulk energy (once)"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:7
+#: fcd11eeb58f546f39a6c2a0d79f91fb5 of
+msgid "Reads all slab terminations from a directory"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:8
+#: dd1b1dfc8ed546c791ac5b188e6143da of
+msgid "Calculates slab energies (optionally with relaxation)"
+msgstr ""
+
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:9
+#: cffdfd315a2a479884801a87989036bc of
+msgid "Computes surface energies for each termination"
+msgstr ""
+
+#: 76846e6a3e1e43b6b0177fcb361686e8
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:12 of
+msgid ""
+"Inherits from BaseSiestaFlowMaker, so dry_run=True automatically "
+"propagates to child makers (bulk_static_maker, slab_static_maker, "
+"slab_relax_maker)."
+msgstr ""
+
+#: 06bcaec887d94ab597302f7335798824
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:17 of
+msgid ""
+"Directory containing slab files generated by "
+"generate_slabs_refactored.py. Should contain .fdf/.xsf files and "
+"\\*_validation.json metadata files."
+msgstr ""
+
+#: 7a32a6da2d5e4cdfb6268e3b86197a17
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:24 of
+msgid ""
+"Maker for slab relaxation before energy calculation. If None, slabs are "
+"rigid."
+msgstr ""
+
+#: 5dc194352d554eadbb620cc153cabf17
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:26 of
+msgid "Miller indices (h, k, l) of the surface."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:28
+#: be0e9a1fde5b4f8397889a7185b04290 of
+msgid "Number of formula units in bulk unit cell. Auto-detected if None."
+msgstr ""
+
+#: 44fd8b3fa7234e03b3ebb7481197ed8c
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker:30 of
+msgid "Whether to generate surface energy plots."
+msgstr ""
+
+#: a0de11451c834b378c150914622ea9f9
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker.make:2 of
+msgid "Create surface energy calculation workflow."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.core.SurfaceEnergyFlowMaker.make:9
+#: bc186abdce6d4c0b91349f23d93c903b of
+msgid "Surface energy calculation flow."
+msgstr ""
+
+#: a9037e0d8a394a5897a7ec74cdc3947a
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:2 of
+msgid "Calculate surface energies for multiple Miller indices automatically."
+msgstr ""
+
+#: 24fa95df91184d3c9bf257d2985fea6b
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:4 of
+msgid ""
+"This workflow calculates surface energies for all specified Miller "
+"indices in a single integrated job. Slabs are generated internally using "
+"pymatgen."
+msgstr ""
+
+#: 45b8f79c04b348ed9d7bc88d686ced37 71b619588df640139d78bc1bfc830f68
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:12
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:8
+#: of
+msgid "List of Miller indices to calculate."
+msgstr ""
+
+#: 9271d5a3c44c466db5cca9d248240215
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:18
+#: of
+msgid "Number of atomic layers in the slab."
+msgstr ""
+
+#: 9157d07015424f85996bf629680e31df
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:20
+#: of
+msgid "Vacuum spacing in Ångströms."
+msgstr ""
+
+#: 4c3fae0e36bf490597c0207692751a13
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:22
+#: of
+msgid "Whether to generate symmetric slabs."
+msgstr ""
+
+#: 493345b610a54a79883ce1eb32537e95
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:24
+#: of
+msgid "Number of formula units in bulk unit cell (auto-detect if None)."
+msgstr ""
+
+#: 5a6e3f5f577c4455810f9c6e80bfa8b1
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:26
+#: of
+msgid ""
+"If True, apply diffuse basis to surface atoms. Surface atoms get larger "
+"basis sets because electrons extend further into vacuum. Default: False."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:29
+#: ba9df0a80f9d44fbb8a6b44d6ae7dba3 of
+msgid ""
+"Basis size for surface atoms when apply_diffuse_basis=True. Default: "
+"\"DZP\"."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:31
+#: d02369b2a8054b6d86946b9abc31e010 of
+msgid "Basis size for bulk atoms when apply_diffuse_basis=True. Default: \"DZ\"."
+msgstr ""
+
+#: 3d9260681aa545109265bba5f9aa3928
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:33
+#: of
+msgid ""
+"Number of outermost layers to treat as surface when "
+"apply_diffuse_basis=True. Default: 1 (top and bottom layers)."
+msgstr ""
+
+#: 82c06c59eee149298138c91f080beb37
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:85
+#: of
+msgid ""
+"K-point sampling: Surface slabs should use reduced k-points in the vacuum"
+" direction (typically z). For example, if bulk uses [3,3,3], slabs should"
+" use [2,2,1]."
+msgstr ""
+
+#: 9748ad40576b44abac484e01f19e131a
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:88
+#: of
+msgid ""
+"The slab_static_maker uses smart defaults: if no k-points are specified, "
+"it automatically uses [2,2,1] assuming (001)-type surfaces."
+msgstr ""
+
+#: 04b1f17dec854794a774f5114e2d3030
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker:90
+#: of
+msgid ""
+"For non-(001) surfaces or higher accuracy, explicitly set k-points via "
+"user_params as shown in the example above."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker.make:2
+#: cf3e0a21763542aa84d0e356d79168d2 of
+msgid "Create multi-surface energy calculation workflow."
+msgstr ""
+
+#: 4f53280eedf74d68814c677fcd1bfd82
+#: atomate2.siesta.flows.surface.multi_surface.MultiSurfaceEnergyFlowMaker.make:9
+#: of
+msgid "Multi-surface energy calculation flow."
+msgstr ""
+
+#: 0b341b13e02e41e6be5d71a3cc84a111
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:2
+#: of
+msgid "Create workflow for multi-surface energy calculation."
+msgstr ""
+
+#: 458c2bd362e040b49d32ddff327773a1
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:4
+#: of
+msgid ""
+"This creates a Flow with parallel slab calculations for multiple Miller "
+"indices."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:10
+#: d4ce353628d948f09873821c9799bcca of
+msgid "Maker for bulk calculation."
+msgstr ""
+
+#: 4f315e0975774e0abca6788a757a5364
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:12
+#: of
+msgid "Maker for slab calculations."
+msgstr ""
+
+#: 74db3b97e8a8447fa34de2aebafeca50
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:14
+#: of
+msgid "Number of layers in the slab."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:16
+#: eba92a82b3ef4504a883e8a460146f75 of
+msgid "Vacuum spacing (Å)."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:18
+#: b3f6633b6211434f92de1a420bc25ec4 of
+msgid "Whether to create symmetric slabs."
+msgstr ""
+
+#: 0066290f288d43f59efed0562dd8234c
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:20
+#: of
+msgid "Formula units in bulk cell (auto-detect if None)."
+msgstr ""
+
+#: 51201608c262443793b156ff758b8bf7
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:22
+#: of
+msgid "If True, apply diffuse basis to surface atoms."
+msgstr ""
+
+#: a298a5c64bf643a896b57966af656d29
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:24
+#: of
+msgid "Basis size for surface atoms (e.g., \"DZP\")."
+msgstr ""
+
+#: 32b6275d41a84a5293c93d9f97bb817c
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:26
+#: of
+msgid "Basis size for bulk/interior atoms (e.g., \"DZ\")."
+msgstr ""
+
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:28
+#: d0a70dac66454b689bc93830ed537b8e of
+msgid "Number of outermost layers to treat as surface."
+msgstr ""
+
+#: 4bb12a8913c645ed9a29f1ac619400ea
+#: atomate2.siesta.flows.surface.multi_surface.calculate_multi_surface_energies:31
+#: of
+msgid "Multi-surface energy calculation workflow."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst:72
+#: d97bbfbfa1e64e509254180c11e1f5b1
+msgid "NEB Workflows"
+msgstr ""
+
+#: 68318558a6454f5f8f5a4e6df1373024 atomate2.siesta.flows.neb:1 of
+msgid "NEB (Nudged Elastic Band) workflow implementations."
+msgstr ""
+
+#: atomate2.siesta.flows.neb:3 bd89bcd60f814d86a6614e496c9ed193 of
+msgid "This package provides three types of NEB workflows:"
+msgstr ""
+
+#: 56464050a04e4a2fb4bad31f114d81f7 atomate2.siesta.flows.neb:5 of
+msgid ""
+"**AseNebFlowMaker**: Full ASE-based NEB with Python optimization - Uses "
+"optimizers (PER_IMAGE_LBFGS/FIRE/BFGS) with SIESTA as calculator - "
+"Persistent folder approach (custodian-style) - Default: PER_IMAGE_LBFGS "
+"(each image has its own L-BFGS, like Lua FLOS) - Best for: Complex "
+"reaction paths, climbing image NEB"
+msgstr ""
+
+#: 48ab83703bde4072bcd6086eb2896a97 atomate2.siesta.flows.neb:11 of
+msgid ""
+"**NebDirectFlowMaker**: FLOS/Lua-based NEB from two structures - Uses "
+"SIESTA's Lua scripting (neb.lua) - Simpler setup, runs entirely within "
+"SIESTA - Best for: Quick NEB calculations, SIESTA-native workflows"
+msgstr ""
+
+#: atomate2.siesta.flows.neb:16 cf8f642e715f428f8d6f6b003a87a9de of
+msgid ""
+"**NebVacancyExchangeFlowMaker**: Specialized for atom swapping - "
+"Generates initial/final by swapping two atoms - Uses FLOS/Lua NEB - Best "
+"for: Vacancy diffusion, atom exchange barriers"
+msgstr ""
+
+#: 118130613f1040aba25be7a9ea61fe8f atomate2.siesta.flows.neb:22 of
+msgid "Available Optimizers (AseNebFlowMaker)"
+msgstr ""
+
+#: atomate2.siesta.flows.neb:23
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:58
+#: c27a7d0cfc1546a3b1fcf832b187b097 f42b4fa3f8b54174be0cd6c7575978ae of
+msgid "**Per-image optimizers** (recommended - like Lua FLOS):"
+msgstr ""
+
+#: 09489c92763742e883b20d71238ce66a atomate2.siesta.flows.neb:25 of
+msgid ""
+"**PER_IMAGE_LBFGS** (default): Each NEB image has its own L-BFGS "
+"optimizer with limited memory (~20 steps). Best balance of convergence "
+"and memory."
+msgstr ""
+
+#: 3e81643b41074a6eb55a56683e56431d 80f2dec0601d492aae9177e754d3d00d
+#: atomate2.siesta.flows.neb:28
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:64 of
+msgid ""
+"**PER_IMAGE_BFGS**: Each NEB image has its own full BFGS optimizer with "
+"complete inverse Hessian. May converge faster for small systems but uses "
+"more memory (O(n²) per image)."
+msgstr ""
+
+#: 2a0b51eb44d64e298f4f68794463bcb3 a2000ed7bd0b42dd90990a7f2ffbcd39
+#: atomate2.siesta.flows.neb:32
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:68 of
+msgid "**Global optimizers** (treat all images together):"
+msgstr ""
+
+#: atomate2.siesta.flows.neb:34 d37ebafd40cd441e9221cb7b882ac105 of
+msgid "**FIRE**: No Hessian, handles oscillations well. Good fallback option."
+msgstr ""
+
+#: atomate2.siesta.flows.neb:36 e7a301db34464ebaadf97c774b4ea265 of
+msgid ""
+"**LBFGS/BFGS**: Global optimizer for all images combined. Can oscillate "
+"due to mixing curvature information from different regions."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:2
+#: c897b475991a42df955fc0700b4c6439 of
+msgid ""
+"Jobflow maker to run NEB calculations using ASE optimizer with persistent"
+" folders."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:4
+#: ef39880b67f8477e84c1304886c9961b of
+msgid ""
+"This maker uses ASE's NEB implementation with SIESTA as the calculator, "
+"instead of SIESTA's Lua scripting. This approach is: - More portable (no "
+"FLOS/Lua required) - Easier to customize (Python-based) - Better for "
+"advanced NEB methods (climbing image, string methods) - Optimized with "
+"persistent folders (custodian-style approach)"
+msgstr ""
+
+#: 9ffe818acfb44802b3d6f5ddf8a94a27
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:11 of
+msgid "Key optimizations:"
+msgstr ""
+
+#: 342f93cb486b4655b994f2a40b92b7d3
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:13 of
+msgid "Creates persistent folders (neb_image_0, neb_image_1, etc.)"
+msgstr ""
+
+#: 15d939adc73745b9be968e5a9c68eba9
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:14 of
+msgid "Reuses folders across all iterations (no new job folders per iteration)"
+msgstr ""
+
+#: 3db064c2f16d428a947ebeaa3828ab32
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:15 of
+msgid ""
+"Endpoint structures calculated only once (cached for subsequent "
+"iterations)"
+msgstr ""
+
+#: 0057b564e54444ce92bd9d04e0660a1f
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:16 of
+msgid "Intermediate images recalculated each iteration"
+msgstr ""
+
+#: 364fe3c464b24e808fe42a4629c32962
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:18 of
+msgid "Steps:"
+msgstr ""
+
+#: a198aa41180d4db99e5c0fa80c8a3aff
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:20 of
+msgid "Generate NEB images using ASE interpolation"
+msgstr ""
+
+#: 606a5cc4c168429a9b53d32d8ce64e89
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:21 of
+msgid "Setup persistent folders for each image"
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:22
+#: bf52dc7b33984737a068500ec512daaf of
+msgid "Run iterative NEB optimization:"
+msgstr ""
+
+#: af9c76777ab5455db54d968c742affb5
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:24 of
+msgid "Iteration 0: Calculate all images (including endpoints)"
+msgstr ""
+
+#: 944776b24dd94ceca99dead5ccdc96fe
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:25 of
+msgid "Iterations 1+: Reuse cached endpoint data, recalculate intermediate images"
+msgstr ""
+
+#: 8f9127fcf7bf4ad0ac1801c6a9b32ded
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:27 of
+msgid "Plot results"
+msgstr ""
+
+#: 31106916d1e341bc8816cf735b4b8d24
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:29
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:14
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:14
+#: d9ac5895a841474a93bccc97307f617c e57bbab0c6a64fe1a2b75202b17daf46 of
+msgid "Name of the flow produced by this maker."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:31
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:16
+#: c3fefe68dfd845bab7a4ba4a531b31a0 d756746cb07447fe9de433cddcf7ffab of
+msgid ""
+"Whether to relax endpoint structures before NEB. Options:  - False: Don't"
+" relax either endpoint (use structures as provided) - True: Relax both "
+"initial and final structures (backward compatible) - \"initial\": Relax "
+"only the initial structure - \"final\": Relax only the final structure - "
+"\"both\": Relax both structures (same as True)  Default is False."
+msgstr ""
+
+#: 09de134450764582bb128ccac5eff163
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:31
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:16
+#: b4845fcaab7a442198c40eeddea64a3d of
+msgid "Whether to relax endpoint structures before NEB. Options:"
+msgstr ""
+
+#: 0f19cd073fb84e059a267ad51c5a861f
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:33
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:18
+#: ba1e5366c6e742549f4ee67b65f1199e of
+msgid "False: Don't relax either endpoint (use structures as provided)"
+msgstr ""
+
+#: 282bed5167724e26a8f25610378d1378
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:34
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:19
+#: c76b0880d878477484923c01c9d5933d of
+msgid "True: Relax both initial and final structures (backward compatible)"
+msgstr ""
+
+#: 46b5688dddd84e918acfd4fa99bb73c2
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:35
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:20
+#: b693d94aab05451497c4b8a2df8fdafb of
+msgid "\"initial\": Relax only the initial structure"
+msgstr ""
+
+#: 080ae0088fe64bc6bd16a87228e39023 a052b31482d647289b7fc2ed8470ac09
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:36
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:21 of
+msgid "\"final\": Relax only the final structure"
+msgstr ""
+
+#: 05e8d71017fc4ea0b23ff71c44e3f94c
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:37
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:22
+#: b571066dae6c41048bdb7e932603af8d of
+msgid "\"both\": Relax both structures (same as True)"
+msgstr ""
+
+#: 7e574f6ae60446d9ac8a5d6451425520
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:39
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:24
+#: b113f92bf7c941cdb4674663111c8836 of
+msgid "Default is False."
+msgstr ""
+
+#: 1d4a37bd8c834efe9a0002be459132f5 651dc99621e149ceb3b1fde45f68cc74
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:41
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:26 of
+msgid ""
+"Job maker for relaxing structures. Only used if relax_endpoints is not "
+"False. Default is RelaxMaker.fixed_cell_relaxation(). If "
+"relax_initial_maker or relax_final_maker are specified, they take "
+"precedence."
+msgstr ""
+
+#: 9c9a9c62c1ad47fca14f27412f9e6ff2
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:45
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:30
+#: b82d082010484d72986f92fa04cc674e of
+msgid ""
+"Job maker for relaxing the initial structure. If None, uses relax_maker. "
+"Allows different relaxation settings for initial vs final endpoints."
+msgstr ""
+
+#: 119b131a55c54131b6e90f0bc741b2f2
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:48
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:33
+#: d8d71a03945045f2a347acfa0fcac541 of
+msgid ""
+"Job maker for relaxing the final structure. If None, uses relax_maker. "
+"Allows different relaxation settings for initial vs final endpoints."
+msgstr ""
+
+#: 44f36c392943440491c2330135039143
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:51 of
+msgid "Job maker for static calculations on each image. Default is StaticMaker()."
+msgstr ""
+
+#: 0685f656fbe744b0b1595a5649fd8bde
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:54 of
+msgid "Number of intermediate NEB images (default is 5)."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:56
+#: c1f1924b71b84e078d88abfe874c4119 of
+msgid ""
+"Optimizer to use. Default is \"PER_IMAGE_LBFGS\".  **Per-image "
+"optimizers** (recommended - like Lua FLOS):  - **PER_IMAGE_LBFGS** "
+"(default): Each NEB image has its own L-BFGS   optimizer with limited "
+"memory (~20 steps). Best balance of   convergence speed and memory usage."
+"  - **PER_IMAGE_BFGS**: Each NEB image has its own full BFGS optimizer   "
+"with complete inverse Hessian. May converge faster for small systems   "
+"but uses more memory (O(n²) per image).  **Global optimizers** (treat all"
+" images together):  - **FIRE**: No Hessian, handles oscillations well. "
+"Good fallback.  - **LBFGS/BFGS**: Global optimizer for all images "
+"combined (~1365 DOF).   Can oscillate due to mixing curvature from "
+"different regions."
+msgstr ""
+
+#: 79cce4a0deb6436cbe060cf05d0f90c7
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:56 of
+msgid "Optimizer to use. Default is \"PER_IMAGE_LBFGS\"."
+msgstr ""
+
+#: 3040e802048f4a4eb4e89553bd68e223
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:60 of
+msgid ""
+"**PER_IMAGE_LBFGS** (default): Each NEB image has its own L-BFGS "
+"optimizer with limited memory (~20 steps). Best balance of convergence "
+"speed and memory usage."
+msgstr ""
+
+#: 2496567d8a9949c795a5fc16f2a5a052
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:70 of
+msgid "**FIRE**: No Hessian, handles oscillations well. Good fallback."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:72
+#: ba0df6d29e3241598d9bc5314b580083 of
+msgid ""
+"**LBFGS/BFGS**: Global optimizer for all images combined (~1365 DOF). Can"
+" oscillate due to mixing curvature from different regions."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:75
+#: d4f610e187d84ffd83e87254100cc1bb of
+msgid "Force convergence criterion in eV/Å (default is 0.05)."
+msgstr ""
+
+#: 12fd8c184bff44a8a488441f04748b10
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:77 of
+msgid "Use climbing image NEB (default is False)."
+msgstr ""
+
+#: 472419b19bd3493bb9d90332291ffed9
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:79 of
+msgid ""
+"Spring constant for NEB in eV/Å² (default is 5.0). Controls image spacing"
+" along the path: - Low (0.1-1.0): More path flexibility, images may "
+"spread unevenly - Medium (1.0-5.0): Good balance for most cases - High "
+"(5.0-10.0): Forces equal spacing, use if images bunch up"
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:85
+#: b676408dca584c1db88c8211d0134b08 of
+msgid "Initial Hessian guess for BFGS optimizer (default is 1/100)."
+msgstr ""
+
+#: 34e888280cbb47fb8c94e08e4779a179
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:87 of
+msgid ""
+"Maximum step size in Å (default is 0.2). Reduced from typical 0.5 for "
+"stability with high-force initial images."
+msgstr ""
+
+#: a2d614f9c817445188eeeb5b3e70e676
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker:90 of
+msgid ""
+"Force threshold in eV/Å for dynamic step scaling (default is 5.0). When "
+"max DFT force exceeds this, the step size is reduced proportionally to "
+"prevent atoms from moving into unphysical positions."
+msgstr ""
+
+#: 446175d4f12643d0b4a4048ad72b048d
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker.make:2 of
+msgid "Create an iterative ASE NEB workflow with persistent image folders."
+msgstr ""
+
+#: 0cb6f6e64bc74c0aa29990ede417b265
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker.make:4 of
+msgid ""
+"Creates one folder per NEB image and reuses them across iterations, "
+"similar to custodian's approach for error correction."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker.make:7
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker.make:4
+#: be2c3c5dd94d4fa08c47cc3c26b00493 c309289f8baf41cbbb749c98efead53a of
+msgid "The initial structure (starting point)."
+msgstr ""
+
+#: 9af80be2463449d9b19b5ee70e5dacf2
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker.make:9
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker.make:6
+#: d9c5fe044a9a44b7be6dc20d5534ebc4 of
+msgid "The final structure (end point)."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.AseNebFlowMaker.make:12
+#: e803847fd1454d9cbfe542f9983cbf0b of
+msgid "A jobflow Flow containing the iterative ASE NEB workflow."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:2
+#: c0a7c65d3ac6443b8aff3352137e9314 of
+msgid "Jobflow maker to run NEB calculations from two structures directly."
+msgstr ""
+
+#: 000d21aa36964b168c8248aaee341961
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:4 of
+msgid ""
+"This maker accepts two structures (initial and final) and generates "
+"intermediate images using ASE's NEB interpolation. This is useful when "
+"you already know the initial and final structures and want to calculate "
+"the minimum energy path between them."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:9
+#: ed0267e811ab43aaa2670adc6194b12a of
+msgid ""
+"Steps: 1. (Optional) Relax the initial and/or final structures. 2. "
+"Generate NEB images from the (relaxed) structures using ASE "
+"interpolation. 3. Run the NEB calculation using Lua scripting (neb.lua)."
+msgstr ""
+
+#: 75c1ec2f2f924f9bb3a95b48b6035d69
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:36
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:18
+#: df194644807a4c99bb67c0e882e74411 of
+msgid "Job maker for running NEB calculation. Default is LuaMaker.neb()."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:38
+#: d524855e83a94aaa9ec15f2b76a824f1 of
+msgid "Number of intermediate NEB images to generate (default is 5)."
+msgstr ""
+
+#: 87a6221a1fa14cf897c7c2585f5a4d45
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker:40 of
+msgid ""
+"ASE NEB interpolation method. Options: \"idpp\" (image-dependent pair "
+"potential, recommended), \"linear\" (simple linear interpolation). "
+"Default is \"idpp\"."
+msgstr ""
+
+#: 7c354ad08a624f5da44db15be95322c0
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker.make:2 of
+msgid "Create a NEB workflow from two structures."
+msgstr ""
+
+#: 4b14ebd0ead640be93f99b5859651950
+#: atomate2.siesta.flows.neb.direct.NebDirectFlowMaker.make:9 of
+msgid "A jobflow Flow containing the NEB workflow."
+msgstr ""
+
+#: 379a73c82a9248498b934711318dcb8b
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:2 of
+msgid "Jobflow maker to run NEB calculations for vacancy exchange."
+msgstr ""
+
+#: 9697744e9c9745da8f4943d18fa28b6d
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:4 of
+msgid ""
+"This maker is specifically designed for vacancy exchange or atom swap "
+"scenarios where you want to calculate the energy barrier for swapping two"
+" atoms (A and B) in a structure."
+msgstr ""
+
+#: 14a2590e49c045e2b2c6f80df9881d6f
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:8 of
+msgid ""
+"Steps: 1. Generate initial and final images by swapping atoms at indices "
+"A and B. 2. Relax the initial and final images. 3. Regenerate NEB images "
+"from relaxed structures using ASE interpolation. 4. Run the NEB "
+"calculation using Lua scripting (neb.lua)."
+msgstr ""
+
+#: 8cb7604d79fe4a7c8d0afff4dda1f8c3
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:16 of
+msgid ""
+"Job maker for relaxing structures. Default is "
+"RelaxMaker.fixed_cell_relaxation()."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:20
+#: df295968468545419c924709c5814dc8 of
+msgid "Number of intermediate NEB images to generate, default is 5."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:22
+#: d85e1dcf7d3b4e9eb01fa85225172b29 of
+msgid "Index of the first atom to swap."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker:24
+#: f3d6e04090f0475387369069caa2ada2 of
+msgid "Index of the second atom to swap."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.generate_neb_images:2
+#: f750b5e377ab4047b7c42296898aec12 of
+msgid ""
+"Generate initial and final NEB images by swapping atoms at indices A and "
+"B."
+msgstr ""
+
+#: a407c1efc15745668b00ae4e95906b14
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.generate_neb_images:4
+#: of
+msgid "The input structure."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.generate_neb_images:6
+#: e13f0ca695aa481795f7a8086222ae4a of
+msgid "Index of the first atom."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.generate_neb_images:8
+#: e2955be1bac24946a6eefd72bb2628bb of
+msgid "Index of the second atom."
+msgstr ""
+
+#: 3b389191283f49e2abe65aa96ccd0495
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.generate_neb_images:11
+#: of
+msgid "List containing [initial_structure, final_structure] with atoms swapped."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.make:2
+#: b552c2a173774f828b782d54ec4ee91a of
+msgid "Create a NEB vacancy exchange workflow."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.make:4
+#: ced65d37ed0d43af92466b454609f771 of
+msgid "The input structure containing the atoms to be swapped."
+msgstr ""
+
+#: 4971b3cf1f864a9ba3d0e90bea69d189
+#: atomate2.siesta.flows.neb.vacancy_exchange.NebVacancyExchangeFlowMaker.make:7
+#: of
+msgid "A jobflow Flow containing the NEB vacancy exchange workflow."
+msgstr ""
+
+#: 4325c2742e0f4abaa0d674b839af800d
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:2 of
+msgid "Per-image BFGS optimizer for NEB calculations."
+msgstr ""
+
+#: 34535be830be4582bed887aa2d598190
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:4 of
+msgid ""
+"This optimizer follows the Lua FLOS approach where each NEB image has its"
+" own independent BFGS optimizer with a full inverse Hessian "
+"approximation."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:7
+#: b8cbfcb6a45146dab7ac4956e042c6ad of
+msgid ""
+"Unlike L-BFGS which only stores recent gradient/position pairs, full BFGS"
+" maintains the complete inverse Hessian matrix. This can provide better "
+"convergence for smaller systems but uses more memory (O(n²) vs O(n*m))."
+msgstr ""
+
+#: 51c9caabe03843679935c87b7531970a
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:11
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:20
+#: fd7d31f8b1b94ea3b4af4082340eddaa of
+msgid "Total number of NEB images (including endpoints)."
+msgstr ""
+
+#: 135475424df640f5ac7fc7858e09b693 926b534400744eeb9cf37b3545c93122
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:13
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:22 of
+msgid ""
+"Initial inverse Hessian diagonal (H0 = alpha * I). Default is 1/75 ≈ "
+"0.0133 (same as Lua FLOS)."
+msgstr ""
+
+#: 321060725268467a8d61befa65d6f038
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:16
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:25
+#: d2fd7a62196d4ecb8413cf3126344fb8 of
+msgid "Maximum step size in Å. Default is 0.2."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/api/modules.rst
+#: 0f34d1e4b1e54d8ba7cc609b21899d6a 20c13bfacc4c4930a5729ce88203fc58
+msgid "Variables"
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS:19
+#: b6fc4d6e4c0d461ab267bc64b1dbc122 of
+msgid ""
+"List of per-image optimizer states (one per intermediate image). Each "
+"state contains: H (inverse Hessian), prev_positions, prev_gradients."
+msgstr ""
+
+#: 1fe4c83dcc274850918d8a5c9beb7a75
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS.reset:2 of
+msgid "Reset all optimizer states (clear Hessians)."
+msgstr ""
+
+#: a5c802a92e4041d99bc586da3c91eab2
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS.step:2 of
+msgid "Perform one BFGS step for each intermediate image."
+msgstr ""
+
+#: 393a56138a064dbeb971236fdb7a5c5b
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS.step:4
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS.step:4
+#: d88cbeafb1ae4d95b607419da31fbdaf of
+msgid ""
+"NEB forces for intermediate images only. Shape: ((n_images-2) * n_atoms, "
+"3) or (n_intermediate, n_atoms, 3)"
+msgstr ""
+
+#: 03bcb494883244eb88d2df61b614386d a97877834fca4e6d91426708cf5cac0b
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS.step:7
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS.step:7 of
+msgid ""
+"Current positions for ALL images (including endpoints). Each element has "
+"shape (n_atoms, 3)."
+msgstr ""
+
+#: 7963d76e2ad34394b4b2977243967c1c
+#: atomate2.siesta.flows.neb.ase_neb.PerImageBFGS.step:11
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS.step:11
+#: d8c7ebf225e74f7d95d0a4cb780a101f of
+msgid ""
+"Updated positions for ALL images. Endpoints are unchanged, intermediate "
+"images are updated."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:2
+#: d5776499c6eb4221b6b63127bc849031 of
+msgid "Per-image LBFGS optimizer for NEB calculations."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:4
+#: eccb05a1859c4bf5ad1addf0914aadb5 of
+msgid ""
+"This optimizer follows the Lua FLOS approach where each NEB image has its"
+" own independent LBFGS optimizer. This is more effective than a global "
+"optimizer because:"
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:8
+#: f8642eb611f341e386cf16af866d6c11 of
+msgid ""
+"**Small Hessian per image**: Each image has ~195 DOF (65 atoms × 3), not "
+"~1365 DOF (7 images × 65 atoms × 3). Smaller Hessians are easier to "
+"approximate accurately."
+msgstr ""
+
+#: 58c16f95fc5d4a6fa54844eb7f968693
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:12 of
+msgid ""
+"**Local curvature learning**: Each image learns its own local potential "
+"energy surface curvature, rather than trying to mix curvature information"
+" from different images."
+msgstr ""
+
+#: 999eab34dab3432e8061625a898cba9f
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:16 of
+msgid ""
+"**Better handling of NEB forces**: NEB forces are projected "
+"(perpendicular DFT + parallel spring), which confuses global optimizers "
+"but works well with per-image optimization."
+msgstr ""
+
+#: 422fce0aedcc497eab6ecd7c0da3c5e1
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:27 of
+msgid "Number of steps to keep in L-BFGS memory. Default is 20."
+msgstr ""
+
+#: 64db5023d1db4f049efc13fb46afed89
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS:30 of
+msgid ""
+"List of per-image optimizer states (one per intermediate image). Each "
+"state contains: positions_history, gradients_history, H0."
+msgstr ""
+
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS.reset:2
+#: f5f91de8c997478dad58c6b9c4d15c4c of
+msgid "Reset all optimizer states (clear history)."
+msgstr ""
+
+#: 44542d670a0746f484a10edc31caed25
+#: atomate2.siesta.flows.neb.ase_neb.PerImageLBFGS.step:2 of
+msgid "Perform one L-BFGS step for each intermediate image."
+msgstr ""
+
+#~ msgid "Generate automatic label for dry-run output."
+#~ msgstr ""
+
+#~ msgid "Structure to generate label from."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Label in format: {maker_name}_{formula} "
+#~ "Special characters unsafe for filenames "
+#~ "are replaced with safe alternatives."
+#~ msgstr ""
+
+#~ msgid "Normal SIESTA calculation (full calculation workflow)."
+#~ msgstr ""
+
+#~ msgid "A jobflow Response containing the SIESTA calculation results."
+#~ msgstr ""
+
+#~ msgid "Create dry-run job (saves structure and generates SIESTA input files)."
+#~ msgstr ""
+
+#~ msgid "A pymatgen Structure object to save."
+#~ msgstr ""
+
+#~ msgid "Previous directory (included in metadata)."
+#~ msgstr ""
+
+#~ msgid "A jobflow Response containing dry-run output information."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This function prints the logo and "
+#~ "current SIESTA configuration. Can be "
+#~ "called explicitly or is automatically "
+#~ "displayed on module import unless "
+#~ "disabled via ATOMATE2_SIESTA_SHOW_BANNER=0 "
+#~ "environment variable."
+#~ msgstr ""
+
+#~ msgid "Workflow Steps:"
+#~ msgstr ""
+
+#~ msgid "Read converged Hamiltonian from previous SCF calculation"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Define k-path through high-symmetry "
+#~ "points (automatic from structure symmetry)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Diagonalize Hamiltonian at each k-point "
+#~ "along path (non-self-consistent)"
+#~ msgstr ""
+
+#~ msgid "Output band eigenvalues (eV) and k-point coordinates"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Generate band structure data for "
+#~ "plotting (pymatgen BandStructure object)"
+#~ msgstr ""
+
+#~ msgid "Key Results:"
+#~ msgstr ""
+
+#~ msgid "Band Structure: Eigenvalues E(k) along high-symmetry path"
+#~ msgstr ""
+
+#~ msgid "Band Gap: Direct/indirect gap and VBM/CBM positions (eV)"
+#~ msgstr ""
+
+#~ msgid "Effective Masses: Curvature near band extrema (optional)"
+#~ msgstr ""
+
+#~ msgid "Symmetry Labels: Γ, X, M, K, etc. marking special k-points"
+#~ msgstr ""
+
+#~ msgid "Pymatgen Object: Plottable BandStructureSymmLine for visualization"
+#~ msgstr ""
+
+#~ msgid "Applications:"
+#~ msgstr ""
+
+#~ msgid "Semiconductor band gap determination (direct vs indirect)"
+#~ msgstr ""
+
+#~ msgid "Metal vs insulator classification"
+#~ msgstr ""
+
+#~ msgid "Topological material characterization (band inversions)"
+#~ msgstr ""
+
+#~ msgid "Optical transition analysis (allowed transitions)"
+#~ msgstr ""
+
+#~ msgid "Validation against experimental ARPES data"
+#~ msgstr ""
+
+#~ msgid "param calc_type"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"band_structure\")"
+#~ msgstr ""
+
+#~ msgid "type calc_type"
+#~ msgstr ""
+
+#~ msgid "str"
+#~ msgstr ""
+
+#~ msgid "type name"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`str\\``"
+#~ msgstr ""
+
+#~ msgid "param name"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"bands\")"
+#~ msgstr ""
+
+#~ msgid "type input_set_generator"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.sets.core.BandStructureSetGenerator\\``"
+#~ msgstr ""
+
+#~ msgid "param input_set_generator"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation"
+#~ msgstr ""
+
+#~ msgid "BandStructureSetGenerator"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Critical requirements: - MUST run SCF"
+#~ " calculation first to generate Hamiltonian"
+#~ " - Use same basis set, mesh "
+#~ "cutoff, and pseudopotentials as SCF -"
+#~ " K-path automatically determined from "
+#~ "structure symmetry (seekpath) - For "
+#~ "accurate gaps, ensure dense k-grid in"
+#~ " SCF calculation - Non-self-"
+#~ "consistent: fast but requires good "
+#~ "initial Hamiltonian - For spin-polarized"
+#~ " systems, bands plotted separately for "
+#~ "each spin channel"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.jobs.core.BandStructureMaker\\``"
+#~ msgstr ""
+
+#~ msgid "Sample eigenvalues on dense k-point mesh (typically 10x SCF density)"
+#~ msgstr ""
+
+#~ msgid "Apply broadening (Gaussian width ~0.1 eV) to discrete levels"
+#~ msgstr ""
+
+#~ msgid "Integrate over Brillouin zone with k-point weights"
+#~ msgstr ""
+
+#~ msgid "Output total DOS vs energy (states/eV)"
+#~ msgstr ""
+
+#~ msgid "Total DOS: Electronic states per energy (states/eV)"
+#~ msgstr ""
+
+#~ msgid "Fermi Level: Chemical potential at specified temperature (eV)"
+#~ msgstr ""
+
+#~ msgid "Band Gap: Energy gap between VBM and CBM (eV)"
+#~ msgstr ""
+
+#~ msgid "DOS at Fermi Level: N(E_F) - indicator of metallic character"
+#~ msgstr ""
+
+#~ msgid "Integration: Total electrons from DOS integration (validation check)"
+#~ msgstr ""
+
+#~ msgid "Metal vs insulator classification (N(E_F) analysis)"
+#~ msgstr ""
+
+#~ msgid "Band gap estimation (faster than band structure)"
+#~ msgstr ""
+
+#~ msgid "Thermoelectric properties (Seebeck coefficient estimation)"
+#~ msgstr ""
+
+#~ msgid "Magnetic moment analysis (spin-polarized DOS difference)"
+#~ msgstr ""
+
+#~ msgid "Comparison with experimental photoemission spectroscopy (PES)"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"dos\")"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"DOS calculation\")"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.sets.core.DOSSetGenerator\\``"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the DOS calculation"
+#~ msgstr ""
+
+#~ msgid "DOSSetGenerator"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Convergence and accuracy: - K-point mesh"
+#~ " density critical (test convergence!) - "
+#~ "Typical requirement: 2-5x denser than "
+#~ "SCF mesh - Energy range: cover all"
+#~ " relevant states (VBM-10 eV to CBM+5"
+#~ " eV) - Broadening width: 0.05-0.2 eV"
+#~ " (balance resolution vs noise) - "
+#~ "Spin-polarized systems: separate DOS for"
+#~ " up/down spins - Output file: "
+#~ "siesta.DOS (energy, total DOS, integrated "
+#~ "DOS)"
+#~ msgstr ""
+
+#~ msgid "Load Lua script (user-provided or default: relax_geometry_lbfgs.lua)"
+#~ msgstr ""
+
+#~ msgid "Initialize atomic positions and forces"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Execute Lua script controlling ionic "
+#~ "steps: - Calculate forces via SCF "
+#~ "at each geometry - Update positions "
+#~ "using Lua-defined algorithm (LBFGS, "
+#~ "FIRE, custom) - Apply constraints, "
+#~ "convergence checks"
+#~ msgstr ""
+
+#~ msgid "Output final structure and trajectory"
+#~ msgstr ""
+
+#~ msgid "Relaxed Structure: Optimized geometry from Lua-controlled algorithm"
+#~ msgstr ""
+
+#~ msgid "Trajectory: Step-by-step ionic movement (.MD, .XV files)"
+#~ msgstr ""
+
+#~ msgid "Final Energy: Converged total energy (eV)"
+#~ msgstr ""
+
+#~ msgid "Force History: Evolution of atomic forces during optimization"
+#~ msgstr ""
+
+#~ msgid "Algorithm-Specific Data: Custom outputs from Lua script"
+#~ msgstr ""
+
+#~ msgid "Advanced relaxation algorithms (LBFGS, FIRE, custom optimizers)"
+#~ msgstr ""
+
+#~ msgid "Nudged Elastic Band (NEB) transition state searches"
+#~ msgstr ""
+
+#~ msgid "Custom molecular dynamics protocols"
+#~ msgstr ""
+
+#~ msgid "Constrained optimization (selective relaxation, reaction coordinates)"
+#~ msgstr ""
+
+#~ msgid "Method development and algorithm testing"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"relax\")"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"Lua calculation\")"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.sets.base.SiestaInputGenerator\\``"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation (default: LuaSetGenerator)"
+#~ msgstr ""
+
+#~ msgid "SiestaInputGenerator"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Lua scripting best practices: - Use "
+#~ "LBFGS for faster convergence vs CG "
+#~ "(3-5x speedup typical) - Default script"
+#~ " (relax_geometry_lbfgs.lua) works for most "
+#~ "cases - Custom scripts require SIESTA"
+#~ " Lua API knowledge - NEB requires "
+#~ "initial and final structures (see "
+#~ "flows/neb.py) - Check SIESTA manual "
+#~ "section 4.2 for Lua API reference"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.jobs.core.LuaMaker\\``"
+#~ msgstr ""
+
+#~ msgid "Calculate momentum matrix elements <i|p|j> between band pairs"
+#~ msgstr ""
+
+#~ msgid "Sum contributions from all optical transitions (valence → conduction)"
+#~ msgstr ""
+
+#~ msgid "Apply energy conservation and occupation factors"
+#~ msgstr ""
+
+#~ msgid "Output frequency-dependent optical properties (ε(ω), α(ω), n(ω))"
+#~ msgstr ""
+
+#~ msgid "Dielectric Function: ε(ω) = ε₁(ω) + iε₂(ω) (real and imaginary parts)"
+#~ msgstr ""
+
+#~ msgid "Absorption Coefficient: α(ω) - photon absorption vs wavelength"
+#~ msgstr ""
+
+#~ msgid "Refractive Index: n(ω) - real part of complex refractive index"
+#~ msgstr ""
+
+#~ msgid "Reflectivity: R(ω) - fraction of light reflected at normal incidence"
+#~ msgstr ""
+
+#~ msgid "Energy Loss Function: Im(-1/ε) - electron energy loss spectroscopy"
+#~ msgstr ""
+
+#~ msgid "Optical Gap: First absorption onset (may differ from electronic gap)"
+#~ msgstr ""
+
+#~ msgid "Solar cell materials (absorption spectrum, optimal band gap)"
+#~ msgstr ""
+
+#~ msgid "Transparent conductors (optical gap vs electrical conductivity)"
+#~ msgstr ""
+
+#~ msgid "Photocatalysis (light absorption efficiency)"
+#~ msgstr ""
+
+#~ msgid "Optical coatings (refractive index engineering)"
+#~ msgstr ""
+
+#~ msgid "Comparison with UV-Vis spectroscopy experiments"
+#~ msgstr ""
+
+#~ msgid "Optoelectronic device design (LEDs, photodetectors)"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"Optical\")"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"Optical calculation\")"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation (default: OpticalSetGenerator)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Convergence requirements: - Dense k-point "
+#~ "mesh essential (optical transitions sample "
+#~ "entire BZ) - Include enough unoccupied"
+#~ " bands (NumberOfBands >> N_electrons/2) -"
+#~ " Broadening: 0.05-0.2 eV (experimental "
+#~ "linewidth guidance) - Energy range: "
+#~ "cover experimental measurement range - "
+#~ "Scissors correction: adjust band gap to"
+#~ " match experiment if needed"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Limitations: - RPA approximation: no "
+#~ "excitonic effects (underestimates absorption) "
+#~ "- Independent particle picture: electron-"
+#~ "hole interactions neglected - For "
+#~ "accurate exciton binding, use GW-BSE "
+#~ "(not in SIESTA) - Good for trends"
+#~ " and qualitative predictions"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Output files: - siesta.EPSIMG: Imaginary "
+#~ "dielectric function ε₂(ω) - siesta.EPSREAL:"
+#~ " Real dielectric function ε₁(ω) - "
+#~ "Additional optical data in standard "
+#~ "output"
+#~ msgstr ""
+
+#~ msgid "Sample eigenvalues on dense k-point mesh with orbital projections"
+#~ msgstr ""
+
+#~ msgid "Project wavefunctions onto atomic orbitals (s, p, d, f shells)"
+#~ msgstr ""
+
+#~ msgid "Apply broadening and integrate over Brillouin zone"
+#~ msgstr ""
+
+#~ msgid "Output total DOS + per-atom orbital-resolved PDOS"
+#~ msgstr ""
+
+#~ msgid "Total DOS: Overall electronic density of states (states/eV)"
+#~ msgstr ""
+
+#~ msgid "Orbital-Resolved PDOS: Contributions from s, p, d, f orbitals per atom"
+#~ msgstr ""
+
+#~ msgid "Atom-Specific DOS: Electronic states localized on each atom"
+#~ msgstr ""
+
+#~ msgid "Bonding Analysis: Orbital overlap and hybridization patterns"
+#~ msgstr ""
+
+#~ msgid "XML Output: Machine-readable PDOS data (siesta.PDOS.xml)"
+#~ msgstr ""
+
+#~ msgid "Chemical bonding analysis (σ/π bonding, hybridization)"
+#~ msgstr ""
+
+#~ msgid "Identify orbital contributions to band edges (VBM/CBM character)"
+#~ msgstr ""
+
+#~ msgid "Magnetic moment decomposition (spin-polarized PDOS)"
+#~ msgstr ""
+
+#~ msgid "Ligand field splitting in transition metal complexes"
+#~ msgstr ""
+
+#~ msgid "Charge transfer analysis (donor/acceptor orbital populations)"
+#~ msgstr ""
+
+#~ msgid "Comparison with X-ray photoelectron spectroscopy (XPS)"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"pdos\")"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"PDOS calculation\")"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.sets.core.PDOSSetGenerator\\``"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the PDOS calculation"
+#~ msgstr ""
+
+#~ msgid "PDOSSetGenerator"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "PDOS output files: - siesta.DOS: Total"
+#~ " DOS (same as DOSMaker) - "
+#~ "siesta.PDOS: Human-readable PDOS (atom, "
+#~ "orbital, energy, DOS) - siesta.PDOS.xml: "
+#~ "Machine-readable format for plotting "
+#~ "tools"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Analysis tips: - Compare O-2p and "
+#~ "Ti-3d PDOS to identify band gap "
+#~ "character - Spin-polarized PDOS shows"
+#~ " magnetic moment origin (3d vs 4f)"
+#~ " - Overlap between atom PDOS "
+#~ "indicates bonding/antibonding states - Peak"
+#~ " positions reveal orbital energies and "
+#~ "ligand field splittings - Use dense "
+#~ "k-mesh (same as DOS requirements)"
+#~ msgstr ""
+
+#~ msgid "Generate supercell with symmetry-reduced atomic displacements (phonopy)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "For each displaced configuration: - Read"
+#~ " structure with displacement applied - "
+#~ "Run static SCF calculation - Extract "
+#~ "forces on all atoms"
+#~ msgstr ""
+
+#~ msgid "Collect force sets from all displacements"
+#~ msgstr ""
+
+#~ msgid "Output force constants for phonopy post-processing"
+#~ msgstr ""
+
+#~ msgid "Force Sets: Atomic forces for each displacement configuration (eV/Å)"
+#~ msgstr ""
+
+#~ msgid "Force Constants: Second derivatives of energy wrt atomic positions"
+#~ msgstr ""
+
+#~ msgid "Displacement Data: Mapping of displacements to force responses"
+#~ msgstr ""
+
+#~ msgid "Supercell Information: Supercell matrix and symmetry operations"
+#~ msgstr ""
+
+#~ msgid "Phonon dispersion calculation (input for phonopy)"
+#~ msgstr ""
+
+#~ msgid "Thermal properties (heat capacity, thermal expansion)"
+#~ msgstr ""
+
+#~ msgid "Thermodynamic stability (phonon free energy)"
+#~ msgstr ""
+
+#~ msgid "Infrared/Raman spectroscopy prediction"
+#~ msgstr ""
+
+#~ msgid "Grüneisen parameter calculation (volume dependence)"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"Relaxation calculation\")"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation (default: PhononSetGenerator)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Best practices: - Use well-converged "
+#~ "SCF parameters (forces must be "
+#~ "accurate!) - Displacement: 0.01 Å "
+#~ "typical (larger for soft modes, smaller"
+#~ " for hard) - Supercell: min_length ≥"
+#~ " 12 Å to avoid spurious interactions"
+#~ " - K-point mesh: scale inversely with"
+#~ " supercell size (Γ-point often sufficient)"
+#~ " - CRITICAL: Relax structure first "
+#~ "(residual forces < 0.01 eV/Å) - "
+#~ "For anharmonic systems, consider finite-"
+#~ "temperature effects - Output used by "
+#~ "phonopy to compute phonon frequencies "
+#~ "and eigenvectors"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.jobs.core.PhononMaker\\``"
+#~ msgstr ""
+
+#~ msgid "Read initial structure and setup calculation"
+#~ msgstr ""
+
+#~ msgid "Calculate forces and stresses via SCF at current geometry"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Update atomic positions (and lattice if"
+#~ " variable-cell) using optimization "
+#~ "algorithm"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Repeat steps 2-3 until convergence: -"
+#~ " Maximum force < MD.MaxForceTol (default:"
+#~ " 0.04 eV/Å) - Maximum stress < "
+#~ "MD.MaxStressTol (default: 1.0 GPa, "
+#~ "variable-cell only)"
+#~ msgstr ""
+
+#~ msgid "Output relaxed structure and final properties"
+#~ msgstr ""
+
+#~ msgid "Relaxation Modes:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Fixed-Cell: Optimize atomic positions "
+#~ "only (lattice constants frozen) - Use"
+#~ " when lattice parameters are "
+#~ "known/experimental - Faster than variable-"
+#~ "cell (fewer degrees of freedom) - "
+#~ "Common for surface slabs, molecules, "
+#~ "defects"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Variable-Cell: Optimize both atomic "
+#~ "positions AND lattice parameters - Find"
+#~ " equilibrium lattice constants from scratch"
+#~ " - Essential for unknown materials, "
+#~ "high-pressure studies - Slower but "
+#~ "provides complete equilibrium geometry"
+#~ msgstr ""
+
+#~ msgid "Relaxed Structure: Optimized atomic positions and lattice"
+#~ msgstr ""
+
+#~ msgid "Final Energy: Minimum energy configuration (eV)"
+#~ msgstr ""
+
+#~ msgid "Final Forces: Residual atomic forces (should be < tolerance)"
+#~ msgstr ""
+
+#~ msgid "Final Stress: Residual cell stress (variable-cell only)"
+#~ msgstr ""
+
+#~ msgid "Optimization History: Energy/force evolution during relaxation"
+#~ msgstr ""
+
+#~ msgid "Find equilibrium structures for new materials"
+#~ msgstr ""
+
+#~ msgid "Relax experimental structures (remove thermal effects)"
+#~ msgstr ""
+
+#~ msgid "Pre-processing for phonons, band structure, NEB"
+#~ msgstr ""
+
+#~ msgid "Geometry optimization for molecules and surfaces"
+#~ msgstr ""
+
+#~ msgid "High-pressure structure prediction (with external pressure)"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation (default: RelaxSetGenerator)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Convergence tips: - Start with looser"
+#~ " tolerances (0.04 eV/Å) then tighten "
+#~ "if needed - Use fixed-cell for "
+#~ "surfaces/2D materials (prevent vacuum "
+#~ "collapse) - Variable-cell essential for"
+#~ " bulk materials without experimental data"
+#~ " - For difficult convergence, try "
+#~ "different MD.VariableCell options"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.jobs.core.RelaxMaker\\``"
+#~ msgstr ""
+
+#~ msgid "Optional structure relaxation (variable-cell or fixed-cell)"
+#~ msgstr ""
+
+#~ msgid "Generate symmetry-reduced displaced supercells (phonopy)"
+#~ msgstr ""
+
+#~ msgid "Calculate forces for each displacement (static SCF calculations)"
+#~ msgstr ""
+
+#~ msgid "Build force constants matrix and dynamical matrix (phonopy)"
+#~ msgstr ""
+
+#~ msgid "Compute phonon dispersion along high-symmetry paths"
+#~ msgstr ""
+
+#~ msgid "Calculate phonon DOS and thermal properties (Cv, S, F)"
+#~ msgstr ""
+
+#~ msgid "Generate automatic plots: band structure, DOS, thermal properties"
+#~ msgstr ""
+
+#~ msgid "Write comprehensive text summary with analysis"
+#~ msgstr ""
+
+#~ msgid "Phonon Dispersion: ω(q) along high-symmetry paths (THz or cm⁻¹)"
+#~ msgstr ""
+
+#~ msgid "Phonon DOS: Vibrational density of states"
+#~ msgstr ""
+
+#~ msgid "Thermal Properties: Heat capacity Cv(T), entropy S(T), free energy F(T)"
+#~ msgstr ""
+
+#~ msgid "Zero-Point Energy: Quantum vibrational contribution at 0 K"
+#~ msgstr ""
+
+#~ msgid "Plots: phonon_bands.png, phonon_dos.png, thermal_properties.png"
+#~ msgstr ""
+
+#~ msgid "Summary: Detailed text report with frequencies, symmetries, analysis"
+#~ msgstr ""
+
+#~ msgid "Thermodynamic stability (imaginary frequencies → instability)"
+#~ msgstr ""
+
+#~ msgid "Thermal expansion coefficient via quasi-harmonic approximation"
+#~ msgstr ""
+
+#~ msgid "Heat capacity prediction for materials design"
+#~ msgstr ""
+
+#~ msgid "Infrared/Raman spectroscopy peak assignment"
+#~ msgstr ""
+
+#~ msgid "Isotope effects on vibrational properties"
+#~ msgstr ""
+
+#~ msgid "Comparison with inelastic neutron scattering experiments"
+#~ msgstr ""
+
+#~ msgid "Name of the workflow (default: \"siesta phonopy\")"
+#~ msgstr ""
+
+#~ msgid "type relax_maker"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.jobs.core.RelaxMaker\\`"
+#~ " \\| \\:py\\:obj\\:\\`None\\``"
+#~ msgstr ""
+
+#~ msgid "param relax_maker"
+#~ msgstr ""
+
+#~ msgid "Maker for structure relaxation with custom parameters (default: None)"
+#~ msgstr ""
+
+#~ msgid "RelaxMaker | None"
+#~ msgstr ""
+
+#~ msgid "type static_maker"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.jobs.core.StaticMaker\\``"
+#~ msgstr ""
+
+#~ msgid "param static_maker"
+#~ msgstr ""
+
+#~ msgid "Maker for force calculations with custom parameters"
+#~ msgstr ""
+
+#~ msgid "StaticMaker"
+#~ msgstr ""
+
+#~ msgid "type min_length"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`float\\``"
+#~ msgstr ""
+
+#~ msgid "param min_length"
+#~ msgstr ""
+
+#~ msgid "Minimum supercell length in Angstroms (default: 12.0)"
+#~ msgstr ""
+
+#~ msgid "float"
+#~ msgstr ""
+
+#~ msgid "type displacement"
+#~ msgstr ""
+
+#~ msgid "param displacement"
+#~ msgstr ""
+
+#~ msgid "type supercell_matrix"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ "
+#~ "\\\\\\[\\:py\\:class\\:\\`list\\`\\\\ "
+#~ "\\\\\\[\\:py\\:class\\:\\`int\\`\\]\\] \\| "
+#~ "\\:py\\:obj\\:\\`None\\``"
+#~ msgstr ""
+
+#~ msgid "param supercell_matrix"
+#~ msgstr ""
+
+#~ msgid "Manual supercell matrix (overrides min_length if provided)"
+#~ msgstr ""
+
+#~ msgid "list[list[int]] | None"
+#~ msgstr ""
+
+#~ msgid "type prefer_90_degrees"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid "param prefer_90_degrees"
+#~ msgstr ""
+
+#~ msgid "Prefer supercells with ~90° angles (default: True)"
+#~ msgstr ""
+
+#~ msgid "bool"
+#~ msgstr ""
+
+#~ msgid "type symprec"
+#~ msgstr ""
+
+#~ msgid "param symprec"
+#~ msgstr ""
+
+#~ msgid "Symmetry precision (default: 1e-5)"
+#~ msgstr ""
+
+#~ msgid "type use_symmetry"
+#~ msgstr ""
+
+#~ msgid "param use_symmetry"
+#~ msgstr ""
+
+#~ msgid "Use symmetry to reduce calculations (default: True)"
+#~ msgstr ""
+
+#~ msgid "type mesh"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`tuple\\`\\\\ "
+#~ "\\\\\\[\\:py\\:class\\:\\`int\\`\\, \\:py\\:class\\:\\`int\\`\\,"
+#~ " \\:py\\:class\\:\\`int\\`\\]`"
+#~ msgstr ""
+
+#~ msgid "param mesh"
+#~ msgstr ""
+
+#~ msgid "Q-point mesh for DOS/thermal properties (default: (50, 50, 50))"
+#~ msgstr ""
+
+#~ msgid "tuple[int, int, int]"
+#~ msgstr ""
+
+#~ msgid "type create_thermal_properties"
+#~ msgstr ""
+
+#~ msgid "param create_thermal_properties"
+#~ msgstr ""
+
+#~ msgid "Calculate thermal properties (default: True)"
+#~ msgstr ""
+
+#~ msgid "type t_min"
+#~ msgstr ""
+
+#~ msgid "param t_min"
+#~ msgstr ""
+
+#~ msgid "Minimum temperature in K (default: 0)"
+#~ msgstr ""
+
+#~ msgid "type t_max"
+#~ msgstr ""
+
+#~ msgid "param t_max"
+#~ msgstr ""
+
+#~ msgid "Maximum temperature in K (default: 1000)"
+#~ msgstr ""
+
+#~ msgid "type t_step"
+#~ msgstr ""
+
+#~ msgid "param t_step"
+#~ msgstr ""
+
+#~ msgid "Temperature step in K (default: 10)"
+#~ msgstr ""
+
+#~ msgid "type generate_plots"
+#~ msgstr ""
+
+#~ msgid "param generate_plots"
+#~ msgstr ""
+
+#~ msgid "Generate plots and analysis files (default: True)"
+#~ msgstr ""
+
+#~ msgid "type plot_band_structure"
+#~ msgstr ""
+
+#~ msgid "param plot_band_structure"
+#~ msgstr ""
+
+#~ msgid "Plot phonon band structure (default: True)"
+#~ msgstr ""
+
+#~ msgid "type plot_dos"
+#~ msgstr ""
+
+#~ msgid "param plot_dos"
+#~ msgstr ""
+
+#~ msgid "Plot phonon DOS (default: True)"
+#~ msgstr ""
+
+#~ msgid "type plot_thermal"
+#~ msgstr ""
+
+#~ msgid "param plot_thermal"
+#~ msgstr ""
+
+#~ msgid "Plot thermal properties (default: True)"
+#~ msgstr ""
+
+#~ msgid "type write_summary"
+#~ msgstr ""
+
+#~ msgid "param write_summary"
+#~ msgstr ""
+
+#~ msgid "Write comprehensive text summary (default: True)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Best practices: - CRITICAL: Use tighter"
+#~ " force tolerances for force calculations"
+#~ " vs relaxation - Typical: relax with"
+#~ " 0.04 eV/Å, forces with 0.01 eV/Å "
+#~ "or better - Supercell size: min_length"
+#~ " ≥ 12 Å (15 Å for soft "
+#~ "materials) - Displacement: 0.01 Å "
+#~ "standard (0.005 Å for very stiff "
+#~ "systems) - K-points for forces: can "
+#~ "use Γ-point for large supercells (>100"
+#~ " atoms) - Symmetry exploitation: "
+#~ "use_symmetry=True reduces calculations by "
+#~ "10-100x - For publication: increase mesh"
+#~ " to (100,100,100) for smooth DOS"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Output files: - phonon_bands.png: Phonon "
+#~ "dispersion plot - phonon_dos.png: Phonon "
+#~ "density of states - thermal_properties.png:"
+#~ " Cv(T), S(T), F(T) plots - "
+#~ "phonon_summary.txt: Comprehensive analysis report"
+#~ msgstr ""
+
+#~ msgid "Start SIESTA socket server on specified host:port"
+#~ msgstr ""
+
+#~ msgid "Initialize basis sets, pseudopotentials, grid parameters (once only)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "For each structure in the batch: -"
+#~ " Send atomic positions via socket -"
+#~ " SIESTA computes SCF energy and "
+#~ "forces - Receive results without "
+#~ "restarting"
+#~ msgstr ""
+
+#~ msgid "Close socket connection after all structures processed"
+#~ msgstr ""
+
+#~ msgid "Multiple Structure Energies: Total energies for entire batch (eV)"
+#~ msgstr ""
+
+#~ msgid "Forces: Atomic forces for each structure (eV/Å)"
+#~ msgstr ""
+
+#~ msgid "Stress Tensors: Cell stresses if applicable (GPa)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Speedup: 5-50x faster than individual "
+#~ "jobs (depends on SCF cost vs setup"
+#~ " cost)"
+#~ msgstr ""
+
+#~ msgid "Batch Task Document: Aggregated results from all structures"
+#~ msgstr ""
+
+#~ msgid "Molecular dynamics trajectory analysis (energy/force evaluation)"
+#~ msgstr ""
+
+#~ msgid "High-throughput screening (same parameters, many structures)"
+#~ msgstr ""
+
+#~ msgid "Adsorption site scanning (multiple adsorbate positions)"
+#~ msgstr ""
+
+#~ msgid "Structure interpolation (NEB images, reaction paths)"
+#~ msgstr ""
+
+#~ msgid "Machine learning dataset generation"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"multi_scf\")"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"SCF Calculations Socket\")"
+#~ msgstr ""
+
+#~ msgid "type host"
+#~ msgstr ""
+
+#~ msgid "param host"
+#~ msgstr ""
+
+#~ msgid "The hostname for socket server (default: \"localhost\")"
+#~ msgstr ""
+
+#~ msgid "type port"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`int\\``"
+#~ msgstr ""
+
+#~ msgid "param port"
+#~ msgstr ""
+
+#~ msgid "Socket port number (default: 12345)"
+#~ msgstr ""
+
+#~ msgid "int"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation (default: SocketIOSetGenerator)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Performance considerations: - Most efficient"
+#~ " when setup cost >> SCF cost "
+#~ "(small systems, many structures) - "
+#~ "Typical speedup: 10-20x for 100+ "
+#~ "structures - Ensure port is available"
+#~ " and not blocked by firewall - "
+#~ "All structures must use same "
+#~ "pseudopotentials and basis sets - Socket"
+#~ " errors automatically handled with "
+#~ "reconnection attempts - Not suitable for"
+#~ " single structure calculations (use "
+#~ "StaticMaker instead)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Initialize electronic density (from atomic "
+#~ "superposition or previous calculation)"
+#~ msgstr ""
+
+#~ msgid "Solve Kohn-Sham equations self-consistently until convergence"
+#~ msgstr ""
+
+#~ msgid "Calculate final properties: total energy, forces, stress tensor"
+#~ msgstr ""
+
+#~ msgid "Generate output: density matrix, wave functions, Hamiltonian"
+#~ msgstr ""
+
+#~ msgid "Total Energy: Ground-state DFT energy (eV)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Forces: Atomic forces (eV/Å) - useful"
+#~ " for checking if structure is relaxed"
+#~ msgstr ""
+
+#~ msgid "Stress Tensor: Cell stress (GPa) - for pressure analysis"
+#~ msgstr ""
+
+#~ msgid "Electron Density: Charge distribution for post-processing"
+#~ msgstr ""
+
+#~ msgid "Band Structure Data: For subsequent band structure calculations"
+#~ msgstr ""
+
+#~ msgid "Density of States: Electronic DOS at Fermi level"
+#~ msgstr ""
+
+#~ msgid "Energy calculations at fixed geometry"
+#~ msgstr ""
+
+#~ msgid "Force and stress evaluation without relaxation"
+#~ msgstr ""
+
+#~ msgid "Reference calculations for more complex workflows"
+#~ msgstr ""
+
+#~ msgid "Post-processing: charge density, LDOS, COOP analysis"
+#~ msgstr ""
+
+#~ msgid "Checkpoint for continuation calculations (phonons, band structure)"
+#~ msgstr ""
+
+#~ msgid "The type key for the calculation (default: \"scf\")"
+#~ msgstr ""
+
+#~ msgid "The job name (default: \"SCF Calculation\")"
+#~ msgstr ""
+
+#~ msgid "The InputGenerator for the calculation (default: StaticSetGenerator)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Static calculations are faster than "
+#~ "relaxations and useful when: - You "
+#~ "have an already relaxed structure - "
+#~ "You need forces/stresses at a specific"
+#~ " geometry - Setting up for band "
+#~ "structure or DOS calculations - Testing"
+#~ " convergence parameters (k-points, basis, "
+#~ "cutoff)"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~jobflow.core.flow.Flow\\``"
+#~ msgstr ""
+
+#~ msgid "Get a static calculation maker for SIESTA."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This is used internally for constant-"
+#~ "volume calculations on the expanded/contracted"
+#~ " structures. Inherits settings from the "
+#~ "phonon maker's static_maker if available."
+#~ msgstr ""
+
+#~ msgid "A SIESTA static calculation maker."
+#~ msgstr ""
+
+#~ msgid "Log details about the Grüneisen calculation."
+#~ msgstr ""
+
+#~ msgid "The structure being calculated."
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+#~ msgstr ""
+
+#~ msgid "Generate volumes for phonon calculations."
+#~ msgstr ""
+
+#~ msgid "Equilibrium volume from EOS fit in Å³."
+#~ msgstr ""
+
+#~ msgid "List of volumes for phonon calculations."
+#~ msgstr ""
+
+#~ msgid "Validate the input structure for QHA calculations."
+#~ msgstr ""
+
+#~ msgid "Structure to validate."
+#~ msgstr ""
+
+#~ msgid "Raises"
+#~ msgstr ""
+
+#~ msgid "If the structure is not suitable for QHA."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Reference material data from: [1] "
+#~ "Simmons, G. & Wang, H. Single "
+#~ "Crystal Elastic Constants and"
+#~ msgstr ""
+
+#~ msgid "Calculated Aggregate Properties: A Handbook. MIT Press (1971)."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "[2] de Jong, M. et al. Sci. "
+#~ "Data 2, 150009 (2015). DOI: "
+#~ "10.1038/sdata.2015.9"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Reference material data from: [1] de "
+#~ "Jong, M. et al. Sci. Data 2, "
+#~ "150009 (2015). DOI: 10.1038/sdata.2015.9"
+#~ msgstr ""
+
+#~ msgid "Materials Project elastic constants database"
+#~ msgstr ""
+
+#~ msgid "[2] Simmons, G. & Wang, H. Single Crystal Elastic Constants and"
+#~ msgstr ""
+
+#~ msgid "[3] Every, A.G. & McCurdy, A.K. Landolt-Börnstein, Group III, Vol. 29a,"
+#~ msgstr ""
+
+#~ msgid "Second and Higher Order Elastic Constants. Springer (1992)."
+#~ msgstr ""
+
+#~ msgid "Workflow Steps"
+#~ msgstr ""
+
+#~ msgid "Initial Relaxation (optional):"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Fully relax the structure to equilibrium"
+#~ " (zero pressure, minimum forces)"
+#~ msgstr ""
+
+#~ msgid "Determines the reference state V₀, E₀"
+#~ msgstr ""
+
+#~ msgid "Structure Deformation:"
+#~ msgstr ""
+
+#~ msgid "Apply uniform volume strains (default: -5% to +5%)"
+#~ msgstr ""
+
+#~ msgid "Generate multiple structures at different volumes"
+#~ msgstr ""
+
+#~ msgid "Maintains crystal symmetry during deformation"
+#~ msgstr ""
+
+#~ msgid "Energy Calculations:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Relax atomic positions at each fixed "
+#~ "volume (or run static calculations)"
+#~ msgstr ""
+
+#~ msgid "Calculate total energy E(V) for each volume point using SIESTA"
+#~ msgstr ""
+
+#~ msgid "Optionally calculate stress tensors"
+#~ msgstr ""
+
+#~ msgid "EOS Fitting:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Fit E(V) data to analytical EOS "
+#~ "models: • Murnaghan: Simple linear B(P)"
+#~ " assumption • Birch-Murnaghan: Finite "
+#~ "strain theory (2nd/3rd order) • Vinet:"
+#~ " Universal EOS based on interatomic "
+#~ "potentials • Pourier-Tarantola: Logarithmic"
+#~ " strain formulation"
+#~ msgstr ""
+
+#~ msgid "Extract equilibrium properties: E₀, V₀, B₀ (bulk modulus), B₁"
+#~ msgstr ""
+
+#~ msgid "Analysis & Output:"
+#~ msgstr ""
+
+#~ msgid "Generate E(V) plots with fitted curves"
+#~ msgstr ""
+
+#~ msgid "Export results to summary file with theoretical background"
+#~ msgstr ""
+
+#~ msgid "Compare different EOS model predictions"
+#~ msgstr ""
+
+#~ msgid "Key Results"
+#~ msgstr ""
+
+#~ msgid "E₀: Equilibrium energy (eV)"
+#~ msgstr ""
+
+#~ msgid "V₀: Equilibrium volume (Ų)"
+#~ msgstr ""
+
+#~ msgid "B₀: Bulk modulus (GPa) - material's resistance to compression"
+#~ msgstr ""
+
+#~ msgid "B₁: Pressure derivative of bulk modulus (dimensionless)"
+#~ msgstr ""
+
+#~ msgid "Applications"
+#~ msgstr ""
+
+#~ msgid "Determine bulk modulus (material stiffness/compressibility)"
+#~ msgstr ""
+
+#~ msgid "Predict high-pressure behavior and phase transitions"
+#~ msgstr ""
+
+#~ msgid "Validate DFT accuracy against experimental data"
+#~ msgstr ""
+
+#~ msgid "Calculate thermal expansion (when combined with phonon calculations)"
+#~ msgstr ""
+
+#~ msgid "Study pressure-induced phenomena in materials"
+#~ msgstr ""
+
+#~ msgid "Name of the flows produced by this maker."
+#~ msgstr ""
+
+#~ msgid "type initial_relax_maker"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~jobflow.core.maker.Maker\\`"
+#~ " \\| \\:py\\:obj\\:\\`None\\``"
+#~ msgstr ""
+
+#~ msgid "param initial_relax_maker"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Maker to relax the input structure, "
+#~ "defaults to variable-cell relaxation."
+#~ msgstr ""
+
+#~ msgid ".Maker | None"
+#~ msgstr ""
+
+#~ msgid "type eos_relax_maker"
+#~ msgstr ""
+
+#~ msgid "param eos_relax_maker"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Maker to relax deformed structures for"
+#~ " the EOS fit (default: fixed-cell)."
+#~ msgstr ""
+
+#~ msgid ".Maker"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~jobflow.core.maker.Maker\\``"
+#~ msgstr ""
+
+#~ msgid "Maker to generate statics after each relaxation, defaults to None."
+#~ msgstr ""
+
+#~ msgid "type linear_strain"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`tuple\\`\\\\ "
+#~ "\\\\\\[\\:py\\:class\\:\\`float\\`\\, "
+#~ "\\:py\\:class\\:\\`float\\`\\]`"
+#~ msgstr ""
+
+#~ msgid "param linear_strain"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Percentage linear strain to apply as "
+#~ "a deformation, default = -5% to "
+#~ "+5%."
+#~ msgstr ""
+
+#~ msgid "tuple[float]"
+#~ msgstr ""
+
+#~ msgid "type number_of_frames"
+#~ msgstr ""
+
+#~ msgid "param number_of_frames"
+#~ msgstr ""
+
+#~ msgid "Number of strain calculations to do for EOS fit, default = 6."
+#~ msgstr ""
+
+#~ msgid "type postprocessor"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.common.jobs.eos.EOSPostProcessor\\``"
+#~ msgstr ""
+
+#~ msgid "param postprocessor"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Optional postprocessing step, defaults to "
+#~ "`atomate2.common.jobs.PostProcessEosEnergy`."
+#~ msgstr ""
+
+#~ msgid ".atomate2.common.jobs.EOSPostProcessor"
+#~ msgstr ""
+
+#~ msgid "type _store_transformation_information"
+#~ msgstr ""
+
+#~ msgid "param _store_transformation_information"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether to store the information about"
+#~ " transformations. Unfortunately needed at "
+#~ "present to handle issues with emmet "
+#~ "and pydantic validation"
+#~ msgstr ""
+
+#~ msgid ".bool = False"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~atomate2.siesta.flows.eos.core.SiestaEosFlowMaker\\``"
+#~ msgstr ""
+
+#~ msgid "Create job that analyzes all site results."
+#~ msgstr ""
+
+#~ msgid "Clean slab energy calculation job."
+#~ msgstr ""
+
+#~ msgid "Adsorbate energy calculation job."
+#~ msgstr ""
+
+#~ msgid "Sites generation job."
+#~ msgstr ""
+
+#~ msgid "List of site calculation jobs."
+#~ msgstr ""
+
+#~ msgid "List of heights that were scanned."
+#~ msgstr ""
+
+#~ msgid "Analysis job."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Create consolidated analysis job that "
+#~ "creates all outputs in one directory."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "All output files (best structure, plots,"
+#~ " summary) are created directly in the"
+#~ " analysis job's directory."
+#~ msgstr ""
+
+#~ msgid "Placement location ('top' or 'bottom')."
+#~ msgstr ""
+
+#~ msgid "Whether to generate plots."
+#~ msgstr ""
+
+#~ msgid "Whether to write summary file."
+#~ msgstr ""
+
+#~ msgid "Job counter for naming (not used, kept for compatibility)."
+#~ msgstr ""
+
+#~ msgid "Consolidated analysis job."
+#~ msgstr ""
+
+#~ msgid "Create job for calculating energy at a single site at specific height."
+#~ msgstr ""
+
+#~ msgid "Output from sites generation job."
+#~ msgstr ""
+
+#~ msgid "Index of site in the list."
+#~ msgstr ""
+
+#~ msgid "Height of adsorbate above surface (Å)."
+#~ msgstr ""
+
+#~ msgid "Index of height in the heights list."
+#~ msgstr ""
+
+#~ msgid "Progress indicator string for logging."
+#~ msgstr ""
+
+#~ msgid "Current job number for counter."
+#~ msgstr ""
+
+#~ msgid "Total number of jobs for counter."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Site energy calculation job that returns"
+#~ " dict with site, height, and energy."
+#~ msgstr ""
+
+#~ msgid "Resolve the list of heights to scan."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Priority: 1. heights (explicit list) 2."
+#~ " height_min/height_max/height_step (range) 3. "
+#~ "height (single value)"
+#~ msgstr ""
+
+#~ msgid "List of heights to scan."
+#~ msgstr ""
+
+#~ msgid "Create the surface energy analysis job."
+#~ msgstr ""
+
+#~ msgid "This job collects all slab energies and calculates surface energies."
+#~ msgstr ""
+
+#~ msgid "Bulk energy calculation job."
+#~ msgstr ""
+
+#~ msgid "List of slab calculation job dictionaries."
+#~ msgstr ""
+
+#~ msgid "Surface energy analysis job."
+#~ msgstr ""
+
+#~ msgid "Discover all slab files and their metadata from directory."
+#~ msgstr ""
+
+#~ msgid "Directory containing slab files."
+#~ msgstr ""
+
+#~ msgid "List of (slab_file_path, metadata_dict) tuples."
+#~ msgstr ""
+
+#~ msgid "type"
+#~ msgstr ""
+
+#~ msgid "list"
+#~ msgstr ""
+
+#~ msgid "Compute L-BFGS search direction using two-loop recursion."
+#~ msgstr ""
+
+#~ msgid "This implements the standard L-BFGS algorithm from Nocedal & Wright."
+#~ msgstr ""
+
+#~ msgid "Per-image optimizer state with history."
+#~ msgstr ""
+
+#~ msgid "Current gradient (flattened, shape: n_atoms * 3)."
+#~ msgstr ""
+
+#~ msgid "Search direction (same shape as grad)."
+#~ msgstr ""
+

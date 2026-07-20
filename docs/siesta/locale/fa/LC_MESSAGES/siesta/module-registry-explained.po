@@ -1,0 +1,816 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/module-registry-explained.rst:3
+#: 212905f87354498c90a73a5f0bdba508
+msgid "Module Registry System: Complete Guide"
+msgstr "سیستم رجیستری ماژول: راهنمای کامل"
+
+#: ../../source/module-registry-explained.rst:6
+#: ef8f35629ce14764906fb79330273000
+msgid ""
+"**This document explains the complete module registration and tier "
+"activation system.**"
+msgstr "**این سند سیستم کامل ثبت ماژول و فعال‌سازی سطح را توضیح می‌دهد.**"
+
+#: ../../source/module-registry-explained.rst:11
+#: ecb6c05a790b498ebe34e11ba89f5910
+msgid "What is the Module Registry?"
+msgstr "رجیستری ماژول چیست؟"
+
+#: ../../source/module-registry-explained.rst:13
+#: a973698f523a448393c82dd20b0e7f56
+msgid ""
+"The **module registry** is a central database that tracks all 28 "
+"dataclass modules used to organize SIESTA input parameters. It enables:"
+msgstr ""
+"**رجیستری ماژول** یک پایگاه داده مرکزی است که تمام ۲۸ ماژول کلاس داده که "
+"برای سازماندهی پارامترهای ورودی SIESTA استفاده می‌شوند را ردیابی می‌کند. "
+"این رجیستری امکانات زیر را فراهم می‌کند:"
+
+#: ../../source/module-registry-explained.rst:15
+#: a492e376d79947ffaaa6e68ce130ac6d
+msgid "**Automatic module discovery** - No manual imports needed"
+msgstr "**کشف خودکار ماژول** - نیازی به import دستی نیست"
+
+#: ../../source/module-registry-explained.rst:16
+#: 66c24a32a25f42b8a637fc2d27d20692
+msgid "**Tier-based activation** - Load only the modules you need"
+msgstr "**فعال‌سازی مبتنی بر سطح** - فقط ماژول‌هایی که نیاز دارید بارگذاری می‌شوند"
+
+#: ../../source/module-registry-explained.rst:17
+#: 85d412d198254c6f9239adaaa899f798
+msgid "**Dependency management** - Modules initialize in the correct order"
+msgstr "**مدیریت وابستگی** - ماژول‌ها به ترتیب صحیح مقداردهی اولیه می‌شوند"
+
+#: ../../source/module-registry-explained.rst:18
+#: 86f7f18c2ddd48acb8559a6b9080ce23
+msgid "**Material-specific presets** - Quick setup for common calculation types"
+msgstr "**پیش‌تنظیم‌های اختصاصی ماده** - راه‌اندازی سریع برای انواع محاسبات رایج"
+
+#: ../../source/module-registry-explained.rst:20
+#: 6c058b563930400c933e54c39ff82829
+msgid "**Location**: ``src/atomate2/siesta/dataclass/registry.py``"
+msgstr "**مکان**: ``src/atomate2/siesta/dataclass/registry.py``"
+
+#: ../../source/module-registry-explained.rst:25
+#: 7c7a198718f7420aa5fdb72969548fd5
+msgid "Three Key Dictionaries"
+msgstr "سه دیکشنری کلیدی"
+
+#: ../../source/module-registry-explained.rst:27
+#: 68c0a430c04e44eab03d6009871f7b6e
+msgid "The tier system uses **3 interconnected dictionaries**:"
+msgstr "سیستم سطح از **۳ دیکشنری به هم پیوسته** استفاده می‌کند:"
+
+#: ../../source/module-registry-explained.rst:30
+#: 863096b841ad4615bc32bf9b78317c24
+msgid "1. MODULE_REGISTRY - All Available Modules"
+msgstr "۱. MODULE_REGISTRY - تمام ماژول‌های موجود"
+
+#: ../../source/module-registry-explained.rst:32
+#: 9906c23d565541c0911350799689b223
+msgid "**Location**: ``registry.py:77``"
+msgstr "**مکان**: ``registry.py:77``"
+
+#: ../../source/module-registry-explained.rst:34
+#: 0744301a097a4e53975b642ee7f9948c
+msgid "**Type**: ``dict[str, DataclassModule]``"
+msgstr "**نوع**: ``dict[str, DataclassModule]``"
+
+#: ../../source/module-registry-explained.rst:36
+#: 142ed0b5adda43f2ac507a1b4bb37c13
+msgid "**Purpose**: Global registry storing metadata for all 28 dataclass modules"
+msgstr "**هدف**: رجیستری سراسری که فراداده تمام ۲۸ ماژول کلاس داده را ذخیره می‌کند"
+
+#: ../../source/module-registry-explained.rst:38
+#: 152bd4db8eb8475eb92d0a1f6e25d442
+msgid "**Example Entry**:"
+msgstr "**نمونه ورودی**:"
+
+#: ../../source/module-registry-explained.rst:62
+#: b8113ada4ba14f6db74a4be2faa79bd2
+msgid ""
+"**How It's Built**: Automatically filled by calling ``register_module()``"
+" 28 times"
+msgstr ""
+"**نحوه ساخت**: به صورت خودکار با فراخوانی ``register_module()`` به تعداد "
+"۲۸ بار پر می‌شود"
+
+#: ../../source/module-registry-explained.rst:65
+#: 8b782b4837624fd0b521423a9b4cf46d
+msgid "2. tier_hierarchy - Module Activation Mapping"
+msgstr "۲. tier_hierarchy - نگاشت فعال‌سازی ماژول"
+
+#: ../../source/module-registry-explained.rst:67
+#: 514f77fd46c248d2b8484dcd65e08839
+msgid "**Location**: ``registry.py:180-192``"
+msgstr "**مکان**: ``registry.py:180-192``"
+
+#: ../../source/module-registry-explained.rst:69
+#: 7fba223fbd334c9598c71e30cc1b73bf
+msgid "**Type**: ``dict[str, list[str]]``"
+msgstr "**نوع**: ``dict[str, list[str]]``"
+
+#: ../../source/module-registry-explained.rst:71
+#: 05fb47bbb25d4c7caa66679bc0c900f8
+msgid "**Purpose**: Maps tier names → which module tiers to activate"
+msgstr "**هدف**: نگاشت نام‌های سطح ← کدام سطوح ماژول فعال شوند"
+
+#: ../../source/module-registry-explained.rst:73
+#: ../../source/module-registry-explained.rst:114
+#: 75c0f893cac2465b8a9b59c341edbf71 f78168fd8cae4536a9abcb525c6dcb4c
+msgid "**Complete Definition**:"
+msgstr "**تعریف کامل**:"
+
+#: ../../source/module-registry-explained.rst:90
+#: 663597bc45a24132be8b5f0ccbdbfe3f
+msgid "**Example Usage**:"
+msgstr "**نمونه استفاده**:"
+
+#: ../../source/module-registry-explained.rst:106
+#: 7735f21fe4ad427e846674d21513c4be
+msgid "3. TIER_DEFAULTS - Parameter Presets"
+msgstr "۳. TIER_DEFAULTS - پیش‌تنظیم‌های پارامتر"
+
+#: ../../source/module-registry-explained.rst:108
+#: 2797091a5ce142da914ecb2181688b73
+msgid "**Location**: ``src/atomate2/siesta/sets/tiers/defaults.py:16-48``"
+msgstr "**مکان**: ``src/atomate2/siesta/sets/tiers/defaults.py:16-48``"
+
+#: ../../source/module-registry-explained.rst:110
+#: e3c453b0bb564027a67a7a8dccdd0fe4
+msgid "**Type**: ``dict[str, dict[str, Any]]``"
+msgstr "**نوع**: ``dict[str, dict[str, Any]]``"
+
+#: ../../source/module-registry-explained.rst:112
+#: b88a781b53144fe0b590557a05822a9e
+msgid "**Purpose**: Provides starting parameter values for each tier"
+msgstr "**هدف**: مقادیر اولیه پارامترها را برای هر سطح فراهم می‌کند"
+
+#: ../../source/module-registry-explained.rst:154
+#: 180a39d1e44a4899abdd98627aa84bb8
+msgid "How Modules Are Registered"
+msgstr "نحوه ثبت ماژول‌ها"
+
+#: ../../source/module-registry-explained.rst:156
+#: dc24b5ab63ba4df794bfc89796bb8e1b
+msgid "All 28 modules are registered in ``registry.py`` starting at line 265."
+msgstr "تمام ۲۸ ماژول در ``registry.py`` از خط ۲۶۵ ثبت می‌شوند."
+
+#: ../../source/module-registry-explained.rst:159
+#: a424fe09e2d74015b43afd63cd5a8ba4
+msgid "The Registration Process"
+msgstr "فرآیند ثبت"
+
+#: ../../source/module-registry-explained.rst:161
+#: af3199d770a94864b2c9b14c2517c9b5
+msgid "**Step 1: Define Metadata**"
+msgstr "**مرحله ۱: تعریف فراداده**"
+
+#: ../../source/module-registry-explained.rst:163
+#: d86ef4ac556c431fbd3e001d7bbf1dd8
+msgid "Each module is registered with a ``register_module()`` call:"
+msgstr "هر ماژول با یک فراخوانی ``register_module()`` ثبت می‌شود:"
+
+#: ../../source/module-registry-explained.rst:179
+#: a223bf69e35f4dedb13dc8eb1261d9b9
+msgid "**Step 2: Add to MODULE_REGISTRY**"
+msgstr "**مرحله ۲: اضافه کردن به MODULE_REGISTRY**"
+
+#: ../../source/module-registry-explained.rst:181
+#: ac2076b06c0a4daeadab45cf6143e93d
+msgid ""
+"The ``register_module()`` function creates a ``DataclassModule`` object "
+"and adds it to ``MODULE_REGISTRY``:"
+msgstr ""
+"تابع ``register_module()`` یک شیء ``DataclassModule`` ایجاد کرده و آن را "
+"به ``MODULE_REGISTRY`` اضافه می‌کند:"
+
+#: ../../source/module-registry-explained.rst:199
+#: ba8462ccec8d4baa819add5a8bd1a83f
+msgid "**Step 3: Automatic Discovery**"
+msgstr "**مرحله ۳: کشف خودکار**"
+
+#: ../../source/module-registry-explained.rst:201
+#: a465cc6e62e443d1b3d3151c15fada72
+msgid "When you create a Maker, the system automatically:"
+msgstr "وقتی یک Maker ایجاد می‌کنید، سیستم به صورت خودکار:"
+
+#: ../../source/module-registry-explained.rst:203
+#: 071f3ced44064d10bf577ed1e60f2d04
+msgid "Looks up ``tier`` in ``tier_hierarchy``"
+msgstr "``tier`` را در ``tier_hierarchy`` جستجو می‌کند"
+
+#: ../../source/module-registry-explained.rst:204
+#: acf03f3783d4477782bc3039ab6768c6
+msgid "Gets list of allowed module tiers"
+msgstr "لیست سطوح مجاز ماژول را دریافت می‌کند"
+
+#: ../../source/module-registry-explained.rst:205
+#: ba098bc6a51241819f61ab5bffd6c4aa
+msgid "Filters ``MODULE_REGISTRY`` to only include those tiers"
+msgstr "``MODULE_REGISTRY`` را فیلتر می‌کند تا فقط آن سطوح را شامل شود"
+
+#: ../../source/module-registry-explained.rst:206
+#: 69ce4cbd8906441587f858de0d948669
+msgid "Initializes matching modules in priority order"
+msgstr "ماژول‌های منطبق را به ترتیب اولویت مقداردهی اولیه می‌کند"
+
+#: ../../source/module-registry-explained.rst:209
+#: 38feccd21b064aa6b14ab197d8076ca6
+msgid "All 28 Registered Modules"
+msgstr "تمام ۲۸ ماژول ثبت‌شده"
+
+#: ../../source/module-registry-explained.rst:211
+#: 3a323b2d2219437eb6ee2513ccffc0b7
+msgid "**TIER 1: BASIC (6 modules)**"
+msgstr "**سطح ۱: BASIC (۶ ماژول)**"
+
+#: ../../source/module-registry-explained.rst:222
+#: 277dd9a65dea4a119e9de50b81d926bc
+msgid "**TIER 2: INTERMEDIATE (7 more modules)**"
+msgstr "**سطح ۲: INTERMEDIATE (۷ ماژول بیشتر)**"
+
+#: ../../source/module-registry-explained.rst:234
+#: 505ca7ed1b3d452b914d9b6175b126f5
+msgid "**TIER 3: ADVANCED (9 more modules)**"
+msgstr "**سطح ۳: ADVANCED (۹ ماژول بیشتر)**"
+
+#: ../../source/module-registry-explained.rst:248
+#: e26aa1466e12472d9e31b67169c7a509
+msgid "**TIER 4: EXPERT (6 more modules)**"
+msgstr "**سطح ۴: EXPERT (۶ ماژول بیشتر)**"
+
+#: ../../source/module-registry-explained.rst:262
+#: f554d6aff5384b869061847f060dc206
+msgid "Complete Flow: User Code → Module Activation"
+msgstr "جریان کامل: کد کاربر ← فعال‌سازی ماژول"
+
+#: ../../source/module-registry-explained.rst:265
+#: 7d46d0723d7f4fde9524dd2266e54c2d
+msgid "Step-by-Step Example"
+msgstr "نمونه گام‌به‌گام"
+
+#: ../../source/module-registry-explained.rst:267
+#: ee71d369b92745daa811e1e58dbbd18f
+msgid "**User Code**:"
+msgstr "**کد کاربر**:"
+
+#: ../../source/module-registry-explained.rst:275
+#: 3932c2503ccf4831bbb8e7609a652789
+msgid "**What Happens Internally**:"
+msgstr "**آنچه در داخل رخ می‌دهد**:"
+
+#: ../../source/module-registry-explained.rst:277
+#: d3b191d0b6a04e47969a39d8bb58ee25
+msgid "**Maker Creation** (``jobs/core.py``)"
+msgstr "**ایجاد Maker** (``jobs/core.py``)"
+
+#: ../../source/module-registry-explained.rst:285
+#: 6de4faf06dca4191a602df47155e2ee7
+msgid "**Generator Initialization** (``sets/core.py``)"
+msgstr "**مقداردهی اولیه Generator** (``sets/core.py``)"
+
+#: ../../source/module-registry-explained.rst:299
+#: 71b0f595b83448ca913cf92cd570e601
+msgid "**Load Tier Defaults** (``sets/base.py:535``)"
+msgstr "**بارگذاری پیش‌فرض‌های سطح** (``sets/base.py:535``)"
+
+#: ../../source/module-registry-explained.rst:314
+#: f2f079a82de1438aa8d591e69477f951
+msgid "**Activate Modules** (``dataclass/registry.py:201``)"
+msgstr "**فعال‌سازی ماژول‌ها** (``dataclass/registry.py:201``)"
+
+#: ../../source/module-registry-explained.rst:336
+#: ff04f9bf56ec4f73833c039981ff7a9e
+msgid "**Initialize Modules** (``sets/base.py:600+``)"
+msgstr "**مقداردهی اولیه ماژول‌ها** (``sets/base.py:600+``)"
+
+#: ../../source/module-registry-explained.rst:356
+#: d69d0df0cf75420da156fa7462e2141c
+msgid ""
+"**Result**: 13 modules initialized with tier=\"intermediate\" parameter "
+"defaults"
+msgstr ""
+"**نتیجه**: ۱۳ ماژول با پیش‌فرض‌های پارامتر tier=\"intermediate\" مقداردهی"
+" اولیه شدند"
+
+#: ../../source/module-registry-explained.rst:359
+#: 8bc59f0c31604160ad846bd2c77e287d
+msgid "Visual Flow Diagram"
+msgstr "نمودار جریان بصری"
+
+#: ../../source/module-registry-explained.rst:410
+#: ce08702de45043308349156f8a395513
+msgid "Tier Comparison Table"
+msgstr "جدول مقایسه سطوح"
+
+#: ../../source/module-registry-explained.rst:416
+#: 49b483f0f4f34e9885253391d404cff5
+msgid "Tier Name"
+msgstr "نام سطح"
+
+#: ../../source/module-registry-explained.rst:417
+#: ce1a68c0e1eb4d7c9598c422acba77f4
+msgid "Module Activation"
+msgstr "فعال‌سازی ماژول"
+
+#: ../../source/module-registry-explained.rst:418
+#: 59af92739ffb4f2b9d5ed2e63e2a9485
+msgid "# Modules"
+msgstr "تعداد ماژول"
+
+#: ../../source/module-registry-explained.rst:419
+#: 82bf505c19f740658977666199d60868
+msgid "Parameters"
+msgstr "پارامترها"
+
+#: ../../source/module-registry-explained.rst:420
+#: 62a51dcfcc7248d1a00801f8121bbddf
+msgid "Use Case"
+msgstr "مورد استفاده"
+
+#: ../../source/module-registry-explained.rst:421
+#: 115c56003b8347859d6d997fabae7cc8
+msgid "``dirty``"
+msgstr "``dirty``"
+
+#: ../../source/module-registry-explained.rst:422
+#: 56e426011f024b0ca307d96bf5b76eee
+msgid "basic only"
+msgstr "فقط basic"
+
+#: ../../source/module-registry-explained.rst:423
+#: ../../source/module-registry-explained.rst:428
+#: 5d82e2511be84ef7b7cd9cfbf6333de6 e5da631be1bb4f39a6e0d756d769dbfe
+msgid "6"
+msgstr "۶"
+
+#: ../../source/module-registry-explained.rst:424
+#: 2fcd1a16865a4d4bb16dbb7aa6007b75
+msgid "SZ / [1,1,1] / 50 Ry"
+msgstr "SZ / [1,1,1] / ۵۰ Ry"
+
+#: ../../source/module-registry-explained.rst:425
+#: 60d5cfd297d347f2b545ce46fd81edff
+msgid "Quick testing, workflow debugging"
+msgstr "تست سریع، اشکال‌زدایی گردش کار"
+
+#: ../../source/module-registry-explained.rst:426
+#: 77ceb3c9ff9e492eb962646998518614
+msgid "``basic``"
+msgstr "``basic``"
+
+#: ../../source/module-registry-explained.rst:427
+#: 19f4f38dbeb74d39af8a89be220af552
+msgid "basic"
+msgstr "basic"
+
+#: ../../source/module-registry-explained.rst:429
+#: 90108fa37f98490395a6c01dd76b3df6
+msgid "DZP / [3,3,3] / 150 Ry"
+msgstr "DZP / [3,3,3] / ۱۵۰ Ry"
+
+#: ../../source/module-registry-explained.rst:430
+#: a9a8517922554fc3b09c1a8cd08d42b8
+msgid "Initial relaxations, structure checks"
+msgstr "بهینه‌سازی‌های اولیه، بررسی ساختار"
+
+#: ../../source/module-registry-explained.rst:431
+#: 20c18ddda70c480b9d293f3962e47ed0
+msgid "``intermediate``"
+msgstr "``intermediate``"
+
+#: ../../source/module-registry-explained.rst:432
+#: 65351f9647c042bfb8977a1123a1a7c1
+msgid "basic + intermediate"
+msgstr "basic + intermediate"
+
+#: ../../source/module-registry-explained.rst:433
+#: 4070852eb90b4dc883ed992260066efb
+msgid "13"
+msgstr "۱۳"
+
+#: ../../source/module-registry-explained.rst:434
+#: 786a40ddb8f54927bb4c819a2f8832e8
+msgid "DZP / [6,6,6] / 200 Ry"
+msgstr "DZP / [6,6,6] / ۲۰۰ Ry"
+
+#: ../../source/module-registry-explained.rst:435
+#: 8ca48c0636af4175a8d25404841c1448
+msgid "Standard production calculations"
+msgstr "محاسبات استاندارد تولیدی"
+
+#: ../../source/module-registry-explained.rst:436
+#: 81fc304af54e49f89c263a5b92741431
+msgid "``advanced``"
+msgstr "``advanced``"
+
+#: ../../source/module-registry-explained.rst:437
+#: 085ed3aa108246338ae6411f07b86a1c
+msgid "basic + intermediate + advanced"
+msgstr "basic + intermediate + advanced"
+
+#: ../../source/module-registry-explained.rst:438
+#: bf047fd4d7e349f6a1899ce6bb38426f
+msgid "22"
+msgstr "۲۲"
+
+#: ../../source/module-registry-explained.rst:439
+#: d7f2cc0045634eeba0087b18ca896d5c
+msgid "TZP / [6,6,6] / 300 Ry"
+msgstr "TZP / [6,6,6] / ۳۰۰ Ry"
+
+#: ../../source/module-registry-explained.rst:440
+#: d15e78c7f9a54dd89da85f3735faa8b5
+msgid "High-quality results"
+msgstr "نتایج با کیفیت بالا"
+
+#: ../../source/module-registry-explained.rst:441
+#: 7fae4e2577884755ba3eb8786b733a10
+msgid "``expert``"
+msgstr "``expert``"
+
+#: ../../source/module-registry-explained.rst:442
+#: 2e7971ea6fc24c73b5f8df0ef03c6e89
+msgid "all 4 tiers"
+msgstr "تمام ۴ سطح"
+
+#: ../../source/module-registry-explained.rst:443
+#: ../../source/module-registry-explained.rst:448
+#: ../../source/module-registry-explained.rst:453
+#: 78d83860bd0a4b4ba57c226e6aac94a8 7c834cacb7dc48ee86df154a3dc69493
+#: a3fce7350b504fdf80c8fcb02dffc02e
+msgid "28"
+msgstr "۲۸"
+
+#: ../../source/module-registry-explained.rst:444
+#: 9b4d56b09d0447679d8b7cd47e1da100
+msgid "TZP / [8,8,8] / 400 Ry"
+msgstr "TZP / [8,8,8] / ۴۰۰ Ry"
+
+#: ../../source/module-registry-explained.rst:445
+#: e5d5c1988b8a4bb5a40a1cf3bede5a06
+msgid "Publication quality"
+msgstr "کیفیت انتشار"
+
+#: ../../source/module-registry-explained.rst:446
+#: 7a371158af8143c68ef5e1e1f550c8b5
+msgid "``ultra``"
+msgstr "``ultra``"
+
+#: ../../source/module-registry-explained.rst:447
+#: ../../source/module-registry-explained.rst:452
+#: 6751fb0167c947d6a829bf39aa59f531 821d218680af45aea68d1d9017e3a6ae
+msgid "all 4 tiers (same as expert)"
+msgstr "تمام ۴ سطح (مشابه expert)"
+
+#: ../../source/module-registry-explained.rst:449
+#: 9e31e53b5d8a440c909fc3ee6f266496
+msgid "TZDP / [10,10,10] / 800 Ry"
+msgstr "TZDP / [10,10,10] / ۸۰۰ Ry"
+
+#: ../../source/module-registry-explained.rst:450
+#: 78ff8e2d8cfa4e748341de21dac90fed
+msgid "Benchmark, convergence tests"
+msgstr "آزمایش‌های معیار و همگرایی"
+
+#: ../../source/module-registry-explained.rst:451
+#: cb9aa59ea2784a25b23ae226912f743d
+msgid "``all``"
+msgstr "``all``"
+
+#: ../../source/module-registry-explained.rst:454
+#: 315b341135e14d9d8c3a2ddf3ccf8f26
+msgid "(no defaults)"
+msgstr "(بدون پیش‌فرض)"
+
+#: ../../source/module-registry-explained.rst:455
+#: 319435d64a0b4fbb91a5dac7a648d262
+msgid "Load all modules, use maker defaults"
+msgstr "بارگذاری تمام ماژول‌ها، استفاده از پیش‌فرض‌های maker"
+
+#: ../../source/module-registry-explained.rst:460
+#: 849a347ebb95473e83ae95982d3c0d5b
+msgid "Common Questions"
+msgstr "سؤالات متداول"
+
+#: ../../source/module-registry-explained.rst:463
+#: 3ee835c30eae4be38650fa23c9d80ebd
+msgid "Q: What's the difference between \"dirty\" and \"basic\"?"
+msgstr "س: تفاوت بین \"dirty\" و \"basic\" چیست؟"
+
+#: ../../source/module-registry-explained.rst:465
+#: 85b9a3081d144874ad09f873f54fda23
+msgid "**Module Activation**: Both use **basic modules only** (6 modules)"
+msgstr ""
+"**فعال‌سازی ماژول**: هر دو **فقط از ماژول‌های basic** استفاده می‌کنند (۶ "
+"ماژول)"
+
+#: ../../source/module-registry-explained.rst:467
+#: ../../source/module-registry-explained.rst:485
+#: 2e5fcee511914a6693e2660be5f1b7e7 9501d1d8c2734aefb1b61fe601ae073f
+msgid "**Parameters**: Different defaults from TIER_DEFAULTS"
+msgstr "**پارامترها**: پیش‌فرض‌های متفاوت از TIER_DEFAULTS"
+
+#: ../../source/module-registry-explained.rst:469
+#: 50c9b74af3714bdab07274a14bceb587
+msgid ""
+"``tier=\"dirty\"``: SZ basis, [1,1,1] k-points, 50 Ry cutoff → Very fast,"
+" low quality"
+msgstr ""
+"``tier=\"dirty\"``: پایه SZ، نقاط k برابر [1,1,1]، برش ۵۰ Ry ← بسیار "
+"سریع، کیفیت پایین"
+
+#: ../../source/module-registry-explained.rst:470
+#: aa60fd129e0543259b1f14cbc73729d5
+msgid ""
+"``tier=\"basic\"``: DZP basis, [3,3,3] k-points, 150 Ry cutoff → Fast, "
+"reasonable quality"
+msgstr ""
+"``tier=\"basic\"``: پایه DZP، نقاط k برابر [3,3,3]، برش ۱۵۰ Ry ← سریع، "
+"کیفیت معقول"
+
+#: ../../source/module-registry-explained.rst:472
+#: ../../source/module-registry-explained.rst:490
+#: b2e56dda78fc469fb7f76a1010c7db12 cef805920e60446ba0ae6e35f13b3fd2
+msgid "**Example**:"
+msgstr "**نمونه**:"
+
+#: ../../source/module-registry-explained.rst:481
+#: b50af95f4fc54f74adc5cf0b1946b2f6
+msgid "Q: What's the difference between \"expert\" and \"ultra\"?"
+msgstr "س: تفاوت بین \"expert\" و \"ultra\" چیست؟"
+
+#: ../../source/module-registry-explained.rst:483
+#: 91b81e128dc34accb31a37a64d8a36fe
+msgid "**Module Activation**: Both use **all modules** (28 modules)"
+msgstr "**فعال‌سازی ماژول**: هر دو از **تمام ماژول‌ها** استفاده می‌کنند (۲۸ ماژول)"
+
+#: ../../source/module-registry-explained.rst:487
+#: 4476f97826f8431eb45fd830b34bb4cd
+msgid ""
+"``tier=\"expert\"``: TZP basis, [8,8,8] k-points, 400 Ry cutoff → "
+"Publication quality"
+msgstr ""
+"``tier=\"expert\"``: پایه TZP، نقاط k برابر [8,8,8]، برش ۴۰۰ Ry ← کیفیت "
+"انتشار"
+
+#: ../../source/module-registry-explained.rst:488
+#: c5930cea82ce49b481d81bfa7273e3fd
+msgid ""
+"``tier=\"ultra\"``: TZDP basis, [10,10,10] k-points, 800 Ry cutoff → "
+"Benchmark quality"
+msgstr ""
+"``tier=\"ultra\"``: پایه TZDP، نقاط k برابر [10,10,10]، برش ۸۰۰ Ry ← "
+"کیفیت معیار"
+
+#: ../../source/module-registry-explained.rst:499
+#: 479d619a61b14db9bd35d1a1780efafb
+msgid "Q: Can I use \"dirty\" tier with RelaxMaker?"
+msgstr "س: آیا می‌توانم سطح \"dirty\" را با RelaxMaker استفاده کنم؟"
+
+#: ../../source/module-registry-explained.rst:501
+#: 752532ef04784b539ca9e2a710aeb38b
+#, fuzzy
+msgid "**Yes!** (as of v1.0.0)"
+msgstr "**بله!** (از نشست ۱۰۹)"
+
+#: ../../source/module-registry-explained.rst:503
+#: 56d526be209d4e669ccb6a2c99800934
+msgid ""
+"``RelaxSetGenerator`` automatically enables the ``md_relaxation`` module "
+"even if it's not in the tier's module list."
+msgstr ""
+"``RelaxSetGenerator`` به صورت خودکار ماژول ``md_relaxation`` را فعال "
+"می‌کند حتی اگر در لیست ماژول‌های آن سطح نباشد."
+
+#: ../../source/module-registry-explained.rst:510
+#: 8a5a8ed6feb548afa79467371969193f
+msgid ""
+"Before the fix, this would fail with: ``'RelaxSetGenerator' object has no"
+" attribute '_md_relaxation_module'``"
+msgstr ""
+"قبل از رفع این مشکل، این کار با خطای زیر شکست می‌خورد: "
+"``'RelaxSetGenerator' object has no attribute '_md_relaxation_module'``"
+
+#: ../../source/module-registry-explained.rst:514
+#: 6921e3523f4d4df6b1b59e2bdf8290eb
+msgid "Q: Why does tier=\"basic\" fail with some Makers?"
+msgstr "س: چرا tier=\"basic\" با برخی Makerها شکست می‌خورد؟"
+
+#: ../../source/module-registry-explained.rst:516
+#: f4d5eab8092e461ba5b3462e32eaf1f7
+msgid "Some Makers require modules that are only in higher tiers."
+msgstr "برخی Makerها به ماژول‌هایی نیاز دارند که فقط در سطوح بالاتر هستند."
+
+#: ../../source/module-registry-explained.rst:518
+#: 7c36bc9129e2462dba9459f331e9b30c
+msgid "**Examples**:"
+msgstr "**نمونه‌ها**:"
+
+#: ../../source/module-registry-explained.rst:520
+#: 940e3cc3b4174f1d905d4235d80c08d0
+msgid ""
+"``RelaxMaker`` → needs ``md_relaxation`` (intermediate tier) - but auto-"
+"enabled now!"
+msgstr ""
+"``RelaxMaker`` ← نیاز به ``md_relaxation`` (سطح intermediate) دارد - اما "
+"اکنون خودکار فعال می‌شود!"
+
+#: ../../source/module-registry-explained.rst:521
+#: 51b35bf3dbd54237b7e5bb3e269c1e51
+msgid "``PhononMaker`` → needs ``phonons`` module (advanced tier)"
+msgstr "``PhononMaker`` ← نیاز به ماژول ``phonons`` (سطح advanced) دارد"
+
+#: ../../source/module-registry-explained.rst:522
+#: bb53481bf06a4688be32eb80a6fdf0e9
+msgid "``OpticalMaker`` → needs ``optical`` module (advanced tier)"
+msgstr "``OpticalMaker`` ← نیاز به ماژول ``optical`` (سطح advanced) دارد"
+
+#: ../../source/module-registry-explained.rst:524
+#: c7486f8e2f7d4c32a9fac7456dc7ff25
+msgid "**Solution 1**: Use appropriate tier"
+msgstr "**راه‌حل ۱**: از سطح مناسب استفاده کنید"
+
+#: ../../source/module-registry-explained.rst:530
+#: a018994b1587493b905d304bfc59e390
+msgid "**Solution 2**: Manually enable modules"
+msgstr "**راه‌حل ۲**: ماژول‌ها را به صورت دستی فعال کنید"
+
+#: ../../source/module-registry-explained.rst:540
+#: 400f16a3db5d4afba07d9703fd936249
+msgid "Q: How do I see which modules are loaded?"
+msgstr "س: چگونه ببینم کدام ماژول‌ها بارگذاری شده‌اند؟"
+
+#: ../../source/module-registry-explained.rst:542
+#: 57b95d50ce924c21bf0dea9752a6e6e0
+msgid "Check the parameter evolution log file:"
+msgstr "فایل گزارش تکامل پارامتر را بررسی کنید:"
+
+#: ../../source/module-registry-explained.rst:548
+#: 05cb7bca405540bebcfe32cc8e0010d7
+msgid "Or use the registry directly:"
+msgstr "یا مستقیماً از رجیستری استفاده کنید:"
+
+#: ../../source/module-registry-explained.rst:559
+#: 931bc71b3b13441d8a2356f112408740
+msgid "Output::"
+msgstr "خروجی::"
+
+#: ../../source/module-registry-explained.rst:579
+#: 9eec56c37c854c8a9e5592924b8f8400
+msgid "Code Locations Reference"
+msgstr "مرجع مکان‌های کد"
+
+#: ../../source/module-registry-explained.rst:581
+#: 6b7b93b34d0d4260bc4bd09e884dbfe4
+msgid "**Module Registry System**:"
+msgstr "**سیستم رجیستری ماژول**:"
+
+#: ../../source/module-registry-explained.rst:583
+#: 4a3c9643ed814161888115f2d8bb1a0d
+msgid ""
+"``src/atomate2/siesta/dataclass/registry.py:77`` - ``MODULE_REGISTRY`` "
+"definition"
+msgstr ""
+"``src/atomate2/siesta/dataclass/registry.py:77`` - تعریف "
+"``MODULE_REGISTRY``"
+
+#: ../../source/module-registry-explained.rst:584
+#: 5dbac9b2356542d2a2a4728326e52a12
+msgid ""
+"``src/atomate2/siesta/dataclass/registry.py:180-192`` - "
+"``tier_hierarchy`` definition"
+msgstr ""
+"``src/atomate2/siesta/dataclass/registry.py:180-192`` - تعریف "
+"``tier_hierarchy``"
+
+#: ../../source/module-registry-explained.rst:585
+#: 7dcbc11742534f31aa756c169010be4d
+msgid ""
+"``src/atomate2/siesta/dataclass/registry.py:265-620`` - All 28 "
+"``register_module()`` calls"
+msgstr ""
+"``src/atomate2/siesta/dataclass/registry.py:265-620`` - تمام ۲۸ فراخوانی "
+"``register_module()``"
+
+#: ../../source/module-registry-explained.rst:587
+#: 71e3b2af849c473eaebe5be320f3d9cb
+msgid "**Tier Defaults**:"
+msgstr "**پیش‌فرض‌های سطح**:"
+
+#: ../../source/module-registry-explained.rst:589
+#: fa0222c04e48411e843ef46e82c00b27
+msgid ""
+"``src/atomate2/siesta/sets/tiers/defaults.py:16-48`` - ``TIER_DEFAULTS`` "
+"definition"
+msgstr ""
+"``src/atomate2/siesta/sets/tiers/defaults.py:16-48`` - تعریف "
+"``TIER_DEFAULTS``"
+
+#: ../../source/module-registry-explained.rst:591
+#: fa9954b66d6e465abe50e3ee5489295d
+msgid "**Tier Application**:"
+msgstr "**اعمال سطح**:"
+
+#: ../../source/module-registry-explained.rst:593
+#: a19be846d4c64bb7938010e70341bb85
+msgid ""
+"``src/atomate2/siesta/sets/base.py:519-549`` - ``__post_init__()`` "
+"applies tier defaults"
+msgstr ""
+"``src/atomate2/siesta/sets/base.py:519-549`` - ``__post_init__()`` "
+"پیش‌فرض‌های سطح را اعمال می‌کند"
+
+#: ../../source/module-registry-explained.rst:594
+#: 1f15602cc65e4b98bb6782ec0940202b
+msgid "``src/atomate2/siesta/sets/base.py:535`` - Loads ``TIER_DEFAULTS``"
+msgstr ""
+"``src/atomate2/siesta/sets/base.py:535`` - ``TIER_DEFAULTS`` را بارگذاری "
+"می‌کند"
+
+#: ../../source/module-registry-explained.rst:595
+#: 750f7eebef2146ebb88d9521e3f0c7a1
+msgid ""
+"``src/atomate2/siesta/sets/base.py:539-540`` - Merges tier defaults with "
+"user params"
+msgstr ""
+"``src/atomate2/siesta/sets/base.py:539-540`` - پیش‌فرض‌های سطح را با "
+"پارامترهای کاربر ادغام می‌کند"
+
+#: ../../source/module-registry-explained.rst:597
+#: ff17c96e636a495587d010c8f6044b14
+msgid "**Module Activation**:"
+msgstr "**فعال‌سازی ماژول**:"
+
+#: ../../source/module-registry-explained.rst:599
+#: e0033beebd504a24aa2ef3ffbc2d59e3
+msgid ""
+"``src/atomate2/siesta/dataclass/registry.py:150-206`` - "
+"``get_modules_by_tier()`` function"
+msgstr ""
+"``src/atomate2/siesta/dataclass/registry.py:150-206`` - تابع "
+"``get_modules_by_tier()``"
+
+#: ../../source/module-registry-explained.rst:601
+#: fc789aeb2ad340809e30e6acbfc6e432
+msgid "**RelaxMaker Auto-Enable**:"
+msgstr "**فعال‌سازی خودکار RelaxMaker**:"
+
+#: ../../source/module-registry-explained.rst:603
+#: a49604a1eeb6424385803e45201665d9
+msgid ""
+"``src/atomate2/siesta/sets/core.py:46-60`` - "
+"``RelaxSetGenerator.__post_init__()`` auto-enables ``md_relaxation``"
+msgstr ""
+"``src/atomate2/siesta/sets/core.py:46-60`` - "
+"``RelaxSetGenerator.__post_init__()`` به صورت خودکار ``md_relaxation`` را"
+" فعال می‌کند"
+
+#: ../../source/module-registry-explained.rst:608
+#: 172c7f89167e4d22a545dd4e78f41d42
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/module-registry-explained.rst:610
+#: b8d5a0ddbcad497da77d97211c1eb3ff
+msgid ":doc:`tier-system` - Main tier system documentation"
+msgstr ":doc:`tier-system` - مستندات اصلی سیستم سطح"
+
+#: ../../source/module-registry-explained.rst:611
+#: b534cc18694f471eaf3d6a50243a0966
+msgid ""
+":doc:`tier-system-clarification` - Tier levels vs tier defaults "
+"distinction"
+msgstr ":doc:`tier-system-clarification` - تمایز بین سطوح tier و پیش‌فرض‌های tier"
+
+#: ../../source/module-registry-explained.rst:612
+#: 3377c4d3a66f4f4e84b7d2dece20a9d4
+msgid ":doc:`tier-defaults-explained` - Detailed explanation of TIER_DEFAULTS"
+msgstr ":doc:`tier-defaults-explained` - توضیح جامع TIER_DEFAULTS"
+
+#: ../../source/module-registry-explained.rst:613
+#: 16eaabbd772d4981ab4ee5f7417ddc11
+msgid ":doc:`cli-tools` - Using ``atomate2siesta-presets`` CLI"
+msgstr ":doc:`cli-tools` - استفاده از CLI ``atomate2siesta-presets``"

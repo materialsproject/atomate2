@@ -1,0 +1,753 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:1
+#: 00e8f32f6aba4ab0971fe21d4fe01c88
+msgid "02: Convergence Studies"
+msgstr "02: همگرایی Studies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:3
+#: e81d9c18200c4a0f90d18584f3eed608
+msgid ""
+"**Focus**: Systematic parameter optimization for production-quality "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:5
+#: 29d03effc4a54df2bfd73fff95929978
+msgid "**Difficulty**: Intermediate"
+msgstr "**سطح سختی**: متوسط"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:7
+#: 20a75e7d06704617b481acf1cc719d00
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:8
+#: 78481221d5844d2aa90fb03930c4a29e
+msgid "Completed [01-basics](../01-basics/) tutorials"
+msgstr "Completed [01-bsics](../01-bsics/) tutیاils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:9
+#: d8e0bd7ff0d441619e9edba88e90c163
+msgid "Understanding of DFT convergence concepts"
+msgstr "درک of DFT convergence concepts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:10
+#: fe0c55c92b974acbbbcef1c584ffcefe
+msgid "Familiarity with k-points, mesh cutoff, and basis sets"
+msgstr "Fmilirity با k-points, mesh cutoff, و bsis sets"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:14
+#: 620de5a510c14fa4a61d86b557784acb
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:16
+#: 6741764d5e634da9b6495b3c23091e8c
+msgid "1. [KpointsConvergenceFlowMaker](KpointsConvergenceFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:17
+#: 1353f353876a4e8b9c3e9649ee43935a
+msgid ""
+"**Description**: K-point mesh convergence testing for Brillouin zone "
+"sampling **Difficulty**: Beginner **Time**: ~5 min (dry-run), ~10-20 min "
+"(full calculation) **Key Concepts**: K-point sampling, material "
+"dependence (metals vs insulators), anisotropic meshes **📖 [Full Tutorial "
+"Guide →](KpointsConvergenceFlowMaker/README.md)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:23
+#: 9e301ffbea714471aa0071cd221472d5
+msgid "2. [MeshCutoffConvergenceFlowMaker](MeshCutoffConvergenceFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:24
+#: 2d122488e9864493b7cb108637e831fc
+msgid ""
+"**Description**: Mesh cutoff convergence testing for real-space grid "
+"optimization **Difficulty**: Beginner **Time**: ~5 min (dry-run), ~10-15 "
+"min (full calculation) **Key Concepts**: Real-space grids, "
+"pseudopotential dependence, monotonic convergence **📖 [Full Tutorial "
+"Guide →](MeshCutoffConvergenceFlowMaker/README.md)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:30
+#: 6842ad2b54804f7fae9b9ce77c5c89f8
+msgid "3. [MeshKpointConvergenceFlowMaker](MeshKpointConvergenceFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:31
+#: 055f9f2b71964cba836a4b3803cd2aa6
+msgid ""
+"**Description**: Combined two-stage convergence (mesh cutoff → k-points) "
+"with early stopping **Difficulty**: Intermediate **Time**: ~10 min (dry-"
+"run), ~30-60 min (full calculation) **Key Concepts**: Two-stage workflow,"
+" early stopping, multi-property criteria, many time savings **📖 [Full "
+"Tutorial Guide →](MeshKpointConvergenceFlowMaker/README.md)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:37
+#: aa2a0923e08d40afb9ed1cd67b4f0fad
+msgid ""
+"4. "
+"[BasisParametersConvergenceFlowMaker](BasisParametersConvergenceFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:38
+#: 6ae57a9613394dae9f8dd7313748fe1f
+msgid ""
+"**Description**: PAO basis parameter convergence (EnergyShift + "
+"SplitNorm) with timing analysis **Difficulty**: Intermediate **Time**: ~5"
+" min (dry-run), ~20 min (simple grid), ~1-2 hours (full grid) **Key "
+"Concepts**: PAO.EnergyShift, PAO.SplitNorm, basis size trade-offs, "
+"custodian integration **📖 [Full Tutorial Guide "
+"→](BasisParametersConvergenceFlowMaker/README.md)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:46
+#: ce0eb51a7f6342cf9107c97a4eb4dec0
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:48
+#: 7a9a9873fc7f4ce5a52f8910e8617d79
+msgid ""
+"**Important**: Convergence studies are essential before production "
+"calculations!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:50
+#: 456dc110a6584f9da38050422c90011a
+msgid "Recommended Order"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:52
+#: 42fb518a72d44497be238fdc497622e6
+msgid ""
+"**Start here**: "
+"[MeshCutoffConvergenceFlowMaker](MeshCutoffConvergenceFlowMaker/) - Real-"
+"space grid convergence (MUST do first!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:53
+#: ab8320e15ad1486d8b6485a4a130f12b
+msgid ""
+"**Next**: [KpointsConvergenceFlowMaker](KpointsConvergenceFlowMaker/) - "
+"K-point sampling (use converged mesh cutoff)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:54
+#: f21cfb5a9f6b4586a91888941bcaccb6
+msgid ""
+"**Verify together**: "
+"[MeshKpointConvergenceFlowMaker](MeshKpointConvergenceFlowMaker/) - Two-"
+"stage combined convergence with early stopping"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:55
+#: 30509e0b66e74b69bd9ab0c40c513bbf
+msgid ""
+"**Fine-tune**: "
+"[BasisParametersConvergenceFlowMaker](BasisParametersConvergenceFlowMaker/)"
+" - PAO basis parameters (optional but recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:59
+#: 726c6eb9cb254a1181014fdc69b64055
+msgid "Why Convergence Testing?"
+msgstr "Why همگرایی Testing?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:61
+#: b334241241144f56932e26d1050768d4
+msgid "Convergence testing ensures your results are:"
+msgstr "همگرایی testing ensures your results re:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:62
+#: f0df36e519d44cf2b762d5c725dc31a2
+msgid "✅ **Reliable**: Independent of numerical parameters"
+msgstr "✅ **Relible**: Independent of numericl prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:63
+#: 155f153628034b51a425e458d484ee61
+msgid "✅ **Reproducible**: Consistent across different setups"
+msgstr "✅ **Reproducible**: Consistent cross different setups"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:64
+#: 2dffeb62008a4d0a92b49384b42a2f04
+msgid "✅ **Efficient**: Balanced accuracy vs computational cost"
+msgstr "✅ **Efficient**: Blnced ccurcy vs computtionl cost"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:65
+#: 931f9b8584c34ec1b2c8b393eb853afe
+msgid "✅ **Publishable**: Meeting scientific standards"
+msgstr "✅ **Publishble**: Meeting scientific stوrds"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:67
+#: 65c0c53ac6274ac8bd799ba1097a0f27
+msgid "**Rule of thumb**:"
+msgstr "**Rule of thumb**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:68
+#: bb8361ccca824d7da1c64dd3ced0cb29
+msgid "Energy convergence: < 1 meV/atom"
+msgstr "Energy convergence: < 1 meV/tom"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:69
+#: 7a1fb45a819d48c8830790b7fdef2543
+msgid "Force convergence: < 0.01 eV/Å"
+msgstr "Fیاce convergence: < 0.01 eV/Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:73
+#: 7129feca2b3047378c3e4c168dd36b84
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:75
+#: ec7c23981eb24512a8a9aed6a46a59c7
+msgid "All convergence tutorials generate automatic plots and summaries:"
+msgstr "All convergence tutیاils generte utomtic plots و summries:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:92
+#: d46488b30d5144928c41f7345a48149e
+msgid "Detailed Tutorial Guides"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:94
+#: 26190971076040879b59823f30f99044
+msgid ""
+"Each convergence workflow has its own comprehensive README with complete "
+"documentation:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:96
+#: 998b09e7b88540a1949bb04f126ef48f
+msgid ""
+"📘 [KpointsConvergenceFlowMaker "
+"Guide](KpointsConvergenceFlowMaker/README.md)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:97
+#: 05884643aae747e48ef7f8433eff0d1f
+msgid "**Complete guide to k-point mesh convergence** (250+ lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:98
+#: 6edb81b96ea142f3be14a89f8651e1b6
+msgid "K-point sampling theory and material dependence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:99
+#: e0c6455ba5ed4724b565f4c79ea7f10d
+msgid "Workflow structure with quick start examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:100
+#: 32aa001e950e4671986b4ec7a0ba7da8
+msgid "Common k-point ranges for different materials (metals, insulators, 2D)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:101
+#: 2073f269efad462784e614ba0d3d2a04
+msgid "Anisotropic k-meshes for layered materials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:102
+#: 0ae7c5a10a634216a03c5cade7793dc2
+msgid "Troubleshooting and best practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:104
+#: 14d62de0654e48d1876f14e8f2e930f5
+msgid ""
+"📗 [MeshCutoffConvergenceFlowMaker "
+"Guide](MeshCutoffConvergenceFlowMaker/README.md)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:105
+#: 7b28cec4ee964d0f8e27f3aa9f3208e2
+msgid "**Complete guide to mesh cutoff convergence** (250+ lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:106
+#: 70e873e6bd53473f942d5b793a739a04
+msgid "Real-space grid fineness optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:107
+#: 2d72919011704f51932d8a356b22a66a
+msgid "Mesh cutoff ranges by material type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:108
+#: c4d8c24cc52f4a69aa366e6400c4f19b
+msgid "Pseudopotential-specific guidelines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:109
+#: 23b9ba0e58df49328c9ff33a809597a8
+msgid "Interpreting energy vs cutoff plots"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:110
+#: 5c5826a8c2eb4fd19f3f12ca6041ba12
+#, fuzzy
+msgid "Common issues and solutions"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:112
+#: cf95f70b9e2f4a69994cd681ac4f54d6
+msgid ""
+"📙 [MeshKpointConvergenceFlowMaker "
+"Guide](MeshKpointConvergenceFlowMaker/README.md)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:113
+#: 4b0a7aae37484f04a0658cde7002fdf1
+msgid "**Complete guide to combined two-stage convergence** (300+ lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:114
+#: 86d6cf113b6045cb86ce3a6e20d50173
+msgid "Two-stage workflow (mesh cutoff → k-points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:115
+#: b0c9d1b2fc3f4f4c8fc916446e4fc42d
+msgid "Early stopping feature (saves many computational time)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:116
+#: 33508407df754e3fbbadea1ebbe0613c
+msgid ""
+"Multi-property convergence criteria (energy, Fermi, forces, stress, "
+"bandgap)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:117
+#: 6507f7142e1f431b9d7f269106141385
+msgid "Stage-by-stage analysis with 12 automatic plots"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:118
+#: 141e8ccb0e73495e9bccad7309194d91
+msgid "Advanced configurations for different material types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:120
+#: e747b3d746d74022bd93a7a06441d67c
+msgid ""
+"📕 [BasisParametersConvergenceFlowMaker "
+"Guide](BasisParametersConvergenceFlowMaker/README.md)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:121
+#: 89b149936b5c45a7b393bcc377c6525b
+msgid "**Complete guide to PAO basis parameter convergence** (400+ lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:122
+#: 01d3f3d1a70d4295bbb7c2161aa47666
+msgid "PAO.EnergyShift and PAO.SplitNorm optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:123
+#: e2fdf6f622be4920a6aa1e0733175ffe
+msgid "Basis size trade-offs and material-specific guidelines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:124
+#: 0d864d05be5547f5a61b5db91c4a499a
+msgid "Si vs MgO comparison (why custodian is needed for ionic systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:125
+#: 40b827a786ad4bcaac7a1387c98d4312
+msgid "Timing analysis and performance optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:126
+#: d37627d81f994584b9b2899bdcda1ebe
+msgid "Custodian integration for automatic error recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:130
+#: 5be121363555455085f14fe1ebc9a272
+msgid "Quick Reference Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:132
+#: eed06b24cf584fbc92a9a30648344d7f
+#, fuzzy
+msgid "K-Points"
+msgstr "K-points"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:133
+#: ab517c02e6184a4eaf987b10fb5a7de6
+msgid ""
+"**Metals**: 6×6×6 to 12×12×12 (dense k-meshes, Fermi surface sampling "
+"critical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:134
+#: 488387b4de3343d1ae97ed0d6db0fabc
+msgid "**Insulators/Semiconductors**: 4×4×4 to 8×8×8 (sparser meshes acceptable)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:135
+#: a34c41f418bf4f9b9bc8be3e0cd3a261
+#, fuzzy
+msgid "**2D Materials**: Dense in-plane, sparse out-of-plane (e.g., 8×8×1)"
+msgstr "**2D mterils**: Dense in-plne, sprse out-of-plne (8×8×1)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:137
+#: 15255161b301460cab81db0165538df4
+msgid "Mesh Cutoff"
+msgstr "Mesh Cutoff"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:138
+#: 0e54afc7d1a948f49f866318d8a2b322
+msgid "**Typical range**: 200-400 Ry"
+msgstr "**Typicl rnge**: 200-400 Ry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:139
+#: a508d659ca9641a2bdadcc27db470d30
+msgid "**Soft elements (C, Si, O, N)**: 200-300 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:140
+#: 53c0f5883d15459590d73e2100ae51c5
+#, fuzzy
+msgid "**Transition metals**: 300-400 Ry"
+msgstr "**Typicl rnge**: 200-400 Ry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:141
+#: c57fe8c2f60f41c0891af17ddeb2297f
+#, fuzzy
+msgid "**Hard pseudopotentials**: 400-500+ Ry"
+msgstr "**Hrd pseudopotentils**: My need 500+ Ry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:143
+#: 693772eb66fa4623ba2d482d163047a2
+#, fuzzy
+msgid "Basis Parameters (PAO)"
+msgstr "Bsis Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:144
+#: 664d3d6efd8f49599201bad14c31ddd9
+#, fuzzy
+msgid "**PAO.EnergyShift**: 0.005-0.02 Ry (lower = larger basis, more accurate)"
+msgstr "**PAO.EnergyShift**: 0.01-0.05 Ry (smller = lrger bsis)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:145
+#: 3f8878c4263f4daea4271477ef256261
+#, fuzzy
+msgid "**PAO.SplitNorm**: 0.10-0.30 (lower = more splitting, larger basis)"
+msgstr "**PAO.EnergyShift**: 0.01-0.05 Ry (smller = lrger bsis)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:146
+#: 3fc93d126ccd4546b66945af1fc9f104
+msgid "**Typical**: EnergyShift=0.01 Ry, SplitNorm=0.15 (standard quality)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:150
+#: c88ec9cb33184e46a85322788c836d7f
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:152
+#: f6a8a2eb0ef845818751cb64ec849d5c
+msgid "Issue 1: \"Convergence tests take too long\""
+msgstr "Issue 1: \"همگرایی tests tke too long\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:153
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:159
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:165
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:175
+#: 44d65d379c12433db060708dfaf8113d 5c7add43a7d94463a4d4a1b1157442aa
+#: 816e469e71c94f03bbe1aae4ea1fa74e ecc8a50952c04633a8698f3391675fb8
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:154
+#: 7ad6704183054de2b2545680e571bf6d
+msgid "Start with dry-run mode to verify test points"
+msgstr "Strt با dry-run mode to verify test points"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:155
+#: 54ef4e4892c241039c33c74cac5333d9
+msgid "Use coarser initial sampling"
+msgstr "Use corser initil smpling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:156
+#: c7a7126bc2d74ee7892538b523d74441
+msgid "Run on HPC cluster (tutorial 04-infrastructure/02-job-submission)"
+msgstr "Run on HPC cluster (tutیاil 04-infrstructure/02-job-submission)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:158
+#: 0ce033d8fdbc43f5ab18db2175857c1c
+msgid "Issue 2: \"Results don't converge\""
+msgstr "Issue 2: \"Results don't converge\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:160
+#: f8f727ff9f9f45cf90de8f537ec20e7d
+msgid "Check if system is metallic (needs denser k-points)"
+msgstr "Check if system is metllic (needs denser k-points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:161
+#: cf1bdb00b0e646798cfb6fc1979a06e8
+msgid "Try different basis set (DZP → TZP)"
+msgstr "Try different bsis set (DZP → TZP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:162
+#: 81552337f7e74a178fc2deb098943497
+msgid "Increase mesh cutoff range"
+msgstr "Increse mesh cutoff rnge"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:164
+#: 68476324783442fda1fad3f853fe5927
+msgid "Issue 3: \"How many test points?\""
+msgstr "Issue 3: \"How mny test points?\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:166
+#: 1880dc54c24f4583a3afbfb220e95e4c
+msgid "K-points: 5-7 test points (e.g., 2, 4, 6, 8, 10, 12, 14)"
+msgstr "K-points: 5-7 test points (e.g., 2, 4, 6, 8, 10, 12, 14)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:167
+#: f074aa87309846cdafa8caa40282408a
+msgid "Mesh cutoff: 6-8 test points (100-400 Ry)"
+msgstr "Mesh cutoff: 6-8 test points (100-400 Ry)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:168
+#: 731fca6f64aa495a95509dacc2d690f5
+msgid "Basis parameters: 4-6 test points each"
+msgstr "Bsis prmeters: 4-6 test points ech"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:170
+#: 9aba60f17bca4ca5869e3a66576554f5
+msgid "Issue 4: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:171
+#: 3248144d84ce4febbcb0c9c246346187
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:173
+#: c3006825ca9749478df42f86cda89bf7
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:190
+#: 72e77fe46a8f43829d241411701c13f9
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section below."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:194
+#: 4fd2c750c6484a6a9d9690d305369bab
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:196
+#: 3441bf69a6354d72bd7148cca078a0fd
+msgid "**Always start with dry-run**: Verify test points before running"
+msgstr "**Alwys strt با dry-run**: Verify test points beبرایe running"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:197
+#: 6ae56b5dde9f418b83eaa5b944efb484
+msgid "**One parameter at a time**: Don't vary k-points AND cutoff simultaneously"
+msgstr "**One prmeter t  time**: Don't vry k-points AND cutoff simultneously"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:198
+#: 319fac932fba48329749fc63d013869b
+msgid "**Use reference structure**: Well-relaxed geometry"
+msgstr "**Use reference structure**: Well-relxed geometry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:199
+#: 817c97f2947e4824889b3a66fc680a79
+msgid "**Save results**: Keep convergence plots for your paper"
+msgstr "**Sve results**: Keep convergence plots برای your pper"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:200
+#: 61e2cda19e414730a320f0e8ba147ba5
+msgid "**Document choices**: Note converged parameters in your workflow"
+msgstr "**Document choices**: توجه converged prmeters in your wیاkflow"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:204
+#: c0b4e96215824fdc8319c9f69bdd2ba6
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:206
+#: 91fcc1740ff048fa9d6addab83bc958a
+msgid ""
+"When you need to specify FDF block parameters in convergence workflows, "
+"use the `\"%block ParamName\"` syntax **directly** in `user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:208
+#: c536ed6100f94473ac370740b65ddf64
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:210
+#: 5fd40717151c441398ad8fcd78878f6b
+msgid "Correct Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:232
+#: 864980be9771426ba304357a0545a85c
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:246
+#: 55911441e34f4289ac827fa2e47ac893
+msgid "Common Block Parameters for Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:248
+#: 8b8b0d59e52e47a68626a648393a74bf
+msgid "`\"%block BandLines\"` - K-path for band structure convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:249
+#: 1bcd8a042e1c4dab9e2d03434a763732
+msgid "`\"%block kgrid.MonkhorstPack.Offset\"` - Custom k-point offsets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:250
+#: 9c5158be96d34a66b71ae10a5e163daf
+msgid "`\"%block Geometry.Constraints\"` - Fix atoms during convergence tests"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:252
+#: 83adc19fad7f4e2b9306ab7bcf696ec7
+msgid ""
+"For comprehensive examples, see [Advanced Features: FDF Block "
+"Inputs](../../03-advanced-features/02-fdf-block-inputs/)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:256
+#: 30153de09c0d47269e0ea7db3dab0a76
+msgid "Next Category"
+msgstr "Next دسته‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:258
+#: c03cacdaa673441283b09e00d9151aae
+msgid "After completing convergence studies, proceed to:"
+msgstr "After completing convergence studies, proceed to:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:259
+#: cb96c61fe07c455c8bd8fbe18f1060ba
+msgid ""
+"**[03-advanced-workflows](../../02-workflows/)** - Apply converged "
+"parameters to production workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:260
+#: 8444e8fa62cf40ac9b34e8bb6b1084c0
+msgid ""
+"**[04-infrastructure](../../03-advanced-features/03-infrastructure/)** - "
+"Set up for large-scale calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/README.md:264
+#: a3410663af2a4bf6a8bcad3226580030
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"
+
+#~ msgid "[01-kpoints-mesh-cutoff](01-kpoints-mesh-cutoff/)"
+#~ msgstr "[01-kpoints-mesh-cutoff](01-kpoints-mesh-cutoff/)"
+
+#~ msgid ""
+#~ "**Description**: K-points and mesh cutoff "
+#~ "convergence testing **Difficulty**: Intermediate "
+#~ "**Time**: ~5 min (dry-run), ~1-2 "
+#~ "hours (full calculation) **Key Concepts**: "
+#~ "K-point sampling, mesh cutoff, convergence "
+#~ "criteria, automatic plotting"
+#~ msgstr ""
+
+#~ msgid "[02-basis-parameters](02-basis-parameters/)"
+#~ msgstr "[02-bsis-prmeters](02-bsis-prmeters/)"
+
+#~ msgid ""
+#~ "**Description**: Basis set parameter "
+#~ "convergence (PAO.EnergyShift, PAO.SplitNorm) "
+#~ "**Difficulty**: Intermediate **Time**: ~5 min"
+#~ " (dry-run), ~2-3 hours (full "
+#~ "calculation) **Key Concepts**: PAO basis "
+#~ "sets, energy shift, split norm, timing"
+#~ " analysis"
+#~ msgstr ""
+
+#~ msgid "[03-complete-basis](03-complete-basis/)"
+#~ msgstr "[03-complete-bsis](03-complete-bsis/)"
+
+#~ msgid ""
+#~ "**Description**: Complete basis set "
+#~ "convergence (size + parameters) "
+#~ "**Difficulty**: Advanced **Time**: ~10 min "
+#~ "(dry-run), ~4-6 hours (full calculation)"
+#~ " **Key Concepts**: Basis size "
+#~ "(SZ/DZ/DZP/TZP), complete parameter space "
+#~ "exploration"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Start here**: [01-kpoints-mesh-cutoff](01"
+#~ "-kpoints-mesh-cutoff/) - Most critical "
+#~ "parameters"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Next**: [02-basis-parameters](02-basis-"
+#~ "parameters/) - Fine-tune basis quality"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Complete**: [03-complete-basis](03-complete-"
+#~ "basis/) - Full basis optimization"
+#~ msgstr ""
+
+#~ msgid "Common Convergence Parameters"
+#~ msgstr "Common همگرایی Prmeters"
+
+#~ msgid "**Metals**: Denser k-point mesh required (6×6×6 or higher)"
+#~ msgstr "**Metls**: Denser k-point mesh required (6×6×6 یا higher)"
+
+#~ msgid "**Insulators**: Can use coarser mesh (4×4×4)"
+#~ msgstr "**Insultیاs**: Cn use corser mesh (4×4×4)"
+
+#~ msgid "**Start**: Test 100, 150, 200, 250, 300, 350, 400 Ry"
+#~ msgstr "**Strt**: Test 100, 150, 200, 250, 300, 350, 400 Ry"
+
+#~ msgid "**PAO.SplitNorm**: 0.10-0.30 (controls polarization function size)"
+#~ msgstr "**PAO.SplitNیاm**: 0.10-0.30 (controls polriztion function size)"
+

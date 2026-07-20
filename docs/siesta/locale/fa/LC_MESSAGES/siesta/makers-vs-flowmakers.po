@@ -1,0 +1,600 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:2
+#: 3dd7b398b317402d8063cd3f1b32b326
+msgid "Makers vs FlowMakers"
+msgstr "Makers در مقابل FlowMakers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:6
+#: 8c0749b6addd4983b90d1b84a43356b8
+msgid "Table of Contents"
+msgstr "فهرست مطالب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:9
+#: bf620ecb7d8e4c27ab843e1267849691
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:11
+#: 70900ce9e8e34be291a2cebc3f15406f
+#, fuzzy
+msgid "Atomate2SIESTA uses two types of workflow builders:"
+msgstr "Atomate2-SIESTA از دو نوع سازنده جریان کار استفاده می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:13
+#: b9b2367831864e2885d64867d384d793
+msgid "**Makers** (``*Maker``): Single-job calculations"
+msgstr "**Makers** (``*Maker``): محاسبات تک‌کاری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:14
+#: 10ae351b45fd468e8c514c613d23efe6
+msgid ""
+"**FlowMakers** (``*FlowMaker``): Multi-step workflows that chain multiple"
+" jobs together"
+msgstr ""
+"**FlowMakers** (``*FlowMaker``): جریان‌های کار چند مرحله‌ای که چندین کار "
+"را به هم زنجیر می‌کنند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:16
+#: bc807c2217354b33b0b689de21944253
+msgid ""
+"Understanding when to use each is crucial for building efficient "
+"computational workflows."
+msgstr ""
+"درک زمان استفاده از هر کدام برای ساخت جریان‌های کار محاسباتی کارآمد حیاتی"
+" است."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:19
+#: 91ef42c56fcb469b95636cb4c15165a4
+msgid "Viewing Comprehensive Documentation"
+msgstr "مشاهده مستندات جامع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:21
+#: 7408db79d75f4337aef954f6c0c20962
+#, fuzzy
+msgid "All Makers and FlowMakers have comprehensive docstrings viewable via CLI:"
+msgstr ""
+"**جدید در نسخه ۱.۰.۱**: همه Makerها و FlowMakerها اکنون دارای رشته‌های "
+"مستندات جامعی هستند که از طریق CLI قابل مشاهده است:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:31
+#: 1ada4c057c4e402992a89711d2a0cf2d
+msgid "Each comprehensive docstring includes:"
+msgstr "هر رشته مستندات جامع شامل موارد زیر است:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:33
+#: 696384a6712d46dd9b1236d163e61147
+msgid "**Detailed scientific context** - What the calculation does and why"
+msgstr "**زمینه علمی تفصیلی** - محاسبه چه کاری انجام می‌دهد و چرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:34
+#: d55eef697b5c4222b5a271a546bd79fe
+msgid "**Workflow steps** - Step-by-step breakdown of computation"
+msgstr "**مراحل جریان کار** - تجزیه گام‌به‌گام محاسبات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:35
+#: 0f73bd6591b4492bab8df656b6614d78
+msgid ""
+"**Key results** - What outputs are generated (energies, forces, band "
+"gaps, etc.)"
+msgstr ""
+"**نتایج کلیدی** - چه خروجی‌هایی تولید می‌شوند (انرژی‌ها، نیروها، شکاف‌های"
+" نواری و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:36
+#: 87ea677e8d4b4053be853e0c6fdace28
+msgid ""
+"**Applications** - Real-world use cases (catalysis, materials discovery, "
+"etc.)"
+msgstr "**کاربردها** - موارد استفاده در دنیای واقعی (کاتالیز، کشف مواد و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:37
+#: 66d6cbc654aa4441af1b784680bfb995
+msgid "**Parameters** - All available configuration options"
+msgstr "**پارامترها** - تمام گزینه‌های پیکربندی موجود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:38
+#: d44bc1529c3b4683b795d48b783b5f0c
+msgid "**Examples** - Practical code snippets"
+msgstr "**مثال‌ها** - قطعه کدهای عملی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:39
+#: a7e5cead61844199b3089d6c0a03a29b
+msgid "**Notes** - Best practices, convergence tips, and common pitfalls"
+msgstr "**نکات** - بهترین شیوه‌ها، نکات همگرایی و مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:41
+#: a82cb2366fef4c46ac9c4cdd26784b3e
+msgid "All 10 single-job Makers have comprehensive documentation:"
+msgstr "هر ۱۰ Maker تک‌کاری دارای مستندات جامع هستند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:57
+#: 643724c8748f490bb6dbcbdf41a46f67
+msgid "See :ref:`info-cli` in the CLI tools documentation for complete details."
+msgstr "برای جزئیات کامل به :ref:`info-cli` در مستندات ابزارهای CLI مراجعه کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:60
+#: 400199980a6a4315983855409fdb6211
+msgid "Naming Convention"
+msgstr "قرارداد نام‌گذاری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:62
+#: 70b0fa2ff22f4b7ebb64c50b8cfc9ee0
+msgid ""
+"As of v1.0.0, all multi-step workflows use the ``FlowMaker`` suffix for "
+"clarity:"
+msgstr ""
+"از نسخه ۱.۰.۰، همه جریان‌های کار چند مرحله‌ای از پسوند ``FlowMaker`` برای"
+" وضوح استفاده می‌کنند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:65
+#: 8225cd6e81fb4a7a827495cfaadfdaff
+msgid "**Single-Job Makers** (``*Maker``)"
+msgstr "**Makerهای تک‌کاری** (``*Maker``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:67
+#: e0da1f7a79f041cdbcd9d01bb0652058
+msgid "These perform a single calculation and return one result:"
+msgstr "این‌ها یک محاسبه تکی انجام می‌دهند و یک نتیجه برمی‌گردانند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:78
+#: 7a7c31bd7ae84a8b9588fc4f154ae84a
+msgid "**Multi-Step FlowMakers** (``*FlowMaker``)"
+msgstr "**FlowMakerهای چند مرحله‌ای** (``*FlowMaker``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:80
+#: 130885b2155a4e7ab35d9f3e5fc41e04
+msgid "These orchestrate multiple calculations in a workflow:"
+msgstr "این‌ها چندین محاسبه را در یک جریان کار هماهنگ‌سازی می‌کنند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:93
+#: 62d77e9e7e1f48e5b292770d511f4221
+msgid "When to Use Each"
+msgstr "چه زمانی از هر کدام استفاده کنیم"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:96
+#: 9db64fe2a7d64f85bea8960beb0c929c
+msgid "Use a **Maker** when you need:"
+msgstr "زمانی که نیاز دارید از **Maker** استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:98
+#: 2f27b2fd6cc04c3792b0d8ee3ffba510
+msgid "✓ A single calculation (SCF, relaxation, band structure, etc.)"
+msgstr "✓ یک محاسبه تکی (SCF، آرام‌سازی، ساختار نواری و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:100
+#: 4f1c929983064f29b69a9221e2b6f5d7
+msgid "✓ Building blocks for custom workflows"
+msgstr "✓ بلوک‌های سازنده برای جریان‌های کار سفارشی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:102
+#: 56fd33fb5cac41f69e9b1ca55e3ff955
+msgid "✓ Maximum control over individual job parameters"
+msgstr "✓ کنترل حداکثری بر پارامترهای کار فردی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:104
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:124
+#: a970a903940a4f5bbbbb5a2a2bdc36ea cc139d15bf21428983ee646dca5a9eef
+msgid "Example:"
+msgstr "مثال:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:114
+#: 5b41cb12ea89481a8f24558ff0414d80
+msgid "Use a **FlowMaker** when you need:"
+msgstr "زمانی که نیاز دارید از **FlowMaker** استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:116
+#: 464b99af58554c92a28f55432cfca18a
+msgid "✓ Multi-step workflows with automatic job chaining"
+msgstr "✓ جریان‌های کار چند مرحله‌ای با زنجیره‌سازی خودکار کارها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:118
+#: a550b13d4d984e8394cf2f889910ee69
+msgid "✓ Property calculations requiring multiple stages (phonons, EOS, elastic)"
+msgstr "✓ محاسبات ویژگی که نیاز به مراحل چندگانه دارند (فونون‌ها، EOS، الاستیک)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:120
+#: 58240e37dd3a41d08763474dba47c9d2
+msgid "✓ Convergence testing across parameter spaces"
+msgstr "✓ آزمایش همگرایی در فضاهای پارامتری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:122
+#: 7cbad036ebfd46e2a81d765abefbd7b1
+msgid "✓ Complex workflows with data flow between jobs"
+msgstr "✓ جریان‌های کار پیچیده با جریان داده بین کارها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:137
+#: 81585582aeee40ae82c8831905dff86c
+msgid "Parameter Customization"
+msgstr "سفارشی‌سازی پارامترها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:139
+#: 31268dc8f43c4330a6e304dbdae7baa6
+msgid "There are three main ways to customize calculations:"
+msgstr "سه روش اصلی برای سفارشی‌سازی محاسبات وجود دارد:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:142
+#: cc5f73089b7c48ebb5be3a33253db1f5
+msgid "1. Constructor Parameters (``user_params``)"
+msgstr "۱. پارامترهای سازنده (``user_params``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:144
+#: 8329c1d08d6640e4abb2d89c77f1d128
+msgid "Pass parameters directly when creating the maker:"
+msgstr "پارامترها را هنگام ایجاد maker مستقیماً ارسال کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:159
+#: 2c04562b03df4376854dd61775edf9bb
+msgid ""
+"**When to use**: Setting base parameters before applying presets or "
+"powerups."
+msgstr ""
+"**چه زمانی استفاده شود**: تنظیم پارامترهای پایه قبل از اعمال پیش‌فرض‌ها "
+"یا powerupها."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:162
+#: eb801800dd124ceaaf5a46781fb0dd74
+msgid "2. Tier Presets"
+msgstr "۲. پیش‌فرض‌های سطحی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:164
+#: b495855313ce4cbba594a9a79f02f881
+msgid "Apply material-specific parameter sets:"
+msgstr "مجموعه پارامترهای مخصوص ماده را اعمال کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:183
+#: 3187f772f3b14dc1b7e6392ded9935ee
+msgid ""
+"**When to use**: Starting from validated parameter sets for specific "
+"material types."
+msgstr ""
+"**چه زمانی استفاده شود**: شروع از مجموعه پارامترهای معتبرشده برای انواع "
+"ماده خاص."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:186
+#: 6a22a7114f714499928b57c917782336
+msgid ""
+"Always use ``override_params`` when modifying preset parameters. Passing "
+"``user_params`` to the maker before applying a preset will NOT work - the"
+" preset will overwrite them!"
+msgstr ""
+"همیشه هنگام تغییر پارامترهای پیش‌فرض از ``override_params`` استفاده کنید."
+" ارسال ``user_params`` به maker قبل از اعمال یک پیش‌فرض کار نخواهد کرد - "
+"پیش‌فرض آن‌ها را بازنویسی می‌کند!"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:191
+#: f171b8cad20d45de8572d63efaf38c3e
+msgid "3. Powerups (Runtime Modifications)"
+msgstr "۳. Powerupها (تغییرات زمان اجرا)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:193
+#: 4e0a381622924bcd90c192b615adb511
+msgid "Modify jobs or flows after creation:"
+msgstr "کارها یا جریان‌ها را پس از ایجاد تغییر دهید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:213
+#: cfc0a8d0f21448f09ac6a290969fea3d
+msgid "**When to use**:"
+msgstr "**چه زمانی استفاده شود**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:215
+#: 5ce7207e4e7f4b088f02ca37af76a8a5
+msgid "Modifying jobs after creation"
+msgstr "تغییر کارها پس از ایجاد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:216
+#: 165ccf3e0ab34b418d719b981f54e8aa
+msgid "Conditional parameter updates based on structure analysis"
+msgstr "به‌روزرسانی پارامترهای شرطی بر اساس تحلیل ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:217
+#: eb685944f0da40dc865083516aa3942e
+msgid "Adding metadata or tags"
+msgstr "افزودن فراداده یا برچسب‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:218
+#: 63573d2d47554f21a598def850a4280d
+msgid "Bulk modifications across multiple jobs in a flow"
+msgstr "تغییرات انبوه در چندین کار در یک جریان"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:221
+#: 6271c6bfbc864c1db77d866f315e4aad
+msgid "Comparison Table"
+msgstr "جدول مقایسه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:227
+#: 2d45c2175ad249a0be862e3e60edd430
+msgid "Method"
+msgstr "روش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:228
+#: 430598cea2e74bfa82cf29361aa1e12b
+msgid "Timing"
+msgstr "زمان‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:229
+#: 721b836cb52e4d97957d54f49cda9a75
+msgid "Use Case"
+msgstr "مورد استفاده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:230
+#: 4f123885b8214ff58cf885573800d6d4
+msgid "Example"
+msgstr "مثال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:231
+#: 2a406bb46cfc4830967846c599a12115
+msgid "``user_params``"
+msgstr "``user_params``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:232
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:236
+#: c26c439cc7dd44f6bb0b6b2b96e4587b d8dd0dbf2ea543febd926a6477c82c85
+msgid "At creation"
+msgstr "هنگام ایجاد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:233
+#: 509fdacfcb124ccda751bcff6e3da9d2
+msgid "Base parameters"
+msgstr "پارامترهای پایه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:234
+#: 76c2610f580c4d118d52f8dc12594e25
+msgid "Custom basis size"
+msgstr "اندازه پایه سفارشی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:235
+#: bec4374ef0b34985baca1a574cf3ebe6
+msgid "Tier presets"
+msgstr "پیش‌فرض‌های سطحی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:237
+#: 446e25601d92496d8cfa05de621e7b85
+msgid "Material-specific sets"
+msgstr "مجموعه‌های مخصوص ماده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:238
+#: 347992670da64a36b995504986110d1c
+#, fuzzy
+msgid "``relax_standard``"
+msgstr "``standard_relax``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:239
+#: e100828c25d24b94a3d5a58cd2b194e9
+msgid "Powerups"
+msgstr "Powerupها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:240
+#: e8b48e70d59648eab92c14237e31856f
+msgid "After creation"
+msgstr "پس از ایجاد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:241
+#: d9cb1d9335794d52b1ebe630d2cab285
+msgid "Runtime modifications"
+msgstr "تغییرات زمان اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:242
+#: 54455b96b27249b484c35f8809665c47
+msgid "Conditional updates"
+msgstr "به‌روزرسانی‌های شرطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:245
+#: 09a4f0a39e1a4827a328f78b2813eec5
+msgid "Complete Examples"
+msgstr "مثال‌های کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:248
+#: 66f00ea1a4714f7f97b4d22a69dfb786
+msgid "Example 1: Single-Job Maker with Preset"
+msgstr "مثال ۱: Maker تک‌کاری با پیش‌فرض"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:272
+#: c964408c01ea427d9b1b66ed5964b118
+msgid "Example 2: FlowMaker with Powerups"
+msgstr "مثال ۲: FlowMaker با Powerupها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:302
+#: 804490b2952e4f4bbf4ba094505e1ab9
+msgid "Example 3: Custom Workflow with Makers"
+msgstr "مثال ۳: جریان کار سفارشی با Makerها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:304
+#: df8172e4aaf9456689155decc6260bfc
+msgid "Build a custom workflow using individual Makers:"
+msgstr "یک جریان کار سفارشی با استفاده از Makerهای فردی بسازید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:327
+#: a530d4d4d9f645da8e795c8de157293a
+msgid "Example 4: Convergence Testing with FlowMaker"
+msgstr "مثال ۴: آزمایش همگرایی با FlowMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:351
+#: c3cade0a66c046b59c7a34ff69ab34c5
+msgid "Common Patterns"
+msgstr "الگوهای رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:354
+#: 412e357d9d674efaa3521d6f1a22b2f2
+msgid "Pattern 1: Preset + Override"
+msgstr "الگوی ۱: پیش‌فرض + بازنویسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:356
+#: 32e5b1e2556342c39755f8ac90c3637c
+msgid "Start with a validated preset and override specific parameters:"
+msgstr "با یک پیش‌فرض معتبرشده شروع کنید و پارامترهای خاص را بازنویسی کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:374
+#: e8c2ea3260314eb0a90b00f1f7f0b15b
+msgid "Pattern 2: Conditional Powerups"
+msgstr "الگوی ۲: Powerupهای شرطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:376
+#: a30fbf1e7f7243d28847e3cae7e7005f
+msgid "Apply powerups based on structure analysis:"
+msgstr "Powerupها را بر اساس تحلیل ساختار اعمال کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:393
+#: 2df1657e198741a1a4fea6fe5de84876
+msgid "Pattern 3: Flow Customization"
+msgstr "الگوی ۳: سفارشی‌سازی جریان"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:395
+#: 288d918de54d4597b020f7e2e4f833e9
+msgid "Customize individual jobs within a FlowMaker:"
+msgstr "کارهای فردی را درون یک FlowMaker سفارشی‌سازی کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:419
+#: 2ced15859bee411a80dc2755ed54303d
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:421
+#: 271f204e15ed40109cfef006ad662310
+msgid ""
+"✓ **Use FlowMakers for standard workflows**: Phonons, EOS, elastic "
+"constants, etc."
+msgstr ""
+"✓ **از FlowMakerها برای جریان‌های کار استاندارد استفاده کنید**: فونون‌ها،"
+" EOS، ثابت‌های الاستیک و غیره."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:423
+#: eea7fbe797bd47c0935f1ab6d8db7127
+msgid "✓ **Use Makers for custom workflows**: When you need fine-grained control"
+msgstr ""
+"✓ **از Makerها برای جریان‌های کار سفارشی استفاده کنید**: زمانی که به "
+"کنترل دقیق نیاز دارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:425
+#: fb36bfadb794415ab4d760e769f685b8
+msgid ""
+"✓ **Start with presets**: Use tier presets as starting points and "
+"override as needed"
+msgstr ""
+"✓ **با پیش‌فرض‌ها شروع کنید**: از پیش‌فرض‌های سطحی به عنوان نقطه شروع "
+"استفاده کنید و در صورت نیاز بازنویسی کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:427
+#: 47298beddac548b8a626616a0a24206c
+msgid ""
+"✓ **Use powerups for conditional logic**: Apply powerups when parameters "
+"depend on runtime conditions"
+msgstr ""
+"✓ **از powerupها برای منطق شرطی استفاده کنید**: زمانی که پارامترها به "
+"شرایط زمان اجرا وابسته هستند، powerupها را اعمال کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:429
+#: edfb468637ec4aaa9a36beee42eca7b4
+msgid "✓ **Document custom workflows**: Add comments explaining parameter choices"
+msgstr ""
+"✓ **جریان‌های کار سفارشی را مستندسازی کنید**: توضیحاتی در مورد انتخاب "
+"پارامترها اضافه کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:431
+#: 7da73a4524e7489c98275bf8f9563fcf
+msgid ""
+"✗ **Don't mix user_params and presets incorrectly**: Use "
+"``override_params`` when modifying presets"
+msgstr ""
+"✗ **user_params و پیش‌فرض‌ها را به طور نادرست ترکیب نکنید**: هنگام تغییر "
+"پیش‌فرض‌ها از ``override_params`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:433
+#: e8c2c05df69047d78539809c85c8d112
+msgid ""
+"✗ **Don't duplicate parameters**: Choose one customization method per "
+"parameter"
+msgstr ""
+"✗ **پارامترها را تکراری نکنید**: برای هر پارامتر یک روش سفارشی‌سازی "
+"انتخاب کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:435
+#: 8331ac417ad3464f9d15cc3f2881cfc0
+msgid ""
+"✗ **Don't create FlowMakers manually**: Use the provided FlowMaker "
+"classes for standard workflows"
+msgstr ""
+"✗ **FlowMakerها را به صورت دستی ایجاد نکنید**: از کلاس‌های FlowMaker "
+"ارائه‌شده برای جریان‌های کار استاندارد استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:438
+#: dcae3c4a736e4314a3b30471f19db9ec
+msgid "Migration Guide"
+msgstr "راهنمای مهاجرت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:440
+#: 843dbd7426fe40c0bde0c88c46a168dc
+msgid "If you're updating code from before v1.0.0, here's how to migrate:"
+msgstr ""
+"اگر کد را از نسخه‌های قبل از ۱.۰.۰ به‌روزرسانی می‌کنید، این‌گونه مهاجرت "
+"دهید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:443
+#: 838f8c14cbe64564a63db22384283e13
+msgid "Old Code (Before v1.0.0)"
+msgstr "کد قدیمی (قبل از نسخه ۱.۰.۰)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:456
+#: 239829d5e9fd4de8bace6363cfe23636
+msgid "New Code (v1.0.0+)"
+msgstr "کد جدید (نسخه ۱.۰.۰+)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:468
+#: 4580beac726c4a78853656703f867ba7
+msgid ""
+"**Simple find-and-replace**: Add ``Flow`` before ``Maker`` for all multi-"
+"step workflows."
+msgstr ""
+"**جست‌وجو و جایگزینی ساده**: برای همه جریان‌های کار چند مرحله‌ای، "
+"``Flow`` را قبل از ``Maker`` اضافه کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:471
+#: 410acf7e0c4847368275d54b3ac9e675
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:473
+#: 5e983c153c4c4e4db8bc1fb970b26dbb
+msgid ":doc:`usage` - General usage guide"
+msgstr ":doc:`usage` - راهنمای استفاده عمومی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:474
+#: ed3691c66d5c4d2887b67640c484526a
+msgid ":doc:`tier-system` - Tier presets documentation"
+msgstr ":doc:`tier-system` - مستندات پیش‌فرض‌های سطحی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:475
+#: a3eed7f74f34493590757551eacdb943
+msgid ":doc:`features` - Advanced features including powerups"
+msgstr ":doc:`features` - ویژگی‌های پیشرفته شامل powerupها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:476
+#: 8ff7c821c01d48c9a51c29196e6ac16d
+msgid ":doc:`recipe-book` - High-level workflow recipes"
+msgstr ":doc:`recipe-book` - دستورالعمل‌های جریان کار سطح بالا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/makers-vs-flowmakers.rst:477
+#: 34de25d33b9b457f90bbcaedfc2a971b
+msgid ":doc:`advanced-workflows` - Complex workflow examples"
+msgstr ":doc:`advanced-workflows` - مثال‌های جریان کار پیچیده"
+

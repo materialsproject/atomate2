@@ -1,0 +1,1258 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 17:01+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:3
+#: cb108289b89845bdb67a8fbaea5b2e90
+msgid "Introduction"
+msgstr "مقدمه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:5
+#: d3118f3025924909b1b94027e88a5d0a
+msgid ""
+"**atomate2siesta** is a production-ready library for automated "
+"computational materials science workflows, integrating the `SIESTA <https"
+"://siesta-project.org>`_ quantum chemistry code with the `Atomate2 "
+"<https://materialsproject.github.io/atomate2/>`_ workflow framework. It "
+"provides scalable, reproducible, and intelligent workflows for materials "
+"simulations with comprehensive error recovery and analysis tools."
+msgstr ""
+"**atomate2siesta** یک کتابخانه آماده برای تولید است که جریان‌های کار "
+"خودکار علم مواد محاسباتی را فراهم می‌کند و کد شیمی کوانتومی `SIESTA "
+"<https://siesta-project.org>`_ را با چارچوب جریان کار `Atomate2 "
+"<https://materialsproject.github.io/atomate2/>`_ یکپارچه می‌سازد. این "
+"کتابخانه جریان‌های کار مقیاس‌پذیر، تکرارپذیر و هوشمند برای شبیه‌سازی مواد"
+" با ابزارهای جامع بازیابی خطا و تحلیل ارائه می‌دهد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:10
+#: 77c491838a9843859b0a470b8c0ead8f
+msgid "Why atomate2siesta?"
+msgstr "چرا atomate2siesta؟"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:12
+#: 46289e03b8ea40b5aa158afbeec5c0b1
+msgid "🎯 **Comprehensive Workflow Coverage**"
+msgstr "🎯 **پوشش جامع جریان‌های کار**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:13
+#: fa282d0e22fc42e6bd6c99c78abed703
+msgid ""
+"From simple structure relaxations to complex multi-step calculations: "
+"phonons, surface energy, elastic constants, Grüneisen parameters, quasi-"
+"harmonic approximation, and more."
+msgstr ""
+"از آرام‌سازی ساختار ساده تا محاسبات چند مرحله‌ای پیچیده: فونون‌ها، انرژی "
+"سطح، ثابت‌های الاستیک، پارامترهای Grüneisen، تقریب شبه‌هارمونیک، و موارد "
+"دیگر."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:15
+#: 843c3c57c2d04f2986957d179b7fa67e
+msgid "🧠 **Intelligent Error Recovery**"
+msgstr "🧠 **بازیابی هوشمند خطا**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:16
+#: fc68af4567ac43e4b176ba5c57c55072
+msgid ""
+"Built-in custodian integration detects and automatically recovers from "
+"10+ error types including SCF failures, memory issues, and time "
+"limits—ensuring robust production runs."
+msgstr ""
+"یکپارچه‌سازی داخلی custodian بیش از ۱۰ نوع خطا را شناسایی و به‌طور خودکار"
+" بازیابی می‌کند، از جمله شکست‌های SCF، مشکلات حافظه و محدودیت‌های "
+"زمانی—که اجراهای تولید قوی را تضمین می‌کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:18
+#: 4b11aaf9f253455f8b0b9363925220ec
+msgid "⚙️ **Flexible Parameter Management**"
+msgstr "⚙️ **مدیریت انعطاف‌پذیر پارامترها**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:19
+#: 109d44aa54cf4ced923d55363af99dec
+msgid ""
+"**Tier-based architecture**: 4 complexity levels with automatic module "
+"activation"
+msgstr "**معماری مبتنی بر سطح**: ۴ سطح پیچیدگی با فعال‌سازی خودکار ماژول"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:20
+#: 87d06b7de4dc44468062c3c532c28c21
+msgid ""
+"**14 material-specific presets**: Optimized settings for metals, "
+"semiconductors, surfaces"
+msgstr ""
+"**۱۴ پیش‌تنظیم اختصاصی مواد**: تنظیمات بهینه‌شده برای فلزات، "
+"نیمه‌رساناها، سطوح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:21
+#: bf81560967954c2482a9dcee3d855728
+msgid "**Powerups system**: Dynamic parameter modification without recreation"
+msgstr "**سیستم Powerups**: تغییر پویای پارامترها بدون نیاز به ایجاد مجدد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:23
+#: df7bb49765944cc1add97afd3fb9dbfc
+msgid "📊 **Rich Analysis & Visualization**"
+msgstr "📊 **تحلیل و تجسم غنی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:24
+#: 0df1a0f2fef841019106467b7ea9eeab
+msgid ""
+"Automatic generation of publication-quality plots, comprehensive text "
+"summaries, and JSON outputs for all workflows."
+msgstr ""
+"تولید خودکار نمودارهای با کیفیت انتشاراتی، خلاصه‌های متنی جامع، و "
+"خروجی‌های JSON برای تمام جریان‌های کار."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:26
+#: 732534d0578845d082c5df5a5b3c8489
+msgid "🔬 **Production-Ready**"
+msgstr "🔬 **آماده برای تولید**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:27
+#: cc29eeaf9fe0487286d340ea98062340
+msgid "Comprehensive, fully passing test suite"
+msgstr "۷۵۰ تست با ۴۴٪ پوشش، ۱۰۰٪ موفقیت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:28
+#: 40559bb049284c23a1faad14b22c42f6
+msgid "HPC cluster support (SLURM, PBS, SGE)"
+msgstr "پشتیبانی از خوشه‌های HPC (SLURM، PBS، SGE)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:29
+#: 8c659d147bea42348aa1fdb95b55ba26
+msgid "MongoDB integration for high-throughput campaigns"
+msgstr "یکپارچه‌سازی MongoDB برای کمپین‌های با توان عملیاتی بالا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:30
+#: c959abbd96334d81a1313fa994e71776
+msgid "Performance optimized (< 25ms overhead)"
+msgstr "بهینه‌سازی عملکرد (سربار کمتر از ۲۵ میلی‌ثانیه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:35
+#: 41ae21f773ed4514ab45c8d262e483bc
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:38
+#: 4727b891ec744eed9288ed1b50f89ef0
+msgid "1. Automated Workflow Library"
+msgstr "۱. کتابخانه جریان‌های کار خودکار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:40
+#: 0167f7af2ee64240b9d5602e967a52cc
+msgid "**Electronic Structure**"
+msgstr "**ساختار الکترونی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:41
+#: 0c11709103bc4d90b9af2eadd6f0edc7
+msgid "Structure relaxation (fixed/variable cell) with geometric optimization"
+msgstr "آرام‌سازی ساختار (سلول ثابت/متغیر) با بهینه‌سازی هندسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:42
+#: f0ffd61ce26548e4b028776f3ae1722b
+msgid "Band structure and density of states (DOS) calculations"
+msgstr "محاسبات ساختار نواری و چگالی حالت‌ها (DOS)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:43
+#: 67bf5047904d472f8f85c62ec9403ee4
+msgid "Optical properties (dielectric function, absorption)"
+msgstr "خواص نوری (تابع دی‌الکتریک، جذب)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:44
+#: f3d96ff298084fcdab3e0e7dbfcc9f04
+msgid "Electronic analysis tools"
+msgstr "ابزارهای تحلیل الکترونی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:46
+#: 915a3c78021142ecb314012f068f0c2a
+msgid "**Mechanical & Thermodynamic Properties**"
+msgstr "**خواص مکانیکی و ترمودینامیکی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:47
+#: 351a8fe326c8470280874d1ed6b18b70
+msgid "Equation of State (EOS) with automatic fitting"
+msgstr "معادله حالت (EOS) با برازش خودکار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:48
+#: 9d54aba44fba4336a7651d0220fe67f7
+msgid "Elastic constants and full elastic tensor"
+msgstr "ثابت‌های الاستیک و تانسور الاستیک کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:49
+#: 477028532874425b8cfe7ad17a5f71a4
+msgid "Mechanical properties (bulk/shear modulus, Young's modulus, Poisson ratio)"
+msgstr "خواص مکانیکی (مدول حجمی/برشی، مدول یانگ، نسبت پواسون)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:50
+#: 24fbae5d44a44e1c9718e88d0b296e85
+msgid "Nudged Elastic Band (NEB) for transition state searching"
+msgstr "روش نوار الاستیک تکان‌داده‌شده (NEB) برای جستجوی حالت گذار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:52
+#: 9f3e20eab4704e9e84b59487130c9dca
+msgid "**Vibrational & Thermal Properties**"
+msgstr "**خواص ارتعاشی و حرارتی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:53
+#: 5750b13314ea401d9e35ac8877be5c27
+msgid "**Phonon calculations** with full phonopy integration"
+msgstr "**محاسبات فونون** با یکپارچه‌سازی کامل phonopy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:54
+#: 9bd7e9c61e9a475ab7c4a7cab6ae33ee
+msgid "**Grüneisen parameters** with 6 comprehensive plotting functions"
+msgstr "**پارامترهای Grüneisen** با ۶ تابع رسم جامع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:55
+#: 554cac85dad641e3bbffc02e20252893
+msgid ""
+"**Quasi-harmonic approximation (QHA)** for finite-temperature "
+"thermodynamics"
+msgstr "**تقریب شبه‌هارمونیک (QHA)** برای ترمودینامیک در دمای محدود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:56
+#: fd532a01cc2441718136019a53def826
+msgid "Thermal expansion, heat capacity, entropy calculations"
+msgstr "انبساط حرارتی، ظرفیت گرمایی، محاسبات آنتروپی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:57
+#: 837573451a5a4dc08d66f094fabf6b1a
+#, python-format
+msgid "Automatic symmetry reduction (50-80% fewer force calculations)"
+msgstr "کاهش خودکار تقارن (۵۰-۸۰٪ کاهش محاسبات نیرو)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:59
+#: 0686595d5e2c4e69a4e35aa3ce544abb
+msgid "**Surface Chemistry**"
+msgstr "**شیمی سطح**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:60
+#: d6439c967e7949e3a37e4d39f1deb8d0
+msgid "**Surface energy calculations** with automatic termination discovery"
+msgstr "**محاسبات انرژی سطح** با کشف خودکار پایانه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:61
+#: 6b695da9763a4601bdce7fac317206fe
+msgid "**Multi-surface comparison** for Miller indices screening"
+msgstr "**مقایسه چند سطح** برای غربالگری شاخص‌های Miller"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:62
+#: d710df2338994cd6a164e0835b6ca560
+msgid "**Adsorption site scanning** with grid-based energy mapping"
+msgstr "**اسکن سایت جذب** با نقشه‌برداری انرژی مبتنی بر شبکه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:63
+#: 9808e1889ecf40c5b4e9a95a47bb7c9a
+msgid "Molecule orientation control and automatic visualization"
+msgstr "کنترل جهت‌گیری مولکول و تجسم خودکار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:66
+#: e0fc107b888e4034a2cc66882d261626
+msgid "2. Intelligent Error Handling"
+msgstr "۲. مدیریت هوشمند خطا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:68
+#: 5145fc74d8744bcc8dbd8e7d8f116a0e
+msgid "Built on MaterialsProject/custodian library with:"
+msgstr "ساخته‌شده بر اساس کتابخانه MaterialsProject/custodian با:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:70
+#: 4ed1b7bf2ab14e8595efff7cab652f41
+msgid "**Automatic Error Detection**"
+msgstr "**تشخیص خودکار خطا**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:71
+#: f63c8e4cbdcd4ff78f744e23f8418e3c
+msgid "SCF convergence failures (5-level progressive rescue)"
+msgstr "شکست‌های همگرایی SCF (نجات تدریجی ۵ سطحی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:72
+#: fd17b142fd774263b9cfa5510f874111
+msgid "Memory and walltime limit issues"
+msgstr "مشکلات محدودیت حافظه و زمان دیواری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:73
+#: e9b2831155734973953f57fa9d1dc5fe
+msgid "Basis set and pseudopotential problems"
+msgstr "مشکلات مجموعه پایه و شبه‌پتانسیل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:74
+#: b70e4c16a42448c18433ed9dcc928555
+msgid "Geometry optimization failures"
+msgstr "شکست‌های بهینه‌سازی هندسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:75
+#: e4130e6d0cf940fb8b09284c3b650539
+msgid "Electronic structure anomalies"
+msgstr "ناهنجاری‌های ساختار الکترونی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:77
+#: 1cdc8fd80f934d319eed15de1595d1fb
+msgid "**Progressive Correction Strategies**"
+msgstr "**استراتژی‌های اصلاح تدریجی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:78
+#: b54b2bab1c0a4aae8d710cce20c66366
+msgid "Automatic parameter adjustment (mixing, k-points, basis)"
+msgstr "تنظیم خودکار پارامترها (میکسر، k-points، پایه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:79
+#: e883e62e7d3b410eba90dde4539055a1
+msgid "Restart from checkpoints"
+msgstr "راه‌اندازی مجدد از نقاط بررسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:80
+#: a2f941dcbe4f4f45b0af1a0bf11985d5
+msgid "JSON logging (`custodian.json`) for full auditability"
+msgstr "ثبت وقایع JSON (`custodian.json`) برای قابلیت حسابرسی کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:81
+#: d7e0c3c50afb406f800170d9fbc8667d
+msgid "Validation framework for correction effectiveness"
+msgstr "چارچوب اعتبارسنجی برای اثربخشی اصلاحات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:83
+#: 1f308f3ee5864b9ab40e136fd7699270
+msgid "**10+ Specialized Handlers**"
+msgstr "**بیش از ۱۰ مدیریت‌کننده تخصصی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:84
+#: a30be5ea717a4597898e0b1fd5f4673f
+msgid "``SCFConvergenceHandler`` - Multi-level mixing adjustments"
+msgstr "``SCFConvergenceHandler`` - تنظیمات میکسر چند سطحی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:85
+#: a00d42a0229c4bfd890a964d1b6bc9b5
+msgid "``MemoryHandler`` - Dynamic memory management"
+msgstr "``MemoryHandler`` - مدیریت پویای حافظه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:86
+#: 64d2f404b9d646649bc5940c0532a575
+msgid "``WalltimeHandler`` - Time limit recovery"
+msgstr "``WalltimeHandler`` - بازیابی محدودیت زمانی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:87
+#: 1505e16493534d92a6742e3a03099721
+msgid "``BasisSetHandler`` - PAO parameter optimization"
+msgstr "``BasisSetHandler`` - بهینه‌سازی پارامترهای PAO"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:88
+#: 75758b6b2d904332b242a202802682cd
+msgid "``GeometryHandler`` - Stuck relaxation recovery"
+msgstr "``GeometryHandler`` - بازیابی آرام‌سازی متوقف‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:89
+#: cb3dfd3309664b1eae8ab38e09551fba
+msgid "...and more"
+msgstr "... و موارد دیگر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:92
+#: c637e3715d3948dbaf74fc2791966120
+msgid "3. Tier-Based Input Architecture"
+msgstr "۳. معماری ورودی مبتنی بر سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:96
+#: 3a31eb0a51844b37a675d070204bddcd
+msgid "**4-Tier Complexity System**"
+msgstr "**سیستم پیچیدگی ۴ سطحی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:97
+#: 0f8cba20e9424edc90d62d16f684362a
+msgid "**basic** (6 modules): Essential parameters for simple calculations"
+msgstr "**پایه** (۶ ماژول): پارامترهای ضروری برای محاسبات ساده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:98
+#: 9aa644e06e3342a5a80569ec4dbd6c14
+msgid "**intermediate** (12 modules): Standard production runs"
+msgstr "**متوسط** (۱۲ ماژول): اجراهای تولید استاندارد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:99
+#: 0ed0a81fc0884c0aa8a91cd221785b51
+msgid "**advanced** (19 modules): Fine-tuned control"
+msgstr "**پیشرفته** (۱۹ ماژول): کنترل دقیق"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:100
+#: dbf237c07eca4b8ba404d25bdf5b1b5e
+msgid "**expert** (24 modules): All available parameters"
+msgstr "**متخصص** (۲۴ ماژول): تمام پارامترهای موجود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:102
+#: 728dd2a9cfa8489a9fc623410bd4cfa6
+msgid "**Automatic Module Activation**"
+msgstr "**فعال‌سازی خودکار ماژول**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:103
+#: 9603da8abb7c4c47ac5a7a57a7172b31
+msgid "Modules load based on calculation complexity"
+msgstr "ماژول‌ها بر اساس پیچیدگی محاسبات بارگذاری می‌شوند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:104
+#: 88aabb0c27014d05816013f9665ce625
+msgid "Zero configuration for simple cases"
+msgstr "بدون نیاز به پیکربندی برای موارد ساده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:105
+#: 5d6c5981d8dc4bf3a2cb683291cfc4c9
+msgid "Full control when needed"
+msgstr "کنترل کامل در صورت نیاز"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:107
+#: 7743e4fdc7de4218adfae06d5f612365
+msgid "**24+ Dataclass Modules**"
+msgstr "**بیش از ۲۴ ماژول Dataclass**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:108
+#: 7d27173ba39648faa579247dfb84f544
+msgid "Organized by functionality:"
+msgstr "سازمان‌دهی شده بر اساس عملکرد:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:110
+#: fd2609d155a4462baa94f8aca8c077c1
+msgid "``BasisSetsAndProjectors`` - PAO basis configuration"
+msgstr "``BasisSetsAndProjectors`` - پیکربندی پایه PAO"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:111
+#: 77c81d108bd047adb235562561a0fdd2
+msgid "``SCFLoopParameters`` - Self-consistent field control"
+msgstr "``SCFLoopParameters`` - کنترل میدان خودسازگار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:112
+#: cc55daffdc2f4d7dada45f6e4cfd936a
+msgid "``MolecularDynamicsAndRelaxation`` - Geometry optimization"
+msgstr "``MolecularDynamicsAndRelaxation`` - بهینه‌سازی هندسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:113
+#: 46e5dd0a9c694a63893d7fcadb36532c
+msgid "``PhononCalculations`` - Vibrational properties"
+msgstr "``PhononCalculations`` - خواص ارتعاشی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:114
+#: ebdefe446b664d3fb135818a8d0c699f
+msgid "``ExchangeCorrelationFunctionals`` - DFT functionals"
+msgstr "``ExchangeCorrelationFunctionals`` - تابعک‌های DFT"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:115
+#: 2a87a8dbd6d5447c873d648777ce4895
+msgid "``SpinSettings`` - Magnetic calculations"
+msgstr "``SpinSettings`` - محاسبات مغناطیسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:116
+#: 00e19a70d83442a7b26a05b64fe8276e
+msgid "...and 18 more"
+msgstr "... و ۱۸ مورد دیگر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:118
+#: 9bcb4a0600654d449d520ea693a15f6c
+msgid "**14 Material-Specific Presets**"
+msgstr "**۱۴ پیش‌تنظیم اختصاصی مواد**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:119
+#: 3bd40836a7b44f64914d77e6ca41a7e9
+msgid "``relax_standard`` - General-purpose relaxation"
+msgstr "``relax_standard`` - آرام‌سازی عمومی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:120
+#: 9cd0fa42279043ffb4574c99b55d9107
+msgid "``high_accuracy`` - Converged production runs"
+msgstr "``high_accuracy`` - اجراهای تولید همگرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:121
+#: 401a11ea731144fab3b3412a3fd52713
+msgid "``band_structure_precise`` - Electronic structure"
+msgstr "``band_structure_precise`` - ساختار الکترونی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:122
+#: 58689ba81fdd42e1b17b6fd247f994f0
+msgid "``surface_metal`` - Metallic surface calculations"
+msgstr "``surface_metal`` - محاسبات سطح فلزی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:123
+#: 425b386c4fa1450bbf884652c6c51ca2
+msgid "``surface_semiconductor`` - Semiconductor surfaces"
+msgstr "``surface_semiconductor`` - سطوح نیمه‌رسانا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:124
+#: 7e21afde0d2d4b5fb98f4495668e3b8e
+msgid "``phonon_high_accuracy`` - Vibrational properties"
+msgstr "``phonon_high_accuracy`` - خواص ارتعاشی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:125
+#: a5866d8f68c7450384e0aac684c56bf0
+msgid "``magnetic_system`` - Spin-polarized calculations"
+msgstr "``magnetic_system`` - محاسبات اسپین-قطبیده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:126
+#: 4f361915171f44babf23d6aff950f3bb
+msgid "...and 7 more"
+msgstr "... و ۷ مورد دیگر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:129
+#: a5c4985172be46c286e62e3daefd02c5
+msgid "4. Advanced Analysis & Visualization"
+msgstr "۴. تحلیل و تجسم پیشرفته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:131
+#: dc7185e644be454c8d01da11714f4960
+msgid "**Grüneisen Parameter Analysis**"
+msgstr "**تحلیل پارامتر Grüneisen**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:132
+#: b91fadc31f5544d19f45ebade86c28ed
+msgid "6 plotting functions for comprehensive analysis:"
+msgstr "۶ تابع رسم برای تحلیل جامع:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:134
+#: 67bf2dec43654245b94398f16f10f1e2
+msgid "Scatter plots with mode classification"
+msgstr "نمودارهای پراکنش با طبقه‌بندی مد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:135
+#: 705f47f7d8424f0ba6afb463dff39d43
+msgid "Histograms with statistical analysis"
+msgstr "هیستوگرام‌ها با تحلیل آماری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:136
+#: f3b23e5991d54a9bb32950fdf0623c9e
+msgid "Dual-panel phonon band structures"
+msgstr "ساختارهای نواری فونون دو پنلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:137
+#: 390f93b2a2314e0b95922144fcda19b5
+msgid "Thermal expansion vs temperature"
+msgstr "انبساط حرارتی در مقابل دما"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:138
+#: 29009ff28a814e1ea3edb8945dc2cf99
+msgid "Physical interpretation and material classification"
+msgstr "تفسیر فیزیکی و طبقه‌بندی مواد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:140
+#: 67c16103edba4c6da1e8a7228bb47ec0
+msgid "Temperature-dependent thermal expansion using Debye model"
+msgstr "انبساط حرارتی وابسته به دما با استفاده از مدل Debye"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:141
+#: bdff97da864c40cd98e417ae0281cd47
+msgid "Publication-quality output (300 DPI)"
+msgstr "خروجی با کیفیت انتشاراتی (۳۰۰ DPI)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:143
+#: 44fbc8a6f78a4a6e9f5ac1c66fb252c3
+msgid "**Phonon Analysis Suite**"
+msgstr "**مجموعه تحلیل فونون**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:144
+#: 759b7b1a33f348849449aed6125e720e
+msgid "Automatic phonon band structure plots"
+msgstr "نمودارهای خودکار ساختار نواری فونون"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:145
+#: 0baea1871e6943c6b28fc2eb05b75402
+msgid "Phonon density of states (DOS)"
+msgstr "چگالی حالت‌های فونون (DOS)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:146
+#: 5e368a3f64b14c0cb794389471121f82
+msgid "Thermal properties (Cv, S, F vs T)"
+msgstr "خواص حرارتی (Cv، S، F در مقابل T)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:147
+#: e5992f9b1e2f4993aa676433809df7ed
+msgid "Comprehensive text summaries with convergence recommendations"
+msgstr "خلاصه‌های متنی جامع با توصیه‌های همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:149
+#: 0994325881e0464c85a62db13c30db8b
+msgid "**Surface Energy Workflows**"
+msgstr "**جریان‌های کار انرژی سطح**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:150
+#: 6966179fe6b14a2fa7a1890e169ce671
+msgid "Multi-surface energy comparison plots"
+msgstr "نمودارهای مقایسه انرژی چند سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:151
+#: 96c2a2b67089487f9a1216fc43182c00
+msgid "Automatic Wulff construction"
+msgstr "ساخت خودکار Wulff"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:152
+#: 73573d87cd9c4d98b874546eee6ba583
+msgid "Surface stability analysis"
+msgstr "تحلیل پایداری سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:153
+#: 86a8019b014248d1bb62ecc8ceb3b779
+msgid "Termination-specific energies"
+msgstr "انرژی‌های اختصاصی پایانه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:155
+#: 8bd5cd2925854012b70fe5ae54842a12
+msgid "**Convergence Studies**"
+msgstr "**مطالعات همگرایی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:156
+#: f593852af94a4424ac103c7a4ad0f3b4
+msgid "Automatic convergence plots (k-points, mesh cutoff, basis)"
+msgstr "نمودارهای خودکار همگرایی (k-points، برش شبکه، پایه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:157
+#: 553eb5515fab498aaeb50b251a4688b6
+msgid "Energy vs parameter visualization"
+msgstr "تجسم انرژی در مقابل پارامتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:158
+#: 78474dc25cab4a8ca7ede7fa9cfbe7de
+msgid "Threshold indicators (1 meV, 5 meV)"
+msgstr "شاخص‌های آستانه (۱ meV، ۵ meV)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:159
+#: 12aada3874c84fbf90577cc70b904b21
+msgid "Timing analysis for cost optimization"
+msgstr "تحلیل زمان‌بندی برای بهینه‌سازی هزینه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:162
+#: 69e16035d6164b018465455f8e09cc11
+msgid "5. Powerups System"
+msgstr "۵. سیستم Powerups"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:166
+#: 8696b68ed78e48b38fc1b9bd8e11be4e
+msgid "Dynamic workflow customization without recreating makers:"
+msgstr "سفارشی‌سازی پویای جریان کار بدون ایجاد مجدد makers:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:182
+#: 8e71d4b10502463fbbfcb442b7fe79c8
+msgid "**Key Capabilities**:"
+msgstr "**قابلیت‌های کلیدی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:183
+#: 19ed323190164e9a96acefdc7ce6bb31
+msgid "Apply to Jobs, Flows, or Makers"
+msgstr "اعمال به Jobs، Flows یا Makers"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:184
+#: bd67dc873ec34dc2b206fb2ed8077431
+msgid "Selective updates using ``name_filter``"
+msgstr "به‌روزرسانی‌های انتخابی با استفاده از ``name_filter``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:185
+#: 1712ab18004643c4a083b5bf528c232c
+msgid "Material-specific parameter sets"
+msgstr "مجموعه پارامترهای اختصاصی مواد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:186
+#: b8a6bcf7ff734234b8000816461305ff
+msgid "High-throughput screening patterns"
+msgstr "الگوهای غربالگری با توان عملیاتی بالا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:187
+#: 462c13b0f39e40629cd92faf12fa80cc
+msgid "Workflow builder patterns"
+msgstr "الگوهای ساخت جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:190
+#: 171598bde8924feab4a109e51876ea07
+msgid "6. Production Infrastructure"
+msgstr "۶. زیرساخت تولید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:192
+#: 79088f9b2c474ae087882e9751198a99
+msgid "**Database Integration**"
+msgstr "**یکپارچه‌سازی پایگاه داده**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:193
+#: 4672f38f1aaf400dab8d48491865233d
+msgid "MongoDB/Maggma support for result storage"
+msgstr "پشتیبانی MongoDB/Maggma برای ذخیره‌سازی نتایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:194
+#: 306e0e7e18a94f53926ec2a72400a58a
+msgid "Automatic task document generation"
+msgstr "تولید خودکار سند کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:195
+#: 293b2d643e864239915290e5349552e0
+msgid "Query interface for high-throughput campaigns"
+msgstr "رابط جستجو برای کمپین‌های با توان عملیاتی بالا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:196
+#: 7816da14a67e40829b7dd65966709457
+msgid "GridFS for large data (wavefunctions, charge densities)"
+msgstr "GridFS برای داده‌های بزرگ (توابع موج، چگالی‌های بار)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:198
+#: ac925c6b62ad44ecaf1b67a2b67c323a
+msgid "**HPC Cluster Support**"
+msgstr "**پشتیبانی از خوشه HPC**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:199
+#: f86c3c2386de4d8e9f0c934665cc9b82
+msgid "SLURM, PBS, SGE queue systems"
+msgstr "سیستم‌های صف SLURM، PBS، SGE"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:200
+#: 0259631a331249cb847ad875b38d566c
+msgid "jobflow-remote integration"
+msgstr "یکپارچه‌سازی jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:201
+#: 5cdd825ddbc54d0a98e220c42e95ef60
+msgid "Automatic resource management"
+msgstr "مدیریت خودکار منابع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:202
+#: cb081af75c7c4f5ba6a66034edb29547
+msgid "Remote job submission and monitoring"
+msgstr "ارسال و نظارت راه‌دور کارها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:204
+#: 08c5a3e111554ade86ffa53078e2a58f
+msgid "**Testing & Quality**"
+msgstr "**تست و کیفیت**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:205
+#: 092069a7c4974949ad8553b8da139342
+msgid "750 comprehensive tests (mock-based for speed)"
+msgstr "۷۵۰ تست جامع (مبتنی بر mock برای سرعت)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:206
+#: 28ba9dd4b0f54ceeb308bd45e9b8e210
+#, python-format
+msgid "44% code coverage"
+msgstr "۴۴٪ پوشش کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:207
+#: 8eb522a5a33e4c38a0a6611f5ac7044e
+msgid "100% test pass rate"
+msgstr "۱۰۰٪ نرخ موفقیت تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:208
+#: 8b1467ca7b954215a9eecbf8c3f4ef96
+msgid "17-second full test suite execution"
+msgstr "اجرای ۱۷ ثانیه‌ای مجموعه تست کامل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:209
+#: a841736ea32545c09025069a5adc72fd
+msgid "Critical infrastructure: parser (39%), file_client (86%), schemas (97%)"
+msgstr "زیرساخت حیاتی: parser (۳۹٪)، file_client (۸۶٪)، schemas (۹۷٪)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:212
+#: 7f02b370d862406bab7d935b8115988a
+msgid "7. Developer-Friendly Design"
+msgstr "۷. طراحی دوستدار توسعه‌دهنده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:214
+#: a541e43f99844607889084da4c13ea18
+msgid "**Modular Architecture**"
+msgstr "**معماری ماژولار**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:215
+#: abb9913adcdd425fb3cacb005de6f775
+msgid "Clean separation of concerns (jobs, flows, sets, schemas)"
+msgstr "جداسازی واضح دغدغه‌ها (jobs، flows، sets، schemas)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:216
+#: 23cce3585b9e4246af6d62218be86f88
+msgid "Extensible maker pattern"
+msgstr "الگوی maker قابل گسترش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:217
+#: ac94458547a74bc18d5ff129550a45c0
+msgid "Type-annotated throughout"
+msgstr "حاشیه‌نویسی نوع در سراسر کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:218
+#: da34a7552fe44b468c626cc11ef39216
+msgid "Comprehensive docstrings"
+msgstr "رشته‌های مستندسازی جامع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:220
+#: 9986d38987724f2c80481ae242f90841
+msgid "**Documentation**"
+msgstr "**مستندسازی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:221
+#: 2b7728a41ae846f4b44f867a8b8a4a7a
+msgid "22 comprehensive tutorials (basics → advanced)"
+msgstr "۲۲ آموزش جامع (مبانی ← پیشرفته)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:222
+#: 53065afbda304a489d66e04e7944eaa3
+msgid "Complete API reference"
+msgstr "مرجع کامل API"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:223
+#: af30c32865cd43858c7a97be04d401b0
+msgid "Comprehensive feature documentation"
+msgstr "مستندات جامع ویژگی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:225
+#: d227be958d3c4229b04f35336adb9cbe
+msgid "**Configuration Management**"
+msgstr "**مدیریت پیکربندی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:226
+#: 78193c27b6944b0592ccb2ce3ed15002
+msgid "Simple YAML configuration (`~/.atomate2.yaml`)"
+msgstr "پیکربندی ساده YAML (`~/.atomate2.yaml`)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:227
+#: 41305de7d9d24c4b8081d9fc02d6cc5c
+msgid "Environment variable support"
+msgstr "پشتیبانی از متغیرهای محیطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:228
+#: 869a0fb93c2e40ebba7713e04aae5cf2
+msgid "Programmatic override capability"
+msgstr "قابلیت بازنویسی برنامه‌ای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:229
+#: 69e01d4b7bdb43aeac1acd34187fc47f
+msgid "Validation and helpful error messages"
+msgstr "اعتبارسنجی و پیام‌های خطای مفید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:234
+#: c1593e8b347b4d31b7f324e55d8a6033
+msgid "Recent Enhancements (2025)"
+msgstr "بهبودهای اخیر (۲۰۲۵)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:236
+#: 8263e9b61a19427c950c26712d6fe3cd
+msgid "** Test Coverage Foundation"
+msgstr "** پایه پوشش تست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:237
+#: f0233239a62a409b97ff9ed5433210ed
+msgid ""
+"Major testing initiative substantially expanding test coverage. Critical "
+"infrastructure comprehensively tested."
+msgstr ""
+"ابتکار تست عمده با ۲۷۰ تست جدید، دستیابی به ۴۴٪ پوشش. زیرساخت حیاتی "
+"به‌طور جامع تست شده است."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:239
+#: 05110583a2644e0f8eb8cdd2bb6b675c
+msgid "** Grüneisen Parameters & Thermal Expansion"
+msgstr "** پارامترهای Grüneisen و انبساط حرارتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:240
+#: 818ec9e0ec2746ce8eb6642d78d00c5e
+msgid ""
+"Complete 6-function visualization suite for Grüneisen analysis with "
+"publication-quality plots and physical interpretation."
+msgstr ""
+"مجموعه تجسم کامل ۶ تابعی برای تحلیل Grüneisen با نمودارهای با کیفیت "
+"انتشاراتی و تفسیر فیزیکی."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:242
+#: 8092a036553140c4b4247e6e785f276f
+msgid "** Thermal Expansion Analysis"
+msgstr "** تحلیل انبساط حرارتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:243
+#: 0527c4b655924de3b9b08cae88edd29e
+msgid ""
+"Enhanced Grüneisen workflows with comprehensive thermal property "
+"calculations and seamless dict/Pydantic compatibility."
+msgstr ""
+"جریان‌های کار Grüneisen بهبودیافته با محاسبات جامع خواص حرارتی و سازگاری "
+"یکپارچه dict/Pydantic."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:245
+#: 68dc80a39f6940b1a808e4a8fe057f4c
+msgid "** Code Quality Improvements"
+msgstr "** بهبودهای کیفیت کد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:246
+#: fc00cfda9d9249a6a121c1537c31ca34
+#, python-format
+msgid ""
+"TODO cleanup (62% reduction), eliminated tier system warnings, enhanced "
+"validation docstrings."
+msgstr ""
+"پاکسازی TODO (کاهش ۶۲٪)، حذف هشدارهای سیستم سطح، بهبود رشته‌های مستندسازی"
+" اعتبارسنجی."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:248
+#: 4d0546bd09014ebb873ae6eb9ad50d59
+msgid "** Adsorption Site Scanning"
+msgstr "** اسکن سایت جذب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:249
+#: 750f1af0b3d5494bbde8f5c15b648251
+msgid ""
+"Grid-based adsorption energy mapping with molecule orientation control "
+"and automatic visualization."
+msgstr ""
+"نقشه‌برداری انرژی جذب مبتنی بر شبکه با کنترل جهت‌گیری مولکول و تجسم "
+"خودکار."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:251
+#: 5d5bde8d635d40f5a3088c33b301f420
+msgid "** Tier-Based Architecture"
+msgstr "** معماری مبتنی بر سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:252
+#: 9151c310602345e0905421d81cc350ad
+msgid ""
+"Complete module registry with automatic initialization and 14 material-"
+"specific presets."
+msgstr "رجیستری کامل ماژول با راه‌اندازی خودکار و ۱۴ پیش‌تنظیم اختصاصی مواد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:254
+#: e68a6eeeea2e444db6d2008a36830391
+msgid "** QHA Thermodynamics"
+msgstr "** ترمودینامیک QHA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:255
+#: 4fb84260689f415b885e862d66314165
+msgid ""
+"Quasi-harmonic approximation for finite-temperature properties using "
+"phonon calculations."
+msgstr "تقریب شبه‌هارمونیک برای خواص دمای محدود با استفاده از محاسبات فونون."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:257
+#: 31528573ddd94c4da44685a06c4d0899
+msgid "** Custodian Integration"
+msgstr "** یکپارچه‌سازی Custodian"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:258
+#: df3fd39f839a4058b289245327740efa
+msgid ""
+"Refactored to MaterialsProject/custodian library with 10+ error handlers "
+"and JSON logging."
+msgstr ""
+"بازنویسی به کتابخانه MaterialsProject/custodian با بیش از ۱۰ مدیریت‌کننده"
+" خطا و ثبت وقایع JSON."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:260
+#: 2f4ae75a12e14f9187dc8fb61d3390e5
+msgid "** Phonons & Surface Energy"
+msgstr "** فونون‌ها و انرژی سطح"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:261
+#: 8cad23fea8694c509cc48ddb9e8c1f08
+msgid ""
+"Full phonopy integration and multi-surface workflows with symmetry "
+"analysis."
+msgstr "یکپارچه‌سازی کامل phonopy و جریان‌های کار چند سطح با تحلیل تقارن."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:266
+#: de9b4604c12d40db910d320050d2c7fa
+msgid "Integration with Atomate2 Ecosystem"
+msgstr "یکپارچه‌سازی با اکوسیستم Atomate2"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:268
+#: f5e0dae9ffca4f8c9004a4f6daea8fa0
+msgid "atomate2siesta seamlessly integrates with the broader Atomate2 framework:"
+msgstr "atomate2siesta به‌طور یکپارچه با چارچوب گسترده‌تر Atomate2 ادغام می‌شود:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:270
+#: f68fc49f2ad3420b860c94e8fd822a99
+msgid "**Jobflow**"
+msgstr "**Jobflow**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:271
+#: 242b8b11428a466f8cb21a6c528a1b1e
+msgid "Modern workflow management with DAG execution"
+msgstr "مدیریت جریان کار مدرن با اجرای DAG"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:272
+#: 305e465d1bde49de86f586702227d525
+msgid "Job dependency tracking"
+msgstr "ردیابی وابستگی کارها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:273
+#: 4255b1de6002469fbfbd70d32d60bad6
+msgid "Stateful workflows with checkpointing"
+msgstr "جریان‌های کار با حالت و نقاط بررسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:274
+#: e6566151641d43f3b95019908311e51b
+msgid "Parallel and distributed execution"
+msgstr "اجرای موازی و توزیع‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:276
+#: 13c701e1456e4a3f8d296e393335c52b
+msgid "**Pymatgen**"
+msgstr "**Pymatgen**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:277
+#: ab8507c08424432491b2945efdec9210
+msgid "Structure manipulation and analysis"
+msgstr "دستکاری و تحلیل ساختار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:278
+#: 73456a732c4e4370a19c328ce02144a6
+msgid "Automatic k-point generation"
+msgstr "تولید خودکار k-point"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:279
+#: a1bd240c3cc14ef699d68ec3b4b66764
+msgid "Symmetry detection"
+msgstr "تشخیص تقارن"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:280
+#: 50140a62c30946c5aee777446d057cdb
+msgid "File I/O for multiple formats"
+msgstr "ورودی/خروجی فایل برای فرمت‌های متعدد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:282
+#: b459baffca0f45559cd1889ab0588f86
+msgid "**Maggma**"
+msgstr "**Maggma**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:283
+#: a42ba09951e44b819629b5a6eb278a32
+msgid "MongoDB data storage"
+msgstr "ذخیره‌سازی داده MongoDB"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:284
+#: a6f380b698a1479cacd1145143040078
+msgid "Builder pattern for data processing"
+msgstr "الگوی ساخت برای پردازش داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:285
+#: 73e5c43e5acf46418c89c74d24e62885
+msgid "Query interface for data analysis"
+msgstr "رابط جستجو برای تحلیل داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:287
+#: 0c2166d0faa146c298a7ea39fdc45b3f
+msgid "**Custodian**"
+msgstr "**Custodian**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:288
+#: 3e86f91266914b39aa26ea03eae0f82b
+msgid "Error detection and recovery"
+msgstr "تشخیص و بازیابی خطا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:289
+#: a185d2db557f4330b061ba0d219088e1
+msgid "Job monitoring"
+msgstr "نظارت بر کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:290
+#: 16ff809b3c1e430f8a56b192632ee24b
+msgid "Automatic correction strategies"
+msgstr "استراتژی‌های اصلاح خودکار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:295
+#: f8f93526d0224afe97666e94e1662c58
+msgid "Performance & Scalability"
+msgstr "عملکرد و مقیاس‌پذیری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:297
+#: cd767905965f41718ca0a8199a83abea
+msgid "**Optimized for High-Throughput**"
+msgstr "**بهینه‌شده برای توان عملیاتی بالا**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:298
+#: 7e0264a750a34f48b0fe5f2a63284989
+msgid "< 25ms framework overhead per calculation"
+msgstr "سربار چارچوب کمتر از ۲۵ میلی‌ثانیه به ازای هر محاسبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:299
+#: b6ceb9bb728549c885c8b347be0bcfa7
+msgid "Efficient parameter passing (no redundant copies)"
+msgstr "انتقال کارآمد پارامترها (بدون کپی‌های زائد)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:300
+#: b5edda564b0e4b5a97256c39943229ba
+msgid "Lazy evaluation where possible"
+msgstr "ارزیابی تنبل در جایی که ممکن است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:301
+#: 3d536c2a1fe14974ada5ebefaee86b06
+msgid "Minimal memory footprint"
+msgstr "ردپای حافظه حداقلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:303
+#: 350f5aea4ad44aad91f51b2552ba5567
+msgid "**Scalable Execution**"
+msgstr "**اجرای مقیاس‌پذیر**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:304
+#: 3247d33734384dea83215c2209d6307a
+msgid "Parallel job execution with jobflow"
+msgstr "اجرای موازی کار با jobflow"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:305
+#: 1025900ddb0e48db839ea443a840a724
+msgid "HPC cluster integration"
+msgstr "یکپارچه‌سازی خوشه HPC"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:306
+#: 3c692a58250f4048883d2e0deee97811
+msgid "Remote execution with jobflow-remote"
+msgstr "اجرای راه‌دور با jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:307
+#: 576bba8fdd9a4d978ede85cb3366f885
+msgid "Database-backed result storage"
+msgstr "ذخیره‌سازی نتایج پشتیبانی‌شده با پایگاه داده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:309
+#: 8f2775a427cb410a9832e07097484da2
+msgid "**Tested Performance**"
+msgstr "**عملکرد تست‌شده**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:310
+#: 6006c63ee2074ecd827149dba497a07e
+msgid "Full test suite runs in seconds"
+msgstr "۷۵۰ تست در ۱۷ ثانیه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:311
+#: eba2da0740304509853b69b3fdada5ff
+msgid "Mock-based testing for rapid development"
+msgstr "تست مبتنی بر mock برای توسعه سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:312
+#: c7c7cd1d0d59495cac336b9a226ac928
+msgid "Benchmarked on real calculations"
+msgstr "معیارسنجی شده بر روی محاسبات واقعی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:313
+#: 2ca5f04316ea41f7834e48317f64324a
+msgid "Production-validated on HPC clusters"
+msgstr "اعتبارسنجی‌شده در تولید بر روی خوشه‌های HPC"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:318
+#: a38e85d3a5914b8ebcb1ca2dbd0e28fd
+msgid "Getting Started"
+msgstr "شروع کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:320
+#: ee995d0d4be7455d9b64dd271af64e5c
+msgid "**Installation**"
+msgstr "**نصب**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:326
+#: ece6f1631b70480b9751eea4acbe1f51
+msgid "**Basic Usage**"
+msgstr "**استفاده پایه**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:339
+#: f398b1db1fa648f4bc209803f3d90615
+msgid "**Next Steps**"
+msgstr "**مراحل بعدی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:340
+#: 9a0b050bc73e4bca82a60bc8cb6b50a0
+msgid ":doc:`installation` - Complete installation guide"
+msgstr ":doc:`installation` - راهنمای کامل نصب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:341
+#: b7138bb535174527b02ab9647ae99bde
+msgid ":doc:`usage` - Common usage patterns"
+msgstr ":doc:`usage` - الگوهای استفاده رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:342
+#: aa0ce297c615415eadf5689b4eb949e5
+msgid ":doc:`tutorials/index` - 22 comprehensive tutorials"
+msgstr ":doc:`tutorials/index` - ۲۲ آموزش جامع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:343
+#: 5ef700d39f9e443bb2c1788fe772a1f4
+msgid ":doc:`features` - Detailed feature documentation"
+msgstr ":doc:`features` - مستندات جزئی ویژگی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:348
+#: 8b36e8f37759460caeb5ab520fb43a0d
+msgid "Community & Support"
+msgstr "جامعه و پشتیبانی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:350
+#: 194186168da14010b13abffff3b08b99
+msgid "**Documentation**: https://materialsproject.github.io/atomate2/"
+msgstr "**مستندات**: https://materialsproject.github.io/atomate2/"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:351
+#: 6e94faa85b00468d8105b1675937be51
+msgid "**GitHub**: https://github.com/materialsproject/atomate2"
+msgstr "**GitHub**: https://github.com/materialsproject/atomate2"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:352
+#: eec4307afa674c459d0e875d4a4cbbc3
+msgid "**Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "**مشکلات**: https://github.com/materialsproject/atomate2/issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:353
+#: 91e9ce61b7024a7aacd33dfebb79ef5d
+msgid "**Discussions**: https://github.com/materialsproject/atomate2/discussions"
+msgstr "**بحث‌ها**: https://github.com/materialsproject/atomate2/discussions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:358
+#: 480b1c478a3a4b358acc61a561e52e5e
+msgid "License & Citation"
+msgstr "مجوز و استناد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:360
+#: 65a2c9edd78b4f108e406feaaadea997
+msgid ""
+"The SIESTA workflows are part of atomate2 and are distributed under the "
+"same license as atomate2 (modified BSD, ``BSD-3-Clause-LBNL``)."
+msgstr "گردش‌کارهای سیستا بخشی از atomate2 هستند و تحت همان مجوز atomate2 (BSD اصلاح‌شده، ``BSD-3-Clause-LBNL``) توزیع می‌شوند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:363
+#: 1e94adc81a8f4a49beae4ba8d73eba28
+msgid "If you use these workflows in your research, please cite:"
+msgstr "اگر از این گردش‌کارها در تحقیقات خود استفاده می‌کنید، لطفاً به موارد زیر استناد کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:365
+#: 1c880568773540af981724278c057d9d
+msgid ""
+"atomate2: Ganose, A. M. et al., *Digital Discovery* (2025), DOI: "
+"10.1039/D5DD00019J"
+msgstr "atomate2: Ganose, A. M. و همکاران، *Digital Discovery* (۲۰۲۵)، DOI: 10.1039/D5DD00019J"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:366
+#: e4d790fe9ad549a390387f04bdde00d4
+msgid ""
+"SIESTA: Soler, J. M. et al., *J. Phys.: Condens. Matter* **14**, 2745 "
+"(2002), DOI: 10.1088/0953-8984/14/11/302"
+msgstr "SIESTA: Soler, J. M. و همکاران، *J. Phys.: Condens. Matter* **۱۴**، ۲۷۴۵ (۲۰۰۲)، DOI: 10.1088/0953-8984/14/11/302"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:367
+#: 76efd9a244854edf9c5753a55fc6912b
+msgid "Relevant feature papers (phonopy, pymatgen, custodian, jobflow)"
+msgstr "مقالات ویژگی‌های مرتبط (phonopy، pymatgen، custodian، jobflow)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/introduction.rst:369
+#: ae20bbb9929548809fc0e3d698aad337
+msgid "See :doc:`contributing` for guidelines on contributing to the project."
+msgstr "برای راهنمایی‌های مشارکت در پروژه :doc:`contributing` را ببینید."
+
+#~ msgid ""
+#~ "**Discussions**: https://github.com/arsalan-"
+#~ "akhtar/atomate2siesta/discussions"
+#~ msgstr ""
+#~ "**بحث‌ها**: https://github.com/arsalan-"
+#~ "akhtar/atomate2siesta/discussions"
+
+#~ msgid "atomate2siesta is released under the BSD-3-Clause license."
+#~ msgstr "atomate2siesta تحت مجوز BSD-3-Clause منتشر شده است."
+
+#~ msgid "The atomate2 framework"
+#~ msgstr "چارچوب atomate2"
+
+#~ msgid "SIESTA: https://doi.org/10.1088/0953-8984/14/11/302"
+#~ msgstr "SIESTA: https://doi.org/10.1088/0953-8984/14/11/302"
+

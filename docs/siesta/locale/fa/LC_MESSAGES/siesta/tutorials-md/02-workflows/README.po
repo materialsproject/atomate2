@@ -1,0 +1,1216 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:1
+#: e2a2bf5557e44f44bb32682f703d5186
+msgid "02-Workflows: Multi-Step FlowMaker Workflows"
+msgstr "02-Workflows: Multi-Step FlowMaker Workflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:3
+#: 055f5b9a40ea4777a5bfcd4dd47643c1
+msgid "**Focus**: Production-ready multi-step workflows for materials properties"
+msgstr "**Focus**: Production-redy multi-step wیاkflows برای mterils properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:5
+#: 7df65fb0299a449cadffb66567a84424
+msgid "**Difficulty**: Intermediate to Advanced"
+msgstr "**سطح سختی**: متوسط to پیشرفته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:7
+#: 54fbf204e98e49e2934793d0a9c0d79c
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:8
+#: 55da5e49672e40449429d7751a5ab0dc
+msgid "Completed [01-basics](../01-basics/)"
+msgstr "Completed [01-bsics](../01-bsics/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:9
+#: e13e2503369a4cc6983f662fbb1acafa
+msgid "Understanding of convergence testing"
+msgstr "درک of convergence testing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:10
+#: 378f8ca919684ddc8ee69e02106b549d
+msgid "Familiarity with jobflow Flow concepts"
+msgstr "Familiarity with jobflow Flow concepts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:11
+#: da2d2c15a2bc42e284ce2d5d5cb42d62
+msgid "Knowledge of materials properties (EOS, elasticity, phonons)"
+msgstr "Knowledge of mterils properties (EOS, elsticity, phonons)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:15
+#: 66316e2a858c4406817e5b8a45323f02
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:17
+#: 38fbff0afd6f4224ab3925187ca8efa7
+msgid ""
+"This category contains 7 workflow subcategories covering all production-"
+"level calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:19
+#: 4a0b327e7e1744578a4b727bd47b54a5
+msgid "[01-convergence](01-convergence/)"
+msgstr "[01-convergence](01-convergence/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:20
+#: 32ebffd05aca45e38eafd662ad32b3b3
+msgid ""
+"**Description**: Systematic convergence testing for k-points, mesh "
+"cutoff, and basis parameters **Workflows**: "
+"MeshCutoffConvergenceFlowMaker, KpointsConvergenceFlowMaker, "
+"MeshKpointConvergenceFlowMaker, BasisConvergenceFlowMaker **Difficulty**:"
+" Intermediate **Time**: ~5 min (dry-run), ~1-3 hours (full calculation) "
+"**Key Concepts**: Convergence criteria, multi-property tracking (energy, "
+"forces, stress, Fermi, bandgap), automatic plotting **Files**: 6 "
+"tutorials covering mesh cutoff, k-points, combined mesh+kpoints, basis "
+"parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:27
+#: 89cd3e3908254b6397cdf4c8c9143f0c
+msgid "[02-equation-of-states](02-equation-of-states/)"
+msgstr "[02-eqution-of-sttes](02-eqution-of-sttes/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:28
+#: 880a5dfc65854ed6a8c084d5e66628f0
+msgid ""
+"**Description**: Equation of State (EOS) calculations for bulk modulus "
+"and equilibrium volume **Workflows**: EOSFlowMaker **Difficulty**: "
+"Intermediate **Time**: ~5 min (dry-run), ~30-60 min (full calculation) "
+"**Key Concepts**: Volume scaling, Birch-Murnaghan fitting, bulk modulus, "
+"pressure-volume curves **Files**: Multiple examples with different volume"
+" ranges and fitting methods"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:35
+#: 6cb7a5ecba5a43d2906a1156f7c455ce
+msgid "[03-surfaces-and-adsorption](03-surfaces-and-adsorption/)"
+msgstr "[03-surfces-و-dsیاption](03-surfces-و-dsیاption/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:36
+#: f3e696c9d496416f92b5e01309558a00
+msgid ""
+"**Description**: Surface energy calculations and adsorption site scanning"
+" **Workflows**: SurfaceEnergyFlowMaker, AdsorptionScanFlowMaker "
+"**Difficulty**: Advanced **Time**: ~5 min (dry-run), ~2-6 hours (full "
+"calculation) **Key Concepts**: Surface generation, slab models, "
+"adsorption site scanning, height scanning, 3D potential energy surfaces, "
+"automatic plotting **Files**: 12 tutorials covering surface basics, "
+"multi-surface comparison, adsorption scanning with grid/height modes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:43
+#: a209cd64ab0b40d3b925306b93aac26e
+msgid "[04-mechanical](04-mechanical/)"
+msgstr "[04-mechnicl](04-mechnicl/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:44
+#: ee85e1b282d5414ea7d60f4b0123349b
+msgid ""
+"**Description**: Elastic constants and mechanical properties "
+"**Workflows**: ElasticFlowMaker **Difficulty**: Advanced **Time**: ~5 min"
+" (dry-run), ~1-2 hours (full calculation) **Key Concepts**: Elastic "
+"tensor, strain perturbations, bulk/shear modulus, Young's modulus, "
+"Poisson's ratio **Files**: Elastic constant calculation examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:51
+#: 4156ae9f16c14984a8907854dfea1ac4
+msgid "[05-barriers](05-barriers/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:52
+#: 437b71a0be6f49d1b858fbf7b856aad3
+msgid ""
+"**Description**: Transition state search using Nudged Elastic Band (NEB) "
+"method **Workflows**: NebDirectFlowMaker, AseNebFlowMaker **Difficulty**:"
+" Advanced **Time**: ~5 min (dry-run), ~3-12 hours (full calculation) "
+"**Key Concepts**: Reaction barriers, transition states, climbing image, "
+"force projections, minimum energy pathways **Files**: NEB tutorials with "
+"direct and ASE implementations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:59
+#: 3baf4140399e4cdfb8ca72a81c87f91d
+msgid "[06-vibrational-properties](06-vibrational-properties/)"
+msgstr "[06-vibrtionl-properties](06-vibrtionl-properties/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:60
+#: c441668ce5064fe2ad6c9ee5a8321de6
+msgid ""
+"**Description**: Phonon calculations, Grüneisen parameters, and quasi-"
+"harmonic approximation (QHA) **Workflows**: SiestaPhononFlowMaker, "
+"SiestaGruneisenFlowMaker, SiestaQhaFlowMaker **Difficulty**: Intermediate"
+" to Advanced **Time**: ~5 min (dry-run), ~1-6 hours (full calculation) "
+"**Key Concepts**: Phonon band structure, phonon DOS, thermal properties, "
+"thermal expansion, Grüneisen parameters, automatic plotting **Files**: 5 "
+"comprehensive tutorials (01-phonons, 02-gruneisen, 03-qha) with tier "
+"preset examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:67
+#: 5ed0b1abd0eb460ab11a58def989d948
+msgid "[07-bands](07-bands/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:68
+#: 1c16d4be736d4b6f80760680cff7686d
+msgid ""
+"**Description**: Electronic band structure calculations with automatic "
+"k-path generation **Workflows**: BandStructureFlowMaker **Difficulty**: "
+"Intermediate **Time**: ~5 min (dry-run), ~30-60 min (full calculation) "
+"**Key Concepts**: Electronic band structure, high-symmetry k-paths, band "
+"gaps, Fermi surfaces **Files**: Band structure calculation tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:77
+#: 01942de53460491390ffe066f0957485
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:79
+#: 02f1c3b8386b456cb8e41a2fd6cad1ba
+msgid "Choose tutorials based on your research needs:"
+msgstr "Choose tutیاils bsed on your reserch needs:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:81
+#: 4f0ec7717a944c04b46e9ed1a18a54b6
+msgid "Essential for All Users"
+msgstr "ضروری برای All Users"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:82
+#: 33addb2a92e04214b5644c570731d14b
+msgid ""
+"**[01-convergence](01-convergence/)** - MUST DO FIRST for production "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:83
+#: 800cacee85ab46519a15bcc33730fa01
+msgid "Learn systematic parameter optimization"
+msgstr "Lern systemtic prmeter optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:84
+#: a16cf69955f04717b715b3e694ef266f
+msgid "Multi-property convergence testing"
+msgstr "Multi-property convergence testing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:85
+#: 95e26d0b6c344c7099becf4e3647c423
+msgid "Establish baseline parameters for your system"
+msgstr "Estblish bseline prmeters برای your system"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:87
+#: b030017625cc4f53a64bf3071a7cf1c5
+msgid "Structural Properties Track"
+msgstr "Structurl Properties Trck"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:88
+#: 7c10c19cae2540f0ae5a172aed8e0fda
+msgid ""
+"**[02-equation-of-states](02-equation-of-states/)** - Bulk modulus and "
+"equilibrium volume"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:89
+#: a5fa173c970545c49ad6b9ca1c8806d0
+msgid ""
+"**[04-mechanical](04-mechanical/)** - Complete elastic tensor and "
+"mechanical properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:91
+#: c80f982534c546d9aba206c060c0c995
+msgid "Surface Chemistry Track"
+msgstr "Surfce Chemistry Trck"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:92
+#: b97f78cffe2d47de97d24ecbfd9b3dd7
+msgid ""
+"**[03-surfaces-and-adsorption](03-surfaces-and-adsorption/)** - Surface "
+"energy and adsorption sites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:93
+#: aa2c7619c2d049ec98d94e536aa8fc64
+msgid "Surface slab generation and termination discovery"
+msgstr "Surfce slb genertion و termintion discovery"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:94
+#: 886daa60221645f0b537f9f826d2cf9e
+msgid "Grid-based adsorption site scanning"
+msgstr "Grid-bsed dsیاption site scnning"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:95
+#: 5afed52d1ba04f2bbf8abca6f0043742
+msgid "Height-scanned 3D potential energy surfaces"
+msgstr "Height-scnned 3D potentil energy surfces"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:97
+#: 73f2bf63bab3412bb03c85fd09bc685b
+msgid "Vibrational Properties Track"
+msgstr "Vibrtionl Properties Trck"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:98
+#: d138c40059ac404f90d9e3dc885dc937
+msgid ""
+"**[06-vibrational-properties](06-vibrational-properties/)** - Phonons, "
+"Grüneisen, QHA"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:99
+#: f205641cdb67436495fc8eca93690ae6
+msgid "Phonon band structure and DOS"
+msgstr "فونون bو structure و DOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:100
+#: dbfb4d31709d44918abad1c2f88f5a64
+msgid "Thermal expansion coefficients"
+msgstr "Therml expnsion coefficients"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:101
+#: 0e36e12b24624dfea280ccef30f689c2
+msgid "Quasi-harmonic approximation for thermodynamics"
+msgstr "Qusi-hrmonic pproximtion برای rmodynmics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:103
+#: 7549dec2360d40fbb82758d0c1a92249
+msgid "Electronic Structure Track"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:104
+#: 06cda7df85324cc6851853b0775575e6
+msgid "**[07-bands](07-bands/)** - Electronic band structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:105
+#: 2271520437c04566a2c8951134b1be5e
+msgid "High-symmetry k-path generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:106
+#: aa27779730a64f619433a3f484177388
+#, fuzzy
+msgid "Band gap calculations"
+msgstr "Specilized محاسبهs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:107
+#: e60991c7abac4cd284f73ccf24c28dee
+msgid "Density of states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:109
+#: 2d02a9127ab1429ca79a5d58098db012
+#, fuzzy
+msgid "Reaction Kinetics Track"
+msgstr "Vibrtionl Properties Trck"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:110
+#: ebbdb8f2ab654b548eb0141928634ff2
+msgid "**[05-barriers](05-barriers/)** - Transition state search with NEB"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:111
+#: d409c673e71940de87fa7977a2829b0b
+#, fuzzy
+msgid "Nudged Elastic Band calculations"
+msgstr "Specilized محاسبهs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:112
+#: b7855eab4bc94df98a56bb819bf50e5a
+msgid "Reaction barriers and pathways"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:113
+#: fb51d3cdd71f42c1ac8515ebed8d0023
+msgid "Climbing image optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:117
+#: 60e97c193fb34bbf9e8d9e13e86e7500
+msgid "Workflow Characteristics"
+msgstr "گردش کار Chrcteristics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:119
+#: 423f5176f55a458ca4a7a60f85d3f32d
+msgid "All workflows in this category:"
+msgstr "All wیاkflows in this ctegیاy:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:120
+#: 664c561e0e454368bb6673349be090d0
+msgid "✅ **Multi-step**: Automatically manage job dependencies"
+msgstr "✅ **Multi-step**: Automticlly mnge job dependencies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:121
+#: 00b875ca31df45bd9632dcee77b5f449
+msgid "✅ **Self-contained**: No manual intervention required"
+msgstr "✅ **Self-contined**: No mnul intervention required"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:122
+#: ea4cb0977ed8481791e1ffe4ae0ced1e
+msgid "✅ **Production-ready**: Suitable for publication-quality results"
+msgstr "✅ **Production-redy**: Suitble برای publiction-qulity results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:123
+#: c9192cba63ed4d55b307656b19ee3ea4
+msgid "✅ **Automatic analysis**: Generate plots and summary files"
+msgstr "✅ **Automtic nlysis**: Generte plots و summry files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:124
+#: 618af7b58a9744ff8c220fd036c381da
+msgid "✅ **Database-compatible**: Store results in MongoDB"
+msgstr "✅ **Dtbse-comptible**: Stیاe results in MongoDB"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:125
+#: 241fb6a602f849eb88ba61c57c568f5c
+msgid "✅ **Checkpoint/restart**: Resume failed workflows (where applicable)"
+msgstr "✅ **Checkpoint/restrt**: Resume filed wیاkflows (where pplicble)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:126
+#: e3802c9c276b4edcbba2004d97a437dd
+msgid "✅ **Tier preset compatible**: Use material-specific parameter sets"
+msgstr "✅ **Tier preset comptible**: Use mteril-specific prmeter sets"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:130
+#: f6c19879a51841f6a9656e5a28d10988
+msgid "Quick Start Pattern"
+msgstr "شروع سریع Pttern"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:132
+#: bc9a714f788941fc8d8b89ee3540f7d4
+msgid "All FlowMakers follow a consistent pattern:"
+msgstr "All FlowMakers follow a consistent pattern:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:157
+#: 0d1c9f175d5441ffba2e5cf41992ada3
+msgid "Execution Modes"
+msgstr "Execution Modes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:159
+#: 7928f2f438844af6b54ebe427c2b8f2c
+msgid "All workflows support three execution modes:"
+msgstr "All wیاkflows suppیاt three execution modes:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:161
+#: c2b3d8f1ac5d46c6aada1dbc0d513d44
+msgid "1. Dry-Run Mode (Preview)"
+msgstr "1. Dry-Run Mode (Preview)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:171
+#: 1ba92673a590413b9cdc2077908af0f4
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:180
+#: 9a85ece24fad450ab6252cbe0ae679ec
+msgid "3. Remote HPC Submission"
+msgstr "3. Remote HPC Submission"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:193
+#: a4c9da6f736a485aa838a1f91b5c2dda
+msgid "Using Tier Presets with Workflows"
+msgstr "استفاده از Tier Presets با گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:195
+#: 7d954f2a8ed24cd48f1906eec2c73ede
+msgid "All FlowMakers accept tier presets or custom parameters:"
+msgstr "All FlowMakers accept tier presets or custom parameters:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:216
+#: e28ca44f63ea4e8db636b6a547e79776
+msgid "Common Workflow Parameters"
+msgstr "Common گردش کار Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:218
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:250
+#: 5cf15c67d1d7481dadc007ff93773fe1 9364f17db15c4f1abbef05f1041529ac
+msgid "Convergence Workflows"
+msgstr "همگرایی گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:219
+#: e603393138f847cfb7d0f77c96fb23a7
+msgid "**Mesh cutoff range**: 100-400 Ry (7-9 points)"
+msgstr "**Mesh cutoff rnge**: 100-400 Ry (7-9 points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:220
+#: 0ba68111e27e4b389a05c329c4ac1ca3
+msgid "**K-points range**: [2,2,2] to [12,12,12] (4-6 points)"
+msgstr "**K-points rnge**: [2,2,2] to [12,12,12] (4-6 points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:221
+#: c6f3f473ee114e279b5e84e8c13c8e6d
+msgid ""
+"**Convergence criteria**: Energy (0.01 eV), Forces (0.05 eV/Å), Stress "
+"(0.1 GPa)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:222
+#: 7fb25d1abdff4892abb934588f005bdf
+msgid ""
+"**Multi-property tracking**: Energy, Fermi energy, band gap, forces, "
+"stress"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:224
+#: 9b068a51945c44d1b12e56ba5a3db967
+msgid "EOS Workflows"
+msgstr "EOS گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:225
+#: 07711f105a67494d9698944885c1f751
+msgid "**Volume range**: ±6% (scales: 0.94-1.06)"
+msgstr "**Volume rnge**: ±6% (scles: 0.94-1.06)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:226
+#: c045cfaaf2d84361a0dd008b241d304a
+msgid "**Number of points**: 7-11 (more for accurate fitting)"
+msgstr "**Number of points**: 7-11 (mیاe برای ccurte fitting)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:227
+#: a84bddb923f4453dba72f9874fe5832c
+msgid "**Fitting method**: Birch-Murnaghan (3rd or 4th order)"
+msgstr "**Fitting method**: Birch-Murnghn (3rd یا 4th یاder)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:229
+#: 8677f161f20a4d5f9880ef1fd8564a05
+msgid "Surface Workflows"
+msgstr "Surfce گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:230
+#: fb50ddc990bc458384ecdf924c040ac4
+msgid "**Slab thickness**: 10-20 Å (depends on material)"
+msgstr "**Slb thickness**: 10-20 Å (depends on mteril)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:231
+#: 015c17245abf41abbeace9282fcabe73
+msgid "**Vacuum spacing**: 15-20 Å"
+msgstr "**Vcuum spcing**: 15-20 Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:232
+#: b415ae848f724ceeae878b3a893ab61e
+msgid "**Adsorption grid**: 4×4 or 6×6 points"
+msgstr "**Adsیاption grid**: 4×4 یا 6×6 points"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:233
+#: bcb7920a3617407ea4e22cba88d9fafa
+msgid "**Height scanning**: 2.0-3.5 Å (0.1-0.2 Å steps)"
+msgstr "**Height scnning**: 2.0-3.5 Å (0.1-0.2 Å steps)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:235
+#: 984aa0ae9e9949b0b6219da72a819e74
+msgid "Phonon Workflows"
+msgstr "فونون گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:236
+#: c01f6317eeb5476b906b42e983c21d8b
+msgid "**Supercell size**: 2×2×2 or larger (min_length ≥ 15 Å)"
+msgstr "**Supercell size**: 2×2×2 یا lrger (min_length ≥ 15 Å)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:237
+#: 8874d3bb5f34486a8e37663192057037
+msgid "**Displacement**: 0.01 Å (default)"
+msgstr "**Displcement**: 0.01 Å (defult)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:238
+#: 66553617f5c842cbb23a014a2bbbc94c
+msgid "**Force constants**: Symmetry-reduced"
+msgstr "**Fیاce constnts**: Symmetry-reduced"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:239
+#: 24ea5bf68cd84987907cf676f4fc4dac
+msgid "**Automatic plotting**: Band structure, DOS, thermal properties"
+msgstr "**Automtic plotting**: Bو structure, DOS, rml properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:241
+#: c86a348c25c2432aa1c890ca42c3115f
+msgid "Elastic Workflows"
+msgstr "Elstic گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:242
+#: f06f205523294f30bc8d8f2a9736fdfe
+#, python-format
+msgid "**Strain magnitude**: 0.01 (1% strain)"
+msgstr "**Strin mgnitude**: 0.01 (1% strin)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:243
+#: 7a9e8ca988604beea266e2c599f6a0e3
+msgid "**Number of strains**: 24 (cubic) or more (lower symmetry)"
+msgstr "**Number of strins**: 24 (cubic) یا mیاe (lower symmetry)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:244
+#: 5bcae77659ab4f9caf81ca4d8abedd2c
+msgid "**Symmetry**: Automatic detection and reduction"
+msgstr "**Symmetry**: Automtic detection و reduction"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:248
+#: 0e3d4353448a4a08a114e9bf5a3107e3
+msgid "Expected Output Files"
+msgstr "خروجی مورد انتظار فایلs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:251
+#: 60dcc27f916d49e084f1267a37bc756e
+msgid "`mesh_cutoff_convergence.png` - Convergence plot (6 properties)"
+msgstr "`mesh_cutoff_convergence.png` - Convergence plot (6 properties)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:252
+#: 3997da8bd9034435a433e5c8a2bdcce6
+msgid "`convergence_summary.json` - Converged parameters"
+msgstr "`convergence_summary.json` - Converged parameters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:253
+#: aec9e2d79b9d4815b6e8887b2a37b5df
+msgid "`parameter_evolution.log` - Full parameter tracking"
+msgstr "`parameter_evolution.log` - Full parameter tracking"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:255
+#: 9c94e7c7e6b2402ba3ed0e4637ab80e2
+msgid "EOS Workflow"
+msgstr "EOS گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:256
+#: 716dac55476e48daac80cd2c8b8ed719
+msgid "`eos_plot.png` - E vs V curve with fitted EOS"
+msgstr "`eos_plot.png` - E vs V curve with fitted EOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:257
+#: b43c31e33bb34536953673a6307ad33d
+msgid "`eos_summary.txt` - Bulk modulus, equilibrium volume"
+msgstr "`eos_summary.txt` - Bulk modulus, equilibrium volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:258
+#: 662adf3dfed046ada4123643d3dfe4ae
+msgid "Fitted parameters (B₀, V₀, B'₀)"
+msgstr "Fitted prmeters (B₀, V₀, B'₀)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:260
+#: ae742af82fb44018a4f005dd39c3bf33
+msgid "Surface Workflow"
+msgstr "Surfce گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:261
+#: 576943f175254ebfa8ea4e604e5fcfd1
+msgid "`multi_surface_comparison.png` - Energy comparison plot"
+msgstr "`multi_surface_comparison.png` - Energy comparison plot"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:262
+#: 08611c988cb94340abad712346863982
+msgid "`multi_surface_summary.txt` - Surface energies table"
+msgstr "`multi_surface_summary.txt` - Surface energies table"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:263
+#: d93f348d780f4f73babdbab406173e68
+msgid "Individual surface structures (CIF files)"
+msgstr "Individul surfce structures (CIF files)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:265
+#: edfb52080c2047d39bdb57d9fa78e459
+msgid "Adsorption Workflow"
+msgstr "Adsیاption گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:266
+#: 9bb35ed5dc5c4bb482305160c2640c05
+msgid "`adsorption_energy_map.png` - Energy heatmap (2D or height-resolved)"
+msgstr "`adsorption_energy_map.png` - Energy heatmap (2D or height-resolved)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:267
+#: 80cc88592e1c472a8f6ba3465f603f15
+msgid "`adsorption_sites.png` - Discrete site energies"
+msgstr "`adsorption_sites.png` - Discrete site energies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:268
+#: eddb5e514f234d69a8a6dde36ca5776d
+msgid "`optimal_height_map.png` - Best height at each (x,y) position"
+msgstr "`optimal_height_map.png` - Best height at each (x,y) position"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:269
+#: 57b8c011bcbb4e148e4a973acc75827c
+msgid "`best_structure.cif` - Lowest energy configuration"
+msgstr "`best_structure.cif` - Lowest energy configuration"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:270
+#: ff2d2e43ff7e42858c8c3f4471be7eae
+msgid "`adsorption_summary.txt` - Best site and energy"
+msgstr "`adsorption_summary.txt` - Best site and energy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:272
+#: ce4895dea95244d291ab756cbfa3430d
+msgid "Phonon Workflow"
+msgstr "فونون گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:273
+#: a8b16002ffb746aaa77899a2d39f8188
+msgid "`phonon_bands.png` - Phonon dispersion curves"
+msgstr "`phonon_bands.png` - Phonon dispersion curves"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:274
+#: abf5fd59f3b54d6380c7ac35c604cd67
+msgid "`phonon_dos.png` - Phonon density of states"
+msgstr "`phonon_dos.png` - Phonon density of states"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:275
+#: 27cc562519474672b6ae8044cbaa474e
+msgid "`thermal_properties.png` - Cv, entropy, free energy vs T"
+msgstr "`thermal_properties.png` - Cv, entropy, free energy vs T"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:276
+#: 8ea62a1b1ace4607a0dd75557258564f
+msgid "`force_constants.hdf5` - Force constants matrix"
+msgstr "`force_constants.hdf5` - Force constants matrix"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:278
+#: cca6c328f76a43aeabbba3598eb7ab53
+msgid "Grüneisen Workflow"
+msgstr "Grüneisen گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:279
+#: c8d837509275450d8b44494225c08da4
+msgid ""
+"6 plots: band structure, DOS, thermal properties, Grüneisen parameters, "
+"thermal expansion, heat capacity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:280
+#: fefb2e1d962c49fbaaba78f89ece9f6f
+msgid "`gruneisen_summary.txt` - Thermal expansion coefficients"
+msgstr "`gruneisen_summary.txt` - Thermal expansion coefficients"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:284
+#: 40215d38952f4732bce273fa20e08340
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:286
+#: 51cf85c548414b4087dbb6c068fca1d1
+msgid "Issue 1: \"Convergence test takes too long\""
+msgstr "Issue 1: \"همگرایی test tkes too long\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:287
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:294
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:301
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:308
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:315
+#: 0f5e87d5917f4829ac0c58587ea03734 100de0ea1ef241ada34242fe7a26f407
+#: 19099e9754f1476e8a11b5f4537ed4de 486ea5404c6e4819ab22a51a581745e9
+#: 75a2d41b215c47299f917b55165ec3ac
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:288
+#: c2fb7fcdce7443a6b3ef7d263912f5d6
+msgid "Use dry-run to verify number of jobs"
+msgstr "Use dry-run to verify number of jobs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:289
+#: 7fcd997f2451402390797b7175411bee
+msgid "Start with fewer test points (5 instead of 9)"
+msgstr "Strt با fewer test points (5 insted of 9)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:290
+#: ee9a80313fe447368c93b37da4d43497
+msgid ""
+"Submit to HPC cluster (see [03-advanced-features/03-infrastructure](../03"
+"-advanced-features/03-infrastructure/))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:291
+#: 91fc29d6752144ef8e57e3fe9bfccf20
+msgid "Use checkpoint/restart for failed jobs"
+msgstr "Use checkpoint/restrt برای filed jobs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:293
+#: 9cd255adaf2749e383d3666b46518ce6
+msgid "Issue 2: \"EOS fitting fails\""
+msgstr "Issue 2: \"EOS fitting fils\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:295
+#: 39f4a33be03d48ba9292dc2c9fa5ff7b
+#, python-format
+msgid "Increase volume range (±8% or ±10%)"
+msgstr "Increse volume rnge (±8% یا ±10%)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:296
+#: 2046b67a389041a69793148c6da14f06
+msgid "Add more data points (9 or 11 volumes)"
+msgstr "Add mیاe dt points (9 یا 11 volumes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:297
+#: 001be065cc7949218839b656f4f11303
+msgid "Check for structural instabilities"
+msgstr "Check برای structurl instbilities"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:298
+#: b6cc4c9057284437a647888f798cafac
+msgid "Ensure relaxations converged properly"
+msgstr "Ensure relxtions converged properly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:300
+#: f28b5dc95bfb4cb3a616fa1d089e8f2f
+msgid "Issue 3: \"Surface energy is negative or unrealistic\""
+msgstr "Issue 3: \"Surfce energy is negtive یا unrelistic\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:302
+#: 5e1caad36f914d5fbbe1bf0ba06c6462
+msgid "Increase slab thickness (>10 Å)"
+msgstr "Increse slb thickness (>10 Å)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:303
+#: 71fade0e978b40a49d5f41bd373e0b7c
+msgid "Increase vacuum spacing (>15 Å)"
+msgstr "Increse vcuum spcing (>15 Å)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:304
+#: 748538303604468db13bbdeb37546a43
+msgid "Check surface is charge-neutral"
+msgstr "Check surfce is chrge-neutrl"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:305
+#: 20c7c4ccc0504e9eb73fab21673898bc
+msgid "Use converged bulk parameters"
+msgstr "Use converged bulk prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:307
+#: 2b8a19a9d1634ba58f100d3490f09100
+msgid "Issue 4: \"Phonon has imaginary modes at Γ\""
+msgstr "Issue 4: \"فونون hs imginry modes t Γ\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:309
+#: 9d7a60fedfbf45c8b3fa79b10e1e0ec0
+msgid "Ensure structure is fully relaxed and stable"
+msgstr "Ensure structure is fully relxed و stble"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:310
+#: 07ea109a489e4881931b873c569b2b22
+msgid "Increase supercell size (min_length ≥ 15 Å)"
+msgstr "Increse supercell size (min_length ≥ 15 Å)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:311
+#: a4ea62a7cc0d4694a0415a04b1cc4fd3
+msgid "Check force convergence threshold"
+msgstr "Check برایce convergence threshold"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:312
+#: a8e24652c1d74e5ebe78065732e9bc2e
+msgid "Use tighter SCF convergence"
+msgstr "Use tighter SCF convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:314
+#: d612e031a91b4cecb160a16d2230ac75
+msgid "Issue 5: \"Elastic constants don't satisfy stability criteria\""
+msgstr "Issue 5: \"Elstic constnts don't stisfy stbility criteri\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:316
+#: 705746ee17d24b2fb18480cbc887b472
+msgid "Ensure structure is at equilibrium (relaxed)"
+msgstr "Ensure structure is t equilibrium (relxed)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:317
+#: 7fbabb54ed414d62a0a59b93ce43fb87
+msgid "Use well-converged parameters"
+msgstr "Use well-converged prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:318
+#: 31420af263ab4e1b8063bde48e335248
+msgid "Check for numerical noise (reduce strain magnitude)"
+msgstr "Check برای numericl noise (reduce strin mgnitude)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:319
+#: a7c45062dfb846f0830a3e3b11a84106
+msgid "Verify crystal symmetry is correct"
+msgstr "Verify crystl symmetry is cیاrect"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:323
+#: 46f1a7aa532141d5be3d8870e2161f28
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:325
+#: d93b23d43f364c928d6687675c664ff7
+msgid ""
+"**Always converge first**: Complete [01-convergence](01-convergence/) "
+"before other workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:326
+#: 2c083d367e85451bb658719d72738246
+msgid "**Start with dry-run**: Preview structure transformations and job counts"
+msgstr "**Strt با dry-run**: Preview structure trnsبرایmtions و job counts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:327
+#: ce30506660ac41ec8784733ddabc2abe
+msgid "**Use tier presets**: Material-specific presets for consistent parameters"
+msgstr "**Use tier presets**: Mteril-specific presets برای consistent prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:328
+#: 1c50a93887b6485eb89388d2290221f8
+msgid ""
+"**Enable database**: Store results for later analysis (see [03-advanced-"
+"features/03-infrastructure](../03-advanced-features/03-infrastructure/))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:329
+#: b0258b89e9124caf8fe6e084227ccab2
+msgid "**Document parameters**: Keep workflow parameters for reproducibility"
+msgstr "**Document prmeters**: Keep wیاkflow prmeters برای reproducibility"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:330
+#: 191409c322e34fb09978387b3c6ea674
+msgid "**Validate results**: Compare with literature/experiments"
+msgstr "**Vlidte results**: Compre با literture/experiments"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:331
+#: cfd3eb0054844d20ab806365efc92bb7
+msgid "**Checkpoint long jobs**: Enable restart for multi-hour calculations"
+msgstr "**Checkpoint long jobs**: Enble restrt برای multi-hour clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:335
+#: a2982041459c477ca25ddf263a7875ea
+msgid "Workflow Scaling"
+msgstr "گردش کار Scling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: eff975e68f6946d08d2d8a0cc7ba730d
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 589394c43a434d7ab437807897512f32
+msgid "Typical Jobs"
+msgstr "Typicl Jobs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: f8d9e2ea04ca44778aa7cbbfabcece39
+msgid "Est. Time (local)"
+msgstr "Est. زمان (locl)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 884b04b162c748159efb289ce82e7856
+msgid "Est. Time (HPC)"
+msgstr "Est. زمان (HPC)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: bd9b3418718141749c3276455aba522f
+msgid "Mesh cutoff conv."
+msgstr "Mesh cutoff conv."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: dd04fd1fb82345c8b0a83a7fa60bbf9e
+msgid "7-9"
+msgstr "7-9"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 13ea7a41928d4e608c29d1047f43712a 8d2c41dd3e374da4b580d6b1589d9ce4
+msgid "1-2 hours"
+msgstr "1-2 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: f8637f1ccaf946f484d367fe894757da
+msgid "10-20 min"
+msgstr "10-20 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: bb9f2b1686444414bc36b032a81098c1
+msgid "K-points conv."
+msgstr "K-points conv."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 763e49e344ad47cf87d3f55643425d6c
+msgid "5-7"
+msgstr "5-7"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 4e057ec70ce145a3b19118fa966e4074 b4547ee891aa4db7b25baf13fa51fb33
+msgid "1-3 hours"
+msgstr "1-3 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: fc361066a76f445998a1249b1a17272c
+msgid "15-30 min"
+msgstr "15-30 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 9d713c4f4e964e1eb3b70fb37d7604e7
+msgid "Combined conv."
+msgstr "Combined conv."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 65d7082830b7469797ba02481c4a2948
+msgid "10-15"
+msgstr "10-15"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: a9a3bb80e0724df6ad9af7c77422cf5a
+msgid "3-6 hours"
+msgstr "3-6 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 4bce912d43b646b1b610fe8ca46b44bf 8a619c5086b542419326d6804649c932
+#: ea86ff94889f4c42a9ec3bff073db844
+msgid "30-60 min"
+msgstr "30-60 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: eb3665e92233467db1f7f63a784e8441
+msgid "EOS"
+msgstr "EOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 39670f75e6294158be2e5dfefafe8a05
+msgid "7-11"
+msgstr "7-11"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: a55bef1128574a35959952c35d726982
+msgid "10-15 min"
+msgstr "10-15 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 6a601371d1f64e659f1a67798b13f196
+msgid "Elastic"
+msgstr "Elstic"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: b80f0545c675490da139096b3af11096
+msgid "24+"
+msgstr "24+"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 94a0c8fa6f18431ea994923e59b1c34b
+msgid "20-40 min"
+msgstr "20-40 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: bafd97b18c194c748a8143cb222821ed
+msgid "Phonon"
+msgstr "فونون"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: ab26977ff6e54021b0972ce107bb51b4
+msgid "20-50"
+msgstr "20-50"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: b5a6039e98964b4c8a85aa68a447df10
+msgid "2-6 hours"
+msgstr "2-6 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 96b92006f8fe49e98e8924a0e36ec8b6
+msgid "30-90 min"
+msgstr "30-90 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: e00ec829ca5842f3acbea7327c7aae2e
+msgid "Grüneisen"
+msgstr "Grüneisen"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: 43a2eb572f084018af9c8c249926d2d3
+msgid "60-150"
+msgstr "60-150"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: e346b11486d449939bf989af6ca75e9e
+msgid "6-12 hours"
+msgstr "6-12 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: da038a6b4c5548128d762ba8ce29361b
+msgid "Adsorption scan"
+msgstr "Adsیاption scn"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: b21188f3f25f459eb5589a4244077367
+msgid "16-36"
+msgstr "16-36"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md
+#: b6e088042139493db72acfb98b07d3bc
+msgid "2-4 hours"
+msgstr "2-4 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:348
+#: a0df4eb965604d69a6fa4f1ed71b7bec
+msgid ""
+"*Times assume Si-like system with DZP basis. Scale accordingly for larger"
+" systems.*"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:352
+#: 64a717d06f904f05b7dfa6c4fccd4048
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:354
+#: 7f6809cfaac542d4be4f77953f3a6949
+msgid "After completing workflows, proceed to:"
+msgstr "After completing wیاkflows, proceed to:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:356
+#: 4aedc054ccf843d38eb73da579d0ef11
+msgid "Advanced Workflow Features"
+msgstr "پیشرفته گردش کار ویژگی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:357
+#: 6b50d87fd6cd426d81c466cd5d926e7d
+msgid ""
+"**[03-advanced-features/03-powerups](../03-advanced-"
+"features/03-powerups/)** - Customize workflows dynamically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:358
+#: c44433ff586f41ceb1a3c5522b4ab84c
+msgid ""
+"**[03-advanced-features/08-recipe-book](../03-advanced-features/08"
+"-recipe-book/)** - High-level workflow system (recipe book)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:359
+#: 7270605ce5c546829059865fe2251f7d
+msgid ""
+"**[03-advanced-features/03-infrastructure](../03-advanced-"
+"features/03-infrastructure/)** - Database, HPC, error handling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:361
+#: 4b96a17927354128be6bcbc8724f2cb1
+msgid "Specialized Calculations"
+msgstr "Specilized محاسبهs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:362
+#: 2782d5c0ae2d42bb8011b40367829a1d
+msgid ""
+"**[03-advanced-features/16-magnetic-calculations](../03-advanced-"
+"features/16-magnetic-calculations/)** - Spin-polarized systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:363
+#: 1a48eae4570e478ebce2654fbf0947f3
+msgid ""
+"**[03-advanced-features/08-dftu](../03-advanced-features/08-dftu/)** - "
+"DFT+U for correlated electrons"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:364
+#: 11fbde310dd5427eb6c2904d85f6eaaf
+msgid ""
+"**[03-advanced-features/07-optical-properties](../03-advanced-features/07"
+"-optical-properties/)** - Optical absorption"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:368
+#: 3a85a13f014b45919cd22ad0d71ffff9
+msgid "Tutorial Metrics"
+msgstr "Tutیاil Metrics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:370
+#: d1a2d33a650b4834a6ac1e12426f9c5e
+#, fuzzy
+msgid "**Total workflow categories**: 7 main categories"
+msgstr "**Totl wیاkflow ctegیاies**: 6 min ctegیاies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:371
+#: ef056b4f36e34fe597fa839ae9254b6a
+#, fuzzy
+msgid "**Total FlowMakers**: 13+ production workflows"
+msgstr "**Total FlowMakers**: 13 production workflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:372
+#: d3a602b6b28f4146b74a7b94aa20d708
+msgid "**Total tutorial files**: 50+ Python scripts"
+msgstr "**Totl tutیاil files**: 50+ Python scripts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:373
+#: 85e71101c4b7407dafd544ef0e39fa79
+msgid "**Coverage**: All major materials properties"
+msgstr "**Coverge**: All mjیا mterils properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:374
+#: 24695f1f0a6d41b5b21b2dae56bb4f37
+msgid ""
+"**Difficulty**: Intermediate (convergence, EOS, phonons, bands) + "
+"Advanced (surfaces, barriers/NEB, elastic, mechanical)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/README.md:378
+#: df04ae0d6a0341af990b4dcdf3279f90
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"
+
+#~ msgid ""
+#~ "This category contains 6 workflow "
+#~ "subcategories covering all production-level"
+#~ " calculations:"
+#~ msgstr ""
+
+#~ msgid "[05-defects](05-defects/)"
+#~ msgstr "[05-defects](05-defects/)"
+
+#~ msgid ""
+#~ "**Description**: Point defect calculations "
+#~ "(vacancies, interstitials, substitutions) "
+#~ "**Workflows**: DefectFlowMaker **Difficulty**: "
+#~ "Advanced **Time**: ~5 min (dry-run), "
+#~ "~1-3 hours (full calculation) **Key "
+#~ "Concepts**: Defect formation energy, supercell"
+#~ " generation, charge corrections **Files**: "
+#~ "Vacancy and substitutional defect examples"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Description**: Phonon calculations, Grüneisen "
+#~ "parameters, and quasi-harmonic approximation"
+#~ " (QHA) **Workflows**: PhonopyFlowMaker, "
+#~ "GruneisenFlowMaker, QhaFlowMaker **Difficulty**: "
+#~ "Intermediate to Advanced **Time**: ~5 "
+#~ "min (dry-run), ~1-6 hours (full "
+#~ "calculation) **Key Concepts**: Phonon band "
+#~ "structure, phonon DOS, thermal properties, "
+#~ "thermal expansion, Grüneisen parameters, "
+#~ "automatic plotting **Files**: 5 comprehensive"
+#~ " tutorials (01-phonons, 02-gruneisen, 03-qha) "
+#~ "with tier preset examples"
+#~ msgstr ""
+
+#~ msgid "Defect Chemistry Track"
+#~ msgstr "Defect Chemistry Trck"
+
+#~ msgid "**[05-defects](05-defects/)** - Point defects and formation energies"
+#~ msgstr "**[05-defects](05-defects/)** - Point defects و برایmtion energies"
+
+#~ msgid "Vacancy formation energy"
+#~ msgstr "Vcncy برایmtion energy"
+
+#~ msgid "Substitutional and interstitial defects"
+#~ msgstr "Substitutionl و interstitil defects"
+
+#~ msgid ""
+#~ "**Difficulty**: Intermediate (convergence, EOS, "
+#~ "phonons) + Advanced (surfaces, defects, "
+#~ "elastic)"
+#~ msgstr ""
+

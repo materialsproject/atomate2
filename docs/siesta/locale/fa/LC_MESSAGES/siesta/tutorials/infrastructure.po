@@ -1,0 +1,1155 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials/infrastructure.rst:3 cf85fe9a5b334cc4aa4d3393ef4e39bd
+msgid "Infrastructure Learning Paths"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:5 ce8414f06e5941019bc9760b0649d0b3
+msgid ""
+"Production deployment: database integration, HPC job submission, and "
+"automatic error recovery."
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:10
+#: 2fff773adf0546beb5c9d15cc6f00ed3
+msgid "Tutorial 13: Database Storage"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:12
+#: ../../source/tutorials/infrastructure.rst:143
+#: ../../source/tutorials/infrastructure.rst:655
+#: ../../source/tutorials/infrastructure.rst:810
+#: 45f5e82dbb0340b999f92113e5a23b29 78cd6fac01db4fb195b6f5f4e8267767
+#: 9b978b53e1504b0ba6fc5cffd6e23805 db8d9de23eea49f0983e7d3b68042369
+msgid "**Learning Objectives**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:14
+#: 32602411d7b14b1f992b2352ab432eb4
+msgid "Store calculation results in MongoDB"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:15
+#: fb7c52596edf408985e31a8db62b93ad
+msgid "Use Maggma stores for data management"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:16
+#: c90c44a4338c4fa3839fe440535e1874
+msgid "Query and analyze results programmatically"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:17
+#: 1d7674867939443eb442dbd265451dec
+msgid "Set up high-throughput workflows"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:19
+#: ../../source/tutorials/infrastructure.rst:162
+#: ../../source/tutorials/infrastructure.rst:662
+#: ../../source/tutorials/infrastructure.rst:817
+#: 47f213b7de4548e995b1e95da2564e14 4a6c096facd942e891377ae6ca3933e0
+#: 646043fa981446c29c7ac1e5aa3a3609 91d570848af54bd6827a40a76d0cd1ff
+msgid "**Key Concepts**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:21
+#: e0af3c3df3994f11a68f7de043dde3db
+msgid "**Maggma**: Materials Genome Project data management framework"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:22
+#: d36b63d930254d3c851c2563cc1392bc
+msgid "**MongoStore**: MongoDB interface for storing results"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:23
+#: 3945fae3d25e40f48720bb39858e10a3
+msgid "**Task documents**: Structured result schemas"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:24
+#: 70f8a8d5de814c8983e780f2d4c8b8c8
+msgid "High-throughput data management"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:26
+#: 29174bee9a3e44efa5b3306a5f9cd092
+msgid "**Basic Setup**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:48
+#: 67f6e22ce09643779abb59201553eafe
+msgid "**Querying Results**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:70
+#: d47a08a1f68c4338bc712950cb4b0323
+msgid "**High-Throughput Example**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:98
+#: b074149403a94f398b073ced8d2438d9
+msgid "**Document Structure**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:100
+#: dc4e235efdcd4e9d9fe581e7565b8c6c
+msgid "Results stored as structured documents:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:125
+#: ../../source/tutorials/infrastructure.rst:513
+#: 2b5024434b154d00b871f693d7bc9505 352aa2dd8db442cd920a373736b0eb4f
+msgid "**Advanced Features**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:127
+#: ae2714dc3a3c48599e1b4ab86e650d13
+msgid "**Provenance tracking**: Full calculation history"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:128
+#: aacbf03977b54f18b0e26f5e743044f8
+msgid "**Metadata**: Custom tags and annotations"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:129
+#: f6d87264d9ce4507b4686c98d2a43812
+msgid "**Version control**: Track code/parameter versions"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:130
+#: 304b9e789e6642f8b98e39c6ffc2cac8
+msgid "**Data aggregation**: Complex queries and analysis"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:132
+#: 26a8b178e1fb48e4b379cae7ebf9ef5d
+msgid "📁 **Location**: ``tutorials/04-infrastructure/01-database-storage/``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:134
+#: ../../source/tutorials/infrastructure.rst:1025
+#: 52e573ccb32b4f618b2e11a318b0f440 dc5dedd480ea41498c0cc1dca98d3e19
+msgid "⏱️ **Time**: 45 minutes"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:136
+#: ../../source/tutorials/infrastructure.rst:644
+#: ../../source/tutorials/infrastructure.rst:1027
+#: 312d4a071367476fad262c5ce89b67e5 5ca674fdc9f64e9587d00aac5277b052
+#: cc625c1568cb4eccbf626f6a384eec99
+msgid "⭐ **Difficulty**: Intermediate"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:141
+#: 72c9fd4af39c4e6fabadf9edc354badf
+msgid "Tutorial 14: HPC Job Submission with jobflow-remote ⭐ RECOMMENDED"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:145
+#: f28a85eb48e04f688844f9d4adb50782
+msgid "Submit workflows to HPC clusters with jobflow-remote"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:146
+#: 5049b7bc984e46f2bb972f7a5a81f0fa
+msgid "Configure job schedulers (SLURM, PBS, SGE, local)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:147
+#: 52072daaa66c410aa2f7cdc4d7968569
+msgid "Manage job queue and monitor progress"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:148
+#: 4a230ea3b46c4ccb9fdc1771cdcb0b26
+msgid "Use modern CLI tools for job management"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:150
+#: 6ba662a497eb46fbb5d4900bc1bb87c1
+msgid "**Why jobflow-remote?**"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:152
+#: 1d6bf15923f24fdbb4998c54265e2c33
+msgid "✅ **Simpler** than FireWorks - YAML configuration, no complex setup"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:154
+#: bc5ef2a12c514fc4baf26fca364de332
+msgid "✅ **Modern CLI** - Comprehensive commands for all operations"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:156
+#: 42588b2216a24a6ba072686dd6009c56
+msgid "✅ **Flexible** - Local, SLURM, PBS, SGE workers with easy switching"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:158
+#: 995db5559a58438ba2df3853af9cece0
+msgid ""
+"✅ **Automatic** - Queue management and job dependencies handled "
+"automatically"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:160
+#: 2c7b10dc457740368f40a49e8c3cc3b5
+msgid "✅ **Built-in** - MongoDB integration for queue and results"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:164
+#: 81318e562d734f10b2f173e5805e41e4
+msgid "**Workers**: Execution environments (local, remote HPC)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:165
+#: ebdf8138bfbc4d6cbdc5f30719b66c93
+msgid "**Queue Store**: MongoDB-backed job queue"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:166
+#: 0f37f6fbe8284dfd84429520ddc368a7
+msgid "**Job Store**: MongoDB storage for results"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:167
+#: 03cc0339d8c647398bbc0fb864925c2f
+msgid "**Runner Daemon**: Background process that executes jobs"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:168
+#: 9b54ca442a4746648cf51e46f183abac
+msgid "**CLI Tools**: Complete command-line interface for management"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:170
+#: 6ce12d7416b04f84a0b7ac20ad547bf0
+msgid "**Quick Start (5 Commands)**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:188
+#: 7e165023e9f24bf186c60961b0fe0767
+msgid "**Installation**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:190
+#: ff72b0d22a194703a6c5211708ec09c3
+msgid "Using the CLI helper (recommended):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:200
+#: f62ffd94ee9c495cab5f55bea779a405
+msgid "Direct installation:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:206
+#: ed4cc50d02c744bcb0fa6a417a142ee0
+msgid "**Configuration**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:208
+#: 11df145740a14be0b47607dbd19fdafd
+msgid "Generate configuration file at ``~/.jfremote/atomate2siesta.yaml``:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:221
+#: 33eb6411f06d4bd79ebc5aa08127d523
+msgid "**Configuration Structure**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:223
+#: f2cbfc29ae2142028581855e40483ca0
+msgid "The configuration file has three main sections:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:225
+#: 65dc7bdcc0994dd99e74ed70840870fd
+msgid "**1. Workers** (execution environments):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:227
+#: 8f6c91fe0cbd4d9cb3e31b081a8aad62
+msgid "Local worker for testing:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:240
+#: 748f4d381c0c42e1b030f66cd699b7b8
+msgid "SLURM worker for HPC:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:261
+#: 5a525f88f6e94f7094cf9151217d590a
+msgid "PBS worker for HPC:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:279
+#: f327924a616e419688fe23de44d0d93c
+msgid "**2. Queue Store** (MongoDB for job queue):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:291
+#: 83c32e5275464d0d83d98d1bf37d5ad4
+msgid "**3. Job Store** (MongoDB for results):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:303
+#: f35dbc14b0334f6c8a971f2d894c721f
+msgid "**Submitting Jobs**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:305
+#: f71349c1d77b4f949884ab36417bba1f
+msgid "Basic workflow submission:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:329
+#: c2badf97e5f44add896b9d08d5b72111
+msgid "With custom parameters:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:349
+#: 8fe9f8c9d4a941b4af6e52ec91ee4c2f
+msgid "Submitting workflows:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:364
+#: 404b58d1772f4bfbab0c9e9673a2c0c0
+msgid "**Runner Management**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:366
+#: 7307edf870534291892f09aac0da745b
+msgid "Start the runner daemon:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:379
+#: 5042aee07493416ab7f8ff00964bc330
+msgid "Check runner status:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:391
+#: 57437a93571f4ee5b1ba97b55902eaee
+msgid "Stop the runner:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:400
+#: 96b68af00a954d6f985c7d78cdf04645
+msgid "**Monitoring Jobs**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:402
+#: 5814d551422646c1ad551b069995a33b
+msgid "List all jobs:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:417
+#: 6b59dc19059241c4a5bf33fc302925b5
+msgid "View job details:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:430
+#: 6de0d8f84d714d7297889226d127f875
+msgid "View job output:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:440
+#: ddd0fe54e262479a8eb94995f12987c8
+msgid "Get results:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:452
+#: 1bf0a57979b24a8bb205222c4b701ddd
+msgid "**Job Management Commands**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:471
+#: ../../source/tutorials/infrastructure.rst:791
+#: 5d26a2770566494c94f78a65399fef8b cfd3eda6d60e4433a5674c03261dfe8e
+msgid "**Best Practices**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:473
+#: fc76e8795ebe4d4d8cf33a0bb8b422ee
+msgid "**Test locally first**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:488
+#: 5b6d22aeb2b54e3789815e2b11d360a9
+msgid "**Monitor runner regularly**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:495
+#: 42d964f0214849b68da14219fd943c3e
+msgid "**Use appropriate workers**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:497
+#: 9aa48c5ebd4b46feb685a27917d67a88
+msgid "**local_shell**: Testing, quick calculations"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:498
+#: 8ab96d2c19eb4dd3980f05e7f66691ed
+msgid "**slurm_worker/pbs_worker**: Production, expensive calculations"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:500
+#: 95487b10fd5d436784e5b0984361faab
+msgid "**Handle failures**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:515
+#: 1c0e5b7256fb44cda7d64bb715c70244
+msgid "Custom resources:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:532
+#: 6e18a0bed8ff49458a9cfe3c2b691135
+msgid "Batch submission:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:545
+#: 67ddea6e05fc4a2dad462481acc7bc55
+msgid "**Integration with Database**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:547
+#: 041e7fc33f104f5fbef67f72c9b5efe7
+msgid ""
+"Jobflow-remote automatically stores results in MongoDB (configured in "
+"jobstore):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:575
+#: da42cba8b3c84378aa230b0bcd59b969
+msgid "**Troubleshooting**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:577
+#: 1db86f16f2ee4b88a2b1f743038ade88
+msgid "Runner not starting:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:593
+#: 3afcb961da3644d6a19fc2435d422291
+msgid "Jobs stuck in WAITING:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:606
+#: 978ab40ad2004bcb9ddd51ce757f8fa8
+msgid "Remote worker connection failed:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:616
+#: 411bcd367399417b8b77a2969b1650a8
+msgid "SIESTA not found on worker:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:628
+#: ../../source/tutorials/infrastructure.rst:998
+#: 38015aba3def4bbbb484ba76fc682dd4 61b832c76c1f4d75b4202c9af8f0b8a8
+msgid "**Benefits**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:630
+#: 375b329ba0fc4c199dcc1951bb1fef69
+msgid "✅ **Modern & Simple**: YAML configuration, comprehensive CLI"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:632
+#: 8eed681f10fe456e8b6f41673a5be898
+msgid "✅ **Flexible**: Easy switching between local and HPC workers"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:634
+#: 6ab7e314b7104451b65a0e33a3e42890
+msgid "✅ **Automatic**: Queue management and dependencies handled"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:636
+#: b3309d0789024e98a8ae21caee831095
+msgid "✅ **Integrated**: Built-in MongoDB storage"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:638
+#: 556a7965ebb04262873ef52280720b99
+msgid "✅ **Production-ready**: Battle-tested in high-throughput studies"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:640
+#: 938fcd388aed42b185a4705595f6c446
+msgid "📁 **Location**: ``tutorials/04-infrastructure/02-job-submission/``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:642
+#: 1b79b3a48f554e6db47c6e3fe598f89e
+msgid "⏱️ **Time**: 30 minutes"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:646
+#: c55598bb7e2e41e1b746e03f9ea54b18
+msgid ""
+"**CLI Reference**: See :doc:`/cli-jobflow-remote` for complete CLI "
+"documentation"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:651
+#: 50f79410d1e8420cbc61164de579b013
+msgid "Tutorial 14b: FireWorks (Alternative)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:653
+#: c33e2f0c963045fab0ef547783edff82
+msgid ""
+"**Note**: FireWorks is an alternative to jobflow-remote. We recommend "
+"using jobflow-remote (Tutorial 14) for new projects due to its simpler "
+"configuration and modern CLI."
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:657
+#: 8678a684753048be86a6327acac43314
+msgid "Submit workflows to HPC clusters using FireWorks"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:658
+#: 0f0f26420a98457f80c1d8052db3eef3
+msgid "Configure queue adapters for job schedulers"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:659
+#: a47edf371600456d9354a15203698990
+msgid "Manage job dependencies"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:660
+#: 61b939b6bc7242bb9ca79e0955681ec0
+msgid "Monitor workflow progress"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:664
+#: 35a8e7c180cc42cea63a1a8ff295c6f7
+msgid "**FireWorks**: Workflow execution engine"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:665
+#: 339b1e7718d94dae8fe258bde324d408
+msgid "**Queue adapters**: Interface to job schedulers"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:666
+#: 8936c4306c96418baff254f29b72681e
+msgid "**Launch directories**: Organized calculation folders"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:667
+#: 39d38ba694eb446ab5348b439bb0109c
+msgid "**Job dependencies**: Automatic workflow orchestration"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:669
+#: 99ec1221e1dd4e57bd800ba9ddf4a2ee
+msgid "**FireWorks Setup**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:671
+#: f3a3c9c6f45d490bb5b4829527acc405
+msgid "**1. Install FireWorks**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:677
+#: 51ee89a10c3e4cf89fb0664b1698dedc
+msgid "**2. Configure LaunchPad** (``my_launchpad.yaml``):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:689
+#: e7c13d208d1a4f1fbf3d428c43227830
+msgid "**3. Configure Queue Adapter** (``my_qadapter.yaml``):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:691
+#: a414632a238f446c98363a76ee1a3e8a
+msgid "For SLURM:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:707
+#: 4c938cbf4d2c43dba62324d7f5133dfd
+msgid "For PBS:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:720
+#: 377f01a606be45c79dec5aae2f068508
+msgid "**Workflow Submission**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:736
+#: c44f538e1fbc4fd49eee717adf2a4b07
+msgid "**Launching Jobs**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:746
+#: 46f9c147f6ab4ac384d824104d0b442d
+msgid "**Monitoring**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:759
+#: 60b69ba66b794f84a387a705dec32390
+msgid "**Advanced Configuration**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:761
+#: 61f105402356418c9d52b2f9d088320e
+msgid "**Resource Optimization**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:776
+#: 0e444319bd44421aa3f84182a13ffa7e
+msgid "**Job Dependencies**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:778
+#: 60ab1b35e3b04a05a911b08e5f7f8363
+msgid "FireWorks automatically handles dependencies based on Flow structure:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:793
+#: 3d975bc298f64c5582f92c2a67529d91
+msgid "**Test locally first**: Verify workflow before HPC submission"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:794
+#: dc09d827377d4149b8efeaf2699d3c3b
+msgid "**Monitor actively**: Check for failures early"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:795
+#: 420ed24b73c34eb88d42994036eb407f
+msgid "**Use checkpoints**: Enable restarts for long calculations"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:796
+#: ba19d9f1842e4d96bca436c6daac79f5
+msgid "**Organize outputs**: Use clear directory structure"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:797
+#: 94b5447cc5c0454e9e4e8f78fd098e4e
+msgid "**Document parameters**: Include in job metadata"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:799
+#: 2cbbdcae90584bc1b4749850382e28a9
+msgid ""
+"📁 **Location**: ``tutorials/04-infrastructure/02-job-submission/`` "
+"(FireWorks alternative)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:801
+#: 8c23ceb0c5864dde91dcb02f50bef1f6
+msgid "⏱️ **Time**: 60 minutes"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:803
+#: 9b80f4dcc0124bf784bfce68aabfaccb
+msgid "⭐ **Difficulty**: Advanced"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:808
+#: 487c4b4d7cf74047bf2b57d070274c6a
+msgid "Tutorial 15: Custodian Error Handling ⭐ NEW"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:812
+#: ecdf10e1de4d4580a24816792b793faa
+msgid "Enable automatic error detection and recovery"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:813
+#: d7482965c41b40c4b236d12927a34842
+msgid "Understand custodian library integration"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:814
+#: ec5ce97b0afe4962a47f92c0aa46ee2b
+msgid "Configure custom error handlers"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:815
+#: da5018d95b5e430b9bf3d4a94ed55dba
+msgid "Analyze correction history"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:819
+#: 58d018157d6241a886898ae13f0d5a18
+msgid "**Custodian**: MaterialsProject error handling library"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:820
+#: dd76bc10cf3d49f59ba7b0080ce09a8e
+msgid "**Error handlers**: Automatic correction strategies"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:821
+#: 544f5d539d244c5cba03025a54c272c9
+msgid "**Validators**: Output quality checking"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:822
+#: 14e76882acc34c88813a96403a8dbd7b
+msgid "**JSON logging**: Full correction history"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:824
+#: bd2e66faa52a4c38bb2531db3e1bf133
+msgid "**Architecture**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:826
+#: 7d2d056022bb4d44af4625bc4bb10650
+msgid ""
+"atomate2siesta uses the battle-tested **MaterialsProject/custodian** "
+"library:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:828
+#: 371e5bb650a94013b09151bb7a9253e5
+msgid "10+ error types automatically detected"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:829
+#: f02719c418d4451d8de02527b2c78e4e
+msgid "Progressive correction strategies"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:830
+#: ad1c8d7b118a406a8774e4282aabf262
+msgid "Automatic retry with modified parameters"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:831
+#: f245e5679f9b4babb1671751700c3165
+msgid "Complete audit trail in ``custodian.json``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:833
+#: 64a3c65ce27d45aaa2638bece3f33c54
+msgid "**Basic Usage**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:850
+#: 3dbdc0372cc0456bb892714922c37cf9
+msgid "**Error Types Detected**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:852
+#: 89260f80bce445e29b522b1f563402cd
+msgid "**SCF_NOT_CONV** - SCF convergence failure"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:853
+#: 19d94b8cc1244ae48eda0ad57da882f8
+msgid "**MEMORY** - Out of memory"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:854
+#: 060de4771eb2490d9d077eb8b4ea240e
+msgid "**TIME_LIMIT** - Job timeout"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:855
+#: 30bbc84370a54291a208210c733cd651
+msgid "**NUMERICAL** - NaN/Inf in calculations"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:856
+#: 836b9118e131490bab9142cd206a2691
+msgid "**SINGULAR_OVERLAP** - Singular overlap matrix"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:857
+#: 8ce6b4de3bfa40d2992c3ee32c02b327
+msgid "**NEGATIVE_EIGENVALUES** - Negative overlap eigenvalues"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:858
+#: 7c33e55e8c044a9bbde3d330330e0471
+msgid "**GEOMETRY_OPTIMIZATION** - Relaxation failure"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:859
+#: 2ae80239a12b455f87146fa013e668c0
+msgid "**BASIS_GENERATION** - Basis set error"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:860
+#: c773ea5131bb4476a796ddb09a034411
+msgid "**GRID_INTEGRATION** - Real-space grid error"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:861
+#: 0292595c73824309bbaaa55d0879350c
+msgid "**FILE_IO** - File I/O error"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:863
+#: 83fa6db0a2c247be9f4e6baf34182f56
+msgid "**SCF Convergence Handler** (5-Level Strategy):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:865
+#: 26cea65120b347f8b1c797acdaf248d0
+msgid "Automatically tries progressively more aggressive fixes:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:871
+#: 913535a55a844ff8ad4b81ec903fe073
+msgid "Level"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:872
+#: 68fb91fd2b77400eb8c497fa7e5845e8
+msgid "Changes"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:873
+#: 97d8d65ea6d6428abb9d8222481fa14c
+msgid "Rationale"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:874
+#: 1b1c661278004287b1c8893cff94751f
+msgid "1"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:875
+#: 67effa0a7f0c4157ac37a0a96640d55c
+msgid "``Mixer.Weight = 0.05``, ``Mix.First = True``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:876
+#: 7f15c12cad864fac855054fb3933dc3e
+msgid "Gentle reduction, start fresh"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:877
+#: 1a20c458991845f58da8ce0167707069
+msgid "2"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:878
+#: d6e0f83930e643fe9ec0a8800b122f29
+msgid "``Mixer.Weight = 0.01``, ``History = 5``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:879
+#: 30334129f5904f68a127e950139312aa
+msgid "More conservative mixing"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:880
+#: 4525e67c66684c619fcd89694ec7ccfe
+msgid "3"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:881
+#: 80d0af92692d4b8fa98033230d31173b
+msgid "``Mixer.Weight = 0.005``, ``History = 8``, ``Kick = 40``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:882
+#: 9d3597b6420f4ebe96464726369d5aaa
+msgid "Very conservative + perturbation"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:883
+#: 2a1e910f48304e7dbca8061117298c67
+msgid "4"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:884
+#: 86057623236b45acbffb01e2e08394f0
+msgid "Switch to **Pulay mixer**, ``History = 10``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:885
+#: b23db14f72a14d41b66aea886ba331be
+msgid "Try different algorithm"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:886
+#: 80d22131bc9e41d2ba269d0677f43853
+msgid "5"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:887
+#: ad944c9eb4d94eddb1f3ef325bc30cb5
+msgid "Switch to **Broyden mixer**, ``Weight = 0.001``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:888
+#: 1f138de7dcf542598ba06a81b53b966a
+msgid "Last resort: different algorithm"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:890
+#: 039009fc8377422aa6f7319d1bdc66d6
+msgid "**Custom Handlers**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:913
+#: 79935c2bbcb7466399610b622479ce93
+msgid "**Custodian Output** (``custodian.json``):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:953
+#: 5efef62cb656403f86284cdc7d4d6797
+msgid "**Validation**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:955
+#: e8034ee3aefd4079bd7659a14b3d7654
+msgid "After successful completion, validators check output quality:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:970
+#: 2d68c59e35a14418bf5a3cf49b4d4c2d
+msgid "**Real Example** (SCF convergence issue):"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1000
+#: b0d8413598764c1fac63d2382a7d7433
+msgid "✅ **Automatic**: No manual intervention for common errors"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1002
+#: 3142afd1c0c449d38f9d2a9e5dca1788
+msgid "✅ **Transparent**: Full history in ``custodian.json``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1004
+#: 4f65ca1ba16f4ec1b0b1f641289b5936
+msgid "✅ **Configurable**: Custom handlers and strategies"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1006
+#: 1b00d090c3674cc28dd5603242e5dbd9
+msgid "✅ **Production-tested**: Built on MaterialsProject's proven framework"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1008
+#: f36bdfe50a994104aa482069f20e7f50
+msgid "✅ **Safety limits**: Respects max attempts to prevent infinite loops"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1010
+#: da0a8fdd87704207bd8b5dbbf8e99588
+msgid "**When to Use**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1012
+#: ff8ba242c1eb4ce2acfe37ba811b2da0
+msgid "**Production calculations**: Always enable for robustness"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1013
+#: 906f2649e4e04f4898adcd305d982de1
+msgid "**High-throughput**: Essential for unattended workflows"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1014
+#: 0184bc7266e34008ad9484751c25b3f5
+msgid "**Challenging systems**: Metals, surfaces, complex materials"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1015
+#: ebba60076d864e83a31bdf2272a1995b
+msgid "**HPC workflows**: Automatic recovery saves queue time"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1017
+#: b4bbeb8931ff4889a16e176011980c60
+msgid "**When to Disable**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1019
+#: 3afc768de5ae4be2b79c3867f51ed94c
+msgid "**Testing/debugging**: Want to see raw failures"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1020
+#: 19009478ecaa4bf091ec7013128fe667
+msgid "**Very simple systems**: Overhead not needed"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1021
+#: 89b3c5178b8647e5858e7feae8bf0064
+msgid "**Custom workflows**: Need specific error handling"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1023
+#: 54d9b759386c4b90a6c1ad377bce8c09
+msgid "📁 **Location**: ``tutorials/04-infrastructure/03-error-handling/``"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1029
+#: e0142cb657e94ed196132f7f933a0f63
+msgid "📄 **Documentation**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1030
+#: c4923747d2b8459bbcf4ef0298af3378
+msgid "``README.md`` - Tutorial and examples"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1031
+#: a9cd8a6b5b304d1080ef003c8a23d34d
+msgid ""
+"``REFACTORING_SUMMARY.md`` - Complete custodian library integration guide"
+" (438 lines)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1032
+#: 4c493ff52175459ea19fe587d7411d6b
+msgid "``CUSTODIAN_STRATEGY.md`` - Implementation strategy"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1037
+#: e9dd9834d1ce400daec8374293941b86
+msgid "Production Workflow Examples"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1040
+#: 1995bc1b3db242509349d08fc0c128e6
+msgid "Option 1: jobflow-remote (Recommended)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1042
+#: 0b3fd67281d74766b13fb7cf4d7cda68
+msgid "Modern, simple setup with comprehensive CLI:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1077
+#: 48e6ca33e79f4351ac2701af5a562f0b
+msgid "Option 2: FireWorks (Alternative)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1079
+#: 8c7e3858854b4634bede5447bfb68f11
+msgid "Traditional workflow engine:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1118
+#: 5d2379891fb0428793e698510c23660a
+msgid "Both setups provide:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1120
+#: 04ac3dc673f84fbf92e9ce748fb839e0
+msgid "✅ Automatic error recovery"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1121
+#: 186cd4fdefde444a857cbb46d5b79798
+msgid "✅ HPC job scheduling"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1122
+#: 7517d53c0a124d83b604f9bf6538a529
+msgid "✅ Database storage"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1123
+#: 5eb0cc0103dc4414bf1bf73f438fb9f9
+msgid "✅ Material-specific parameters"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1124
+#: 1814ebe6d04f4ac19ce858847a968e32
+msgid "✅ Full provenance tracking"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1129
+#: abb254ea6b8e478eaecb50ec82e6ee78
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1131
+#: 784983f9a1414ffaad3b87f67a7b84cb
+msgid "After setting up infrastructure:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1133
+#: 70129f7ba2c44313b5ba068de429b543
+msgid "**Scale up**: Run high-throughput studies"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1134
+#: a20787dd50cf448cafb63cbd87e50cf3
+msgid "**Analyze data**: Query database for trends"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1135
+#: 8a568da8b88045adb73b486a807d5dc4
+msgid "**Optimize**: Fine-tune queue settings"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1136
+#: 8a15ff13cedf4ae8b5e3a5050a7831b7
+msgid "**Monitor**: Set up dashboards and alerts"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1138
+#: 3e8587c00a3540a5a8d73a01c0473da7
+msgid "See :doc:`index` for full tutorial listing."
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1144
+#: 27620dd2065f4393bbdacef3e0b7670f
+msgid "**Recommended Path for Production**:"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1146
+#: 30e7e3b0ad2e40a1802bccacb1b54b1f
+msgid "**Tutorial 13**: Set up MongoDB database storage"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1147
+#: f2ab9efc00394ba09d9520309d7c5517
+msgid ""
+"**Tutorial 14**: Configure jobflow-remote for HPC submission (simpler "
+"than FireWorks)"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1148
+#: 2a8567245aa442adbb25a8a58e4e3d12
+msgid "**Tutorial 15**: Enable custodian for automatic error recovery"
+msgstr ""
+
+#: ../../source/tutorials/infrastructure.rst:1150
+#: b32f4f2b11a54113933f445dd99552f1
+msgid ""
+"This combination provides a robust, production-ready infrastructure with "
+"minimal configuration."
+msgstr ""

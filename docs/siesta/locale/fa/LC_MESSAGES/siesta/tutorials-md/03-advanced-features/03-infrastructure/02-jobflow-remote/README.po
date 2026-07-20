@@ -1,0 +1,866 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:1
+#: 60b7dce2d8004653b713afa268ec9fae
+msgid "HPC Job Submission Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:3
+#: 410c557637664f5e9b2cedb6cd857fcd
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:5
+#: 48acb77af75c44d1958c903c2ac98024
+msgid ""
+"This tutorial demonstrates **jobflow-remote**, a modern system for "
+"submitting calculations to HPC clusters with automatic queue management, "
+"MongoDB backend, and comprehensive CLI tools."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:7
+#: 5deaf62e529f4ae38ae192bff851406a
+msgid "**Why jobflow-remote?**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:8
+#: c9c3eb14304144b38f84f186ecef3b2a
+msgid "✅ **Simpler** than FireWorks (YAML configuration)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:9
+#: bd64b91ddd0548cd92df52bd45ef8fad
+msgid "✅ **Modern** CLI with comprehensive commands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:10
+#: 0cc6c8e10c9841b7985441013ccc4212
+msgid "✅ **Flexible** workers (local, SLURM, PBS, SGE)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:11
+#: b935d5cefd794dd8884d2b04a5515024
+msgid "✅ **Automatic** queue management"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:12
+#: e69c28aaa79b4cf295164e5f9b55e1f7
+msgid "✅ **Built-in** MongoDB integration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:16
+#: e46cdc015a8f4351af217b0d0c0d25c4
+msgid "Quick Start (5 Commands)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:36
+#: c0eaa137bebd4ac2bc2d46261d668655
+msgid "Installation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:38
+#: 4531fdfa53c145c6bfb34aad3d51404a
+msgid "Using CLI Helper (Recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:48
+#: e9e54a83db0d4d07994bb68f73d9f4cc
+msgid "Direct Installation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:59
+#: 8c35b4cb92404527a95baad8604bc2f1
+msgid "Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:61
+#: b77c4ff3fa454c108f30dd1039924389
+msgid "Generate Configuration File"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:74
+#: c7f9fd3371c949c2a23fa7110d0f3348
+msgid "Creates `~/.jfremote/atomate2siesta.yaml` with three sections:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:76
+#: 55f2b17876ac4eebbca4c132080c226f
+msgid "1. Workers (Execution Environments)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:78
+#: 4ce058cc0d90475eb2acb493573d69bd
+msgid "**Local Worker** (testing):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:90
+#: d9a12e06c7304eb0a2c09843acc67098
+msgid "**SLURM Worker** (HPC):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:110
+#: f18d264102d440c880cec2c646c98701
+msgid "**PBS Worker** (HPC):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:127
+#: b6a0a505009d4c81bea92a9b8bc92a1e
+msgid "2. Queue Store (MongoDB for job queue)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:139
+#: 7e2f4f466398425bb5f1126193b709e8
+msgid "3. Job Store (MongoDB for results)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:153
+#: ebdc038188424216a3f9f77b1875fc1e
+msgid "Submitting Jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:155
+#: c025bec1e2b94685891664a7de51fb57
+msgid "Basic Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:179
+#: b242a844ba3347f384caf2273473b4c1
+msgid "With Custom Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:199
+#: 114412af57fe4dfbacb7d72bff0e8f64
+msgid "Submitting Workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:216
+#: 17e4c87183b742d6bcc3f75188f461a9
+msgid "Customizing Submission Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:218
+#: 1eba3f631a794d0e8fd81d90185702f1
+msgid "Overview: resources and exec_config"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:220
+#: 22237c4d0074424ab016b416cb7b2277
+msgid "When submitting jobs, you can customize two key aspects:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:222
+#: 3f9c2120dd48473ea13adb5a7e4766ee
+msgid ""
+"**`resources`**: SLURM/PBS submission script parameters (nodes, walltime,"
+" memory, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:223
+#: 55e950c2fb8d460ca439bb02c00ee8d9
+msgid ""
+"**`exec_config`**: Execution environment (modules, environment variables,"
+" pre/post-run commands)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:225
+#: 7f55b4ebdf0341c19a7b3503a5facaf6
+msgid ""
+"Both parameters override worker defaults defined in your YAML "
+"configuration."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:227
+#: a95e81b3899d4d79ae0054bf145428a5
+msgid "Customizing Resources"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:229
+#: 2f7c854c65e748f39ac2ae6a031577d7
+msgid "The `resources` parameter controls SLURM/PBS submission script directives:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:231
+#: 7c1e44f950164ff9b4cd0e1e7377be42
+msgid "Basic Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:248
+#: ffa9f89045c54217827e712bc413ffad
+msgid "This generates a SLURM script with:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:257
+#: ef4994a86251460fa023ef6f4d572d54
+msgid "Available Resources Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:259
+#: 87953754b23b433cac4e90fefe3b3389
+msgid "**SLURM Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:275
+#: 3e081afc79ea40d995a0aeedef1a72dd
+msgid "**PBS/Torque Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:286
+#: b23b4c08265b466f90e574c6710e5338
+msgid "Common Use Cases"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:288
+#: bad6320ca8684dfa8e6e6624db8be646
+msgid "**GPU Calculation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:301
+#: 542ccd0240804a5aaa7dcd259b08ccae
+msgid "**High-Memory Job**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:314
+#: 72e1ef1510f54a3bb56f898e4ccb45cf
+msgid "**Quick Test (Debug Queue)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:327
+#: 0ce0578acdef4de289815cf7c837a856
+msgid "**Production Run with Priority**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:342
+#: 9b3bfca55e6c487a85cfc61d523aa129
+msgid "Customizing Execution Environment (exec_config)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:344
+#: fac08f6b6fb9496c925c2996c7a9e44c
+msgid ""
+"The `exec_config` parameter controls the execution environment and "
+"commands:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:346
+#: cba27e5bdd19450cb2d0f17f098c9a2d
+msgid "Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:357
+#: 798282df44b34cc2b48c0bb3573c1020
+msgid "Loading Software Modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:369
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:392
+#: ac68d62de41749a3ae3b678e614522a9 c36736463b634874888abdbe3dd673ce
+msgid "Generated script includes:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:376
+#: 12c3fec389604ed3a768c39ae2ead54a
+msgid "Setting Environment Variables"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:399
+#: 289d9b7682134d0eaf9a06590b52ded6
+msgid "Pre-run Commands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:401
+#: 9c25e8f9e7a54d3d91809193a4d1fdb0
+msgid "Commands executed **before** the main job:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:419
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:445
+#: 889c29fd6a3f4a9f9f408f4d8f2e7b84 9f4cfc083de342f78a519aa20b6b88d3
+msgid "Common uses:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:420
+#: f49108d2063f4ca597affd73fe8504af
+msgid "Set system limits (`ulimit`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:421
+#: 75d2106965004f8295695a07b1fe82ca
+msgid "Create temporary directories"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:422
+#: d2397fb0fa9d4cc5b425908e3ccafab7
+msgid "Log job information"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:423
+#: 8fd208cc5a6a40989ba261c6b3f4f638
+msgid "Check GPU availability (`nvidia-smi`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:425
+#: f21a67f1e751431aba997100364a4e64
+msgid "Post-run Commands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:427
+#: 05f01c0ac82d4306bfe600d450e72b13
+msgid "Commands executed **after** the main job:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:446
+#: c20159f88ff5459caa101c2216afdf8c
+msgid "Compress output files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:447
+#: f9f45e40758c4a21833b491a1d2e3a5b
+msgid "Clean up temporary files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:448
+#: de2637884b6f49398532468469371628
+msgid "Log completion status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:449
+#: 59358a698d3345faa88c4779658bc989
+msgid "Archive results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:451
+#: eae7a7829e3042f9a9ad9be9eb5b8060
+msgid "Complete Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:453
+#: f1dc933caca04d00866cd388a76ec70e
+msgid "Combining all exec_config options:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:486
+#: 56023ceaf04d45f1a70f3bc2fa18e0d9
+msgid "GPU-Specific Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:488
+#: 869166467ae94950be556a9bcf096c0c
+msgid "For GPU calculations, combine resources and exec_config:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:518
+#: ab6a81b0840c44b0994c4cfb23ea0073
+msgid "Priority and Merging Behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:520
+#: 2c18cd920d2d4662834deef9fdd1089a
+msgid "Priority Order"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:521
+#: 81db4ad7b463441fa7672a963b88b7af
+msgid "**Highest**: `resources` and `exec_config` in `submit_flow()` (runtime)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:522
+#: bc441771500f40279663f63da6a66d36
+msgid "**Lowest**: Worker defaults in `~/.jfremote/projects/atomate2siesta.yaml`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:524
+#: 74ddff10748a422c9a8b77d8042810a5
+msgid "Merging Behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:525
+#: fa3f02c59e7743c0aec36224583048cc
+msgid "**resources**: Overrides matching keys, keeps non-matching defaults"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:526
+#: 30173bd8bfad47329bd0b092f2407c98
+msgid "**exec_config**: Merges with worker config (both are executed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:528
+#: e56be25095f24e4a8ed2c09e02f30ab2
+msgid "Example:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:551
+#: d5b8ba30432e4bb9ac4dd73c999c4003
+msgid "Result:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:552
+#: 4492bbc369ef4dd9a76d60445f71698d
+msgid "`nodes`: 4 (overridden)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:553
+#: d86c110c947f4c6daf6c0107b799772d
+msgid "`time`: \"24:00:00\" (from worker default)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:554
+#: b86aeac8e94c4cb3a37e09a433ea9dfb
+msgid "Pre-run: Both \"module load siesta/4.1\" AND \"ulimit -s unlimited\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:556
+#: 1a69cc53514947cd957253bf6ac23429
+msgid "Modifying Jobs After Submission"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:558
+#: c266ec8000ea4eb3993847ac657d0262
+msgid "Use CLI commands to modify resources/exec_config after job is submitted:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:574
+#: f53333cdf80b4e0e989c5d734e92dbd1
+msgid "**Note**: Job must be in `READY` or `FAILED` state to modify."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:576
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:963
+#: a6d32f138eda48fca25d54143953cccf e89fd20b906c42dfab01cabdd2e3de93
+msgid "Tutorial Scripts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:578
+#: 745fb179d93a4e578b5a0607c20e8509
+msgid "Explore complete examples in the tutorial directory:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:580
+#: fe854f4b74de4769bdbea9512265f28c
+msgid "`04_custom_resources.py` - Comprehensive resources examples (6 scenarios)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:581
+#: 66fecf26a2264007b6abf69ec7a2912a
+msgid "`05_exec_config.py` - Execution environment configuration (6 examples)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:582
+#: 8a5e2800746a4f84807072c3d5c4690e
+msgid ""
+"`06_advanced_submission.py` - Real-world workflows combining both (7 "
+"scenarios)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:584
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:737
+#: b99179185d52405490f5cdaa8540c146 c5533e4dc3214d10a3f1d78d89d1c9ea
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:586
+#: 1f4b3d7e01df434f9209e506800d7644
+msgid "**Resource Allocation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:587
+#: 133fee04000b48e7beffba0086716a14
+msgid "Start small: Test with 1 node, 30 min in debug queue"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:588
+#: ae0bcf202c2447538d8eb076e6021501
+msgid "Standard: 1-2 nodes, 24 hours for production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:589
+#: 0ece6f4a8e144d35a9b44fcebd3a0dfc
+msgid "Large systems: 4-8 nodes, 48-72 hours"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:590
+#: 50ed3587b1ef4ef889886a463a9f13fd
+msgid "High-throughput: Many small jobs (1 node, 6 hours each)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:592
+#: 0ca4ad8d6ddf4433976bcb9255203515
+msgid "**Execution Environment**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:593
+#: af8e916a71b34d5998fc5c69941b4465
+msgid "Always set `SIESTA_PP_PATH` in export"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:594
+#: ee95e37d837b43978fcb52d3cb4c9aff
+msgid "Disable threading for pure MPI: `OMP_NUM_THREADS=1`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:595
+#: 57cfa09d3380448091f7746ae72086d4
+msgid "Set stack limit: `ulimit -s unlimited` in pre_run"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:596
+#: f6be9fb43cc542f09d6042bf023e98f5
+msgid "Compress large outputs in post_run: `gzip -9 *.WFSX *.DM`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:598
+#: 9818955e233444c7be22533f5b4ef421
+msgid "**Queue Strategy**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:599
+#: bfdb3764507945cfae4f9320dd00357b
+msgid "Debug queue: Quick tests (<30 min)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:600
+#: 8a98fe2aabbc4794b327c406329632e1
+msgid "Normal queue: Standard calculations (<48 hours)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:601
+#: 3e34601744c64e6995abb9f3bfdf9c2b
+msgid "Large queue: Big jobs (48-72 hours, 4+ nodes)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:602
+#: 9bfe67cb39844865b9a10819db6c1e73
+msgid "GPU queue: GPU-accelerated calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:606
+#: ef78a9453bde43f7b79eacb6ac72893a
+msgid "Runner Management"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:608
+#: 37b39bb0c1fb44dea9a5371b499c20cd
+msgid "Start Runner"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:621
+#: 69ec5c3c08164c0798ddd11c591a0ea0
+msgid "Check Runner Status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:633
+#: 47da958e0fe74e86ad6a4479e47cc7db
+msgid "Stop Runner"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:644
+#: f3d3b37b99a04408bf43549cbe06fc73
+msgid "Monitoring Jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:646
+#: ca5cf4651c08499ab2daccb244a0fdd1
+msgid "List Jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:661
+#: bf5b55f995c3409488b727cee178f1fb
+msgid "Job Details"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:675
+#: 4ba067234b614239b6bdab43b53dead4
+msgid "View Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:685
+#: 04e9e7d07a6a464891e71faf1b021670
+msgid "Get Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:700
+#: ffc782d10a024c0b924514dac6cbc417
+msgid "Job Management Commands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:702
+#: 715a4dbfdd9c46bba28c858f32baf295
+msgid "Rerun Failed Jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:708
+#: f6278c39c787403791e0d99be130c6fa
+msgid "Stop Running Job"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:714
+#: 9696eb4c4af640d485a202352a2d0ef0
+msgid "Retry Job"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:720
+#: a8febc640151424085baad29be9e167a
+msgid "Unlock Stuck Job"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:726
+#: 36bfaf410a5646cbb8d860877a6aa714
+msgid "Delete Job"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:739
+#: d893727bdd8b4a4288b96732f911460f
+msgid "1. Test Locally First"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:756
+#: 0475c0189b7f4f46a3b1dbfad4bd07e1
+msgid "2. Monitor Runner Status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:766
+#: 61d30c093459421f982ffa44159d9955
+msgid "3. Use Appropriate Worker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:768
+#: 12a308a26c2f429b9e4c6ee54e518a14
+msgid "**Local**: Testing, quick calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:769
+#: 85de133141cc4a11bada5c39ea53a698
+msgid "**SLURM/PBS**: Production, expensive calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:770
+#: d14e97cec3fe4993bd8a814e18f47b93
+msgid "**Configure memory/time** based on calculation size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:772
+#: e8ad3129a7d7448d9a74fb7e4927a931
+msgid "4. Handle Failures"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:785
+#: 871a21c72ae347059835ee31e692102c
+msgid "5. Database Backups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:797
+#: 274f2bc71a92400a8ba9502a9954e93d
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:799
+#: f22b87d6baff477d8abb61508222488f
+msgid "Runner Not Starting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:801
+#: eff56f949b174aada8089d8755d484cb
+msgid "**Problem**: `jf runner start` fails"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:803
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:822
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:841
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:861
+#: 2c1856ef08334b5995daab160b05612c 3d4e18bad55e42db85ee7c0a22dcf6d5
+#: 479647313fec40fe9da668497c65261a 4dc904d419b24fb0be6b7689a052083f
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:818
+#: 48fbd8bd3ab34916ae407b049ba13089
+msgid "Jobs Stuck in WAITING"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:820
+#: 794e460ea99946de8bc7497c16a9ead2
+msgid "**Problem**: Jobs not running"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:837
+#: f9759e2a65ef40eea0d2452ca59cd3bd
+msgid "Remote Worker Connection Failed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:839
+#: 305c497d311945abb9c6f7876510c77f
+msgid "**Problem**: Cannot connect to HPC cluster"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:852
+#: f9b16df9805f4af48906fb6281ef9f66
+msgid "Test SSH connection:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:857
+#: 813b10b8d456401f8daf0ceb10a9b01a
+msgid "SIESTA Not Found on Worker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:859
+#: b7fe11574cbd4a77929792bc56789cc4
+msgid "**Problem**: \"SIESTA command not found\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:874
+#: 34623bc209f544f4a614071ed2a76290
+msgid "Advanced Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:876
+#: 3a31f923537b41b9b7709e948b974cb6
+msgid "Multiple Projects"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:885
+#: 5acc996f4bc547118c33f8f4cfa6c1b7
+msgid "Batch Submission"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:898
+#: d0c1fc9eea9a44fe84b7485eef380c2e
+msgid ""
+"**Note**: See the \"Customizing Submission Parameters\" section above for"
+" comprehensive `resources` and `exec_config` examples."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:902
+#: cbb0d49a1f2540729ccdf7eb72a453b9
+msgid "Integration with Database Storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:904
+#: f454ceddbe0743f7b89d725ef68e3b52
+msgid ""
+"Jobflow-remote automatically stores results in MongoDB (configured in "
+"jobstore section). Query results using maggma:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:934
+#: 4bcb05bb7468478196a545dbf0255736
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:936
+#: 8d7725b2240b4fd4833a1169357557f8
+msgid "Key Takeaways"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:938
+#: 1ce3dcacfb4d449599be3e10d88ac992
+msgid ""
+"✅ **jobflow-remote** manages HPC job submission automatically ✅ **MongoDB"
+" backend** stores queue and results ✅ **Runner daemon** processes jobs in"
+" background ✅ **Flexible workers** support local, SLURM, PBS, SGE ✅ **CLI"
+" tools** simplify setup and monitoring"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:944
+#: b07c970af49247baa4669067036fdeaa
+msgid "Essential Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:965
+#: b24301e4103043cab37f4745c99f77f8
+msgid "Explore the complete examples in this directory:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:967
+#: 234c09a85f524e1d930b791aae8f978e
+msgid "**01_cli_setup.py** - CLI commands and configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:968
+#: e5696cba1c4a4d808bced1c2fefbee56
+msgid "**02_local_submit.py** - Submit to local worker (dry-run preview)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:969
+#: 2c85224172fc4102ab291e73e60dde0b
+msgid "**03_monitor_jobs.py** - Job monitoring and status"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:970
+#: 30c1a8d898ad4b1a8b1642bd098ce755
+msgid "**04_custom_resources.py** - Customize SLURM/PBS resources (6 scenarios)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:971
+#: 765ba943a3b6458aabdbc04b852de665
+msgid "**05_exec_config.py** - Configure execution environment (6 examples)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:972
+#: 34f5fcd0fbfb433f951124e3a8166783
+msgid "**06_advanced_submission.py** - Real-world workflows (7 scenarios)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:974
+#: e045e837cfd0411d8cd88ff4ce07940e
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:976
+#: 4f9751514f3d4b038c3d7e05a217de82
+msgid "**Setup jobflow-remote**: `atomate2siesta-jobflow-remote setup`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:977
+#: ca6408752724483580ac5fbe4a4e0fbc
+msgid ""
+"**Try basic tutorials**: `python 01_cli_setup.py`, `python "
+"02_local_submit.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:978
+#: ee892b3dbae140f18ad831e5c88d5123
+msgid ""
+"**Learn customization**: `python 04_custom_resources.py`, `python "
+"05_exec_config.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:979
+#: 05b7cdfdd2f54645bca704b7c1dd1160
+msgid "**Advanced patterns**: `python 06_advanced_submission.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:980
+#: ec14c800da634b6ebf7bdf8526ddd6f8
+msgid ""
+"**Configure HPC worker** for production in "
+"`~/.jfremote/projects/atomate2siesta.yaml`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:981
+#: 8be20beb25324ae0aaf953aa9a384902
+msgid "**Database integration**: See `04-infrastructure/01-database-storage/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/02-jobflow-remote/README.md:985
+#: c4189c83569f4c68a19123b5b7ea77a8
+msgid "**Make jobflow-remote your default for HPC calculations!** 🚀"
+msgstr ""
+

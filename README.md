@@ -90,6 +90,63 @@ atomate2 workflows can be run using the [jobflow-remote] or [FireWorks] software
 Atomate2 is a Python 3.10+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
+### SIESTA workflows
+
+This build adds SIESTA workflows under `atomate2.siesta`. Install with the `siesta`
+extra so all SIESTA-specific dependencies are pulled in:
+
+```bash
+# from PyPI
+pip install atomate2[siesta]
+
+# or from a local clone (editable / development)
+git clone https://github.com/materialsproject/atomate2.git
+cd atomate2
+pip install -e ".[siesta]"
+```
+
+The `[siesta]` extra installs `sisl`, `pyfiglet`, `questionary`, `rich`, `colorama`,
+`seaborn`, and `atomate2[ase,phonons]` (ASE + phonopy/seekpath). Without it, importing
+`atomate2.siesta` fails with a `ModuleNotFoundError` (e.g. `No module named 'sisl'`).
+
+### Building the documentation
+
+The docs are built with [Sphinx](https://www.sphinx-doc.org/). The doc dependencies are
+a [PEP 735](https://peps.python.org/pep-0735/) `dependency-group` (not an extra), so
+install them with `--group`, then build the HTML site (there is no `Makefile` — invoke
+`sphinx-build` directly):
+
+```bash
+pip install -e . --group docs
+sphinx-build -b html docs docs/_build/html
+```
+
+Open `docs/_build/html/index.html` in a browser. The SIESTA pages are under
+**User Guide → Codes → SIESTA**.
+
+The SIESTA docs carry a language switcher (English ⇄ فارسی). It expects the
+Persian build to live under the English site's `fa/` subdirectory, so build
+English first, then Persian **into `<english-out>/fa`** (a sibling `html-fa/`
+dir will make the switcher links 404):
+
+```bash
+sphinx-build -b html docs docs/_build/html                 # English, at the root
+sphinx-build -b html -D language=fa docs docs/_build/html/fa   # Persian, nested under fa/
+```
+
+The full build autodocs every atomate2 code, so it needs their optional
+dependencies (e.g. `abipy`, `pymatgen-io-aims`) — without them Sphinx emits
+import warnings for those API pages (harmless, but slow and noisy). For a fast,
+quiet build of just the SIESTA docs, set `SIESTA_DOCS_ONLY=1` to skip the
+`reference/` API autodoc:
+
+```bash
+SIESTA_DOCS_ONLY=1 sphinx-build -b html docs docs/_build/html            # English
+SIESTA_DOCS_ONLY=1 sphinx-build -b html -D language=fa docs docs/_build/html/fa  # Persian
+```
+
+Then open `docs/_build/html/index.html` (Persian at `docs/_build/html/fa/…`).
+
 ## Tutorials
 
 The documentation includes comprehensive tutorials and reference information to get you

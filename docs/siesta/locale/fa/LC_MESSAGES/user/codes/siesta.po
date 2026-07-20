@@ -1,0 +1,151 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:49
+msgid "Getting started"
+msgstr "شروع به کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:60
+msgid "Command-line tools"
+msgstr "ابزارهای خط فرمان"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:72
+msgid "Key features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:87
+msgid "Tutorials"
+msgstr "آموزش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:96
+msgid "Reference"
+msgstr "مرجع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:3
+#: 9454634c9f084113bbfba0b2dd307bd3
+msgid "SIESTA"
+msgstr "SIESTA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:5
+#: de448d62835d45218828b7e0c9fa7264
+msgid ""
+"Atomate2 provides a comprehensive set of workflows for the [SIESTA](https"
+"://siesta-project.org) density functional theory code. SIESTA uses a "
+"basis of numerical atomic orbitals, which makes it efficient for large "
+"systems and a natural fit for high-throughput materials simulations."
+msgstr "Atomate2 مجموعه‌ای جامع از گردش‌کارها را برای کد نظریهٔ تابعی چگالی [SIESTA](https://siesta-project.org) فراهم می‌کند. SIESTA از پایه‌ای متشکل از اوربیتال‌های اتمی عددی استفاده می‌کند که آن را برای سامانه‌های بزرگ کارآمد و برای شبیه‌سازی‌های مواد با توان عملیاتی بالا مناسب می‌سازد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:10
+#: 087c5818033b4223a6daf78230338e3f
+msgid ""
+"The SIESTA integration covers structural relaxation, band structure and "
+"density of states, equation of state, elastic constants, phonons (with "
+"phonopy), nudged elastic band, surface energies and adsorption, point "
+"defects, and electrocatalysis, together with a tier-based input system, a"
+" recipe book of one-line workflows, and a custodian error-handling layer."
+msgstr "یکپارچه‌سازی SIESTA شامل آرام‌سازی ساختاری، ساختار نواری و چگالی حالت‌ها، معادلهٔ حالت، ثابت‌های کشسانی، فونون‌ها (با phonopy)، باند کشسان هل‌داده‌شده (NEB)، انرژی‌های سطح و جذب سطحی، نقص‌های نقطه‌ای و الکتروکاتالیز است؛ به‌همراه یک سامانهٔ ورودی لایه‌ای، یک کتاب دستور (recipe book) از گردش‌کارهای تک‌خطی، و یک لایهٔ مدیریت خطای custodian."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:16
+#: 1b2032e5ca3746f1ba1b9b22a9ec09f3
+msgid "Configuration"
+msgstr "پیکربندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:18
+#: bfc0cf47ada6415690fec53541c2a800
+msgid ""
+"These workflows require SIESTA to be installed and available on your "
+"path. All settings that control SIESTA execution can be set using the "
+"`~/.atomate2.yaml` configuration file or using environment variables "
+"(with the `ATOMATE2_` prefix). For more details on configuring atomate2, "
+"see the [Installation page](installation)."
+msgstr "این گردش‌کارها نیازمند آن هستند که SIESTA نصب شده و در مسیر (path) شما در دسترس باشد. همهٔ تنظیماتی که اجرای SIESTA را کنترل می‌کنند می‌توانند از طریق فایل پیکربندی `~/.atomate2.yaml` یا با استفاده از متغیرهای محیطی (با پیشوند `ATOMATE2_`) تنظیم شوند. برای جزئیات بیشتر دربارهٔ پیکربندی atomate2 به [صفحهٔ نصب](installation) مراجعه کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:23
+#: 78e64b81a4e84187857b42804760ed76
+msgid "The most important settings to consider are:"
+msgstr "مهم‌ترین تنظیماتی که باید در نظر گرفته شوند عبارت‌اند از:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:25
+#: 7beeb3be9b094f888c171deebaebe9b6
+msgid ""
+"`SIESTA_CMD`: The command used to run SIESTA, e.g. `mpirun -n 16 siesta <"
+" input.fdf > siesta.out`."
+msgstr "`SIESTA_CMD`: فرمانی که برای اجرای SIESTA استفاده می‌شود، برای مثال `mpirun -n 16 siesta < input.fdf > siesta.out`."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:27
+#: ff4fe68717b44de391086cb75631091a
+msgid ""
+"`SIESTA_PP_PATH`: The directory containing the pseudopotential files "
+"(`.psf` / `.psml`) used to write SIESTA input."
+msgstr "`SIESTA_PP_PATH`: پوشه‌ای که فایل‌های شبه‌پتانسیل (`.psf` / `.psml`) مورد استفاده برای نوشتن ورودی SIESTA را در بر دارد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:29
+#: 3085262bb475461cbced23dec8c06ef7
+msgid ""
+"`FLOS_PATH`: The path to the [flos](https://github.com/siesta-"
+"project/flos) Lua library, required by the Lua-driven workflows (NEB and "
+"Lua relaxation)."
+msgstr "`FLOS_PATH`: مسیر کتابخانهٔ Lua با نام [flos](https://github.com/siesta-project/flos) که برای گردش‌کارهای مبتنی بر Lua (NEB و آرام‌سازی Lua) لازم است."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:31
+#: 2bcd66bc079e417ca811ad0a7be4f957
+msgid ""
+"`VIBRA_CMD`, `OPTICAL_INPUT_CMD`, `OPTICAL_CMD`: Commands for the "
+"auxiliary SIESTA utilities used by the vibrational and optical workflows."
+msgstr "`VIBRA_CMD`، `OPTICAL_INPUT_CMD`، `OPTICAL_CMD`: فرمان‌هایی برای ابزارهای کمکی SIESTA که توسط گردش‌کارهای ارتعاشی و اپتیکی استفاده می‌شوند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:33
+#: 5390a5805660413ca7e79bc5b524e5c1
+msgid ""
+"`SIESTA_ZIP_FILES`: Whether to gzip large output files after a "
+"calculation completes."
+msgstr "`SIESTA_ZIP_FILES`: اینکه آیا فایل‌های خروجی بزرگ پس از پایان محاسبه با gzip فشرده شوند یا خیر."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:34
+#: 40083911a15c458ba40c586d5c88f66f
+msgid ""
+"`SIESTA_SHOW_BANNER`, `SIESTA_SHOW_DOCSTRINGS`, "
+"`SIESTA_SHOW_PARAMETER_EVOLUTION`: Display options controlling the Rich "
+"console output (welcome banner, FlowMaker docstring panels, and "
+"parameter-evolution tables)."
+msgstr "`SIESTA_SHOW_BANNER`، `SIESTA_SHOW_DOCSTRINGS`، `SIESTA_SHOW_PARAMETER_EVOLUTION`: گزینه‌های نمایشی که خروجی کنسول Rich را کنترل می‌کنند (بنر خوش‌آمدگویی، پنل‌های docstring مربوط به FlowMaker، و جدول‌های تکامل پارامتر)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:39
+#: 5bbe0f21754e4f788a87e0d565f57ba2
+msgid ""
+"The standalone `atomate2siesta` distribution reads the same settings from"
+" a `~/.atomate2siesta.yaml` file. When SIESTA is used through atomate2, "
+"the settings live in the standard `~/.atomate2.yaml` alongside the other "
+"code settings."
+msgstr "توزیع مستقل `atomate2siesta` همان تنظیمات را از فایل `~/.atomate2siesta.yaml` می‌خواند. هنگامی که SIESTA از طریق atomate2 استفاده می‌شود، تنظیمات در فایل استاندارد `~/.atomate2.yaml` در کنار تنظیمات سایر کدها قرار می‌گیرند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:44
+#: 38894401f08141a582916c9e108ee970
+msgid "Documentation"
+msgstr "مستندات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/user/codes/siesta.md:46
+#: 35bfdf62dd1b4b6aa36f5437d45fec48
+msgid ""
+"The pages below document the SIESTA workflows in detail, from a first "
+"calculation through to advanced, publication-quality studies."
+msgstr "صفحات زیر گردش‌کارهای SIESTA را با جزئیات مستند می‌کنند؛ از نخستین محاسبه تا مطالعات پیشرفته و در سطح کیفیت انتشار."
+

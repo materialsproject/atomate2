@@ -1,0 +1,827 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/schemas.rst:3 736d822b602a409fafbbaa5444b28e9a
+msgid "Output Schemas & Models"
+msgstr "طرحواره‌ها و مدل‌های خروجی"
+
+#: ../../source/schemas.rst:5 78e132b6e284426bb8066247dd90d1a8
+msgid "Understanding atomate2siesta's data models and output schemas."
+msgstr "درک مدل‌های داده و طرحواره‌های خروجی atomate2siesta."
+
+#: ../../source/schemas.rst:10 b2324ac1aeaa4a2abccc0ae9c707b123
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../source/schemas.rst:12 3bb1f36670a547cdb3513483cbfcad82
+msgid ""
+"atomate2siesta uses a hierarchical schema system to organize calculation "
+"data. Understanding these schemas is essential for:"
+msgstr ""
+"atomate2siesta از یک سیستم طرحواره سلسله‌مراتبی برای سازماندهی داده‌های "
+"محاسبه استفاده می‌کند. درک این طرحواره‌ها برای موارد زیر ضروری است:"
+
+#: ../../source/schemas.rst:15 51852e2f4d23447bbb436546da269b0f
+msgid "Accessing calculation results"
+msgstr "دسترسی به نتایج محاسبات"
+
+#: ../../source/schemas.rst:16 eeadba386c3646fe9d39ee75d217d512
+msgid "Building custom workflows"
+msgstr "ساخت گردش‌کارهای سفارشی"
+
+#: ../../source/schemas.rst:17 56a41010b91c4652925fff846c2a2928
+msgid "Storing data in databases"
+msgstr "ذخیره داده‌ها در پایگاه‌های داده"
+
+#: ../../source/schemas.rst:18 517c0d3f32954b1e8f7dbbd5602c0bc2
+msgid "Analyzing convergence studies"
+msgstr "تحلیل مطالعات همگرایی"
+
+#: ../../source/schemas.rst:20 d64bd1cccc51481295a1a107924b8b79
+msgid ""
+"The schema hierarchy flows from low-level calculation details to high-"
+"level task summaries, providing both detailed information and convenient "
+"summary data."
+msgstr ""
+"سلسله‌مراتب طرحواره از جزئیات محاسبات سطح پایین به خلاصه‌های وظایف سطح "
+"بالا جریان می‌یابد و هم اطلاعات دقیق و هم داده‌های خلاصه مناسب را فراهم "
+"می‌کند."
+
+#: ../../source/schemas.rst:26 41ac895b21fb47658450d1cdd4bd84fe
+msgid "Schema Hierarchy"
+msgstr "سلسله‌مراتب طرحواره"
+
+#: ../../source/schemas.rst:28 5c4531fa46c54ffaade9a3cc2b91f912
+msgid "The data models are organized in 3 levels:"
+msgstr "مدل‌های داده در ۳ سطح سازماندهی شده‌اند:"
+
+#: ../../source/schemas.rst:30 a0bb93b1cc7549a9abad4f45054185eb
+msgid "**CalculationOutput** - Raw calculation results (lowest level)"
+msgstr "**CalculationOutput** - نتایج خام محاسبات (پایین‌ترین سطح)"
+
+#: ../../source/schemas.rst:31 2879b08fde7f418a9bce0a582d0dcef3
+msgid "**Calculation** - Calculation document with inputs and outputs"
+msgstr "**Calculation** - سند محاسبه با ورودی‌ها و خروجی‌ها"
+
+#: ../../source/schemas.rst:32 3fee6782e2674accb23d879e159bfca2
+msgid "**OutputDoc** - Summary of calculation results (highest level)"
+msgstr "**OutputDoc** - خلاصه نتایج محاسبات (بالاترین سطح)"
+
+#: ../../source/schemas.rst:33 89bb568404e240cbb102ebebbe6c0666
+msgid "**SiestaTaskDoc** - Complete task document (workflow level)"
+msgstr "**SiestaTaskDoc** - سند کامل وظیفه (سطح گردش‌کار)"
+
+#: ../../source/schemas.rst:54 0061c7e690b74502997c3aa47c3665a4
+msgid "Core Schema Classes"
+msgstr "کلاس‌های اصلی طرحواره"
+
+#: ../../source/schemas.rst:57 dc51995f4a4f434dab6ec4594c7a4923
+msgid "CalculationOutput"
+msgstr "CalculationOutput"
+
+#: ../../source/schemas.rst:59 ../../source/schemas.rst:132
+#: 1a7ea08c4984427db39c11340718e84a 44c3f4265629469eb160420996e648fa
+msgid "**Location**: ``src/atomate2/siesta/schemas/calculation.py``"
+msgstr "**مکان**: ``src/atomate2/siesta/schemas/calculation.py``"
+
+#: ../../source/schemas.rst:61 34b4ad0769c1441184818973d225a521
+msgid ""
+"**Purpose**: Stores raw SIESTA calculation outputs directly parsed from "
+"output files."
+msgstr ""
+"**هدف**: ذخیره خروجی‌های خام محاسبات SIESTA که مستقیماً از فایل‌های خروجی"
+" تجزیه شده‌اند."
+
+#: ../../source/schemas.rst:63 ../../source/schemas.rst:136
+#: ../../source/schemas.rst:188 ../../source/schemas.rst:274
+#: 3845388851114749ad2214b5b4102146 7492b0f2f184416bb821caeec12f1dd5
+#: b57c34dcdfd14383938bbd7400f86cb2 eeabb2495ffb48719b20e201409cf552
+msgid "**Key Fields**:"
+msgstr "**فیلدهای کلیدی**:"
+
+#: ../../source/schemas.rst:69 ../../source/schemas.rst:142
+#: ../../source/schemas.rst:194 ../../source/schemas.rst:280
+#: 10d23764dd904e56847095b229dc556d 5910b1f464524e028c639ebb447b3e20
+#: c88895b358a64f59987921be8a832094 deee203d88de42b1b864c2646668fd71
+msgid "Field"
+msgstr "فیلد"
+
+#: ../../source/schemas.rst:70 ../../source/schemas.rst:143
+#: ../../source/schemas.rst:195 ../../source/schemas.rst:281
+#: 19e6fa42a61b4fa6aef46c88735175e5 2ca1687278114f098f60cd9199e93e3e
+#: 2e361824cdf344e58393fbc6e31ed39f f82ad33aecbe453b9c8aa9d710f69382
+msgid "Type"
+msgstr "نوع"
+
+#: ../../source/schemas.rst:71 ../../source/schemas.rst:144
+#: ../../source/schemas.rst:196 ../../source/schemas.rst:232
+#: ../../source/schemas.rst:282 32796d30161e42afae3b6c064580268a
+#: 34f6915af47f4c22abf404fc53201d2a b725564470154f5883bdf648accbf3dc
+#: f1ba7fe6bf424854a485352127dad3f0 f1f0c704b4a047af842d35f08a15c5d8
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/schemas.rst:72 994f39c5ced94147af8900cea9b72fa7
+msgid "``total_energy``"
+msgstr "``total_energy``"
+
+#: ../../source/schemas.rst:73 ../../source/schemas.rst:76
+#: ../../source/schemas.rst:88 ../../source/schemas.rst:91
+#: ../../source/schemas.rst:94 ../../source/schemas.rst:204
+#: ../../source/schemas.rst:207 ../../source/schemas.rst:210
+#: ../../source/schemas.rst:213 ../../source/schemas.rst:216
+#: 0480c656e8314b8bab7e9246e724522a 3ca5f5f08ad24da79220fda9c2aa60ec
+#: 5e13135e536d48c396f385dfc6a1462b 893ddad578504cc5b4cfd6dfc5f7dbc6
+#: a10f14a17e6046c2ba4322dac1e16cd6 a811cc80655d4c2a9f1a3f947629b736
+#: b93b86e65acf4e5da1b462a40f0cf206 bfa67a4a6b154fefb17de1797deeaec9
+#: d3316eaa10444b06816419afd5bde08c ee5b5be8019c428f97f8fa3605476a5b
+msgid "``float``"
+msgstr "``float``"
+
+#: ../../source/schemas.rst:74 ../../source/schemas.rst:205
+#: 4861517619064becadd5dc2895308e38 4db752ae80e440858f59702d93084cea
+msgid "Final total DFT energy in eV"
+msgstr "انرژی کل نهایی DFT بر حسب eV"
+
+#: ../../source/schemas.rst:75 ../../source/schemas.rst:206
+#: 0b933dc7599441299705740bc2657346 705de5e444614241a56daeff9ea8baac
+msgid "``efermi``"
+msgstr "``efermi``"
+
+#: ../../source/schemas.rst:77 ba9b66dea0ba40a7aab5462bf33113f5
+msgid "Fermi energy in eV (parsed from ``siesta.out``)"
+msgstr "انرژی فرمی بر حسب eV (تجزیه شده از ``siesta.out``)"
+
+#: ../../source/schemas.rst:78 ../../source/schemas.rst:197
+#: ../../source/schemas.rst:289 9761d59187a140aa8f18a418547b5573
+#: b6a4e692578646c1aefe56167a0c2e04 cfd91289a11b4aab8a709bd653773aec
+msgid "``structure``"
+msgstr "``structure``"
+
+#: ../../source/schemas.rst:79 ../../source/schemas.rst:198
+#: ../../source/schemas.rst:290 352a6ec49b27465ebfefb3584637593c
+#: 8158a53bd269479889060d143f7e1fc6 c23fab7f20854f359f9fadca3ee855b1
+msgid "``Structure``"
+msgstr "``Structure``"
+
+#: ../../source/schemas.rst:80 c6103643b6784dce9944ef5b256b98c9
+msgid "Final atomic structure from ``siesta.XV``"
+msgstr "ساختار اتمی نهایی از ``siesta.XV``"
+
+#: ../../source/schemas.rst:81 ../../source/schemas.rst:218
+#: 514bbbafe8914b45ac4799b8b71c490e 71ab65aad75b4f0e8a30e1964a51d080
+msgid "``forces``"
+msgstr "``forces``"
+
+#: ../../source/schemas.rst:82 ../../source/schemas.rst:219
+#: 43e80292a3c141d083ba5438b9858275 f0ecc287f851453b9f25126841cd999e
+msgid "``list[Vector3D]``"
+msgstr "``list[Vector3D]``"
+
+#: ../../source/schemas.rst:83 13ee57acd81b414bb7560c567c2568c2
+msgid "Forces on each atom in eV/Å"
+msgstr "نیروها بر روی هر اتم بر حسب eV/Å"
+
+#: ../../source/schemas.rst:84 ../../source/schemas.rst:221
+#: 6a57c79e3239407a9829d5240bef493e cf4a0a7c864648ab9a759ec0fa00d52b
+msgid "``stress``"
+msgstr "``stress``"
+
+#: ../../source/schemas.rst:85 ../../source/schemas.rst:222
+#: 24ab4c8987b14f05876813b2332a6d68 413360cf54c44154bb261544e3a5b78e
+msgid "``Matrix3D``"
+msgstr "``Matrix3D``"
+
+#: ../../source/schemas.rst:86 2ba90fe5877f492bafc03cc59080a510
+msgid "Stress tensor on unit cell (3×3 matrix)"
+msgstr "تانسور تنش بر روی سلول واحد (ماتریس ۳×۳)"
+
+#: ../../source/schemas.rst:87 ../../source/schemas.rst:209
+#: 0fad78cc0e5a433ca24c7f499df76c74 f6b692a7f4824811a828d2ba9ae20ebd
+msgid "``bandgap``"
+msgstr "``bandgap``"
+
+#: ../../source/schemas.rst:89 1a842151d5a04325a4a1c6e596e82b2c
+msgid "Band gap in eV (from ``.EIG`` file if available)"
+msgstr "گاف نواری بر حسب eV (از فایل ``.EIG`` در صورت وجود)"
+
+#: ../../source/schemas.rst:90 ../../source/schemas.rst:212
+#: 26fe3b1266cf49adbfda342e3cdf5213 933fcf32849147a7a1626ed611846c73
+msgid "``cbm``"
+msgstr "``cbm``"
+
+#: ../../source/schemas.rst:92 ../../source/schemas.rst:214
+#: 5d8d5a87a27d46c688bdd8cbdcd01e23 7afea1094d534afcb98e8e3c7e675cc9
+msgid "Conduction band minimum in eV"
+msgstr "حداقل باند رسانش بر حسب eV"
+
+#: ../../source/schemas.rst:93 ../../source/schemas.rst:215
+#: 9b90ff6df280485dbc5b94841feff977 c5b886821a404a13a79638394d17743c
+msgid "``vbm``"
+msgstr "``vbm``"
+
+#: ../../source/schemas.rst:95 ../../source/schemas.rst:217
+#: 402c9cf209744a28858547db7275d8a1 94d9c33a6eed4c9da57b5e0e04c700be
+msgid "Valence band maximum in eV"
+msgstr "حداکثر باند ظرفیت بر حسب eV"
+
+#: ../../source/schemas.rst:97 271ca2cc790c405aad8dedb96cca076c
+msgid "**Parsing Source**:"
+msgstr "**منبع تجزیه**:"
+
+#: ../../source/schemas.rst:99 6865a0d62fb74d7fa5bf8efa6ad9b9ae
+msgid ""
+"Total energy: ``siesta.out`` via "
+"``sisl.stdoutSileSiesta.read_energy()['total']``"
+msgstr ""
+"انرژی کل: ``siesta.out`` از طریق "
+"``sisl.stdoutSileSiesta.read_energy()['total']``"
+
+#: ../../source/schemas.rst:100 e236d449e9254bbfb389403c14e87742
+msgid ""
+"Fermi energy: ``siesta.out`` via "
+"``sisl.stdoutSileSiesta.read_energy()['fermi']``"
+msgstr ""
+"انرژی فرمی: ``siesta.out`` از طریق "
+"``sisl.stdoutSileSiesta.read_energy()['fermi']``"
+
+#: ../../source/schemas.rst:101 1852ba2d358946128483c142d66c1896
+msgid "Structure: ``siesta.XV`` via ``sisl.xvSileSiesta.read_geometry()``"
+msgstr "ساختار: ``siesta.XV`` از طریق ``sisl.xvSileSiesta.read_geometry()``"
+
+#: ../../source/schemas.rst:102 fab7230ea2624b51bfef23196f299251
+msgid "Band gap: ``siesta.EIG`` via custom EIG parser"
+msgstr "گاف نواری: ``siesta.EIG`` از طریق تجزیه‌گر سفارشی EIG"
+
+#: ../../source/schemas.rst:103 fc0f21e2365d4ea299a4bd36b262532e
+msgid "Forces: ``siesta.out`` via ``sisl.stdoutSileSiesta.read_force()``"
+msgstr "نیروها: ``siesta.out`` از طریق ``sisl.stdoutSileSiesta.read_force()``"
+
+#: ../../source/schemas.rst:104 8aef248fb91e4eb88bc77357a1f09d01
+msgid "Stress: ``siesta.out`` via ``sisl.stdoutSileSiesta.read_stress()``"
+msgstr "تنش: ``siesta.out`` از طریق ``sisl.stdoutSileSiesta.read_stress()``"
+
+#: ../../source/schemas.rst:106 ../../source/schemas.rst:164
+#: ../../source/schemas.rst:236 ../../source/schemas.rst:314
+#: 600aeb6aaa8a40ab80bb0609d1448151 9ef0285968d04d898118cb7f2f426e2c
+#: bec9f7e0625d45a89935d29a8e354919 c5246398deec499ca15ddba24aae269e
+msgid "**Example Access**:"
+msgstr "**نمونه دسترسی**:"
+
+#: ../../source/schemas.rst:130 0da082adb223484ea975ce6b5ebbf787
+msgid "Calculation"
+msgstr "Calculation"
+
+#: ../../source/schemas.rst:134 3a2fe3412a904cccab61f7479f674449
+msgid ""
+"**Purpose**: Complete calculation document containing inputs, outputs, "
+"and metadata."
+msgstr "**هدف**: سند کامل محاسبه شامل ورودی‌ها، خروجی‌ها و فراداده."
+
+#: ../../source/schemas.rst:145 ../../source/schemas.rst:283
+#: 2fb197c9a5154606bbc09f636ba7b4c0 b6408d93f70f4cf49bc8025339440b55
+msgid "``dir_name``"
+msgstr "``dir_name``"
+
+#: ../../source/schemas.rst:146 ../../source/schemas.rst:149
+#: ../../source/schemas.rst:158 ../../source/schemas.rst:161
+#: ../../source/schemas.rst:284 ../../source/schemas.rst:308
+#: 17672aba33344c3aa2b7c30f3c98cf04 337b558a90654f9cac7ad56182f5f137
+#: 47172aee9ee84684b9ee6ad831bb0a56 6fc5bab1ff62429b8d024d768147ce1a
+#: ee02bf6dec114454904c9c451cfa5010 f80cf7f93a5d4e80b17cdf62d65c3e3c
+msgid "``str``"
+msgstr "``str``"
+
+#: ../../source/schemas.rst:147 5dea4969e6374b1391fb7f9557ec2d19
+msgid "Directory containing calculation files"
+msgstr "دایرکتوری شامل فایل‌های محاسبه"
+
+#: ../../source/schemas.rst:148 08176acea9984aabb603e5dd0427248d
+msgid "``siesta_version``"
+msgstr "``siesta_version``"
+
+#: ../../source/schemas.rst:150 886e1b438e864b7a8562ff6772508245
+msgid "SIESTA version used (e.g., \"5.0.0\")"
+msgstr "نسخه SIESTA مورد استفاده (مثلاً \"۵.۰.۰\")"
+
+#: ../../source/schemas.rst:151 301eafec4ac246c6b0446bdea200bc3d
+msgid "``input``"
+msgstr "``input``"
+
+#: ../../source/schemas.rst:152 0acd986ebe834e76b54aff9fd70ede05
+msgid "``CalculationInput``"
+msgstr "``CalculationInput``"
+
+#: ../../source/schemas.rst:153 649d5287022f48329eefed272920db65
+msgid "Input parameters and settings"
+msgstr "پارامترها و تنظیمات ورودی"
+
+#: ../../source/schemas.rst:154 ../../source/schemas.rst:286
+#: 46dfa6518203450e9db7deabba3282e2 d7bf313350454434998dafff552b7738
+msgid "``output``"
+msgstr "``output``"
+
+#: ../../source/schemas.rst:155 13b470570c3049edb9582f86c6c27364
+msgid "``CalculationOutput``"
+msgstr "``CalculationOutput``"
+
+#: ../../source/schemas.rst:156 5140ce3a920745ebad41de01405bd3b0
+msgid "Calculation results (see above)"
+msgstr "نتایج محاسبه (بخش بالا را ببینید)"
+
+#: ../../source/schemas.rst:157 b8d3b6c86a8e42ad8a28031d9021244a
+msgid "``completed_at``"
+msgstr "``completed_at``"
+
+#: ../../source/schemas.rst:159 9b05a924b19a4d7f92a5c9b035bbc7ae
+msgid "Timestamp of calculation completion"
+msgstr "زمان تکمیل محاسبه"
+
+#: ../../source/schemas.rst:160 c686aa5e62dc42eaa22f124620e458f4
+msgid "``task_name``"
+msgstr "``task_name``"
+
+#: ../../source/schemas.rst:162 5f24c5c04d28426cbda422fff3494a3f
+msgid "Name of the calculation task"
+msgstr "نام وظیفه محاسبه"
+
+#: ../../source/schemas.rst:182 a0e5446a803d44e2b6aeaaf39bb92452
+msgid "OutputDoc"
+msgstr "OutputDoc"
+
+#: ../../source/schemas.rst:184 ../../source/schemas.rst:270
+#: c45f9c68b4f04c9db770b4605b867bfb e5d6d691d79b438a99c018ab871154fd
+msgid "**Location**: ``src/atomate2/siesta/schemas/task.py``"
+msgstr "**مکان**: ``src/atomate2/siesta/schemas/task.py``"
+
+#: ../../source/schemas.rst:186 b3c047a320864575bbedf5cfc9453978
+msgid ""
+"**Purpose**: High-level summary of calculation results for convenient "
+"access."
+msgstr "**هدف**: خلاصه سطح بالای نتایج محاسبه برای دسترسی راحت."
+
+#: ../../source/schemas.rst:199 51e1ab7d4a014685ab56f14fa1e0c1c2
+msgid "Final atomic structure"
+msgstr "ساختار اتمی نهایی"
+
+#: ../../source/schemas.rst:200 b7b4330d7edc4c8885b19aa782a772a3
+msgid "``trajectory``"
+msgstr "``trajectory``"
+
+#: ../../source/schemas.rst:201 64c55dc3c10742afa2df939f1f9f1775
+msgid "``Sequence[Structure]``"
+msgstr "``Sequence[Structure]``"
+
+#: ../../source/schemas.rst:202 1f06f1ab093745d384435af0d5f5a4a5
+msgid "Trajectory of structures (for relaxations)"
+msgstr "مسیر ساختارها (برای واهلش‌ها)"
+
+#: ../../source/schemas.rst:203 993c0ab3c17b4626abc2fd12dce14495
+msgid "``energy``"
+msgstr "``energy``"
+
+#: ../../source/schemas.rst:208 b2d672c2de3c4431bd48dd180ab45e1c
+#, fuzzy
+msgid "Fermi energy in eV"
+msgstr "انرژی فرمی در طرحواره‌ها"
+
+#: ../../source/schemas.rst:211 2672bef6cff844c4a142671f049d48b1
+msgid "DFT band gap in eV"
+msgstr "گاف نواری DFT بر حسب eV"
+
+#: ../../source/schemas.rst:220 a39ca86dcb2642cab16180916c773696
+msgid "Atomic forces in eV/Å"
+msgstr "نیروهای اتمی بر حسب eV/Å"
+
+#: ../../source/schemas.rst:223 06768013b2434e0c9c86afebaad555ed
+msgid "Cell stress tensor"
+msgstr "تانسور تنش سلول"
+
+#: ../../source/schemas.rst:225 48db57a015974b63b833e3df3efa8bb9
+msgid "**Properties**:"
+msgstr "**خواص**:"
+
+#: ../../source/schemas.rst:231 d2896581cfd84f4ab1d15310a28d73b2
+msgid "Property"
+msgstr "خاصیت"
+
+#: ../../source/schemas.rst:233 952fda7499a448b6a413c73c08387855
+msgid "``energy_per_atom``"
+msgstr "``energy_per_atom``"
+
+#: ../../source/schemas.rst:234 05e57e37b2f2475ab0353393dc6350ee
+msgid "Total energy divided by number of atoms (eV/atom)"
+msgstr "انرژی کل تقسیم بر تعداد اتم‌ها (eV/atom)"
+
+#: ../../source/schemas.rst:250 49670731246c4d1481ff8885fe2a9489
+msgid "**Design Pattern**:"
+msgstr "**الگوی طراحی**:"
+
+#: ../../source/schemas.rst:252 411aef4976aa4ecfb1fe53d7ebdf2add
+msgid ""
+"``OutputDoc`` provides a **simplified interface** to the most commonly "
+"accessed data. For detailed or intermediate calculation data, use "
+"``calcs_reversed``:"
+msgstr ""
+"``OutputDoc`` یک **رابط ساده‌شده** برای داده‌های پرکاربرد فراهم می‌کند. "
+"برای داده‌های جزئی یا میانی محاسبه، از ``calcs_reversed`` استفاده کنید:"
+
+#: ../../source/schemas.rst:268 de4baf71275f4477acbad9799bde6423
+msgid "SiestaTaskDoc"
+msgstr "SiestaTaskDoc"
+
+#: ../../source/schemas.rst:272 a5d444f721ce4065a0fa36da1041001d
+msgid ""
+"**Purpose**: Complete task document containing all calculation "
+"information and metadata."
+msgstr "**هدف**: سند کامل وظیفه شامل تمام اطلاعات محاسبه و فراداده."
+
+#: ../../source/schemas.rst:285 86504d98292f427f84912c2e946020de
+msgid "Task directory path"
+msgstr "مسیر دایرکتوری وظیفه"
+
+#: ../../source/schemas.rst:287 d9f8677190464bd9bc43c8671d7e6037
+msgid "``OutputDoc``"
+msgstr "``OutputDoc``"
+
+#: ../../source/schemas.rst:288 c417d83d61d549a09873d3a947f78001
+msgid "Summary of calculation results (see above)"
+msgstr "خلاصه نتایج محاسبه (بخش بالا را ببینید)"
+
+#: ../../source/schemas.rst:291 7803a9a01e6e4469b8e62b599b560f5d
+msgid "Input structure"
+msgstr "ساختار ورودی"
+
+#: ../../source/schemas.rst:292 9f8ced7930844c8cb28129e20d821986
+msgid "``state``"
+msgstr "``state``"
+
+#: ../../source/schemas.rst:293 1bad3739369141188d79894f968934f0
+msgid "``TaskState``"
+msgstr "``TaskState``"
+
+#: ../../source/schemas.rst:294 643f57023c674831a431c56f1e2cd830
+msgid "Task execution state (SUCCESS, FAILED, etc.)"
+msgstr "وضعیت اجرای وظیفه (SUCCESS، FAILED و غیره)"
+
+#: ../../source/schemas.rst:295 c5b07b91e6004094b31110ab93cd5243
+msgid "``calcs_reversed``"
+msgstr "``calcs_reversed``"
+
+#: ../../source/schemas.rst:296 86ec3705b7f64068bae037f9727c8da2
+msgid "``list[Calculation]``"
+msgstr "``list[Calculation]``"
+
+#: ../../source/schemas.rst:297 0114ee20d1a846538bbf1faa23496962
+msgid "List of calculations (most recent first)"
+msgstr "لیست محاسبات (جدیدترین ابتدا)"
+
+#: ../../source/schemas.rst:298 cdb029f8bb0344bfaa1947289331bdbd
+msgid "``nsites``"
+msgstr "``nsites``"
+
+#: ../../source/schemas.rst:299 0e9107c6fdd64e4f91c1f9267683fce4
+msgid "``int``"
+msgstr "``int``"
+
+#: ../../source/schemas.rst:300 a82d1a86196f46728c4ecfdc06a601ed
+msgid "Number of atoms in structure"
+msgstr "تعداد اتم‌ها در ساختار"
+
+#: ../../source/schemas.rst:301 10bcbc9160274ccab6c2915ae243c96c
+msgid "``elements``"
+msgstr "``elements``"
+
+#: ../../source/schemas.rst:302 d63c410852824d51bdae3e8a55f54cf3
+msgid "``list[str]``"
+msgstr "``list[str]``"
+
+#: ../../source/schemas.rst:303 d2ef163cf0e54a7e8b6444db4e85b1c9
+msgid "List of elements present"
+msgstr "لیست عناصر موجود"
+
+#: ../../source/schemas.rst:304 d04d90958cbb4c2d9dfa67feef5942fe
+msgid "``composition``"
+msgstr "``composition``"
+
+#: ../../source/schemas.rst:305 1b712fb56a5b4b51972650230f227856
+msgid "``Composition``"
+msgstr "``Composition``"
+
+#: ../../source/schemas.rst:306 2efb822d20f64d43a400c706e129bafe
+msgid "Chemical composition"
+msgstr "ترکیب شیمیایی"
+
+#: ../../source/schemas.rst:307 df5462269b6c40c9876ac2366fa8f812
+msgid "``formula_pretty``"
+msgstr "``formula_pretty``"
+
+#: ../../source/schemas.rst:309 8984c5c2e9dd4e78bdebe1bf7c1d1323
+msgid "Pretty-printed formula (e.g., \"Si₂\")"
+msgstr "فرمول زیبا (مثلاً \"Si₂\")"
+
+#: ../../source/schemas.rst:310 42933825915c427a84d8798e87c10b2c
+msgid "``custodian``"
+msgstr "``custodian``"
+
+#: ../../source/schemas.rst:311 7568ee007c934b01a99c7f61bd408dd9
+msgid "``list[dict]``"
+msgstr "``list[dict]``"
+
+#: ../../source/schemas.rst:312 8766a0264d554a4b931486b25cb977a8
+msgid "Custodian error handling logs (if used)"
+msgstr "گزارش‌های مدیریت خطای Custodian (در صورت استفاده)"
+
+#: ../../source/schemas.rst:347 c79dec1c97c24bbe98685eeacb588273
+msgid "Fermi Energy in Schemas"
+msgstr "انرژی فرمی در طرحواره‌ها"
+
+#: ../../source/schemas.rst:349 076b85beee96469e82b04388c4d96e85
+msgid ""
+"The Fermi energy (``efermi``) is now available at multiple levels in the "
+"schema hierarchy:"
+msgstr ""
+"انرژی فرمی (``efermi``) اکنون در چندین سطح در سلسله‌مراتب طرحواره در "
+"دسترس است:"
+
+#: ../../source/schemas.rst:352 e69189053e8c4de68e7e569e4987291e
+msgid "Access Patterns"
+msgstr "الگوهای دسترسی"
+
+#: ../../source/schemas.rst:354 03b64b87981748a4a83f2228fbc80fc2
+msgid "**1. Summary Access (Recommended)**:"
+msgstr "**۱. دسترسی خلاصه (توصیه شده)**:"
+
+#: ../../source/schemas.rst:362 9cf2d962e0d24a5799bb72ef6481c33f
+msgid "**2. Detailed Access**:"
+msgstr "**۲. دسترسی جزئی**:"
+
+#: ../../source/schemas.rst:370 80013b3e388b411cb970894306199e53
+msgid "**3. Convergence Workflows**:"
+msgstr "**۳. گردش‌کارهای همگرایی**:"
+
+#: ../../source/schemas.rst:386 150880e7b7d74b30b20abe2fde508abb
+msgid "Parsing Details"
+msgstr "جزئیات تجزیه"
+
+#: ../../source/schemas.rst:388 a5fe4dcfc8f3497e86da1acfd11a575f
+msgid "**Source**: SIESTA outputs Fermi energy in ``siesta.out``:"
+msgstr "**منبع**: SIESTA انرژی فرمی را در ``siesta.out`` خروجی می‌دهد:"
+
+#: ../../source/schemas.rst:394 f43b2229848d4fa6a48b0eafb814ff96
+msgid "**Parser**: Uses sisl library:"
+msgstr "**تجزیه‌گر**: از کتابخانه sisl استفاده می‌کند:"
+
+#: ../../source/schemas.rst:403 ee9723dd1df84a719847346c04f63d08
+msgid "**Availability**:"
+msgstr "**در دسترس بودن**:"
+
+#: ../../source/schemas.rst:405 4626861473a74764841ecdad2bbea1e4
+msgid "✅ SIESTA always outputs Fermi energy (metals and insulators)"
+msgstr "✅ SIESTA همیشه انرژی فرمی را خروجی می‌دهد (فلزات و عایق‌ها)"
+
+#: ../../source/schemas.rst:406 4dd3482777954e11aebaf2d1a3a56c6b
+msgid "✅ Parsed for all calculation types (static, relaxation, bands, etc.)"
+msgstr "✅ برای تمام انواع محاسبات تجزیه می‌شود (ایستا، واهلش، باندها و غیره)"
+
+#: ../../source/schemas.rst:407 e3833730968641b7b8d32ebcd545cd3f
+msgid "✅ Available in all schema levels (CalculationOutput and OutputDoc)"
+msgstr "✅ در تمام سطوح طرحواره در دسترس است (CalculationOutput و OutputDoc)"
+
+#: ../../source/schemas.rst:410 62617d03892b40ac89d1a9e7d7f34692
+msgid "Units"
+msgstr "واحدها"
+
+#: ../../source/schemas.rst:412 7c059e083f4943fdbf078503270940c5
+msgid "All Fermi energies are in **electron volts (eV)**."
+msgstr "تمام انرژی‌های فرمی بر حسب **الکترون ولت (eV)** هستند."
+
+#: ../../source/schemas.rst:415 ef8afbf59617417eb79d8853b031fdc3
+msgid "Physical Interpretation"
+msgstr "تفسیر فیزیکی"
+
+#: ../../source/schemas.rst:417 cedbb58c122342bc9d403892aea79cc7
+msgid "**Metals**: Fermi level where occupation function = 0.5"
+msgstr "**فلزات**: سطح فرمی که تابع اشغال = ۰.۵"
+
+#: ../../source/schemas.rst:418 744d851d1e184e4698b3d034fa2be93c
+msgid ""
+"**Insulators/Semiconductors**: Chemical potential (typically near VBM or "
+"between VBM/CBM)"
+msgstr ""
+"**عایق‌ها/نیمه‌رساناها**: پتانسیل شیمیایی (معمولاً نزدیک VBM یا بین "
+"VBM/CBM)"
+
+#: ../../source/schemas.rst:419 e106dcaf0f95441a8631aa7a565d1b96
+msgid "**Convergence**: Fermi energy should converge alongside total energy"
+msgstr "**همگرایی**: انرژی فرمی باید همراه با انرژی کل همگرا شود"
+
+#: ../../source/schemas.rst:424 449b1d38b8124040925d332fff00f1ef
+msgid "Common Access Patterns"
+msgstr "الگوهای متداول دسترسی"
+
+#: ../../source/schemas.rst:427 737b336f68ac49faa5ec43c9d11957bc
+msgid "Single Calculation"
+msgstr "محاسبه تکی"
+
+#: ../../source/schemas.rst:449 db0a1f65cdaa4ca99a325b94b1e839e8
+msgid "Relaxation Workflow"
+msgstr "گردش‌کار واهلش"
+
+#: ../../source/schemas.rst:475 14b72464e564491c8709d250361007ff
+msgid "Convergence Workflows"
+msgstr "گردش‌کارهای همگرایی"
+
+#: ../../source/schemas.rst:499 c4b1f38d8ba64ad9a45bba2648ff8e91
+msgid "Multi-Job Flows"
+msgstr "جریان‌های چند کاره"
+
+#: ../../source/schemas.rst:524 637134424a0b4f4e91a26e77ba10be0c
+msgid "Schema Evolution"
+msgstr "تکامل طرحواره"
+
+#: ../../source/schemas.rst:527 de8a9186b9d741d48efa2c07c51640d8
+msgid "Version History"
+msgstr "تاریخچه نسخه‌ها"
+
+#: ../../source/schemas.rst:529 fe84a93e4a304f1388ced305d6187c77
+msgid "**v1.0.0**:"
+msgstr "**نسخه v۱.۰.۰**:"
+
+#: ../../source/schemas.rst:531 30c2055b68e346bb8e03acbb328b97d5
+msgid "Initial schema implementation"
+msgstr "پیاده‌سازی اولیه طرحواره"
+
+#: ../../source/schemas.rst:532 a6aa1aceb50642cc89a2fa4bb0fa8eab
+#, fuzzy
+msgid "``efermi`` field available in both ``CalculationOutput`` and ``OutputDoc``"
+msgstr "✅ در تمام سطوح طرحواره در دسترس است (CalculationOutput و OutputDoc)"
+
+#: ../../source/schemas.rst:533 9940cbae8e5e41d999e8375d7c07ecec
+#, fuzzy
+msgid "Fermi energy accessible at summary level"
+msgstr "انرژی فرمی اکنون در سطح خلاصه قابل دسترسی است"
+
+#: ../../source/schemas.rst:534 d77f863570074e6fa77be631d541e1fd
+msgid "Convergence workflows automatically collect and plot Fermi energy"
+msgstr "گردش‌کارهای همگرایی به طور خودکار انرژی فرمی را جمع‌آوری و ترسیم می‌کنند"
+
+#: ../../source/schemas.rst:535 ab3bbb13f8ea4afc932478a79eccf3a5
+msgid "Text file output includes Fermi energy column"
+msgstr "خروجی فایل متنی شامل ستون انرژی فرمی است"
+
+#: ../../source/schemas.rst:538 5c0824de7f134459b4c270957d135126
+msgid "Backward Compatibility"
+msgstr "سازگاری با نسخه‌های قبلی"
+
+#: ../../source/schemas.rst:540 39c57df0af3141dea6411f19e46d9aa5
+msgid "The schema changes are **backward compatible**:"
+msgstr "تغییرات طرحواره **با نسخه‌های قبلی سازگار** هستند:"
+
+#: ../../source/schemas.rst:542 7f01c10c42354912990b555c465e2698
+msgid "Old code accessing ``calcs_reversed[-1].output.efermi`` still works"
+msgstr ""
+"کد قدیمی که به ``calcs_reversed[-1].output.efermi`` دسترسی دارد هنوز کار "
+"می‌کند"
+
+#: ../../source/schemas.rst:543 6bd4dcca3c3647679a4a16623bdc4935
+msgid "New code can use the simpler ``output.efermi``"
+msgstr "کد جدید می‌تواند از ``output.efermi`` ساده‌تر استفاده کند"
+
+#: ../../source/schemas.rst:544 15de79a55d6a478191f2cee06cedfbcc
+msgid "All existing workflows continue to function"
+msgstr "تمام گردش‌کارهای موجود به کار خود ادامه می‌دهند"
+
+#: ../../source/schemas.rst:547 d060399e5eac49e3891c282dc0891260
+msgid "Migration Guide"
+msgstr "راهنمای مهاجرت"
+
+#: ../../source/schemas.rst:549 586c89b28b814e5fbf802cc6e6fc3414
+msgid "**Old pattern** (still works):"
+msgstr "**الگوی قدیمی** (هنوز کار می‌کند):"
+
+#: ../../source/schemas.rst:556 b6533806e18c4ead80de6b9a26b7c5d1
+msgid "**New pattern** (recommended):"
+msgstr "**الگوی جدید** (توصیه شده):"
+
+#: ../../source/schemas.rst:565 d757df4af04e473697493a10f54860d8
+msgid "Advanced Usage"
+msgstr "استفاده پیشرفته"
+
+#: ../../source/schemas.rst:568 4d5cd801acc54169b84ba9d05eb6a37f
+msgid "Custom Data Extraction"
+msgstr "استخراج داده سفارشی"
+
+#: ../../source/schemas.rst:570 a98b34fd3693437894c5ea4985455216
+msgid "Extract specific data from multiple calculations:"
+msgstr "استخراج داده‌های خاص از چندین محاسبه:"
+
+#: ../../source/schemas.rst:591 731f062624e643a194cc2933f43eb867
+msgid "Database Storage"
+msgstr "ذخیره‌سازی پایگاه داده"
+
+#: ../../source/schemas.rst:593 ff83f7d606c846388d6ab0484826b525
+msgid "Store task documents in MongoDB:"
+msgstr "ذخیره اسناد وظایف در MongoDB:"
+
+#: ../../source/schemas.rst:616 02fcfa3214cf46d3981d608dd9546e76
+msgid "Schema Validation"
+msgstr "اعتبارسنجی طرحواره"
+
+#: ../../source/schemas.rst:618 25891f1954974702bd0bab47ea9cdbb4
+msgid "Pydantic models provide automatic validation:"
+msgstr "مدل‌های Pydantic اعتبارسنجی خودکار فراهم می‌کنند:"
+
+#: ../../source/schemas.rst:644 7a06c6ac4c6a42c68463a299747e9ece
+msgid "Reference"
+msgstr "مرجع"
+
+#: ../../source/schemas.rst:647 40d74fdcb922451f913cb84838c52814
+msgid "Schema Module Locations"
+msgstr "مکان ماژول‌های طرحواره"
+
+#: ../../source/schemas.rst:657 ebb755bb779d4e9786473730a9f09fb4
+msgid "Key Imports"
+msgstr "ایمپورت‌های کلیدی"
+
+#: ../../source/schemas.rst:673 ba264c2363f94c94a4546c1033fda250
+msgid "External Dependencies"
+msgstr "وابستگی‌های خارجی"
+
+#: ../../source/schemas.rst:675 5f9f2f8ff4b8483cad6974f833439b3c
+msgid "**Pydantic**: Data validation and settings management"
+msgstr "**Pydantic**: اعتبارسنجی داده و مدیریت تنظیمات"
+
+#: ../../source/schemas.rst:676 0e92e18dd5774505a400009423c70ec7
+msgid "**pymatgen**: Structure objects and materials science data types"
+msgstr "**pymatgen**: اشیاء ساختار و انواع داده علوم مواد"
+
+#: ../../source/schemas.rst:677 44652efaffe142c1bec3a926ba7f1131
+msgid "**sisl**: SIESTA file parsing"
+msgstr "**sisl**: تجزیه فایل‌های SIESTA"
+
+#: ../../source/schemas.rst:678 3d6dc53d204d4758a938fd4103f5e243
+msgid "**emmet-core**: Base model schemas (from Materials Project)"
+msgstr "**emmet-core**: طرحواره‌های مدل پایه (از Materials Project)"
+
+#: ../../source/schemas.rst:683 42a16b883bce4da7bd30be60536b4fe8
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/schemas.rst:685 65c4931cca364b6d922427a9ea6da351
+msgid ":doc:`usage` - Basic usage patterns"
+msgstr ":doc:`usage` - الگوهای استفاده پایه"
+
+#: ../../source/schemas.rst:686 fd1f1bd67efe4ee5bbef0fa98b3844a8
+msgid ":doc:`advanced-workflows` - Multi-step workflow examples"
+msgstr ":doc:`advanced-workflows` - نمونه‌های گردش‌کار چند مرحله‌ای"
+
+#: ../../source/schemas.rst:687 a54a3cd2580548d48eb949ab7fd82cbc
+msgid ":doc:`cli-database` - Database integration"
+msgstr ":doc:`cli-database` - یکپارچه‌سازی پایگاه داده"
+
+#: ../../source/schemas.rst:688 41d4c2fe6abf4a6d925d2ab5f832e806
+msgid ":doc:`troubleshooting` - Common issues and solutions"
+msgstr ":doc:`troubleshooting` - مشکلات رایج و راه‌حل‌ها"
+
+#: ../../source/schemas.rst:689 a55b64f72d9a4552a16646d081b240c9
+msgid ":doc:`api/modules` - Complete API reference"
+msgstr ":doc:`api/modules` - مرجع کامل API"
+
+#~ msgid "Fermi energy in eV ✨ **NEW in v1.1.0**"
+#~ msgstr "انرژی فرمی بر حسب eV ✨ **جدید در نسخه v۱.۱.۰**"
+
+#~ msgid "``CalculationOutput`` had ``efermi`` field"
+#~ msgstr "``CalculationOutput`` دارای فیلد ``efermi`` بود"
+
+#~ msgid ""
+#~ "``OutputDoc`` did NOT have ``efermi`` "
+#~ "(required accessing via ``calcs_reversed``)"
+#~ msgstr ""
+#~ "``OutputDoc`` فیلد ``efermi`` نداشت (دسترسی"
+#~ " از طریق ``calcs_reversed`` نیاز بود)"
+
+#~ msgid "**v1.1.0** (Current):"
+#~ msgstr "**نسخه v۱.۱.۰** (فعلی):"
+
+#~ msgid "✨ Added ``efermi`` field to ``OutputDoc``"
+#~ msgstr "✨ فیلد ``efermi`` به ``OutputDoc`` اضافه شد"

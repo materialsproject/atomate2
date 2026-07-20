@@ -1,0 +1,751 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:1
+#: 890f4be53fbb4511950d4fb26d9baecf
+msgid "Tutorial: Lua Scripts for Advanced Features"
+msgstr "آموزش: Lu Scripts برای پیشرفته ویژگی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:3
+#: a7bee60523d04928abfac04e350ef37f
+msgid ""
+"**Category**: 01-basics **Difficulty**: Intermediate **Time**: ~2 min "
+"(dry-run), ~15-20 min (full calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:9
+#: e3571078f26d45f49e2bb66dad399753
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:11
+#: 6a4e16c84c0243ed84b4a2db8a35589b
+msgid ""
+"Learn how to use Lua scripting in SIESTA for advanced geometry "
+"optimization and constraints using FLOS (Flexible Lua Objects for "
+"Siesta). Lua scripts provide more control than built-in SIESTA relaxation"
+" methods."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:15
+#: e27cd43f82b945e891ade836671e7a46
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:17
+#: 652000d44eca49e7b00838f154cf8440
+msgid "Using `LuaMaker` for Lua-enabled calculations"
+msgstr "Using `LuaMaker` for Lua-enabled calculations"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:18
+#: 37501a723b784e24b0d449ad39c4a23b
+msgid "FLOS library for geometry optimization"
+msgstr "FLOS librry برای geometry optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:19
+#: fc18f95318b54f889a7747ae1021c18a
+msgid "Common Lua scripts (LBFGS, FIRE, NEB)"
+msgstr "Common Lu scripts (LBFGS, FIRE, NEB)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:20
+#: 114b9d7620f74651a2446076b3701ec8
+msgid "Advanced geometry constraints via Lua"
+msgstr "پیشرفته geometry constrints vi Lu"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:21
+#: ba301cf434184239b38377438965f088
+msgid "Verifying SIESTA has Lua support"
+msgstr "Verifying SIESTA hs Lu suppیاt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:25
+#: fabddc6974194a909534435f7d3a77bb
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:27
+#: 1a8c948530e1447db9afc6bebe0cb916
+msgid "**Required**: [01-relaxation](../01-RelaxMaker/) completed"
+msgstr "**Required**: [01-relaxation](../01-RelaxMaker/) completed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:28
+#: 98c4ffe512c7421e8824c763427946b7
+msgid "**Required**: SIESTA compiled with Lua support"
+msgstr "**مورد نیاز**: SIESTA compiled با Lu suppیاt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:29
+#: bfa772cc067249da8ee2a72bf61e20a8
+msgid "**Required**: FLOS library available"
+msgstr "**مورد نیاز**: FLOS librry vilble"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:30
+#: cae2474ab77b4777bcb36413ccf08988
+msgid "**Recommended**: [02-relaxation-parameters](../02-BandStructureMaker/)"
+msgstr "**Recommended**: [02-relaxation-parameters](../02-BandStructureMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:34
+#: f7665bbf33524c5582db4638f848f560
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:36
+#: ee5e4ad8ce694913a969681ad043bad9
+msgid "FLOS (Flexible Lua Objects for Siesta)"
+msgstr "FLOS (Flexible Lu Objects برای Siest)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:38
+#: cb6b17ff95cc42e5bdf757563a2b1b75
+msgid ""
+"FLOS is a Lua library that provides advanced optimization algorithms for "
+"SIESTA:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:40
+#: 7590afc0fee843c2a0d028cf8dcdf64e
+msgid "**Common Lua Scripts**:"
+msgstr "**Common Lu Scripts**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:41
+#: 073b770b71ff4efe919088024cb03132
+msgid "`relax_geometry_lbfgs.lua` - L-BFGS optimizer (memory efficient)"
+msgstr "`relax_geometry_lbfgs.lua` - L-BFGS optimizer (memory efficient)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:42
+#: 468d48ca520d44f18ec51e518a365877
+msgid "`relax_geometry_fire.lua` - FIRE algorithm (good for hard cases)"
+msgstr "`relax_geometry_fire.lua` - FIRE algorithm (good for hard cases)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:43
+#: faeed6b72eb74ac3bd48594fd1920260
+msgid "`neb.lua` - Nudged elastic band calculations"
+msgstr "`neb.lua` - Nudged elastic band calculations"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:44
+#: 6c4eb29f33a64639acf0876ae3d15ea4
+msgid "`constrained_relax.lua` - Custom geometric constraints"
+msgstr "`constrained_relax.lua` - Custom geometric constraints"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:46
+#: deaef650c32e49d2869a0ff0e5ea5671
+msgid "**Advantages**:"
+msgstr "**Advntges**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:47
+#: 0557ea8bd9124146ba5c61a612e9aca9
+msgid "✓ More optimization algorithms than built-in SIESTA"
+msgstr "✓ Mیاe optimiztion lgیاithms thn built-in SIESTA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:48
+#: e16cb1a7c8bd4606ba9a164d0a7e4dd0
+msgid "✓ Custom constraints (distances, angles, planes)"
+msgstr "✓ Custom constrints (distnces, ngles, plnes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:49
+#: 4f0d24c9657e4ce1bbb7a013ee5b6af9
+msgid "✓ On-the-fly parameter adjustment"
+msgstr "✓ On--fly prmeter djustment"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:50
+#: d52f04b00bfd4a679f37c3ba03d8d240
+msgid "✓ Advanced NEB calculations"
+msgstr "✓ پیشرفته NEB clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:51
+#: 3baaeb31c94246cba17cc56095b366e0
+msgid "✓ Better convergence for difficult systems"
+msgstr "✓ Better convergence برای difficult systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:53
+#: b220b3d93a4c458196f06ada80645ad7
+msgid "LuaMaker vs RelaxMaker"
+msgstr "LuaMaker vs RelaxMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:55
+#: 36c21fa1dfb34d4693569ed5e22c8711
+msgid "**RelaxMaker**:"
+msgstr "**RelaxMaker**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:56
+#: 0facc0c78eb14a4e926cfc89509eaf7b
+msgid "Uses built-in SIESTA optimization (CG, Broyden, etc.)"
+msgstr "Uses built-in SIESTA optimiztion (CG, Broyden, etc.)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:57
+#: 592cf1df431e439da1bbd6cb8fa0da5f
+msgid "Simpler setup, no external dependencies"
+msgstr "Simpler setup, no externl dependencies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:58
+#: 7b13e9f5b46547c3b83d616471f98935
+msgid "Good for most standard relaxations"
+msgstr "Good برای most stوrd relxtions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:60
+#: f6ac0bcb6edd4c8f9ad9bab387d3fde5
+msgid "**LuaMaker**:"
+msgstr "**LuaMaker**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:61
+#: c503d33c286c44b7a02a7940394338f4
+msgid "Uses FLOS Lua scripts for optimization"
+msgstr "Uses FLOS Lu scripts برای optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:62
+#: fa36dfef431e49269f0717b33bc94019
+msgid "Requires SIESTA with Lua support"
+msgstr "Requires SIESTA با Lu suppیاt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:63
+#: 40f78f28cac649ae9f47a1504328678a
+msgid "Better for advanced cases (NEB, custom constraints, difficult convergence)"
+msgstr "Better برای dvnced cses (NEB, custom constrints, difficult convergence)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:67
+#: d6e174d5577b44bd8ae45547b5b779e3
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:69
+#: 4824e6f697d446a98d7384ba32ea2fd2
+msgid "This directory contains:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:71
+#: d18dcf2eb6a74fe78336bc10cd98c616
+msgid "**`LuaMaker_basic.py`** - Basic Lua-enabled relaxation using FLOS library"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:75
+#: f5ea37734b56494e84bb91fbc3d3b821
+msgid "Alternative: Using CLI Tool"
+msgstr "Alterntive: استفاده از CLI Tool"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:77
+#: 797f51920c794cf39217225ad3b3ca83
+msgid "The CLI tool can also generate Lua-based relaxation scripts:"
+msgstr "The CLI tool cn lso generte Lu-bsed relxtion scripts:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:88
+#: 6e97e2efaa7a44549c55a0c4ff83cce2
+msgid ""
+"**Note**: CLI-generated scripts will check for Lua support and warn if "
+"not available."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:90
+#: e5e9d45bf5e04d6397f4c6ab15e78e48
+msgid ""
+"See the [CLI Tools documentation](../../../docs/source/cli-tools.rst) for"
+" more options."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:94
+#: 6b207b9e238d4f3283cd018447935043
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:96
+#: 1df3c75cd37f4e9f821dc9baf4390650
+msgid "Lua Script Selection"
+msgstr "Lu Script Selection"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:102
+#: eb024b03024f4357bff36cc59919684f
+msgid "**Available Scripts**:"
+msgstr "**Avilble Scripts**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:103
+#: ca82d5c368554b6c837d8e196051268f
+msgid "**LBFGS**: L-BFGS quasi-Newton (memory efficient, fast)"
+msgstr "**LBFGS**: L-BFGS qusi-Newton (memیاy efficient, fst)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:104
+#: 5da0e8c7bed44c50bcebeec0d5e4c1ea
+msgid "**FIRE**: Fast Inertial Relaxation Engine (robust for hard cases)"
+msgstr "**FIRE**: Fst Inertil Relxtion Engine (robust برای hrd cses)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:105
+#: c0e7cf8accb144d8a2f88c3b64c26738
+msgid "**CG**: Conjugate gradient (traditional method)"
+msgstr "**CG**: Conjugte grdient (trditionl method)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:106
+#: 02b3ca2d7c0a42e7a3b255cf3eaa6c8d
+msgid "**NEB**: Nudged elastic band (transition state searches)"
+msgstr "**NEB**: Nudged elstic bو (trnsition stte serches)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:110
+#: dd280d61b67747ce8dbea0cf9a1b7455
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:133
+#: 826d63e66ad7448ea7d7926d29692cc6
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:135
+#: 2a3ec5e8106345db8b9ad6793a767ab1
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:147
+#: 21c9bb4a91b44456a1e840c26385ead9
+msgid "**Files Generated**:"
+msgstr "**فایلs Generted**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:157
+#: 89018fbb23a948799214670eca14bae0
+msgid "Local Mode"
+msgstr "Locl Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:168
+#: 2ab40840bba147858c866beb5aa24f26
+msgid "**Look for in siesta.out**:"
+msgstr "**Look برای in siest.out**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:179
+#: 52214a244d44400b9885798ffb1ae9ef
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:181
+#: aa481ce5a8204cd6aefd8c6f7061c3bb
+msgid "Issue 1: \"Lua not supported in this SIESTA build\""
+msgstr "Issue 1: \"Lu not suppیاted in this SIESTA build\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:183
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:204
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:220
+#: 2d0197e6d3254fcf9ccfbabdb95760c0 3521ebf5eee84a7b9fc0be0ec102a5f5
+#: 67dda8032b54484cbe7b621ee66c30d6
+msgid "**Symptoms**:"
+msgstr "**Symptoms**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:188
+#: c4b82017608a4f6d9082df92a693c481
+msgid "**Solution**: Install SIESTA with Lua support"
+msgstr "**Solution**: Instll SIESTA با Lu suppیاt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:196
+#: b9eb94de8ecf4f8494e3e53fa4a3d355
+msgid "**Check support**:"
+msgstr "**Check suppیاt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:202
+#: 0336a8c6b69c4a909a19385bb79ed820
+msgid "Issue 2: \"FLOS library not found\""
+msgstr "Issue 2: \"FLOS librry not found\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:209
+#: c66afa3fd9304f6381aeeeaf13d5db1b
+msgid "**Solution**: Install FLOS library"
+msgstr "**Solution**: Instll FLOS librry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:218
+#: 80bbff108338419cb628bc39fb02f0f7
+msgid "Issue 3: \"Lua script not found\""
+msgstr "Issue 3: \"Lu script not found\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:225
+#: aadb01037b47401a9cf6e898542b0401
+msgid "**Solution**: Ensure script is in calculation directory"
+msgstr "**Solution**: Ensure script is in clcultion directیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:226
+#: 0575792f1d8747eebacc2c3c0fc732e5
+msgid "Dry-run mode automatically copies script"
+msgstr "Dry-run mode utomticlly copies script"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:227
+#: 499a2237aec644fc881da4593ea21fd6
+msgid "For manual runs, copy from FLOS examples:"
+msgstr "Fیا mnul runs, copy from FLOS exmples:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:232
+#: a504136abbb64100ab40ccfe209708d4
+msgid "Issue 4: \"Optimization not converging\""
+msgstr "Issue 4: \"Optimiztion not converging\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:234
+#: 9ab5953478544583a78e52dbc9e2cebb
+msgid "**Solution**: Try different Lua scripts"
+msgstr "**Solution**: Try different Lu scripts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:235
+#: 5ae7e8580695418d9430b5d485e44f0b
+msgid "**FIRE algorithm**: Better for difficult cases"
+msgstr "**FIRE lgیاithm**: Better برای difficult cses"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:240
+#: 329b3c28b2a34efca776c493251e8e84
+msgid "**Adjust force tolerance** in Lua script:"
+msgstr "**Adjust برایce tolernce** in Lu script:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:246
+#: 3c087d508cf04c6ea3518bb7c4743c97
+msgid "**Increase max steps** in siesta.fdf:"
+msgstr "**Increse mx steps** in siest.fdf:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:251
+#: 4b1aae197c2e4467b079ad5a497bdb17
+msgid "Issue 5: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:253
+#: 228dab5e998f4ff8b9eaa5ae6d14cbd0
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:255
+#: 1de1d52875aa4b00b6d9d776d4547bf2
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:257
+#: fb30e440a2ec4210aaf04cbf47a50312
+#, fuzzy
+msgid "**Solution**:"
+msgstr "**Symptoms**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:272
+#: b7e929ceebd74be7bc33304ce0bbbb1f
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section above."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:276
+#: 5376b54e5cfc430395f157e497b68313
+msgid "Verifying Lua Setup"
+msgstr "Verifying Lu Setup"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:278
+#: c55af16644394a708239b955952a11d0
+msgid "Check SIESTA Lua Support"
+msgstr "Check SIESTA Lu Suppیاt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:299
+#: 10235ae232cd4777bb5313b409aeda80
+msgid "Check FLOS Installation"
+msgstr "Check FLOS Instlltion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:312
+#: 250ec1f2fa3e4279a18fb5549c0d2ce1
+msgid "Lua Script Customization"
+msgstr "Lu Script Customiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:314
+#: ad48fc405d514fc2a531f7d595b90ce6
+msgid "Basic Structure"
+msgstr "Bsic Structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:330
+#: f1953a84c64140e7af8d579e1949a447
+msgid "Custom Constraints"
+msgstr "Custom Constrints"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:347
+#: 8d2818d695a04999a0386f6f650d89bf
+msgid "Comparison: Built-in vs Lua"
+msgstr "Comprison: Built-in vs Lu"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:349
+#: bf90767585734685a30ef8c2d51859c7
+msgid "When to Use Built-in (RelaxMaker)"
+msgstr "When to Use Built-in (RelaxMaker)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:351
+#: ffa163c52dec42d6bd50946a21bc82f7
+msgid ""
+"✓ Simple relaxations ✓ Standard systems ✓ No special constraints ✓ Faster"
+" setup (no Lua dependency)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:356
+#: 411b615340d641de9446a41441c4d5ec
+msgid "When to Use Lua (LuaMaker)"
+msgstr "When to Use Lua (LuaMaker)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:358
+#: e1a57c14ab3d489a9dbb91cd3f6ab2f0
+msgid ""
+"✓ Difficult convergence cases ✓ Custom geometric constraints ✓ NEB "
+"calculations ✓ Advanced optimization algorithms ✓ Research requiring "
+"specific methods"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:366
+#: c322f0e334a54e3fabe75cdf4cf7e54b
+msgid "Advanced Customization"
+msgstr "پیشرفته Customiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:368
+#: 5871a37ed19842af85b9d3661a9b8c94
+msgid "For more sophisticated parameter control and workflow customization:"
+msgstr "Fیا mیاe sophisticted prmeter control و wیاkflow customiztion:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:370
+#: ba6a5827470b4a17ad870ab3bcf27704
+msgid "**📖 Parameter Customization Methods**"
+msgstr "**📖 Prmeter Customiztion Methods**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:371
+#: 63f3a7a09a2b4f6fb7923c931da6a009
+msgid ""
+"[Makers vs FlowMakers](../../../docs/source/makers-vs-flowmakers.rst) - "
+"Comprehensive guide on when to use `user_params`, tier presets, or "
+"powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:372
+#: 4b066e4406ca494786f2e9c60594e30f
+msgid ""
+"[Powerups System](../../../docs/source/features.rst#powerups-system) - "
+"Runtime parameter modifications for jobs and flows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:373
+#: 21238bee48dc43919339efac125f01f3
+msgid ""
+"[Tier System](../../../docs/source/tier-system.rst) - Material-specific "
+"parameter presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:375
+#: d7b9cb4ff5cc482799dda55033db7a3e
+msgid "**🎯 Quick Examples**"
+msgstr "**🎯 Quick مثال‌ها**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:377
+#: a2885236658d45d0b5374658de7500b0
+msgid "*Using tier presets with Lua:*"
+msgstr "*استفاده از tier presets با Lu:*"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:385
+#: c68ba92069cd4c46bc314b9857ed985a
+msgid "*Using powerups for runtime modifications:*"
+msgstr "*استفاده از powerups برای runtime modifictions:*"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:397
+#: a977a2f6c2834ed7b86a9c0c5352cdd3
+msgid "*Combining Lua with custom parameters:*"
+msgstr "*Combining Lu با custom prmeters:*"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:410
+#: 4c04e31516f745bc9e54c024adfa906d
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:412
+#: c13a4fca76f04bf7a0ff56e66e2f0da8
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:414
+#: 0d470613f2554df6a6cf6d81fbf2cb15
+msgid "**Try different Lua scripts**: Test FIRE vs LBFGS performance"
+msgstr "**Try different Lu scripts**: Test FIRE vs LBFGS perبرایmnce"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:415
+#: 95c3fb339dc240d9b3b36d4fc0234768
+msgid "**Multi-step workflows**: [05-workflows](../04-RelaxMaker-StaticMaker/)"
+msgstr "**Multi-step workflows**: [05-workflows](../04-RelaxMaker-StaticMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:416
+#: 7b708e53472e45f1a54eac88fbde207f
+msgid ""
+"**NEB calculations**: [03-advanced-"
+"workflows/04-neb](../../../02-workflows/04-neb/) - Nudged elastic band "
+"with Lua"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:417
+#: 2b343aef2bc24282abfb6e3e6473d924
+msgid "**Custom constraints**: Modify Lua scripts for your needs"
+msgstr "**Custom constrints**: Modify Lu scripts برای your needs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:418
+#: fa8acf7f955e44eabd6869558d4d7f05
+msgid "**Advanced features**: Explore FLOS examples for complex optimizations"
+msgstr "**پیشرفته fetures**: Explیاe FLOS exmples برای complex optimiztions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:422
+#: 96461e041d6342e1a237a0dd5d6468b5
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:424
+#: 05165fb64e5846779ff814ed05439b42
+msgid ""
+"When using LuaMaker with custom FDF block parameters, use the `\"%block "
+"ParamName\"` syntax **directly** in `user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:426
+#: ec57f22bdadc4e528868016c579e4517
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:428
+#: b50fb3388f2a486ca905b32baeb8994b
+msgid "Correct Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:448
+#: b82e9169f45c41d189ee04172dcbac83
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:461
+#: d1f89327d1fd439cac8012839f44b134
+#, fuzzy
+msgid "**Common block parameters**:"
+msgstr "**Common Lu Scripts**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:462
+#: de90fc70b4ae47e195af627a2a5356df
+msgid "`\"%block DM.InitSpin\"` - Initial magnetic moments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:463
+#: d07c6d19be04439caa5cd37514970048
+msgid ""
+"`\"%block Geometry.Constraints\"` - Fix atoms (complementary to Lua "
+"constraints)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:464
+#: 526e8daa462040ada2ee0a6481440c82
+msgid "`\"%block DFTU.Proj\"` - DFT+U projectors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:466
+#: e13550e1f5374b4cbc703fce41ee9b35
+msgid ""
+"For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-"
+"features/02-fdf-block-inputs/)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:470
+#: 1896dc55e52648b59fbd92c2c669c9e7
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:472
+#: 7c74e8c55a3647659e5acd6d6e4afbe6
+msgid ""
+"✅ **Verify Lua support first**: Don't waste time if SIESTA lacks Lua - "
+"use dry-run to check ✅ **Start with LBFGS**: Generally most efficient "
+"algorithm for standard cases ✅ **Compare with built-in**: Use RelaxMaker "
+"as baseline to verify improvements ✅ **Try FIRE for hard cases**: If "
+"LBFGS struggles, FIRE is more robust ✅ **Read FLOS docs**: Many advanced "
+"features available (constraints, cell optimization) ✅ **Check "
+"siesta.out**: Lua prints useful convergence info at each step ✅ **Use "
+"dry-run mode**: Verify Lua script is copied correctly before running ✅ "
+"**Block parameters**: Use `\"%block ParamName\"` directly in "
+"`user_params` - NO `fdf_arguments` wrapper!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:483
+#: 4a7e6615e62c4f779e1e892ccdcd5b91
+msgid "Additional Resources"
+msgstr "Additionl Resources"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:485
+#: 5945fd33f7d245c696f2338a061b8a1e
+msgid "**FLOS Documentation**:"
+msgstr "**FLOS Documenttion**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:486
+#: 2e36b21d52e54048be2f63b9beeb703c
+msgid "GitHub: https://github.com/siesta-project/flos"
+msgstr "GitHub: https://github.com/siesta-project/flos"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:487
+#: e646cffd8f5f40d79d574efc11b67f94
+msgid "Examples: Check `flos/examples/` directory"
+msgstr "Examples: Check `flos/examples/` directory"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:488
+#: eff261c6f1ed49b493dc6753abd74301
+msgid "API reference: See FLOS documentation"
+msgstr "API reference: See FLOS documenttion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:490
+#: 4c76e8850bd24616a3a34cb1d8a733b3
+msgid "**SIESTA Manual**:"
+msgstr "**SIESTA Mnul**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:491
+#: c658d35d26344741b29981e35126d9c6
+msgid "Chapter 10: Lua scripting"
+msgstr "Chpter 10: Lu scripting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:492
+#: b1f3de96568c40b4a4356dee9b52bc57
+msgid "Section 4.7: Geometry optimization"
+msgstr "Section 4.7: Geometry optimiztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:494
+#: 16ee8c2268e8472da1777769cd567884
+msgid "**Lua Resources**:"
+msgstr "**Lu Resources**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:495
+#: 7959d700afd64a479f4c9df34e9c7e25
+msgid "Lua 5.3 manual: https://www.lua.org/manual/5.3/"
+msgstr "Lua 5.3 manual: https://www.lua.org/manual/5.3/"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:496
+#: f98dcfe047d44aa5abd6d3abb07cb94b
+msgid "Lua quick reference"
+msgstr "Lu quick reference"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/03-LuaMaker/README.md:500
+#: 49246fa0c96644b4a68555a3ebc0cf30
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid ""
+#~ "✅ **Verify Lua support first**: Don't"
+#~ " waste time if SIESTA lacks Lua "
+#~ "- use dry-run to check ✅ "
+#~ "**Start with LBFGS**: Generally most "
+#~ "efficient algorithm for standard cases ✅"
+#~ " **Compare with built-in**: Use "
+#~ "RelaxMaker as baseline to verify "
+#~ "improvements ✅ **Try FIRE for hard "
+#~ "cases**: If LBFGS struggles, FIRE is "
+#~ "more robust ✅ **Read FLOS docs**: "
+#~ "Many advanced features available (constraints,"
+#~ " cell optimization) ✅ **Check siesta.out**:"
+#~ " Lua prints useful convergence info "
+#~ "at each step ✅ **Use dry-run "
+#~ "mode**: Verify Lua script is copied "
+#~ "correctly before running"
+#~ msgstr ""
+

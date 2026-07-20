@@ -1,0 +1,240 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:1
+#: 04de8864a60c40eba21d867653457834
+msgid "Density of States (DOS) Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:3
+#: 25fe93739bfa48d2a76525a4d21a997d
+msgid ""
+"This tutorial demonstrates how to calculate density of states in "
+"atomate2siesta using **direct SIESTA FDF format**."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:5
+#: 4f26bda3b5194accb561c50c2a315aa7
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:7
+#: d22e84b5b2ca43a586650b721d27b693
+msgid "The `ProjectedDensityOfStates` block in SIESTA generates:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:9
+#: ad5b5b5d6ad8475b82fa8587a3744cc6
+msgid "**siesta.DOS**: Total electronic density of states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:10
+#: 0ba4e9b891104fc68af747bc9cc7bb16
+msgid "**siesta.PDOS**: Projected DOS (orbital-resolved on atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:11
+#: 42335b9e3ae845ee936f72ac6f392855
+msgid "**siesta.PDOS.xml**: XML format for visualization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:13
+#: 5b2eae4aba7a41da9433ac60f8ddcc00
+msgid "Key Features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:15
+#: 1c9e1d3301cb4fb69e47fd4123bbafc3
+msgid ""
+"✅ **Direct SIESTA syntax**: Use native FDF block format ✅ **Automatic "
+"comment headers**: Dataclass sections labeled in output ✅ **Works with "
+"all makers**: StaticMaker, RelaxMaker, etc. ✅ **Dry-run support**: "
+"Preview input files without calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:20
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:89
+#: 17f14647302d431488ef88fccc96759e a588a61dc78c44a8adc7bd63115d56d1
+msgid "Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:22
+#: b7685ebeee4f4a09b556260ceb86d708
+msgid "01_basic_dos.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:23
+#: 079317d2c68c4cb999237f0ab2a629e1
+msgid "Basic DOS calculation with StaticMaker using direct FDF format."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:25
+#: 927889e6ac4241a583f440c89b8193e3
+msgid "02_relax_with_dos.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:26
+#: 89d1ab0d925d468685d8ae3b5035802f
+msgid "DOS calculation during geometry optimization with RelaxMaker."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:28
+#: 8f8a10ebf9004a6bb90c9796a5ee844c
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:30
+#: 1b50853f7e4f4b2682435d73441d29cd
+msgid "Basic DOS Calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:60
+#: f8836f79c16f453d9e36cea739dbe71a
+msgid "This generates in `siesta.fdf`:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:71
+#: cf43f9c7bb8541d086bc05b9fb59d551
+msgid "ProjectedDensityOfStates Block Format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:73
+#: f20123620189457eafe5421c4ed458c4
+msgid "The SIESTA format for DOS is:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:81
+#: 80fc2f64809f4e01bf2fbc004afbcfcb
+msgid "Where:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:82
+#: be71331500d145aab6d9a8b1f53f20da
+msgid "**EF**: Energy relative to Fermi level"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:83
+#: c438aa3d67ee4a1f9251c1f606cae648
+msgid "**Emin**: Minimum energy (e.g., -10.000)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:84
+#: ed4aa5cc74c84f85bc0087a5b463f84f
+msgid "**Emax**: Maximum energy (e.g., 10.000)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:85
+#: d1382975dd5348458c28159a0d3caa8a
+msgid "**dE**: Energy spacing (e.g., 0.100)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:86
+#: bd1d1a41c0484152b43a2c9207a83e1e
+msgid "**nE**: Number of energy points (e.g., 200)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:87
+#: a3a5be4307444959a4842fbdaecae138
+msgid "**units**: Energy units (eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:91
+#: fa08d4648cf2433d9898f1953bc19bde
+msgid "Narrow energy range (around Fermi level):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:96
+#: 3621d62aefc04c26a1e85b3b9f888baf
+msgid "Wide energy range (full valence/conduction):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:101
+#: 80bc4b43ed4a485bbf9a9f02f413ea1d
+msgid "High resolution (fine energy spacing):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:106
+#: 7794f3f292bf489ba77df9080faefdce
+msgid "Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:108
+#: 397543c56de24770a1272b17c6904bc7
+msgid "When you run the calculation (not dry-run), SIESTA generates:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:110
+#: bffca116f0014fc8b774ba54d8e1dd99
+msgid "**siesta.DOS** - Total density of states (energy vs DOS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:111
+#: 8d0db6f40c9840509cf8971e7075e989
+msgid "**siesta.PDOS** - Projected DOS on atoms/orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:112
+#: 170a7dc4c0e642228dffc3ca39d7c7b6
+msgid "**siesta.PDOS.xml** - XML format for visualization tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:114
+#: e783fff537344059a58da07eb74a49da
+msgid "Usage with Different Makers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:116
+#: 1fcbc8466a4042259391b0f7e5462135
+msgid "StaticMaker (SCF only)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:125
+#: d0c359da1ee847248f23dab2bf531113
+msgid "RelaxMaker (geometry optimization)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:134
+#: 27834c3ad53242dbacb611f43d52e384
+msgid "BandStructureMaker (bands + DOS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:143
+#: f480d0d099f54adbb410fb6017688231
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:145
+#: 4a4a94b314df422eb95dcdd470c29f93
+msgid "**Band structure calculations**: `tutorials/01-basics/03-band-structure/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:146
+#: 50f84dd505e043f5800f01b4b17bf377
+msgid "**SIESTA Manual**: Section on ProjectedDensityOfStates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/02-physics-features/01-dos/README.md:147
+#: ee41a65f879a4de69007e3fa0a2ccdbc
+msgid ""
+"**Dataclass reference**: "
+"`src/atomate2/siesta/dataclass/density_of_states_and_band_structure.py`"
+msgstr ""
+

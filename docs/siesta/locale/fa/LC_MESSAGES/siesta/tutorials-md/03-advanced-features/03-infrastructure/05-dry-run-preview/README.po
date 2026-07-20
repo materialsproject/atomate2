@@ -1,0 +1,1029 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:1
+#: 4ddf554404004f0ea11955289a1930b5
+msgid "Dry-Run Mode Tutorial"
+msgstr "Dry-Run Mode Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:3
+#: f005606515804639af9942e3fd928f4a
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:5
+#: 1ddec1345a6f4f6eabc3b583a94d323a
+msgid ""
+"**Dry-run mode** is a powerful feature that allows you to preview "
+"workflows and generate complete SIESTA input files **without running "
+"expensive calculations**. This is essential for:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:7
+#: 151fbea4f2f747ed839aa5ed444dacb3
+msgid ""
+"**Validation**: Verify workflow setup before committing computational "
+"resources"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:8
+#: 68bf398233d74f549359b9651d353bd5
+msgid ""
+"**Parameter Inspection**: Check all SIESTA parameters in generated input "
+"files"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:9
+#: d2c113a486664f378e1f553f7102374b
+msgid ""
+"**Structure Preview**: Visualize transformed structures (relaxation, EOS,"
+" surfaces)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:10
+#: ad7f3d78f1e24fdf82d4d7e6e46c7696
+msgid ""
+"**Time Savings**: Convergence studies can be validated in seconds instead"
+" of hours"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:11
+#: c26a05179e544e4a8e6cbb6847b9725f
+msgid "**Zero Cost**: No SIESTA calculations are performed"
+msgstr "**Zero Cost**: No SIESTA clcultions re perبرایmed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:13
+#: cab17e06925246f9a35442488c64b520
+msgid "When to Use Dry-Run Mode"
+msgstr "When to Use Dry-Run Mode"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:15
+#: f3bfb7b9783c42f68b0dba4db37687e6
+msgid "✅ **Before running expensive workflows**:"
+msgstr "✅ **Beبرایe running expensive wیاkflows**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:16
+#: dc3a451cfddb4982a344ed62b085fb82
+msgid "Convergence studies (k-points, mesh cutoff, basis parameters)"
+msgstr "همگرایی studies (k-points, mesh cutoff, bsis prmeters)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:17
+#: c91d4f0f988940d9b38afd061db75760
+msgid "EOS calculations with multiple volumes"
+msgstr "EOS clcultions با multiple volumes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:18
+#: 5e36e93d7a5246cba39055d8ce13fe4d
+msgid "Surface energy calculations"
+msgstr "Surfce energy clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:19
+#: f50c0437d98d4c01b85edde05a24c04f
+msgid "NEB transition state searches"
+msgstr "NEB trnsition stte serches"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:20
+#: f69094c3f8ff40f9a5fd81bfa95751a1
+msgid "Phonon calculations with large supercells"
+msgstr "فونون clcultions با lrge supercells"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:22
+#: 83530afbd9c94162b5c7c1390011abb0
+msgid "✅ **When learning atomate2siesta**:"
+msgstr "✅ **When lerning tomte2siest**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:23
+#: a6af5b02e0f942bf98f8906d53afc985
+msgid "Understand how workflows transform structures"
+msgstr "Understو how wیاkflows trnsبرایm structures"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:24
+#: d7837856c36344bc835f3b02929c2dd9
+msgid "Learn SIESTA parameter organization"
+msgstr "Lern SIESTA prmeter یاgniztion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:25
+#: de75b77149a04123a6b340bbec386ce4
+msgid "Explore different calculation types risk-free"
+msgstr "Explیاe different clcultion types risk-free"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:27
+#: 0c9b0d3b84794d1b803981fcf1bf2d97
+msgid "✅ **For workflow development**:"
+msgstr "✅ **Fیا wیاkflow development**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:28
+#: 470876c7616143fe889b266da7482236
+msgid "Test new workflow combinations"
+msgstr "Test new wیاkflow combintions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:29
+#: 75e1ba8c23d14b5899e240789d1cb13e
+msgid "Verify parameter propagation"
+msgstr "Verify prmeter propgtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:30
+#: 16fbccb79ed94a6ba163402815a0d586
+msgid "Debug complex multi-step workflows"
+msgstr "Debug complex multi-step wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:34
+#: 8b48835550b645949edbe57f894a9e4d
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:36
+#: 0f07f8ffaf9a4edeafa9ebcf293f73a2
+msgid "1. What Dry-Run Generates"
+msgstr "1. Wht Dry-Run Genertes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:38
+#: f6a75fde0b6a46e39e43c25171ba4a76
+msgid "Each dry-run job creates a **complete SIESTA input package**:"
+msgstr "Ech dry-run job cretes  **complete SIESTA input pckge**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:50
+#: 3d1d224b55774acb8fa9284daab478ae
+msgid "**Key file: `siesta.fdf`** - Contains complete calculation setup:"
+msgstr "**Key file: `siesta.fdf`** - Contains complete calculation setup:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:51
+#: bb63abd22d794f45a91d01c50f385e2b
+msgid "All FDF parameters (basis, k-points, mesh cutoff, SCF, etc.)"
+msgstr "All FDF prmeters (bsis, k-points, mesh cutoff, SCF, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:52
+#: 0c37ed6ecaf7457fa4c481469e4ef922
+msgid "PAO.BasisSize, OccupationFunction, electronic temperature"
+msgstr "PAO.BsisSize, OccuptionFunction, electronic temperture"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:53
+#: 252210409b2f4551814a82630d8d90b8
+msgid "Convergence criteria, mixing parameters"
+msgstr "همگرایی criteri, mixing prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:54
+#: c98e17138dc746318158147be9a07820
+msgid "Output options"
+msgstr "Output options"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:56
+#: 492a432e67bf4615b6af6622c698dbfd
+msgid "2. Automatic Propagation in Flows"
+msgstr "2. Automatic Propagation in Flows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:58
+#: a56b2fa750bf4eac9507ec7c12fa479e
+msgid ""
+"When you set `dry_run=True` at the **flow level**, it automatically "
+"propagates to **all child makers**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:71
+#: 5dda73dbdf714000875af0cbcdbcb262
+msgid "**Supported flows** (all inherit from `BaseSiestaFlowMaker`):"
+msgstr "**Supported flows** (all inherit from `BaseSiestaFlowMaker`):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:72
+#: 3c5127511e81433daa5d1d7811e108d8
+msgid ""
+"Convergence flows: `KpointsConvergenceMaker`, "
+"`MeshCutoffConvergenceMaker`, `BasisParametersConvergenceMaker`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:73
+#: d8710a3ea5ac4f5d942bd56c0fb7a2e0
+msgid "EOS flows: `EOSMaker`, `EOSBasisConvergenceMaker`"
+msgstr "EOS flows: `EOSMaker`, `EOSBasisConvergenceMaker`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:74
+#: df4f9884eaa7427d9181d46625cfa5bb
+msgid "Advanced workflows: `ElasticConstantsMaker`, `NEBMaker`"
+msgstr "Advanced workflows: `ElasticConstantsMaker`, `NEBMaker`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:75
+#: 53e3b4d428524f84957fb7fe424ac130
+msgid "Surface workflows: `SurfaceEnergyMaker`, `MultiSurfaceEnergyMaker`"
+msgstr "Surface workflows: `SurfaceEnergyMaker`, `MultiSurfaceEnergyMaker`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:76
+#: 40b379071b774d2288ab409fdcb2b06f
+msgid "Adsorption workflows: `AdsorptionScanMaker`, `AdsorptionOptimizationMaker`"
+msgstr "Adsorption workflows: `AdsorptionScanMaker`, `AdsorptionOptimizationMaker`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:78
+#: 7964d4f4bcf64a40b4ed1f6878f2a688
+msgid "3. Job-Level vs Flow-Level Dry-Run"
+msgstr "3. Job-Level vs Flow-Level Dry-Run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 25b614a4f95547e99eac71d2275ea4cb
+msgid "Approach"
+msgstr "Approch"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 1eaa403e677e4ed2915552c9ab7088b6
+msgid "Use Case"
+msgstr "Use Cse"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: fe81583ac1c8496c95be5d00fee464c7
+msgid "Example"
+msgstr "مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 3dda70a9677543cb8086b1c6747dadf3
+msgid "**Job-Level**"
+msgstr "**Job-Level**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: d60a7519757249ebba1f4dfd2f0d8dbf
+msgid "Single calculations"
+msgstr "Single clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 9ed7c0818e13493c8d8e935fb3dd3d1e
+msgid "`RelaxMaker(..., dry_run=True)`"
+msgstr "`RelaxMaker(..., dry_run=True)`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 2480e1f660954a3f95578bffa0fcf834
+msgid "**Flow-Level**"
+msgstr "**Flow-Level**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 363f4e5a207f42c9a561c9e80def76d0
+msgid "Multi-step workflows"
+msgstr "Multi-step wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 4a0e1319b8b1487b8d47a79655a00c82
+msgid "`KpointsConvergenceMaker(..., dry_run=True)`"
+msgstr "`KpointsConvergenceMaker(..., dry_run=True)`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:85
+#: e5c739f91a2c41c6b427f42b56b55847
+msgid ""
+"**Recommendation**: Use **flow-level** for most cases - it's simpler and "
+"ensures all child makers inherit dry-run mode automatically."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:89
+#: 108f590c277e402e96589f8bc84af459
+msgid "Example 1: Job-Level Dry-Run (Basic)"
+msgstr "مثال 1: Job-Level Dry-Run (Bsic)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:91
+#: 7e2a4fb49c5743a4bfa10ef03e89477f
+msgid "Simple Relaxation Preview"
+msgstr "Simple Relxtion Preview"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:119
+#: 9ee0226d2b0f4b5585f54452688adcef
+msgid "Key Parameters"
+msgstr "Key Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:128
+#: 9884cc0146f7467592e256026555d634
+msgid "Inspecting Generated Files"
+msgstr "Inspecting Generted فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:145
+#: 93f3aa64bcfb40f08e3ff70794217cde
+msgid "Example 2: Flow-Level Dry-Run (Recommended)"
+msgstr "Example 2: Flow-Level Dry-Run (Recommended)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:147
+#: c2063187e3784bedb76e58481215a25b
+msgid "K-Points Convergence Study"
+msgstr "K-Points همگرایی Study"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:149
+#: f6e6e47f940440bda226e10c3d4c9941
+msgid "Without dry-run:"
+msgstr "Without dry-run:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:159
+#: d70baf847ced41e09889d4776d53577d
+msgid "With dry-run:"
+msgstr "With dry-run:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:175
+#: 12b4953a88e64d44b46dcc4a2b5e5069
+#, python-format
+msgid "**Time saved**: 50 minutes → 5 seconds (99.8% reduction!)"
+msgstr "**زمان sved**: 50 minutes → 5 seconds (99.8% reduction!)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:177
+#: c204044c789d4bed867b63cfd9ea36d0
+msgid "Mesh Cutoff Convergence Study"
+msgstr "Mesh Cutoff همگرایی Study"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:198
+#: 0fdb94edbe45479bb280cac4edf79edb
+#, python-format
+msgid "**Time saved**: 70 minutes → 5 seconds (99.9% reduction!)"
+msgstr "**زمان sved**: 70 minutes → 5 seconds (99.9% reduction!)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:200
+#: dce321fea6134a0787dbee7c1c173dbb
+msgid "EOS Workflow"
+msgstr "EOS گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:222
+#: 8a2f906d0fdb4025802ef4980ca94b03
+msgid ""
+"**Benefit**: Verify all 7 volume transformations before 70-minute "
+"calculation!"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:226
+#: df063d11f9544d2fbd00f7f1525095c4
+msgid "Example 3: Different Output Formats"
+msgstr "مثال 3: Different Output Fیاmts"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:228
+#: a85b9919023e42cdb6d92b943aabeb6d
+msgid "Available Formats"
+msgstr "Avilble Fیاmts"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:237
+#: 913cefe4a5f547a387be03b713a6800e
+msgid "Format Comparison"
+msgstr "Fیاmt Comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 5188b6b51cb24942b2a13625c77cf62c
+msgid "Format"
+msgstr "Fیاmt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 27ba8f9d5b9c4d9aa95698dcf46741f4
+msgid "Best For"
+msgstr "Best Fیا"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 5d34c73f2d3044ca8e98395acfbf4849
+msgid "Tool Compatibility"
+msgstr "Tool Comptibility"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 477785a3ee82455b802e333e3a5b311f
+msgid "**CIF**"
+msgstr "**CIF**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: fff547c87c1a4dafa0277ef42edf7e28
+msgid "General use, sharing"
+msgstr "Generl use, shring"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 65e0883a53484efbb9e5f59fa8eb3a73
+msgid "VESTA, Avogadro, Mercury"
+msgstr "VESTA, Avogdro, Mercury"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 1df118c9c42b47d7856930fb849529e9
+msgid "**XSF**"
+msgstr "**XSF**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 67e900b967764b9bbd0c35583a57905c
+msgid "Visualization"
+msgstr "Visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: ac47ca7c87964d6cbc08b4c695374780
+msgid "XCrySDen, XCrySDen"
+msgstr "XCrySDen, XCrySDen"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 98a7da8e3afe4522813eeb03b46cf428
+msgid "**JSON**"
+msgstr "**JSON**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 0cbfcd4f0b24475b976e29223db0cf21
+msgid "Python scripts"
+msgstr "Python scripts"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 64f27a01237249e795e23bb48c0dcda7
+msgid "pymatgen, custom analysis"
+msgstr "pymtgen, custom nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: cea3c88c2387467c97a78faecd17d141
+msgid "**POSCAR**"
+msgstr "**POSCAR**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: ccbfcab3c533417d91ef266294f6839e
+msgid "VASP users"
+msgstr "VASP users"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: c0ae92336f75484bad2b2f156ad1e401
+msgid "VESTA, p4vasp"
+msgstr "VESTA, p4vsp"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:246
+#: c1621ba7d04d4facad046b78ea420718
+msgid "Example: XSF for Visualization"
+msgstr "مثال: XSF برای Visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:265
+#: b1c36204733649fd95697e2e0ca984a4
+msgid "Advanced Usage"
+msgstr "پیشرفته Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:267
+#: 8072a3e06a5540458e7d0aba242844b7
+msgid "Custom Labels for Organization"
+msgstr "Custom Lbels برای Orgniztion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:269
+#: 749990e3050a42539285207e65d53ccf
+msgid "Organize dry-run outputs with meaningful labels:"
+msgstr "Orgnize dry-run outputs با meningful lbels:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:290
+#: ad9d4a6fdd0443969fa611f5f2e5969f
+msgid "Workflow Summary Files"
+msgstr "گردش کار Summry فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:292
+#: 36d820fe09e949b79fb6e178a93c417a
+msgid "Dry-run automatically generates `workflow_summary.txt`:"
+msgstr "Dry-run automatically generates `workflow_summary.txt`:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:317
+#: 49379b4b39ed46398c8d443a01456ca1
+msgid "Dry-Run in Complex Workflows"
+msgstr "Dry-Run in Complex گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:319
+#: 1d6bd7a13d064a38bee8c90e2446de21
+msgid "Dry-run works with nested workflows:"
+msgstr "Dry-run wیاks با nested wیاkflows:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:348
+#: a4eccc47931f424b9dfea33fe111d54f
+msgid "Understanding Dry-Run Output"
+msgstr "درک Dry-Run Output"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:350
+#: 25a6fff044a8469a8bfc7d2baffd3af0
+msgid "What Gets Generated vs What Doesn't"
+msgstr "Wht Gets Generted vs Wht Doesn't"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:352
+#: 9b7e82c4ccc4495e9d045b8a325505cd
+msgid "✅ **Generated** (dry-run mode):"
+msgstr "✅ **Generted** (dry-run mode):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:353
+#: 5f508114ae6441b4833b3b75556d5a9c
+msgid "Structure files (CIF, XSF, JSON, POSCAR)"
+msgstr "Structure files (CIF, XSF, JSON, POSCAR)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:354
+#: 6388892b56474f33b606ffdd607e7900
+msgid "Complete `siesta.fdf` with ALL parameters"
+msgstr "Complete `siesta.fdf` with ALL parameters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:355
+#: 8d5ff8e5b93748c9a8fcb564303d53a9
+msgid "`structure.fdf` with geometry"
+msgstr "`structure.fdf` with geometry"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:356
+#: 565ba9a7771a4e9d828da03ff3c0778e
+msgid "Pseudopotential files (symlinks or copies)"
+msgstr "Pseudopotentil files (symlinks یا copies)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:357
+#: 3224a577134a4145b39e8eaf9f990799
+msgid "`siesta_parameters.json`"
+msgstr "`siesta_parameters.json`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:358
+#: 8e5ddddccb7b4f49b28f4bb3ae313fbf
+msgid "`workflow_summary.txt`"
+msgstr "`workflow_summary.txt`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:360
+#: f1b9eca667064fd49e4b005679eb632b
+msgid "❌ **NOT Generated** (dry-run mode):"
+msgstr "❌ **NOT Generted** (dry-run mode):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:361
+#: a35236b4e8744b48a954d35a3945be60
+msgid "SIESTA calculation outputs (.out, .XV, .DM, .EIG, etc.)"
+msgstr "SIESTA clcultion outputs (.out, .XV, .DM, .EIG, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:362
+#: e01e5201444649b1ba5410303f776c88
+msgid "Energy values"
+msgstr "Energy vlues"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:363
+#: 4db8fb0c88f549a19a498d73a289afbe
+msgid "Forces/stresses"
+msgstr "Fیاces/stresses"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:364
+#: 31d9ad85889841b7a79a1e1a163496ef
+msgid "Electronic structure data"
+msgstr "Electronic structure dt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:365
+#: 2e6bfe1afc464d0a85315e5aba7604fc
+msgid "Convergence information"
+msgstr "همگرایی inبرایmtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:367
+#: f1dd6e7ee3194dc99a4dd5db2a2b8ccf
+msgid "Transition from Dry-Run to Real Calculation"
+msgstr "Trnsition from Dry-Run to Rel محاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:369
+#: 0b26ff0a39c84fd6bd96c1cfe9702390
+msgid "Once you've validated the workflow:"
+msgstr "Once you've vlidted  wیاkflow:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:388
+#: 7fb276362316488a96a0d2d173e716ad
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:390
+#: 8189d72af7cd42fcbf494cb22f97c10a
+msgid "1. Always Dry-Run First"
+msgstr "1. Alwys Dry-Run First"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:392
+#: 8aab869dde374369837cedcd4113e39b
+msgid "**Before running**:"
+msgstr "**Beبرایe running**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:393
+#: 5cb0dfe59c894d278ebe4a3255412c2f
+msgid "Any convergence study (k-points, cutoff, basis)"
+msgstr "Any convergence study (k-points, cutoff, bsis)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:394
+#: fef139128ddf449195f321edc3fdf316
+msgid "Expensive workflows (EOS, elastic constants, phonons)"
+msgstr "Expensive wیاkflows (EOS, elstic constnts, phonons)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:395
+#: 3e6435c267e84948ac30b0edfd5355ba
+msgid "New workflow types you haven't used before"
+msgstr "New wیاkflow types you hven't used beبرایe"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:396
+#: 9446cc6f6bcf402f9adec65058a75b8c
+msgid "Complex multi-step workflows"
+msgstr "Complex multi-step wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:398
+#: 6d67e8f4473746d8bbf12f5bd7c9974d
+msgid "**Why**: Catch configuration errors before wasting computational time!"
+msgstr "**Why**: Ctch configurtion errیاs beبرایe wsting computtionl time!"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:400
+#: bd35f442e184410f97f8d25548da0d35
+msgid "2. Inspect siesta.fdf Files"
+msgstr "2. Inspect siest.fdf فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:402
+#: 4b42faf69b934a7f80d8ca449ea84dc0
+msgid "Critical checks:"
+msgstr "Criticl checks:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:420
+#: 16c18698151e4560b56da68cda464c79
+msgid "3. Use Flow-Level Dry-Run"
+msgstr "3. Use Flow-Level Dry-Run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:422
+#: dcbc9f4996f74d77928a2f174f93e19d
+msgid "**Recommended**:"
+msgstr "**Recommended**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:427
+#: d1b8c779c25f40ac8cb36c08469a3bec
+msgid "**Avoid (manual configuration)**:"
+msgstr "**Avoid (mnul configurtion)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:433
+#: 9d62ad4ee3cf4403868dc606b224ad89
+msgid "4. Organize with Custom Labels"
+msgstr "4. Orgnize با Custom Lbels"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:435
+#: 73324ae4f0ff4a7e9f85d6db45aa97d7
+msgid "Use descriptive labels for easy navigation:"
+msgstr "Use descriptive lbels برای esy nvigtion:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:441
+#: 4043faa033dd41929d25214cc97646b3
+msgid "5. Choose Appropriate Format"
+msgstr "5. Choose Approprite Fیاmt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:443
+#: fa523cdc36f240528880e5b2ad7bde21
+msgid "**Default (CIF)**: Good for most cases"
+msgstr "**Defult (CIF)**: Good برای most cses"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:444
+#: c30874094c71426b871907195c19db2f
+msgid "**XSF**: If you'll visualize with XCrySDen"
+msgstr "**XSF**: If you'll visulize با XCrySDen"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:445
+#: 8a82543868054e229adacd818d39376d
+msgid "**JSON**: If you'll parse structures with Python"
+msgstr "**JSON**: If you'll prse structures با Python"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:446
+#: f2e01c42b61848b6916ab4764e0b3266
+msgid "**POSCAR**: If collaborating with VASP users"
+msgstr "**POSCAR**: If collbیاting با VASP users"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:450
+#: f99181f253db4c37aca8da5c12862e28
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:452
+#: b96c24026aff4820b0a198055b5741f5
+msgid "Issue 1: Dry-Run Not Generating Files"
+msgstr "Issue 1: Dry-Run Not Generting فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:454
+#: d9679c2a961e42339f5dc6da695bad05
+msgid "**Problem**: No output files generated"
+msgstr "**Problem**: No output files generted"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:456
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:472
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:489
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:509
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:523
+#: 6d2641fd97f842bab92f90dd0d94dc0d 73bdf1e4333d44c2908d97b627095391
+#: a0fca325e5cd462f9289f35bcb87b701 e759863d38af4c56b5cff4ced82650ba
+#: f35a3fccefd947368c00d460841b6a18
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:468
+#: fa30f637e0ef41758449e60ee6ff5ab4
+msgid "Issue 2: siesta.fdf Missing Parameters"
+msgstr "Issue 2: siest.fdf Missing Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:470
+#: d447121dcb9c4597a15e8b9ed86b1b88
+msgid "**Problem**: Expected parameters not in `siesta.fdf`"
+msgstr "**Problem**: Expected parameters not in `siesta.fdf`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:485
+#: f440956614964543a0be91af4da9600d
+msgid "Issue 3: Flow-Level Dry-Run Not Propagating"
+msgstr "Issue 3: Flow-Level Dry-Run Not Propagating"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:487
+#: e3e29f2bcfc44bb8b6c0e1458e06213f
+msgid "**Problem**: Child makers not inheriting dry-run"
+msgstr "**Problem**: Child mkers not inheriting dry-run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:505
+#: 171c9563b38f4924b32b62164554b348
+msgid "Issue 4: Pseudopotential Files Missing"
+msgstr "Issue 4: Pseudopotentil فایلs Missing"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:507
+#: 6b6a9acf01b3414082dc7a7e68e7a306
+msgid "**Problem**: `.psml` or `.psf` files not in output"
+msgstr "**Problem**: `.psml` or `.psf` files not in output"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:519
+#: 162158b032c04a19a8c6ec6cf1dc311c
+msgid "Issue 5: Can't Find Generated Files"
+msgstr "Issue 5: Cn't Find Generted فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:521
+#: 5ead1c4370b14ab583f2b5cd97d95c50
+msgid "**Problem**: Don't know where files were saved"
+msgstr "**Problem**: Don't know where files were sved"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:538
+#: 61d143e06fa24cae9263fd452f45559e
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:540
+#: 732b111874a1465aa08d18838c045cb4
+msgid "Complete Dry-Run Parameters"
+msgstr "Complete Dry-Run Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:561
+#: 3faf5bed2f0c439680aaf96e11d36f64
+msgid "Format Options"
+msgstr "Fیاmt Options"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:574
+#: 382ccc4eed1148969782b2e3d87e43f7
+msgid "Integration with Other Features"
+msgstr "Integrtion با Or ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:576
+#: 4607784339f8461a95a3ef87ada00c9c
+msgid "With Powerups"
+msgstr "With Powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:595
+#: 9a959672d61e446bba22813841f4c14d
+msgid "With Tier System"
+msgstr "With Tier System"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:609
+#: 9d7e37a70c314117a6fd3d6495627e75
+msgid "With Custodian"
+msgstr "With Custodin"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:623
+#: 79a68fcee72e456192fa2a4037305d99
+msgid "Performance Comparison"
+msgstr "Perبرایmnce Comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:625
+#: bb5bf34f1996446682a22f323a551429
+msgid "Typical Time Savings"
+msgstr "Typicl زمان Svings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 6a5243e1975641b7b4dd9f0a88b1a747
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: e5942cbddb874d4c9dbd598663701f7b
+msgid "Real Calculation"
+msgstr "Rel محاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 25d9ec5d86d44d9785547f75428c9607
+msgid "Dry-Run"
+msgstr "Dry-Run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 298b77a8a0954525996bb700e4ece51e
+msgid "Time Saved"
+msgstr "زمان Sved"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 68897444835b4389b0ecb9ca48e37dfc
+msgid "Single relax"
+msgstr "Single relx"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 5d05618a0a584debbbcb9ab21b74b2b3
+msgid "10 min"
+msgstr "10 min"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: cd5db6f4d1034e508371731e54a8f85e
+msgid "1 sec"
+msgstr "1 sec"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 1b3944351ae64d4da5c355b163bc5828
+msgid "99.8%"
+msgstr "99.8%"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 4529ac8cff0e45bcad1491e42306b805
+msgid "K-points (5 points)"
+msgstr "K-points (5 points)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: c09697d87aee45588a06d8523490fbfa
+msgid "50 min"
+msgstr "50 min"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: d7d70242cb9f4ea5a6e1da726f1f9c29
+msgid "3 sec"
+msgstr "3 sec"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 7f44f8114fff4c2faa117ff3894ed39a af5b6c65d2154167a2afb57105ce7908
+#: bb9006c222024b31aa83df25ad28e44b cabc4fb8267d48149a3bf113241478b0
+#: dd51a2048cd849d6a0ef404a4ec18b52
+msgid "99.9%"
+msgstr "99.9%"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 5e368c36fd32457cbc0548baccbd1650
+msgid "Mesh cutoff (7 points)"
+msgstr "Mesh cutoff (7 points)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 86980a69c99e4bb6b33692b1b3077edc 8bc79e4db78b4745aa826b662c360e18
+msgid "70 min"
+msgstr "70 min"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 5336ee66a36840438f3c04632256caee 7ecac49c1942496db2baa08ee1cfa8a2
+msgid "5 sec"
+msgstr "5 sec"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: dedf060696294ec1b92626c9b75bfb1a
+msgid "EOS (7 volumes)"
+msgstr "EOS (7 volumes)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 73afbf0375ff43f4a38367941c1f0893
+msgid "EOS + basis (28 calcs)"
+msgstr "EOS + bsis (28 clcs)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 994db21a959d4010b02b72ff5e0f4ce8
+msgid "280 min"
+msgstr "280 min"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 940a2b4ae6d7470ca4da5ce3a2db9b2a
+msgid "10 sec"
+msgstr "10 sec"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: f413ea64584d423e901d1a36e38a103b
+msgid "Phonon (50 displacements)"
+msgstr "فونون (50 displcements)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 3d5294f4b48e4bccb17cb0a3a3d20e09
+msgid "500 min"
+msgstr "500 min"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md
+#: 78781f5da03b4223a58a66482a7fdb45
+msgid "15 sec"
+msgstr "15 sec"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:636
+#: 15cefeaa44404aeca6af492deca1e69f
+msgid "Storage Requirements"
+msgstr "Stیاge Requirements"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:638
+#: eceffb86fe4140c29b9db6e8cc5fe1c0
+msgid "Dry-run output is minimal:"
+msgstr "Dry-run output is miniml:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:639
+#: 43d7239b1f454261a1158484c904a97c
+msgid "Structure file: ~1-10 KB"
+msgstr "Structure file: ~1-10 KB"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:640
+#: 29a031f224944708a203d38503525db6
+msgid "siesta.fdf: ~5-10 KB"
+msgstr "siest.fdf: ~5-10 KB"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:641
+#: 4d6656e778974ebface562821575bd3c
+msgid "structure.fdf: ~1-5 KB"
+msgstr "structure.fdf: ~1-5 KB"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:642
+#: b904f4c727524c4bb72e796f33b50fdb
+msgid "Total per job: ~10-50 KB"
+msgstr "Totl per job: ~10-50 KB"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:644
+#: 21e7e0a6adc24759a82a0247790d5ac5
+msgid "vs. Real calculation output: ~1-100 MB per job"
+msgstr "vs. Rel clcultion output: ~1-100 MB per job"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:648
+#: 6a2b93c2e4684a608dc853c5e2399925
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:650
+#: 9196d3ef7ae0494eb0fc0461f49cd6cd
+msgid "**Try the tutorial**:"
+msgstr "**Try  tutیاil**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:656
+#: 807ef7e7698346ae8414056f0f0a1b77
+msgid "**Experiment with example types**:"
+msgstr "**Experiment با exmple types**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:657
+#: 17a313c59020447db21b9f32cdccd4fc
+msgid "`EXAMPLE_TYPE = \"job_level\"` - Basic dry-run"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:658
+#: 0d928bc3784441efaec414cf0c843319
+msgid "`EXAMPLE_TYPE = \"flow_level\"` - Workflow dry-run (recommended)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:659
+#: 2a1378283968435787734a9ed2b86427
+msgid "`EXAMPLE_TYPE = \"formats\"` - Test output formats"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:661
+#: 872b7231c04a4c09aa3b6a5f81fc220d
+msgid "**Inspect generated files**:"
+msgstr "**Inspect generted files**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:667
+#: 1e33023c2124486ab47a0e0a8edcdd7a
+msgid "**Apply to your own workflows**:"
+msgstr "**Apply to your own wیاkflows**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:668
+#: aaa7fa33c88f408a87f334813752f381
+msgid "Add `dry_run=True` to any maker or flow"
+msgstr "Add `dry_run=True` to any maker or flow"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:669
+#: 74ec2685cac641b993452b3a838d2b81
+msgid "Validate before running expensive calculations"
+msgstr "Vlidte beبرایe running expensive clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:670
+#: 72ff0ed5d1674d5d9c1c7da9d6697282
+msgid "Save hours of computational time!"
+msgstr "Sve hours of computtionl time!"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:674
+#: 767638665d1a447ca5890a23e13e28a0
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:676
+#: 5feb45842e664665a5000a120d7d05c1
+msgid "Key Takeaways"
+msgstr "Key Tkewys"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:678
+#: 7856631454054001975a0241b966febb
+#, python-format
+msgid ""
+"✅ **Dry-run mode** generates complete SIESTA input files without running "
+"calculations ✅ **Time savings**: 99.9% reduction in validation time "
+"(hours → seconds) ✅ **Automatic propagation**: Set `dry_run=True` once at"
+" flow level ✅ **Zero cost**: Perfect for learning and validation ✅ "
+"**Universal support**: Works with all makers and flows"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:684
+#: 329ffa4023654e9db24453f07521313e
+msgid "When to Use"
+msgstr "When to Use"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:686
+#: c485f0080a6f476d839e718fc8b6a10b
+msgid ""
+"🎯 **Always** before expensive workflows 🎯 **Always** for convergence "
+"studies 🎯 **Always** when learning new features 🎯 **Always** to inspect "
+"SIESTA parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:691
+#: 6dc5253d132b481393bfe6b4ede7c138
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/05-dry-run-preview/README.md:704
+#: 08f79af86bca4f39a07d0c3c44de13ca
+msgid "**Make dry-run your first step for every new workflow!** 🚀"
+msgstr "**Mke dry-run your first step برای every new wیاkflow!** 🚀"

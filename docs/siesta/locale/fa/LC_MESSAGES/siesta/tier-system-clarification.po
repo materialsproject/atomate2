@@ -1,0 +1,816 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tier-system-clarification.rst:3
+#: 57227fd167b645c88518215ecf3d7aa2
+msgid "Tier System: Critical Clarifications"
+msgstr "سیستم سطح‌بندی: توضیحات حیاتی"
+
+#: ../../source/tier-system-clarification.rst:6
+#: 81b7f46e6ad240749cd5b53a9ed6ca17
+msgid ""
+"**This document clarifies the distinction between tier levels (for module"
+" activation) and tier defaults (parameter sets). Read this if you "
+"encounter errors like \"Invalid tier\" or \"object has no attribute "
+"'_md_relaxation_module'\".**"
+msgstr ""
+"**این سند تمایز بین سطوح سطح‌بندی (برای فعال‌سازی ماژول) و پیش‌فرض‌های سطح (مجموعه پارامترها) را توضیح می‌دهد. این سند را بخوانید اگر با خطاهایی مانند \"Invalid tier\" یا \"object has no attribute '_md_relaxation_module'\" مواجه شدید.**"
+
+#: ../../source/tier-system-clarification.rst:13
+#: 173dd07b6fce4a18ac042aa3dc9d4bca
+msgid "Two Separate Concepts"
+msgstr "دو مفهوم جداگانه"
+
+#: ../../source/tier-system-clarification.rst:15
+#: d05fa1c76ad241f0a72e291baff25e06
+msgid ""
+"The tier system has **two separate but related concepts** that are often "
+"confused:"
+msgstr ""
+"سیستم سطح‌بندی دارای **دو مفهوم جداگانه اما مرتبط** است که اغلب با هم اشتباه گرفته می‌شوند:"
+
+#: ../../source/tier-system-clarification.rst:18
+#: ddab978c8fe5408a9575b67cb2c60f08
+msgid "1. **Tier Levels** (Module Activation)"
+msgstr "۱. **سطوح سطح‌بندی** (فعال‌سازی ماژول)"
+
+#: ../../source/tier-system-clarification.rst:20
+#: e7bb9e6e1efd41598119741e7b338c53
+msgid "These control **which dataclass modules are initialized**:"
+msgstr "اینها کنترل می‌کنند که **کدام ماژول‌های dataclass مقداردهی اولیه شوند**:"
+
+#: ../../source/tier-system-clarification.rst:31
+#: ../../source/tier-system-clarification.rst:57
+#: 0353709d7cb541a7ad1ee783c67400b8 4634c68a8e1143799e9a494f1c4be9ff
+msgid "**Used in**:"
+msgstr "**استفاده در**:"
+
+#: ../../source/tier-system-clarification.rst:33
+#: bf2520bc4a264b12bcb81c534c77335b
+msgid "``SiestaInputGenerator(tier=\"basic\")``"
+msgstr "``SiestaInputGenerator(tier=\"basic\")``"
+
+#: ../../source/tier-system-clarification.rst:34
+#: a815046853fd4c50b3afb5fcbc8a7fd2
+msgid "``RelaxMaker.fixed_cell_relaxation(tier=\"intermediate\")``"
+msgstr "``RelaxMaker.fixed_cell_relaxation(tier=\"intermediate\")``"
+
+#: ../../source/tier-system-clarification.rst:35
+#: f6f0bef530164d33a36279cf3c88c81e
+msgid "Module filtering in registry"
+msgstr "فیلتر کردن ماژول در رجیستری"
+
+#: ../../source/tier-system-clarification.rst:37
+#: 96d00308ba514daf9be9a31816f18322
+msgid ""
+"**Defined in**: ``src/atomate2/siesta/dataclass/registry.py`` → "
+"``tier_hierarchy`` dict"
+msgstr ""
+"**تعریف‌شده در**: ``src/atomate2/siesta/dataclass/registry.py`` ← "
+"dict ``tier_hierarchy``"
+
+#: ../../source/tier-system-clarification.rst:40
+#: d9ebd2d6d3a24d9a9812a0a322d67169
+msgid "2. **TIER_DEFAULTS** (Parameter Presets)"
+msgstr "۲. **TIER_DEFAULTS** (پیش‌تنظیم‌های پارامتر)"
+
+#: ../../source/tier-system-clarification.rst:42
+#: e68c8f792a484082ada24f64a1396495
+msgid "These provide **quick starting parameters** for common calculation types:"
+msgstr "اینها **پارامترهای شروع سریع** را برای انواع محاسبات رایج فراهم می‌کنند:"
+
+#: ../../source/tier-system-clarification.rst:59
+#: 2e2e7f72f8a148b89e249e6c30935621
+msgid ""
+"Applied automatically when you set ``tier=`` parameter in base class "
+"``__post_init__()``"
+msgstr ""
+"به‌طور خودکار زمانی که پارامتر ``tier=`` را در کلاس پایه "
+"``__post_init__()`` تنظیم می‌کنید اعمال می‌شود"
+
+#: ../../source/tier-system-clarification.rst:60
+#: 8910c4cd855b4b438ed956b2d7dff8e0
+msgid "Only affects USER PARAMETERS, not module activation"
+msgstr "فقط بر پارامترهای کاربر تأثیر می‌گذارد، نه فعال‌سازی ماژول"
+
+#: ../../source/tier-system-clarification.rst:62
+#: 97af4c8fc34a42af916111b8131a324f
+msgid ""
+"**Defined in**: ``src/atomate2/siesta/sets/tiers/defaults.py`` → "
+"``TIER_DEFAULTS`` dict"
+msgstr ""
+"**تعریف‌شده در**: ``src/atomate2/siesta/sets/tiers/defaults.py`` ← "
+"dict ``TIER_DEFAULTS``"
+
+#: ../../source/tier-system-clarification.rst:67
+#: 465651770ae04fdd811fbd3ecca1b04d
+msgid "The Confusion Explained"
+msgstr "توضیح ابهام"
+
+#: ../../source/tier-system-clarification.rst:70
+#: baa7b37c5e1547a99f6ea59dbf29de4f
+msgid "Why ``tier=\"basic_dirty\"`` Fails"
+msgstr "چرا ``tier=\"basic_dirty\"`` شکست می‌خورد"
+
+#: ../../source/tier-system-clarification.rst:72
+#: ../../source/tier-system-clarification.rst:116
+#: 35a392aa2cb7467090d07210f4d50d20 63315eedecd04d88a0965b8ef8f999a2
+msgid "❌ **This will fail**:"
+msgstr "❌ **این شکست خواهد خورد**:"
+
+#: ../../source/tier-system-clarification.rst:79
+#: 65e87bd7f5a649a5b1221b32c1528997
+msgid ""
+"**Why**: ``\"basic_dirty\"`` exists in ``TIER_DEFAULTS`` (for parameters)"
+" but NOT in ``tier_hierarchy`` (for module activation)."
+msgstr ""
+"**چرا**: ``\"basic_dirty\"`` در ``TIER_DEFAULTS`` (برای پارامترها) وجود دارد"
+" اما در ``tier_hierarchy`` (برای فعال‌سازی ماژول) وجود ندارد."
+
+#: ../../source/tier-system-clarification.rst:82
+#: 635ea30e201d4a8cbd24beaae2ecfc62
+msgid "**The Fix** (Current System):"
+msgstr "**رفع مشکل** (سیستم فعلی):"
+
+#: ../../source/tier-system-clarification.rst:92
+#: 86fedf2a73064a188e23ae3aa4398234
+msgid "**Future Fix** (Recommended):"
+msgstr "**رفع مشکل آینده** (توصیه‌شده):"
+
+#: ../../source/tier-system-clarification.rst:94
+#: ee8ac8ca3484493284ba897291767c43
+msgid "Add extended tier mappings to ``tier_hierarchy`` in ``registry.py``:"
+msgstr "افزودن نگاشت‌های سطح گسترده‌شده به ``tier_hierarchy`` در ``registry.py``:"
+
+#: ../../source/tier-system-clarification.rst:114
+#: 049963b0da524acea408865c893c41ea
+msgid "Why ``RelaxMaker`` Fails with ``tier=\"basic\"``"
+msgstr "چرا ``RelaxMaker`` با ``tier=\"basic\"`` شکست می‌خورد"
+
+#: ../../source/tier-system-clarification.rst:124
+#: d714290e8b8b4ea78c3d04b0a180c2df
+msgid "**Why**:"
+msgstr "**چرا**:"
+
+#: ../../source/tier-system-clarification.rst:126
+#: 7d7e32e0fcb64053b3b290686b2888dd
+msgid ""
+"``RelaxSetGenerator`` REQUIRES the ``md_relaxation`` module "
+"(MolecularDynamicsAndRelaxation)"
+msgstr ""
+"``RelaxSetGenerator`` به ماژول ``md_relaxation`` "
+"(MolecularDynamicsAndRelaxation) نیاز دارد"
+
+#: ../../source/tier-system-clarification.rst:127
+#: cb53a7b029b64b8ebbc361687e389293
+msgid "``md_relaxation`` is registered in **intermediate tier**, NOT basic tier"
+msgstr "``md_relaxation`` در **سطح intermediate** ثبت شده است، نه سطح basic"
+
+#: ../../source/tier-system-clarification.rst:128
+#: 4fa0fd7c57934680acfc999f51887353
+msgid "When ``tier=\"basic\"``, only 6 modules are activated"
+msgstr "زمانی که ``tier=\"basic\"`` است، فقط ۶ ماژول فعال می‌شوند"
+
+#: ../../source/tier-system-clarification.rst:129
+#: c228227b9a304b6395eea51594b84b7f
+msgid "``md_relaxation`` is NOT in those 6 modules"
+msgstr "``md_relaxation`` در آن ۶ ماژول نیست"
+
+#: ../../source/tier-system-clarification.rst:130
+#: e577e4098a33467bb43d5cd5d5b66b10
+msgid ""
+"When ``get_parameter_updates()`` tries to access "
+"``self._md_relaxation_module``, it doesn't exist"
+msgstr ""
+"زمانی که ``get_parameter_updates()`` سعی می‌کند به "
+"``self._md_relaxation_module`` دسترسی پیدا کند، وجود ندارد"
+
+#: ../../source/tier-system-clarification.rst:132
+#: 57ac1fccf3ae47c89c947a0f4ab7806d
+msgid "**The Fix**:"
+msgstr "**رفع مشکل**:"
+
+#: ../../source/tier-system-clarification.rst:145
+#: de737cc082874d15b8bbf223c43ef940
+msgid ""
+"**Root Cause**: ``md_relaxation`` should probably be in ``basic`` tier "
+"since ``RelaxSetGenerator`` (a fundamental class) requires it."
+msgstr ""
+"**علت ریشه‌ای**: ``md_relaxation`` احتمالاً باید در سطح ``basic`` باشد "
+"چون ``RelaxSetGenerator`` (یک کلاس بنیادی) به آن نیاز دارد."
+
+#: ../../source/tier-system-clarification.rst:151
+#: 122f05f6a1d343f28912046b97f30ff5
+msgid "Module Requirements by Maker"
+msgstr "نیازمندی‌های ماژول بر اساس Maker"
+
+#: ../../source/tier-system-clarification.rst:154
+#: d298d80085ea4eec8675c178865a8507
+msgid "Critical Module Dependencies"
+msgstr "وابستگی‌های حیاتی ماژول"
+
+#: ../../source/tier-system-clarification.rst:160
+#: 9bcb6a08d6e244ad988923f5b6f66dd3
+msgid "Maker/Generator"
+msgstr "Maker/Generator"
+
+#: ../../source/tier-system-clarification.rst:161
+#: 81fd493acd0643f7afb82385703941ec
+msgid "Required Module"
+msgstr "ماژول موردنیاز"
+
+#: ../../source/tier-system-clarification.rst:162
+#: 8912295c6f7c4169b0f2f412f2d419a7
+msgid "Current Tier"
+msgstr "سطح فعلی"
+
+#: ../../source/tier-system-clarification.rst:163
+#: 0e6fa60a09a347b48869a1dae29d0cea
+msgid "Minimum tier="
+msgstr "حداقل tier="
+
+#: ../../source/tier-system-clarification.rst:164
+#: 4d8ab510373349878f19b4db5200ba7b
+msgid "``RelaxSetGenerator``"
+msgstr "``RelaxSetGenerator``"
+
+#: ../../source/tier-system-clarification.rst:165
+#: 90ba245bf8094cddb0117550f6bde275
+msgid "``md_relaxation``"
+msgstr "``md_relaxation``"
+
+#: ../../source/tier-system-clarification.rst:166
+#: f8ad710ce86f490297c273d01f133dbd
+msgid "intermediate"
+msgstr "intermediate"
+
+#: ../../source/tier-system-clarification.rst:167
+#: 4f957f138db04f86845e0c095dcc5bff
+msgid "``intermediate``"
+msgstr "``intermediate``"
+
+#: ../../source/tier-system-clarification.rst:168
+#: 223b89f3cb17418abfcc939d7b7cb30b
+msgid "``BandStructureSetGenerator``"
+msgstr "``BandStructureSetGenerator``"
+
+#: ../../source/tier-system-clarification.rst:169
+#: 94b86b1445a04db0925bcc2365aceea6
+msgid "``dos_bands``"
+msgstr "``dos_bands``"
+
+#: ../../source/tier-system-clarification.rst:170
+#: ../../source/tier-system-clarification.rst:178
+#: 1760a55b91704d949a141987cbf97957 3fe1a88e1fdb46628aec64a9159b6565
+msgid "advanced"
+msgstr "advanced"
+
+#: ../../source/tier-system-clarification.rst:171
+#: ../../source/tier-system-clarification.rst:179
+#: 6752d70e1c8d45d2ab301a3151bb03e7 d3099d0fa2a64ad6ba926482cfe08454
+msgid "``advanced``"
+msgstr "``advanced``"
+
+#: ../../source/tier-system-clarification.rst:172
+#: eebd8a8eb7004b65aae40ce887278475
+msgid "``StaticMaker``"
+msgstr "``StaticMaker``"
+
+#: ../../source/tier-system-clarification.rst:173
+#: 41ea5565be0b45d2bb344a5e2c9067e4
+msgid "(none required)"
+msgstr "(هیچ‌کدام موردنیاز نیست)"
+
+#: ../../source/tier-system-clarification.rst:175
+#: 6e8dd8706d064315b54b7dd5a4d5913c
+msgid "``basic``"
+msgstr "``basic``"
+
+#: ../../source/tier-system-clarification.rst:176
+#: 96c4f457fa1b48be8ad8d5b6cd06d898
+msgid "``PhonopyMaker``"
+msgstr "``PhonopyMaker``"
+
+#: ../../source/tier-system-clarification.rst:177
+#: ../../source/tier-system-clarification.rst:394
+#: 2b8edaba7de942caa859330412c7ee14 36cd2426b1404ac1a24ea6105a41ba64
+msgid "``phonons``"
+msgstr "``phonons``"
+
+#: ../../source/tier-system-clarification.rst:181
+#: 6d4c295d3b19472096d64bb28ade81b6
+msgid ""
+"**Recommendation**: Always use at least ``tier=\"intermediate\"`` for "
+"RelaxMaker."
+msgstr ""
+"**توصیه**: همیشه حداقل ``tier=\"intermediate\"`` را برای "
+"RelaxMaker استفاده کنید."
+
+#: ../../source/tier-system-clarification.rst:186
+#: b7724763b7c34cdd932ad61e2711cf0f
+msgid "How Tier Parameter Works"
+msgstr "نحوه کار پارامتر Tier"
+
+#: ../../source/tier-system-clarification.rst:189
+#: eb3a1e55d3bb4134b53609f39dc390dd
+msgid "Step-by-Step Flow"
+msgstr "جریان گام‌به‌گام"
+
+#: ../../source/tier-system-clarification.rst:191
+#: 94b7c16ef3e94d878156077249b3c3d4
+msgid "When you write:"
+msgstr "زمانی که می‌نویسید:"
+
+#: ../../source/tier-system-clarification.rst:200
+#: 7cc98f2c1114492db39a53f72e4d5e21
+msgid "**What happens**:"
+msgstr "**چه اتفاقی می‌افتد**:"
+
+#: ../../source/tier-system-clarification.rst:202
+#: 2ffa89ff4eab49eba6f7122f93326b84
+msgid "**Parameter passed to InputSetGenerator**:"
+msgstr "**پارامتر ارسال‌شده به InputSetGenerator**:"
+
+#: ../../source/tier-system-clarification.rst:208
+#: 08fe380fd4d84275832459eeae5ce24e
+msgid "**In __post_init__() of SiestaInputGenerator**:"
+msgstr "**در ()__post_init__ از SiestaInputGenerator**:"
+
+#: ../../source/tier-system-clarification.rst:210
+#: 9852e6c49fcc4ebe9d0b900cdb24b187
+msgid "**Load TIER_DEFAULTS**:"
+msgstr "**بارگذاری TIER_DEFAULTS**:"
+
+#: ../../source/tier-system-clarification.rst:218
+#: b44dcd9e957546dca731c8abf5944d60
+msgid "**Merge with user_params** (user_params take precedence):"
+msgstr "**ادغام با user_params** (user_params اولویت دارند):"
+
+#: ../../source/tier-system-clarification.rst:225
+#: 41b17400440740cfba4c7f52997d0692
+msgid "**Later, in get_input_set() → _get_input_parameters()**:"
+msgstr "**بعداً، در ()get_input_set ← ()_get_input_parameters**:"
+
+#: ../../source/tier-system-clarification.rst:227
+#: 260627bcdd444109b94621ea29601b39
+msgid "**Get modules for tier**:"
+msgstr "**دریافت ماژول‌ها برای سطح**:"
+
+#: ../../source/tier-system-clarification.rst:234
+#: 5f8e642f120446de99cd35ddd712bf84
+msgid "**Initialize modules** (including ``md_relaxation``):"
+msgstr "**مقداردهی اولیه ماژول‌ها** (شامل ``md_relaxation``):"
+
+#: ../../source/tier-system-clarification.rst:243
+#: d8c50f5f5c9f427c93140c8e4b35d2b2
+msgid "**Call get_parameter_updates()**:"
+msgstr "**فراخوانی ()get_parameter_updates**:"
+
+#: ../../source/tier-system-clarification.rst:253
+#: e94d4e4821ec4ed88d4d42288030f6a1
+msgid "Common Errors and Solutions"
+msgstr "خطاهای رایج و راه‌حل‌ها"
+
+#: ../../source/tier-system-clarification.rst:256
+#: 0f56532d78e24b35a46fd535e11c086f
+msgid "Error 1: \"Invalid tier '...'\""
+msgstr "خطای ۱: \"Invalid tier '...'\""
+
+#: ../../source/tier-system-clarification.rst:258
+#: ../../source/tier-system-clarification.rst:281
+#: bce29d07950c42178ed20517e1c7365a cd3ce66d18a3466f8ab61cd1f08d369e
+msgid "**Error**:"
+msgstr "**خطا**:"
+
+#: ../../source/tier-system-clarification.rst:264
+#: b459dd956b4d41b485b3f1c8ba19c6c3
+msgid "**Cause**: Using TIER_DEFAULTS key as tier level parameter."
+msgstr "**علت**: استفاده از کلید TIER_DEFAULTS به‌عنوان پارامتر سطح سطح‌بندی."
+
+#: ../../source/tier-system-clarification.rst:266
+#: ../../source/tier-system-clarification.rst:325
+#: 32acec5bb64f44508ddf6c338493e93e f1d6980262494775b223f3bd1a7aef9f
+msgid "**Solution**:"
+msgstr "**راه‌حل**:"
+
+#: ../../source/tier-system-clarification.rst:276
+#: 1948271d3433451db2aede92c3c0dcab
+msgid ""
+"**Future**: Extended tier names will be added to ``tier_hierarchy`` "
+"mapping."
+msgstr ""
+"**آینده**: نام‌های سطح گسترده‌شده به نگاشت ``tier_hierarchy`` "
+"اضافه خواهند شد."
+
+#: ../../source/tier-system-clarification.rst:279
+#: a19ee180559a4f9d94c872086d6b0170
+msgid "Error 2: \"object has no attribute '_md_relaxation_module'\""
+msgstr "خطای ۲: \"object has no attribute '_md_relaxation_module'\""
+
+#: ../../source/tier-system-clarification.rst:287
+#: 7d6faa1337c648f183aee51f7da11a96
+msgid ""
+"**Cause**: Using ``tier=\"basic\"`` with ``RelaxMaker``, but "
+"``md_relaxation`` module is in ``intermediate`` tier."
+msgstr ""
+"**علت**: استفاده از ``tier=\"basic\"`` با ``RelaxMaker``، اما "
+"ماژول ``md_relaxation`` در سطح ``intermediate`` است."
+
+#: ../../source/tier-system-clarification.rst:290
+#: faa6f394877e4042997a0f2603b66987
+msgid "**Solution 1** (Recommended):"
+msgstr "**راه‌حل ۱** (توصیه‌شده):"
+
+#: ../../source/tier-system-clarification.rst:297
+#: 224c4229d36249afa443c0059b57b767
+msgid "**Solution 2**:"
+msgstr "**راه‌حل ۲**:"
+
+#: ../../source/tier-system-clarification.rst:308
+#: f77f4037b61b45d08ad6874c19c26ba0
+msgid "Error 3: Module Not Activated"
+msgstr "خطای ۳: ماژول فعال نشده است"
+
+#: ../../source/tier-system-clarification.rst:310
+#: 0c80cf89a7c744efba507593c047756d
+msgid "**Symptom**: Powerup doesn't work for advanced parameters."
+msgstr "**علامت**: Powerup برای پارامترهای پیشرفته کار نمی‌کند."
+
+#: ../../source/tier-system-clarification.rst:312
+#: e717884269f943e39d20e940c8d0178a
+msgid "**Example**:"
+msgstr "**مثال**:"
+
+#: ../../source/tier-system-clarification.rst:323
+#: 3aad81c8ddfc4bf294649c5636b67cc8
+msgid ""
+"**Cause**: ``phonons`` module is in ``advanced`` tier, not activated with"
+" ``tier=\"basic\"``."
+msgstr ""
+"**علت**: ماژول ``phonons`` در سطح ``advanced`` است، با "
+"``tier=\"basic\"`` فعال نشده است."
+
+#: ../../source/tier-system-clarification.rst:341
+#: a854ba1adfc84dc3b8c3aef014fcc91a
+msgid "Complete Reference"
+msgstr "مرجع کامل"
+
+#: ../../source/tier-system-clarification.rst:344
+#: 7769ae64cbfc482791a4b935dedc3b43
+msgid "Valid Tier Levels (Module Activation)"
+msgstr "سطوح معتبر سطح‌بندی (فعال‌سازی ماژول)"
+
+#: ../../source/tier-system-clarification.rst:356
+#: cfa5e4bcf42c41ffb509fd0b9c73197e
+msgid "TIER_DEFAULTS Keys (Parameter Sets)"
+msgstr "کلیدهای TIER_DEFAULTS (مجموعه پارامترها)"
+
+#: ../../source/tier-system-clarification.rst:372
+#: c2e5342bfb0a472bb9ed72574dea40d7
+msgid "Modules by Tier Level"
+msgstr "ماژول‌ها بر اساس سطح سطح‌بندی"
+
+#: ../../source/tier-system-clarification.rst:374
+#: b5e3e1483320469585fc103a0c57ba6b
+msgid "**Basic (6 modules)**:"
+msgstr "**پایه (۶ ماژول)**:"
+
+#: ../../source/tier-system-clarification.rst:376
+#: d2aab1f6e9d04961808f2a38c5eae0f1
+msgid "``pseudopotentials``"
+msgstr "``pseudopotentials``"
+
+#: ../../source/tier-system-clarification.rst:377
+#: 925fbee2e5664465b55900a80147e7d1
+msgid "``basis_sets_and_projectors``"
+msgstr "``basis_sets_and_projectors``"
+
+#: ../../source/tier-system-clarification.rst:378
+#: cf18470de86c4c4b94693fa21ee4f841
+msgid "``xc_functional``"
+msgstr "``xc_functional``"
+
+#: ../../source/tier-system-clarification.rst:379
+#: 28dfc8684da3457d9ea3ab82ad55f25b
+msgid "``kpoints``"
+msgstr "``kpoints``"
+
+#: ../../source/tier-system-clarification.rst:380
+#: be053e4d2d134cc5b72f5723db330b1b
+msgid "``mesh_cutoff``"
+msgstr "``mesh_cutoff``"
+
+#: ../../source/tier-system-clarification.rst:381
+#: cdc2f2b3d3e04ee1a4dfbc47180b2676
+msgid "``general_system``"
+msgstr "``general_system``"
+
+#: ../../source/tier-system-clarification.rst:383
+#: e7d3f36c917c4f53a0ae1a2140d512f4
+msgid "**Intermediate (+6 modules = 12 total)**:"
+msgstr "**میانی (۶+ ماژول = ۱۲ در مجموع)**:"
+
+#: ../../source/tier-system-clarification.rst:385
+#: b9d8d7f7c3fb4f368474f04857fa970a
+msgid "``spin``"
+msgstr "``spin``"
+
+#: ../../source/tier-system-clarification.rst:386
+#: 4c085537d2fb4a76ba2690871029558c
+msgid "``scf_loop_parameters``"
+msgstr "``scf_loop_parameters``"
+
+#: ../../source/tier-system-clarification.rst:387
+#: 9a1733320ad0487c8d7c59657d51644a
+msgid "``electronic_structure_calculation_options``"
+msgstr "``electronic_structure_calculation_options``"
+
+#: ../../source/tier-system-clarification.rst:388
+#: 4e4b9eb35961484a92320b3d5a82595f
+msgid "**``md_relaxation``** ← Required by RelaxMaker"
+msgstr "**``md_relaxation``** ← موردنیاز RelaxMaker"
+
+#: ../../source/tier-system-clarification.rst:389
+#: a18615ff00fb4c629cbfe2a695d35fcf
+msgid "``constraints``"
+msgstr "``constraints``"
+
+#: ../../source/tier-system-clarification.rst:390
+#: c7967cc59c584429af6dd92628a9933f
+msgid "``lua_scripting``"
+msgstr "``lua_scripting``"
+
+#: ../../source/tier-system-clarification.rst:392
+#: 6ad6defc14f84b8aafb99807a7ee662c
+msgid "**Advanced (+7 modules = 19 total)**:"
+msgstr "**پیشرفته (۷+ ماژول = ۱۹ در مجموع)**:"
+
+#: ../../source/tier-system-clarification.rst:395
+#: 10d3257849ff467386bacc8f2f6c966f
+msgid "``optical``"
+msgstr "``optical``"
+
+#: ../../source/tier-system-clarification.rst:396
+#: d395b73a0b844991b742dfa972a463a1
+msgid "``dos_bands`` ← Required by BandStructureSetGenerator"
+msgstr "``dos_bands`` ← موردنیاز BandStructureSetGenerator"
+
+#: ../../source/tier-system-clarification.rst:397
+#: 17f1cad6c7be4c90a96d268bd801c032
+msgid "``dftu``"
+msgstr "``dftu``"
+
+#: ../../source/tier-system-clarification.rst:398
+#: 11d42c84c8b748a89b38bdf40657a8da
+msgid "``charge_dipole``"
+msgstr "``charge_dipole``"
+
+#: ../../source/tier-system-clarification.rst:399
+#: 00e1a738c5f1443c93e89990ce7e8001
+msgid "``grids_advanced``"
+msgstr "``grids_advanced``"
+
+#: ../../source/tier-system-clarification.rst:400
+#: f8cd1a467fbc4e84b81be1137261659b
+msgid "``denchar``"
+msgstr "``denchar``"
+
+#: ../../source/tier-system-clarification.rst:402
+#: 84b555f9e25c4b17a5dc600de51f6632
+msgid "**Expert (+5 modules = 24 total)**:"
+msgstr "**تخصصی (۵+ ماژول = ۲۴ در مجموع)**:"
+
+#: ../../source/tier-system-clarification.rst:404
+#: 3536abd7d5cf4ac4b27938a86b19e5bc
+msgid "``parallel``"
+msgstr "``parallel``"
+
+#: ../../source/tier-system-clarification.rst:405
+#: bd316d30e69e4f0ab0c66bbb126f8018
+msgid "``solvers``"
+msgstr "``solvers``"
+
+#: ../../source/tier-system-clarification.rst:406
+#: dbfca87a3e954f128b4f1744b016dc9a
+msgid "``efficiency``"
+msgstr "``efficiency``"
+
+#: ../../source/tier-system-clarification.rst:407
+#: 9f73baca90954ade928523c5194da9c5
+msgid "``hamiltonian_overlap``"
+msgstr "``hamiltonian_overlap``"
+
+#: ../../source/tier-system-clarification.rst:408
+#: a03fcf3f48f14a309d2d9c55b866ec81
+msgid "``netcdf``"
+msgstr "``netcdf``"
+
+#: ../../source/tier-system-clarification.rst:413
+#: 48d64b8d998e4e3590f5b37f51f04bc9
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../source/tier-system-clarification.rst:416
+#: cc0bff6438ad4c31a9806abacd86356e
+msgid "Choosing the Right Tier"
+msgstr "انتخاب سطح مناسب"
+
+#: ../../source/tier-system-clarification.rst:418
+#: d01fc5c5976c4abea88e7fecae0e23e8
+msgid "**For RelaxMaker**:"
+msgstr "**برای RelaxMaker**:"
+
+#: ../../source/tier-system-clarification.rst:420
+#: cab720cab5cf4298b54d8d0b422cab65
+msgid "✅ **Use ``tier=\"intermediate\"`` or higher**"
+msgstr "✅ **استفاده از ``tier=\"intermediate\"`` یا بالاتر**"
+
+#: ../../source/tier-system-clarification.rst:422
+#: 6764a1913c4f4b2cb64b67576e2daea9
+msgid "Includes required ``md_relaxation`` module"
+msgstr "شامل ماژول موردنیاز ``md_relaxation``"
+
+#: ../../source/tier-system-clarification.rst:423
+#: 2dfc5c57064d4a448e7d4e972cda9529
+msgid "Standard SCF convergence control"
+msgstr "کنترل همگرایی استاندارد SCF"
+
+#: ../../source/tier-system-clarification.rst:424
+#: fde71abc42aa42a2b460575d61f3424e
+msgid "Spin polarization support"
+msgstr "پشتیبانی از قطبش اسپین"
+
+#: ../../source/tier-system-clarification.rst:426
+#: 3dc257b6d3d14d6db2bd22c9f4839dfb
+msgid "❌ **Don't use ``tier=\"basic\"``**"
+msgstr "❌ **از ``tier=\"basic\"`` استفاده نکنید**"
+
+#: ../../source/tier-system-clarification.rst:428
+#: 8da140546e624fbda068ec3ceab4608d
+msgid "Missing ``md_relaxation`` → errors"
+msgstr "فقدان ``md_relaxation`` ← خطاها"
+
+#: ../../source/tier-system-clarification.rst:429
+#: ace44f0ca91441b5be584842f7c8a3ae
+msgid "Unless you explicitly enable it"
+msgstr "مگر اینکه به‌طور صریح آن را فعال کنید"
+
+#: ../../source/tier-system-clarification.rst:431
+#: 2760e9a00d8d4170b1b685c17be92f2e
+msgid "**For StaticMaker**:"
+msgstr "**برای StaticMaker**:"
+
+#: ../../source/tier-system-clarification.rst:433
+#: a9f5941fccc74f3da26d523b084e8944
+msgid "✅ **``tier=\"basic\"`` works fine**"
+msgstr "✅ **``tier=\"basic\"`` به‌خوبی کار می‌کند**"
+
+#: ../../source/tier-system-clarification.rst:435
+#: d7861cc9309c4658ba45adb2603a3284
+msgid "No special module requirements"
+msgstr "بدون نیازمندی ماژول ویژه"
+
+#: ../../source/tier-system-clarification.rst:436
+#: 667ed3407db54de2838747be73101374
+msgid "Good for quick calculations"
+msgstr "مناسب برای محاسبات سریع"
+
+#: ../../source/tier-system-clarification.rst:438
+#: 9e2f29d04a7743afb755060713d7c36f
+msgid "**For Specialized Calculations**:"
+msgstr "**برای محاسبات تخصصی**:"
+
+#: ../../source/tier-system-clarification.rst:440
+#: 8c64885d8be44643ab8ae557cf702d4d
+msgid "Phonons: ``tier=\"advanced\"`` (needs ``phonons`` module)"
+msgstr "فونون‌ها: ``tier=\"advanced\"`` (نیاز به ماژول ``phonons``)"
+
+#: ../../source/tier-system-clarification.rst:441
+#: 26f643e961d3403e93a4af6057f34d28
+msgid "Band structure: ``tier=\"advanced\"`` (needs ``dos_bands`` module)"
+msgstr "ساختار باند: ``tier=\"advanced\"`` (نیاز به ماژول ``dos_bands``)"
+
+#: ../../source/tier-system-clarification.rst:442
+#: 585b177602314665989ee47f98179379
+msgid "DFT+U: ``tier=\"advanced\"`` (needs ``dftu`` module)"
+msgstr "DFT+U: ``tier=\"advanced\"`` (نیاز به ماژول ``dftu``)"
+
+#: ../../source/tier-system-clarification.rst:443
+#: 297bfa6222e54adcbeb7e53d368570cc
+msgid "HPC tuning: ``tier=\"expert\"`` (needs ``parallel``, ``solvers`` modules)"
+msgstr "تنظیم HPC: ``tier=\"expert\"`` (نیاز به ماژول‌های ``parallel``، ``solvers``)"
+
+#: ../../source/tier-system-clarification.rst:446
+#: 43da4869a2cb44d29a739f1ad9d626c7
+msgid "Using TIER_DEFAULTS"
+msgstr "استفاده از TIER_DEFAULTS"
+
+#: ../../source/tier-system-clarification.rst:448
+#: 76fd7c90db6847808fafcd3263ab0917
+msgid ""
+"**Current behavior**: TIER_DEFAULTS parameters are automatically applied "
+"based on ``tier=`` parameter:"
+msgstr ""
+"**رفتار فعلی**: پارامترهای TIER_DEFAULTS به‌طور خودکار بر اساس "
+"پارامتر ``tier=`` اعمال می‌شوند:"
+
+#: ../../source/tier-system-clarification.rst:458
+#: 5244a61be7474250a75a5e81ebe2109e
+msgid "**Override defaults**:"
+msgstr "**بازنویسی پیش‌فرض‌ها**:"
+
+#: ../../source/tier-system-clarification.rst:473
+#: 78287ebb20714171b92ba3934f99298f
+msgid "Planned Improvements"
+msgstr "بهبودهای برنامه‌ریزی‌شده"
+
+#: ../../source/tier-system-clarification.rst:475
+#: f2b2bd149c274d61875ba4735d68ce92
+msgid "**Fix ``tier_hierarchy`` in registry.py**"
+msgstr "**رفع ``tier_hierarchy`` در registry.py**"
+
+#: ../../source/tier-system-clarification.rst:477
+#: 0ea9e80d4c7b4c3e800439aa9144cf1e
+msgid ""
+"Add extended tier mappings so ``tier=\"basic_dirty\"`` etc. work for "
+"module activation."
+msgstr ""
+"افزودن نگاشت‌های سطح گسترده‌شده تا ``tier=\"basic_dirty\"`` و غیره برای "
+"فعال‌سازی ماژول کار کند."
+
+#: ../../source/tier-system-clarification.rst:479
+#: 234edf92d9804a119349df41db6dc9ac
+msgid "**Move ``md_relaxation`` to basic tier**"
+msgstr "**انتقال ``md_relaxation`` به سطح basic**"
+
+#: ../../source/tier-system-clarification.rst:481
+#: 516aed5cf8e2452cbe89cabce1976f68
+msgid "Since ``RelaxMaker`` requires it, it should be in basic tier."
+msgstr "چون ``RelaxMaker`` به آن نیاز دارد، باید در سطح basic باشد."
+
+#: ../../source/tier-system-clarification.rst:483
+#: 28354a61c7a04f5692c1aabf62e4d826
+msgid "**Add Maker-specific tier validation**"
+msgstr "**افزودن اعتبارسنجی سطح اختصاصی Maker**"
+
+#: ../../source/tier-system-clarification.rst:485
+#: c4e86be6f9204cb098542e7399b07330
+msgid ""
+"``RelaxMaker.fixed_cell_relaxation()`` should warn or error if "
+"``tier=\"basic\"`` without ``enabled_modules=[\"md_relaxation\"]``."
+msgstr ""
+"``RelaxMaker.fixed_cell_relaxation()`` باید هشدار یا خطا دهد اگر "
+"``tier=\"basic\"`` بدون ``enabled_modules=[\"md_relaxation\"]`` باشد."
+
+#: ../../source/tier-system-clarification.rst:488
+#: 3bd1ba62a34c4454b66a906b427fde63
+msgid "**Better error messages**"
+msgstr "**پیام‌های خطای بهتر**"
+
+#: ../../source/tier-system-clarification.rst:490
+#: e563b7f9cc844fd8a0904e83f97255e1
+msgid ""
+"When ``_md_relaxation_module`` is missing, suggest using "
+"``tier=\"intermediate\"`` or higher."
+msgstr ""
+"زمانی که ``_md_relaxation_module`` وجود ندارد، پیشنهاد استفاده از "
+"``tier=\"intermediate\"`` یا بالاتر."
+
+#: ../../source/tier-system-clarification.rst:495
+#: 7e218f1937b345ad9e48ef74d5028784
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/tier-system-clarification.rst:497
+#: 444e0a15b4bb4714917a8663c97f3810
+msgid ":doc:`tier-system` - Main tier system documentation"
+msgstr ":doc:`tier-system` - مستندات اصلی سیستم سطح‌بندی"
+
+#: ../../source/tier-system-clarification.rst:498
+#: 5f75bb15f51a498ea6a04e5dc3480259
+msgid ":doc:`cli-tools` - ``atomate2siesta-presets`` CLI reference"
+msgstr ":doc:`cli-tools` - مرجع CLI ``atomate2siesta-presets``"
+
+#: ../../source/tier-system-clarification.rst:499
+#: e83b33a3d8ec475297ebe4aaa78c5a54
+msgid ":doc:`troubleshooting` - General troubleshooting guide"
+msgstr ":doc:`troubleshooting` - راهنمای عمومی رفع مشکل"

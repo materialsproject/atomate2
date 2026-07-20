@@ -1,0 +1,1763 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:1
+#: 47d5a370c4814856afc907ca93f34962
+msgid "Equation of State (EOS) Workflow Tutorial"
+msgstr "Eqution of Stte (EOS) گردش کار Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:3
+#: 6f52d32781aa4785b224de10dee758b6
+msgid ""
+"**Category**: Advanced Workflows **Difficulty**: Intermediate **Time**: "
+"~5 min (dry-run), ~30-60 min (full calculation) **Prerequisites**: "
+"Completed convergence studies (tutorials/02-convergence/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:10
+#: 8666eebb16d44f5d92f83a4f003fd03a
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:12
+#: 9e56b22712c44831a5c0b75bd45b580e
+msgid ""
+"This tutorial demonstrates how to calculate the **Equation of State "
+"(EOS)** for crystalline materials using atomate2siesta. The EOS describes"
+" the relationship between volume, pressure, and energy, providing "
+"fundamental information about a material's compressibility and stability."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:14
+#: fd868f3b6ce14d8897373b24af600be8
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:16
+#: a6fdf0a2600442ee94636c0c8fd9024f
+msgid "How to run multi-volume EOS workflows"
+msgstr "How to run multi-volume EOS wیاkflows"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:17
+#: 1bcf9d8c895f4c76b9a16f99ae157676
+msgid "Fitting energy-volume data to various EOS models"
+msgstr "Fitting energy-volume dt to vrious EOS models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:18
+#: f9bb34937a524f819a375dd0c6284839
+msgid "Extracting bulk modulus and equilibrium volume"
+msgstr "Extrcting bulk modulus و equilibrium volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:19
+#: 5bda66e6958b4370b4d24406e7c2207d
+msgid "Interpreting EOS fit quality and physical parameters"
+msgstr "Interpreting EOS fit qulity و physicl prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:20
+#: e86b1f6756254c2bb9e844586d903203
+msgid "Choosing appropriate strain ranges and number of points"
+msgstr "Choosing pproprite strin rnges و number of points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:22
+#: 65f0fbeb642740a491fbba24cd35da41
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:24
+#: 08e148f9145a47c7ad47d499b1843831
+msgid ""
+"**Equation of State**: Mathematical relationship E(V) describing how a "
+"material's energy changes with volume"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:26
+#: 509a9f39a7de4ee78948a861ded89a8c
+msgid ""
+"**Bulk Modulus (B₀)**: Resistance to uniform compression (GPa) B₀ = "
+"-V(∂P/∂V)ₜ"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:29
+#: c957da0c29cc40b89672764da92bdfa5
+msgid ""
+"**Equilibrium Volume (V₀)**: Volume at which energy is minimized (zero "
+"pressure)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:31
+#: aa75b29e04a449178b2744415e8bb3b5
+msgid "**EOS Models**: Different mathematical forms for fitting E-V data:"
+msgstr "**EOS Models**: Different mmticl برایms برای fitting E-V dt:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:32
+#: bc497ee53e074e039828e1ba3b9ff220
+msgid "**Birch-Murnaghan**: General-purpose, most commonly used"
+msgstr "**Birch-Murnghn**: Generl-purpose, most commonly used"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:33
+#: c33217184eee47c1a4251ddd25d8e426
+msgid "**Murnaghan**: Simpler, good for metals"
+msgstr "**Murnghn**: Simpler, good برای metls"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:34
+#: 37e8ab455c2d48bebf9fcd89d05121db
+msgid "**Vinet**: Accurate over wide pressure ranges"
+msgstr "**Vinet**: Accurte over wide pressure rnges"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:35
+#: 2e3fe9abb87f4dbc8cccbbd39d57e030
+msgid "**Pourier-Tarantola**: Alternative to Birch-Murnaghan"
+msgstr "**Pourier-Trntol**: Alterntive to Birch-Murnghn"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:39
+#: 0a501952a64e45cbbe3becb95b9a62bb
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:41
+#: 119ca8217aae47969c901cb39b5ad028
+msgid "1. Run the Tutorial"
+msgstr "1. Run  Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:48
+#: ce24e2d7033041fb96dafd49ef852c79
+msgid "**What it does**:"
+msgstr "**Wht it does**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:49
+#: b31b15632f244f398378768b8102b411
+msgid "7-point EOS with standard settings"
+msgstr "7-point EOS با stوrd settings"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:50
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:136
+#: 006b04ea950c4e97a2a59b64c7d6e069 9a5bbfb24f624841b0bf168aaec692ab
+msgid "Strain range: -5% to +5%"
+msgstr "Strin rnge: -5% to +5%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:51
+#: ca0c097790134bf69f9d3d2a151ab912
+msgid "Dry-run mode enabled (preview without calculations)"
+msgstr "Dry-run mode enbled (preview باout clcultions)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:52
+#: f68d9790203b4d46ab45afd1383284a4
+msgid "Demonstrates complete EOS workflow"
+msgstr "Demonstrtes complete EOS wیاkflow"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:54
+#: 87312394cf6f413abcf23f0475b65646
+msgid "2. Customize for Your Material"
+msgstr "2. Customize برای Your Mteril"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:56
+#: f342f89b8ed34b06a09c538ceb30d061
+msgid "Edit `01_basic.py` and modify:"
+msgstr "Edit `01_basic.py` and modify:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:70
+#: 301ad5afeb8f4f22b3ebddb1a8ac3bf0
+msgid "3. Select Execution Mode"
+msgstr "3. Select Execution Mode"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:84
+#: 7cb1aad87da14ecabe92de79b770fbf4
+msgid "Understanding the Workflow"
+msgstr "درک  گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:86
+#: 0683bc89a02d48f7843da46915bc2612
+msgid "Workflow Structure"
+msgstr "گردش کار Structure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:102
+#: e3cb63a6c8fc4082be2b9085e6200178
+msgid "What Happens at Each Step"
+msgstr "Wht Hppens t Ech Step"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:104
+#: c2ee3ff4d8cc46b6b5694ce789c0a917
+msgid "**Step 1 - Initial Relaxation**:"
+msgstr "**Step 1 - Initil Relxtion**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:105
+#: 606a62d0a5294d6ea992f33ece92f18a
+msgid "Fully relaxes initial structure (cell + atoms)"
+msgstr "Fully relxes initil structure (cell + toms)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:106
+#: 0a5fe40205824e0a8dde14b3a9cd95e3
+msgid "Finds equilibrium geometry at zero pressure"
+msgstr "Finds equilibrium geometry t zero pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:107
+#: bd88bdb50f614649be5656313a2a5a92
+msgid "Provides reference structure for strain application"
+msgstr "Provides reference structure برای strin ppliction"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:109
+#: 1fe80333df1040179cfc8f6a0a9e2690
+msgid "**Step 2 - Structure Generation**:"
+msgstr "**Step 2 - Structure Genertion**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:110
+#: 16c74779af384585a29f9b3a4e778d55
+msgid "Applies volumetric strains to equilibrium structure"
+msgstr "Applies volumetric strins to equilibrium structure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:111
+#: 40bd21ac1c7c4ff49a327a7da20216e9
+msgid "Maintains symmetry during scaling"
+msgstr "Mintins symmetry during scling"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:112
+#: e2e35fc6485f4a59a822becfdd7b8ee7
+msgid "Generates N structures (5-11 typical)"
+msgstr "Genertes N structures (5-11 typicl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:114
+#: 669f2cdd530346d199452334238acb9a
+msgid "**Step 3 - Energy Calculations**:"
+msgstr "**Step 3 - Energy محاسبهs**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:115
+#: 807471141736445d98270ed1d21cadfe
+msgid "Relaxes atoms at each fixed volume"
+msgstr "Relxes toms t ech fixed volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:116
+#: c4be6ac64c9c469a9fd156e4dd2d0efb
+msgid "Calculates minimum energy for each volume"
+msgstr "Clcultes minimum energy برای ech volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:117
+#: 4344f26e8911425899e5051cc35c907e
+msgid "Ensures consistent force tolerance across all volumes"
+msgstr "Ensures consistent برایce tolernce cross ll volumes"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:119
+#: 15130278f98d4a0dafdcd4f76c0f5007
+msgid "**Step 4-6 - EOS Fitting**:"
+msgstr "**Step 4-6 - EOS Fitting**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:120
+#: 0ea048ddfc4c44fc9b990395613cfac2
+msgid "Fits E(V) data to multiple EOS models"
+msgstr "Fits E(V) dt to multiple EOS models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:121
+#: f142677460104f98934bdcc1f77960c5
+msgid "Extracts B₀, V₀, E₀ for each model"
+msgstr "Extrcts B₀, V₀, E₀ برای ech model"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:122
+#: c7da107b4f84473aabd53a428e7e3cbe
+msgid "Compares fit quality across models"
+msgstr "Compres fit qulity cross models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:124
+#: a3f08428333c454682aac074348ee831
+msgid "**Step 7 - Analysis**:"
+msgstr "**Step 7 - Anlysis**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:125
+#: 79add0983cf448009ac664eb34e2a1fc
+msgid "Generates publication-quality E-V plots"
+msgstr "Genertes publiction-qulity E-V plots"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:126
+#: 4e7a933e6c6341019f53d371ba97928a
+msgid "Writes comprehensive text summary"
+msgstr "Writes comprehensive text summry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:127
+#: 6fadac7243b74c97a162e9d22fc0ed62
+msgid "Provides physical interpretation"
+msgstr "Provides physicl interprettion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:131
+#: d0336a6b8c204124b6d02a0711a2f423
+msgid "Example Configuration"
+msgstr "مثال Configurtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:133
+#: 47deb7b03e824ec99db9c3131cf5c61e
+msgid "The tutorial (`01_basic.py`) uses these settings:"
+msgstr "The tutorial (`01_basic.py`) uses these settings:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:135
+#: b6f6a968483f49cd9488159ea5a5280d
+msgid "**Configuration**:"
+msgstr "**Configurtion**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:137
+#: a177b9854d8d424484269f4d6947e4af
+msgid "Number of points: 7"
+msgstr "Number of points: 7"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:138
+#: 6eba406fbbff4bd8a90fa0e6a7aaf0a4
+msgid "Dry-run mode: Enabled (preview only)"
+msgstr "Dry-run mode: Enbled (preview only)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:140
+#: d7d3788d645542ca82e14db0ecdbcd01
+msgid "**When to customize**:"
+msgstr "**When to customize**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:141
+#: d1e89c51f7a0406b89fa007fa56dd5c1
+msgid "For production calculations: Set `dry_run=False`"
+msgstr "For production calculations: Set `dry_run=False`"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:142
+#: b578edecc6d347318bd6ce8bec2bed53
+msgid "For higher accuracy: Increase points to 9-11"
+msgstr "Fیا higher ccurcy: Increse points to 9-11"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:143
+#: bd6d780e73eb467a91e38065825a96bc
+msgid "For extended range: Use `(-0.07, 0.07)` or wider"
+msgstr "For extended range: Use `(-0.07, 0.07)` or wider"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:144
+#: 928abfecb1bb4e088260411d1762f4ea
+msgid "For tighter convergence: Add custom parameters"
+msgstr "Fیا tighter convergence: Add custom prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:146
+#: 59d22c2b6d4b4f1aa9d981593429fdd1
+msgid "**Expected runtime** (when dry_run=False):"
+msgstr "**Expected runtime** (when dry_run=Flse):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:147
+#: 8d718212ba0f40ca8bcbd7139b2db582
+msgid "Standard (DZP, 300 Ry, 4×4×4): ~30-45 minutes (local)"
+msgstr "Stوrd (DZP, 300 Ry, 4×4×4): ~30-45 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:148
+#: 35247c93ba774d99bb3c812749c7f052
+msgid "Tight (DZP, 350 Ry, 6×6×6): ~60-90 minutes (local)"
+msgstr "Tight (DZP, 350 Ry, 6×6×6): ~60-90 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:152
+#: f07a78d4dc444fa288402da90072d5b5
+msgid "Understanding EOS Models"
+msgstr "درک EOS Models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:154
+#: 50052e18e9eb4689bc3e6c8b91be4f0e
+msgid "Birch-Murnaghan EOS (Recommended)"
+msgstr "Birch-Murnghn EOS (Recommended)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:156
+#: 89bfe11795fa4f27b018150d77098d42
+msgid "**Equation** (3rd order):"
+msgstr "**Eqution** (3rd یاder):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:161
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:176
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:195
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:209
+#: 3d8df09cd9794c1b9ca9c2821539141f 6caecb60bb3a4eb5a22b82958c507586
+#: 9838caa440a54f9194f6ef7584c382e3 d5ac1f36f302427ab9378beaf30d582b
+msgid "**Strengths**:"
+msgstr "**Strengths**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:162
+#: a88ba8a3ffa841be9f7dd30b381f43f8
+msgid "Based on finite strain theory"
+msgstr "Bsed on finite strin یاy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:163
+#: e429a045a5e744b0a1e75e0cd04a936d
+msgid "Physically motivated"
+msgstr "Physiclly motivted"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:164
+#: 7ae650c0fadd48b69b3f5bb0ff5db21e
+msgid "Works for most materials"
+msgstr "Wیاks برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:165
+#: f33e4e47ebed478db8f61e1af6d12cc2
+msgid "Most commonly reported in literature"
+msgstr "Most commonly repیاted in literture"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:167
+#: 318a12e70fa641268187972b3e50a3a4
+msgid "**Use for**: General-purpose EOS fitting"
+msgstr "**Use برای**: Generl-purpose EOS fitting"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:169
+#: 82792ae22d25402d9297c102d5bd7692
+msgid "Murnaghan EOS"
+msgstr "Murnghn EOS"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:171
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:189
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:204
+#: 1be07c622f6545b3b7a69247724882b3 21edb626c4764983b09687aef54cf808
+#: 51ca7dadbfc044a1805640a6bf091309
+msgid "**Equation**:"
+msgstr "**Eqution**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:177
+#: 440fe40cf1484900b242a0605b4e250c
+msgid "Simpler functional form"
+msgstr "Simpler functionl برایm"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:178
+#: 64c9238179fe432aabc8539286cc662c
+msgid "Good for metals"
+msgstr "Good برای metls"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:179
+#: cf85ea28bff24e659848efbb2091bd73
+msgid "Fewer parameters than Birch-Murnaghan"
+msgstr "Fewer prmeters thn Birch-Murnghn"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:181
+#: 47c395c9c2a445a1b144e412e512d610
+msgid "**Limitations**:"
+msgstr "**Limittions**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:182
+#: 6aafc3247118408fad715de62c3621ad
+msgid "Less accurate at high compressions"
+msgstr "Less ccurte t high compressions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:183
+#: c0c5e649052f4136b333533ea93494df
+msgid "Assumes linear B(P) relationship"
+msgstr "Assumes liner B(P) reltionship"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:185
+#: ea702241208e4ebfbb71822c41bd5a80
+msgid "**Use for**: Metallic systems, quick estimates"
+msgstr "**Use برای**: Metllic systems, quick estimtes"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:187
+#: e0ea142504264cae920d46207b4f57cd
+msgid "Vinet EOS"
+msgstr "Vinet EOS"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:196
+#: bd58a16915964d08a63cdf66061690b0
+msgid "Excellent for wide pressure ranges"
+msgstr "Excellent برای wide pressure rnges"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:197
+#: f7056352798a4fe9a7f63b0bb341e972
+msgid "Good high-compression behavior"
+msgstr "Good high-compression behviیا"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:198
+#: 168d124a92a245bf82e6d5b03891ac9a
+msgid "Universal EOS form"
+msgstr "Universl EOS برایm"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:200
+#: fc95630c93334cdcafa4fa242f17a35e
+msgid "**Use for**: High-pressure studies, planetary interiors"
+msgstr "**Use برای**: High-pressure studies, plnetry interiیاs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:202
+#: d2ee88989efb4fa5a3756698664bca73
+msgid "Pourier-Tarantola EOS"
+msgstr "Pourier-Trntol EOS"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:210
+#: 081cb1d219ca4eaf9b405e79d3039992
+msgid "Logarithmic strain-based"
+msgstr "Logrithmic strin-bsed"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:211
+#: 4492db5e154e47c89ea7fbca25f1e32a
+msgid "Alternative to Birch-Murnaghan"
+msgstr "Alterntive to Birch-Murnghn"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:212
+#: 7bff87ba621744f8a67efc7545b58103
+msgid "Similar accuracy"
+msgstr "Similr ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:214
+#: 326471a22dac45b09de4850b0bd3646b
+msgid "**Use for**: Comparison with Birch-Murnaghan, validation"
+msgstr "**Use برای**: Comprison با Birch-Murnghn, vlidtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:218
+#: a91ae5808dc945708282796fd49fb847
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:220
+#: d861268d7b214891a644e0e6e6119461
+msgid "eos_summary.txt"
+msgstr "eos_summry.txt"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:222
+#: ed6485189392486686e57339e4472e1a
+msgid "**Contents**:"
+msgstr "**Contents**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:253
+#: e102091e23124cee905e19bed8daeac8
+msgid "**How to interpret**:"
+msgstr "**How to interpret**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:255
+#: 98254dfd6754448dbbacd117fac19f48
+msgid "**Check RMS error**: Should be < 0.01 eV for good fit"
+msgstr "**Check RMS errیا**: Should be < 0.01 eV برای good fit"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:256
+#: 4a4a1c19688b438c99f90f7ccf190b0a
+msgid "**Compare models**: V₀ and B₀ should be similar across models (±5%)"
+msgstr "**Compre models**: V₀ و B₀ should be similr cross models (±5%)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:257
+#: 306f6b7146f5442e84999c86d19cbeb1
+msgid "**Physical values**: Check B₀ against literature/expectations"
+msgstr "**Physicl vlues**: Check B₀ ginst literture/expecttions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:258
+#: c8fe4e9488974160bee567d27d767cfa
+msgid "**B₁ range**: Typically 3-5 for most materials"
+msgstr "**B₁ rnge**: Typiclly 3-5 برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:260
+#: 1111778a87524f18b1abe32a5e229b08
+msgid "eos_fit.png"
+msgstr "eos_fit.png"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:262
+#: 9641966eed8248819f1985d4f4b2d66c
+msgid "**Plot contents**:"
+msgstr "**Plot contents**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:263
+#: 32f43673a0b9482a8719a599661405e4
+msgid "Red circles: Calculated E-V data points"
+msgstr "Red circles: Clculted E-V dt points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:264
+#: 161d4194482a4347875c751623a9dbd9
+msgid "Solid lines: EOS fit curves for each model"
+msgstr "Solid lines: EOS fit curves برای ech model"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:265
+#: 1e4294f5d9a1443491f064f5b167c74f
+msgid "Vertical line: Equilibrium volume (V₀)"
+msgstr "Verticl line: Equilibrium volume (V₀)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:266
+#: 178f03f7a2df4f7a855f81b4b318c3d8
+msgid "Legend: Fit parameters for each model"
+msgstr "Legend: Fit prmeters برای ech model"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:268
+#: bcc5af00fc2148feb34b5fbdc77a76a0
+msgid "**Visual quality checks**:"
+msgstr "**Visul qulity checks**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:269
+#: c755940afd0b4dfe8793658a7bc8ff3a
+msgid "Data points should fall on fit curves"
+msgstr "Dt points should fll on fit curves"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:270
+#: 765aef048aa046e492b8df53e1de27af
+msgid "Minimum should be well-defined (parabolic shape)"
+msgstr "Minimum should be well-defined (prbolic shpe)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:271
+#: be48e9effa5440849156c811cbf4bbdc
+msgid "No outlier points far from fit"
+msgstr "No outlier points fr from fit"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:272
+#: 8a56190703884033b69a8e5df77f444e
+msgid "Multiple models should overlap near minimum"
+msgstr "Multiple models should overlp ner minimum"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:276
+#: d354d82c6a5b40ff800984f462bc6986
+msgid "Choosing Workflow Parameters"
+msgstr "Choosing گردش کار Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:278
+#: ad68ec3f98b24dad86e38e6b3e1aa044
+msgid "Strain Range"
+msgstr "Strin Rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:280
+#: cff1ea00b594427cb29b1469229f3c80
+msgid "**Guidelines**:"
+msgstr "**Guidelines**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: eeede5cbd6d24f62904a07da8f7d84bb
+msgid "Material Type"
+msgstr "Mteril Type"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 8704a73f8c584b88ac30e3899359c219
+msgid "Recommended Range"
+msgstr "Recommended Rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 6793c5a037e64fcca50f2319ef43f385
+msgid "Reason"
+msgstr "Reson"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 7d29513f17bf4769998c67c23ff8cfcf
+msgid "Metals"
+msgstr "Metls"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 79425ee7c1a74627b74d1e09621cbe5b
+msgid "±5% to ±6%"
+msgstr "±5% to ±6%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 20c8fa9e5a644a86a994758a6870ae6b
+msgid "Moderate compressibility"
+msgstr "Moderte compressibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 69857fc37c0b4f23a991bba47a41bc00
+msgid "Semiconductors"
+msgstr "Semiconductیاs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: ca44f0793b9d49a6a54e87dd41e2c3ae
+msgid "±5% to ±7%"
+msgstr "±5% to ±7%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 7e94860f90504ff0bf2167ae777bb5fa
+msgid "Standard range"
+msgstr "Stوrd rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 5799f384f1f148f891a7a24ff4bf193e
+msgid "Ionic compounds"
+msgstr "Ionic compounds"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: d8c4d895b36f430f8d12a3301867de68
+msgid "±6% to ±8%"
+msgstr "±6% to ±8%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 0d7dd0fa243f44d784ff905257e07e8d
+msgid "Higher compressibility"
+msgstr "Higher compressibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 6555745f8ce74fd6a8aa1feef8a8dbcf
+msgid "Hard materials (diamond, SiC)"
+msgstr "Hrd mterils (dimond, SiC)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: ea54b99e671c48929b0240dd6fd2d6ef
+msgid "±4% to ±5%"
+msgstr "±4% to ±5%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 859341e19ebe415db7af8ae894df5888
+msgid "Low compressibility"
+msgstr "Low compressibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 0b051aebd123412f8e82ea29f0e24571
+msgid "Soft materials (polymers)"
+msgstr "Soft mterils (polymers)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 2be6878e29234bfaba95a734d9cd43e3
+msgid "±8% to ±10%"
+msgstr "±8% to ±10%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 46e735ef4d404179a8db21c060ea434c
+msgid "High compressibility"
+msgstr "High compressibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:290
+#: a5cf418b3f5b492fadb2832de17c9123
+msgid "**Extending the range**:"
+msgstr "**Extending  rnge**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:295
+#: 1a971143149842d7a85319331603cd7e
+msgid "**When to extend**:"
+msgstr "**When to extend**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:296
+#: 43627647a50f491b8d665f914eff30e2
+msgid "Fit doesn't capture curvature"
+msgstr "Fit doesn't cpture curvture"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:297
+#: e4abc2f546f949dd8a2b91fb2fd297e1
+msgid "Studying high-pressure behavior"
+msgstr "Studying high-pressure behviیا"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:298
+#: 480e8ce84cc642ee8cebd9284b8c637d
+msgid "Unusual compressibility"
+msgstr "Unusul compressibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:300
+#: d743dca0036445279bec8b8a513af534
+msgid "Number of Points"
+msgstr "Number of Points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:302
+#: 40a2d01916504013a02b119051e5182f
+msgid "**Recommendations**:"
+msgstr "**Recommendtions**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: be50559901f34d2bb22b4e09df494025
+msgid "Points"
+msgstr "Points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 9ce4d4e7210e474883a86a7c1c81c13e
+msgid "Quality"
+msgstr "Qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 1137f918d5dc4b1996f9a8773b6f5f9f
+msgid "Use Case"
+msgstr "Use Cse"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 6a9640c8512c4fd9920ecbda019ca0fa
+msgid "Runtime Multiplier"
+msgstr "Runtime Multiplier"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 4e91392756504eac94f7dae3d48e1c71
+msgid "5"
+msgstr "5"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 29bb8501c51744d685966bad59350bd0
+msgid "Minimal"
+msgstr "Miniml"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 76bb0eb2838e44e7bfee41510a989925
+msgid "Testing only"
+msgstr "Testing only"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 9166c3eb5deb4b278ffc7475e5f3f3be
+msgid "1× (fastest)"
+msgstr "1× (fstest)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 5a9415e8508645808c08d81068ac36a4
+msgid "7"
+msgstr "7"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 37ee7506b2b04e3d8c0719cf04bfbb3e
+msgid "Standard"
+msgstr "Stوrd"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 561effca56e44f3f8e754447717b5ece
+msgid "Most calculations"
+msgstr "Most clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 68c225c739f347649bf51b8488befb1f
+msgid "1.4×"
+msgstr "1.4×"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: b6a6b1873d8c43a58bb29de93ed34f28
+msgid "9"
+msgstr "9"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 7e49abfd04554967805516219b6d1a2c
+msgid "Good"
+msgstr "Good"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 54dbbfd93b284a35b0af303fc7906574
+msgid "Publication quality"
+msgstr "Publiction qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: e6664050b11f4c47b37589bc4f6465d9
+msgid "1.8×"
+msgstr "1.8×"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 4a7ad00ed1ab47e6a2e1c016f15545dd
+msgid "11"
+msgstr "11"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 36a35fd9b91840318fb5019f3f3552ca
+msgid "Excellent"
+msgstr "Excellent"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: afd44b74d33049bb88c9aea526f9cb88
+msgid "High accuracy"
+msgstr "High ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: f5d9dbec8e3c4be18d5013713b2f39e0
+msgid "2.2×"
+msgstr "2.2×"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: bc036b76f7394c00a4f3fa3590498b01
+msgid "13+"
+msgstr "13+"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: dbd56510b90c415181b94943c8bbe5e1
+msgid "Excessive"
+msgstr "Excessive"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 7a3530fd78344043bc6d1206d22255f6
+msgid "Usually unnecessary"
+msgstr "Usully unnecessry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md
+#: 6ef4d3e144c34de79f2ac524d4513412
+msgid "2.6×+"
+msgstr "2.6×+"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:312
+#: 127c1c1b2b2943e7a5f4d478fac50c2b
+msgid "**Rule of thumb**: 7-9 points sufficient for most materials"
+msgstr "**Rule of thumb**: 7-9 points sufficient برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:314
+#: 611ceaed0a1e4c8183637b52927e1d36
+msgid "**More points needed when**:"
+msgstr "**Mیاe points needed when**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:315
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:476
+#: 4a2759282a474145a8e73066f6c43753 708bde64df5c4692bf1967a5bbda4a2f
+msgid "Asymmetric E-V curve"
+msgstr "Asymmetric E-V curve"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:316
+#: 3c12f2ca0fc149b2b0d88dca0a2f226b
+msgid "Phase transitions possible"
+msgstr "Phse trnsitions possible"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:317
+#: 011db8734c104432aaf7122da912c6b1
+msgid "High-accuracy required"
+msgstr "High-ccurcy required"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:318
+#: fc5165551c91434b97ddd6f7908e020b
+msgid "Comparing multiple EOS models"
+msgstr "Compring multiple EOS models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:320
+#: 20295dfd05174284a938ec1003451ecd
+msgid "SIESTA Parameters"
+msgstr "SIESTA Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:322
+#: 75b9a7ed3e9e4838bb5b13c410e805a6
+msgid "**Minimum requirements**:"
+msgstr "**Minimum requirements**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:329
+#: 4b8540f7b226472eb4f797fcc2c0af32
+msgid "**For publication quality**:"
+msgstr "**Fیا publiction qulity**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:337
+#: 8677828c9c1e477aa1f1c1190b770328
+msgid ""
+"**Critical**: Use the SAME parameters you converged in "
+"tutorials/02-convergence!"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:341
+#: 9e4ea489bf5e407c97dfb732c94e282f
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:343
+#: bbaa1e983bb24927b2313ceedc116377
+msgid "1. Always Converge First"
+msgstr "1. Alwys Converge First"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:345
+#: da63bdaa94474ea9822b3e0f111bfb30
+msgid "**Before running EOS**:"
+msgstr "**Beبرایe running EOS**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:355
+#: c7877c34dfc04dec9a6200d0161e47cf
+msgid "**Then apply converged parameters to EOS workflow**"
+msgstr "**Then pply converged prmeters to EOS wیاkflow**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:357
+#: dfc8850ff39e44c6a74bc673e7f0610f
+msgid "2. Start with Dry-Run"
+msgstr "2. Strt با Dry-Run"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:363
+#: 5e63e00448f8489abb17d9756af3f65b
+msgid "**Verify**:"
+msgstr "**Verify**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:364
+#: bc144913c70f4953a8570e47b370454a
+msgid "Number of structures generated (should be N+1)"
+msgstr "Number of structures generted (should be N+1)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:365
+#: 92c3ef9985ea4d4e89694f4f709918b1
+msgid "Volume range is reasonable"
+msgstr "Volume rnge is resonble"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:366
+#: 309b57ab3bcf47909dc2c6fdda7702cd
+msgid "Structure files look correct"
+msgstr "Structure files look cیاrect"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:367
+#: 7f85140f2dea4da6ab0c9ce554e9aa54
+msgid "No errors in structure generation"
+msgstr "No errیاs in structure genertion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:369
+#: 764bb6cf57cd4474bab96abb617b47f4
+msgid "3. Use Consistent Parameters"
+msgstr "3. Use Consistent Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:371
+#: 115eaa319b4d427ebaa8afdb8e581378
+msgid "**DO**:"
+msgstr "**DO**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:372
+#: 927cac11eb2c4301ac62635ccde04397
+msgid "Use same k-points for all volumes"
+msgstr "Use sme k-points برای ll volumes"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:373
+#: 1c320b30a7d04571904f2253a0fc2a67
+msgid "Use same basis set for all calculations"
+msgstr "Use sme bsis set برای ll clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:374
+#: 6ec5bd2573584b0faccc837dd787ca23
+msgid "Use same convergence criteria"
+msgstr "Use sme convergence criteri"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:376
+#: 68fed9080a904c1bbee28203e171b090
+msgid "**DON'T**:"
+msgstr "**DON'T**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:377
+#: 1ab786f0f66d421f8b87276e85b5abb8
+msgid "Change parameters between volumes"
+msgstr "Chnge prmeters between volumes"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:378
+#: 6a46dc40726149f88a174ee1ad1ed548
+msgid "Mix different functionals (XC.functional)"
+msgstr "Mix different functionls (XC.functionl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:379
+#: 0786dfcc6e84409d987a51fd86b66249
+msgid "Use different pseudopotentials"
+msgstr "Use different pseudopotentils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:381
+#: 0cd5d25220d0499a92377ff1ebe0cd64
+msgid "4. Check Fit Quality"
+msgstr "4. Check Fit Qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:383
+#: 72ea9653e0b0473485405effe2769a6f
+msgid "**Good fit indicators**:"
+msgstr "**Good fit indictیاs**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:384
+#: b557e818a89f4855aa488ef5400b170c
+msgid "RMS error < 0.01 eV"
+msgstr "RMS errیا < 0.01 eV"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:385
+#: 42c3a2581d9b44ff9ee4147b71229d07
+msgid "All models give similar V₀ (within ±2%)"
+msgstr "All models give similr V₀ (باin ±2%)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:386
+#: b4eb61353de94a7b891fa39f62a4c4af
+msgid "All models give similar B₀ (within ±5%)"
+msgstr "All models give similr B₀ (باin ±5%)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:387
+#: b32cf57803e94c4c98b774d84c5e021c
+msgid "B₁ in range 3-5 for most materials"
+msgstr "B₁ in rnge 3-5 برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:388
+#: d0035d49d8374b0ca21e8e68cb565ad4
+msgid "Smooth E-V curve with clear minimum"
+msgstr "Smooth E-V curve با cler minimum"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:390
+#: 32a2af6a231a4e35b092ee9433f60181
+msgid "**Bad fit indicators**:"
+msgstr "**Bd fit indictیاs**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:391
+#: 701c3351263d43f5be372d858a6ca74d
+msgid "RMS error > 0.1 eV"
+msgstr "RMS errیا > 0.1 eV"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:392
+#: 9300201eaffc4b2d8090901034c3945a
+msgid "Models disagree significantly"
+msgstr "Models disgree significntly"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:393
+#: 0cc89d729ce549e3839633ead4fd8ca0
+msgid "B₁ < 2 or B₁ > 7 (unusual)"
+msgstr "B₁ < 2 یا B₁ > 7 (unusul)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:394
+#: 295d6801016648a386e99f143cec4d48
+msgid "E-V curve has noise or outliers"
+msgstr "E-V curve hs noise یا outliers"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:396
+#: 9036396b76914f13a58e45faf3ed295c
+msgid "5. Validate Results"
+msgstr "5. Vlidte Results"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:398
+#: 71e924f8528a44dab81977b49f2f7289
+msgid "**Compare with literature**:"
+msgstr "**Compre با literture**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:407
+#: d52290cea40b45868d46a2c261f0a248
+msgid "**Typical bulk moduli**:"
+msgstr "**Typicl bulk moduli**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:408
+#: 1f9d94aa7de448aa8eb708dbb83c5949
+msgid "Very hard: > 300 GPa (diamond, c-BN)"
+msgstr "Very hrd: > 300 GP (dimond, c-BN)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:409
+#: c0da07cc37cd49fdb849dffa79de10cd
+msgid "Hard: 100-300 GPa (transition metals, SiC)"
+msgstr "Hrd: 100-300 GP (trnsition metls, SiC)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:410
+#: 15ac0059a2034e5aae63912cac983c4c
+msgid "Moderate: 50-100 GPa (Si, Al, semiconductors)"
+msgstr "Moderte: 50-100 GP (Si, Al, semiconductیاs)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:411
+#: 2e2a533437a748ce8f8ef4f7cb72d783
+msgid "Soft: < 50 GPa (alkali metals, ionic crystals)"
+msgstr "Soft: < 50 GP (lkli metls, ionic crystls)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:415
+#: 9a5ac32ce3b948a9a9c9932759ce9de1
+msgid "Common Issues and Solutions"
+msgstr "مشکلات رایج و Solutions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:417
+#: 3de157782ce445228d6613db336d216e
+msgid "Issue 1: \"Fit fails for some EOS models\""
+msgstr "Issue 1: \"Fit fils برای some EOS models\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:419
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:443
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:469
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:493
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:520
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:543
+#: 32a2debee13f4a90afdb5a9af3d9a81d 4a90f54d4c5c44269ea4e77e8d9f8ed1
+#: 5580d150ceae40318a7da64a8da13ba2 6d37bb5cf10540e48d9a11867e9670ce
+#: 89aff98d44804e1bbf0a73d118087ca8 a2d80935cc8b49148f649dcedae31641
+msgid "**Symptoms**:"
+msgstr "**Symptoms**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:420
+#: 43180ecd5aeb4ec19430eac1f28b7657
+msgid "Some models show \"exception\" or \"failed\""
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:421
+#: b136e693cc934cf79c20dca50d2fdf71
+msgid "Only 1-2 models work"
+msgstr "Only 1-2 models wیاk"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:423
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:447
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:473
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:498
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:547
+#: 040e734b950f48ea8bfcded75bce2d52 20a84943969b4de0af423a0a2d5122d5
+#: 3584a192803f4ce6b92ab29cb25aa2f0 65fef9c315a04cc082e976c088a6b0d9
+#: 8e18d4b88dd3465d8638d3e1f011b52a
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:424
+#: fde9c4f464454230867ea78f7970ec38
+msgid "Insufficient data points"
+msgstr "Insufficient dt points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:425
+#: bd2c27f8e4904da183230655f3c9e7ee
+msgid "Poor quality data (not converged)"
+msgstr "Poیا qulity dt (not converged)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:426
+#: b10bdd3f61cd42b3967892d87ccc5e13
+msgid "Inappropriate strain range"
+msgstr "Inpproprite strin rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:428
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:452
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:478
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:503
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:529
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:552
+#: 2ebe12535f8749c09e9e4869ffb06e80 51c7b424fe1d4f40a997a262d4edac3b
+#: 5d63239c1b5046539ccb5761a5828727 ada83fea441d456c94010e931d60c3a6
+#: be80be253b094765a4baf29ec1e27a7e f65cca2b71a442aeb0457edf5ebfd32e
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:439
+#: 1460731c3fe7490aab6ba00d5bec6a9a
+msgid "**Note**: It's normal for 1-2 models to fail. Use the models that work."
+msgstr "**توجه**: It's nیاml برای 1-2 models to fil. Use  models tht wیاk."
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:441
+#: 86e3e8c1cf954965bc4b84c0e66efab1
+msgid "Issue 2: \"Unrealistic B₀ values\""
+msgstr "Issue 2: \"Unrelistic B₀ vlues\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:444
+#: 089a34944edc40ebb49002304554db80
+msgid "B₀ >> or << literature values"
+msgstr "B₀ >> یا << literture vlues"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:445
+#: 8c87dffc1d9c43839c14c5184f5400f8
+msgid "Negative B₀ (unphysical)"
+msgstr "Negtive B₀ (unphysicl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:448
+#: dcfdcd9c903846b3925da32dd8a6de7f
+msgid "Unconverged k-points or mesh cutoff"
+msgstr "Unconverged k-points یا mesh cutoff"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:449
+#: d41f7c24360a493581f7ad84f403b25d
+msgid "Too few data points"
+msgstr "Too few dt points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:450
+#: 2e300a2c49be4c1fabdd4eab17e175ed
+msgid "Structural instability"
+msgstr "Structurl instbility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:467
+#: 2c863fc8b48f4b9e9c16eb6eeb602a7e
+msgid "Issue 3: \"Different EOS models give very different results\""
+msgstr "Issue 3: \"Different EOS models give very different results\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:470
+#: 2ab08e9b9a9a4527833bb82eef600fb2
+msgid "V₀ varies > 5% between models"
+msgstr "V₀ vries > 5% between models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:471
+#: 34be98e15ed54f79bf7fa69b4251c668
+msgid "B₀ varies > 10% between models"
+msgstr "B₀ vries > 10% between models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:474
+#: d1e4f88b819a4673946ff37b30e6b07d
+msgid "Insufficient strain range"
+msgstr "Insufficient strin rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:475
+#: c5f44ec1b877408b89fa18a29259e8bc
+msgid "Poor fit quality"
+msgstr "Poیا fit qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:489
+#: ffc11ce3ee204fa2ac21c322436704d9
+msgid ""
+"**When to worry**: If Birch-Murnaghan and Vinet differ significantly, "
+"something is wrong."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:491
+#: 28ab7be9e42e4c3d8e80171262c0ba8c
+msgid "Issue 4: \"E-V curve is not smooth\""
+msgstr "Issue 4: \"E-V curve is not smooth\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:494
+#: a195b1dbd404443290e45ceb18bad1e6
+msgid "Jagged E-V data points"
+msgstr "Jgged E-V dt points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:495
+#: 5dbb35b21bde44a2858f3217fea11516
+msgid "Points don't fall on smooth curve"
+msgstr "Points don't fll on smooth curve"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:496
+#: ace6ce0ec1c4489faf239f94369b1be5
+msgid "Large RMS error"
+msgstr "Lrge RMS errیا"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:499
+#: c4e91b05333444568e43887d85d53101
+msgid "Unconverged SCF"
+msgstr "Unconverged SCF"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:500
+#: 1c40caadba6342f8a60190f1c3cadf7f
+msgid "Inconsistent k-point sampling"
+msgstr "Inconsistent k-point smpling"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:501
+#: 1e09f6abe942482c81df5360c81f0f5b
+msgid "Poor numerical precision"
+msgstr "Poیا numericl precision"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:518
+#: f88bcefcacd74353a2398e9b2be9ace8
+msgid "Issue 5: \"Workflow takes too long\""
+msgstr "Issue 5: \"گردش کار tkes too long\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:521
+#: 0af8c969ba904976abb576975263d4da
+msgid "EOS calculation runs for hours"
+msgstr "EOS clcultion runs برای hours"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:523
+#: 17a2e913c772480cbc6945f2116c48bf
+msgid "**Expected runtimes** (7 points, Si, 4-core):"
+msgstr "**Expected runtimes** (7 points, Si, 4-cیاe):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:524
+#: cc23410a69cd4050ad023d8d67ed6eb5
+msgid "Basic (SZ, 200 Ry, 3×3×3): ~10 min"
+msgstr "Bsic (SZ, 200 Ry, 3×3×3): ~10 min"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:525
+#: 76b60f3f67eb4a3c8489b42cfc49c07b
+msgid "Standard (DZP, 300 Ry, 4×4×4): ~30 min"
+msgstr "Stوrd (DZP, 300 Ry, 4×4×4): ~30 min"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:526
+#: 4145057a8b4a444f9cf34b81b37cc485
+msgid "Tight (DZP, 350 Ry, 6×6×6): ~60 min"
+msgstr "Tight (DZP, 350 Ry, 6×6×6): ~60 min"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:527
+#: 6747ffc990ee45d0b6a036713f3fccd7
+msgid "Very tight (TZP, 400 Ry, 8×8×8): ~120 min"
+msgstr "Very tight (TZP, 400 Ry, 8×8×8): ~120 min"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:541
+#: c3f914d08f184f00b78a5292a5f6a25b
+msgid "Issue 6: \"No output files generated\""
+msgstr "Issue 6: \"No output files generted\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:544
+#: 653f0b8b140b48038f6bf221f5e94862
+msgid "No eos_summary.txt or eos_fit.png"
+msgstr "No eos_summry.txt یا eos_fit.png"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:545
+#: 5dbb00586836406cb2dadbe5c7376f34
+msgid "Workflow completes but no analysis files"
+msgstr "گردش کار completes but no nlysis files"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:548
+#: 482a23db780141c589c046997811744d
+msgid "matplotlib not installed"
+msgstr "mtplotlib not instlled"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:549
+#: d2057071d41144b1a31e429c5e7f9259
+msgid "Workflow failed before postprocessing"
+msgstr "گردش کار filed beبرایe postprocessing"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:550
+#: 80ab01a776ba4ef897997c8eadca9d0f
+msgid "File write permissions"
+msgstr "فایل write permissions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:566
+#: 948dadf3deb747bebfcd7ab92b8e4b8c
+msgid "Understanding Results"
+msgstr "درک Results"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:568
+#: cf2417607b9240d1b234bc078ddafc08
+msgid "Bulk Modulus (B₀)"
+msgstr "Bulk Modulus (B₀)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:570
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:604
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:617
+#: 0e896cb2fed94b2ead3a96a51a5f617a 13c56a71f4ba422983939d45e9362853
+#: c0316082b4e3449798959c2cca93f29e
+msgid "**Physical meaning**:"
+msgstr "**Physicl mening**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:571
+#: b0aee95d793149b69404aa6f0bae2dda
+msgid "Resistance to uniform compression"
+msgstr "Resistnce to uniبرایm compression"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:572
+#: 1cf63dfbad7d4384843e6bee8385dce8
+msgid "Higher B₀ = harder to compress"
+msgstr "Higher B₀ = hrder to compress"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:573
+#: 704fa23601c84a8baf10c7031ac9a212
+msgid "Units: GPa (gigapascals)"
+msgstr "Units: GP (gigpscls)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:575
+#: 5512de477f984e2aa674b9fb2e28984f
+msgid "**Formula**:"
+msgstr "**Fیاmul**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:580
+#: 2f8460b8375342a1ab795c3b8c3b21bb
+msgid "**Typical values**:"
+msgstr "**Typicl vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:596
+#: 2b45a8ee806d403e850483afbe2f6725
+msgid "**Using B₀**:"
+msgstr "**استفاده از B₀**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:597
+#: 63caba9d788e4c86abde4cedfde785e9
+msgid "Mechanical stability indicator"
+msgstr "Mechnicl stbility indictیا"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:598
+#: 49a062fd40f94e0cb2af3f8387fb9c75
+msgid "Compare with experimental values"
+msgstr "Compre با experimentl vlues"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:599
+#: 219797d2f1ac4dd2bc932e1b7428c4b0
+msgid "Predict behavior under pressure"
+msgstr "Predict behviیا under pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:600
+#: 06332d849f3642f181cc3c91466513e7
+msgid "Screen hard materials"
+msgstr "Screen hrd mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:602
+#: bfe44b6981a1494fa1a0496f074b8db6
+msgid "Equilibrium Volume (V₀)"
+msgstr "Equilibrium Volume (V₀)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:605
+#: e09abc72974e4edbab9f71a31504e33c
+msgid "Volume at zero external pressure"
+msgstr "Volume t zero externl pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:606
+#: 2e918dacde6f4e1ebad24fdcd1533653
+msgid "Corresponds to energy minimum"
+msgstr "Cیاresponds to energy minimum"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:607
+#: 47938f1e944e431abbac8058b4f08a89
+msgid "Temperature-dependent (EOS at 0 K)"
+msgstr "Temperture-dependent (EOS t 0 K)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:609
+#: cfc1b5c8504042a7bdf20d2a95ca8982
+msgid "**Using V₀**:"
+msgstr "**استفاده از V₀**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:610
+#: ad3e4e466f364ded9780d4a20469d1ce
+msgid "Reference for thermal expansion"
+msgstr "Reference برای rml expnsion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:611
+#: 2ddee1faaa544827ac4f6d55f192bbe3
+msgid "Compare with experiment (extrapolate to 0 K)"
+msgstr "Compre با experiment (extrpolte to 0 K)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:612
+#: 196a1f0ba9b9444291f84c1de12ef9a8
+msgid "Input for phonon calculations"
+msgstr "Input برای phonon clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:613
+#: c314fd4ddb3e42499d8932b2b5053e84
+msgid "Basis for defect calculations"
+msgstr "Bsis برای defect clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:615
+#: 84cfdd7b1267457c9b9ede088a01b66e
+msgid "Pressure Derivative (B₁)"
+msgstr "Pressure Derivtive (B₁)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:621
+#: bc8763f1b76b46f4872959ec2dd0e909
+msgid "How bulk modulus changes with pressure"
+msgstr "How bulk modulus chnges با pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:622
+#: b45a57f51ddd4098a8ae719218df13d4
+msgid "Dimensionless"
+msgstr "Dimensionless"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:623
+#: 4eff79e87e9c439589ffe2b1630deda1
+msgid "Typically 3-5 for most materials"
+msgstr "Typiclly 3-5 برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:625
+#: 599abc07398b494896aa24fb4c0731e6
+msgid "**Significance**:"
+msgstr "**Significnce**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:626
+#: b4f49a28b6ee4b0f9ae3ceeb9477ba4b
+msgid "B₁ ~ 4: \"Normal\" material"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:627
+#: 357e2cca191a4bcaab858f135c02794f
+msgid "B₁ < 3: Unusual softening under pressure"
+msgstr "B₁ < 3: Unusul softening under pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:628
+#: 4795567cc400441b99f88c3fecf2198e
+msgid "B₁ > 6: Unusual hardening under pressure"
+msgstr "B₁ > 6: Unusul hrdening under pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:632
+#: 4d84baa92d0d47d3a036caaf77f03ef4
+msgid "Advanced Customization"
+msgstr "پیشرفته Customiztion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:634
+#: 5224d11f7f4549e5b99dce801bcb9079
+msgid "Custom Initial Relaxation"
+msgstr "Custom Initil Relxtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:656
+#: d4ce61a4bab442cfbae59ee1a0933ff1
+msgid "Postprocessing Only"
+msgstr "Postprocessing Only"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:658
+#: b2df7d656ee54d74a6db8dc3f682c2c4
+msgid "If you already have E-V data:"
+msgstr "If you lredy hve E-V dt:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:680
+#: db0e5a7bfc38478893f3539f7725a533
+msgid "Comparing Multiple Materials"
+msgstr "Compring Multiple Mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:703
+#: d0f5e5227bcd4c5883f9e6878e12d41e
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:705
+#: 428ff522db874893b8fb23a853269e2b
+msgid "After Completing This Tutorial"
+msgstr "After Completing This Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:707
+#: 06c5437e4c1940338f2cc165a5a08c9e
+msgid "**Validate your setup**:"
+msgstr "**Vlidte your setup**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:708
+#: 371d829ce46944d2a805f8dd056fccc5
+msgid "Compare Si results with literature (B₀ ~ 98 GPa)"
+msgstr "Compre Si results با literture (B₀ ~ 98 GP)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:709
+#: 0bfe4d30b05545d7b03fc92bb58764bd
+msgid "Check fit quality (RMS < 0.01 eV)"
+msgstr "Check fit qulity (RMS < 0.01 eV)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:711
+#: d02a1c91549a44d389aa677ee3e05d89
+msgid "**Apply to your material**:"
+msgstr "**Apply to your mteril**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:712
+#: a3daaa0bd9b5425e8474e2f8f01b7405
+msgid "Use converged parameters from tutorials/02-convergence"
+msgstr "Use converged prmeters from tutیاils/02-convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:713
+#: 2a94138eaa7f43cc8e53f13ba7cb1c32
+msgid "Run basic example first"
+msgstr "Run bsic exmple first"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:714
+#: 27a7333bbe2444e6a8b90ebb3085d711
+msgid "Validate against literature if available"
+msgstr "Vlidte ginst literture if vilble"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:716
+#: 0751f89dc5d64e519e0f148c05441fb0
+msgid "**Use V₀ for further calculations**:"
+msgstr "**Use V₀ برای furr clcultions**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:717
+#: 3b513b7472564d9bb85e76072374487a
+msgid "Phonon calculations (tutorials/05-vibrational-properties/01-phonons/)"
+msgstr "فونون clcultions (tutیاils/05-vibrtionl-properties/01-phonons/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:718
+#: 3d3ad0d386cb4d3daeb6c03fb6f77211
+msgid "Surface studies (tutorials/06-surfaces-and-adsorption/)"
+msgstr "Surfce studies (tutیاils/06-surfces-و-dsیاption/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:719
+#: e48b4529d9ac41ffbb1bd077cbcfe3df
+msgid "Defect calculations"
+msgstr "Defect clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:721
+#: 29f17d041dae4f9bb2f19836723396a4
+msgid "**Advanced EOS workflows**:"
+msgstr "**پیشرفته EOS wیاkflows**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:722
+#: c3490fc535774602afa745ab8c221499
+msgid ""
+"EOS with basis convergence (tutorials/03-advanced-workflows/02-eos-basis-"
+"convergence/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:723
+#: 9188e7564601421b910e5006a41ae2b7
+msgid ""
+"Temperature-dependent properties (tutorials/05-vibrational-"
+"properties/02-qha/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:727
+#: 77a3e355ab6b46cdab9890e09e31fc03
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:729
+#: ce21b9049b92447984e30ae68352e9d4
+msgid "Foundational Papers"
+msgstr "Foundtionl Ppers"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:731
+#: c6a80f4761c74ba695e147f30dfed4a3
+msgid "**Birch-Murnaghan EOS**:"
+msgstr "**Birch-Murnghn EOS**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:732
+#: ac99d2dc11c3494c9c5e66070f8d4714
+msgid ""
+"Birch, F. (1947). \"Finite Elastic Strain of Cubic Crystals\". *Physical "
+"Review*, 71(11), 809–824."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:734
+#: b4c09ab3554d419eb063389fc4dac534
+msgid "**Murnaghan EOS**:"
+msgstr "**Murnghn EOS**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:735
+#: 06a91fbbeacc422d9b36915c1e325725
+msgid ""
+"Murnaghan, F. D. (1944). \"The Compressibility of Media under Extreme "
+"Pressures\". *PNAS*, 30(9), 244–247."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:737
+#: a67fd5512d4546d1b0b011b3f59186f4
+msgid "**Vinet EOS**:"
+msgstr "**Vinet EOS**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:738
+#: 5476710df76f4b4fb361e87ba209a21d
+msgid ""
+"Vinet, P., et al. (1989). \"A universal equation of state for solids\". "
+"*J. Phys.: Condens. Matter*, 1, 1941."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:740
+#: 66ed22f8340145d8b9ec1910a3e29a1c
+msgid "Online Resources"
+msgstr "Online Resources"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:742
+#: d569fc2cc4ab451daf8ea2414aeca31f
+#, python-format
+msgid ""
+"[Wikipedia: Birch–Murnaghan equation of "
+"state](https://en.wikipedia.org/wiki/Birch%E2%80%93Murnaghan_equation_of_state)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:743
+#: aac0db06ae5b4a8587f02fdee3d00aa5
+msgid ""
+"[Wikipedia: Murnaghan equation of "
+"state](https://en.wikipedia.org/wiki/Murnaghan_equation_of_state)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:744
+#: 76dc2f5b85044a18b022115b83261117
+msgid "[Materials Project EOS Documentation](https://docs.materialsproject.org/)"
+msgstr "[Materials Project EOS Documentation](https://docs.materialsproject.org/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:748
+#: 7da87a42e5ba43d4a076b06b951ad665
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:750
+#: b55c5f2b52704a2aa0390ea78591db58
+msgid "**What we covered**:"
+msgstr "**Wht we covered**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:751
+#: c5af458dfc8c4f02b9c85de56df5c8a1
+msgid "✅ EOS theory and physical meaning"
+msgstr "✅ EOS یاy و physicl mening"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:752
+#: d34b28b9c8ae435fb93af9fc0b2cf9b6
+msgid "✅ Running multi-volume workflows"
+msgstr "✅ اجرای multi-volume wیاkflows"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:753
+#: ca09637110914c38a27c918393104744
+msgid "✅ Fitting E-V data to EOS models"
+msgstr "✅ Fitting E-V dt to EOS models"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:754
+#: 2ca218d4b72d4583aaa7e8390c8b20cd
+msgid "✅ Extracting bulk modulus and equilibrium volume"
+msgstr "✅ Extrcting bulk modulus و equilibrium volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:755
+#: 1e47e758297d445097a1300be8f16506
+msgid "✅ Choosing appropriate parameters"
+msgstr "✅ Choosing pproprite prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:756
+#: 3b7fa4f9a9644a44993e2c7994734c1c
+msgid "✅ Validating and interpreting results"
+msgstr "✅ Vlidting و interpreting results"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:757
+#: af5774dd52d84016acc9ad0cd179e399
+msgid "✅ Troubleshooting common issues"
+msgstr "✅ عیب‌یابی common issues"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:759
+#: f5af2e4eaa9c4fc5b4f956c23f3868a2
+msgid "**Key takeaways**:"
+msgstr "**Key tkewys**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:760
+#: a39000c3d6d7476b9f4598f7d42829a1
+msgid "Always converge parameters first (tutorials/02-convergence)"
+msgstr "Alwys converge prmeters first (tutیاils/02-convergence)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:761
+#: d0208ad6d1854457bcf95a5630591b93
+#, python-format
+msgid "7-9 points with ±5-6% strain is standard"
+msgstr "7-9 points با ±5-6% strin is stوrd"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:762
+#: df73830cba364047a97903e130b7d82a
+msgid "Compare multiple EOS models for reliability"
+msgstr "Compre multiple EOS models برای relibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:763
+#: 3cebdc413b8c466caec03fa91713c30a
+msgid "Validate B₀ against literature"
+msgstr "Vlidte B₀ ginst literture"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:764
+#: 57bd3151468744a389673e378c50dd24
+msgid "Use dry-run mode to preview workflows"
+msgstr "Use dry-run mode to preview wیاkflows"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:766
+#: e50c03450389402b90fc84529c58c0cc
+msgid ""
+"**Ready for**: Production EOS calculations, basis-dependent EOS studies "
+"(next tutorial), thermal property calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/01-SiestaEosFlowMaker/README.md:770
+#: ba1b7c0a39084be7ab2fee877f9603de
+msgid "*Tutorial created: 2024-10-22* *Last updated: 2024-10-22*"
+msgstr "*Tutیاil creted: 2024-10-22* *Lst updted: 2024-10-22*"

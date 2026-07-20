@@ -1,0 +1,1 @@
+"""Bundled SIESTA pseudopotential archives."""

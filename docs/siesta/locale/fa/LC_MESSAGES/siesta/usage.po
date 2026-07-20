@@ -1,0 +1,299 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/usage.rst:3 81f269e1c9c14dcbaa5998837e11e2bf
+msgid "Usage"
+msgstr "استفاده"
+
+#: ../../source/usage.rst:5 d4532b984c4643e4bed2cd0a7391e6e0
+msgid ""
+"This guide demonstrates common usage patterns for atomate2siesta, from "
+"basic calculations to advanced workflows."
+msgstr ""
+"این راهنما الگوهای استفاده رایج برای atomate2siesta را نشان می‌دهد، از "
+"محاسبات پایه تا جریان‌های کار پیشرفته."
+
+#: ../../source/usage.rst:10 ccd4155aca9e4bc99185f61427af2f6b
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/usage.rst:13 6cb890345d0b4d08a60eda3f30b5a98f
+msgid "Basic Structure Relaxation"
+msgstr "آرام‌سازی ساختار پایه"
+
+#: ../../source/usage.rst:15 87ac1721ee814f17b5d7394532486964
+msgid "The simplest workflow: relax a crystal structure."
+msgstr "ساده‌ترین جریان کار: آرام‌سازی یک ساختار کریستالی."
+
+#: ../../source/usage.rst:42 f047071946854bcf8e993a832a6451c2
+msgid "Configuration"
+msgstr "پیکربندی"
+
+#: ../../source/usage.rst:45 a90ab96c7897414490ae52b0a9f3feb5
+msgid "SIESTA Settings File"
+msgstr "فایل تنظیمات SIESTA"
+
+#: ../../source/usage.rst:47 8b9f9962294a4c169c97115eb57a2276
+msgid "Create ``~/.atomate2.yaml`` with your SIESTA configuration:"
+msgstr "فایل ``~/.atomate2.yaml`` را با پیکربندی SIESTA خود ایجاد کنید:"
+
+#: ../../source/usage.rst:65 f17307b8b8204facbc96ae59c5280fd3
+msgid "Using Environment Variables"
+msgstr "استفاده از متغیرهای محیطی"
+
+#: ../../source/usage.rst:67 98e3bcd690a749f2807feeca46d045a9
+msgid "Alternatively, set environment variables:"
+msgstr "به‌طور جایگزین، متغیرهای محیطی را تنظیم کنید:"
+
+#: ../../source/usage.rst:75 f5ffc5ca8ae4400fb2908e6e1d4d49e7
+msgid "Programmatic Configuration"
+msgstr "پیکربندی برنامه‌ای"
+
+#: ../../source/usage.rst:77 250795e4a8084de1aa7af007a663b53f
+msgid "Override settings in Python:"
+msgstr "بازنویسی تنظیمات در Python:"
+
+#: ../../source/usage.rst:92 e516bb350a994e3d80c1f666d533cac9
+msgid "Common Workflows"
+msgstr "جریان‌های کار رایج"
+
+#: ../../source/usage.rst:95 afc91b2f86694f5a9dd6c51fb1b5c6e1
+msgid "1. Electronic Structure"
+msgstr "۱. ساختار الکترونی"
+
+#: ../../source/usage.rst:97 c7bf8eba0bcb4321b126505b33df40ed
+msgid "**Band Structure Calculation**"
+msgstr "**محاسبه ساختار نواری**"
+
+#: ../../source/usage.rst:119 836c1863cbff47c9925262a743125860
+msgid "2. Phonon Calculations"
+msgstr "۲. محاسبات فونون"
+
+#: ../../source/usage.rst:121 aa0798832de2485099277f4fa11eed07
+msgid "**Complete Phonon Workflow with Plotting**"
+msgstr "**جریان کار کامل فونون با رسم نمودار**"
+
+#: ../../source/usage.rst:145 85560a642c2940e7a6033295f17fc6d1
+msgid "3. Surface Energy"
+msgstr "۳. انرژی سطح"
+
+#: ../../source/usage.rst:147 1bc98080bb0e43578836f06cc05214fd
+msgid "**Multi-Surface Energy Comparison**"
+msgstr "**مقایسه انرژی چند سطح**"
+
+#: ../../source/usage.rst:168 9902d5d54eca4b19ab34ec5bbb43b06d
+msgid "4. Equation of State"
+msgstr "۴. معادله حالت"
+
+#: ../../source/usage.rst:170 95390c235e354edcbfd874249ebe0c17
+msgid "**EOS with Automatic Fitting**"
+msgstr "**EOS با برازش خودکار**"
+
+#: ../../source/usage.rst:188 c9e2c8cfd5ac44daabb38b93f7af7b1e
+msgid "5. Elastic Constants"
+msgstr "۵. ثابت‌های الاستیک"
+
+#: ../../source/usage.rst:190 1e073ba256d546f29c44dca7003edd37
+msgid "**Full Elastic Tensor Calculation**"
+msgstr "**محاسبه تانسور الاستیک کامل**"
+
+#: ../../source/usage.rst:207 433ad3a34ccc484d967b847043f2ff08
+msgid "Parameter Customization"
+msgstr "سفارشی‌سازی پارامترها"
+
+#: ../../source/usage.rst:210 7a4956f14af1418d9f94b04f0dc7ea3e
+msgid "Method 1: Direct in Maker"
+msgstr "روش ۱: مستقیم در Maker"
+
+#: ../../source/usage.rst:224 f34f58a92d0748cdb3e7d23049ec3af9
+msgid "Method 2: Using Powerups"
+msgstr "روش ۲: استفاده از Powerups"
+
+#: ../../source/usage.rst:226 48790211ee4149a690d52d9d6b68dd26
+msgid "Apply updates after job creation:"
+msgstr "اعمال به‌روزرسانی‌ها پس از ایجاد کار:"
+
+#: ../../source/usage.rst:246 4c11d4a6b14244529df9d9d2ca0c66cf
+msgid "Method 3: Tier Presets"
+msgstr "روش ۳: پیش‌تنظیم‌های سطح"
+
+#: ../../source/usage.rst:248 4ab2a67030f34bb18ed3901f46d7cbfb
+msgid "Use material-specific presets:"
+msgstr "استفاده از پیش‌تنظیم‌های اختصاصی مواد:"
+
+#: ../../source/usage.rst:269 40bef42d281d4962a0b7a336d31c8e10
+msgid "Advanced Features"
+msgstr "ویژگی‌های پیشرفته"
+
+#: ../../source/usage.rst:272 a3164bc779704886a2cbbb96017a2818
+msgid "Error Handling with Custodian"
+msgstr "مدیریت خطا با Custodian"
+
+#: ../../source/usage.rst:274 8e516a2705ac4edfbfe56eef564f901c
+msgid "Enable automatic error recovery:"
+msgstr "فعال‌سازی بازیابی خودکار خطا:"
+
+#: ../../source/usage.rst:295 8d7d7d41f84145d98393fa3c4ccd634e
+msgid "Database Storage"
+msgstr "ذخیره‌سازی پایگاه داده"
+
+#: ../../source/usage.rst:297 49a767aa10db4afeb8c7237c101bb187
+msgid "Store results in MongoDB:"
+msgstr "ذخیره نتایج در MongoDB:"
+
+#: ../../source/usage.rst:323 9fe05b0e8b1b45118987812cfb701883
+msgid "HPC Cluster Submission"
+msgstr "ارسال به خوشه HPC"
+
+#: ../../source/usage.rst:325 e446f6c583104a949918d10bc2abf80e
+msgid "Submit to remote HPC clusters using jobflow-remote:"
+msgstr "ارسال به خوشه‌های HPC راه‌دور با استفاده از jobflow-remote:"
+
+#: ../../source/usage.rst:351 cd0b135f6815443a9b7d418200fe0713
+msgid "Performance Optimization"
+msgstr "بهینه‌سازی عملکرد"
+
+#: ../../source/usage.rst:354 04f12c452594442ab6321aa6dc207ecd
+msgid "Convergence Testing"
+msgstr "تست همگرایی"
+
+#: ../../source/usage.rst:356 ff275c6e9917439194b5823ec02ba75a
+msgid "Always test convergence before production runs:"
+msgstr "همیشه قبل از اجراهای تولید همگرایی را تست کنید:"
+
+#: ../../source/usage.rst:382 19c8512384544dd1a91b80e646bced72
+msgid "Parallel Execution"
+msgstr "اجرای موازی"
+
+#: ../../source/usage.rst:384 5538e9e82e104e659930d33712e3a3db
+msgid "Use MPI for SIESTA calculations:"
+msgstr "استفاده از MPI برای محاسبات SIESTA:"
+
+#: ../../source/usage.rst:391 9b17d0202ad24b9e9866c34de6f4edd2
+msgid "Optimize performance with proper resource allocation."
+msgstr "بهینه‌سازی عملکرد با تخصیص مناسب منابع."
+
+#: ../../source/usage.rst:396 12d7ee6ec9b4422ebdb6a97f522e0a5e
+msgid "Output and Results"
+msgstr "خروجی و نتایج"
+
+#: ../../source/usage.rst:399 7e3bd86bdf8849fcba1344ba6d7dbc70
+msgid "Accessing Job Results"
+msgstr "دسترسی به نتایج کار"
+
+#: ../../source/usage.rst:417 e6f988f9e61749509e9d1f4edae79b0a
+msgid "Understanding Task Documents"
+msgstr "درک اسناد کار"
+
+#: ../../source/usage.rst:419 8beca3fb29c5493dafe7c4dbb094f113
+msgid "All results are stored as ``SiestaTaskDoc`` objects containing:"
+msgstr "تمام نتایج به‌عنوان اشیاء ``SiestaTaskDoc`` ذخیره می‌شوند که شامل موارد زیر است:"
+
+#: ../../source/usage.rst:421 30e06d4dcd0a4c26b2dc66c05d3baa80
+msgid "**Input**: Structure, parameters used"
+msgstr "**ورودی**: ساختار، پارامترهای استفاده‌شده"
+
+#: ../../source/usage.rst:422 961537caa9ac442aae4b0be7ada291ad
+msgid "**Output**: Energy, forces, stress, electronic properties"
+msgstr "**خروجی**: انرژی، نیروها، تنش، خواص الکترونی"
+
+#: ../../source/usage.rst:423 a602c4831ea54fbbbc23aa48c593643a
+msgid "**Metadata**: Calculation type, SIESTA version, timing"
+msgstr "**فراداده**: نوع محاسبه، نسخه SIESTA، زمان‌بندی"
+
+#: ../../source/usage.rst:424 cc0c528c3a8f4777bb6dab2fd4c51f82
+msgid "**Analysis**: Derived properties (bandgap, magnetization, etc.)"
+msgstr "**تحلیل**: خواص مشتق‌شده (گاف نواری، مغناطش، و غیره)"
+
+#: ../../source/usage.rst:427 c7215dfadb5349128aba7b7bce10b659
+msgid "Saving Results"
+msgstr "ذخیره نتایج"
+
+#: ../../source/usage.rst:429 ce8258f4f8df445fabadc5c109a65b81
+msgid "**JSON Export**"
+msgstr "**صادرات JSON**"
+
+#: ../../source/usage.rst:442 20b15bd8a3fe4296bc3703e870a4b42a
+msgid "**Structure Export**"
+msgstr "**صادرات ساختار**"
+
+#: ../../source/usage.rst:452 84deb056cc744431bf6eaba5449936f3
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/usage.rst:455 efa2b4bceac74da183670da96085f0f6
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/usage.rst:457 d3f315232c0645a9b8e971a556202c70
+msgid "**Issue**: SCF not converging"
+msgstr "**مشکل**: SCF همگرا نمی‌شود"
+
+#: ../../source/usage.rst:470 e20fe6efc24246ef8d478950723ea6b4
+msgid "**Issue**: Basis set errors"
+msgstr "**مشکل**: خطاهای مجموعه پایه"
+
+#: ../../source/usage.rst:481 4ae2035453904b3e8d59a04cc76da861
+msgid "**Issue**: Memory problems"
+msgstr "**مشکل**: مشکلات حافظه"
+
+#: ../../source/usage.rst:494 b5f0d2910fd64ff4b4f887e9f3466b00
+msgid "Enable Debug Logging"
+msgstr "فعال‌سازی ثبت وقایع اشکال‌زدایی"
+
+#: ../../source/usage.rst:506 c45164655caf40c0ae32476d161dd525
+msgid "Next Steps"
+msgstr "مراحل بعدی"
+
+#: ../../source/usage.rst:508 4d82b893241f412e8761ef8a1eac6f15
+msgid "**Tutorials**: See :doc:`tutorials/index` for 22 comprehensive tutorials"
+msgstr "**آموزش‌ها**: برای ۲۲ آموزش جامع :doc:`tutorials/index` را ببینید"
+
+#: ../../source/usage.rst:509 6059feb37ec343dda69c1413562cc14a
+msgid "**Features**: Explore :doc:`features` for detailed feature documentation"
+msgstr "**ویژگی‌ها**: برای مستندات جزئی ویژگی‌ها :doc:`features` را کاوش کنید"
+
+#: ../../source/usage.rst:510 8b6f83898e9e4e5687dbe5ae521805b3
+msgid ""
+"**Advanced Workflows**: Check :doc:`advanced-workflows` for complex "
+"calculations"
+msgstr ""
+"**جریان‌های کار پیشرفته**: برای محاسبات پیچیده :doc:`advanced-workflows` را بررسی کنید"
+
+#: ../../source/usage.rst:511 2faee86b53724fdca48f7f3f82f42036
+msgid ""
+"**API Reference**: Browse :doc:`api/modules` for complete API "
+"documentation"
+msgstr ""
+"**مرجع API**: برای مستندات کامل API به :doc:`api/modules` مراجعه کنید"
+
+#: ../../source/usage.rst:513 aaea2c056044430ca79275160f95cf08
+msgid "For questions and support:"
+msgstr "برای سؤالات و پشتیبانی:"
+
+#: ../../source/usage.rst:515 60ec6181772246ffbe1240ac26a096ce
+msgid "GitHub Issues: https://github.com/materialsproject/atomate2/issues"
+msgstr "مشکلات GitHub: https://github.com/materialsproject/atomate2/issues"
+
+#: ../../source/usage.rst:516 5e4a399fa43a47d3ab5cb91c9fb20018
+msgid "Discussions: https://github.com/materialsproject/atomate2/discussions"
+msgstr "بحث‌ها: https://github.com/materialsproject/atomate2/discussions"

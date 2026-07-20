@@ -1,0 +1,713 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:1
+#: d0003a22ca0542f4802442b6f1dab8e7
+msgid "Tutorial: Elastic Tensor Calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:3
+#: ff3115d6223c440ab75e5cf83620f8d4
+msgid ""
+"**Category**: 04-mechanical **Difficulty**: Advanced **Time**: ~5 min "
+"(dry-run), ~1-2 hours (full workflow)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:9
+#: 4b6b50c738a04502a0fdad5492bb11f9
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:11
+#: f7a85578268f44a7a683238c207dc797
+msgid ""
+"Complete elastic tensor calculation using strain perturbation method. "
+"Determines full elastic constants matrix (Cᵢⱼ) and derives mechanical "
+"properties including bulk modulus, shear modulus, Young's modulus, and "
+"Poisson's ratio."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:13
+#: 1b30cd248dbd47219e98756a8073e999
+msgid ""
+"This tutorial demonstrates the **ElasticFlowMaker** workflow for "
+"calculating mechanical properties from stress-strain relationships."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:17
+#: be4f92cdadff43e7a4747a32f3cc0034
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:19
+#: 754bad48da144c5baaebae8505261c6e
+msgid "Elastic tensor calculation using strain perturbation method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:20
+#: bb931cbd6ba4430bbc9c8d0fe19bff68
+msgid "Extracting elastic constants (Cᵢⱼ) from stress-strain data"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:21
+#: ec659f29b2954119b8c0df7b4f8efe81
+msgid "Computing derived mechanical properties (B, G, E, ν)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:22
+#: ed1cb4a4e74e4c3ea3295438f01d2edf
+msgid "Mechanical stability criteria and anisotropy analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:23
+#: 1c06812a844c4c52b01257382b2ca4af
+msgid "Importance of equilibrium structure for elastic calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:24
+#: e3e622fcc8504cb5a1075480dda31d4e
+msgid "Strain magnitude selection and linearity verification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:28
+#: 8f143fc6bb2240bc9f2d013a2cfe0e94
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:30
+#: 98218b53a8c04b78800b646c27d6d890
+msgid "**Required**: [01-RelaxMaker](../../../01-basics/01-RelaxMaker/) completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:31
+#: d4dacca7dcf6413aa85613095404be1a
+msgid ""
+"**Critical**: **Fully relaxed structure at equilibrium** (forces < 0.01 "
+"eV/Å, stress < 0.1 GPa)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:32
+#: 5d8a0684862f4a1aa8487eddee567fd7
+msgid ""
+"**Recommended**: [01-convergence](../../01-convergence/) - Converged "
+"k-points and basis parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:33
+#: 6ed8245fa6b042c498c383d894395306
+msgid "**Recommended**: Basic elasticity theory knowledge"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:37
+#: ee41166cf65245759ce6b33e1103d71e
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:39
+#: 94b76dcc97af4b6d9a3477a9b2a5663a
+msgid "Elastic Tensor"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:41
+#: 5cd6b6c679194a618f0a095ec363b24d
+msgid "The elastic tensor relates stress (σ) to strain (ε) via Hooke's law:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:43
+#: 7fd2f58a7e9f45e488eb0874f418a644
+#, python-brace-format
+msgid "$ \\sigma_i = \\sum_j C_{ij} \\varepsilon_j $"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:47
+#: 35f53af9653f404ebe96c91106c65b9f
+msgid "**Independent Constants by Symmetry**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:48
+#: ae1cece5d9234a429a830a05343ca6e2
+msgid "**Cubic**: 3 independent (C₁₁, C₁₂, C₄₄)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:49
+#: 64ccc8353e314a50aea4a6d9ceb2425e
+msgid "**Hexagonal**: 5 independent"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:50
+#: 683bfb833bf54205ba270638d810ed98
+msgid "**Orthorhombic**: 9 independent"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:51
+#: 0d06c0b530194389b80c938ebcb68be6
+msgid "**Triclinic**: 21 independent"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:53
+#: 89e729a48ecb4e7aa486ad8e5a3174d3
+msgid "Strain Perturbation Method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:55
+#: b9a8496a806f4dba9afac87ce34f1cc8
+msgid "**Workflow**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:56
+#: 5dd4911f43784934aa3c667ba8799a68
+msgid "Start with **fully relaxed structure** (CRITICAL!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:57
+#: 7d93d64d2a6d45c5baf65fa475e3db04
+msgid "Apply small strains: ε = ±0.01 (±1%)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:58
+#: 52d96fb93a5f4c0ea8322373ba293346
+msgid "Calculate stress response for each strain"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:59
+#: 917e3f6967764410b1f90ea6c6e2f866
+msgid "Extract elastic constants from σ vs ε"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:60
+#: b493d3077baa40b3a42b4175b2446c15
+msgid "Compute derived properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:62
+#: 32a6b8eb940041a9b20dfe569532b6a0
+msgid "**Why Equilibrium Matters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:63
+#: 7c9b135e060b44539745074813db3424
+msgid "Non-equilibrium structure → residual forces → incorrect stress"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:64
+#: 50430e6b99a348d4a8600b4c7568f2af
+msgid "Small deviation → large errors in Cᵢⱼ"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:65
+#: 3f5a2fba5b87467d8d922ad9377df855
+msgid "**Requirement**: Forces < 0.01 eV/Å, Stress < 0.1 GPa"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:67
+#: 5e22a64a67c642fbab39f6071c5caccc
+msgid "Derived Mechanical Properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:69
+#: fd68468b980f4a43badab4e8836440b9
+msgid "From elastic tensor C:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:71
+#: 56206c0e837944bda87e7365cbd99432
+msgid "**Bulk Modulus (B)**: Resistance to uniform compression"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:72
+#: 6ba459a9759a44cfae20a6c4c9337b8d
+msgid "Voigt-Reuss-Hill average: B = (B_V + B_R) / 2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:74
+#: a32f76e7b248445e8a5c8df1a475972b
+msgid "**Shear Modulus (G)**: Resistance to shear deformation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:75
+#: fc26a50f903c45708c06fdd3250984a7
+msgid "Voigt-Reuss-Hill average: G = (G_V + G_R) / 2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:77
+#: 287ba97ad0e54cac863053245021086d
+msgid "**Young's Modulus (E)**: Stiffness in tension"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:78
+#: e0aff74f1436473d9478f39aab961cc5
+msgid "E = 9BG / (3B + G)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:80
+#: e18fff7c06a94888a29f2d89d61e345c
+msgid "**Poisson's Ratio (ν)**: Lateral strain response"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:81
+#: 3cb3a31f303f4f57a3ef0df3ef07dca3
+msgid "ν = (3B - 2G) / (2(3B + G))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:85
+#: 8c32bc80dc3c4d15a46415c5bfa0f797
+msgid "Workflow Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:105
+#: a023b14ad0a7467ca8dce4744f03e438
+msgid "**Number of Calculations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:106
+#: 68ae01afbff2422db68870f2ced1fe6b
+msgid "Cubic system: ~12 strain calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:107
+#: 46fde79021d344ff93cc47f8bd67e3de
+msgid "Hexagonal: ~16 calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:108
+#: 3ca74c312aa04945b4af87823544a0ec
+msgid "Lower symmetry: 20-30 calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:112
+#: 48d7105b7b9d438781428c9b3410950f
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:114
+#: b5b4a7adfa5b4806a7efc8ba1bde0bfa
+msgid "Basic Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:136
+#: d6f2f6756041467b87d0cee4491e987b
+msgid "Configuration Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:138
+#: b6cda076a8e0427d8869330febb153a1
+msgid "Strain Magnitudes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:152
+#: 2f5de01db8eb4606a7d260bea4655be5
+msgid "SIESTA Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:174
+#: 39b69ae50dd143bdb719f6cbe3e069ea
+msgid "With Tier Preset"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:188
+#: 774677dcc67547a5842fa7ab110487f0
+msgid "Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:190
+#: a2fb578d135140dfa4b79878d92ff671
+msgid "File Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:201
+#: f0b9d46bdbc54b558936c6331e953185
+msgid "Elastic Tensor Example (Silicon)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:223
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:247
+#: 214103e1bbb24505a7c9ea6bcdb24a09 8897abe6ed754fc6b5d816b4308c510a
+msgid "**Output**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:239
+#: 447319e2e5f24be6939603f8b85437cc
+msgid "Mechanical Properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:259
+#: 4ecc4260754b4c399bcec2e14d86b238
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:261
+#: 3a495a1b5a5e42949d05118e75c000ec
+#, python-format
+msgid ""
+"✅ **CRITICAL - Use fully relaxed structure**: Forces < 0.01 eV/Å, stress "
+"< 0.1 GPa ✅ **Dense k-point mesh**: 10×10×10 minimum, 12×12×12 better ✅ "
+"**Tight SCF convergence**: DM.Tolerance=\"1e-6\" or tighter ✅ **Converged"
+" parameters**: Run convergence tests first ✅ **Small strains**: 1% "
+"standard, 0.5% for nonlinear materials ✅ **Check stability criteria**: "
+"Verify all conditions satisfied ✅ **Compare with experiments**: Validate "
+"B, G, E values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:269
+#: 16d6b29a4977467c9c256a80191d86d9
+msgid ""
+"❌ **Don't use unrelaxed structure**: Will give completely wrong Cᵢⱼ ❌ "
+"**Don't skip convergence**: Unconverged k-points/basis → unreliable "
+"results ❌ **Don't use large strains**: > 2% may cause nonlinear effects ❌"
+" **Don't ignore warnings**: Failed stability = unphysical structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:276
+#: 2154723918234f5ba50df8cbf287be05
+msgid "Relaxation Before Elastic Calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:278
+#: 799ee805f34646458759759f33d7db07
+msgid "Two-Stage Workflow (Recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:306
+#: b32cf97a0f604af8a8ddbaf45825439c
+msgid "Verify Equilibrium"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:308
+#: af4f70e427ab4d249342f81fd044fa00
+msgid "Before elastic calculation, check:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:318
+#: dfb17fb4934f40cfa56628487d9fca62
+msgid "Should show:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:319
+#: b494cafa197746a2b064b87f02ec5809
+msgid "Forces: < 0.01 eV/Å (all components)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:320
+#: 8188287bd822498ca7933320eb0eb104
+msgid "Stress: < 0.1 GPa (all components)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:324
+#: c372b55f98a14a8dbb67f0e153c16037
+msgid "Mechanical Stability Criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:326
+#: 676f5be7cade44e782eabdbed117f52f
+msgid "Cubic System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:328
+#: c25e90dabbbc4760949ee187171bfc3e
+msgid "For mechanical stability, must satisfy:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:329
+#: 6079198f32244fa486a4196f36978bba
+msgid "C₁₁ > 0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:330
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:361
+#: 3787dae15cd649a1ace94cac88f3ab18 a902e82d00f845b0b56f6d42b2b0c63b
+msgid "C₄₄ > 0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:331
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:359
+#: 69227fd7377842d7b6078bfad17fdfd1 b323b2c4919543a8bb2addc62ee95155
+msgid "C₁₁ > |C₁₂|"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:332
+#: 3fe29d07ac4048ab8550d9bb60817436
+msgid "C₁₁ + 2C₁₂ > 0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:356
+#: 4bb5c6ca0dfd461ab5a8ce685a5a51b1
+msgid "Hexagonal System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:358
+#: 994981b6c2124f3387b096a10886e991
+msgid "Stability criteria:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:360
+#: e59acaed88a8448aa828af281086c743
+msgid "C₃₃(C₁₁ + C₁₂) > 2C₁₃²"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:362
+#: ef2b62e2f9f4405596dfaff588a12033
+msgid "C₆₆ > 0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:366
+#: 7723f82bf92048feba07a6048ce54f78
+msgid "Elastic Anisotropy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:368
+#: f8f9f4af59b04b768cbc4f7f34c5b8e7
+msgid "Zener Anisotropy Ratio (Cubic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:370
+#: 919ca1ee61f24254848b742b29c0a8b6
+msgid "$ A = \\frac{2C_{44}}{C_{11} - C_{12}} $"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:385
+#: 1ef5c3ad76a8415daadb4dc6d2da7797
+msgid "**Interpretation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:386
+#: 22e1b13f5e6147b39929c05e41a89421
+msgid "A = 1: Elastically isotropic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:387
+#: ce371398ff3f44238c03ad7876ef1b09
+msgid "A < 1: Softer in <100> direction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:388
+#: ae0121301d4341c6b8c846827ac96fc0
+msgid "A > 1: Stiffer in <100> direction"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:390
+#: 67d42486c8ab4db797a8498766bcd2a8
+msgid "**Example**: Silicon A ≈ 1.56 (moderately anisotropic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:394
+#: ca31a24b35bc4453b6b93cfe44437554
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:396
+#: 0cd7585017984f8bb8bfb9b86fda41e8
+msgid "**Problem**: Elastic constants don't satisfy stability criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:398
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:407
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:416
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:425
+#: 11d9abb3f3b04bf3a20e2e9f73229ba6 1b7540659b384833b3889ce8b73f82b9
+#: 59010356d3184fc0a17db334b7a17a2a d5e6a55b143c48bcb218e86e0e2ea037
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:399
+#: c0e83dd7461b416ca00ba181ed1cbf08
+msgid "Verify structure is at equilibrium (forces < 0.01 eV/Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:400
+#: 5c62d42ce5ba4cf28263568c313c90c3
+msgid "Re-relax with tighter criteria: `MD.MaxForceTol=\"0.001 eV/Ang\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:401
+#: 6305eb91f39d420fbfa8571beffc986b
+msgid "Check for imaginary phonon modes (structural instability)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:405
+#: 24b4b182380d429db45348ef993b3479
+msgid "**Problem**: Cᵢⱼ values vary with strain magnitude"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:408
+#: 7272536bd5b34ff6b9adcd1af1dc2c49
+msgid "Use smaller strains: `strain_magnitudes=[0.005]`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:409
+#: b71d4b8e22b64557aa3c8716d9967af7
+msgid "Test linearity with multiple values: `[0.003, 0.005, 0.007, 0.01]`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:410
+#: 8f0e6bcdeb0f480dbbb723db531b7cab
+msgid "Check for structural phase transitions at large strains"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:414
+#: dfe384a5893746ef8aa28d7630c9553b
+msgid "**Problem**: Elastic tensor not symmetric (Cᵢⱼ ≠ Cⱼᵢ)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:417
+#: 4aeb1fda6e964f69879429a2ffc5c46c
+msgid "Increase k-point density: `[12, 12, 12]` or higher"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:418
+#: 7c522de8bf214b66aa3008bf4d00d577
+msgid "Tighter SCF: `DM.Tolerance=\"1e-7\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:419
+#: b5fa27507eeb4922bb49b1086774d8eb
+msgid "Post-process: Symmetrize C = (C + C.T) / 2"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:423
+#: dc501e8f7c444771b3af2cc0261a2278
+msgid "**Problem**: Bulk modulus differs from EOS value"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:426
+#: 1d72df940f9240a28392be0b1e333e37
+msgid "Small difference (< 5%) is normal"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:427
+#: eb374bd6b9194ae5a4b22f38dcd2b4f8
+msgid "Large difference → check:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:428
+#: c8ce7ba2cf2541b696d26f6f4d2ba9f7
+msgid "Structure equilibration (most common cause)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:429
+#: 72e30dde8e4c410abd96fe0fe5f76d31
+msgid "k-point convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:430
+#: 7d5d69f8d03149c6b8a89412d87e8f6b
+msgid "Strain magnitude (should be same for both)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:434
+#: 8d9d2738cc8c4426a8ce6716867db392
+msgid "Comparison with Experiments"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:436
+#: 878dd745216a41308abe989a75efae15
+msgid "Silicon Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:454
+#: c60b690b59ba449a99e1e9dd5ab7479f
+msgid "**Expected Accuracy**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:455
+#: 3c70f182131140f88a4bcbf33500a20c
+#, python-format
+msgid "GGA (PBE): Typically within ~5-10% for Cᵢⱼ"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:456
+#: 8b90f6c938004c7ca0311358096a0c6e
+msgid "Bulk modulus: ~5% accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:457
+#: 7904c57b289949458165b991f67cc218
+msgid "Trends more reliable than absolute values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:461
+#: 2152ec8bfcb849829abcaaf50853256e
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:463
+#: ed0af8670a46493aa8d365868eb29e4f
+msgid "After completing elastic calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:465
+#: 95a2a58ae0d54e9f8fff5df0f230f78e
+msgid ""
+"**Compare with EOS**: [02-equation-of-states](../../02-equation-of-"
+"states/) - Bulk modulus should agree within ~5%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:466
+#: 5757975519ce4c13bf738be67b225194
+msgid ""
+"**Thermal expansion**: [06-vibrational-"
+"properties/03-SiestaQhaFlowMaker](../../06-vibrational-"
+"properties/03-SiestaQhaFlowMaker/) - Temperature-dependent elastic "
+"constants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:467
+#: 039503e7e7ff4820986dc5e318c4b444
+msgid "**Pressure effects**: How Cᵢⱼ changes under pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:468
+#: 873c2ef1d751499eaeb444e68aadb0f4
+msgid "**Sound velocities**: Compute from elastic tensor and density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:472
+#: 69728d4761c44587b9a99f3ce6755083
+msgid "Related Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:474
+#: 6084103f75c34a7486dcdcf8887e249d
+msgid ""
+"[02-equation-of-states](../../02-equation-of-states/) - Bulk modulus from"
+" EOS (should match)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:475
+#: a7580fc0da6e4bef99b06bb81b80df63
+msgid ""
+"[01-convergence](../../01-convergence/) - Parameter convergence (do this "
+"first!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:476
+#: 7493f2ddd8cd478aa46a54f6a0b47f3b
+msgid ""
+"[Mechanical Properties Overview](../README.md) - All mechanical property "
+"tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/04-mechanical/01-ElasticFlowMaker/README.md:480
+#: 956356d0fd7f4489a890523aaa70c375
+msgid ""
+"**📚 [Back to Mechanical Properties](../README.md)** | **📖 [All "
+"Tutorials](../../../README.md)**"
+msgstr ""
+

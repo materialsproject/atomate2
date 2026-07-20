@@ -50,7 +50,25 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["Thumbs.db", ".DS_Store", "test*.py"]
+exclude_patterns = [
+    "Thumbs.db",
+    ".DS_Store",
+    "test*.py",
+    "siesta/locale",
+    # docs/siesta/tutorials/tutorials is a symlink to the repo-root tutorials/
+    # source tree (notebooks + raw sources); it is not Sphinx-ready docs, so keep
+    # it out of the build. The rendered tutorials live in siesta/tutorials-md and
+    # siesta/tutorials-auto.
+    "siesta/tutorials/tutorials",
+]
+
+# Fast SIESTA-focused builds: set SIESTA_DOCS_ONLY=1 to skip the full-atomate2
+# API autodoc under reference/ (1000+ pages that import optional deps such as
+# abipy and pymatgen-io-aims, which are slow and noisy when not installed). The
+# SIESTA narrative docs -- including the Persian (fa) translations -- then build
+# in seconds. Do not use this for a production/full-site build.
+if os.environ.get("SIESTA_DOCS_ONLY"):
+    exclude_patterns += ["reference"]
 
 myst_heading_anchors = 2  # enable headings as link targets
 myst_enable_extensions = [
@@ -92,10 +110,22 @@ latex_elements = {
 """
 }
 language = "en"
+
+# Internationalization. The siesta documentation ships Persian (Farsi)
+# translation catalogs under docs/siesta/locale. Build a translated site with
+# ``sphinx-build -D language=fa``.
+locale_dirs = ["siesta/locale/"]
+gettext_compact = False
+gettext_uuid = True
+gettext_auto_build = True
+
 # html_extra_path = ["images/badge.svg"]
 html_static_path = ["_static"]
-html_css_files = ["custom.css", "github.css"]
-suppress_warnings = ["etoc.toctree"]
+html_css_files = ["custom.css", "github.css", "lang-switcher.css", "rtl.css"]
+html_js_files = ["rtl.js"]
+# "myst.xref_missing" silences cross-reference warnings emitted by the vendored
+# siesta tutorial markdown under docs/siesta/tutorials-md.
+suppress_warnings = ["etoc.toctree", "myst.xref_missing"]
 
 # autodoc options
 autosummary_imported_members = False

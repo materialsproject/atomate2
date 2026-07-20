@@ -1,0 +1,904 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:2
+#: 55696cb0a99d4b179d2b39d93a4bbb1a
+msgid "Troubleshooting Guide"
+msgstr "راهنمای عیب‌یابی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:4
+#: cad730f26adc4418b309cae095d1eb1a
+msgid "This guide helps you resolve common issues when using atomate2siesta."
+msgstr ""
+"این راهنما به شما کمک می‌کند مشکلات رایج هنگام استفاده از atomate2siesta "
+"را حل کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:8
+#: 812b5de213d847a28954418775b018a2
+msgid "Quick Navigation"
+msgstr "ناوبری سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:11
+#: 8c40093a1de441a18304e04c90c82820
+msgid "Installation Issues"
+msgstr "مشکلات نصب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:14
+#: 9eac01d605a84431a5b393ebf68239cb
+msgid "Package Installation Fails"
+msgstr "نصب بسته ناموفق است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:16
+#: 1bf3abc97b8f429dadb1fe160b8d2df3
+msgid "**Symptom**: ``pip install`` fails with dependency errors"
+msgstr "**علامت**: ``pip install`` با خطاهای وابستگی ناموفق می‌شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:18
+#: d6c05e8cb1d34330a561184f376e82ca
+msgid "**Common Causes**:"
+msgstr "**علل رایج:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:20
+#: 421f920ab09b4ce8aa1d952acb4fb848
+msgid "**Outdated pip**"
+msgstr "**pip قدیمی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:27
+#: 744802ec31f0482b81ad80f70484633a
+msgid "**Python version mismatch**"
+msgstr "**عدم تطابق نسخه Python**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:37
+#: ec17b275adfe4894b23f2ae7014b21a5
+msgid "**Missing build dependencies**"
+msgstr "**وابستگی‌های ساخت گم‌شده**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:48
+#: 05f88cb7157049b4bb50d574f753e174
+msgid "Import Errors"
+msgstr "خطاهای وارد کردن"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:50
+#: 2ca05e83d4c049c580f05707acbfd025
+msgid "**Symptom**: ``ModuleNotFoundError: No module named 'atomate2.siesta'``"
+msgstr "**علامت**: ``ModuleNotFoundError: No module named 'atomate2.siesta'``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:52
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:106
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:133
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:260
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:299
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:338
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:368
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:462
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:489
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:524
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:555
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:608
+#: 08f412faa76b4da8b764cf42d5afaaed 202945cdeaa847caa67b9bf435b22232
+#: 250778b697ec4b82aa12763e57789f28 8880c0fb11c5435e8cb9dad33972d1cc
+#: 8e7a23e5d6eb46f783ade2f5904397e6 9b898774802c41898e49b28e0a2cdc73
+#: 9de15797cc894ee9b36a05884eb0ef63 ab66e257f52e454ebca0b2b5c78c7c1a
+#: d211bf526d234797b132ae81a1ddd5e1 d215788a7c4e488ca0990d9adde7c817
+#: eb1317594e864cca8c6637fcb3724e84 eb726609680f40c6974f36c2cab7d22c
+msgid "**Solutions**:"
+msgstr "**راه‌حل‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:54
+#: e114a12d2585451b87ffe00cab1b9a3e
+msgid "**Verify installation**:"
+msgstr "**تأیید نصب:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:60
+#: 4daf811668c241858892788f9e585775
+msgid "**Reinstall in development mode**:"
+msgstr "**نصب مجدد در حالت توسعه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:67
+#: 9216e3e1a0fc416f8f9bf6ddf4e28d2a
+msgid "**Check Python environment**:"
+msgstr "**بررسی محیط Python:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:75
+#: 7e115aae4cca45e189599b7c03c8d047
+msgid "Configuration Issues"
+msgstr "مشکلات پیکربندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:78
+#: 11b49ddee3f74504a8464ca0097a34dc
+msgid "Configuration File Not Found"
+msgstr "فایل پیکربندی یافت نشد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:80
+#: 7acfe0c8660e4c32b542d3cdc10582e9
+msgid "**Symptom**: Settings not loaded, defaults used instead"
+msgstr "**علامت**: تنظیمات بارگذاری نشده، به‌جای آن از پیش‌فرض‌ها استفاده می‌شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:82
+#: bf6ece4b8d6c491aa2e3a859cc3f5d6d
+msgid "**Cause**: Configuration file at wrong location or wrong name"
+msgstr "**علت**: فایل پیکربندی در مکان اشتباه یا نام اشتباه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:84
+#: fcc60af8aebe4a7c91427d08c2dce50a
+msgid "**Solution**:"
+msgstr "**راه‌حل:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:94
+#: 6918f4843cf046cbbc1846782ac0f58f
+msgid "**Verify configuration is loaded**:"
+msgstr "**تأیید بارگذاری پیکربندی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:102
+#: 2848c17e0f9f4dac8d71a3352f81d525
+msgid "SIESTA Command Not Found"
+msgstr "دستور SIESTA یافت نشد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:104
+#: 507a6ee82ce74409826a047af443e079
+msgid "**Symptom**: ``FileNotFoundError: SIESTA executable not found``"
+msgstr "**علامت**: ``FileNotFoundError: SIESTA executable not found``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:108
+#: c59f4793138144aa935b5e43eb814d69
+msgid "**Use full path to SIESTA**:"
+msgstr "**استفاده از مسیر کامل به SIESTA:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:115
+#: 529e5adc8a0a43198bbb2e7337982c1a
+msgid "**Add SIESTA to PATH**:"
+msgstr "**افزودن SIESTA به PATH:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:122
+#: af608ff11ec947968689ddfc4ca0d860
+msgid "**For MPI runs**:"
+msgstr "**برای اجراهای MPI:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:129
+#: 7cfa53e05fd94a9e8b6bb64db0d01954
+msgid "Pseudopotential Issues"
+msgstr "مشکلات شبه‌پتانسیل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:131
+#: 486a7780d23b47469caaf6a7864efa1c
+msgid ""
+"**Symptom**: ``PseudopotentialError: Pseudopotential not found for "
+"element X``"
+msgstr ""
+"**علامت**: ``PseudopotentialError: Pseudopotential not found for element "
+"X``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:135
+#: 447c516065cc4f679753cd7984577c95
+msgid "**Set pseudopotential path**:"
+msgstr "**تنظیم مسیر شبه‌پتانسیل:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:142
+#: 6b4dba11b5bb4024a0f3cafa5a2fb8c2
+msgid "**Download pseudopotentials**:"
+msgstr "**دانلود شبه‌پتانسیل‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:152
+#: b0577dba9d2f48d89bff0820486c1977
+msgid "**Verify pseudopotentials exist**:"
+msgstr "**تأیید وجود شبه‌پتانسیل‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:160
+#: 9bd96b1eaf994b9786f13244110ccb1e
+msgid "SIESTA Calculation Errors"
+msgstr "خطاهای محاسبات SIESTA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:163
+#: 3aa60654b1c1419cbcdf995d547daae8
+msgid "SCF Not Converged"
+msgstr "SCF همگرا نشد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:165
+#: 059baa9bb62d436093328fc2b478a9e0
+msgid "**Symptom**: ``SCF not converged after N iterations``"
+msgstr "**علامت**: ``SCF not converged after N iterations``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:167
+#: 5e97d69407e846ae9f4bf75423e1b7ef
+msgid "This is the **most common** SIESTA error. Multiple solutions available:"
+msgstr "این **رایج‌ترین** خطای SIESTA است. راه‌حل‌های متعددی موجود است:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:169
+#: 24588d56767b44359c367e2fb6f8f3b8
+msgid "**Solution 1: Automatic Error Handling (Recommended)**"
+msgstr "**راه‌حل ۱: مدیریت خودکار خطا (توصیه می‌شود)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:171
+#: 6ed662f756e54b5280504211a49a1b93
+msgid "Enable custodian for automatic SCF recovery:"
+msgstr "فعال کردن custodian برای بازیابی خودکار SCF:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:182
+#: 878234d6928543bf969939c4e9849e00
+msgid "Custodian will automatically try 5 progressive correction strategies:"
+msgstr "Custodian به‌طور خودکار ۵ استراتژی اصلاح تدریجی را امتحان می‌کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:184
+#: fff9ef14aa954c0c8054727b8d2a0000
+msgid "Reduce mixer weight (0.1 → 0.05 → 0.01)"
+msgstr "کاهش وزن میکسر (۰.۱ → ۰.۰۵ → ۰.۰۱)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:185
+#: e664796e79904ba9967b30ca2b6cb061
+msgid "Increase Pulay history (5 → 8 → 12)"
+msgstr "افزایش تاریخچه Pulay (۵ → ۸ → ۱۲)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:186
+#: 4188df034a064442b832c41ca9d1bde2
+msgid "Switch mixer method (Pulay → Linear)"
+msgstr "تغییر روش میکسر (Pulay → Linear)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:187
+#: 7c024c4e5a36447abd479847733d89da
+msgid "Tighten tolerances"
+msgstr "سخت‌تر کردن تلورانس‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:188
+#: e85a03733da547d8ad0a9558a959de35
+msgid "Restart from previous DM"
+msgstr "راه‌اندازی مجدد از DM قبلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:190
+#: 003b9fb84f03451aa77a7d41cdb16b50
+msgid "**Solution 2: Manual Parameter Adjustment**"
+msgstr "**راه‌حل ۲: تنظیم دستی پارامترها**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:192
+#: 158a0e054d06471c90e7d362189b4e28
+msgid "If not using custodian, adjust SCF parameters manually:"
+msgstr ""
+"اگر از custodian استفاده نمی‌کنید، پارامترهای SCF را به‌صورت دستی تنظیم "
+"کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:206
+#: 93bcea33ac4f41aa92184865413d9642
+msgid "**Solution 3: Improve Initial Guess**"
+msgstr "**راه‌حل ۳: بهبود حدس اولیه**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:218
+#: c41eee6a0c454d689997760bcc0630b6
+msgid "**Solution 4: System-Specific Strategies**"
+msgstr "**راه‌حل ۴: استراتژی‌های ویژه سیستم**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:220
+#: e7d326ef6624464cbf41baf628cf3f42
+msgid "For **magnetic systems**:"
+msgstr "برای **سیستم‌های مغناطیسی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:230
+#: 5c0ca0fabf4f45bd992d5c04a0884902
+msgid "For **metals**:"
+msgstr "برای **فلزات:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:240
+#: b46d2723bc734db08ed4573fa4173b07
+msgid "For **large band gap systems**:"
+msgstr "برای **سیستم‌های با شکاف نواری بزرگ:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:249
+#: 8e8cdbaa22444081a70e3a55ab211bcc
+msgid "**Solution 5: Check Physical Setup**"
+msgstr "**راه‌حل ۵: بررسی تنظیمات فیزیکی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:251
+#: 597a698bfe7b4acaab56067fe418a460
+msgid "**k-point mesh too coarse**: Increase k-points"
+msgstr "**شبکه k-point خیلی درشت است**: k-pointها را افزایش دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:252
+#: d4fdba94f34248f9a1a9df876336eb3e
+msgid "**Basis set issues**: Try different ``PAO.BasisSize`` (SZ, DZ, DZP, TZP)"
+msgstr ""
+"**مشکلات مجموعه پایه**: ``PAO.BasisSize`` مختلف را امتحان کنید (SZ، DZ، "
+"DZP، TZP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:253
+#: 988b8b5638be4f33bdb78f1bc4acf10f
+msgid "**Initial structure**: Ensure structure is reasonable"
+msgstr "**ساختار اولیه**: اطمینان حاصل کنید ساختار معقول است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:256
+#: 85f11682eea4453995d857f9e897a3c9
+msgid "Memory Errors"
+msgstr "خطاهای حافظه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:258
+#: 86a97b550e6644dd877c18bfda0278d4
+msgid "**Symptom**: ``MemoryError`` or SIESTA killed by system"
+msgstr "**علامت**: ``MemoryError`` یا SIESTA توسط سیستم متوقف شد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:262
+#: 95d6295fb59545e8952c69a68c22d284
+msgid "**Enable automatic memory handling**:"
+msgstr "**فعال کردن مدیریت خودکار حافظه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:275
+#: aba4309b33604b579cef1929b09103bf
+msgid "**Reduce memory manually**:"
+msgstr "**کاهش دستی حافظه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:287
+#: fd622ee1c91e4940b29e57b368263241
+msgid "**Use more processors with less memory per process**:"
+msgstr "**استفاده از پردازنده‌های بیشتر با حافظه کمتر در هر فرآیند:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:295
+#: bbfce97bcdf5498aae731822fadb725f
+msgid "Walltime/Timeout Errors"
+msgstr "خطاهای زمان دیواری/تایم‌اوت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:297
+#: bfbb4beb94b44377b1d58dd25fbd9722
+msgid "**Symptom**: Calculation killed due to time limit"
+msgstr "**علامت**: محاسبه به دلیل محدودیت زمان متوقف شد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:301
+#: e22ee7f68e254ac1bf2acad84fa27170
+msgid "**Enable automatic restart**:"
+msgstr "**فعال کردن راه‌اندازی مجدد خودکار:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:311
+#: c56ae7e89ff044df92dc9e54eae5fddb
+msgid "**Set checkpoint files**:"
+msgstr "**تنظیم فایل‌های نقطه بازرسی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:322
+#: 54b38a5888f34cc98ee91fee0f17c180
+msgid "**Reduce calculation cost**:"
+msgstr "**کاهش هزینه محاسبه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:332
+#: 0c311ca11b72468183e917e7dfcf689c
+msgid "Negative Eigenvalues"
+msgstr "مقادیر ویژه منفی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:334
+#: c5444111204a4cc5bb3594b093ea2299
+msgid "**Symptom**: ``WARNING: Negative eigenvalues detected``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:336
+#: 8ea922be4cef4cda8c5d999b623abb00
+msgid "**Cause**: Insufficient basis set or numerical issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:340
+#: ee0747adbd6a4834b3452abd59bc51be
+msgid "**Increase basis quality**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:349
+#: 0b25f3a405af403e8d9861fc0f4e554e
+msgid "**Increase mesh cutoff**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:357
+#: d93432708f564311ad273b2767425a14
+msgid "**Use custodian** (handles automatically):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:364
+#: 016bc1b1844f4e048f5545994b9ab2c2
+msgid "Geometry Relaxation Not Converging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:366
+#: eecd006bda974f2da88786db4dcce31c
+msgid "**Symptom**: Forces not decreasing, relaxation oscillating"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:370
+#: 64cf400a964b4f2da90115be1a76e43c
+msgid "**Adjust force tolerance**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:379
+#: 285aef4235e6416d946a2d0534f35efb
+msgid "**Change relaxation algorithm**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:389
+#: b6dbc8feecbc48ed93df74fd4cd40364
+msgid "**Use smaller steps**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:399
+#: edc44aac139f45cabc9ba7e14c2a82fb
+msgid "File Format Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:402
+#: 768ab689b871407bb6003236da956588
+msgid "Structure File Conversion Errors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:404
+#: 00d4a2de42b84e5b86cdbcc80b715560
+msgid "**Symptom**: Cannot read XV, FDF, or XSF files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:406
+#: b733ee2ebf3f4b8aad6e63776e48299c
+msgid "**Solution**: Use the structure conversion powerup:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:417
+#: 774b7bd644e74b49b26e89d6f0d83789
+msgid "**Supported formats**: XV, FDF, XSF, CIF, POSCAR"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:419
+#: c3b8755cb0b54294975853df03e44cff
+msgid "See: ``tutorials/07-advanced-features/04-structure-conversion/``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:422
+#: 885ce6dcf6234fa1936dfcc37987e8e9
+msgid "Invalid FDF Syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:424
+#: 4d992a36914a4326927822a43425ede9
+msgid "**Symptom**: SIESTA fails with ``FDF syntax error``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:426
+#: 0a307c6d343e4690886df7e122fb8e2b
+msgid "**Cause**: Incorrect parameter format in ``user_params``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:428
+#: 9617b177f6584e9bb51f2b605e62e343
+msgid "**Solution**: Check FDF parameter format:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:441
+#: 7af2edbe2afe40c8851f1a5b2bb78090
+msgid "**Common mistakes**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:455
+#: c49de846355042708579f6f4da05c052
+msgid "Workflow Execution Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:458
+#: 2f19b6dc2e49421484e55131b9ab8e24
+msgid "Job Directory Conflicts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:460
+#: d68228cca9c4436887a5cc1233cb6197
+msgid "**Symptom**: ``FileExistsError: job directory already exists``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:464
+#: 34e71c374fa449609d31ec9c09b74c3c
+msgid "**Use unique names**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:474
+#: 8ef61ca1eb1e4a768239456b8778623f
+msgid "**Clean old directories**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:480
+#: ef7c1d95dbea49ff9d841f52dba2aa1a
+msgid "**Use database storage** (recommended for production):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:482
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:660
+#: 10da012514154191973ce9973e08e222 874dbe6ce53e40c9946033be887905b7
+msgid "See: ``tutorials/04-infrastructure/01-database-storage/``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:485
+#: 66d252704f89488d9e8633a47d6ae4c2
+msgid "Jobflow Run Errors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:487
+#: 95b08cce3e5e477c8b00c8d995839466
+msgid "**Symptom**: ``run_locally()`` fails unexpectedly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:491
+#: ec2971af93544cda8b82fb3a23ca6ed2
+msgid "**Enable verbose logging**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:500
+#: 9103422aee90463dbf7413e2ee7de0cd
+msgid "**Check job validity**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:511
+#: 8fa328c2f33d4af18c5c3d6e4db6f4df
+msgid "**Run in debug mode**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:520
+#: 179a411e09784a839dc8553d9b97f17f
+msgid "Remote Execution Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:522
+#: aee2ec112ba84fa2999d6e3c00de48d0
+msgid "**Symptom**: Jobs fail on HPC cluster"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:526
+#: dec8468d0f614ee9be1f31adfadc54e5
+msgid "**Verify cluster setup**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:532
+#: 49698f6c5d0b496b986861ace1a5dc53
+msgid "**Check jobflow-remote configuration**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:538
+#: f46ba7b023dc48c1a649eaed21229e2b
+msgid "**Test locally first**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:545
+#: 663c3aaa3747405f8df3b10038e4cc1a
+msgid "See: ``tutorials/04-infrastructure/02-job-submission/``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:548
+#: 2d9baf7ab4294c818fca7a33982e8223
+msgid "Performance Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:551
+#: 3bbcef0d05d345dcb14822e641120f20
+msgid "Calculation Too Slow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:553
+#: 95b438567671485db2b6bc5da3ea11d6
+msgid "**Symptoms**: Calculation taking much longer than expected"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:557
+#: e7284275889f49a38e23a327e0e6cd32
+msgid "**Check k-point mesh**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:564
+#: 9fe3f7256145483fa549a3e43bb3f25b
+msgid "**Optimize parallelization**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:572
+#: 11113e61744f4d44b3b53d72dc6f3862
+msgid "**Use efficiency options**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:581
+#: 0173e977d0a14ccfb61748195fb66a0f
+msgid "See: ``tutorials/07-advanced-features/14-efficiency-options/``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:584
+#: 938368f38d454b3dae43b72bda08ed41
+msgid "Convergence Studies Taking Forever"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:586
+#: 188281876c724c78b054a51f5583b9ba
+msgid "**Solution**: Use dry-run mode to preview first:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:598
+#: 498526b30da34dfaa59560ea53cf80ee
+msgid "See: ``tutorials/04-infrastructure/05-dry-run-preview/``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:601
+#: dd8b6b196be3411abc0673207deda67d
+msgid "Database Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:604
+#: 55486d6f67ce43f9a4baa0a29073f69e
+msgid "MongoDB Connection Failed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:606
+#: 770bd36f99ba4dbbbc75a1a365d05866
+msgid "**Symptom**: ``ConnectionError: Could not connect to MongoDB``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:610
+#: 66f60cd4fe474ba691aac6c80f18f9f2
+msgid "**Test connection**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:616
+#: 6053aaf135d44de088c2f833fa8e484e
+msgid "**Check MongoDB is running**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:626
+#: 2e52dd9e7a3c41d5b9d13eb075ab8a93
+msgid "**Verify connection string**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:634
+#: 0df08f45031445ed8ab851dbab9b53a9
+msgid "Query Returns No Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:636
+#: 815c0a042e664737a939e88afc6aec87
+msgid "**Symptom**: Database query finds nothing despite calculations running"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:638
+#: 8799aa10a6b4482e9c7d52dfae4d0c59
+msgid "**Cause**: Results not stored in database"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:640
+#: 9050a4d5f6e54455839d23596b1322fe
+msgid "**Solution**: Ensure you're using database store:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:663
+#: 15406437ccbe46ba982a596bbda66158
+msgid "Debugging Tips"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:666
+#: 2a0457cc2c24455fac207aa084a337d9
+msgid "Enable Detailed Logging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:679
+#: d15d8ef162094f5baa56cc5c2d6646f4
+msgid "Inspect SIESTA Output Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:693
+#: 12f16dcfcd5341c09a129ba8c09a2f45
+msgid "Use Dry-Run Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:695
+#: 0c18bbb5baf44e18b84ba0e8140b995c
+msgid "Preview workflow without running expensive calculations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:707
+#: aae97aac5bce4d659c64c1e0dc8bd4a2
+msgid "Check Input Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:719
+#: d44b893f7acc4120a5c55fe79bbe2c08
+msgid "Getting Help"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:722
+#: af2143584c214f09a8cad92d4dd8ec60
+msgid "Still Stuck?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:724
+#: 4d72f98233df4d159db69d5574638607
+msgid ""
+"**Search existing issues**: "
+"https://github.com/materialsproject/atomate2/issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:726
+#: 573d8a3cc5b040958a0d7c817cccfda7
+msgid "**Check tutorials**: Most common workflows have dedicated tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:728
+#: 31cbd8f256684c01b0b331b97263fb3c
+msgid "**Open a new issue** with:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:730
+#: 15f0ee68087a4ba1a570dcbc88e091ac
+msgid "Minimal reproducible example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:731
+#: e24fd43499e54e6683aa21b9b24f066c
+msgid "Full error message"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:732
+#: 50f16f3d80824aaca0de634a1e66d1e7
+msgid "SIESTA version"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:733
+#: c6d943315232409595b37b655c488734
+msgid "Python version"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:734
+#: 9db1881f728041259a3c97e6ba192bdf
+msgid "Relevant configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:736
+#: 2f246eaaa82a4428a9aa4771271636e7
+msgid "**Include diagnostic information**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:747
+#: 07bc6e1f085744c8aa267ae28e8f6999
+msgid "Common Error Messages Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:753
+#: 3f22474ac6b442c18ac9b05c94439b82
+msgid "Error Message"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:754
+#: 264d103ebb07471a950644f6b7f800e7
+msgid "Solution Section"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:755
+#: b25766fc41d1436e818faedc90948f21
+msgid "``SCF not converged``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:756
+#: fba7e857d1564203bc812a00ee091f32
+msgid "`SCF Not Converged`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:757
+#: d403c0287c1b449ab57080025ac5a5e9
+msgid "``MemoryError``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:758
+#: f3ea51e548e24e6a9da739e2245b2b87
+msgid "`Memory Errors`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:759
+#: a1506fdce8f644cbb5861d6102547137
+msgid "``SIESTA executable not found``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:760
+#: ccf9fa2a584349468b55663514d2a96c
+msgid "`SIESTA Command Not Found`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:761
+#: 5fd24e8ca3a94eebb05c319a2a5af5ca
+msgid "``Pseudopotential not found``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:762
+#: a5e34c6ddd794e52a0843a145b7cd0eb
+msgid "`Pseudopotential Issues`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:763
+#: 06722fc9291545708c22aca8cedcc710
+msgid "``Negative eigenvalues``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:764
+#: 0b62ea4be5744af9b2323263b6258d7f
+msgid "`Negative Eigenvalues`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:765
+#: ddb02c972109484e8859134758f384b7
+msgid "``FileExistsError: job directory``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:766
+#: f7751bbcedc442dcbbffd6bd14fdebbd
+msgid "`Job Directory Conflicts`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:767
+#: e565a1f97045464a92b873c040d659a6
+msgid "``ConnectionError: MongoDB``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:768
+#: 806064f218894452afc989f15a6fee0c
+msgid "`MongoDB Connection Failed`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:769
+#: 7439d97c3a60482893195e8ed8ae7f6f
+msgid "``FDF syntax error``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:770
+#: c3f8c4fb4dff4232ae47ee6d858325be
+msgid "`Invalid FDF Syntax`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:771
+#: e39fac76ba834fabb0c3003a4442141d
+msgid "``Forces not converging``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:772
+#: 341a4c439bcf432fbb43e90ee70dce6e
+msgid "`Geometry Relaxation Not Converging`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:775
+#: c8a06b25f8074d0bacf4aac55d32266d
+msgid "Additional Resources"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:777
+#: 75c0d4c3366a44eda0ea99e71e29e366
+msgid "**Full Documentation**: :doc:`/user/codes/siesta`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:778
+#: 3a7ee3675e3e4c3a8640f8f8682c7632
+msgid "**Tutorials**: ``tutorials/README.md``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:779
+#: 8a2852719a704ddfa2da0ddfd5c3ab3d
+msgid "**Custodian Guide**: :doc:`custodian`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:780
+#: 2389c8158fa44d36ad06cf23d3e2d19f
+msgid "**CLI Tools**: :doc:`cli-tools`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/troubleshooting.rst:781
+#: e56440f77f75434592ee666a9d5a76f8
+msgid "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr ""
+
+#~ msgid ""
+#~ "**Search existing issues**: https://github.com"
+#~ "/arsalan-akhtar/atomate2siesta/issues"
+#~ msgstr ""
+
+#~ msgid "**Full Documentation**: :doc:`index`"
+#~ msgstr ""
+

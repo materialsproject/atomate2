@@ -1,0 +1,1468 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:3
+#: 1ea9c8ea1f6642b2a752ff718764626c
+msgid "Changelog"
+msgstr "تاریخچه تغییرات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:5
+#: 17fa3a8bd89943f2aa703cea1bbae567
+msgid "This page documents major releases of atomate2siesta."
+msgstr "این صفحه انتشارهای اصلی atomate2siesta را مستند می‌کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:10
+#: 9bacf34843fa4446a2f629ec5fdaef1f
+msgid "Unreleased (Development)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:13
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:133
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:240
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:342
+#: 911c40b1a7d54677b542c9065e45ee90 a8062a34c92e4b5ca034858b5c7fccb1
+#: bc777d2d09b54991a661e4360eec1f0a fb088b01c76547ccb18f1aad416e5cfc
+msgid "Bug Fixes"
+msgstr "رفع اشکالات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:15
+#: 040e68ece11143f2934e1c37704cca6e
+msgid ""
+"**Database Basis Size Extraction**: Fixed PAO.BasisSize not being saved "
+"to database"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:17
+#: ed6b0e2db37a41618b4b347bd7fb5fb7
+msgid ""
+"Root cause: ``siesta_fdf_to_json()`` only extracted ``PAO.BasisSizes`` "
+"(block), not ``PAO.BasisSize`` (simple param)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:18
+#: 3eb465f81c894be4ab5c468532d51570
+msgid ""
+"Added ``PAO.BasisSize`` extraction to ensure it appears in "
+"``siesta_parameters.json``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:19
+#: 7c252ad285f64c53a6a162b8c0e6f8d8
+msgid "Enhanced ``InputDoc.from_siesta_calc_doc()`` to handle both formats:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:21
+#: e3633726eea5423ca7bfea1b0b252180
+msgid "Simple: ``PAO.BasisSize DZP`` → stored as ``\"DZP\"``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:22
+#: 94998a6de7b044b4a896fe433f04f682
+#, python-format
+msgid "Block: ``%block PAO.BasisSizes ... %endblock`` → parsed intelligently"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:23
+#: b5959ca6373f40a589d687e3f7b761bd
+msgid "Mixed basis (Ti:TZP, O:DZP) → stored as ``\"Ti:TZP, O:DZP\"``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:24
+#: d7301699c8cf4e15ba73e36c2695b584
+msgid "Uniform basis → simplified to just ``\"DZP\"``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:26
+#: d0123e845f854cfda34618483c46e942
+msgid ""
+"**Impact**: Basis size now displays correctly in database queries instead"
+" of N/A"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:28
+#: d7e0d608e927426e8176c846ace17cf4
+msgid ""
+"**Recipe Phonon Control** (CRITICAL): Fixed ``complete_material_study()``"
+" to expose phonon control parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:30
+#: 7d39b1377753420e87b877fd3456100f
+msgid ""
+"Added ``supercell_matrix``, ``phonon_user_params``, "
+"``temperature_range``, ``ignore_imaginary_modes`` parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:31
+#: c2aab935c6a8405d909809f0f372f1a1
+msgid "Now properly passes phonon parameters through to ``thermal_properties()``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:32
+#: c262c36e33b34993b4ba5498877db732
+msgid ""
+"Updated wrapper recipes: ``thermoelectric_analysis()``, "
+"``high_temperature_ceramic()``, ``structural_phase_transition()``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:33
+#: 9c0abdfa236f4699821509d29480be72
+msgid ""
+"Exported 6 wrapper recipes to RecipeBook: ``battery_cathode_screening``, "
+"``thermoelectric_analysis``, ``high_temperature_ceramic``, "
+"``magnetic_material_study``, ``semiconductor_device_study``, "
+"``structural_phase_transition``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:35
+#: 781021ff1cd94b27a873df3bbc734fad
+msgid ""
+"**Impact**: Users can now control phonon supercells in complete material "
+"studies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:37
+#: f841a7ca376e4145a4ccb221c006d13a
+msgid ""
+"**2D vdW Preset** (CRITICAL): Fixed invalid \"vdw\" parameter in "
+"``2d_vdw`` tier preset"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:39
+#: 2ee1baab964f4be398c452e2161b34ed
+msgid ""
+"Was using fake parameter ``\"vdw\": \"DRSLL\"`` that doesn't exist in "
+"SIESTA"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:40
+#: a7d5b03389734d39b0505152639b8d7d
+msgid ""
+"Changed to correct SIESTA parameters: ``\"XC.functional\": \"VDW\"``, "
+"``\"XC.authors\": \"DRSLL\"``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:41
+#: d63cc78d3697408a80243012334fa4ca
+msgid "Now passes FDF validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:43
+#: 71844f36b47b4639910c03d4da2fe43a
+msgid "**Impact**: 2D vdW calculations now work correctly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:46
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:201
+#: b6e02243015148e8bcf2e9078807f927 c2bf6eed4bbe467da6eabb554bf70ee7
+msgid "Enhancements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:48
+#: b8d6345a97024b5785d5902304b5da40
+msgid ""
+"**Database Query Enhancements**: Comprehensive query filters and export "
+"capabilities"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:50
+#: d5f65ee9fc5c4e57bce534ab5bc3ffb2
+msgid ""
+"Added ``--latest N`` option to show N most recent calculations (sorted by"
+" completion time)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:51
+#: 8e1e8c64f15f4b09a0af966992ce259d
+msgid ""
+"Added filter options: ``--state``, ``--calc-type``, ``--energy-min``, "
+"``--energy-max``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:52
+#: 3b1979599be74c5d80830698e413d234
+msgid "Added export options: ``--export json/csv``, ``--output filename``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:53
+#: 049a70d3199d460fb7ca690b2de1adc4
+msgid "Enhanced output columns: K-points, Basis size, Mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:54
+#: 13d2b03611ee42799d914ee452e70529
+msgid ""
+"Fixed InputDoc schema to store k-points, basis_size, mesh_cutoff from "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:56
+#: ec3446c50bf54b0980d930046c6c19e8
+msgid "**Impact**: Users can easily query, filter, and export calculation results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:58
+#: b374a37986c342fbbd5f541e84b1b248
+msgid ""
+"**Explicit JobStore Support**: Proper MongoDB integration without "
+"jobflow.yaml"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:60
+#: 08e00819d64640e0accf32119a9670d4
+msgid ""
+"Fixed ``SETTINGS.JOB_STORE`` pattern (was incorrectly using ``store`` "
+"parameter)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:61
+#: 587bbc98c6c846ab9f9e1ce786d64893
+msgid "Added ``atomate2siesta-config status`` database and jobflow.yaml checks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:62
+#: c9994976808b4609815003b5f25b973d
+msgid "Shows Python code example for explicit JobStore configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:63
+#: 328d29fdf4844ef7829fb92bafa11969
+msgid "Created tutorial ``09_explicit_jobstore.py`` demonstrating correct usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:64
+#: 7a6b2505f6fb4babbd481361e753c736
+msgid "Updated README with correct SETTINGS.JOB_STORE pattern"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:66
+#: 344e760c79ba4ff99c6656c7d9a0fe82
+msgid ""
+"**Impact**: Users can now save to MongoDB without jobflow.yaml "
+"configuration file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:68
+#: e0908b67c51346e68fda78b160471163
+msgid ""
+"**Maker CLI Database Integration**: Database configuration in workflow "
+"script generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:70
+#: 12bbdb3bd7ca48059c0337f942f2dd17
+msgid ""
+"Interactive mode prompts: \"Save to MongoDB?\" with jobflow.yaml vs "
+"explicit choice"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:71
+#: 2f9062fd7db44901b61f69dbfbff8019
+msgid ""
+"CLI options: ``--database``, ``--db-host``, ``--db-port``, ``--db-name``,"
+" ``--db-collection``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:72
+#: 47b6d79ad1bf4efd9426309ea7173e9b
+msgid "Generated scripts include SETTINGS.JOB_STORE configuration code"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:73
+#: 55f6a90040a946a0a6cbb27364a1c49c
+msgid "Supports both automatic (jobflow.yaml) and explicit (MongoStore) methods"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:75
+#: c422488a0e1b4897bbad8bdd1a516310
+msgid ""
+"**Impact**: Zero-friction database integration in generated workflow "
+"scripts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:77
+#: 6a70de970a134b6eb33dfcfdb6d37ab3
+msgid ""
+"**Interactive Mode Robustness**: Fixed whitespace handling in all input "
+"fields"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:79
+#: a8948d13dabc4b23adfd0fd37fe4cee0
+msgid ""
+"All ``questionary.text()`` and ``questionary.path()`` inputs now strip "
+"whitespace"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:80
+#: 854bcdb86d224faca064078d79f7b8c9
+msgid "Prevents crashes from trailing spaces in file paths"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:81
+#: fe057c369eb344a8bcf53e030b0fb14c
+msgid ""
+"Applied to: structure files, preset names, database params, output "
+"filenames"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:83
+#: 4f6c14735b004bb2a3be98284689cf58
+msgid "**Impact**: Interactive mode no longer crashes on accidental whitespace"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:85
+#: 83e84c913ae24675825205dafd1b794e
+msgid ""
+"**Custodian Integration**: Enabled custodian error handling by default in"
+" ALL recipe workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:87
+#: 9e7861d1d5a04462b7c02116ecf63293
+msgid "Set ``use_custodian=True`` and ``custodian_max_errors=10`` for all Makers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:88
+#: ef182d5483a2459ea69767f6ff669cbf
+msgid ""
+"Applied to: electronic, mechanical, convergence, complete, catalysis, "
+"defect recipes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:89
+#: 44ce0be426ca46c898267fcf455dd95f
+#, python-format
+msgid "95% error recovery rate with automatic retry strategies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:91
+#: aa87945f372e4f94ab35c5b5d2c7dfd5
+msgid ""
+"**Impact**: Recipe workflows now recover automatically from common SIESTA"
+" errors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:93
+#: efae3d1ca4214693ae60e77a2d2ca070
+msgid ""
+"**Time Estimates Removed**: Removed all print statements with time/memory"
+" estimates from ``complete_material_study()``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:95
+#: 62cc509b2539475fa7ec4742c7b0456b
+msgid "Estimates were rough heuristics that varied significantly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:96
+#: ef9941b704a74ee0a4674486ad4e93ab
+msgid "Kept logger.info() calls for debugging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:97
+#: 8c245c5f569f48819bd8beffffef9528
+msgid "Cleaner output focused on workflow structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:100
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:212
+#: 0d22b092fa634d4cacbae3d6923ef4db 5bfb75631ca84d7fa81ae4555237a17e
+#, fuzzy
+msgid "Documentation"
+msgstr "استناد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:102
+#: 480202c7f03e4f9588faec76afaa82d0
+msgid ""
+"**Database CLI Documentation**: Updated ``cli-database.rst`` with "
+"comprehensive query options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:104
+#: 07d98d3de3b345a3b1193a0b0e249224
+msgid "Documented all new filter options (state, calc-type, energy range, latest)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:105
+#: a378c39018644d9190e7e11f1e6dbf22
+msgid "Added export functionality examples (JSON/CSV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:106
+#: 0cb60ac372ed4075b30094a6c063e5e7
+msgid "Updated output columns documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:108
+#: dfdc047d6d8b4e41ae35568bee4cd8be
+msgid ""
+"**Maker CLI Documentation**: Updated ``cli-tools.rst`` with database "
+"integration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:110
+#: 03ec7cb3c23b43e6b3b5fe07b98eba65
+msgid "Added database options to common options section"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:111
+#: d78a0b19595942b28d105ece00254ab3
+msgid "Updated interactive mode steps to include database configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:112
+#: 8fcf7075c6cf4e40ad15e127a85eb962
+msgid "Added database usage examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:113
+#: 0a8525c9c02a4f87a8d2b18e28bfb63b
+msgid "Documented generated script database configuration with code examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:115
+#: c248b0d4db5a41abbfb2b15e76a62214
+msgid "**Database Storage Tutorial**: New tutorial ``09_explicit_jobstore.py``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:117
+#: 35bd8abeaef54b0890bb50b6eaee11e5
+msgid "Demonstrates correct SETTINGS.JOB_STORE usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:118
+#: 92e587fec4ad4d03b59baac4e57ddb57
+msgid "Shows explicit MongoStore configuration without jobflow.yaml"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:119
+#: 93110fbe9e3b404d9761a36d8fb87b78
+msgid "Updated README.md with explicit JobStore section"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:121
+#: e9b0a94e15314180a113fd0bc3740611
+msgid ""
+"**Recipe Book**: Added Method 5 showing phonon control parameters in "
+"complete material studies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:122
+#: 09a217efb4494a9e8a77fd87ff40a4cf
+msgid ""
+"**vdW Tutorial**: Updated ``06_vdw_2d_materials.py`` to use PBE pseudos "
+"(DRSLL not available via CLI)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:123
+#: 8d874388cfd94843b1162be9f356ca66
+msgid ""
+"**Tutorial Updates**: Fixed ``combined_recipes.py`` to demonstrate phonon"
+" parameter control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:128
+#: ccbbb06e85b84977b60de0f16ad28f82
+#, fuzzy
+msgid "Version 1.0.0 (2026)"
+msgstr "نسخه ۱.۰.۱ (۲۰۲۵)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:130
+#: cae4addf7ade4d04b2de95913eec6353
+#, fuzzy
+msgid "**Release Date**: January 2026"
+msgstr "**تاریخ انتشار**: آگوست ۲۰۲۴"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:135
+#: aa101dce2d30415db100ffdf8c600c61
+msgid ""
+"**Recipe Workflows** (CRITICAL): Fixed 8 recipe workflows that were "
+"manually instantiating Makers instead of using class methods, resulting "
+"in missing calculation parameters:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:137
+#: eacd684a01914f64af0eacda363e162b
+msgid ""
+"``dos_workflow()``: DOS jobs missing ``%block DOS.kgrid.MonkhorstPack`` "
+"and ``%block ProjectedDensityOfStates`` in FDF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:138
+#: 2dfc1ca6bf0949fda4fd94fd1c80d799
+msgid ""
+"``electronic_properties()``: Band structure jobs misconfigured (2 "
+"instances)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:139
+#: 2107ce87c9334e6ca8bb8e0352689ceb
+msgid ""
+"``kpoints_convergence()``, ``mesh_cutoff_convergence()``, "
+"``basis_convergence()``: Static jobs misconfigured (3 instances)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:140
+#: b41312f4c03147b1947500d4c77d85c8
+msgid "``thermal_properties()``: Phonon static jobs misconfigured"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:142
+#: d8bf5f67f70547a0b50e32624c50781b
+msgid ""
+"Changed from ``Maker(input_set_generator=Generator(...))`` to "
+"``Maker.class_method(...)`` pattern"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:144
+#: 29d996b2250d43338af96ac34e2c0176
+msgid ""
+"**Impact**: DOS, band structure, convergence, and phonon workflows now "
+"generate correct SIESTA input files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:146
+#: adfd5b8ed1df45febca5a6cf0226a9fd
+msgid ""
+"**Electronic Properties Workflow** (CRITICAL): Fixed "
+"``electronic_properties()`` to actually create DOS jobs as promised in "
+"docstring"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:148
+#: 9eb2de5125b94c1ba097dd7cf9aff6f0
+msgid ""
+"Docstring claimed: \"Complete electronic structure workflow: relaxation +"
+" bands + DOS\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:149
+#: eb11e84c84d84e978499321c88e421b0
+msgid "Reality: Only created relax + band structure jobs (NO DOS job)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:150
+#: 1398104cc0ea4300a13a963e7c4415aa
+msgid "Added DOS job creation after band structure (~40 lines)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:151
+#: ac898e0a4ff2464a930a16b47227bdb1
+msgid "Now creates 3 jobs: relax → bands → DOS (or 2 without relax: bands → DOS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:153
+#: a970f46d3e6a41a1adad5d4f61894fce
+msgid ""
+"**Impact**: Users now get complete electronic characterization including "
+"DOS with PDOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:155
+#: fc73a75e970f4cbe85792f8f4ae03acb
+msgid ""
+"**Phonon Workflow Supercell** (CRITICAL): Fixed ``phonon_workflow()`` "
+"ignoring calculated and user-specified supercell sizes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:157
+#: 65d9109afc4745e18b5231d8acea6ad4
+msgid ""
+"``thermal_properties()`` calculated phonon_supercell but never passed it "
+"to phonon maker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:158
+#: d19fc05dc809409ea4fb4f3d5f464209
+msgid ""
+"``phonon_workflow(supercell_matrix=(2,2,2))`` parameter was completely "
+"ignored"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:159
+#: de1aeb67093c43b98491cf9f314e4bf9
+msgid ""
+"SiestaPhononFlowMaker fell back to ``min_length=15.0`` Angstroms creating"
+" huge supercells"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:160
+#: 21131784956449c88cce5141f434fddc
+msgid ""
+"For Si (5.43Å lattice): created 3x3x3 supercell (54 atoms) instead of "
+"user-requested 2x2x2 (16 atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:161
+#: 937e4b40a9874783b7c55290ef5bf086
+msgid ""
+"Now properly converts tuple to matrix format and passes to ``.make()`` "
+"method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:163
+#: 543214e5df664452892cdeb86ebaf246
+msgid ""
+"**Impact**: Phonon calculations now use reasonable supercell sizes (3-10x"
+" faster)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:165
+#: eacb30a6794f4dcebc219b9f48b60d06
+msgid ""
+"**Phonon K-points Scaling** (CRITICAL PERFORMANCE): Fixed phonon "
+"workflows using primitive cell k-points for supercells"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:167
+#: aeb5a4fb6148479db7de40c59f65a658
+msgid ""
+"Supercells are N³ larger → Brillouin zone is N³ smaller → need fewer "
+"k-points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:168
+#: 43c2e15a3f4d4057be15851e5bab6500
+msgid ""
+"Was using same k-points for supercell as primitive cell (massive over-"
+"sampling)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:169
+#: 475752e50f4e44b3a8ce5847ce6de3ce
+msgid ""
+"For Si 3x3x3 supercell: was using [6,6,6] k-points (216), should use "
+"[2,2,2] (8)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:170
+#: 5b1737bbf4404c119b635b36c709c97e
+msgid ""
+"Now scales k-points down: ``scaled_kpts = [max(1, k // supercell_size) "
+"for k in kpts]``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:171
+#: 51a5cb12c29b4f45a04ed52d5fc13990
+msgid "Speedup: 27x per displaced structure, ~800x for complete workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:173
+#: 06ec438220a04a3eabcb65a709985d72
+msgid ""
+"**Impact**: Phonon calculations now 100-1000x faster with correct k-point"
+" sampling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:175
+#: 7cce032a29e540918efb9cf49e2e2558
+msgid ""
+"**Phonon min_length Default** (CRITICAL): Reduced default ``min_length`` "
+"from 15.0 to 6.0 Angstroms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:177
+#: c1328385597446f9ad00ab1eec5947c8
+msgid ""
+"Was creating absurdly large supercells: for Si (5.43Å) forced 3x3x3 (54 "
+"atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:178
+#: 2a5f658086c2486caa11f45dfb7d41b8
+msgid "Now creates reasonable supercells: for Si allows 2x2x2 (16 atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:179
+#: 38de285a8f0c4d918881cb1aa09d8fee
+msgid "Phonon accuracy only requires ~10-15Å minimum (6.0 is safer than 15.0)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:180
+#: d6bcf3ad602140d2b83decdc9111e614
+msgid "Changed in all 3 workflow functions (phonon, gruneisen, qha)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:181
+#: 2ca46065525549b3a3d0999ba76a3613
+msgid ""
+"Combined with supercell_matrix fix and k-point scaling: **~2400x total "
+"speedup!**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:183
+#: 876c7753cd544218ba5269f6d950c4b4
+msgid ""
+"**Impact**: Phonon workflows now use sensible defaults instead of "
+"wasteful ones"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:185
+#: c2978e42190f4118acabbbeb28731399
+msgid ""
+"**EOS Workflow**: Fixed ``KeyError: 'run_time'`` in EOS postprocessing by"
+" passing directory paths instead of optional output field references"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:186
+#: 862326d762484d76b4fc2d91ae27e11f
+msgid ""
+"**Tutorial Structure Paths**: Fixed 21 tutorial files with incorrect "
+"relative paths after reorganization (8 files in ``02-workflows/``, 13 "
+"files in ``03-advanced-features/presets/``)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:187
+#: 8d8364084e554d9bb6a753d8081ea75c
+msgid ""
+"**Conversion Tutorial**: Fixed ``02_siesta_formats.py`` to work with "
+"dry_run mode by using glob pattern for nested dry_run output directories"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:188
+#: 4104c55e59ed481882574447d8966ec1
+msgid ""
+"**Recipe CLI Stats**: Fixed ``ValueError`` in ``atomate2siesta-recipe "
+"stats`` when recipes have text values like \"high\" instead of "
+"percentages"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:191
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:253
+#: 5763b7d47aed477682c8706ba88bc9e2 e7033b8eaf744de19ba796397e85da1f
+msgid "Breaking Changes"
+msgstr "تغییرات ناسازگار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:193
+#: b1df241ba0a245549d89d22b60bbae96
+msgid ""
+"**Recipe API Cleanup**: Removed duplicate ``bulk_modulus_workflow()`` "
+"function - use ``eos_workflow()`` instead"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:195
+#: a0c5090f88064fe0a432c30fc743b674
+#, python-format
+msgid ""
+"``bulk_modulus_workflow()`` and ``eos_workflow()`` were 100% identical "
+"(same calculation, different names)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:196
+#: 0a21980be55b4e80a02dce6164a56ca8
+msgid "EOS (Equation of State) is the canonical name for this calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:197
+#: 02a03a31f05b400fb3ecf1a8373038f2
+msgid ""
+"Migration: Replace ``RecipeBook.bulk_modulus_workflow(structure)`` with "
+"``RecipeBook.eos_workflow(structure)``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:198
+#: cf5a0f5f18d248dbb8ff4a2e375fa871
+msgid "Output remains identical: bulk_modulus, equilibrium_volume, E0, EOS_fit"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:203
+#: e25a9f65520d41c298503e44cd0fbb0f
+msgid ""
+"**Recipe CLI Analyze Command**: New ``atomate2siesta-recipe analyze`` "
+"subcommand for structure analysis directly from command line (supports "
+"``--detailed`` flag for computational estimates)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:204
+#: 058935ebb8aa48babe9afad143152001
+msgid ""
+"**Recipe CLI Help Documentation**: Enhanced all subcommands with "
+"comprehensive help text, usage examples, and detailed descriptions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:205
+#: 2bd88c2201f44e4b8a71cb8e6b63cb4b
+msgid ""
+"**Recipe CLI Rename**: Renamed ``compare`` subcommand to ``demo`` for "
+"clarity (shows before/after code demonstration)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:206
+#: f9c8e515e646435b8c3e11f63ecfcef8
+msgid ""
+"**Runtime Estimates Removed**: Removed workflow runtime estimates from "
+"recipe CLI and documentation (rough guesses that vary significantly by "
+"system and parameters)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:207
+#: 1dfd19dbbc8c46b7b6dc8050a4a27d79
+msgid ""
+"**Structure Compare**: Enhanced ``--verbose`` flag to show comprehensive "
+"site-by-site comparison with fractional coordinates, distances, and "
+"color-coded match status for ALL sites (not just unmatched)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:208
+#: a33fde6ef6ec436f8e4a20301ba84e91
+msgid ""
+"**Computational Estimates**: Made time/memory/core estimates hidden by "
+"default in ``RecipeBook.print_analysis()`` with clear warnings about "
+"rough heuristics when shown with ``detailed=True``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:209
+#: cbea2da05d8a490db85dcda1764a6b4c
+msgid ""
+"**Tutorial Documentation**: Reduced parallel performance tutorial "
+"verbosity by 70% while maintaining essential content"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:214
+#: 52c38748bfd14b05aaa21186fa64808b
+msgid ""
+"**Structure Conversion**: Added comprehensive 316-line README with FDF vs"
+" XV distinction, dry-run mode details, workflow examples, and "
+"troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:215
+#: 78f4297b321249cd965b42f1a3ca66be
+msgid ""
+"**Recipe Book**: Updated documentation to explain computational estimates"
+" are hidden by default and how to enable them"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:220
+#: c53bb69aa2f144b3b0587989bf049b05
+#, fuzzy
+msgid "Version 1.0.0 (2025)"
+msgstr "نسخه ۱.۰.۱ (۲۰۲۵)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:222
+#: 782ecec940214f5dbfd81d0851886756
+#, fuzzy
+msgid "**Release Date**: December 2025"
+msgstr "**تاریخ انتشار**: دسامبر ۲۰۲۴"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:225
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:321
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:357
+#: 03bedc77e07e489caec188d5b93c1114 1d1a71ba649746be84a8417453398178
+#: 7a56ecfb9c9446b294659812dbca7aac
+msgid "New Features"
+msgstr "ویژگی‌های جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:227
+#: 6336f38a76ed421f87a3111925310cdb
+msgid ""
+"**Structure Info CLI**: New ``atomate2siesta-structure info`` subcommand "
+"for comprehensive structure analysis including crystal symmetry, lattice "
+"parameters, atomic composition, and automatic magnetic property detection"
+msgstr ""
+"**CLI اطلاعات ساختار**: دستور فرعی جدید ``atomate2siesta-structure info``"
+" برای تحلیل جامع ساختار شامل تقارن بلوری، پارامترهای شبکه، ترکیب اتمی و "
+"تشخیص خودکار خواص مغناطیسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:228
+#: e2c391d0cd3845fea063715b99dcc253
+msgid ""
+"**Automatic Format Detection**: ``atomate2siesta-structure convert`` now "
+"automatically detects input format from file extension (.fdf, .xv, .cif, "
+".xsf) with support for CIF and XSF input formats"
+msgstr ""
+"**تشخیص خودکار فرمت**: ``atomate2siesta-structure convert`` اکنون فرمت "
+"ورودی را به‌طور خودکار از پسوند فایل (.fdf، .xv، .cif، .xsf) تشخیص می‌دهد"
+" با پشتیبانی از فرمت‌های ورودی CIF و XSF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:229
+#: 650dc4a5abb144f6b25120048c18b56d
+msgid ""
+"**DM.InitSpin Comments**: Automatic generation of descriptive comments "
+"for each atom showing species name, atom number, and Cartesian "
+"coordinates for easier debugging of magnetic structures"
+msgstr ""
+"**توضیحات DM.InitSpin**: تولید خودکار توضیحات توصیفی برای هر اتم که نام "
+"گونه، شماره اتم و مختصات دکارتی را نشان می‌دهد برای اشکال‌زدایی آسان‌تر "
+"ساختارهای مغناطیسی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:230
+#: b3af08968e184e248434ee950d0e666b
+msgid ""
+"**Cu Magnetic Detection**: Added Cu (Z=29) to automatic magnetic element "
+"detection with default 0.6 μB moment for DFT+U calculations"
+msgstr ""
+"**تشخیص مغناطیسی Cu**: افزودن Cu (Z=۲۹) به تشخیص خودکار عنصر مغناطیسی با "
+"گشتاور پیش‌فرض ۰.۶ μB برای محاسبات DFT+U"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:233
+#: bc00a077e30c422da5d26932fac641de
+msgid "Architecture Improvements"
+msgstr "بهبودهای معماری"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:235
+#: 1c248931ba98460e85ba1ae0ab8b8952
+msgid ""
+"**Single Source of Truth**: Magnetic moment (DM.InitSpin) generation now "
+"exclusively handled by SpinSettings dataclass, eliminating duplicate "
+"logic and architectural inconsistency (~50 lines removed from ASE writer)"
+msgstr ""
+"**منبع واحد حقیقت**: تولید گشتاور مغناطیسی (DM.InitSpin) اکنون منحصراً "
+"توسط کلاس داده SpinSettings انجام می‌شود و منطق تکراری و ناسازگاری معماری"
+" را حذف می‌کند (~۵۰ خط از نویسنده ASE حذف شد)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:236
+#: d52766681f0b4b7386c0b4b10158525e
+msgid ""
+"**Internal Parameter Naming System**: Introduced dual-prefix system "
+"(``a2s_`` alias and ``atomate2siesta_`` full) to clearly distinguish "
+"framework control parameters from SIESTA FDF parameters with automatic "
+"filtering"
+msgstr ""
+"**سیستم نام‌گذاری پارامترهای داخلی**: معرفی سیستم دو پیشوندی (``a2s_`` "
+"مخفف و ``atomate2siesta_`` کامل) برای تمایز واضح پارامترهای کنترل چارچوب "
+"از پارامترهای FDF سیستا با فیلتر خودکار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:237
+#: fe030997214d4c93845296cdce1e448c
+msgid ""
+"**CLI Reorganization**: Removed deprecated ``atomate2siesta-convert`` "
+"command in favor of structured ``atomate2siesta-structure`` group with "
+"room for future subcommands (scale, rotate, translate, etc.)"
+msgstr ""
+"**بازسازماندهی CLI**: حذف دستور منسوخ ``atomate2siesta-convert`` به نفع "
+"گروه ساختاریافته ``atomate2siesta-structure`` با فضای کافی برای دستورات "
+"فرعی آینده (مقیاس‌بندی، چرخش، انتقال و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:242
+#: 22afb2c3c63f42bfb2475ad5e31ad614
+msgid ""
+"Fixed empty ``%block DM.InitSpin`` blocks when structure has no magnetic "
+"moments"
+msgstr ""
+"رفع بلوک‌های خالی ``%block DM.InitSpin`` زمانی که ساختار گشتاور مغناطیسی "
+"ندارد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:243
+#: 7eb33bb63c194780a8e45512fb743e4a
+msgid "Fixed duplicate DM.InitSpin generation sources (SpinSettings + ASE writer)"
+msgstr "رفع منابع تکراری تولید DM.InitSpin (SpinSettings + نویسنده ASE)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:244
+#: 9025dfdd1140499eafa9eac6122e4f0c
+msgid ""
+"Fixed ``magnetic_ordering`` appearing as invalid SIESTA keyword in FDF "
+"files"
+msgstr ""
+"رفع ظاهر شدن ``magnetic_ordering`` به عنوان کلمه کلیدی نامعتبر سیستا در "
+"فایل‌های FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:245
+#: 79c3836486b34f0797839235b9c184ca
+msgid "Updated stale imports after CLI reorganization"
+msgstr "به‌روزرسانی واردات‌های قدیمی پس از بازسازماندهی CLI"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:248
+#: f52425ea128b44a38393ebc466bb8307
+msgid "Strategic Planning"
+msgstr "برنامه‌ریزی راهبردی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:250
+#: c4730a84b70641f9ac2fdea5cf40127d
+msgid ""
+"**Structure Manipulation Roadmap**: Comprehensive 16-command expansion "
+"plan organized in 4 priority tiers with implementation timeline, testing "
+"strategy, and success metrics"
+msgstr ""
+"**نقشه راه دستکاری ساختار**: طرح جامع گسترش ۱۶ دستور سازماندهی شده در ۴ "
+"سطح اولویت با جدول زمانی پیاده‌سازی، استراتژی تست و معیارهای موفقیت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:255
+#: 6e09d0708a124d4998801024caaf4d4f
+msgid ""
+"**CLI**: ``atomate2siesta-convert`` command removed; use "
+"``atomate2siesta-structure convert`` instead"
+msgstr ""
+"**CLI**: دستور ``atomate2siesta-convert`` حذف شد؛ به جای آن از "
+"``atomate2siesta-structure convert`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:256
+#: 0758e6d6ca0a4cf49ae0e3e100482afd
+msgid ""
+"**CLI**: ``--xv`` flag removed from ``atomate2siesta-structure convert``;"
+" file format is now automatically detected from extension"
+msgstr ""
+"**CLI**: پرچم ``--xv`` از ``atomate2siesta-structure convert`` حذف شد؛ "
+"فرمت فایل اکنون به‌طور خودکار از پسوند تشخیص داده می‌شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:259
+#: 9128b335a59241e69017757f9881d207
+msgid "Migration Guide"
+msgstr "راهنمای مهاجرت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:261
+#: 9dfcafc75e094abfbf595350707464b1
+msgid "**Internal Parameter Naming (v1.0.0)**"
+msgstr "**نام‌گذاری پارامترهای داخلی (نسخه ۱.۰.۰)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:263
+#: d52309a3758e43d8a23304d30de03152
+msgid ""
+"atomate2siesta now uses prefixed parameter names to distinguish framework"
+" control parameters from SIESTA FDF parameters:"
+msgstr ""
+"atomate2siesta اکنون از نام‌های پارامتر با پیشوند استفاده می‌کند تا "
+"پارامترهای کنترل چارچوب را از پارامترهای FDF سیستا متمایز کند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:265
+#: 6de5b2e0db33454b805f0a1cf60803e9
+msgid "**Old (Deprecated - Still Works):**"
+msgstr "**قدیمی (منسوخ - هنوز کار می‌کند):**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:278
+#: 2d038ccb013540b682c1114016c12108
+msgid "**New (Recommended):**"
+msgstr "**جدید (توصیه شده):**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:297
+#: b44600cab01a4adfb6d5b2fe5b5f3b8f
+msgid "**Migration Timeline:**"
+msgstr "**جدول زمانی مهاجرت:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:299
+#: 599b02bb91d640ea9d94568a91b71807
+msgid "**v1.0.0+**: Only prefixed names allowed (strict validation, current)"
+msgstr "**نسخه ۱.۰.۰+**: فقط نام‌های با پیشوند مجاز هستند (اعتبارسنجی دقیق، فعلی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:301
+#: f5b7ada6849f4323ad7d9ed77e2afbe2
+msgid "**Why the Change?**"
+msgstr "**چرا این تغییر؟**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:303
+#: c83ce0c46eaa4a8ea9e2ef34add8ca46
+msgid ""
+"**Visual Clarity**: Instantly distinguish atomate2siesta controls "
+"(``a2s_*``) from SIESTA parameters"
+msgstr ""
+"**وضوح بصری**: تمایز فوری کنترل‌های atomate2siesta (``a2s_*``) از "
+"پارامترهای سیستا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:304
+#: 190c09cd839d44979a04541244e22959
+msgid ""
+"**No Collisions**: Separate namespace prevents conflicts with SIESTA "
+"keywords"
+msgstr ""
+"**بدون تداخل**: فضای نام جداگانه از تضادها با کلمات کلیدی سیستا جلوگیری "
+"می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:305
+#: 97c3bdc53852437398173f31b129f6bf
+msgid "**Scalable**: Add unlimited new control parameters without risk"
+msgstr "**مقیاس‌پذیر**: افزودن پارامترهای کنترل جدید نامحدود بدون ریسک"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:306
+#: 06bd220209c14a708d39b3f79bde73a0
+msgid "**Self-Documenting**: Prefix reveals parameter source"
+msgstr "**خودمستندساز**: پیشوند منبع پارامتر را آشکار می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:308
+#: cad2059024064aa7bc36df5b5f5ef951
+msgid "**See Also:**"
+msgstr "**همچنین ببینید:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:310
+#: f21dd7653ffe41fda41744b7e370e5b2
+msgid ":doc:`fdf-parameters` - Complete internal parameter documentation"
+msgstr ":doc:`fdf-parameters` - مستندات کامل پارامترهای داخلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:311
+#: b962a1b4354a4a61a2e9cc5c2d848ea4
+msgid "``README.md`` - Usage examples with new parameter names"
+msgstr "``README.md`` - نمونه‌های استفاده با نام‌های پارامتر جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:316
+#: d0c6a9f9379a4d91a67e5cb343060259
+msgid "Version 0.2.0 (2025)"
+msgstr "نسخه ۰.۲.۰ (۲۰۲۵)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:318
+#: fd379e2bb5cc466c803d90089ee8d2f5
+msgid "**Release Date**: October 2025"
+msgstr "**تاریخ انتشار**: اکتبر ۲۰۲۵"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:323
+#: 1f9a7969c2334bb4b3f305b2e7d4c272
+msgid ""
+"**Dataclass Tutorials & Comment Headers**: 7 comprehensive tutorials for "
+"MEDIUM priority dataclass modules (DOS, optical properties, phonon "
+"inputs, DFT+U, charge/field calculations) with automatic comment header "
+"generation for FDF output"
+msgstr ""
+"**آموزش‌های کلاس داده و سرصفحه‌های توضیح**: ۷ آموزش جامع برای ماژول‌های "
+"کلاس داده با اولویت متوسط (DOS، خواص نوری، ورودی‌های فونون، DFT+U، "
+"محاسبات بار/میدان) با تولید خودکار سرصفحه توضیح برای خروجی FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:324
+#: 06ab5467c72e478f935527d7c34d5f67
+msgid ""
+"**Recipe Book System**: 39 high-level recipes across 6 categories "
+"reducing workflow complexity from 50+ lines to 1-line function calls with"
+" MaterialAnalyzer for automatic parameter recommendations"
+msgstr ""
+"**سیستم کتاب دستورها**: ۳۹ دستور سطح بالا در ۶ دسته که پیچیدگی جریان کار "
+"را از ۵۰+ خط به فراخوانی‌های تابع تک‌خطی کاهش می‌دهند با MaterialAnalyzer"
+" برای توصیه‌های خودکار پارامتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:325
+#: ab89162de0d94b1496b97edc9919c4f1
+msgid ""
+"**Universal Dry-Run Support**: All 10 workflow makers support dry_run "
+"mode with 99.9% time savings for workflow preview"
+msgstr ""
+"**پشتیبانی جامع اجرای آزمایشی**: تمام ۱۰ سازنده جریان کار از حالت dry_run"
+" با ۹۹.۹٪ صرفه‌جویی در زمان برای پیش‌نمایش جریان کار پشتیبانی می‌کنند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:326
+#: 239260e32cad4f97aee4188cf119211b
+msgid ""
+"**Grüneisen Parameters & Thermal Expansion**: Complete analysis suite "
+"with 6 plotting functions, temperature-dependent calculations, and "
+"publication-quality output"
+msgstr ""
+"**پارامترهای گرونایزن و انبساط حرارتی**: مجموعه تحلیل کامل با ۶ تابع رسم،"
+" محاسبات وابسته به دما و خروجی کیفیت انتشار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:327
+#: 51fe8be2de704a24955e9f27d31c207b
+msgid ""
+"**Powerups System**: Dynamic workflow customization with flow-level "
+"parameter updates and selective job modification"
+msgstr ""
+"**سیستم Powerups**: سفارشی‌سازی پویای جریان کار با به‌روزرسانی‌های "
+"پارامتر سطح جریان و تغییر انتخابی کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:328
+#: 7852d87b465f4ce1986cacfd3270563e
+msgid ""
+"**Adsorption Site Scanning**: Grid-based automatic scanning with molecule"
+" orientation control and energy ranking"
+msgstr ""
+"**اسکن سایت جذب**: اسکن خودکار مبتنی بر شبکه با کنترل جهت‌گیری مولکول و "
+"رتبه‌بندی انرژی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:329
+#: e9a615f9efbc439aba4180296cc1d48c
+#, python-format
+msgid ""
+"**Comprehensive Testing**: 750 tests with 44% code coverage and 17-second"
+" execution time"
+msgstr "**تست جامع**: ۷۵۰ تست با ۴۴٪ پوشش کد و زمان اجرای ۱۷ ثانیه‌ای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:332
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:366
+#: 34fae8d0694a4aab8bf884186162b6b9 cf984a373724401c9e96a9eb6b1d2a88
+msgid "Improvements"
+msgstr "بهبودها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:334
+#: 4f500b60d5224f0e91c822c5839d2c5f
+msgid ""
+"**Automatic Comment Headers**: 21 FDF parameter mappings for automatic "
+"dataclass comment header detection in direct SIESTA FDF format"
+msgstr ""
+"**سرصفحه‌های توضیح خودکار**: ۲۱ نگاشت پارامتر FDF برای تشخیص خودکار "
+"سرصفحه توضیح کلاس داده در فرمت FDF مستقیم سیستا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:335
+#: 7bed143a68d14927b3a3de09708041ed
+msgid ""
+"**Tutorial Coverage**: 30+ tutorials with comprehensive READMEs (600-800 "
+"lines) covering theory, best practices, and troubleshooting"
+msgstr ""
+"**پوشش آموزشی**: ۳۰+ آموزش با READMEهای جامع (۶۰۰-۸۰۰ خط) که تئوری، "
+"بهترین شیوه‌ها و عیب‌یابی را پوشش می‌دهند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:336
+#: 8b2c2723d2ed4d0688c80bb79fc07ffb
+msgid "Enhanced basis parameter matching (PAO.BasisSize fuzzy matching)"
+msgstr "تطبیق پارامتر پایه بهبودیافته (تطبیق فازی PAO.BasisSize)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:337
+#: 2c7981e42ed94ff3a9816cfda7e9d631
+msgid "Complete tier system with all 24 modules operational"
+msgstr "سیستم سطح‌بندی کامل با تمام ۲۴ ماژول عملیاتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:338
+#: 6638422cd1b840bf972bb7be0d66e6f4
+#, python-format
+msgid "62% reduction in TODO items with comprehensive docstrings"
+msgstr "کاهش ۶۲٪ در موارد TODO با رشته‌های مستندسازی جامع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:339
+#: 88cc98c375714ac5be3cd8a3333663f4
+msgid "Better error messages and validation"
+msgstr "پیام‌های خطا و اعتبارسنجی بهتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:344
+#: dcb4725ce6bb4359a7bbe46281fab2bd
+msgid "Fixed PAO.BasisSize parameter being silently ignored"
+msgstr "رفع نادیده گرفته شدن بی‌صدای پارامتر PAO.BasisSize"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:345
+#: f75709de57794de88133e51284f66ca1
+msgid "Added missing tier system classmethods"
+msgstr "افزودن classmethodهای گمشده سیستم سطح‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:346
+#: 283c49a2de4e4881b69f6558e3670a61
+msgid "Eliminated initialization warnings"
+msgstr "حذف هشدارهای مقداردهی اولیه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:347
+#: 8a5d97c48adf476fb3fbd2efb8bfb07a
+msgid "Fixed basis size propagation in EOS workflows"
+msgstr "رفع انتشار اندازه پایه در جریان‌های کار EOS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:352
+#: 7175f599fb894706bebf72e44273fdfc
+msgid "Version 0.1.0 (2024)"
+msgstr "نسخه ۰.۱.۰ (۲۰۲۴)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:354
+#: 3eabafde1ec842178702757a78008ef3
+msgid "**Release Date**: December 2024"
+msgstr "**تاریخ انتشار**: دسامبر ۲۰۲۴"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:359
+#: 6f13f64aa6a243939531b6281390d8fb
+msgid ""
+"**Custodian Error Handling**: Intelligent recovery from 10+ error types "
+"with progressive SCF convergence rescue"
+msgstr ""
+"**مدیریت خطای Custodian**: بازیابی هوشمند از ۱۰+ نوع خطا با نجات همگرایی "
+"SCF تدریجی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:360
+#: 42e99ddd755d4f93a7908e41ae0c8103
+msgid ""
+"**Phonon Calculations**: Full phonopy integration with symmetry-reduced "
+"displacements and automatic plotting (4 plot types)"
+msgstr ""
+"**محاسبات فونون**: یکپارچه‌سازی کامل phonopy با جابجایی‌های کاهش‌یافته "
+"تقارن و رسم خودکار (۴ نوع نمودار)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:361
+#: b9f30ad361404f499a7d7b8104e2d8cc
+msgid ""
+"**Surface Energy Workflows**: Multi-surface comparison with automatic "
+"termination discovery and publication-quality output"
+msgstr ""
+"**جریان‌های کار انرژی سطح**: مقایسه چند سطحی با کشف خودکار پایانه و خروجی"
+" کیفیت انتشار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:362
+#: 7aa3465b18624921ad4ef166451ffb7d
+msgid ""
+"**Tier-Based Configuration**: 4-tier hierarchy (basic → expert) with 14 "
+"material-specific presets"
+msgstr ""
+"**پیکربندی مبتنی بر سطح**: سلسله‌مراتب ۴ سطحی (پایه ← خبره) با ۱۴ "
+"پیش‌تنظیم ویژه مواد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:363
+#: bb419a163d314cc08241551c4bcc1432
+msgid ""
+"**Advanced Workflows**: Elastic constants, equation of state, and timing "
+"analysis"
+msgstr "**جریان‌های کار پیشرفته**: ثابت‌های کشسان، معادله حالت و تحلیل زمان‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:368
+#: bc2d2c859a9144b9b0b397ca4d51253a
+msgid "Enhanced SCF convergence parameters"
+msgstr "پارامترهای همگرایی SCF بهبودیافته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:369
+#: c62f3a94615249b8acae3b58c63cecbc
+msgid "Occupation function flexibility"
+msgstr "انعطاف‌پذیری تابع اشغال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:370
+#: 3560a9fc8d7545edb77ae811d036c554
+msgid "Improved field name matching"
+msgstr "تطبیق نام فیلد بهبودیافته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:371
+#: e6d315e8c40d4c23a8c358db98bb6861
+msgid "Electronic temperature settings"
+msgstr "تنظیمات دمای الکترونیکی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:372
+#: 664a8c5f9677403ab04d003c86ae7912
+msgid "Better documentation structure"
+msgstr "ساختار مستندسازی بهتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:377
+#: 130895c31e854956834dd859e8e4adef
+msgid "Version 0.0.1 (2024)"
+msgstr "نسخه ۰.۰.۱ (۲۰۲۴)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:379
+#: d8d696d7cadc436eaa6bf7212d1cab8a
+msgid "**Release Date**: August 2024"
+msgstr "**تاریخ انتشار**: آگوست ۲۰۲۴"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:382
+#: 671155d1ba6c42009fac5c041b3e0b0e
+msgid "Initial Release"
+msgstr "انتشار اولیه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:384
+#: b3ae1fb6329b4a1997dc4d40f63282ca
+msgid ""
+"**Core Job Types**: RelaxMaker, StaticMaker, BandStructureMaker, "
+"SiestaPhononFlowMaker"
+msgstr ""
+"**انواع کار اصلی**: RelaxMaker، StaticMaker، BandStructureMaker، "
+"SiestaPhononFlowMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:385
+#: df94e5eb770e4f36907f6ecea175693b
+msgid ""
+"**Flow System**: Multi-step workflow composition with database "
+"integration and HPC support"
+msgstr ""
+"**سیستم جریان**: ترکیب جریان کار چند مرحله‌ای با یکپارچه‌سازی پایگاه داده"
+" و پشتیبانی HPC"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:386
+#: c39d15266d00431ca7db90ab6c033ca4
+msgid ""
+"**Input Generation**: FDF file generation with 24 dataclass modules and "
+"pseudopotential handling"
+msgstr "**تولید ورودی**: تولید فایل FDF با ۲۴ ماژول کلاس داده و مدیریت شبه‌پتانسیل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:387
+#: 30a3b56c8b7b4913aadd699f9312041f
+msgid ""
+"**Output Processing**: Comprehensive schema system with structure, "
+"energy, forces, and stress extraction"
+msgstr "**پردازش خروجی**: سیستم طرح جامع با استخراج ساختار، انرژی، نیروها و تنش"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:388
+#: 54748145243c45009290950705350791
+msgid ""
+"**Basic Workflows**: Relaxation, band structure, NEB, and convergence "
+"studies"
+msgstr "**جریان‌های کار پایه**: آرام‌سازی، ساختار نوار، NEB و مطالعات همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:389
+#: 476c857979d74ac7aa1fee257885d12f
+msgid ""
+"**14 Tutorials**: Covering basics, convergence studies, advanced "
+"workflows, and infrastructure"
+msgstr "**۱۴ آموزش**: پوشش مبانی، مطالعات همگرایی، جریان‌های کار پیشرفته و زیرساخت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:394
+#: 1e53b7f0e0a04eb0a0f0235a59304576
+msgid "Upgrade Notes"
+msgstr "یادداشت‌های ارتقا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:397
+#: 77bb466e8701400aa8c4bb153297efbf
+msgid "Version 0.2.0"
+msgstr "نسخه ۰.۲.۰"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:399
+#: 2eae294e48914e7d9157615558cbc324
+msgid "No breaking changes"
+msgstr "بدون تغییرات ناسازگار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:400
+#: 22e66cc64afe45af8ed017138acbb035
+msgid "New tutorials: 19 (adsorption), 20 (Grüneisen), 22 (powerups)"
+msgstr "آموزش‌های جدید: ۱۹ (جذب)، ۲۰ (گرونایزن)، ۲۲ (powerups)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:401
+#: b76265ff0d8248a8a1d70316af71cf95
+msgid ""
+"New advanced features tutorials: DOS calculations, phonon inputs, optical"
+" properties, DFT+U, charge/dipole/electric field"
+msgstr ""
+"آموزش‌های ویژگی‌های پیشرفته جدید: محاسبات DOS، ورودی‌های فونون، خواص "
+"نوری، DFT+U، بار/دوقطبی/میدان الکتریکی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:402
+#: 10d4c1db5ed142d1880d493305c9864d
+msgid "Recipe Book: 39 high-level recipes for simplified workflow creation"
+msgstr "کتاب دستورها: ۳۹ دستور سطح بالا برای ایجاد جریان کار ساده‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:405
+#: 05f74c94dca64b17b7d29e92ca15d1f5
+msgid "Version 0.1.0"
+msgstr "نسخه ۰.۱.۰"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:407
+#: 9b99242c57434f90ab24fd8adda9e88d
+msgid "Custodian integration may require updating custom error handlers"
+msgstr ""
+"یکپارچه‌سازی Custodian ممکن است نیاز به به‌روزرسانی مدیریت‌کننده‌های خطای"
+" سفارشی داشته باشد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:408
+#: a579a23c94df420fa0b2fcdb62690ec0
+msgid "Tier system replaces some direct parameter settings"
+msgstr "سیستم سطح‌بندی برخی تنظیمات پارامتر مستقیم را جایگزین می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:409
+#: 7a68a09192614083872c19ece530496d
+msgid "New tutorials: 15 (custodian), 16 (phonons), 17 (surfaces), 18 (tiers)"
+msgstr "آموزش‌های جدید: ۱۵ (custodian)، ۱۶ (فونون‌ها)، ۱۷ (سطوح)، ۱۸ (سطح‌بندی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:414
+#: 12106219cc014e2381650ef426b4e101
+msgid "Citation"
+msgstr "استناد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:416
+#: b5461706776b4d20adc3d1abb4f54bbc
+#, fuzzy
+msgid ""
+"If you use these SIESTA workflows in your research, please cite atomate2,"
+" the SIESTA code, and this work:"
+msgstr "اگر از atomate2siesta در تحقیقات خود استفاده می‌کنید، لطفاً استناد کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:463
+#: 29446664ae7b41b3a8562ea6abb73600
+msgid "License"
+msgstr "مجوز"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/changelog.rst:465
+#: 95520f56781640a4a1b35d320f121a43
+msgid "atomate2siesta is released under the MIT License."
+msgstr "atomate2siesta تحت مجوز MIT منتشر شده است."
+
+#~ msgid "**Release Date**: November 2025"
+#~ msgstr "**تاریخ انتشار**: نوامبر ۲۰۲۵"
+

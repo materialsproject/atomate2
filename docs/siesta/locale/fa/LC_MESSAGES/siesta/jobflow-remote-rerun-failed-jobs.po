@@ -1,0 +1,1646 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:3
+#: fc59b423063d4e51a1b590f49fd68886
+msgid "Rerunning Failed Jobs in Jobflow-Remote"
+msgstr "اجرای مجدد کارهای شکست‌خورده در Jobflow-Remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:5
+#: 800a0bfeaaf1497e9975b2716cee220f
+msgid ""
+"Complete guide to handling failed jobs using ``jf`` CLI commands with "
+"project-specific execution."
+msgstr ""
+"راهنمای کامل برای مدیریت کارهای شکست‌خورده با استفاده از دستورات CLI "
+"``jf`` با اجرای ویژه پروژه."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:9
+#: a33f9dd70d9d4fca844d701c642af73e
+msgid "Table of Contents"
+msgstr "فهرست مطالب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:12
+#: a28b4a8a56e04559b2291c1b7d6b7ff3
+msgid "Overview"
+msgstr "مروری کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:14
+#: 3918640eab044bfbadc6993a8d8648d2
+msgid ""
+"When a job fails in jobflow-remote, you can use the ``jf`` CLI to "
+"diagnose, modify resources, and rerun the job. All commands support the "
+"``-p PROJECT_NAME`` flag for multi-project setups."
+msgstr ""
+"هنگامی که کاری در jobflow-remote شکست می‌خورد، می‌توانید از CLI ``jf`` "
+"برای تشخیص، تغییر منابع و اجرای مجدد کار استفاده کنید. همه دستورات از "
+"پرچم ``-p PROJECT_NAME`` برای پیکربندی‌های چند پروژه‌ای پشتیبانی می‌کنند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:16
+#: 4800d2fe508045dbafe9c6534b08d7ed
+#, fuzzy
+msgid ""
+"For complete jobflow-remote documentation, see: "
+"https://matgenix.github.io/jobflow-remote/"
+msgstr "`GitHub Jobflow-Remote <https://github.com/Matgenix/jobflow-remote>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:18
+#: 6b75db80f4a140669bbdc9a00e0127e4
+msgid ""
+"**NEW**: atomate2siesta now provides tools for modifying FDF parameters! "
+"See :ref:`fdf-modification-tools` below."
+msgstr ""
+"**جدید**: atomate2siesta اکنون ابزارهایی برای تغییر پارامترهای FDF فراهم "
+"می‌کند! بخش :ref:`fdf-modification-tools` در زیر را مشاهده کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:20
+#: 19a74929079748c7864218b3fb5144a8
+msgid ""
+"**Standard Jobflow-Remote Limitation**: The ``jf`` CLI **cannot** modify "
+"FDF parameters (like ``Mesh.Cutoff``, ``kpts``, ``SCF.Mixer.Weight``) "
+"directly. These are baked into the job definition. Use ``atomate2siesta-"
+"jobflow-remote job`` commands for FDF modifications."
+msgstr ""
+"**محدودیت استاندارد Jobflow-Remote**: CLI ``jf`` **نمی‌تواند** پارامترهای"
+" FDF (مانند ``Mesh.Cutoff``، ``kpts``، ``SCF.Mixer.Weight``) را به‌طور "
+"مستقیم تغییر دهد. این پارامترها در تعریف کار قرار گرفته‌اند. از دستورات "
+"``atomate2siesta-jobflow-remote job`` برای تغییرات FDF استفاده کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:23
+#: 98b9ba5b0d974b0e979413e10477f486
+msgid "Quick Reference"
+msgstr "مرجع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:42
+#: e869e9ccbaf64699804c315b1f76225d
+msgid "Understanding Job States"
+msgstr "درک حالت‌های کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:45
+#: 9dfff5424ffb4619be52d6c7240c5d91
+msgid "Job Lifecycle"
+msgstr "چرخه حیات کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:55
+#: 9f1240e3ff0d41198c5593ca6ee16727
+msgid "**FAILED Jobs**"
+msgstr "**کارهای FAILED**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:56
+#: 20ef79dd86e44d7ab5381b15214f18d9
+msgid ""
+"Job completed but failed due to calculation issues (SCF convergence, "
+"wrong parameters, etc.)"
+msgstr ""
+"کار تکمیل شد اما به دلیل مشکلات محاسباتی شکست خورد (همگرایی SCF، "
+"پارامترهای نادرست و غیره)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:58
+#: 2af1a9f21b454ef587abd4d0d8d5f133
+msgid "**Solution**: Use ``jf job rerun``"
+msgstr "**راه‌حل**: از ``jf job rerun`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:60
+#: 199cc62815824e8e84da51cfb5c3f4c8
+msgid "**REMOTE_ERROR Jobs**"
+msgstr "**کارهای REMOTE_ERROR**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:61
+#: 90ac250da93a480b8d4b2434b0ddda4c
+msgid ""
+"Job encountered infrastructure issues (network timeout, file transfer "
+"failure, cluster problems)"
+msgstr ""
+"کار با مشکلات زیرساختی مواجه شد (timeout شبکه، شکست انتقال فایل، مشکلات "
+"خوشه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:63
+#: ae18673ec50e42d79b80ba707262fcd6
+msgid "**Solution**: Use ``jf job retry``"
+msgstr "**راه‌حل**: از ``jf job retry`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:66
+#: c314a45f8838420faab2cd3151a37723
+msgid "Check Job Status"
+msgstr "بررسی وضعیت کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:95
+#: 659e3f5630f94b3190d2b07392b77eb7
+msgid "Commands for Failed Jobs"
+msgstr "دستورات برای کارهای شکست‌خورده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:98
+#: fe8d86a9eb52411ca5b784e1f69f4ed7
+msgid "1. jf job info - Diagnose the Failure"
+msgstr "۱. jf job info - تشخیص شکست"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:100
+#: 0143bd58d04746cf8e4dce8e5211650c
+msgid "**Purpose**: Get detailed information about why a job failed."
+msgstr "**هدف**: دریافت اطلاعات تفصیلی درباره دلیل شکست کار."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:102
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:244
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:294
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:847
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:914
+#: 98c487c473474293ac274b3424b41d13 b0fa3a965f174825b531f3e5351bea3e
+#: b37c641b7c974990aae161e915578996 dc668f1ed26347f095b8bc8187041509
+#: eff8ab8864c444d99fba7e75ae3c3fd2
+msgid "**Basic Usage:**"
+msgstr "**استفاده پایه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:115
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:870
+#: c1c9f9a274bc4f8a8964c2b468a896a7 d4e00acd6e07447ca351630ab4bfac56
+msgid "**Example Output:**"
+msgstr "**خروجی نمونه:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:129
+#: 6008b72d7fdc4896a960c17dc73a6c56
+msgid "**Common Error Patterns:**"
+msgstr "**الگوهای رایج خطا:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:135
+#: c5a03e975c0e48e6b2ec24b594623069
+msgid "Error Message"
+msgstr "پیام خطا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:136
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:753
+#: 1c60aace2d9f4db0aa991d1a53d7cf29 8456fbc95da94221b7acb3814e9ffa29
+msgid "Meaning"
+msgstr "معنی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:137
+#: f8cd0ded3d384184b2234f6f94b9e543
+msgid "``SCF did not converge``"
+msgstr "``SCF did not converge``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:138
+#: 329ea10fb1b94f9e80a9ab9bc6af5236
+msgid "Need different convergence parameters"
+msgstr "نیاز به پارامترهای همگرایی متفاوت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:139
+#: faef2579548d411fa3333e6de134dab5
+msgid "``Exceeded memory limit``"
+msgstr "``Exceeded memory limit``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:140
+#: 4093991a44054393bd7e694f2be409a3
+msgid "Need more resources (use ``jf job set resources``)"
+msgstr "نیاز به منابع بیشتر (از ``jf job set resources`` استفاده کنید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:141
+#: ec64d977dc2f4025ae236c9ead922955
+msgid "``CANCELLED DUE TO TIME LIMIT``"
+msgstr "``CANCELLED DUE TO TIME LIMIT``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:142
+#: 76bba98b0c99407f80faedc40c36b241
+msgid "Need more walltime (use ``jf job set resources``)"
+msgstr "نیاز به زمان اجرا بیشتر (از ``jf job set resources`` استفاده کنید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:143
+#: 459a6a85f5894d7e9513060cb7fda712
+msgid "``kgrid: ERROR. Grid generates no points``"
+msgstr "``kgrid: ERROR. Grid generates no points``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:144
+#: 507ffb6fd11442b884a4ba09d965b65b
+msgid "K-point issue (requires new flow)"
+msgstr "مشکل K-point (نیاز به جریان کار جدید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:145
+#: f854759f8dc44f7194416c0d6ef971b3
+msgid "``PAO.Basis: Unknown basis size``"
+msgstr "``PAO.Basis: Unknown basis size``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:146
+#: 0b664c3952c94412b0e57feaad4017d6
+msgid "Basis set error (requires new flow)"
+msgstr "خطای مجموعه پایه (نیاز به جریان کار جدید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:149
+#: 957dbba2c2dd4d59a600aab803a17356
+msgid "2. jf job set - Modify Job Resources"
+msgstr "۲. jf job set - تغییر منابع کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:151
+#: 8ef3394ba5d1408087c84e6acc12de2b
+msgid ""
+"**Purpose**: Change computational resources before rerunning (memory, "
+"cores, walltime, worker)."
+msgstr ""
+"**هدف**: تغییر منابع محاسباتی قبل از اجرای مجدد (حافظه، هسته‌ها، زمان "
+"اجرا، worker)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:153
+#: cf4234d41492432ca3ef2dddd196d87d
+msgid ""
+"**Important**: This **ONLY** modifies HPC resources, **NOT** FDF "
+"parameters!"
+msgstr ""
+"**مهم**: این دستور **فقط** منابع HPC را تغییر می‌دهد، **نه** پارامترهای "
+"FDF را!"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:156
+#: cfef116a561949589c4a4593a9709f07
+msgid "set resources"
+msgstr "set resources"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:158
+#: 0310161c7de7456a966d3d56e3cca137
+msgid "Modify computational resources (nodes, cores, memory, walltime)."
+msgstr "تغییر منابع محاسباتی (گره‌ها، هسته‌ها، حافظه، زمان اجرا)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:185
+#: 3b5ed918b96a4d0da5672802317da956
+msgid ""
+"**Available Options** (check ``jf job set resources -h`` for complete "
+"list):"
+msgstr ""
+"**گزینه‌های موجود** (برای لیست کامل ``jf job set resources -h`` را بررسی "
+"کنید):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:187
+#: d525d1e996284dc9808fa6aeecdf5123
+msgid "``--nodes`` - Number of compute nodes"
+msgstr "``--nodes`` - تعداد گره‌های محاسباتی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:188
+#: 574f2dd983f1478ba0b7da2dc003626c
+msgid "``--ntasks`` - Total number of tasks"
+msgstr "``--ntasks`` - تعداد کل وظایف"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:189
+#: e3eb6706d895458e84ff395ea8892b7a
+msgid "``--mem-per-cpu`` - Memory per CPU"
+msgstr "``--mem-per-cpu`` - حافظه به ازای هر CPU"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:190
+#: 318c0efe881b4957bf7575abd57e7213
+msgid "``--time`` - Walltime (format: ``HH:MM:SS`` or ``DD-HH:MM:SS``)"
+msgstr "``--time`` - زمان اجرا (فرمت: ``HH:MM:SS`` یا ``DD-HH:MM:SS``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:191
+#: 2d11c5801f1e448eb9deaf90cf9ca1df
+msgid "``--partition`` - Queue/partition name"
+msgstr "``--partition`` - نام صف/پارتیشن"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:192
+#: 78ea71b6b3174dd18080bbd99e24c702
+msgid "``--qos`` - Quality of Service"
+msgstr "``--qos`` - کیفیت سرویس"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:193
+#: face190b80e94241be13438a23d35aba
+msgid "``--account`` - Account/project for billing"
+msgstr "``--account`` - حساب/پروژه برای صورتحساب"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:196
+#: ba07b5f6132043e4a56240e929c013ec
+msgid "set worker"
+msgstr "set worker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:198
+#: 36c126c7ba994566bc40259933c9e4db
+msgid "Change which worker executes the job."
+msgstr "تغییر worker که کار را اجرا می‌کند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:208
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:224
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:287
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:907
+#: 5f22a1dd4ebe4d17a9e56d33749f138a 707655d8a24c4d75ad10252046cd40d9
+#: 827de468d92a44c3a701092128342308 e07013b0009145e2b0e75943a1216da3
+msgid "**When to Use:**"
+msgstr "**چه زمانی استفاده شود:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:210
+#: 7cac918085d547f2ae11b031c1cdf47d
+msgid "Original worker is down or overloaded"
+msgstr "worker اصلی خاموش یا بارگذاری‌شده است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:211
+#: 7964b5329d63478ea1c76a23a467809b
+msgid "Job needs special hardware (GPUs, large memory nodes)"
+msgstr "کار به سخت‌افزار ویژه نیاز دارد (GPU، گره‌های حافظه بزرگ)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:212
+#: 717ef0ffcb0542058dc93fa6a27a12ab
+msgid "Testing on different cluster"
+msgstr "آزمایش روی خوشه متفاوت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:215
+#: 5adad9699b81456b8d3fc2b5d952da2f
+msgid "set exec-config"
+msgstr "set exec-config"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:217
+#: a5fe4a125d7048c89aa697f714495437
+msgid "Modify execution configuration (advanced)."
+msgstr "تغییر پیکربندی اجرا (پیشرفته)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:226
+#: c921bbc4dc8c4e04b04b2f7bd0537db1
+msgid "Change SLURM/PBS submission options"
+msgstr "تغییر گزینه‌های ارسال SLURM/PBS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:227
+#: 7b36d31dbaa14aaebe9527fc0bba6d75
+msgid "Modify environment variables"
+msgstr "تغییر متغیرهای محیطی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:228
+#: 5977d697ca3f46d7970a61a8fba497ca
+msgid "Adjust pre/post execution scripts"
+msgstr "تنظیم اسکریپت‌های قبل/بعد از اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:230
+#: f7b5894407084086a91d4ebfe5117764
+msgid ""
+"**Note**: Exact options depend on your jobflow-remote configuration. "
+"Check ``jf job set exec-config -h``."
+msgstr ""
+"**توجه**: گزینه‌های دقیق به پیکربندی jobflow-remote شما بستگی دارد. ``jf "
+"job set exec-config -h`` را بررسی کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:233
+#: 03415d0c8b7b4fe59bdcfef4e9088278
+msgid "3. jf job rerun - Restart Failed Job"
+msgstr "۳. jf job rerun - راه‌اندازی مجدد کار شکست‌خورده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:235
+#: 866ff304ea744308948f6a74225c8eb6
+msgid "**Purpose**: Restart a FAILED job from the beginning."
+msgstr "**هدف**: راه‌اندازی مجدد کار FAILED از ابتدا."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:237
+#: 730303569fbb4001b258ceafcb81486d
+msgid "**Key Behavior:**"
+msgstr "**رفتار کلیدی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:239
+#: d4db342da76441d3821834bfa8a78445
+msgid "Returns job to ``READY`` state"
+msgstr "کار را به حالت ``READY`` برمی‌گرداند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:240
+#: 40d8d71cbd81487e89e4562e22295b6a
+msgid "**Regenerates all input files** from stored job definition"
+msgstr "**تمام فایل‌های ورودی را دوباره تولید می‌کند** از تعریف ذخیره‌شده کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:241
+#: 645a70ba189745c29b03a3801759e863
+msgid ""
+"**By default, deletes the worker directory** (use ``--no-delete`` to "
+"preserve)"
+msgstr ""
+"**به‌طور پیش‌فرض، دایرکتوری worker را حذف می‌کند** (برای حفظ از ``--no-"
+"delete`` استفاده کنید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:242
+#: 89337a38f51d435aaeae65a3d1dd3b4a
+msgid "**Cannot modify FDF parameters** (they're in the job definition)"
+msgstr "**نمی‌تواند پارامترهای FDF را تغییر دهد** (آنها در تعریف کار هستند)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:257
+#: 0c104095854b409297710dd4186e81e5
+msgid "**Examples:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:272
+#: ea8364e1568643ceb3ced5dd0cb0431c
+msgid "**Batch Rerun:**"
+msgstr "**اجرای مجدد دسته‌ای:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:283
+#: a9c833a04df540ff94cd5c6b71cfa7de
+msgid "4. jf job retry - Retry After Remote Error"
+msgstr "۴. jf job retry - تلاش مجدد پس از خطای راه‌دور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:285
+#: dd6297677f1d4f7cb01d4a95600cbfb2
+msgid ""
+"**Purpose**: Retry a job that encountered infrastructure issues "
+"(REMOTE_ERROR state)."
+msgstr ""
+"**هدف**: تلاش مجدد کاری که با مشکلات زیرساختی مواجه شده (حالت "
+"REMOTE_ERROR)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:289
+#: 7df2f6fecd1546ba94099de26bee0ffe
+msgid "Network timeouts"
+msgstr "timeout های شبکه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:290
+#: 0a009d24988742f28035928bd50abb56
+msgid "File transfer failures"
+msgstr "شکست انتقال فایل"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:291
+#: 83aa78e75d804515ad5e420c30e2cffa
+msgid "Temporary cluster issues"
+msgstr "مشکلات موقت خوشه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:292
+#: 84b23dffdc254d7db181994fca54ebbd
+msgid "SSH connection problems"
+msgstr "مشکلات اتصال SSH"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:304
+#: 30555df92ee744c4b967bd6de19884ac
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:316
+#: 40c57d5df6d54d3c8f98b90cf94eb76b
+msgid "**Difference from rerun:**"
+msgstr "**تفاوت با rerun:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:322
+#: 9944e3e7ec694b1dbbea106afd663ee2
+msgid "Command"
+msgstr "دستور"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:323
+#: 76bb7a26ab054b16870c92d15ca2ab2c
+msgid "When to Use"
+msgstr "چه زمانی استفاده شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:324
+#: e380997a473c40a4baa9e70acf64d4c7
+msgid "Behavior"
+msgstr "رفتار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:325
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:781
+#: 4f9d5a9a8d2c4ecebb6ffb6047a50775 ded9874d98254ff8ba119610bb26e5ee
+msgid "``retry``"
+msgstr "``retry``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:326
+#: 4d82de1704ba43ab9f6dd51a4403ad61
+msgid "REMOTE_ERROR (infrastructure)"
+msgstr "REMOTE_ERROR (زیرساخت)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:327
+#: 4672f00c24a04de8bc862b28b8c88749
+msgid "Returns to previous state"
+msgstr "به حالت قبلی برمی‌گردد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:328
+#: e1f600b34ee9414d9dbe1406f9c853f8
+msgid "``rerun``"
+msgstr "``rerun``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:329
+#: 13e35c2fc46f451689c82819151e467e
+msgid "FAILED (calculation error)"
+msgstr "FAILED (خطای محاسباتی)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:330
+#: 9fbc100a407444a094d74c40612fd338
+msgid "Starts from READY"
+msgstr "از READY شروع می‌شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:333
+#: 66ed9725294743f687deab9369888b6d
+msgid "Workflow Examples"
+msgstr "مثال‌های جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:336
+#: c9f5010cccb8484599e7980be693b58e
+msgid "Example 1: SCF Convergence Failure (Cannot Fix with CLI)"
+msgstr "مثال ۱: شکست همگرایی SCF (قابل رفع با CLI نیست)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:338
+#: b0c9056a016a49079a883e362adb0830
+msgid ""
+"**Scenario**: Job failed because SCF didn't converge. You need to change "
+"``SCF.Mixer.Weight``."
+msgstr ""
+"**سناریو**: کار به دلیل عدم همگرایی SCF شکست خورد. نیاز به تغییر "
+"``SCF.Mixer.Weight`` دارید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:346
+#: b99334ccdd7f496084d8fc54758554f5
+msgid ""
+"**⚠️ LIMITATION**: You **cannot** change FDF parameters using ``jf`` "
+"commands!"
+msgstr ""
+"**⚠️ محدودیت**: **نمی‌توانید** پارامترهای FDF را با دستورات ``jf`` تغییر "
+"دهید!"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:348
+#: 9c16b1cea62241838f89dd4f86bb225c
+msgid ""
+"**Solution**: Use ``atomate2siesta-jobflow-remote job modify-db`` to "
+"modify FDF parameters (see :ref:`fdf-modification-tools` below)."
+msgstr ""
+"**راه‌حل**: از ``atomate2siesta-jobflow-remote job modify-db`` برای تغییر"
+" پارامترهای FDF استفاده کنید (بخش :ref:`fdf-modification-tools` در زیر را"
+" ببینید)."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:351
+#: 342ee398ac9545f8ad37b69a9aab47b0
+msgid "Example 2: Memory Limit Exceeded (Can Fix with CLI)"
+msgstr "مثال ۲: بیش از حد حافظه (قابل رفع با CLI است)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:353
+#: ffa37cf3067040ecb6691d7abc0adb2b
+msgid "**Scenario**: Job cancelled because it exceeded memory allocation."
+msgstr "**سناریو**: کار به دلیل تجاوز از تخصیص حافظه لغو شد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:371
+#: f7b49fdd9781498ab4d1235a6f05a204
+msgid "Example 3: Walltime Exceeded (Can Fix with CLI)"
+msgstr "مثال ۳: بیش از حد زمان اجرا (قابل رفع با CLI است)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:373
+#: 224f3825457147ba829e80fc6f9b6594
+msgid "**Scenario**: Job cancelled due to time limit."
+msgstr "**سناریو**: کار به دلیل محدودیت زمانی لغو شد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:387
+#: 4972afea1e8e4d5091cd6b89953c43ba
+msgid "Example 4: Network Failure (Can Fix with CLI)"
+msgstr "مثال ۴: شکست شبکه (قابل رفع با CLI است)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:389
+#: 2eca7a4982424ce6bed8010333bcd9a9
+msgid "**Scenario**: Job encountered network timeout during file upload."
+msgstr "**سناریو**: کار در حین بارگذاری فایل با timeout شبکه مواجه شد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:404
+#: e8a309d643b14f3b89b14edd24c6a782
+msgid "Example 5: Wrong Worker (Can Fix with CLI)"
+msgstr "مثال ۵: Worker نادرست (قابل رفع با CLI است)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:406
+#: d279a3ea576c41e5be12db403081ac0f
+msgid "**Scenario**: Job submitted to worker without enough memory."
+msgstr "**سناریو**: کار به worker بدون حافظه کافی ارسال شد."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:417
+#: 3a5906163ba4442db4cce71c7612718b
+msgid "Example 6: Batch Fix Multiple Jobs"
+msgstr "مثال ۶: رفع دسته‌ای چندین کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:419
+#: 232170aec7994eeaa18037819f68a7ba
+msgid "**Scenario**: Multiple jobs in a scan failed with memory issues."
+msgstr "**سناریو**: چندین کار در یک اسکن با مشکلات حافظه شکست خوردند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:436
+#: 57580c60a7cd4192b28a9ef4139f1386
+msgid "Monitoring Jobs After Rerun"
+msgstr "نظارت بر کارها پس از اجرای مجدد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:439
+#: add50bf1dff543939492d06f8787ed11
+msgid "Check Job Progress"
+msgstr "بررسی پیشرفت کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:453
+#: c0f980623d0843df9d308f0e272397d3
+msgid "Runner Management"
+msgstr "مدیریت Runner"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:455
+#: 6e68f71e74e04ba3a547c2e993606ffd
+msgid "Ensure the runner is active to process resubmitted jobs:"
+msgstr "اطمینان حاصل کنید که runner برای پردازش کارهای ارسال‌شده مجدد فعال است:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:472
+#: b798ffd1c0ce47cbaa2b1511794e48b3
+msgid "Flow Management"
+msgstr "مدیریت جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:489
+#: 333c7fdd785942bc9b1f32494913edcb
+msgid "What You CANNOT Do with CLI"
+msgstr "آنچه نمی‌توانید با CLI انجام دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:491
+#: b4d15d0266304196b735ba2f16160f4b
+msgid "These require creating a new flow with Python:"
+msgstr "این موارد نیاز به ایجاد جریان کار جدید با Python دارند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:493
+#: 3db03e0dd8b34db1bf22ed3c242fd755
+msgid "❌ **Cannot Modify FDF Parameters:**"
+msgstr "❌ **نمی‌تواند پارامترهای FDF را تغییر دهد:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:495
+#: cecb264b445643fda01c94833fed9efe
+msgid "``Mesh.Cutoff``"
+msgstr "``Mesh.Cutoff``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:496
+#: dc3d8679175643bf99cd7c86405d23c5
+msgid "``kpts`` or ``kgrid.Cutoff``"
+msgstr "``kpts`` یا ``kgrid.Cutoff``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:497
+#: 18eb6c38cd744483b1fbf9563bcad93d
+msgid "``SCF.Mixer.Weight``"
+msgstr "``SCF.Mixer.Weight``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:498
+#: ff56aef5a0454dfe848b814f2f921ad7
+msgid "``SCF.DM.Tolerance``"
+msgstr "``SCF.DM.Tolerance``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:499
+#: 94ae937002ae425991f0982115acb5cf
+msgid "``PAO.BasisSize``"
+msgstr "``PAO.BasisSize``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:500
+#: a3aa9b0facb040df80e921dcefc52981
+msgid "``ElectronicTemperature``"
+msgstr "``ElectronicTemperature``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:501
+#: b33630e28d074be680736b7efdc506ac
+msgid "Any SIESTA FDF parameter"
+msgstr "هر پارامتر FDF در SIESTA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:503
+#: ad85fbd696634e73a4e77292f0177c62
+msgid ""
+"**Why?** These are stored in the job's ``function_kwargs`` in the "
+"database. The ``jf`` CLI doesn't provide commands to modify function "
+"arguments."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:505
+#: 92842dd5a2ac484f9fc534fb58dfb6e4
+msgid "❌ **Cannot Modify User Parameters:**"
+msgstr "❌ **نمی‌تواند پارامترهای کاربر را تغییر دهد:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:507
+#: fc0bc16ba6124d6881a26aae13ce383c
+msgid "``user_params`` dictionary"
+msgstr "دیکشنری ``user_params``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:508
+#: cb5326e6775e47c29ddcb4106156d6f7
+msgid "Maker-specific settings"
+msgstr "تنظیمات خاص Maker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:509
+#: 814cd681269d468b9a53aef770121db6
+msgid "Flow-level parameters"
+msgstr "پارامترهای سطح جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:511
+#: 7444ed2ced19418798892fc223a488e5
+msgid ""
+"**Solution:** Use ``atomate2siesta-jobflow-remote job modify-db`` to "
+"modify FDF parameters (see :ref:`fdf-modification-tools` below)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:513
+#: 47984513de2747ca971c0bcbb7d2fccc
+msgid "✅ **CAN Modify via CLI:**"
+msgstr "✅ **می‌تواند از طریق CLI تغییر دهد:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:515
+#: 77c3f2690d9a4cb88e43d51df273ec9b
+msgid "Computational resources (nodes, cores, memory, walltime)"
+msgstr "منابع محاسباتی (گره‌ها، هسته‌ها، حافظه، زمان اجرا)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:516
+#: 41e3cfaf524a4f149781d94ec3e57952
+msgid "Worker assignment"
+msgstr "تخصیص Worker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:517
+#: 2d0436ab146a4dd4b958562bfe7b769a
+msgid "Execution configuration"
+msgstr "پیکربندی اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:518
+#: 2f4b4202ba374973935e4643f56a3f69
+msgid "Job priority"
+msgstr "اولویت کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:521
+#: 4530c162e5b04050b586f4c80392e8a1
+msgid "Decision Tree"
+msgstr "درخت تصمیم"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:523
+#: 2290db1b86724c40b6eb68dcc0173a95
+msgid "Use this to decide your approach:"
+msgstr "از این برای تصمیم‌گیری رویکرد خود استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:552
+#: ae9494929a4b46608e8ea88e79e34c11
+msgid "Multi-Project Workflow"
+msgstr "جریان کار چند پروژه‌ای"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:554
+#: 691bffe063a0411cb582d442fdfd2ecd
+msgid "If you manage multiple projects, always use ``-p`` flag:"
+msgstr "اگر چندین پروژه را مدیریت می‌کنید، همیشه از پرچم ``-p`` استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:578
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1091
+#: 1bf9df59df4d429db38eaffe9b20c693 c47349f02f1142aebb0f7e9d319b5cd2
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:581
+#: 8aa18d9eeccb452eada07030f14f72fa
+msgid "1. Always Diagnose Before Acting"
+msgstr "۱. همیشه قبل از اقدام تشخیص دهید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:592
+#: 10613d81aa9a4fa49d42f11e6602df47
+msgid "2. Test Resource Changes with One Job First"
+msgstr "۲. ابتدا تغییرات منابع را با یک کار آزمایش کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:608
+#: 070df1177eb04d419209482ce09ff150
+msgid "3. Keep Failed Jobs for Reference"
+msgstr "۳. کارهای شکست‌خورده را برای مرجع نگه دارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:619
+#: a5da4cf0fb2d4d9fb438b2f39fa932bd
+msgid "4. Monitor Runner Health"
+msgstr "۴. سلامت Runner را نظارت کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:630
+#: a15a2bad66344200842b89ac232b34c3
+msgid "5. Use Descriptive Job Names"
+msgstr "۵. از نام‌های توصیفی برای کارها استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:632
+#: 5178661424cc40a59f55be66ba19c28e
+msgid "When creating flows, use descriptive names:"
+msgstr "هنگام ایجاد جریان‌های کار، از نام‌های توصیفی استفاده کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:645
+#: 205b0d45cb2d472fb036d7f6ef82893c
+msgid "Then filter easily:"
+msgstr "سپس به راحتی فیلتر کنید:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:652
+#: ff5111e5a7bd430bb7d343dc6332f287
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:655
+#: 4e1d051abf954f818f47a2ce0146291d
+msgid "\"Command not found: jf\""
+msgstr "\"Command not found: jf\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:657
+#: e6dd73bc9231475799ca7778de0183f2
+msgid "**Cause**: jobflow-remote not installed or not in PATH."
+msgstr "**علت**: jobflow-remote نصب نشده یا در PATH نیست."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:659
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:674
+#: 41af1a25466348d698018a26d71eeb67 9b96fb389c0049e6bc1b10028e08296d
+msgid "**Solution**:"
+msgstr "**راه‌حل**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:670
+#: 20c02a015c634da99d3cca48295aaf80
+msgid "\"Project not found: PROJECTNAME\""
+msgstr "\"Project not found: PROJECTNAME\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:672
+#: 95199ff30e6f4c979f7117c6691799e4
+msgid "**Cause**: Project not configured."
+msgstr "**علت**: پروژه پیکربندی نشده است."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:688
+#: 5c01bae7a0f04455a0e7152c9663c6ac
+msgid "\"Cannot modify job in state COMPLETED\""
+msgstr "\"Cannot modify job in state COMPLETED\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:690
+#: 2e2ba3223a774bc2a9e8ce063b9ff7e0
+msgid "**Cause**: Job already finished."
+msgstr "**علت**: کار قبلاً به پایان رسیده است."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:692
+#: 3d8e96cf9ebd488891e94dd1abc5a30e
+msgid "**Solution**: Create new flow instead of trying to modify completed job."
+msgstr ""
+"**راه‌حل**: به جای تلاش برای تغییر کار تکمیل‌شده، جریان کار جدید ایجاد "
+"کنید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:695
+#: 720e79c6965d479da61c566e3d202758
+msgid "\"Job rerun does nothing\""
+msgstr "\"Job rerun does nothing\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:697
+#: a42cd02cf3e04a8b8b6df061d7cc92da
+msgid "**Possible causes**:"
+msgstr "**علل احتمالی**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:699
+#: 874c5ca766cb453e980c135f91a545c3
+msgid "**Runner not running**:"
+msgstr "**Runner در حال اجرا نیست**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:705
+#: c53aaa7b1afe45f181bb72533b87d94b
+msgid "**Job still locked**:"
+msgstr "**کار هنوز قفل است**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:711
+#: a82994ec1633408593f4803f3072c2d6
+msgid "**Job has dependencies**:"
+msgstr "**کار وابستگی دارد**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:713
+#: 7b2edb0cb37b4aeb996857c1ff848ff2
+msgid "Check flow structure - parent jobs may need to rerun first."
+msgstr ""
+"ساختار جریان کار را بررسی کنید - ممکن است کارهای والد ابتدا نیاز به اجرای"
+" مجدد داشته باشند."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:716
+#: 14d28e4eba2b4a44b5f6bf2346262228
+msgid "Command Reference"
+msgstr "مرجع دستورات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:719
+#: fc4f35c02830472bb611808d54bb543d
+msgid "Complete ``jf job`` Command List"
+msgstr "لیست کامل دستورات ``jf job``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:746
+#: b51e576765e74ff0b9aaea97bb0fd072
+msgid "Job States Reference"
+msgstr "مرجع حالت‌های کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:752
+#: e35ee1ac61804cceb8f74c65845e4cb6
+msgid "State"
+msgstr "حالت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:754
+#: a3ea0453611841348cb9c74aaa5343cd
+msgid "Action"
+msgstr "اقدام"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:755
+#: d6117787baf041849dc92bbdb8c6f3c9
+msgid "``READY``"
+msgstr "``READY``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:756
+#: c24386c4454b4542a05c8a2e6e4e4cee
+msgid "Waiting to be picked up"
+msgstr "در انتظار برداشتن"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:757
+#: c59a3fb3fe324c469a603c0e3ae2399d
+msgid "Wait for runner"
+msgstr "منتظر runner"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:758
+#: b62a7f0d3ebb4d798a93308c9b7236f9
+msgid "``CHECKED_OUT``"
+msgstr "``CHECKED_OUT``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:759
+#: 5ae74512e3d046f0bc72ad23e7d023dd
+msgid "Runner preparing files"
+msgstr "Runner در حال آماده‌سازی فایل‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:760
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:763
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:766
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:769
+#: 137a44c84e524fcfa835270d6f1113db 5d0e958c4c9c4775b519ba05acf832b5
+#: 7ce8839abfc8482487f16f755e54e59d ed22b47b6ac9444790bb9bfe1dc2eb2c
+msgid "Monitor"
+msgstr "نظارت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:761
+#: a8346074c34e4e3c80018795a451a3f3
+msgid "``UPLOADED``"
+msgstr "``UPLOADED``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:762
+#: e8681586fb064bfba7c9bcb236b38d89
+msgid "Files uploaded to worker"
+msgstr "فایل‌ها به worker بارگذاری شدند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:764
+#: 8c1f7c32659146b0a6be3abcf09f0f61
+msgid "``SUBMITTED``"
+msgstr "``SUBMITTED``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:765
+#: 7fde5d5828eb46929381b2745cb10779
+msgid "Submitted to scheduler"
+msgstr "به زمان‌بند ارسال شد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:767
+#: e448cc2dbf004c1daaf2c3eb70daec94
+msgid "``RUNNING``"
+msgstr "``RUNNING``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:768
+#: 1966653be1474a729884ca140e2f4e80
+msgid "Currently executing"
+msgstr "در حال اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:770
+#: 2a9b05999bb74efc81c8d26603e68cfb
+msgid "``DOWNLOADED``"
+msgstr "``DOWNLOADED``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:771
+#: ac1001683f5947f3b924194d1c234549
+msgid "Results retrieved"
+msgstr "نتایج بازیابی شدند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:772
+#: ca0019aaa90044a2b51c3c7672f43604
+msgid "Almost done"
+msgstr "تقریباً انجام شد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:773
+#: e5c61190519341ee88d03e56767f294a
+msgid "``COMPLETED``"
+msgstr "``COMPLETED``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:774
+#: ad4556425da14cbbb7e1969dbea41f3f
+msgid "Successfully finished"
+msgstr "با موفقیت به پایان رسید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:775
+#: 91fd9a4d4bf540229ffa146c768215b5
+msgid "Done ✅"
+msgstr "انجام شد ✅"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:776
+#: 82730c08db97494da21aef06610afe88
+msgid "``FAILED``"
+msgstr "``FAILED``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:777
+#: c6f0efddd5ec4a5f9c804e4a8c321809
+msgid "Calculation failed"
+msgstr "محاسبه شکست خورد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:778
+#: 7a2397171b7c41a98006648ab4f2af88
+msgid "``rerun`` or new flow"
+msgstr "``rerun`` یا جریان کار جدید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:779
+#: 3d8fc4349022421daea113ef6cec82e2
+msgid "``REMOTE_ERROR``"
+msgstr "``REMOTE_ERROR``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:780
+#: fd645607d04d42eca6bb805473ee1ee3
+msgid "Infrastructure issue"
+msgstr "مشکل زیرساخت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:782
+#: 732b4baf416c4764bf6e5daa87c383b0
+msgid "``PAUSED``"
+msgstr "``PAUSED``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:783
+#: 01e4e50e91a74042bf3bfbb89d8d97d1
+msgid "Manually paused"
+msgstr "به صورت دستی متوقف شد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:784
+#: 291d7061e4094b72adf111c842836c20
+msgid "``play`` to resume"
+msgstr "``play`` برای ادامه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:787
+#: b1d54c1115824c238e9ad6bcf82f0d94
+msgid "Related Documentation"
+msgstr "مستندات مرتبط"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:789
+#: 8ffc34ea00de4157aff99268731cf6b3
+msgid ":doc:`cli-jobflow-remote` - Jobflow-remote CLI setup"
+msgstr ":doc:`cli-jobflow-remote` - راه‌اندازی CLI Jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:790
+#: c705296ad4e64b5da69b8318a79dec53
+msgid ":doc:`troubleshooting` - General troubleshooting"
+msgstr ":doc:`troubleshooting` - عیب‌یابی عمومی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:791
+#: 0d83a47c8af342c9850ce74e74ea1de8
+msgid ":doc:`advanced-workflows` - Complex workflow patterns"
+msgstr ":doc:`advanced-workflows` - الگوهای جریان کار پیچیده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:794
+#: f3e8b243d5884bf991304f4c5508d8e8
+msgid "External Resources"
+msgstr "منابع خارجی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:796
+#: 63ae29e30ec347f4bfc28980dc46cb41
+msgid ""
+"`Jobflow-Remote Documentation <https://matgenix.github.io/jobflow-"
+"remote/>`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:797
+#: 5a5ff54cc1504aa8bfe802449d6e077b
+msgid "`Jobflow-Remote GitHub <https://github.com/Matgenix/jobflow-remote>`_"
+msgstr "`GitHub Jobflow-Remote <https://github.com/Matgenix/jobflow-remote>`_"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:798
+#: 167aca9193644888b7bd66c2e2e429fa
+msgid ""
+"`Dealing with Errors Guide <https://matgenix.github.io/jobflow-"
+"remote/user/errors.html>`_"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:801
+#: 15535f6a313b4cdca54e6e2a2d97496f
+msgid "Summary"
+msgstr "خلاصه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:803
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1146
+#: 1dc0346db8fc4ebbb258084e0ad794f9 3fcf4d4290994498b732502d60d1cb5b
+msgid "**Key Points:**"
+msgstr "**نکات کلیدی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:805
+#: cb7299d7fd54490894e6e5fb3096e93e
+msgid "**Use** ``-p PROJECTNAME`` **for all commands** in multi-project setups"
+msgstr ""
+"**از** ``-p PROJECTNAME`` **برای همه دستورات** در پیکربندی‌های چند "
+"پروژه‌ای **استفاده کنید**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:807
+#: 883999bc470c46bb8b26d3e3ac88c136
+msgid "**CLI can modify**: Resources, worker, exec-config (infrastructure)"
+msgstr "**CLI می‌تواند تغییر دهد**: منابع، worker، exec-config (زیرساخت)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:809
+#: eb7a71696d07463f9fbcafd0d57cddc5
+msgid "**CLI cannot modify**: FDF parameters, user_params (calculation settings)"
+msgstr "**CLI نمی‌تواند تغییر دهد**: پارامترهای FDF، user_params (تنظیمات محاسبه)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:811
+#: 1df05dbffd4a445fa780524dde50d476
+msgid ""
+"**For FAILED jobs**: Use ``jf job rerun`` (after setting resources if "
+"needed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:813
+#: 7e005d71bac74436b67c0980a7952c4c
+msgid "**For REMOTE_ERROR jobs**: Use ``jf job retry``"
+msgstr "**برای کارهای REMOTE_ERROR**: از ``jf job retry`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:815
+#: d0cce07c973c4f2ea9ec2db18875e698
+msgid "**Always diagnose first**: ``jf -p PROJECTNAME job info <db_id> --full``"
+msgstr "**همیشه ابتدا تشخیص دهید**: ``jf -p PROJECTNAME job info <db_id> --full``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:817
+#: 23e11afebbcd48e796451c871d19eb36
+msgid "**Quick Command Template:**"
+msgstr "**الگوی سریع دستورات:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:827
+#: 8d8cdee8f8c9476a90522f6dd0ad4953
+msgid "For FDF parameter changes, see :ref:`fdf-modification-tools` below."
+msgstr ""
+"برای تغییرات پارامتر FDF، بخش :ref:`fdf-modification-tools` در زیر را "
+"ببینید."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:832
+#: 49c8ac85390b4ec08fc09b291d20eb82
+msgid "FDF Parameter Modification Tools (NEW)"
+msgstr "ابزارهای تغییر پارامترهای FDF (جدید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:834
+#: 404812e46ea7419b9f7ac2382e5bac12
+msgid ""
+"atomate2siesta provides dedicated commands for modifying SIESTA FDF "
+"parameters in failed jobs. These commands work alongside jobflow-remote "
+"to enable parameter adjustments without manual MongoDB editing."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:837
+#: 342f3814107946f5b8be340ed0d4c35d
+msgid "Two-Tier Approach"
+msgstr "رویکرد دو سطحی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:839
+#: 2eed72527eec487288242954668c18b5
+msgid "**inspect** (Read-Only) - View job details and current FDF parameters"
+msgstr "**inspect** (فقط خواندنی) - مشاهده جزئیات کار و پارامترهای فعلی FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:840
+#: 8f970d9959ad46398ee1ab7b0a9a70af
+msgid ""
+"**modify-db** (Direct Modification) - Modify parameters in MongoDB with "
+"safety features"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:843
+#: c51ff087d288457fb46321a2a5394fc9
+msgid "job inspect - View Job Parameters"
+msgstr "job inspect - مشاهده پارامترهای کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:845
+#: c1e80466ece54e98a3d5c448d998d81b
+msgid "**Purpose**: Read-only inspection of job configuration and FDF parameters."
+msgstr "**هدف**: بازرسی فقط خواندنی از پیکربندی کار و پارامترهای FDF."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:860
+#: a73cc5c5ec3e4f518ad2658c410aa822
+msgid "**What It Shows**:"
+msgstr "**چه چیزی را نشان می‌دهد:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:862
+#: ad9b6367aa2d4bbcbe2249a870b0abfe
+msgid "Job name, state, worker, UUID"
+msgstr "نام کار، حالت، worker، UUID"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:863
+#: 57135cb342cb438a930b1f20e3d68b7f
+msgid "SIESTA FDF input parameters (with ``--full`` or ``--fdf-only``)"
+msgstr "پارامترهای ورودی FDF SIESTA (با ``--full`` یا ``--fdf-only``)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:864
+#: 2f22d138547e4bf98e09d0d539375df0
+msgid "Complete job document structure"
+msgstr "ساختار کامل سند کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:866
+#: 371ecdf0ae0d4da2a31455b73280324c
+msgid "**Requirements**:"
+msgstr "**الزامات:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:868
+#: 8c01415dba3641a196622bc1c51326f9
+msgid "``pymongo`` package for full parameter inspection: ``pip install pymongo``"
+msgstr "بسته ``pymongo`` برای بازرسی کامل پارامترها: ``pip install pymongo``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:895
+#: 97906796ce9f42aaa791ebb7ea7701a6
+msgid "job modify-db - Direct Parameter Modification"
+msgstr "job modify-db - تغییر مستقیم پارامتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:897
+#: 8f5c5c787a834e43b8e8c2c5ae80716f
+msgid "**Purpose**: Modify SIESTA FDF parameters directly in MongoDB database."
+msgstr "**هدف**: تغییر مستقیم پارامترهای FDF SIESTA در پایگاه داده MongoDB."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:899
+#: d442caf651294e019d06ed58a0531c11
+msgid "**⚠️ IMPORTANT ⚠️**"
+msgstr "**⚠️ مهم ⚠️**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:901
+#: a598c24d160b4a8d965d1bd35bb3be4b
+msgid "Modifies existing job in database"
+msgstr "کار موجود در پایگاه داده را تغییر می‌دهد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:902
+#: b24dbce10a534d988989d5875fdb78aa
+msgid "Automatic backup created in ``jobs_backup`` collection before modification"
+msgstr "پشتیبان خودکار در مجموعه ``jobs_backup`` قبل از تغییر ایجاد می‌شود"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:903
+#: f069005599a740829f747de87802ba7d
+msgid "Requires double confirmation before applying changes"
+msgstr "نیاز به تأیید دوگانه قبل از اعمال تغییرات دارد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:904
+#: ad5b04610e1a4254ba0a616050507c2a
+msgid "Parameter validation against 456 registered FDF parameters"
+msgstr "اعتبارسنجی پارامتر در برابر ۴۵۶ پارامتر ثبت‌شده FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:905
+#: b190a6f5dba4449bac7ac0f830a96992
+msgid ""
+"Use when you need to change FDF parameters without recreating the entire "
+"flow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:909
+#: 2b404a2c2848452ca66a800d518abd40
+msgid "SCF convergence failures requiring different mixer settings"
+msgstr "شکست‌های همگرایی SCF که به تنظیمات mixer متفاوت نیاز دارند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:910
+#: a2acbeca339745528773e95d1bd74622
+msgid "K-point or mesh cutoff adjustments"
+msgstr "تنظیمات K-point یا mesh cutoff"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:911
+#: 628b0f451fae4d58a0b9d238c4e94193
+msgid "Changing electronic temperature or other FDF parameters"
+msgstr "تغییر دمای الکترونیک یا سایر پارامترهای FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:912
+#: 9a5337cd34a74e85a37d63a3cc1d482f
+msgid "The job is in READY or FAILED state"
+msgstr "کار در حالت READY یا FAILED است"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:939
+#: e3f081fa42804cd2bb522ddb818f3815
+msgid "**Parameter Format:**"
+msgstr "**فرمت پارامتر:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:941
+#: cb2b3175e2b84d69b2924f9bab2fdd10
+msgid "Simple values: ``\"MaxSCFIterations=200\"``"
+msgstr "مقادیر ساده: ``\"MaxSCFIterations=200\"``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:942
+#: 7b5aa76b744a4ddcbd0582848af4279f
+msgid "Lists: ``\"kpts=[6,6,6]\"``"
+msgstr "لیست‌ها: ``\"kpts=[6,6,6]\"``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:943
+#: 1a065041180c439eb6c1e4355d0fbbc9
+msgid "Strings with units: ``\"Mesh.Cutoff=350 Ry\"``"
+msgstr "رشته‌ها با واحد: ``\"Mesh.Cutoff=350 Ry\"``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:944
+#: 64255dadca714a19964ae509b1978487
+msgid "Booleans: ``\"SaveHS=true\"``"
+msgstr "بولی: ``\"SaveHS=true\"``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:945
+#: 1f8e070bf2984db9a010e453383c06fc
+msgid "Block parameters: ``\"DM.InitSpin=['1 +2.0', '2 -2.0']\"``"
+msgstr "پارامترهای بلوک: ``\"DM.InitSpin=['1 +2.0', '2 -2.0']\"``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:946
+#: 4f9c3a93f854482e8bcf850a70d62798
+msgid "Multiple: Use ``--param`` flag multiple times"
+msgstr "چندتایی: از پرچم ``--param`` چندین بار استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:948
+#: 3bc79965ec244772a72c3b31c4cefb45
+msgid "**Modification Workflow:**"
+msgstr "**جریان کار تغییر:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:950
+#: c6676b2e2d4f45a09b9ccff62f3be769
+msgid ""
+"Command validates parameters against dataclass registry (456 registered "
+"parameters)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:951
+#: 9343ab44f0144c1597b473686e384803
+msgid "Shows preview of all changes"
+msgstr "پیش‌نمایش همه تغییرات را نشان می‌دهد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:952
+#: 651244693db542a1b7d52bf8c0aff160
+msgid "Requests first confirmation (\"Do you understand the risks?\")"
+msgstr "تأیید اول را درخواست می‌کند (\"آیا خطرات را درک می‌کنید؟\")"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:953
+#: 6e806fea4455427a911a0a6b20a9ed40
+msgid "Creates timestamped backup in ``jobs_backup`` collection"
+msgstr "پشتیبان با برچسب زمانی در مجموعه ``jobs_backup`` ایجاد می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:954
+#: 9b6a244ef87b4429b52e2bb5c1e32fb2
+msgid "Shows final confirmation with exact parameter changes"
+msgstr "تأیید نهایی را با تغییرات دقیق پارامتر نشان می‌دهد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:955
+#: 1d780a13af0d40b5b6110532996ed92d
+msgid "Updates MongoDB document directly"
+msgstr "سند MongoDB را مستقیماً به‌روزرسانی می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:956
+#: 4ea59256fd3f49c2be4a5ced1943fd3c
+msgid "You rerun with ``jf -p prod job rerun 70``"
+msgstr "شما با ``jf -p prod job rerun 70`` اجرای مجدد می‌کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:958
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1136
+#: 218a50c07b0e402e9ab2cc38be13a404 335de6207d4a49fd9c5dc2da125d9d5b
+msgid "**Built-in Safety Features:**"
+msgstr "**ویژگی‌های ایمنی داخلی:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:960
+#: aef73f218f0c4e7e95ed436daff784a2
+msgid "**Parameter validation**: Checks against dataclass registry"
+msgstr "**اعتبارسنجی پارامتر**: بررسی در برابر رجیستری dataclass"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:961
+#: 0624ef5ec5404625b1ce2597a04efeb4
+msgid "**Typo detection**: Suggests similar parameters if typo detected"
+msgstr ""
+"**تشخیص غلط املایی**: اگر غلط املایی تشخیص داده شود، پارامترهای مشابه را "
+"پیشنهاد می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:962
+#: 5ed7bb5d730c47698f0f6afbc88a89b1
+msgid "**Internal param filtering**: Strips atomate2siesta-specific parameters"
+msgstr "**فیلتر پارامتر داخلی**: پارامترهای خاص atomate2siesta را حذف می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:963
+#: 451e52d1d82c4c69ab8430ab83dc06db
+msgid "**Double confirmation**: Two prompts before modification"
+msgstr "**تأیید دوگانه**: دو اعلان قبل از تغییر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:964
+#: e49e0fc9bd264628a5af91e192b28a7c
+msgid ""
+"**Automatic backup**: Timestamped backup in MongoDB (can restore if "
+"needed)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:965
+#: 3f201a962a2e4db9bd2369f30a3bdf29
+msgid "**Preview mode**: ``--dry-run`` flag to see changes without applying"
+msgstr "**حالت پیش‌نمایش**: پرچم ``--dry-run`` برای دیدن تغییرات بدون اعمال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:966
+#: 694d4d6689eb45b78890715a7663d687
+msgid "**Verification**: Shows exactly what will change before modification"
+msgstr "**تأیید**: دقیقاً آنچه قبل از تغییر تغییر خواهد کرد را نشان می‌دهد"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:968
+#: 474c7a5c74ef409cb9f5756b6297d0ba
+msgid "**After Modification:**"
+msgstr "**پس از تغییر:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:970
+#: 13265ee0134d42b1907e5c79fbaae4dd
+msgid ""
+"Verify changes applied: ``atomate2siesta-jobflow-remote -p prod job "
+"inspect 70 --full``"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:971
+#: 8ad7fae3c3724c01943e9da8b807075e
+msgid "Rerun the job: ``jf -p prod job rerun 70``"
+msgstr "اجرای مجدد کار: ``jf -p prod job rerun 70``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:972
+#: fcfa7ca55698493ebd55b4f052bf784e
+msgid "Monitor progress: ``jf -p prod job info 70``"
+msgstr "نظارت بر پیشرفت: ``jf -p prod job info 70``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:975
+#: 0ac96f3c40934da5877a78344af67398
+msgid "Parameter Validation"
+msgstr "اعتبارسنجی پارامتر"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:977
+#: bcefa6a087bc47638d118cf50849fcce
+msgid "All modification commands validate parameters before applying:"
+msgstr "همه دستورات تغییر پارامترها را قبل از اعمال اعتبارسنجی می‌کنند:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:979
+#: 04f6e53fc4874728accbd583d60a3257
+msgid "**K-Points Validation:**"
+msgstr "**اعتبارسنجی K-Points:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:989
+#: 8aa6536b96264a36be3dd169ac66a1eb
+msgid "**Mesh Cutoff Validation:**"
+msgstr "**اعتبارسنجی Mesh Cutoff:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:999
+#: 4d263c24ac604d3d8dc252ae469fcb47
+msgid "**Common Typo Detection:**"
+msgstr "**تشخیص غلط‌های املایی رایج:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1010
+#: 26069db396ff44d0aa1c903d4bda51b7
+msgid "Complete Workflow Examples"
+msgstr "مثال‌های کامل جریان کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1012
+#: 6ca4e49808c0472f8d3a94098115862e
+msgid "**Scenario 1: SCF Convergence Failure (Too Coarse K-Points)**"
+msgstr "**سناریو ۱: شکست همگرایی SCF (K-Points خیلی درشت)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1032
+#: d0d2982b07864cc6b97dda6085b2e1b2
+msgid "**Scenario 2: Mixer Weight Too Aggressive**"
+msgstr "**سناریو ۲: وزن Mixer خیلی تهاجمی**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1047
+#: 837d9a43f3e747b7890fd5909b303c5f
+msgid "**Scenario 3: Emergency Database Fix (Use modify-db)**"
+msgstr "**سناریو ۳: رفع اضطراری پایگاه داده (از modify-db استفاده کنید)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1070
+#: e9aa22c6635f48dc95f96ec87b65a176
+msgid "Requirements"
+msgstr "الزامات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1072
+#: e867c1954ef741be8c8d315fc058d3bf
+msgid "**Basic Commands** (inspect):"
+msgstr "**دستورات پایه** (inspect):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1074
+#: 911b9f7188404e05ae6ed57685be53d4
+msgid "atomate2siesta package"
+msgstr "بسته atomate2siesta"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1075
+#: 38ca32d66ccf4923a64df39e3708d0fd
+msgid "jobflow-remote configured"
+msgstr "jobflow-remote پیکربندی‌شده"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1076
+#: 213fcb1584b340ca80664a2e4b3268cc
+msgid "Project configuration in ``~/.jfremote/``"
+msgstr "پیکربندی پروژه در ``~/.jfremote/``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1078
+#: 1e43cd0335b748c6a9db623abec2099c
+msgid "**Full Functionality** (inspect --full, modify-db):"
+msgstr "**عملکرد کامل** (inspect --full، modify-db):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1084
+#: a9dccda0677a420ba95518aa7bb10cf4
+msgid "**For Direct Modifications**:"
+msgstr "**برای تغییرات مستقیم**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1086
+#: 10de883066894ae89c89174c15f189a1
+msgid "MongoDB access credentials in project config"
+msgstr "اعتبارنامه‌های دسترسی MongoDB در پیکربندی پروژه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1087
+#: cf1547e6c2544c348497619c85f2809a
+msgid "Understanding of jobflow-remote internals"
+msgstr "درک داخلی jobflow-remote"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1088
+#: b07425790f2a4d76bfe4a6e073d85bd8
+msgid "Database backups (highly recommended)"
+msgstr "پشتیبان‌های پایگاه داده (بسیار توصیه می‌شود)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1093
+#: 87ec95da8a9f4e8986957f3b27090ad7
+msgid ""
+"**Always use inspect first**: Understand current parameters before "
+"modifying"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1095
+#: a267c7652cb64380b6844bd4f337e907
+msgid "**Use dry-run mode**: Preview changes with ``--dry-run`` before applying"
+msgstr ""
+"**از حالت dry-run استفاده کنید**: قبل از اعمال، تغییرات را با ``--dry-"
+"run`` پیش‌نمایش کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1097
+#: 7fc5f9ab00204f0cb63d5e1f7c39acd0
+msgid "**Keep backups enabled**: Database backups created automatically (default)"
+msgstr ""
+"**پشتیبان‌ها را فعال نگه دارید**: پشتیبان‌های پایگاه داده به طور خودکار "
+"ایجاد می‌شوند (پیش‌فرض)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1099
+#: 2a776157989a4a9da384a0ca6fb97d81
+msgid "**Test modifications**: Try on single job before batch operations"
+msgstr "**تغییرات را آزمایش کنید**: قبل از عملیات دسته‌ای، روی یک کار امتحان کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1101
+#: 8b802cd0d86d426797259a10b83a5a8d
+msgid "**Verify after modification**: Use ``inspect --full`` to confirm changes"
+msgstr ""
+"**پس از تغییر تأیید کنید**: از ``inspect --full`` برای تأیید تغییرات "
+"استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1103
+#: fe501b7c46934dd1803043c6c2dfdd2d
+msgid ""
+"**Monitor after rerun**: Check job completes successfully with new "
+"parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1105
+#: 0f269ec1aa6b461c80fb28254272a49a
+msgid "**Avoid force mode**: Only use ``--force`` when automation is required"
+msgstr ""
+"**از حالت force اجتناب کنید**: فقط زمانی که اتوماسیون مورد نیاز است از "
+"``--force`` استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1107
+#: 3716c5ff887b4fb6ab04f6d0d0f3c59c
+msgid "**Document changes**: Keep notes on what parameters were changed and why"
+msgstr ""
+"**تغییرات را مستندسازی کنید**: یادداشت‌هایی در مورد پارامترهایی که تغییر "
+"کردند و چرا نگه دارید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1110
+#: 3eaec46aba084cb8b048b815eefccc3c
+msgid "FDF Modification Summary"
+msgstr "خلاصه تغییر FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1112
+#: 66b0ae53b44a48759d23ecf4cc8046a9
+msgid "**Complete Workflow for Modifying FDF Parameters:**"
+msgstr "**جریان کار کامل برای تغییر پارامترهای FDF:**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1138
+#: 8f8160f20bc24b238daa90fb6d65bc6a
+msgid "✅ Double confirmation prompts (can bypass with ``--force``)"
+msgstr "✅ اعلان‌های تأیید دوگانه (می‌توان با ``--force`` دور زد)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1139
+#: 1ad1ecb9c03b463abf608cf7670aa60e
+msgid "✅ Automatic backups in ``jobs_backup`` collection"
+msgstr "✅ پشتیبان‌های خودکار در مجموعه ``jobs_backup``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1140
+#: a0885e6a1ad84748acfc49ba79944bd9
+msgid "✅ Parameter validation against 456 registered FDF parameters"
+msgstr "✅ اعتبارسنجی پارامتر در برابر ۴۵۶ پارامتر ثبت‌شده FDF"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1141
+#: d25d39dd223c49d5b81b16cd403421bb
+msgid "✅ Typo detection with smart suggestions"
+msgstr "✅ تشخیص غلط املایی با پیشنهادات هوشمند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1142
+#: b58939d432474d43b37b3bfb981079d7
+msgid "✅ Internal parameter filtering (prevents deserialization errors)"
+msgstr "✅ فیلتر پارامتر داخلی (از خطاهای deserialization جلوگیری می‌کند)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1143
+#: 0e88052d1e1e440ca39734729eeb4bba
+msgid "✅ Dry-run mode for preview without changes"
+msgstr "✅ حالت dry-run برای پیش‌نمایش بدون تغییرات"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1144
+#: 13f31a4671264de092c179a64f9fbddd
+msgid "✅ Full verification with ``inspect --full``"
+msgstr "✅ تأیید کامل با ``inspect --full``"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1148
+#: ccf8d73653674838ad928adc3a04cd71
+msgid "Always start with ``job inspect --full`` to see current parameters"
+msgstr "همیشه با ``job inspect --full`` شروع کنید تا پارامترهای فعلی را ببینید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1149
+#: e531110c935d4c6e8f9e2931262285a6
+msgid "Use ``--dry-run`` to preview changes before applying"
+msgstr "از ``--dry-run`` برای پیش‌نمایش تغییرات قبل از اعمال استفاده کنید"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1150
+#: ed0891fe85cb49378959d1efd8e27238
+msgid "Automatic backup created before modification (restore if needed)"
+msgstr "پشتیبان خودکار قبل از تغییر ایجاد شد (در صورت نیاز بازیابی کنید)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1151
+#: b150dbc18f334604a6130cf7c0091ba6
+msgid "Supports 456 validated SIESTA FDF parameters"
+msgstr "از ۴۵۶ پارامتر اعتبارسنجی‌شده FDF SIESTA پشتیبانی می‌کند"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/jobflow-remote-rerun-failed-jobs.rst:1152
+#: 3b6812d978cc483c8e6070bf956c7b45
+msgid "Works for READY and FAILED jobs only"
+msgstr "فقط برای کارهای READY و FAILED کار می‌کند"
+

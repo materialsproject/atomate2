@@ -1,0 +1,1287 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:1
+#: a647d5bd706945599ab9f7953390d04e
+msgid "Tutorial: Adsorption Site Scanning"
+msgstr "آموزش: Adsیاption Site Scnning"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:3
+#: 5a4f30387d51430aa70ba207843f5140
+msgid ""
+"**Category**: 06-surfaces-and-adsorption **Difficulty**: Advanced "
+"**Time**: ~5 min (dry-run), ~2-4 hours (full scan)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:9
+#: d77c6dd58ebf42e39c129469bba85b84
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:11
+#: 957e7814508e449797aedb46927f9047
+msgid ""
+"Automated scanning of adsorption sites on surface slabs to identify "
+"optimal binding locations for adsorbates. This tutorial demonstrates "
+"grid-based exploration with energy calculations, molecule orientation "
+"control, and result visualization."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:13
+#: f9287a39a3d242ad9322d82387dfad42
+msgid "This consolidates 8 example scripts into a single configurable workflow."
+msgstr "This consolidtes 8 exmple scripts into  single configurble wیاkflow."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:17
+#: e79626d5e4e9412487264493057a6f16
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:19
+#: 58c452b71a0349bf94ffb4a1a8b61453
+msgid "Grid-based adsorption site scanning"
+msgstr "Grid-bsed dsیاption site scnning"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:20
+#: 0f5afd1f013c4e08aba04740ddc20ce1
+msgid "Adsorption energy calculation (E_ads = E_total - E_slab - E_adsorbate)"
+msgstr "Adsیاption energy clcultion (E_ds = E_totl - E_slb - E_dsیاbte)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:21
+#: 9d96f28150c04aed951c59c682951a9f
+msgid "Molecule orientation control (5 different modes)"
+msgstr "Molecule یاienttion control (5 different modes)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:22
+#: 0eee9527c9e64aeeafa2c011fcd2d822
+msgid "Top/bottom surface placement"
+msgstr "Top/bottom surfce plcement"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:23
+#: 65f5edbeee1b44c2a99a32c471ed9e2d
+msgid "Two-stage workflows (scan + optimization)"
+msgstr "Two-stge wیاkflows (scn + optimiztion)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:24
+#: 4dd8c822d85e46838868e5ba25e4f3d7
+msgid "Result visualization and analysis"
+msgstr "Result visuliztion و nlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:25
+#: d47c36d001e44ac1b0051c40476b6843
+msgid "High-throughput site screening"
+msgstr "High-throughput site screening"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:29
+#: 004e26db69a54ae6a5ee2f6fcb4a0328
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:31
+#: 045e2f4ac48e42ecb0ff43e24c4dacbe
+msgid "**Required**: [17-surface-energy](../01-surface-energy/) completed"
+msgstr "**مورد نیاز**: [17-surfce-energy](../01-surfce-energy/) completed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:32
+#: 1db9290c609a4698b4abe803da1347b9
+msgid "**Required**: Understanding of surface slab models"
+msgstr "**مورد نیاز**: درک of surfce slb models"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:33
+#: 85eabb3c16c24ee192d8524594d8f9b6
+msgid "**Recommended**: Familiarity with adsorption chemistry"
+msgstr "**Recommended**: Fmilirity با dsیاption chemistry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:34
+#: 0f74a134e4de4002885f26f1b9ee7192
+msgid "**Recommended**: pymatgen molecule/structure manipulation"
+msgstr "**Recommended**: pymtgen molecule/structure mnipultion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:38
+#: 069e062b32cf4634a9aa3936df880c90
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:40
+#: 1c8e56b54fec4edbb4ed3b07023d3f78
+msgid "Adsorption Energy"
+msgstr "Adsیاption Energy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:42
+#: 22ef44e2ef09475b8e4b1d447b88755f
+#, fuzzy, python-brace-format
+msgid ""
+"\n"
+"E_{ads} = E(slab + adsorbate) - E(clean slab) - E(isolated adsorbate)\n"
+msgstr "$$E_{ds} = E(slb + dsیاbte) - E(clen slb) - E(isolted dsیاbte)$$"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:46
+#: e0273e8d07b948b0a7be37b591af7555
+msgid "**E_ads < 0**: Favorable adsorption (exothermic)"
+msgstr "**E_ds < 0**: Fvیاble dsیاption (exormic)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:47
+#: 89075948e48347aaae07ca345654cd46
+msgid "**E_ads > 0**: Unfavorable adsorption (endothermic)"
+msgstr "**E_ds > 0**: Unfvیاble dsیاption (endormic)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:48
+#: c992329ea9d144809bc6754420703cf1
+msgid "**More negative**: Stronger binding"
+msgstr "**Mیاe negtive**: Stronger binding"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:50
+#: 171d63d0f79342ec97a15664acfb3bee
+msgid "**Typical Ranges**:"
+msgstr "**Typicl Rnges**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:51
+#: 79e0316471b54042a7c27eb3990a0c38
+msgid "Physisorption: 0.0 to -0.5 eV"
+msgstr "Physisیاption: 0.0 to -0.5 eV"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:52
+#: a7bee15d6ad443f5bbf95300e234725e
+msgid "Chemisorption: -0.5 to -5.0 eV"
+msgstr "Chemisیاption: -0.5 to -5.0 eV"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:54
+#: 03b29e3193784398a482b3888c24985b
+msgid "Grid-Based Scanning"
+msgstr "Grid-Bsed Scnning"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:75
+#: 4bdf688b9fcf4d82bd0f5a1773e871b4
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:77
+#: 404f233950b74bfd8acc3f948c7fbca9
+msgid ""
+"This directory contains 11 comprehensive examples covering different "
+"aspects of adsorption scanning:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:79
+#: 7748b123c34643ce8f7854608b5b0027
+#, fuzzy
+msgid "Basic Examples"
+msgstr "مثال‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:81
+#: d7e2730236144681a6379b72e493f065
+#, fuzzy
+msgid "**01_grid_scan.py** - Basic grid-based adsorption scanning"
+msgstr "Grid-bsed dsیاption site scnning"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:82
+#: 87b767e6e3274a78bb2285615f2e23d3
+msgid "Simple 3×3 grid scan"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:83
+#: ecc17114180546c9b24f791aa0222bdf
+msgid "Automatic site discovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:84
+#: dcc481dab52346a0b821b21a2ff74f26
+#, fuzzy
+msgid "Energy landscape visualization"
+msgstr "Energy Lوscpe Interprettion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:85
+#: eff34ed145af48f18bafae6db8d09695
+msgid "Good starting point"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:87
+#: e7b3bc62ca0f42de8cf8d8fc476e2a49
+msgid "**02_with_presets.py** - Using tier presets for simplified setup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:88
+#: 39f716de828f4fcd9c9447695ec89c64
+msgid "Demonstrates tier system (`tier=\"dirty\"` for fast testing)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:89
+#: be81247d0de4483880e454c61118abfa
+#, fuzzy
+msgid "Automatic parameter selection"
+msgstr "**Prmeter Selection**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:90
+#: c76fd11fdf754b93bfa3d6aa4049c6d9
+msgid "Comparison of different tier levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:92
+#: ab25b72fca974600a963ed954358a1ad
+msgid "**03_custom_parameters.py** - Full parameter customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:93
+#: 5987b01dab144b30b881156766f6fe10
+#, fuzzy
+msgid "Custom SIESTA settings for slab and adsorbate"
+msgstr "Custom SIESTA settings"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:94
+#: b951fa00d4e14d5396667ca3a33e6d4c
+#, fuzzy
+msgid "Grid size control"
+msgstr "Grid Size"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:95
+#: cdcef41ce5fb421e95220d0e8c202662
+msgid "Height scanning options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:96
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:141
+#: 4601042c611342588035196bbe0ffd35 b51516a30822405dbabac1c07285fdf6
+msgid "Production-ready example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:98
+#: ba2db666d6bd4142ba4aeeb48dc50e54
+msgid "Remote/HPC Examples"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:100
+#: a6ddfe2b19904fde86ec3aaf97640f6e
+msgid "**04_custom_parameters_remote.py** - Remote execution with jobflow-remote"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:101
+#: ea7dd9f16d9f481d9b4ec6fcb3f3681c
+msgid "HPC cluster submission"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:102
+#: e93330fc8cb24513b5f78f1e26c40387
+msgid "Resource specification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:103
+#: 36450362b4054334ab7a540f30cec339
+msgid "Same workflow as 03 but for clusters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:105
+#: bf04f836d28b4b69816892d209c4181f
+#, fuzzy
+msgid "**05_dynamic_resources_remote.py** - Dynamic per-job resource allocation"
+msgstr "See `05_dynamic_resources_remote.py` for per-job resource allocation"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:106
+#: 981c4d92e4ae475f8458684bf4f90c7b
+msgid "Different resources for different jobs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:107
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:556
+#: 8d1be79f6634427aae735cb795d724ff d47425a4a2a04a49bcb1d51dcfb8dc90
+msgid "Small molecules: 1 core (prevents \"too many processors\" error)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:108
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:558
+#: 147c45d737c04a83b57d84a1743d576b 6608201f7c3d4a51bf1baac37239d14e
+msgid "Large systems: 24+ cores"
+msgstr "Lrge systems: 24+ cیاes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:109
+#: 77efba132f8e4f67802f53570db673e9
+msgid "Optimal resource usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:111
+#: 2425194913d5484fa1e31be409c2d18d
+msgid "**06_simple_resource_control.py** - Simplified resource control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:112
+#: a28c4f4d19534162876fac9dbbec66f9
+msgid "Easy resource specification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:113
+#: 59e86eaeb7974194b72904a46ac58f1c
+msgid "Good for standard HPC usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:115
+#: e11c90aaebca48f8b41c0b19afe17f03
+msgid "**07_easiest_resource_control.py** - Easiest resource control method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:116
+#: 901a4aa8cfc64583bd99458d56fd0bd5
+msgid "Minimal code for resource allocation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:117
+#: 7caf132f68244e439f61bc58e81d3e77
+msgid "Beginner-friendly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:119
+#: 596204be55b141dc94d5be7df57452ee
+msgid "Advanced Parameter Control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:121
+#: dfc8c303d43343f48431cf549eb8899f
+msgid "**08_tier_with_powerups.py** - Tier system with powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:122
+#: f5ab191bab1243eea24f0a9da4edf8b6
+msgid "Apply tier globally"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:123
+#: 50b55129071e4abdaf25bf3040d3a9ae
+msgid "Override specific parameters with powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:124
+#: 97b88c126b3449838f4ce43dbbc30ad8
+msgid "Demonstrates tier + customization workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:126
+#: 65286b2e27b04523a196a123091fbea4
+msgid "**09_tier_with_powerups_after_make.py** - Post-workflow powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:127
+#: 45ada0a9270548409a304e92e8e26970
+msgid "Apply powerups after workflow creation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:128
+#: 6481723f420d4e40b98f257f456cdbae
+#, fuzzy
+msgid "Modify existing workflows"
+msgstr "Two-Stge گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:129
+#: 303adccf2a484c99819f76cc6ae0d659
+msgid "Maximum flexibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:131
+#: dbe8bfe488b344f797314340e200b5a8
+msgid "Height Scanning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:133
+#: e1face014c6d484dab19f6e51cb71ff1
+msgid "**10_height_scanning.py** - 3D potential energy surface scanning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:134
+#: 42870f712c2d4d4c8fcd2d7fb0a52a1b
+msgid "Scan multiple heights above surface"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:135
+#: 7de22079339d457fb9ef5f4fc9d9d7c0
+msgid "Full 3D energy landscape"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:136
+#: 4838b9ad9c3a469484443d3d2f672f8a
+msgid "Optimal height determination"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:138
+#: 47d4ee03f9264d35b9e5fcded7fbd116
+msgid "**11_height_scanning_tier.py** - Height scanning with tier presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:139
+#: c92bd300cbad4da986a794ed2554d516
+msgid "Combines height scanning with tier system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:140
+#: 4122ef16ed2e4ef2b62a060e3b2cb023
+#, fuzzy
+msgid "Fast parameter selection"
+msgstr "**Prmeter Selection**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:145
+#: c090fb56df0b41b280e55e10b6ef20af
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:175
+#: 6395358d593c48189c31d1826d3ce5ee
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:177
+#: 82041993321347889def041c7cd9de31
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:191
+#: 488ac790f6f24fa4b7b52be7eb8bdaaf
+msgid "Local Mode"
+msgstr "Locl Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:202
+#: 6076b9e74ae443eea62dfa35587d2013
+msgid ""
+"**adsorption_sites.png**: 2D contour plot showing energy landscape across"
+" surface"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:204
+#: adc45e1b0155419e89b3c9759d19265a
+msgid "**adsorption_summary.txt**:"
+msgstr "**dsیاption_summry.txt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:216
+#: 54e7a626ce674579837d0a099c128ea7
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:218
+#: 2c69aa1ea73f4a69914604aa1fb7bc78
+msgid "Identifying Binding Sites"
+msgstr "Identifying Binding Sites"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:220
+#: feae084073724810bdfc9ded2be90cba
+msgid "Common high-symmetry sites:"
+msgstr "Common high-symmetry sites:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:221
+#: d12ab8b62acc44bcaa63b87360082926
+msgid "**Top site**: Above surface atom"
+msgstr "**Top site**: Above surfce tom"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:222
+#: dced68a4132f4ab3b4180123bf56dacd
+msgid "**Bridge site**: Between two surface atoms"
+msgstr "**Bridge site**: Between two surfce toms"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:223
+#: afaba9dec5c64a12bbca4eec60080f5f
+msgid "**Hollow site**: Center of 3-4 surface atoms (fcc/hcp)"
+msgstr "**Hollow site**: Center of 3-4 surfce toms (fcc/hcp)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:225
+#: 4cc2939094364a008876c4a62b518454
+msgid "Energy Landscape Interpretation"
+msgstr "Energy Lوscpe Interprettion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:227
+#: 2b3e84fd2fb44515b503421e42326efd
+msgid "**Smooth landscape** (ΔE < 0.2 eV):"
+msgstr "**Smooth lوscpe** (ΔE < 0.2 eV):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:228
+#: 0348ad708a204038944888c20004aa58
+msgid "Weak site preference"
+msgstr "Wek site preference"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:229
+#: 5c1c299917524dd6ac2af8f95d2a09e8
+msgid "Mobile adsorbate"
+msgstr "Mobile dsیاbte"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:230
+#: ec734465247b444b83f9601dc1e70204
+msgid "All sites roughly equivalent"
+msgstr "All sites roughly equivlent"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:232
+#: fd3b9f3addd846d4a1aaa7c0b3f87dab
+msgid "**Rugged landscape** (ΔE > 0.5 eV):"
+msgstr "**Rugged lوscpe** (ΔE > 0.5 eV):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:233
+#: 74c0b18073314b5ca71e8adbcded799a
+msgid "Strong site preference"
+msgstr "Strong site preference"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:234
+#: cb5626fbdeeb47c1bc408c41e5dcdaca
+msgid "Localized binding"
+msgstr "Loclized binding"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:235
+#: 111c24249a254cf89aeea60b37b085c7
+msgid "Site-specific chemistry"
+msgstr "Site-specific chemistry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:237
+#: b4ba3bb0b01d410e967d2236beb9a54a
+msgid "**Barrier height** (energy difference between sites):"
+msgstr "**Brrier height** (energy difference between sites):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:238
+#: 841c15e769ad4509908a4153b416e38a
+msgid "< 0.1 eV: Very mobile, fast diffusion"
+msgstr "< 0.1 eV: Very mobile, fst diffusion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:239
+#: 488c1c2cb24241c5b890b6008ab04e92
+msgid "0.1-0.3 eV: Moderate mobility"
+msgstr "0.1-0.3 eV: Moderte mobility"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:240
+#: 60072f3bcf9a4a51bd563a6ebaef17a3
+msgid "0.5 eV: Localized, slow diffusion"
+msgstr "0.5 eV: Loclized, slow diffusion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:242
+#: 5f0b56ff8f3849ceac810a57028226bd
+msgid "Validation Checks"
+msgstr "Vlidtion Checks"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:244
+#: c273a0b3528c402d96ef072959d47e7f
+msgid ""
+"✓ **Energy scale**: Does E_ads make chemical sense? ✓ **Site "
+"preference**: Does best site match expected chemistry? ✓ **Comparison**: "
+"Literature or experimental data available? ✓ **Convergence**: Try higher "
+"grid resolution (3×3 → 5×5 → 7×7)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:251
+#: 76f187158bdb4ef6a4d52e8694e4ba89
+msgid "Molecule Orientation Control"
+msgstr "Molecule Orienttion Control"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:253
+#: 6b33862f891d4d799917efa33c1e5ae5
+msgid "Parameters"
+msgstr "Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:255
+#: c89c7af468004b5886b18e16d119cedb
+msgid "**target_vector** (3D vector):"
+msgstr "**trget_vectیا** (3D vectیا):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:262
+#: eab3f31545424604aaaddd3275586be0
+msgid "**extra_rotation** (float, degrees):"
+msgstr "**extr_rottion** (flot, degrees):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:268
+#: 45b93472146945e8bf04b64e1c1260f9
+msgid "**placement** (str):"
+msgstr "**plcement** (str):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:274
+#: 0550a79de4614751a1ac963f310d3336
+msgid "**plane_atoms** (list of int):"
+msgstr "**plne_toms** (list of int):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:280
+#: 8f41a239e63c4628aea44595f69666bd
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:282
+#: cc0f4c42af59404fbe6450b0527ec95e
+msgid "**Linear molecule (CO)**:"
+msgstr "**Liner molecule (CO)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:294
+#: 35dbfb0fefcd43a9a93e6e4c1b3c66ba
+msgid "**Planar molecule (benzene)**:"
+msgstr "**Plnr molecule (benzene)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:302
+#: f4ab87af999e40ab8d835aa3fec55af7
+msgid "Parameter Selection Guide"
+msgstr "Prmeter Selection Guide"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:304
+#: 0687c10f1dd24dcd81ab2d441e46bb89
+msgid "Grid Size"
+msgstr "Grid Size"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:306
+#: 7ba93b15683241d8af6fc84b82a98d88
+msgid "**Testing**: (2,2) or (3,3) - ~15-30 min"
+msgstr "**Testing**: (2,2) یا (3,3) - ~15-30 min"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:307
+#: 24a763c0c1f845bf8cad4fd0721edfa2
+msgid "**Standard**: (5,5) or (7,7) - ~1-3 hours"
+msgstr "**Stوrd**: (5,5) یا (7,7) - ~1-3 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:308
+#: 2b7ec20f81ab40ef8f592505f9001011
+msgid "**High resolution**: (10,10) - ~5-10 hours"
+msgstr "**High resolution**: (10,10) - ~5-10 hours"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:309
+#: 7004539111ad4f8285066489bc59cdb3
+msgid "**Publication**: (15,15) or higher"
+msgstr "**Publiction**: (15,15) یا higher"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:311
+#: 34198309178c490c8d6bf98bbd98ed3c
+msgid "**Trade-off**: Resolution vs computational cost"
+msgstr "**Trde-off**: Resolution vs computtionl cost"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:313
+#: 8c62a25b98ed479fa9f2f7fb7f3eec8f
+msgid "Height"
+msgstr "Height"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:315
+#: f1284c35b5904cf0a1ca3cd15287715a
+msgid "**Typical**: 2.0-3.0 Å above surface"
+msgstr "**Typicl**: 2.0-3.0 Å bove surfce"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:316
+#: 624ed3662d674db7a703d443846e8ba5
+msgid "**Small molecules** (CO, H2): 2.0 Å"
+msgstr "**Smll molecules** (CO, H2): 2.0 Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:317
+#: 4bc05f3b109b473da1b8cb79b406c587
+msgid "**Large molecules** (benzene): 3.0-4.0 Å"
+msgstr "**Lrge molecules** (benzene): 3.0-4.0 Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:318
+#: 5adefb600fc74527823d60e04a8c48e7
+msgid "**Rule**: Start at typical bond distance + 0.5 Å"
+msgstr "**Rule**: Strt t typicl bond distnce + 0.5 Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:320
+#: 2565792780dc40ecb73a57135ce2b794
+msgid "SIESTA Parameters"
+msgstr "SIESTA Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:322
+#: 52949496183747caad4db7dd0b7f2829
+msgid "**For Slab**:"
+msgstr "**Fیا Slb**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:331
+#: f2f9a45acf9d479fbc8d9e686f8acd33
+msgid "**For Adsorbate**:"
+msgstr "**Fیا Adsیاbte**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:339
+#: 594ee3fdb8c042f8897539c455f82003
+msgid "⚠️ **CRITICAL**: Cutoff must be identical for slab and adsorbate!"
+msgstr "⚠️ **CRITICAL**: Cutoff must be identicl برای slb و dsیاbte!"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:341
+#: c9af7b4a2319468db12f84d2e90a8fcb
+msgid "**For Metals**:"
+msgstr "**Fیا Metls**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:352
+#: 2839fa3b5a3046079f2495484265f025
+msgid "Two-Stage Workflow"
+msgstr "Two-Stge گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:354
+#: 20550b5cf89e43e8a3204aaeaa87718d
+msgid "Why Use Two Stages?"
+msgstr "Why Use Two Stges?"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:356
+#: 3a5d054100c84d41b635fab16e78311e
+msgid "**Stage 1 (Scan)**:"
+msgstr "**Stge 1 (Scn)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:357
+#: c941ba6183d8464b8297d67e292af512
+msgid "Fast screening with fixed geometries"
+msgstr "Fst screening با fixed geometries"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:358
+#: 8a77c649bc6c465db2e9c59e67d3330c
+msgid "Many sites evaluated quickly"
+msgstr "Mny sites evluted quickly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:359
+#: acacc18b1f2c4c2abe4b8b423bfd4311
+msgid "Identifies promising regions"
+msgstr "Identifies promising regions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:361
+#: 21ad450a627b489791c6b02a540f480b
+msgid "**Stage 2 (Optimization)**:"
+msgstr "**Stge 2 (Optimiztion)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:362
+#: d28722e10bb54c07b9464bb8af4201cf
+msgid "Geometry relaxation at best site"
+msgstr "Geometry relxtion t best site"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:363
+#: 17148ec85e214987abf1ed35f89c3a42
+msgid "More accurate final energy"
+msgstr "Mیاe ccurte finl energy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:364
+#: f82400c8c0fe4f23b98ea2d20f7f6c46
+msgid "Typically lowers E_ads by 0.1-0.5 eV"
+msgstr "Typiclly lowers E_ds by 0.1-0.5 eV"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:366
+#: b00412667ae74d049db1e7ff53523a18
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:380
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:535
+#: 5fca62e211c342488dd9e30f4d4a456e ec569687cf4f480aafb5ff36dd938420
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:382
+#: 2732adee216d4db3bc6055086ef2a6ad
+msgid "Run coarse scan (3×3) first"
+msgstr "Run corse scn (3×3) first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:383
+#: 7c3e4c7d213d4ec19287002dd240b12c
+msgid "Identify top 2-3 sites"
+msgstr "Identify top 2-3 sites"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:384
+#: e8afdd813dc34b73bdfdab5ef79c36af
+msgid "Run fine scan (5×5) around promising regions"
+msgstr "Run fine scn (5×5) round promising regions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:385
+#: 9f09ffb76ba44f4a82315bcd0166c7ea
+msgid "Optimize geometry at best site"
+msgstr "Optimize geometry t best site"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:386
+#: a05a1aa45ba74168b23e05b5d83b4871
+msgid "Compare initial vs optimized E_ads"
+msgstr "Compre initil vs optimized E_ds"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:390
+#: 5b25727579694c99a9c894dd5634991f
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:392
+#: 4d85d55700514cb085d0b32db02e8201
+msgid "Issue 1: Adsorbate Overlaps with Slab"
+msgstr "Issue 1: Adsیاbte Overlps با Slb"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:394
+#: c7be63144e224f9497f6db8bc4330f06
+msgid "**Symptoms**: Very positive E_ads, SCF fails"
+msgstr "**Symptoms**: Very positive E_ds, SCF fils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:396
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:405
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:415
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:423
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:433
+#: 001f069a154846dc8d847a6348253267 3ee3ce1997e84d54b181ed373d846cf2
+#: b2b3609a0a5f4dc1830457f947fbde65 bec15ae4ecfc43f4ae7f94aca7b3a6a5
+#: efe4729f040e48818b2da6a99d22f9da
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:397
+#: 6aaa744bf1a74876a797dcb0cf179c62
+msgid "Increase `height` (try 3.0 or 4.0 Å)"
+msgstr "Increase `height` (try 3.0 or 4.0 Å)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:398
+#: 43aaccf3ddb84a118ac6b2342cdd4663
+msgid "Check vacuum thickness (> 15 Å)"
+msgstr "Check vcuum thickness (> 15 Å)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:399
+#: 374a2ca9397c42f1803c5a71c91f6dec
+msgid "Visualize initial structure"
+msgstr "Visulize initil structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:401
+#: 5fea4f9599bb46b39d8259eb5f08c7b8
+msgid "Issue 2: Unphysical Energies"
+msgstr "Issue 2: Unphysicl Energies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:403
+#: e6d9521ca7c94e739afc1bc72de7bf0f
+msgid "**Symptoms**: E_ads >> 0 or << -10 eV"
+msgstr "**Symptoms**: E_ds >> 0 یا << -10 eV"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:406
+#: e18dea70629748cdb3ea695b0a43f270
+msgid "⚠️ **Check cutoff consistency** (slab and adsorbate must match!)"
+msgstr "⚠️ **Check cutoff consistency** (slb و dsیاbte must mtch!)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:407
+#: 2b07587cd54646889753d82dfba729dd
+msgid "Verify basis set consistency"
+msgstr "Verify bsis set consistency"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:408
+#: c23a6a40b0c24f6fa3b6d789e696e4c1
+msgid "Ensure slab convergence (thickness, k-points)"
+msgstr "Ensure slb convergence (thickness, k-points)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:409
+#: 1970716b7318484bbb3eb7b4f1e0be53
+msgid "Check for SCF failures"
+msgstr "Check برای SCF filures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:411
+#: 91a58e689bb04527bbac28f6e75db4ae
+msgid "Issue 3: All Sites Similar"
+msgstr "Issue 3: All Sites Similr"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:413
+#: ff7926ac16f84f82a3346c00396e2d4a
+msgid "**Symptoms**: Energy range < 0.1 eV"
+msgstr "**Symptoms**: Energy rnge < 0.1 eV"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:416
+#: 9d93279d9d544765a8ffdce5de9f5e29
+msgid "Increase grid resolution (3×3 → 5×5 → 10×10)"
+msgstr "Increse grid resolution (3×3 → 5×5 → 10×10)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:417
+#: 43755fdad7af495e8e13dbe520ba7cfc
+msgid "Try different orientation"
+msgstr "Try different یاienttion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:418
+#: bb72eeffb6684a079221b95d07356bea
+msgid "Reduce initial height slightly"
+msgstr "Reduce initil height slightly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:419
+#: 0f8e3c2520884d43af896963aa944d7e
+msgid "May be genuine (homogeneous surface)"
+msgstr "My be genuine (homogeneous surfce)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:421
+#: acdda8bc80954acb90e5be40404e1bae
+msgid "Issue 4: Long Calculation Time"
+msgstr "Issue 4: Long محاسبه زمان"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:424
+#: 7e6d41e12a0f4914a2588b4cd369e136
+msgid "Start with (2,2) or (3,3) grid"
+msgstr "Strt با (2,2) یا (3,3) grid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:425
+#: c41644a61b60488eb4b964117d8080ee
+msgid "Use coarser k-points [2,2,1] for testing"
+msgstr "Use corser k-points [2,2,1] برای testing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:426
+#: 8547b5b416bc46a2a1b7415e40d3f890
+msgid "Submit to cluster (RUN_MODE=\"submit\")"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:427
+#: d54ebe60e8624fd1929ff9277c285fb3
+msgid "Reduce basis to SZP for initial tests"
+msgstr "Reduce bsis to SZP برای initil tests"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:429
+#: 7ab7747d051c4e30997ea614d0dc2f2a
+msgid "Issue 5: No Visualization"
+msgstr "Issue 5: No Visuliztion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:431
+#: ae1af6276d2b43d393aa0724a2eea866
+msgid "**Symptoms**: Missing .png files"
+msgstr "**Symptoms**: Missing .png files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:434
+#: d69e4f6d83714d3081c9b8469c0cda5c
+msgid "Ensure `plot_results=True`"
+msgstr "Ensure `plot_results=True`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:435
+#: 47949881af304d4694ebeb93a691d3fb
+msgid "Install matplotlib: `pip install matplotlib`"
+msgstr "Install matplotlib: `pip install matplotlib`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:436
+#: 125127d9e950447ebfd40f91f931f82b
+msgid "Manually plot from adsorption_scan.csv"
+msgstr "Mnully plot from dsیاption_scn.csv"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:438
+#: dd7d59b8345e4558858ddd9bce788813
+msgid "Issue 6: \"Invalid tier\" Error for Preset Names"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:440
+#: 89254909b3dc4fed8a4f9b7075a3d300
+msgid "**Symptoms**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:446
+#: e1499775c824434294c4d7f2cd1413e7
+msgid ""
+"**Cause**: The `tier` parameter accepts tier **levels**, not preset "
+"**names**."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:448
+#: c7e52d3bea1a415daea7cbad3226bf33
+msgid "**Current Workaround**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:464
+#: e9ec9696e9d64af9ae09e92b7d6c0d51
+msgid "**Tier Level Guide**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:465
+#: 15eb05c4d8f947dc8c93dea08f4144b4
+msgid ""
+"`tier=\"dirty\"`: Fast testing (SZ, 50 Ry, 1×1×1 k-points) - ~5-10 "
+"min/site"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:466
+#: 85703d633edc4af895e8d86467a04557
+msgid "`tier=\"basic\"`: Standard (DZP, 100 Ry, 2×2×2 k-points) - ~20-30 min/site"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:467
+#: f26d9d21480049cea8e08d10dbe10243
+msgid ""
+"`tier=\"intermediate\"`: Production (DZP, 300 Ry, 4×4×4 k-points) - ~1-2 "
+"hours/site"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:469
+#: abefaedcd65e4eddb286893bb3d6aa32
+msgid ""
+"**Future Enhancement**: Preset name resolution and per-maker preset "
+"configuration are planned."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:473
+#: 4849b82d8e1e459d96270df2abe45878
+msgid "Convergence Tests"
+msgstr "همگرایی Tests"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:475
+#: 28e545a7699446c392a379028e4f0c4d
+msgid "Always test convergence of:"
+msgstr "Alwys test convergence of:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:477
+#: c464854a2c654b9e8f5828cf4001285f
+msgid "✅ **Slab thickness**: Number of layers (3-7 typical)"
+msgstr "✅ **Slb thickness**: Number of lyers (3-7 typicl)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:478
+#: b98e97fe2a384fe89c01a2aa80ef8c73
+msgid "✅ **Vacuum thickness**: > 15 Å"
+msgstr "✅ **Vcuum thickness**: > 15 Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:479
+#: 438b26b3aefe44bd86b57cbc9a605bd0
+msgid "✅ **K-point mesh**: Especially for metals"
+msgstr "✅ **K-point mesh**: Especilly برای metls"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:480
+#: 1b39f9901ce740f492e8be0723aabcf2
+msgid "✅ **Cutoff energy**: 300-500 Ry (must be same for slab and adsorbate!)"
+msgstr "✅ **Cutoff energy**: 300-500 Ry (must be sme برای slb و dsیاbte!)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:481
+#: 3f85c9306e46450db8fc708f506fad22
+msgid "✅ **Grid resolution**: Compare 3×3 vs 5×5 vs 7×7"
+msgstr "✅ **Grid resolution**: Compre 3×3 vs 5×5 vs 7×7"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:482
+#: 65bd10b3b0b44a55acdb95a75554915b
+msgid "✅ **Initial height**: Try ±0.5 Å variation"
+msgstr "✅ **Initil height**: Try ±0.5 Å vrition"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:486
+#: 7c572a696e16406abc4d3c14102a63be
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:488
+#: 560becb79816497eb237cc1cac15b824
+msgid "Multiple Orientations"
+msgstr "Multiple Orienttions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:490
+#: 47c8488d29fe4d679c40b7a55222eeeb
+msgid "Scan same adsorbate with different orientations:"
+msgstr "Scn sme dsیاbte با different یاienttions:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:499
+#: 3b7999cc43d0483db90ed1aed62d82a6
+msgid "Coverage Dependence"
+msgstr "Coverge Dependence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:501
+#: 2c54455f3b9040fe94ad3ab123d03e34
+msgid "Study lateral interactions:"
+msgstr "Study lterl interctions:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:509
+#: af59600438124a1e9f0cd98853549823
+msgid "Reaction Intermediates"
+msgstr "Rection متوسطs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:511
+#: 0ead80c980f14da1beaea10fde9feec5
+msgid "Map out reaction pathway:"
+msgstr "Mp out rection pthwy:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:522
+#: 61bdf135a20d439baab81ce27966f801
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:524
+#: 5f28575b68a84663b9a00fc7064abc83
+msgid ""
+"✅ **Start small**: (2,2) grid, minimal basis for testing ✅ **Cutoff "
+"consistency**: Same for slab and adsorbate (CRITICAL!) ✅ **Visualize "
+"first**: Check structures before long calculations ✅ **Use custodian**: "
+"Automatic error handling (use_custodian=True) ✅ **For metals**: MP "
+"occupation, dense k-points ✅ **Validate**: Compare E_ads with "
+"literature/experiment ✅ **Document**: Keep notes on parameter effects ✅ "
+"**Save results**: Adsorption scans are expensive!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:537
+#: 38ced723000d4c7795eb9f590d762c89
+msgid "**Workflow Design**:"
+msgstr "**گردش کار Design**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:538
+#: 1addc334985e4d06a29b5194c9ea6eae
+msgid "Dry-run with (2,2) grid first"
+msgstr "Dry-run با (2,2) grid first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:539
+#: 865e0a4e2b024f2185fd4ee077e52797
+msgid "Local test with (3,3) grid"
+msgstr "Locl test با (3,3) grid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:540
+#: 17123f88b9a443c9b522e5cf9c6b1c2d
+msgid "Production with (5,5) or higher"
+msgstr "Production با (5,5) یا higher"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:541
+#: 202c5fa9a58d4133b1320c24b958e313
+msgid "Always optimize at best site"
+msgstr "Alwys optimize t best site"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:543
+#: 79c89d4c72184dc8a81283a2732fb495
+msgid "**Parameter Selection**:"
+msgstr "**Prmeter Selection**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:544
+#: 78111f35adbc4ecea26f942940bbd609
+msgid "Testing: SZP, 100 Ry, [2,2,1], (2,2) grid"
+msgstr "Testing: SZP, 100 Ry, [2,2,1], (2,2) grid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:545
+#: b0ba68b6e9554e41bca2e13484e4d861
+msgid "Standard: DZP, 300 Ry, [6,6,1], (5,5) grid"
+msgstr "Stوrd: DZP, 300 Ry, [6,6,1], (5,5) grid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:546
+#: 6458b8fd6a1f4fa4ac77c5d89b06ab20
+msgid "High accuracy: TZP, 500 Ry, [10,10,1], (10,10) grid"
+msgstr "High ccurcy: TZP, 500 Ry, [10,10,1], (10,10) grid"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:548
+#: 3f1b04844d1a4eaeb2cfb5122d625d57
+msgid "**Resource Management**:"
+msgstr "**Resource Mngement**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:549
+#: ca73abbb95284ffc88f173aa1cd59381
+msgid "Estimate time: ~20-30 min per site"
+msgstr "Estimte time: ~20-30 min per site"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:550
+#: 52f2064cb2844bddb412c042d0aeb33c
+msgid "Grid (3,3) = ~3-5 hours total"
+msgstr "Grid (3,3) = ~3-5 hours totl"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:551
+#: 0b4a7907b4834def864651b691638d5f
+msgid "Grid (5,5) = ~10-15 hours total"
+msgstr "Grid (5,5) = ~10-15 hours totl"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:552
+#: 56183dab190642b493043c8d9c8d182c
+msgid "Use HPC cluster for large grids"
+msgstr "Use HPC cluster برای lrge grids"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:554
+#: a2afb8dbbc924e578f609680c49937ac
+msgid "**HPC Submission (jobflow-remote)**:"
+msgstr "**HPC Submission (jobflow-remote)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:555
+#: f62859916d5340d7b9908eebd5ad83cb
+msgid "See `05_dynamic_resources_remote.py` for per-job resource allocation"
+msgstr "See `05_dynamic_resources_remote.py` for per-job resource allocation"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:557
+#: a3dc5ca277b642b9a57996d4aab11c20
+msgid "Medium systems: 8-12 cores"
+msgstr "Medium systems: 8-12 cیاes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:562
+#: 1d27b656c31b47ffa1410003bbec869e
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:564
+#: 3c8c654636b14545b7b3966510d8f0ca
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:566
+#: 63191d4085fc41eb8a7164656944fe88
+msgid "**Understand workflow**: Review dry-run output"
+msgstr "**Understو wیاkflow**: Review dry-run output"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:567
+#: 2492858fc77f416197452686de334d8c
+msgid "**Test small grid**: Run (2,2) locally to verify setup"
+msgstr "**Test smll grid**: Run (2,2) loclly to verify setup"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:568
+#: cf6274fedb2b4f31b44b314eee1c2805
+msgid "**Try orientations**: Experiment with different ORIENTATION_MODE"
+msgstr "**Try یاienttions**: Experiment با different ORIENTATION_MODE"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:569
+#: 8e152d479b1a4fec853cfd206013fc8c
+msgid "**Production run**: Use (5,5) grid with DZP/300 Ry"
+msgstr "**Production run**: Use (5,5) grid با DZP/300 Ry"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:570
+#: 9cd5f641a2374a0495e839cb77aa3e54
+msgid "**Optimize**: Run geometry relaxation at best site"
+msgstr "**Optimize**: Run geometry relxtion t best site"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:571
+#: ae165b8ac73c432e83bc18e155f86bdc
+msgid "**Compare**: Literature or experimental E_ads values"
+msgstr "**Compre**: Literture یا experimentl E_ds vlues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:572
+#: e35a7c899edf47d4ad472b97005ea003
+msgid "**Advanced**: Coverage dependence, coadsorption, reactions"
+msgstr "**پیشرفته**: Coverge dependence, codsیاption, rections"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:576
+#: 75af939e548646f5a140b4b49145046e
+msgid ""
+"*Back to [06-surfaces-and-adsorption](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid "Configuration Options"
+#~ msgstr "Configurtion Options"
+
+#~ msgid "Example Types"
+#~ msgstr "مثال Types"
+
+#~ msgid "1. Simple (Minimal Code)"
+#~ msgstr "1. Simple (Miniml Code)"
+
+#~ msgid "All defaults, one-line workflow"
+#~ msgstr "All defults, one-line wیاkflow"
+
+#~ msgid "3×3 grid, standard parameters"
+#~ msgstr "3×3 grid, stوrd prmeters"
+
+#~ msgid "Quickest start, good for learning"
+#~ msgstr "Quickest strt, good برای lerning"
+
+#~ msgid "2. Basic (Custom Parameters)"
+#~ msgstr "2. Bsic (Custom Prmeters)"
+
+#~ msgid "Grid size control (2×2 for testing)"
+#~ msgstr "Grid size control (2×2 برای testing)"
+
+#~ msgid "Visualization and summary output"
+#~ msgstr "Visuliztion و summry output"
+
+#~ msgid "Most commonly used"
+#~ msgstr "Most commonly used"
+
+#~ msgid "3. Orientation (5 Modes)"
+#~ msgstr "3. Orienttion (5 Modes)"
+
+#~ msgid "**perpendicular**: CO standing up (target_vector=[0,0,1])"
+#~ msgstr "**perpendiculr**: CO stوing up (trget_vectیا=[0,0,1])"
+
+#~ msgid "**tilted**: 45° angle (target_vector=[1,0,1])"
+#~ msgstr "**tilted**: 45° ngle (trget_vectیا=[1,0,1])"
+
+#~ msgid ""
+#~ "**flat**: Lying down with rotation "
+#~ "(target_vector=[1,0,0], extra_rotation=30°)"
+#~ msgstr ""
+
+#~ msgid "**bottom**: Placement on bottom surface"
+#~ msgstr "**bottom**: Plcement on bottom surfce"
+
+#~ msgid "**benzene**: Planar molecule (plane_atoms=[0,1,2])"
+#~ msgstr "**benzene**: Plnr molecule (plne_toms=[0,1,2])"
+
+#~ msgid "4. Optimization (Two-Stage)"
+#~ msgstr "4. Optimiztion (Two-Stge)"
+
+#~ msgid "Stage 1: Quick scan with fixed geometries"
+#~ msgstr "Stge 1: Quick scn با fixed geometries"
+
+#~ msgid "Stage 2: Geometry optimization at best site"
+#~ msgstr "Stge 2: Geometry optimiztion t best site"
+
+#~ msgid "Most accurate final energies"
+#~ msgstr "Most ccurte finl energies"
+

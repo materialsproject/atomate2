@@ -1,0 +1,772 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:1
+#: e5b4ceea159e42fd86ed56e83eecf6e7
+msgid "Tutorial: Complete Basis Convergence"
+msgstr "آموزش: Complete Bsis همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:3
+#: 00bacc3ad0324a09a90cabc9b8013b37
+msgid ""
+"**Category**: 02-convergence **Difficulty**: Advanced **Time**: ~1-4 "
+"hours (depending on configuration)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:9
+#: 6d73a65211f9479bb4fd61af9b8fcd8c
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:11
+#: 66b5057164b9477f9d87cad9c07dc989
+msgid ""
+"Comprehensive basis convergence study that tests BOTH basis sizes (SZ, "
+"DZ, DZP, TZP) AND basis parameters (PAO.EnergyShift, PAO.SplitNorm) "
+"simultaneously. This workflow finds the optimal combination of basis "
+"quality and parameter settings."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:15
+#: 4ff7e55f977243a88ba45027f744861e
+msgid "Examples in This Tutorial"
+msgstr "مثال‌ها in This Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:17
+#: ee60bdc2d29d451db3fd3b4f9921677a
+msgid "**`01_simple_complete.py`** - Simple test (2×2×2 = 8 calculations)"
+msgstr "**`01_simple_complete.py`** - Simple test (2×2×2 = 8 calculations)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:18
+#: 73b400ba16f54a41adedecfc08443356
+msgid "**`02_full_complete.py`** - Full study (3×3×3 = 27 calculations)"
+msgstr "**`02_full_complete.py`** - Full study (3×3×3 = 27 calculations)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:19
+#: 89369e41855348ae9420fc34d46d57bb
+msgid ""
+"**`03_with_custodian.py`** - With automatic error handling (3×2×2 = 12 "
+"calculations)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:23
+#: 0dac543923fd4d56b1d2563760433fd2
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:25
+#: d651c8375406471daaeaeb5f0e54d69c
+msgid "Simultaneous basis size + parameter optimization"
+msgstr "Simultneous bsis size + prmeter optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:26
+#: 691104fe4273417e9a5fc50a02be3e0b
+msgid "CompleteBasisConvergenceMaker workflow"
+msgstr "CompleteBasisConvergenceMaker workflow"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:27
+#: 8ff8ffdae24f4ceb8f96d07098524265
+msgid "Comprehensive convergence analysis"
+msgstr "Comprehensive convergence nlysis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:28
+#: 776a9e88de5146b1ab67da9e44d559cc
+msgid "Cost vs. accuracy trade-offs across multiple dimensions"
+msgstr "Cost vs. ccurcy trde-offs cross multiple dimensions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:29
+#: b678a45a51814eaea53df26629dfe4fe
+msgid "Production-ready basis selection"
+msgstr "Production-redy bsis selection"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:33
+#: 9d5f863ac1c44496991b6e6d58b6a2a5
+msgid "When to Use This Workflow"
+msgstr "When to Use This گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:35
+#: cf7c1238c38f4f0d800560b63f153f12
+msgid "Use Complete Basis Convergence When:"
+msgstr "Use Complete Bsis همگرایی When:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:37
+#: 9e711cc16c124423aa87652f47b79a39
+msgid ""
+"✅ Starting a new material study from scratch ✅ Need to establish "
+"production settings for a material class ✅ Want to understand the full "
+"convergence landscape ✅ Have computational resources for comprehensive "
+"testing ✅ Publication-quality accuracy is required"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:43
+#: d54295908cb54b439d7ef42badbb4a1e
+msgid "Use Separate Workflows When:"
+msgstr "Use Seprte گردش کارs When:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:45
+#: 39c05d8d06dc4dac903bdddbe74b8d7a
+msgid ""
+"**Basis Parameters Only** (Tutorial 02): Already know which basis size to"
+" use"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:46
+#: 58a9be0386bb47d09f79100d69b62148
+msgid ""
+"**Basis Size Only**: Already have optimized parameters, just testing DZ "
+"vs DZP vs TZP"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:50
+#: 1e58c2d0820a4fe9af1710b145b7fb51
+msgid "Workflow Architecture"
+msgstr "گردش کار Architecture"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:52
+#: 019a0632fd6d4f73bf28f0c281c411ab
+msgid "What CompleteBasisConvergenceMaker Does"
+msgstr "What CompleteBasisConvergenceMaker Does"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:63
+#: 091d50ea034f49d88cb1fe1d27aa67e5
+msgid "**Total calculations**: `n_basis × n_shifts × n_norms`"
+msgstr "**Total calculations**: `n_basis × n_shifts × n_norms`"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:67
+#: f4a50753ca264c2e83eea21998609381
+msgid "Configuration Examples"
+msgstr "Configurtion مثال‌ها"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:69
+#: 0695d7c2faa74e9b851ee075242456b1
+msgid "1. Simple Test (`01_simple_complete.py`)"
+msgstr "1. Simple Test (`01_simple_complete.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:81
+#: d5b0237330de4f2e97a91f65e2508208
+msgid "2. Full Study (`02_full_complete.py`)"
+msgstr "2. Full Study (`02_full_complete.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:93
+#: 5fb8dafdc0b04ef7a8defe9f026a4b1a
+msgid "3. With Custodian (`03_with_custodian.py`)"
+msgstr "3. With Custodian (`03_with_custodian.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:109
+#: 2b7d80f5f88b428aa07439e2ec6d2dc0
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:111
+#: 74b8b443aadb443ea659b7d26bceca9c
+msgid "1. Convergence Analysis"
+msgstr "1. همگرایی Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:135
+#: 539cbb9089284f19a04ab7a4c821f1da
+msgid "2. Visualization"
+msgstr "2. Visuliztion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:137
+#: 61cb7bb72efe43668eaabe65f993305e
+msgid "**Generated files**:"
+msgstr "**Generted files**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:138
+#: d2989dc8ae3a4f4989a34d3686b728fc
+msgid ""
+"`complete_convergence_by_basis.png` - Energy vs parameters for each basis"
+" size"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:139
+#: b57ea9c44a374612b2461a34f5050e42
+msgid "`complete_convergence_comparison.png` - Basis size comparison"
+msgstr "`complete_convergence_comparison.png` - Basis size comparison"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:140
+#: 0c4787ae5fbe4d129783d2d0cef9e814
+msgid "`basis_size_vs_energy.png` - Overall convergence trend"
+msgstr "`basis_size_vs_energy.png` - Overall convergence trend"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:141
+#: 8e6f8634ba98490bbf2c730fbe39f473
+msgid "`complete_summary.txt` - Detailed analysis and recommendations"
+msgstr "`complete_summary.txt` - Detailed analysis and recommendations"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:145
+#: 112bdefb6a124eb59e13d491c85106b0
+msgid "Comparison with Other Tutorials"
+msgstr "Comprison با Or Tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: ef89d5aa940e48ce9b72298643ae07fc
+msgid "Tutorial"
+msgstr "Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 11ad6ba9498b4e35ac97ebc82d69daae
+msgid "What It Tests"
+msgstr "Wht It Tests"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 14a6f0ea03a54897ac6c6a45ff00af21
+msgid "Total Jobs"
+msgstr "Totl Jobs"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 65a464488cd04473b2be4982a497f3a1
+msgid "Time"
+msgstr "زمان"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: d2b91a1bd72d4c19bd64ceac8f4e3879
+msgid "Use Case"
+msgstr "Use Cse"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: cdd3af4a4eda4f4fa81b5c25f05edf82
+msgid "**02-basis-parameters**"
+msgstr "**02-bsis-prmeters**"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 05ef9d5823924cf1aa07aa65320ea7d0
+msgid "Parameters only (fixed basis)"
+msgstr "Prmeters only (fixed bsis)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 4888ee012119496a978eff68a1e235ad
+msgid "9-25"
+msgstr "9-25"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 0157799d941042fe95e689e85ec44915
+msgid "30 min - 1 hr"
+msgstr "30 min - 1 hr"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: e02a39ae14a14ac798b80f264d7876fe
+msgid "Known basis size"
+msgstr "Known bsis size"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: fadd2c614c534b99b2aaa38054a9e8e8
+msgid "**03-complete-basis**"
+msgstr "**03-complete-bsis**"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 374b4c49dcd74887bfd9cb0c1520544b
+msgid "Sizes + Parameters"
+msgstr "Sizes + Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 1fd6c24076b847dda9122e7dff32f73d
+msgid "8-27+"
+msgstr "8-27+"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: 1c7d39a90bf942b8b3ec0db6296f4bf3
+msgid "1-4 hours"
+msgstr "1-4 hours"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md
+#: d8b1060ac5b547e796783aceb1c13fd8
+msgid "Full optimization"
+msgstr "Full optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:154
+#: 95ab6ab17ecc41faa93dffa255f61b67
+msgid "Material-Specific Recommendations"
+msgstr "Mteril-Specific Recommendtions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:156
+#: 5bbdca86d7084632b8e9e85bf4f1ad57
+msgid "Covalent Systems (Si, Diamond)"
+msgstr "Covlent Systems (Si, Dimond)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:164
+#: 17022a32ea344e86bd86912815f7ad71
+msgid "**Expected optimal**: DZP with EnergyShift ≈ 0.01-0.015 Ry"
+msgstr "**Expected optiml**: DZP با EnergyShift ≈ 0.01-0.015 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:166
+#: 76e0b85414bf41ebab37fba5ec03df06
+msgid "Ionic Systems (MgO, NaCl)"
+msgstr "Ionic Systems (MgO, NCl)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:174
+#: bea3c2b0085443dab15456e24ffe8598
+msgid "**Expected optimal**: DZP with EnergyShift ≈ 0.005-0.01 Ry (tighter)"
+msgstr "**Expected optiml**: DZP با EnergyShift ≈ 0.005-0.01 Ry (tighter)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:176
+#: 9225eabe99204b40a15c8d906e8b4fc2
+msgid "Metallic Systems (Al, Cu)"
+msgstr "Metllic Systems (Al, Cu)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:184
+#: 2efdbc1ac0344552ad19d46158f4ff3c
+msgid "**Expected optimal**: DZ or DZP with EnergyShift ≈ 0.015-0.02 Ry (looser)"
+msgstr "**Expected optiml**: DZ یا DZP با EnergyShift ≈ 0.015-0.02 Ry (looser)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:188
+#: 46f1ee78c159468e8019e763c239ad2f
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:190
+#: 57dde8a2ba13459ba2c1d72ad67dcfa5
+msgid "Workflow Strategy"
+msgstr "گردش کار Strtegy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:192
+#: 15162b5482ca4117a136763fc6f01de5
+msgid "**Start simple** (2×2×2 = 8 calcs) to identify region"
+msgstr "**Strt simple** (2×2×2 = 8 clcs) to identify region"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:193
+#: 96aecaf02cc148318c5be7fea8111666
+msgid "**Refine if needed** with denser grid in optimal region"
+msgstr "**Refine if needed** با denser grid in optiml region"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:194
+#: ea9bfcad7c1c48d08f48fd16d9fcb81f
+msgid "**Verify convergence** by checking next level improvement"
+msgstr "**Verify convergence** by checking next level improvement"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:195
+#: c0a2aacb74ae40fbb3a6526a845a8f0d
+msgid "**Document settings** for reproducibility"
+msgstr "**Document settings** برای reproducibility"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:197
+#: a4e8168b0b5f4d858dd16b0c0eac9bb9
+msgid "Computational Efficiency"
+msgstr "Computtionl Efficiency"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:199
+#: 56a29fb9e9aa4fc8b7528aa7814d68f6
+msgid "**Grid design**:"
+msgstr "**Grid design**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:200
+#: 85e292cee89e4aafb2d2b090eb3bc6f9
+msgid "Start with 2-3 values per dimension (8-27 calculations)"
+msgstr "Strt با 2-3 vlues per dimension (8-27 clcultions)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:201
+#: 1cc2749aa3e54493af1f605b8988d8df
+msgid "Focus on realistic parameter ranges for your material"
+msgstr "Focus on relistic prmeter rnges برای your mteril"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:202
+#: 4886963ad4a04fc2985abdfe10620cc7
+msgid "Use coarser k-points for initial scan (3×3×3)"
+msgstr "Use corser k-points برای initil scn (3×3×3)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:203
+#: cbc87d7804c74833a4de059570ea0726
+msgid "Refine k-points once basis is optimized"
+msgstr "Refine k-points once bsis is optimized"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:205
+#: 9f6f66c303b146e8a7e79adbb83fdbab
+msgid "**Time management**:"
+msgstr "**زمان mngement**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:206
+#: bf4d425002fd446cb1e8dafe37d8414e
+msgid "Simple: 2×2×2 grid = ~30 minutes"
+msgstr "Simple: 2×2×2 grid = ~30 minutes"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:207
+#: eb07e5cd5f3f47b694fe8bb6adf13517
+msgid "Medium: 3×2×2 grid = ~1 hour"
+msgstr "Medium: 3×2×2 grid = ~1 hour"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:208
+#: c6dd9f5f02fb49c8a135f79d6b24f755
+msgid "Full: 3×3×3 grid = ~2-3 hours"
+msgstr "Full: 3×3×3 grid = ~2-3 hours"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:209
+#: 1f460673f0fa447faa9e37bc0a6353ec
+msgid "Comprehensive: 4×4×4 grid = ~8-12 hours"
+msgstr "Comprehensive: 4×4×4 grid = ~8-12 hours"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:213
+#: 8387140cf9a94069863cf22c8f0fcfda
+msgid "Interpreting Results"
+msgstr "Interpreting Results"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:215
+#: e5f0b44732c34006b472c18e65176c6a
+msgid "Energy Convergence Criteria"
+msgstr "Energy همگرایی Criteri"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:217
+#: ee7088599185487f8e20db2f5a7c45e8
+msgid "**Well converged**:"
+msgstr "**Well converged**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:218
+#: 2e54a37226cf452a9e448347dd1f3069
+msgid "Next basis level gives < 5 meV improvement"
+msgstr "Next bsis level gives < 5 meV improvement"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:219
+#: d7824554f0d24adfba65a2a166d8a164
+msgid "Parameters show flat energy landscape"
+msgstr "Prmeters show flt energy lوscpe"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:220
+#: 3153446dca074395bf8cb4840174110d
+msgid "Basis size < 500 orbitals per atom"
+msgstr "Bsis size < 500 یاbitls per tom"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:222
+#: ecbc512d07d845ba9fa64fe48f43fbb6
+msgid "**Needs refinement**:"
+msgstr "**Needs refinement**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:223
+#: 81c8bd9bdc054952b2fbc51571fcea98
+msgid "Energy still decreasing with better basis"
+msgstr "Energy still decresing با better bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:224
+#: 7fc1b59bfae24ed4b6e3b520d224d6ed
+msgid "Large jumps between parameter values"
+msgstr "Lrge jumps between prmeter vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:225
+#: c0bf6fb8769b40a6ba54c74c3ecea2e0
+msgid "Basis size excessive (> 1000 orbitals)"
+msgstr "Bsis size excessive (> 1000 یاbitls)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:227
+#: 402aea50515341038300bff5ee280e52
+msgid "Cost vs. Accuracy Trade-off"
+msgstr "Cost vs. Accurcy Trde-off"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:241
+#: 47d7628526b24b0aa19f9a678f9c1bb8
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:243
+#: 6dd21627259d45cea3de2f1af3ae26fd
+msgid "Issue 1: Too Many Calculations"
+msgstr "Issue 1: Too Mny محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:245
+#: aece279c5e7c4b3d9bfde50a9bfb40db
+msgid "**Problem**: 27+ calculations take too long"
+msgstr "**Problem**: 27+ clcultions tke too long"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:247
+#: 00f5f2ff27234533904ee87c03a3e380
+msgid "**Solution**: Start with fewer test points"
+msgstr "**Solution**: Strt با fewer test points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:256
+#: b77b61e9df024d4b8b270ec873d29899
+msgid "Issue 2: Results Are Inconsistent"
+msgstr "Issue 2: Results Are Inconsistent"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:258
+#: 00634e3552744148bcc23b624c0d4c20
+msgid "**Problem**: Energy landscape is noisy"
+msgstr "**Problem**: Energy lوscpe is noisy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:260
+#: e8f0ca00e0fa4cf0aef46b890aabe57b
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:261
+#: 5ee543fc4f3b4034991cbf344b3d761d
+msgid "**First converge k-points** (Tutorial 01)"
+msgstr "**First converge k-points** (Tutیاil 01)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:262
+#: f255a896193743469e817f1d5ec74c0b
+msgid "**Increase MaxSCFIterations** to 200"
+msgstr "**Increse MxSCFItertions** to 200"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:263
+#: 2a2ffcc69d3a4918bd1d0f12db1008e6
+msgid "**Tighten DM.Tolerance** to 1e-5"
+msgstr "**Tighten DM.Tolernce** to 1e-5"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:264
+#: 49251a0495f4412c90d13246ee3be36d
+msgid "**Use custodian** for automatic recovery"
+msgstr "**Use custodin** برای utomtic recovery"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:266
+#: 42d263b968c547478a79846fae0e814f
+msgid "Issue 3: Optimal Point at Edge"
+msgstr "Issue 3: Optiml Point t Edge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:268
+#: f577aefccb8c49d288b2b1fb09a501dd
+msgid "**Problem**: Best parameters at edge of tested range"
+msgstr "**Problem**: Best prmeters t edge of tested rnge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:270
+#: 23f054a2f148438a8851c4e708105877
+msgid "**Solution**: Extend range in that direction"
+msgstr "**Solution**: Extend rnge in tht direction"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:281
+#: 1186f05d735d4b2aa7db6c6f131159ca
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:283
+#: dabe8c04ad6e47ebab1c9f93b4b3ec33
+msgid "Combining with k-point Convergence"
+msgstr "Combining با k-point همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:285
+#: fb0a08718f2d49b58a6c99e77b2712a9
+msgid "For production settings, iterate:"
+msgstr "Fیا production settings, iterte:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:286
+#: dd8cf84cadb543d5beb678ed016951cf
+msgid "Rough k-point convergence with DZ basis"
+msgstr "Rough k-point convergence با DZ bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:287
+#: b00380335352433797205847c0178ed2
+msgid "Complete basis convergence at converged k-points"
+msgstr "Complete bsis convergence t converged k-points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:288
+#: 7959459cf89c4cbf94ad8735c0da1211
+msgid "Final k-point refinement with optimal basis"
+msgstr "Finl k-point refinement با optiml bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:290
+#: 9eea13cc258a45feab62ad8aa02e1e0d
+msgid "Force Accuracy Requirements"
+msgstr "Fیاce Accurcy Requirements"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:292
+#: b29c05815bce4fce8fb4dc41c98a953e
+msgid "For geometry optimization, phonons, NEB:"
+msgstr "Fیا geometry optimiztion, phonons, NEB:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:293
+#: 3db30e2afe89456192af1efdf27f5d3d
+msgid "Need tighter basis than for energies alone"
+msgstr "Need tighter bsis thn برای energies lone"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:294
+#: 1728664870a8427cbc5d6ca145546be6
+msgid "Test: Minimal should be DZP + EnergyShift ≤ 0.01 Ry"
+msgstr "Test: Miniml should be DZP + EnergyShift ≤ 0.01 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:295
+#: 4a51cc7f75b842a68f7baa63a9984487
+msgid "Verify forces converge to < 0.001 eV/Å"
+msgstr "Verify برایces converge to < 0.001 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:297
+#: 901ff19b62614f6caaf6a4a2f066e846
+msgid "System Size Considerations"
+msgstr "System Size Considertions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:299
+#: 1a7b80a6c9aa4a37b779df11a757d39a
+msgid "**Small systems** (< 20 atoms):"
+msgstr "**Smll systems** (< 20 toms):"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:300
+#: ddbdaf0abe0141229e1042de66f27400
+msgid "Can afford TZP or DZDP"
+msgstr "Cn fبرایd TZP یا DZDP"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:301
+#: d17d769ba5f441bba681abdcefa7546e
+msgid "Tight parameters (EnergyShift = 0.005 Ry)"
+msgstr "Tight prmeters (EnergyShift = 0.005 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:303
+#: aa7107b0a6f044fab9d2171fb23427fa
+msgid "**Medium systems** (20-100 atoms):"
+msgstr "**Medium systems** (20-100 toms):"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:304
+#: 7c53aea3a739425996b2f958c0813660
+msgid "DZP or DZDP practical"
+msgstr "DZP یا DZDP prcticl"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:305
+#: ecca857e96aa4358b9a1a6c25e21ae04
+msgid "Standard parameters (EnergyShift = 0.01 Ry)"
+msgstr "Stوrd prmeters (EnergyShift = 0.01 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:307
+#: d107c610586f43828824dffd7373d9e9
+msgid "**Large systems** (> 100 atoms):"
+msgstr "**Lrge systems** (> 100 toms):"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:308
+#: 1778d2f62c524df2bbe89610ad69cb3a
+msgid "DZP maximum, often DZ sufficient"
+msgstr "DZP mximum, often DZ sufficient"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:309
+#: eea200a694064ed98aab0bc331339943
+msgid "Looser parameters (EnergyShift = 0.015-0.02 Ry)"
+msgstr "Looser prmeters (EnergyShift = 0.015-0.02 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:313
+#: aeeca9ce93e34d0289ad61c2776f185c
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:315
+#: debcfe18e1924e50b81f338b980b6a21
+msgid "✅ **Prerequisites**: Complete Tutorial 01 (k-points) first"
+msgstr "✅ **پیش‌نیازها**: Complete Tutیاil 01 (k-points) first"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:317
+#: c6b614d81c5941d4961d45031de8dd81
+msgid "✅ **Start small**: 2×2×2 grid for quick test"
+msgstr "✅ **Strt smll**: 2×2×2 grid برای quick test"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:319
+#: b78e2ee94472490486855595bda6e4b7
+msgid "✅ **Use custodian**: Prevent wasted time on SCF failures"
+msgstr "✅ **Use custodin**: Prevent wsted time on SCF filures"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:321
+#: 40891f66edfa437f9f12b73a187e7da3
+msgid "✅ **Material-specific**: Consult guidelines above"
+msgstr "✅ **Mteril-specific**: Consult guidelines bove"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:323
+#: 714f2b38c7dc4eb5a4ffbf492055ecba
+msgid "✅ **Check basis size**: Note number of orbitals in output"
+msgstr "✅ **Check bsis size**: توجه number of یاbitls in output"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:325
+#: 4fa57b6e3201483a8dfcbf90f73d41f8
+msgid "✅ **Verify SCF**: All calculations must converge"
+msgstr "✅ **Verify SCF**: All clcultions must converge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:327
+#: 0d7b4d8ae3af4ddb882fe6bf71c9ad5b
+msgid "✅ **Document choice**: Record optimal settings for future"
+msgstr "✅ **Document choice**: Recیاd optiml settings برای future"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:329
+#: 5fe9b995e69b42a7bda2de4fa1c32db9
+msgid "✅ **Compare literature**: When data available"
+msgstr "✅ **Compre literture**: When dt vilble"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:333
+#: 78c5f91c2d134c1988a5070e0ea15268
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:335
+#: deff73ebb4d94dccaeb9cb765c1e14e9
+msgid "**Run simple example**: Quick 2×2×2 test"
+msgstr "**Run simple exmple**: Quick 2×2×2 test"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:336
+#: 9a5d13e868c94d7985de2588347bb904
+msgid "**Examine results**: Identify optimal region"
+msgstr "**Exmine results**: Identify optiml region"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:337
+#: 6e59ef48cfb5494f94650f9505751356
+msgid "**Scale up if needed**: Run full 3×3×3 study"
+msgstr "**Scle up if needed**: Run full 3×3×3 study"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:338
+#: ffc8292435444e9da589be2f05720dc5
+msgid "**Apply to your material**: Adjust ranges appropriately"
+msgstr "**Apply to your mteril**: Adjust rnges ppropritely"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:339
+#: 1d13e1ec7f664eaea19627e6cdc7c96b
+msgid "**Use optimized settings**: For all production calculations"
+msgstr "**Use optimized settings**: Fیا ll production clcultions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:343
+#: 31036467e06949a89cb89f09bd204442
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:345
+#: edc8bf51f703477389308b47b3567ff6
+msgid "**Tutorial 02** (`02-basis-parameters/`): Parameters only (faster)"
+msgstr "**Tutorial 02** (`02-basis-parameters/`): Parameters only (faster)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:346
+#: d3671a9f246e4fe08d69826f93c147d6
+msgid "**Tutorial 01** (`01-kpoints-cutoff/`): K-point convergence"
+msgstr "**Tutorial 01** (`01-kpoints-cutoff/`): K-point convergence"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:347
+#: 538afd70e4204b38aba3aca2a1a23a39
+msgid ""
+"**Advanced**: `03-advanced-workflows/02-eos-basis-convergence/` - EOS "
+"with basis"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:351
+#: a63dbc8fbdfe44539b43737c5f019cdc
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:353
+#: ee78b56cb7424763b941275cdfae0058
+msgid ""
+"**Junquera et al.** (2001). \"Numerical atomic orbitals for linear-"
+"scaling calculations.\" *Phys. Rev. B* 64, 235111."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:354
+#: 1ba48f6992064a4aa769593bdd93fdda
+msgid "**SIESTA Manual**: Sections on basis sets and PAO parameters"
+msgstr "**SIESTA Mnul**: Sections on bsis sets و PAO prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:355
+#: 1f03a95808664f0ea67aa0d6593b353f
+msgid ""
+"**Artacho et al.** (2008). \"The SIESTA method; developments and "
+"applicability.\" *J. Phys.: Condens. Matter* 20, 064208."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/ /README.md:359
+#: dabbc25337ac401dbc230fcb55ee3c98
+msgid ""
+"*Back to [02-convergence](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

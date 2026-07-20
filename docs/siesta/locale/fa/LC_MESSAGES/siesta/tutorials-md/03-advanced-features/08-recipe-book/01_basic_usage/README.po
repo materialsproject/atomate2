@@ -1,0 +1,442 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:1
+#: 57db2f0604c843f389ab1819e67198e0
+msgid "Recipe Book: Basic Usage Examples"
+msgstr "Recipe Book: Bsic Usge مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:3
+#: 194122ee433948fbbf878d063eb23221
+msgid ""
+"This directory contains 7 standalone examples demonstrating the basic "
+"usage of the Recipe Book system. Each example is self-contained and can "
+"be run independently."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:5
+#: c79b494190944230be52c96f94c3b0aa
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:7
+#: a71262e13a664339938879b6ceb11d7e
+#, python-format
+msgid ""
+"The Recipe Book provides high-level workflows for complete material "
+"characterization with significant code reduction. Instead of writing 50+ lines"
+" of boilerplate, you can generate complete workflows with a single "
+"function call."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:9
+#: 34e8a1e770584bf3876d75a1497506b6
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:11
+#: eadbb0f0fb984dbf91151d43e0cbb9da
+msgid "1. Structure Analysis (`01_structure_analysis.py`)"
+msgstr "1. Structure Analysis (`01_structure_analysis.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:12
+#: a8330ddd65a84dd68daf56583e9470d3
+msgid ""
+"**Start here!** Always analyze your structure first to see what "
+"parameters the Recipe Book will use automatically."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:18
+#: 015df4e6a2a3473bb51c954bdbd6a7ac
+msgid "**Key features:**"
+msgstr "**Key fetures:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:19
+#: bc17f43dedd94d60b11ac3f818b1caa6
+msgid "Material type detection (metal, semiconductor, insulator)"
+msgstr "Mteril type detection (metl, semiconductیا, insultیا)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:20
+#: 0fd45c5aeb624df4b8ee1d2b6d5826e2
+msgid "Recommended parameter presets"
+msgstr "Recommended prmeter presets"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:21
+#: 603c78cad9da45b8867a668b5fd4438c
+msgid "Estimated computation time"
+msgstr "Estimted computtion time"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:22
+#: 682e59eacb824ee6ab90c464cf8574fd
+msgid "Automatic k-point and cutoff suggestions"
+msgstr "Automtic k-point و cutoff suggestions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:26
+#: 3e2e3850b38145368b3aab7392e6f6a5
+msgid "2. Complete Material Study (`02_complete_material_study.py`)"
+msgstr "2. Complete Material Study (`02_complete_material_study.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:27
+#: 7c2c4261ebed4edc9e4dca9eb3c9db3b
+msgid "The ultimate one-liner for comprehensive material characterization."
+msgstr "The ultimte one-liner برای comprehensive mteril chrcteriztion."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:33
+#: 16819ac870a1440d92c09d037bbedd65
+msgid "**Calculates:**"
+msgstr "**Clcultes:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:34
+#: a28d8b1a79094ba9a6332ff78b0bf5a3
+msgid "Electronic structure (bands, DOS)"
+msgstr "Electronic structure (bوs, DOS)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:35
+#: 20fcf7b069384c069ab3d4936da8c592
+msgid "Mechanical properties (elastic constants, bulk modulus)"
+msgstr "Mechnicl properties (elstic constnts, bulk modulus)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:36
+#: 7edcdcd04dcd465ca9568c74181f1f22
+msgid "Thermal properties (phonons, QHA, thermal expansion)"
+msgstr "Therml properties (phonons, QHA, rml expnsion)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:38
+#: 3019cf443e484ee090771a929057c747
+msgid "**Execution modes:**"
+msgstr "**Execution modes:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:39
+#: 15ab4abb611b42a5bf04e281aabadcdd
+msgid "`run_locally`: Full calculation (several hours)"
+msgstr "`run_locally`: Full calculation (several hours)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:40
+#: 315033f824c640d399bb7047365038b4
+msgid "`dry_run`: Preview inputs only (instant)"
+msgstr "`dry_run`: Preview inputs only (instant)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:44
+#: 47cab2cf88b94f63b78d05ac6446cf2d
+msgid "3. Quick Characterization (`03_quick_characterization.py`)"
+msgstr "3. Quick Characterization (`03_quick_characterization.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:45
+#: b9e5f1bb28c04e3f9eab9b3d7696887e
+msgid "Fast preliminary study (~1-2 hours) for quick screening."
+msgstr "Fst preliminry study (~1-2 hours) برای quick screening."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:51
+#: 8b1a20ed54774f769aacec5ac7b6464c
+msgid "**Includes:**"
+msgstr "**Includes:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:52
+#: 6f44e5731c3f43c4b472c98d7a386bda
+msgid "Structure relaxation"
+msgstr "Structure relxtion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:53
+#: e08869ebd863479e9baa297a97b05b32
+msgid "Band structure"
+msgstr "Bو structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:54
+#: 7b0d1663d9074b649061981dfe24cde1
+msgid "Essential properties"
+msgstr "ضروری properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:56
+#: 902719b7d47a4bea95bc51bb01c82230
+msgid "**Use case:** Quick material screening before expensive calculations"
+msgstr "**Use cse:** Quick mteril screening beبرایe expensive clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:60
+#: e5c0b43c48ee454dbedf8832fbe69474
+msgid "4. Selective Properties (`04_selective_properties.py`)"
+msgstr "4. Selective Properties (`04_selective_properties.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:61
+#: b4c30c8cfee644d4ad837a6ff09e2d40
+msgid "Calculate only specific property categories to save time."
+msgstr "Clculte only specific property ctegیاies to sve time."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:67
+#: aa311a1121d5440fa6e8767fa0cd2148
+msgid "**Available properties:**"
+msgstr "**Avilble properties:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:68
+#: 9c8f54e0a3714a98b4d7df8292eda8ee
+msgid "`electronic`: Bands, DOS, effective masses"
+msgstr "`electronic`: Bands, DOS, effective masses"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:69
+#: f5576d38a970461e9d3395508e45240b
+msgid "`mechanical`: Elastic constants, bulk modulus"
+msgstr "`mechanical`: Elastic constants, bulk modulus"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:70
+#: 45d0499dc6a8418cb94b3de1fd407459
+msgid "`thermal`: Phonons, QHA, thermal expansion"
+msgstr "`thermal`: Phonons, QHA, thermal expansion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:72
+#: 54188134a7a34e3bb947a451f877baf5
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:82
+#: eccdbd985ddb4603a619b3cf247d5435
+msgid "5. With Convergence Testing (`05_with_convergence_testing.py`)"
+msgstr "5. With Convergence Testing (`05_with_convergence_testing.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:83
+#: 919f1e5b5a6a4e819104ea3ba51be6c4
+msgid "Test computational parameters before running expensive calculations."
+msgstr "Test computtionl prmeters beبرایe running expensive clcultions."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:89
+#: 6d9ef0df7a854ef1ad5f625a7bff39e5
+msgid "**Tests:**"
+msgstr "**Tests:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:90
+#: 419f87ab6cff4b7fb9f9996b6810f968
+msgid "K-point convergence"
+msgstr "K-point convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:91
+#: 476c0625363e4a6a960a72dd1f805c62
+msgid "Mesh cutoff convergence"
+msgstr "Mesh cutoff convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:92
+#: 85354fd89d5642faa73d5fb512440e5f
+msgid "Basis set convergence"
+msgstr "Bsis set convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:94
+#: 9103928d49564384a67b13fc2ae43731
+msgid "**Benefit:** Ensures optimal accuracy/cost trade-off (adds ~30% time)"
+msgstr "**Benefit:** Ensures optiml ccurcy/cost trde-off (dds ~30% time)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:98
+#: e9afb49eb27545868e5002e633fc7229
+msgid "6. Dry-Run Mode (`06_dry_run_mode.py`)"
+msgstr "6. Dry-Run Mode (`06_dry_run_mode.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:99
+#: 34d55b58414440f398f0ba7821baf83c
+msgid ""
+"Generate all input files WITHOUT running calculations (99.9% time "
+"savings!)."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:105
+#: 4a2671d58f8f47bbaa83102bd6179e7c
+msgid "**Perfect for:**"
+msgstr "**Perfect برای:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:106
+#: 89770254dc0848efa8925ce1efa8282b
+msgid "Checking parameters before expensive runs"
+msgstr "Checking prmeters beبرایe expensive runs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:107
+#: 8f8af658df5441a0b4735106345a4aa5
+msgid "Debugging workflow setup"
+msgstr "Debugging wیاkflow setup"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:108
+#: 2aa90abe14604bf0a5fd59103eacdf4a
+msgid "Learning SIESTA input file structure"
+msgstr "Lerning SIESTA input file structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:110
+#: f1a5d9b7188d4d4a9835096a92dc57a8
+msgid "**Output:** All `.fdf`, `.psml`, and structure files in `dry_run_output/`"
+msgstr "**Output:** All `.fdf`, `.psml`, and structure files in `dry_run_output/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:114
+#: ce0d791bfcdd4b8ab0b049c037ae4cc4
+msgid "7. Different Materials (`07_different_materials.py`)"
+msgstr "7. Different Materials (`07_different_materials.py`)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:115
+#: d8ac01ca4b9f4aa8a2bb7bb5d92aeb41
+msgid "Demonstrates automatic material type detection and parameter adjustment."
+msgstr "Demonstrtes utomtic mteril type detection و prmeter djustment."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:121
+#: 5805489064974c44b524ac4dffd32502
+msgid "**Examples:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:122
+#: 1a4fe52fa092436d81efaca91a598fb8
+msgid "**Silicon** (semiconductor): Standard k-points, no smearing"
+msgstr "**Silicon** (semiconductیا): Stوrd k-points, no smering"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:123
+#: 77e3ae758e1648c891605f65329a4cb3
+msgid "**Aluminum** (metal): Higher k-point density, Fermi-Dirac smearing"
+msgstr "**Aluminum** (metl): Higher k-point density, Fermi-Dirc smering"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:125
+#: 78d768b070c14d28bf446022112492b2
+msgid ""
+"**Key point:** Recipe Book automatically adjusts parameters based on "
+"material type!"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:129
+#: 3c43cf997a12445eb15fda919a4dceb2
+msgid "Execution Options"
+msgstr "Execution Options"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:131
+#: a3c832a55b9f49e9b6ef0aa39fa873c0
+msgid "All examples (except #1 and #6) support two execution modes:"
+msgstr "All exmples (except #1 و #6) suppیاt two execution modes:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:133
+#: 40012ee1c1bd4671a3b288f308c80921
+msgid "Run Locally"
+msgstr "Run Loclly"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:141
+#: 6a1a0467bff146afaa97e7b311d925ff
+msgid ""
+"**Pros:** Get real results **Cons:** Takes hours to complete **Use "
+"when:** You need actual calculation results"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:145
+#: 6d6c692b9dc0434689dee13f93d5e94e
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:151
+#: 4b0250eb432c4a67a5fc8562cc42e800
+msgid ""
+"**Pros:** Instant feedback (seconds instead of hours) **Cons:** No actual"
+" calculations performed **Use when:** Testing, debugging, or previewing "
+"inputs"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:157
+#: 35e8bf36a06a492ba0e33eb96e75eab4
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:170
+#: 130a33784f9d4e9fa8d230016a02f4f9
+msgid "Tips"
+msgstr "نکتهs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:172
+#: bd006e2f1968457cba495466117c5584
+msgid ""
+"**Always analyze first**: `RecipeBook.print_analysis()` shows what "
+"parameters will be used"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:173
+#: 870ff7835caa4ad18f8f809d21fe5d71
+msgid ""
+"**Use dry-run mode**: Perfect for checking setup before expensive "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:174
+#: 5b8b8b1030c349af8c6ed4c7eb816e6b
+msgid ""
+"**Start small**: Try `quick_characterization()` before "
+"`complete_material_study()`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:175
+#: ee2b8ffa0c6d4248ba2c32ea6f0444e6
+msgid "**Selective properties**: Only calculate what you need to save time"
+msgstr "**Selective properties**: Only clculte wht you need to sve time"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:176
+#: ef133cc97ea94b868e63e64c1e432417
+msgid "**Convergence testing**: Adds 30% time but ensures optimal parameters"
+msgstr "**همگرایی testing**: Adds 30% time but ensures optiml prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:178
+#: e2481392e3fd463db96e722484e69cd2
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:180
+#: 3e04b23a9f1a43cc9902d23c954f780c
+msgid ""
+"**02_material_specific_workflows/**: Specialized workflows for different "
+"material types"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:181
+#: 28dca22aa4de4f61babeced7386cbe55
+msgid "**03_property_calculations/**: Individual property calculations"
+msgstr "**03_property_clcultions/**: Individul property clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:182
+#: b20368fc0579471798ee5e0b601a5f7e
+msgid ""
+"**04_advanced_features/**: Custom parameters, convergence testing, error "
+"handling"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:184
+#: feded29db0dc49f28a508baf33800ad4
+msgid "Common Workflows"
+msgstr "Common گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:186
+#: bd6244cec40840278f651fceb7c01074
+msgid "Fast screening"
+msgstr "Fst screening"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:191
+#: 1f9238f5b31b4aec82ae1af6e313adac
+msgid "Electronic properties only"
+msgstr "Electronic properties only"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:196
+#: a6a2c294900a46b587685953a67a1d34
+msgid "With convergence tests"
+msgstr "With convergence tests"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:205
+#: 2865b9e8b3f44efa95c63356789b8b35
+msgid "Preview inputs"
+msgstr "Preview inputs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/01_basic_usage/README.md:212
+#: f602e554e8b849e282fc678aa20b182f
+msgid ""
+"**Need help?** Check `tutorials/08-recipe-book/README.md` for complete "
+"documentation."
+msgstr ""

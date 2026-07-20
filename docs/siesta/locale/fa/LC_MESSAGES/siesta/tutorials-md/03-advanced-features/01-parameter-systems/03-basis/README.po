@@ -1,0 +1,682 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:1
+#: 78d10ae0dbf34676bab2eadc94ed9ceb
+msgid "Tutorial 07: Basis Set Customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:3
+#: 0171923f585e4f4e88abddd30925d074
+msgid ""
+"This tutorial series demonstrates how to customize basis sets in SIESTA "
+"calculations using atomate2siesta. Basis sets are crucial for balancing "
+"accuracy and computational cost."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:5
+#: 8c53df0cda9342e5bb9a66dca309c580
+msgid "Tutorial Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 54b7c5a58ea2405aa9d6839f7d0c4df5
+msgid "File"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 7aa14c5854e048bc883b8d3249602134
+msgid "Description"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 4a7097c606bc40df9e0d4bc83e825b13
+msgid "Complexity"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 0f98ceb27d5f4763aa908c09acf4c84b
+msgid "`01_global_basis_size.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 5a816a972d0a4241bad7d7c6b6944155
+msgid "Set global basis size (SZ, DZ, DZP, TZP)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 9c0cad4b6a6648039be3d50d27d93a02 bad9825494184244bbe24e9bfc2e01c3
+msgid "⭐ Beginner"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 6e70ce8127944e1a9f8139ebf05b8a91
+msgid "`02_single_atom_override.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: c9b225591b6549dabf8e3e2ac73589be
+msgid "Per-species basis with %block PAO.BasisSizes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 9a97728452ba409b820b274b1b701e8a
+msgid "⭐⭐ Beginner"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 576bc5053a134687b5c3eb777af40af8
+msgid "**`03_1_per_atom_direct.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 32cab06979cc4db1954204a14cc61942
+msgid "**🆕 Per-atom basis (direct specification)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 335303777bbb4b8b9c5312e84e1fc4e7 a5fadf468b6e4b7583fd471e1df13b80
+#: ec5b08cfd4e24ee2807624e959f4d8f1
+msgid "⭐⭐ Intermediate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 7067492cb39745b4a0d8c9f86aa3db42
+msgid "**`03_2_per_atom_grouped.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 00781d6b529f4d60be53c6d6bc952326
+msgid "**🆕 Per-atom basis (grouped/layer-based)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: f9d8b055e85b46a999bc24a8f101ddae
+msgid "`04_custom_pao_basis_simple.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 08ef98206c23460a9282c07c8e9166ca
+msgid "Full custom basis specification with %block PAO.Basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 6f852e73ebdc4e3fa0af6b2e69bab8f8 f0efeb0b3b50419a9da7adc87e9c9020
+#: fa1c919b66ea42a3a3dad3d0c60a3b50
+msgid "⭐⭐⭐ Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: e0afb9db55364100a35c39f0dab03dbb
+msgid "`05_custom_pao_basis_with_polarization.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: c3357dc552f141cb96b7f4b80cfd475d
+msgid "Custom basis + polarization orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 84e00db7918642ad906107ae204668e7
+msgid "`06_multispecies_custom_basis.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 7385369f604f43e4be7f206802da0459
+msgid "Custom basis for multiple species (Mg+O)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 01aa8fae44fe4c9f86225c4910d253c3 9c474238212e48de8e2e55d440022ac3
+msgid "⭐⭐⭐⭐ Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 2d06cd231e574336af99cc849d8d0bb0
+msgid "`07_combining_blocks.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 519979d80a6f432ab119e0678eb80de4
+msgid "Combine PAO.BasisSize with %block PAO.Basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 19f7d504f9ae49e6ab11d3b98a677019
+msgid "⭐⭐⭐⭐ Expert"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 0517b36db85145719a96a93547f8f481
+msgid "**`08_species_variants_surface.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 662c7803dacb468483c5cd945f7ee17e
+msgid "**🆕 Species variants for surface calculations (dict format)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 70b96dc18e264851b7f751f3cdae6ecb
+msgid "**`09_species_variants_adsorption.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 21c02088758c4d20854f95d0a0530f75
+msgid "**🆕 Species variants for adsorption studies**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: deb59fef5d064e998064d0b2b5b6fad1
+msgid "⭐⭐⭐ Intermediate-Advanced"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 8ca47b30492c453db9a36bb2ea265454
+msgid "**`10_species_variants_bsse_ghost.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 9f4c88d92aa945da8770716863978d63
+msgid "**🆕 Species variants for BSSE corrections (ghost atoms)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 6d0073f0dcc8442f8d6504c7dc683f8b
+msgid "**`11_pao_basis_helpers.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 0d72a2338854454a87272078d2dff8b4
+msgid "**🆕 PAO.Basis helper functions (programmatic generation)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: d3898c131640459885a08ab11bb6ae2b
+msgid "**`12_reading_ghost_atoms.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md
+#: 0c7c5b85a9b9488cb70999556f938963
+msgid "**🆕 Reading structures with ghost atoms (CIF/FDF)**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:23
+#: 3a0ce63143264c9fbd0efa6a177f7c2c
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:25
+#: 0c509b44630b426b884f5b3b7bd8397a
+msgid "Standard Basis Sizes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:35
+#: 86fc22381c444f248cfb785fb72ffafe
+msgid "Per-Species Basis Override"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:45
+#: f4d88bd18ba548cf93cd8248ffdd04e8
+msgid ""
+"Note: This is per-SPECIES (element type), not per-atom. All Mg atoms get "
+"DZP, all O atoms get TZP."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:47
+#: e2c9f92374e1470cbf2366a8c1e7bad7
+msgid "Per-Atom Basis (🆕 NEW in v1.0.0)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:49
+#: 08f9c026ff964a1aa1bdd21d6c43cbd4
+msgid "The **per-atom basis helpers** enable atom-level precision control:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:83
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:109
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:166
+#: 1069ef8228c64e90aa42f790ce160103 36b8c14847504da29459a84a1498e8a2
+#: 61ad2037d45c4711a7f51a76ef9413c7
+msgid "**Use Cases**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:84
+#: fadd8d0fa46c45afb637f214a3f64273
+msgid ""
+"**Surface slabs**: Different basis for surface vs bulk atoms (even same "
+"element)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:85
+#: abde35c0c7e04c7693ad9d6016acc46b
+msgid "**Defects**: High accuracy around defect site"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:86
+#: 88ee615b42ca4833b46791d88637152e
+msgid "**Dopants**: Special treatment for specific doped atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:87
+#: 7af266ca11864dc7aee662eec3334216
+msgid "**Layer-based systems**: Automatic grouping by z-coordinate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:89
+#: 04ea46110c494ba8879a94b0116b45c2
+msgid "See tutorials 03.1 and 03.2 for detailed examples!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:91
+#: 857fd9671f4e45628a0e9ea2cb06ef97
+msgid "Species Variants (🆕 NEW in v1.0.0)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:93
+#: 806d347b47424e12b32853dc554c3d62
+msgid ""
+"The **dict format** enables species variants like O_surface, O_bulk, "
+"O_ghost:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:110
+#: 27e5be8c5fbb4dc89a396b282f79897c
+msgid "**Surface calculations**: Different basis for surface vs bulk atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:111
+#: 4ebc0909bd5d4fdeace87b5421c61f6c
+msgid ""
+"**Adsorption studies**: High accuracy for adsorbate + interface, standard"
+" for substrate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:112
+#: f5ee438643cc4c42b7be2f285c3f73fc
+msgid "**BSSE corrections**: Ghost atoms (Z < 0) for counterpoise method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:114
+#: 96b8feb08e9a4f3bb3c400f2dddf918c
+msgid "See tutorials 08, 09, 10 for detailed examples!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:116
+#: 9b237a49360c4f92b105cf38cd9d253e
+msgid "PAO.Basis Helper Functions (🆕 NEW in v1.0.0)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:118
+#: 944102443a4947eab3080ca61ef0a79f
+msgid ""
+"The **PAO.Basis builder** enables programmatic generation of custom "
+"orbital blocks:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:159
+#: aab7709dce0648efb7d3e9df61d1b313
+msgid "**Key Features**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:160
+#: b026f8d14bbd475cae9977495dc89f17
+msgid "Programmatic generation (no manual FDF string formatting)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:161
+#: c925dd2e4abe49d6b5dfb3a767ed1186
+msgid "Validation: nzeta vs rc length, l range, split_norm"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:162
+#: 473aea9a096645be9fb4221aea6f1088
+msgid ""
+"All SIESTA PAO flags: polarization, split_norm, soft_conf, charge_conf, "
+"etc."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:163
+#: 68c56c60b8734ae5bf4152ea7c260f23
+msgid "Species variants support: O_surface, O_bulk, O_ghost, etc."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:164
+#: 269c60b1f5f5417191f9cbcf8d3ebe5e
+msgid "Returns list format (ready for user_params)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:167
+#: 072aa3f2bad3454387bfc63c1fc3f6e7
+msgid "Custom cutoff radii optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:168
+#: 9c3f99982d1845408f1311f584291c72
+msgid "Species variants with different orbital configurations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:169
+#: b66d5f31464a474a805a0b9b88afcfdb
+msgid "Advanced basis set development"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:170
+#: 8930e70f36944d2db1880c7a6f6a3ebd
+msgid "Polarization orbital control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:171
+#: b093ad2830c6455da3afe0da7077f4cf
+msgid "Combine with per-atom helpers for ultimate control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:173
+#: 7bb619cc3ad34e3b8be059f95c71358f
+msgid "See tutorial 11 for detailed examples!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:175
+#: 99cdfd400c82487aacb46a421f278b76
+msgid "Custom Basis Block"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:195
+#: 8fbbe096de1b4f2096385b9476c40c38
+msgid ""
+"**Important**: `%block PAO.Basis` must be a **list of strings** (split by"
+" newline), not a single string!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:197
+#: cf69ec7cb1d14e859f3683e297e48720
+msgid "PAO.Basis Format Explained"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:205
+#: 4689a53b169740bb9eae9abbf8f6c548
+msgid "Where:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:206
+#: b360771979904681a06aa442b6511a83
+msgid "`Species`: Element symbol (Si, O, etc.)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:207
+#: f17b091464f144d9b10509a0d465b472
+msgid "`NumberOfShells`: Number of angular momentum shells"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:208
+#: d30f796f70d44ece8879d1766ff491d9
+msgid "`n=N`: Principal quantum number"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:209
+#: 58c61426ff3c4fa3b77bc7171b99084c
+msgid "`l`: Angular momentum (0=s, 1=p, 2=d, 3=f)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:210
+#: dc2d657fb57e42159a6ea47bd7dea220
+msgid "`Nzeta`: Number of zeta functions (1=SZ, 2=DZ, 3=TZ)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:211
+#: f1f84793b338434983675c89b34a8bfd
+msgid "`Type`: Optional flags:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:212
+#: dab9fdb7f0534cb3a8777a69b54dc347
+msgid "`E`: Energy shift method (followed by energy in meV, split norm)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:213
+#: 5c70a5f2486343bc874036e2f26638ec
+msgid "`P`: Polarization orbital (followed by polarization index)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:214
+#: 2867fe43a6dc43db9fe701834a820501
+msgid "`rc1, rc2, ...`: Cutoff radii in Bohr (one per zeta)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:216
+#: 9613fc63f14842daac975c0907d65474
+msgid "Common Scenarios"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:218
+#: 83f8575db20642a8ad68ef1c39de6e52
+msgid "1. Production Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:223
+#: abd62c3c42024f478b47f720404d812c
+msgid "2. High-Accuracy Benchmarks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:228
+#: f5150777fdb347bc920980ba01e8fdb1
+msgid "3. Multi-Species System (e.g., MgO)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:237
+#: cb937b06a564488fa1d2e6a7de15c982
+msgid "4. Custom Basis for One Species"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:255
+#: bf7354b016734dc49a0a72065a9d077f
+msgid ""
+"Note: When both are present, PAO.Basis takes priority for its species, "
+"PAO.BasisSize is fallback for others."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:257
+#: 59e363e759f54ad2814e933d32edfd81
+msgid "Running the Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:259
+#: 0eab07a4a4a746288688ec0f1323d82e
+msgid "Each tutorial is standalone:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:268
+#: 14f8985c04264d0b9485ec00f1b70178
+msgid ""
+"All tutorials use `dry_run=True` so they generate FDF files without "
+"running SIESTA. Check the generated `siesta.fdf` files in the "
+"`dry_run_output` directories."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:270
+#: 3bdd425772ec44de900236c72a849006
+msgid "Important Notes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:272
+#: fae180ea077b48d1af84fdd1e618c822
+msgid "⚠️ **Block Format**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:273
+#: e6cade9e11214b0bb2b2baa5164edb45
+msgid "`%block PAO.Basis` must be a **list of strings** (one per line)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:274
+#: 134a7a2789f74cc89771643b735c7a29
+msgid "Use `.strip().split('\\n')` to convert multi-line string to list"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:275
+#: 6dc5cb3c37564da08abf760955ec420b
+msgid "Direct string assignment will NOT work!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:277
+#: 45b656277be949c6b33b216df7dfb486
+msgid "⚠️ **Basis Convergence**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:278
+#: b26cf54ea50e4934ab27e4866df55b67
+msgid "Always test convergence with respect to basis size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:279
+#: a64abb4d9eec44a9b93c5cec8d132f13
+msgid "Total energy differences should converge to desired accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:280
+#: c4a820ec101445859ef6ae304ec31250
+msgid "Larger basis ≠ always better (diminishing returns)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:282
+#: a65e4f77f6794cc39938990d0a8bd1d6
+msgid "⚠️ **Computational Cost**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:283
+#: 70bf2eda79c54df596fc948111f775ad
+msgid "SZ/DZ: ~1x (baseline)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:284
+#: dda0a3d01ca34ef58d6ea8a9203110a9
+msgid "SZP/DZP: ~2-3x slower than SZ/DZ"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:285
+#: 72bd66007fe44d8ca58c6a20b494b6ae
+msgid "TZP: ~5-10x slower than DZP"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:286
+#: 230ea69669734da49d086623a1766505
+msgid "Custom basis: Depends on number of orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:288
+#: 9d6d70560d95472d8026e865fd0f31d8
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:290
+#: c9ec7003d6c44b63a539bb8bf155fe79
+msgid "**Start Simple**: Use standard basis sizes (DZP recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:291
+#: 0cedf285d793469cbe7bfcec9511c7e5
+msgid "**Test Convergence**: Verify results with larger basis (TZP)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:292
+#: 0fa45864227e454186131ef54204d38a
+msgid ""
+"**Understand Priority**: %block PAO.Basis > %block PAO.BasisSizes > "
+"PAO.BasisSize"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:293
+#: f34a75b07b354c59abcce921ffb4ad49
+msgid ""
+"**Per-Species vs Per-Atom**: Current support is per-SPECIES (element "
+"type), not per-atom"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:294
+#: 5929244bb1d54fb4a9e6a62e5db7c8e8
+msgid ""
+"**List Format**: Always use `.split('\\n')` for blocks (they must be "
+"lists!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:295
+#: cd374070bb544e09a1045a4cb9195e17
+msgid ""
+"**Coexistence**: PAO.BasisSize can coexist with %block PAO.Basis "
+"(fallback mechanism)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:296
+#: b767aae3ce934a2bb72f5a50ebd0daa7
+msgid "**Document Choices**: Note basis decisions in your workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:297
+#: f4da7785e74b4a658653852367e7ed7b
+msgid "**Validate**: Compare with established basis sets when possible"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:299
+#: d32917667d5748498f8d66b480499490
+msgid "Further Reading"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:301
+#: 8a482f267d8644f2bc46a5e60572c537
+msgid "SIESTA Manual: Section on PAO Basis Sets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:302
+#: 27d8caf21b434f6ba2566df49906ca46
+msgid ""
+"`atomate2siesta-pseudos basis` command: Generate basis blocks from "
+"pseudopotentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:303
+#: 2a8d44994c844ac9960572b8a46a4ede
+msgid "Tutorial 02-convergence: Basis convergence studies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:305
+#: 8619e3c2f0e94c3eac7c76602af807c2
+msgid "See Also"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:307
+#: ebd66e17a4e243908ef88ae8be9b5011
+msgid "`../02-BandStructureMaker/`: General parameter customization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:308
+#: 3aa7c5524b834cee898cced38dd57445
+msgid ""
+"`../../../02-workflows/01-convergence/02-basis-convergence/`: Systematic "
+"basis convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/03-basis/README.md:309
+#: a40bb83744c64e3b8269442536a03729
+msgid ""
+"SIESTA Documentation: [https://siesta-project.org/](https://siesta-"
+"project.org/)"
+msgstr ""
+

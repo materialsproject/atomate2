@@ -127,9 +127,11 @@ class BaseGruneisenMaker(Maker, ABC):
             opt_struct["ground"] = structure
             prev_dir_dict["ground"] = prev_dir
 
-        # Add job to get expanded and shrunk volume structures
+        # Add job to get expanded and shrunk volume structures.
+        # Use opt_struct["ground"], which is set in both branches above; the
+        # local "bulk" only exists when bulk_relax_maker is not None.
         struct_dict = shrink_expand_structure(
-            structure=bulk.output.structure, perc_vol=self.perc_vol
+            structure=opt_struct["ground"], perc_vol=self.perc_vol
         )
         jobs.append(struct_dict)
         const_vol_relax_maker_kwargs = {}

@@ -1,5 +1,6 @@
 """Schemas for elastic tensor fitting and related properties."""
 
+import logging
 from copy import deepcopy
 from enum import Enum
 
@@ -20,7 +21,10 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from typing_extensions import Self
 
 from atomate2 import SETTINGS
+from atomate2.common.analysis.elastic import estimate_expansion_order
 from atomate2.common.utils import _recursive_to_list
+
+logger = logging.getLogger(__name__)
 
 
 class DerivedProperties(BaseModel):
@@ -223,7 +227,14 @@ class ElasticDocument(StructureMetadata):
         ]
 
         if order is None:
-            order = 2 if len(stresses) < 70 else 3  # TODO: Figure this out better
+            # Infer the expansion order from the structure of the strain data
+            # (number of strain states, coupled states, magnitudes per state)
+            # rather than the raw number of calculations.
+            order = estimate_expansion_order(strains)
+            logger.info(
+                f"No expansion order specified; estimated order={order} from "
+                f"{len(strains)} strains."
+            )
 
         if order > 2 or fitting_method == "finite_difference":
             # force finite diff if order > 2

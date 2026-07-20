@@ -1,0 +1,634 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:1
+#: b6cb12b71c534e4f888a92a3db8a4c90
+msgid "05: Vibrational Properties"
+msgstr "05: Vibrtionl Properties"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:3
+#: 62553714ba80446d932f7a15ccab459b
+msgid "**Focus**: Phonons, Grüneisen parameters, and thermal properties"
+msgstr "**Focus**: فونون‌ها, Grüneisen prmeters, و rml properties"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:5
+#: dc079ac629f24201ba25ba6637ecf859
+msgid "**Difficulty**: Advanced"
+msgstr "**سطح سختی**: پیشرفته"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:7
+#: 65961d8c0d3e4df6a27a7aad7392eea5
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:8
+#: df145b37bc3144bb97f6125760c727e3
+msgid ""
+"Completed [02-convergence](../../02-workflows/01-convergence/) (converged"
+" parameters essential!)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:9
+#: 6a4fde38e73046be8a9ddea8dddeddf8
+msgid "Understanding of phonons and lattice dynamics"
+msgstr "درک of phonons و lttice dynmics"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:10
+#: 8301802643164ee9b2d372d18d183637
+msgid "Familiarity with phonopy package"
+msgstr "Fmilirity با phonopy pckge"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:11
+#: f0b839f2429a4e10bfa5edc692a63d43
+msgid "Well-relaxed structures (forces < 0.01 eV/Å)"
+msgstr "Well-relxed structures (برایces < 0.01 eV/Å)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:15
+#: 6a457e34ba7645c3bbaf2d925e1bd579
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:17
+#: 35434a4e1ef94b5c990bf8c3b1127e8d
+msgid "[01-phonons](01-phonons/)"
+msgstr "[01-phonons](01-phonons/)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:18
+#: ca4fb4ca8164480f9afac8aaf33715bf
+msgid ""
+"**Description**: Phonon calculations using phonopy integration with "
+"automatic plotting **Difficulty**: Advanced **Time**: ~10 min (dry-run), "
+"~2-6 hours (full calculation) **Key Concepts**: Phonopy, supercells, "
+"force constants, phonon band structure, DOS, thermal properties"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:23
+#: d58b16d3f72049f28c5184990dc3ac6e
+msgid "[02-gruneisen-parameters](02-gruneisen-parameters/)"
+msgstr "[02-gruneisen-prmeters](02-gruneisen-prmeters/)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:24
+#: 48ee00a8ae5a4552b65843c5778048ff
+msgid ""
+"**Description**: Grüneisen parameters from volume-dependent phonon "
+"calculations **Difficulty**: Advanced **Time**: ~15 min (dry-run), ~6-12 "
+"hours (full calculation) **Key Concepts**: Grüneisen parameters, mode-by-"
+"mode analysis, thermal expansion, anharmonicity"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:29
+#: 2eac6f3e32f14c2cabae5051d86912f0
+msgid "[03-qha-thermodynamics](03-qha-thermodynamics/)"
+msgstr "[03-qh-rmodynmics](03-qh-rmodynmics/)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:30
+#: 863ff8ab0a8d4fabbf0f2495e53c7f0c
+msgid ""
+"**Description**: Quasi-harmonic approximation (QHA) for temperature-"
+"dependent thermodynamics **Difficulty**: Advanced **Time**: ~20 min (dry-"
+"run), ~12-24 hours (full calculation) **Key Concepts**: QHA, thermal "
+"expansion, heat capacity, Gibbs free energy vs T and P"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:37
+#: 040829ad9e0f4dd6921a7933efef94da
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:39
+#: a7fd7f0b07044b309588f95bd6295e8e
+msgid "These tutorials build on each other:"
+msgstr "These tutیاils build on ech or:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:41
+#: a55039b1574c456a9c47b82f2ccf93f9
+msgid ""
+"**Foundation**: [01-phonons](01-phonons/) - Master basic phonon "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:42
+#: 1c94ee2ae9f64ce7ae37e33976e48b7a
+msgid ""
+"**Anharmonicity**: [02-gruneisen-parameters](02-gruneisen-parameters/) - "
+"Add volume dependence"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:43
+#: f1493f1a93ca4fe5b8fc8ab85a2fd0d1
+msgid ""
+"**Thermodynamics**: [03-qha-thermodynamics](03-qha-thermodynamics/) - "
+"Complete T,P-dependent properties"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:45
+#: 710b5bf2f31b40b6852b68e62801621b
+msgid "**Important**: Each tutorial requires the previous one as foundation!"
+msgstr "**مهم**: Ech tutیاil requires  previous one s foundtion!"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:49
+#: 790bc72dd64c4e0aa15d8e3d22e18522
+msgid "Why Vibrational Properties?"
+msgstr "Why Vibrtionl Properties?"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:51
+#: c33bdda062af488ba40676f0de82c29d
+msgid "Vibrational calculations enable:"
+msgstr "Vibrtionl clcultions enble:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:52
+#: 78ee63c0c0cc4e3a9ed4cf26e6684144
+msgid "✅ **Thermodynamic stability**: Free energy vs temperature"
+msgstr "✅ **Thermodynmic stbility**: Free energy vs temperture"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:53
+#: 66131c34c3de41a6847c1df4910d19b2
+msgid "✅ **Thermal expansion**: α(T) from QHA"
+msgstr "✅ **Therml expnsion**: α(T) from QHA"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:54
+#: c6eaed02a66141d6aa6b6941559656d5
+msgid "✅ **Heat capacity**: Cv(T) and Cp(T)"
+msgstr "✅ **Het cpcity**: Cv(T) و Cp(T)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:55
+#: 0ec8afd5111b4ed9a3bfde6f24bc07ec
+msgid "✅ **Phase transitions**: Detect structural instabilities"
+msgstr "✅ **Phse trnsitions**: Detect structurl instbilities"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:56
+#: 09233c670a674a0a8cef6953fe9a621d
+msgid "✅ **Spectroscopy**: Compare with IR/Raman experiments"
+msgstr "✅ **Spectroscopy**: Compre با IR/Rmn experiments"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:57
+#: ca0ebcb9c148453aa88b5116a6b0686f
+msgid "✅ **Thermal conductivity**: Starting point for transport properties"
+msgstr "✅ **Therml conductivity**: Strting point برای trnspیاt properties"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:61
+#: 9c57931779134a6395953601348c4e6e
+msgid "Computational Requirements"
+msgstr "Computtionl Requirements"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:63
+#: 2062937f89a049b9bc8e7221c43ead5b
+msgid "Phonon Calculations"
+msgstr "فونون محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:64
+#: 0cd7eb0e7da34589afd89aed7f0e4e8f
+msgid "**Supercell size**: 2×2×2 minimum (3×3×3 for accuracy)"
+msgstr "**Supercell size**: 2×2×2 minimum (3×3×3 برای ccurcy)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:65
+#: 235d822e680c48df9394118e012217a4
+msgid "**Number of calculations**: 10-100+ (depends on symmetry)"
+msgstr "**Number of clcultions**: 10-100+ (depends on symmetry)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:66
+#: 06817a6e6351491492f6020cf44aea61
+msgid "**Time per calculation**: Similar to relaxation"
+msgstr "**زمان per clcultion**: Similr to relxtion"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:67
+#: ce00e43f39e84395a6689ab484c5606f
+msgid "**Total time**: Hours to days"
+msgstr "**Totl time**: Hours to dys"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:69
+#: 91831589c9904d02b4069f6a9b040556
+msgid "**Example**: Si 2×2×2 supercell"
+msgstr "**مثال**: Si 2×2×2 supercell"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:70
+#: 2bf5c79eda304b459d0e1815056ddfdc
+msgid "64 atoms → ~6 irreducible displacements"
+msgstr "64 toms → ~6 irreducible displcements"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:71
+#: a650a3d55cbb4d9794cbabe60980f8cf
+msgid "~30 min per displacement = 3 hours total"
+msgstr "~30 min per displcement = 3 hours totl"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:73
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:138
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:273
+#: 7b26b33a9934417c871ef8969c02f8f5 b6d26d7b992543aca5efeb99746b65d4
+#: ba56ead5abe5451985f59f4f8a7b043f
+msgid "Grüneisen Parameters"
+msgstr "Grüneisen Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:74
+#: 797af8d8f03e49bc81d010a6ee43a96d
+msgid "**Multiply phonon cost by 3-5** (different volumes)"
+msgstr "**Multiply phonon cost by 3-5** (different volumes)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:75
+#: 2e77046c42104f9fa00e4c8dfeffc4bb
+msgid "**Example**: Si phonons × 5 volumes = 15 hours"
+msgstr "**مثال**: Si phonons × 5 volumes = 15 hours"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:77
+#: 368e484f417b4bfaaa408ee9be3a41bb
+msgid "QHA Calculations"
+msgstr "QHA محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:78
+#: a40bbd631e654b268b0e0a9824c6a57d
+msgid "**Multiply Grüneisen cost by 1.5** (additional analysis)"
+msgstr "**Multiply Grüneisen cost by 1.5** (dditionl nlysis)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:79
+#: c56ad3e72e9f4dd1897fb856fdae3ed1
+msgid "**Example**: Si QHA = ~20-25 hours total"
+msgstr "**مثال**: Si QHA = ~20-25 hours totl"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:81
+#: 9f875987c4b44cf9be2be2e6c51d1d09
+msgid ""
+"**Recommendation**: Use HPC cluster (see [04-infrastructure/02-job-"
+"submission](../../03-advanced-features/03-infrastructure/02-job-"
+"submission/))"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:85
+#: e29c941bafd0481eab28de11d5b13135
+msgid "Critical Requirements"
+msgstr "Criticl Requirements"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:87
+#: 8eba66c238a64b1fa8f9536550ee4f24
+msgid "1. Well-Relaxed Structure ⚠️"
+msgstr "1. Well-Relxed Structure ⚠️"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:93
+#: 8a3487ca191a4d8d89d7881909b9d0f0
+msgid "2. Converged Parameters ⚠️"
+msgstr "2. Converged Prmeters ⚠️"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:99
+#: fe33db3a1f3746929f7e87ac438bc3bb
+msgid "3. Symmetry Considerations"
+msgstr "3. Symmetry Considertions"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:106
+#: 94fb58291a0b4413bdeabf573a5e91f9
+msgid "4. Supercell Size"
+msgstr "4. Supercell Size"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:115
+#: c15de395ac2340cc9ad6c463f42f8697
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:117
+#: 8ddad461f73b4260aa74b41e70118e38
+msgid "Basic Phonon Calculation"
+msgstr "Bsic فونون محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:159
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:279
+#: 13c20df3329f4ad98befde1fcdecd811 98f55f5057ee46859a5010ac42259b35
+msgid "QHA Thermodynamics"
+msgstr "QHA Thermodynmics"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:182
+#: e9876c62d6da46db9ca1978dd6360f29
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:184
+#: f683b773cfeb43a28ceb6005874dec63
+msgid "Issue 1: \"Imaginary frequencies (negative)\""
+msgstr "Issue 1: \"Imginry frequencies (negtive)\""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:185
+#: 3a82990903644e4baa7f508db2bbc475
+msgid "**Cause**: Structure not fully relaxed OR unstable structure **Solution**:"
+msgstr "**Cuse**: Structure not fully relxed OR unstble structure **Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:193
+#: 01ba3c8ead8044658cec7334ffe16c94
+msgid "Issue 2: \"Too many displacement calculations\""
+msgstr "Issue 2: \"Too mny displcement clcultions\""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:194
+#: b221ff86dbfe4ff8aa7de325f0950f36
+msgid "**Cause**: Low symmetry structure **Solution**:"
+msgstr "**Cuse**: Low symmetry structure **Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:196
+#: 45805bacce4a4e01a33b3ad0a762acda
+msgid "Use symmetry-reduced displacements (automatic in phonopy)"
+msgstr "Use symmetry-reduced displcements (utomtic in phonopy)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:197
+#: 6e7b7b57f74d4f2bbe5a877af95ee16b
+msgid "Start with smaller supercell (2×2×2)"
+msgstr "Strt با smller supercell (2×2×2)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:198
+#: 5517c98a45254b34af1d07cd230f7831
+msgid "Consider if high-symmetry approximation is acceptable"
+msgstr "Consider if high-symmetry pproximtion is cceptble"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:200
+#: 5dc914b834f0405bb38d955ed5160fd0
+msgid "Issue 3: \"Phonon calculation takes forever\""
+msgstr "Issue 3: \"فونون clcultion tkes برایever\""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:201
+#: 02553a565c1d40ceb2a34a60560de08e
+msgid "**Cause**: Large supercell or many irreducible displacements **Solution**:"
+msgstr "**Cuse**: Lrge supercell یا mny irreducible displcements **Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:211
+#: c7d3676662af41619722e1b21a722598
+msgid "Issue 4: \"Thermal properties look wrong\""
+msgstr "Issue 4: \"Therml properties look wrong\""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:212
+#: 93b28fe0c20f4bb7bfd268dcb415d67e
+msgid ""
+"**Cause**: Insufficient supercell size or unconverged parameters "
+"**Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:214
+#: 6cf050f4d1014b5bb74037076e82716e
+msgid "Increase supercell size (2×2×2 → 3×3×3)"
+msgstr "Increse supercell size (2×2×2 → 3×3×3)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:215
+#: 46f409da9b3d4d2a926ee5d6922ae0cd
+msgid "Verify k-point convergence"
+msgstr "Verify k-point convergence"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:216
+#: 2f49eb39e08949be87cce1add7dc8be7
+msgid "Check mesh cutoff convergence"
+msgstr "Check mesh cutoff convergence"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:218
+#: ab42621b72d049289210d9878c2f2cff
+msgid "Issue 5: \"QHA fails at high temperature\""
+msgstr "Issue 5: \"QHA fils t high temperture\""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:219
+#: 4d55e386ab214873a6b2b5ac73bac05d
+msgid "**Cause**: Anharmonic effects too large for QHA **Solution**:"
+msgstr "**Cuse**: Anhrmonic effects too lrge برای QHA **Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:221
+#: 912b6606765444359db2e8b942c61bc2
+msgid "QHA valid up to ~0.5-0.7 × melting temperature"
+msgstr "QHA vlid up to ~0.5-0.7 × melting temperture"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:222
+#: 2256ae51da9f4f6fa6c536856b0eebf4
+msgid "Consider molecular dynamics for higher T"
+msgstr "Consider moleculr dynmics برای higher T"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:226
+#: a86b2d7cf9044dee96fda55b2b73132f
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:228
+#: 9642e92275f546c59252de41a0cdefbd
+msgid "Before Running Phonons"
+msgstr "Beبرایe اجرای فونون‌ها"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:230
+#: 55199f3537a64574b69c0d72a32ee2eb
+msgid "**Relax thoroughly**:"
+msgstr "**Relx thیاoughly**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:237
+#: 076a3ae1d77341d18f9efcd7828baf44
+msgid "**Test supercell size**:"
+msgstr "**Test supercell size**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:243
+#: c5f59b5f3d194cd9ba9d2deb1d894b55
+msgid "**Preview displacements**:"
+msgstr "**Preview displcements**:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:250
+#: e1f5684fe05148488e002edff8384ca8
+msgid "During Calculation"
+msgstr "During محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:252
+#: b58173fb8af64362a01e3b05a193287f
+msgid "**Monitor progress**: Check calculation outputs periodically"
+msgstr "**Monitیا progress**: Check clcultion outputs periodiclly"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:253
+#: 324253841dfc499e899f9cd1376bf3ff
+msgid "**Check forces**: Verify forces are consistent across displacements"
+msgstr "**Check برایces**: Verify برایces re consistent cross displcements"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:254
+#: 73dcf0a550694337b702d8c59feae96b
+msgid "**Save intermediates**: Keep all displacement calculation outputs"
+msgstr "**Sve intermedites**: Keep ll displcement clcultion outputs"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:256
+#: fd3fbb21beac4c7ea11712c996f55292
+msgid "After Calculation"
+msgstr "After محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:258
+#: 5304677595af442fa017c3be0b943067
+msgid "**Check phonon plots**: Look for imaginary frequencies"
+msgstr "**Check phonon plots**: Look برای imginry frequencies"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:259
+#: ac6c5478b4fa45288644aab38f8dcd19
+msgid "**Validate thermal properties**: Compare with experiments if available"
+msgstr "**Vlidte rml properties**: Compre با experiments if vilble"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:260
+#: bc4afe06aa884ef8b3916261836bb773
+msgid "**Document parameters**: Record supercell size, convergence parameters"
+msgstr "**Document prmeters**: Recیاd supercell size, convergence prmeters"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:261
+#: 6aa12ec9859648dfb95738e876b0a3cd
+msgid "**Archive results**: Save force_constants.yaml and analysis files"
+msgstr "**Archive results**: Sve برایce_constnts.yml و nlysis files"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:265
+#: 2fcdc7c50711488ea2fadebe96f921fc
+msgid "Expected Results"
+msgstr "Expected Results"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:267
+#: 3cf7a121b0124fe889994edcd29012af
+msgid "Phonon Calculation"
+msgstr "فونون محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:268
+#: 186260c62c1a4e1698e23a34cf7aeac1
+msgid "Phonon band structure plot"
+msgstr "فونون bو structure plot"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:269
+#: fc6e85bc8e4246da8cac8bd7b6c46774
+msgid "Phonon density of states"
+msgstr "فونون density of sttes"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:270
+#: 9baf1538308c46c995aaa64d28822445
+msgid "Thermal properties (Cv, S, F vs T)"
+msgstr "Therml properties (Cv, S, F vs T)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:271
+#: ed297939e6064563ad859f81d47b8262
+msgid "`force_constants.yaml` (for further analysis)"
+msgstr "`force_constants.yaml` (for further analysis)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:274
+#: 84a70e0644d14f34ae96613e53b1faa6
+msgid "Mode-dependent Grüneisen parameters"
+msgstr "Mode-dependent Grüneisen prmeters"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:275
+#: 1172861431f345ff8374224d67fff24b
+msgid "Distribution histogram"
+msgstr "Distribution histogrm"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:276
+#: 0abd96d51faf4880b47045282d35a705
+msgid "Thermal expansion coefficient α(T)"
+msgstr "Therml expnsion coefficient α(T)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:277
+#: e33d88204355449d85c3b9a047d9a811
+msgid "Material classification (soft/hard modes)"
+msgstr "Mteril clssifiction (soft/hrd modes)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:280
+#: e9f6b07e42fc454cb8461cabdb76e0cc
+msgid "Thermal expansion α(T)"
+msgstr "Therml expnsion α(T)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:281
+#: f812623da7b44347a6cdc198606277bb
+msgid "Heat capacity Cv(T) and Cp(T)"
+msgstr "Het cpcity Cv(T) و Cp(T)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:282
+#: e4fe4b98e882408d9f87ebc3f784df87
+msgid "Gibbs free energy G(T, P)"
+msgstr "Gibbs free energy G(T, P)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:283
+#: cad00eaf15f64b60910dca611ffe8cb7
+msgid "Equilibrium volume vs T"
+msgstr "Equilibrium volume vs T"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:284
+#: 7782a4b9cc2b4a65b16160936c20cde0
+msgid "Bulk modulus vs T"
+msgstr "Bulk modulus vs T"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:288
+#: 8cd5553eec1f49668152f472cb811437
+msgid "Validation"
+msgstr "Vlidtion"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:290
+#: 4a5f70956f5e430f9c41f41849e258bf
+msgid "Compare with Experiments"
+msgstr "Compre با Experiments"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:292
+#: ddd78f64282a44bbb589f9c77eabe51d
+msgid "**Phonon frequencies**: IR/Raman spectroscopy"
+msgstr "**فونون frequencies**: IR/Rmn spectroscopy"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:293
+#: 62bdb19335b84858a690ef93ce0d33bf
+msgid "**Thermal expansion**: Dilatometry measurements"
+msgstr "**Therml expnsion**: Diltometry mesurements"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:294
+#: 4626deb529274a42bee8ba2fd725f167
+msgid "**Heat capacity**: Calorimetry (Cv, Cp)"
+msgstr "**Het cpcity**: Clیاimetry (Cv, Cp)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:295
+#: 5080620a3e2241ffa0bdba8d8b30d339
+msgid "**Elastic properties**: Ultrasonic measurements"
+msgstr "**Elstic properties**: Ultrsonic mesurements"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:297
+#: 074be598c6674bd0981125dee24c6e7e
+msgid "Typical Accuracy"
+msgstr "Typicl Accurcy"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:299
+#: 524e08c7bfb04c5abb684af20448fdc4
+msgid "**Phonon frequencies**: ±10-50 cm⁻¹ (GGA)"
+msgstr "**فونون frequencies**: ±10-50 cm⁻¹ (GGA)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:300
+#: 139bf6d6241c4b0ca3a591c3565ac334
+msgid "**Thermal expansion**: ±10-20%"
+msgstr "**Therml expnsion**: ±10-20%"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:301
+#: 7814f9047cec42b7bba5b2ed8da00937
+msgid "**Heat capacity**: ±5-10% (low T), ±20% (high T)"
+msgstr "**Het cpcity**: ±5-10% (low T), ±20% (high T)"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:305
+#: 21f7f9adc955404185287febf5bdba3d
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:307
+#: b02c7d7d6451404e92db6ec5ec96c708
+msgid "After completing vibrational properties:"
+msgstr "After completing vibrtionl properties:"
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:308
+#: b8a82ad2f78a4920a304714f6bf37372
+msgid ""
+"**[06-surfaces-and-adsorption](../../02-workflows/03-surfaces-and-"
+"adsorption/)** - Surface phonons and adsorbate vibrations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:309
+#: 74db2128fdf24fe0bef3df60e03934b5
+msgid ""
+"**[07-advanced-features](../../03-advanced-features/)** - Advanced "
+"analysis and customization"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/06-vibrational-properties/README.md:313
+#: d7811d878f5e4456815bb9d1e189744a
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

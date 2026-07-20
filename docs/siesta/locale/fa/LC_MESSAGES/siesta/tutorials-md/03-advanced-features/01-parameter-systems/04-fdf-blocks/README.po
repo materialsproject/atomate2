@@ -1,0 +1,1675 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1
+#: 20695f3e46c2470caf398fe0e39c6504
+msgid "Tutorial: FDF Block-Style Inputs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:3
+#: f57dcbd5c823472ab8b1d9966feaa263
+msgid ""
+"**Category**: 07-advanced-features **Difficulty**: Intermediate **Time**:"
+" ~5 min (dry-run), varies by example (local/submit)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:9
+#: 4aa807f46c394e938a00db2eaf932c60
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:11
+#: 2df6fe20436d4296bb5715d195ecec63
+msgid ""
+"Learn to use SIESTA's FDF (Flexible Data Format) block-style inputs for "
+"advanced features like electric fields, custom k-point paths, geometry "
+"constraints, MD stress targets, PDOS projections, and spin "
+"initialization."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:13
+#: e8957280cfe740f989cf0809e84b070c
+msgid ""
+"This consolidates 7 example scripts into a single configurable tutorial "
+"demonstrating all major FDF block types."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:17
+#: 77305d8b8d80422b9b8ea2b929cb6e5d
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:19
+#: 466e8db167814e0f86d0149b61ec1c4c
+msgid "FDF block format and syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:20
+#: 4b39fa9120004b6298f2472189dad9c0
+msgid "List-based input specification in atomate2siesta"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:21
+#: 0d8e9e8c2d1e4cc2bef026e1738aa782
+msgid "External electric field application"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:22
+#: 12d518d1450b42ab8fc04dd6f619deac
+msgid "Custom k-point path definition (band structure)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:23
+#: e120d71a4ba94050ad9f0c01ad6c82b1
+msgid "Geometry constraints (fix atoms, constrain directions)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:24
+#: 1f9ecc839b404a2989ec399f108772ad
+msgid "MD target stress specification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:25
+#: 69e19c1dfd36410585c20f29cab74ca5
+msgid "PDOS (Projected Density of States) configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:26
+#: 7b38ee09197b4fa287c5c7cd6b56a2e0
+msgid "Initial spin magnetization (DM.InitSpin)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:27
+#: f06d68a63a97425588ea47d74f4ccb81
+msgid "Combining multiple FDF blocks in one calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:31
+#: f14c7ba343a04e658ad319de67eda6bc
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:33
+#: dfe3dd9837c94d52b09607ca0adc0583
+msgid "**Required**: [01-relaxation](../../01-basics/01-relaxation/) completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:34
+#: bb50652211fc42cf84955788e8647c59
+msgid "**Recommended**: Basic understanding of SIESTA FDF format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:35
+#: 25ad5ec8e30b4a12b7a05a9fad99ab06
+msgid "**Recommended**: Familiarity with k-point meshes and band structures"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:39
+#: 23121bbe5e3a4dd6986baf3752f250da
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:41
+#: 432a27b233c448bf8e2ce45efad8eebd
+msgid "FDF Block Format"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:43
+#: 0d501e8952d94a51a60a2e1cf0954869
+msgid "**In SIESTA FDF files**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:52
+#: c7fdca5e767e4f2d8f95f6a6a710626d
+msgid "**In atomate2siesta (Python)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:63
+#: e6e72652b0974a67a59b5f8be2a1c15a
+msgid ""
+"**Key Rule**: FDF blocks are specified as **lists of strings** in "
+"`fdf_arguments` dictionary."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:65
+#: 2d2533b6ead64f0a9383fdfd08b5bcd5
+msgid "Common FDF Blocks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:67
+#: 9a7df359d15447a984e8fc6a7dfbd19d
+msgid "**ExternalElectricField**: Apply uniform electric field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:68
+#: d1d7a71df5894730bb73a3cca5c3ed53
+msgid "**BandLinesScale**: Define custom k-point paths"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:69
+#: b5fe4ab4f82642e99c0fa06b08b1dbbd
+msgid "**GeometryConstraints**: Fix atoms or constrain motion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:70
+#: 81922e55ccf54c138cb3a2643ffae7f3
+msgid "**MD.TargetStress**: Target stress tensor for variable-cell MD"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:71
+#: 18990274c2c546c5af2753cb44f2ad77
+msgid "**ProjectedDensityOfStates**: PDOS energy range and resolution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:72
+#: d1297c419b684fe7bc03236484930c9a
+msgid "**PDOS.kgrid_Monkhorst_Pack**: K-point mesh for PDOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:73
+#: cd641508751745838d4b7cae3a84edd1
+msgid "**DM.InitSpin**: Initial spin polarization per atom"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:77
+#: d0cae6d561f44685a11b5e6df0d40e39
+msgid "Configuration Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:79
+#: 28cb6ea39bcd414a82ec287b24571e61
+msgid "Example Types"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:81
+#: b0597410213343ac8f9bcbbfb1c5dadd
+msgid "1. Electric Field (Graphene)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:85
+#: 0a6b9da5d8f8452bb0d54c186c37ce95
+msgid "Apply perpendicular electric field (0.1 V/Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:86
+#: 2303c005de7d405dac87927c3c54734c
+msgid "Graphene bilayer example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:87
+#: cd4746f892fb4e3d91d1e78d2956b0db
+msgid "Field format: `Ex Ey Ez units`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:88
+#: 8dedab8469bd481f8d2f0ba642c06d0a
+msgid "Enables electrostatic potential output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:90
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:104
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:117
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:131
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:145
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:159
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:173
+#: 0a2a658379184606858b704577f7e7c5 2f0db2c5ed72423ea9d1283068f9746c
+#: af9491ee235d4ef882af8f4ddc3675aa b8de2fe801d04429be3858864d7eedbb
+#: f462f125c1a548eeba7b0ed0fd560aca f76a8bd93993495791651d7874f7157b
+#: faa565112bfb4bbb9a6c5a050beb2e40
+msgid "**Use Cases**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:91
+#: 2bb0cd4cc43647e39039f40fa820d14e
+msgid "2D materials under applied bias"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:92
+#: 6fd2050e56e843d78580b6a6f8ab20a9
+msgid "Polar materials and ferroelectrics"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:93
+#: 1eb1bad370d14c0781265d9c33ffb432
+msgid "Field-effect calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:95
+#: 362ef0050e154b08832d4edde5f04b97
+msgid "2. Custom K-Point Path (Silicon)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:99
+#: d204e1b1bac84477a7ea30161e137702
+msgid "Define high-symmetry path for band structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:100
+#: 71b7fc66447a46e88ec04f887c35d6ef
+msgid "Silicon FCC example (Γ-X-W-K-Γ-L)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:101
+#: 0200a3cc2fb84767955a6940fdeaeccd
+msgid "Automatic path from high-symmetry-seekpath"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:102
+#: 1b2c7334824745bf8f7aa5e08c7022b6
+msgid "40 points per segment"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:105
+#: 91fed8536afe4aa799105fc1e134edbf
+msgid "Non-standard Brillouin zones"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:106
+#: 59226e2c0c59463ebf74ec8e067f6960
+msgid "Specific k-point paths for analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:107
+#: 17fa59c00fc348dbb3573bd0dfe01465
+msgid "Custom band structure plots"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:109
+#: bb311cfb1277417687e5a8b036a67c0b
+msgid "3. Geometry Constraints (Graphene Relaxation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:113
+#: 5aaf4c42d9524b208ba6464b3ba83ec6
+msgid "Fix bottom 2 layers of graphene"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:114
+#: 1ae6b4ef04ad4b4488867d96b210ef5e
+msgid "Allow top layers to relax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:115
+#: af2b6768234d433588da9d67faaa0593
+msgid "Constraint format: `position from atom1 to atom2`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:118
+#: f21be73fcf5a4d0fbc06c2b74ac6e1c1
+msgid "Surface relaxation (fix substrate)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:119
+#: cffe58637e8d4789af781475aaf617e4
+msgid "Defect calculations (fix boundaries)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:120
+#: f3c4db33dc574211a806bcb11d4794e8
+msgid "Selective atomic relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:122
+#: 15c34a78aaf44dc5b2fe4fcad7aa5cce
+msgid "4. MD Target Stress (Silicon)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:126
+#: 0039c6196b1a48e1bf84dea53e64cb74
+msgid "Variable-cell MD to achieve target stress"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:127
+#: 622a8b4d851a48cd9611940098a6b628
+msgid "Hydrostatic pressure (0.5 GPa)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:128
+#: 6b86ccd2547b4e5daa6c40b697c443c1
+msgid "Stress tensor: 6 components (xx, yy, zz, xy, xz, yz)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:129
+#: 06bb52cf6b7a4aceb8137ba0a068d8f3
+msgid "10 ps MD with 2 fs timestep"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:132
+#: fa5c14dc69db433da23b11322004dbbb
+msgid "Equilibrate under pressure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:133
+#: 11fb8cbff6a746e4b2bd255afcc51137
+msgid "NPT ensemble simulations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:134
+#: 607a02cd25874c9c87b8336205f60a31
+msgid "Stress-strain calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:136
+#: d824e8cdf9b74a9383a58a90e0901847
+msgid "5. PDOS Projection (Silicon)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:140
+#: 4a1b62a87a634ff88ad8bc771a71332d
+msgid "Project DOS onto specific orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:141
+#: f01c0408b42c4b8ca001dac9c51e7c0b
+msgid "Energy range: -15 to +10 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:142
+#: 18f591f3b9f2442f8fc4cdcb66d6ca5f
+msgid "0.1 eV resolution, 250 points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:143
+#: 3c3f77faee704f8aa0a1f3630845324e
+msgid "Dedicated k-point mesh (6×6×6)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:146
+#: 4531d8a6433949beb028c29e2d15ed7b
+msgid "Orbital contribution analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:147
+#: 933b7d4520f541c9917dd73ff1fd1a67
+msgid "Band character identification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:148
+#: dfc5f29f978a4c47adf9619903f4a311
+msgid "Chemical bonding studies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:150
+#: ed8aba3248414feabbda56559766c7a5
+msgid "6. Initial Spin (Iron BCC)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:154
+#: 8ec4834d371a4ff6b25629bbc69417d8
+msgid "Set initial spin polarization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:155
+#: 8a4a5d73c5584bb4859fc123bbafea8c
+msgid "Ferromagnetic Fe: 2 μB per atom"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:156
+#: 0477465bfff944229c04be4acf1fe049
+msgid "Accelerates SCF convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:157
+#: 3e1a7acb9f794e83ad024e87d1944be1
+msgid "Format: `atom_index spin_value`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:160
+#: 18490bda0e7d4a6e9568c70e3f8b2867
+msgid "Magnetic materials initialization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:161
+#: 8b6c973a29384a33baabc47703e493a0
+msgid "Antiferromagnetic ordering"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:162
+#: ded3a75864e6448995c169b444ba872e
+msgid "Faster convergence for spin-polarized systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:164
+#: 726e131dc67344fb94b5f6858b930294
+msgid "7. Multiple Blocks Combined (Comprehensive)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:168
+#: 1cdf479031e74399b6f4b29e6fe083db
+msgid "Combines 4 FDF blocks simultaneously"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:169
+#: 70aa01aaadd342c0be195dce215fddfb
+msgid "Electric field + constraints + spin + PDOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:170
+#: 517ef1dc768a4abbb6086e1ba1180e00
+msgid "Demonstrates block compatibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:171
+#: 46a7ec1ba475492183e628f4557d623d
+msgid "Iron slab with complex setup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:174
+#: 8a373451884541a4badcffae0aa5a26f
+msgid "Production calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:175
+#: 93755060a99d47f4867fc2e724ccecd8
+msgid "Complex material setups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:176
+#: 8b127e3aacd143dea4949179d161fe12
+msgid "Learning block interactions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:180
+#: ce3708bf25ef49ab969ddb3d8947b7a2
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:202
+#: 1ce1e7ce82c3460f9688c1d7bbac2905
+msgid "Expected Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:204
+#: a8e1426e5bdd4a1ba303fc470becad4b
+msgid "Dry-Run Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:217
+#: 12ce12720e50478e8e2a7dc1521916a8
+msgid "Local/Submit Mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:219
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:858
+#: 6a80745dbfbf4132a32a40b17da69bc9 f1157ee20248434ca3b108cecf79e454
+msgid "**Electric Field**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:226
+#: ed8580c2b4af4883817aae758b9721c1
+msgid "**K-Point Path**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:233
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:863
+#: 9fc72067417a4a5b889f5ef2d0bf0d5c fd430d840bf04e738e200f9c9526df2c
+msgid "**Constraints**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:240
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:868
+#: 37b44687b06d43c8a5ad22006168c745 44ebb607e01e41ab83ae7723738315b8
+msgid "**MD Stress**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:247
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:873
+#: 11a7d45026f348048b73be366cd7fb5e 59820255feca442ea3bf929cbaaf09a5
+msgid "**PDOS**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:254
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:878
+#: 2aab6e1ca849445b98c81014a11ce030 9f1fccfc17074b868f6b6ed85fe7ec3b
+msgid "**Spin**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:263
+#: b0fff08e242848d08be0fb79f83748e0
+msgid "Understanding FDF Blocks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:265
+#: 1f01a0eef65b4c41960ac5e73a4b7f4b
+msgid "Block 1: ExternalElectricField"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:267
+#: 624aee5f56c743beb4552130c487b445
+msgid "**Purpose**: Apply uniform electric field to system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:269
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:303
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:349
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:409
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:462
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:523
+#: 0f2f629a0fa74cb296f5761767a3f9a3 19fe6300c4a2481d9e1e49876507bfeb
+#: 1dc4e25cf6d840519d100a84e9c5f903 473a35eecff7444c95fc101f563e998c
+#: bca79fc650484f049d8408994ebc4b29 ea6a6abfc1594dbb9b17ba5ecb8f758d
+msgid "**Format**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:278
+#: b16c4481bc56452f9341ad601f129bea
+msgid "**Units**: `V/Ang`, `V/Bohr`, `Ry/Bohr/e`, `Har/Bohr/e`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:280
+#: 3f1751e63496458eaca2ff1cfa9ae3c2
+msgid "**Example - Graphene**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:286
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:328
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:398
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:438
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:502
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:569
+#: 3f33cb3b35054c2c93cef8fd9c90ce68 761ce5673e354edc87aea4fe43fb341d
+#: a5964db3ae3d4ee79a67c57300175fe6 b58c66305ff34738bd40feb62826ddc9
+#: b7996c7599744aa7a4e403fffeb258b1 e47055b24c634a40af8e1f4801bebbad
+msgid "**Important**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:287
+#: 79671137f32847feba2719aa8ce24037
+msgid "Field is uniform across entire cell"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:288
+#: 65bc090680c84b2b96b67ee5dec6e0ee
+msgid "For 2D materials, apply perpendicular to plane"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:289
+#: 22c5d08643034b0592cca38776dac729
+msgid "May require increased SCF iterations (`MaxSCFIterations: 200`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:290
+#: 5d8353fcea9746d2b6c02ff714c39d3b
+msgid ""
+"Consider saving electrostatic potential: `SaveElectrostaticPotential: "
+"True`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:292
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:575
+#: 3c4bac8424be43a9932c31da7cb938d1 81c73cc2af814705b7028cdb00d420b0
+msgid "**Validation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:293
+#: 93397fa443d541298f9443f4de90bd1e
+msgid "Check dipole moment change"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:294
+#: c2b77a04de4c4971a505a7810784db75
+msgid "Verify band shifts (field × distance)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:295
+#: c9ff8d6320ea4e4e89eb821a5166037f
+msgid "Ensure SCF converges"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:299
+#: 8003b61d0dfe47b3b198fcd473273182
+msgid "Block 2: BandLinesScale"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:301
+#: b91045a0dfdb47f2a8ec9699b1f9060c
+msgid "**Purpose**: Define custom k-point path for band structure calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:316
+#: 541de5166e45460fb55ccbfbca4db479
+msgid "**Example - Silicon FCC (Γ-X-W-K-Γ-L)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:329
+#: a04afe76cf894af89d3d22143385562b
+msgid "First line: number of bands + starting k-point"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:330
+#: 779a39d775cf4f868511b22b3a957df7
+msgid "Subsequent lines: number of points + ending k-point"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:331
+#: b40e3a65a2474819b0213fe9bd6d8995
+msgid "Coordinates in reciprocal lattice units (typically)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:332
+#: 64550f8e4e094ebcaf1fbafce4cf4f7d
+msgid "Use `\\\\Gamma` for Γ symbol (LaTeX-like)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:334
+#: 27250300156d47faac96e5729154bc13
+msgid "**Automation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:345
+#: f39555da44ef4ff39031ebe4e1b50e15
+msgid "Block 3: GeometryConstraints"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:347
+#: 5ffdc4e60c414d129d2584a91078f7c7
+msgid "**Purpose**: Fix atoms or constrain motion directions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:358
+#: 7b68050b691e44edb201e801401db2d4
+msgid "**Constraint Types**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:360
+#: 5cd45199aea94221badc81e8d23bb3ba
+msgid "**1. Fix Atoms (all directions)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:369
+#: 982a2b72f461466eba5042e2aeffac0f
+msgid "**2. Fix Specific Directions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:378
+#: 2fe951136fd64d54a9c9d0dd59e30828
+msgid "**3. Constrain Along Vector**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:384
+#: 82933dddb79c49f5ab56ccb18df48684
+msgid "**Common Use Cases**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:385
+#: ae8907c1f55d46b78a88f31f63a8df27
+msgid "**Surface relaxation**: Fix bottom layers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:386
+#: ebb926f04ef6462c9d30a5511a7bef0f
+msgid "**Defect studies**: Fix boundary atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:387
+#: 276533767f344161b180f5b62cdcb970
+msgid "**2D materials**: Fix in-plane motion for out-of-plane relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:389
+#: 6a9d9db795ee4d949105e85ef1b9cc3a
+msgid "**Example - Graphene on Substrate**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:399
+#: 9aaf1938c7c4435185a62dc9db824b5b
+msgid "Atom indices start at 1 (not 0!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:400
+#: e4bc6affcf7e4e4d88640f660ec65284
+msgid "Constrained atoms still included in SCF"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:401
+#: 968c8a77dbd84664be720837e0e02395
+msgid "Forces on fixed atoms should be ~0 after relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:405
+#: e7d8987673c640fb90a269583fe51c86
+msgid "Block 4: MD.TargetStress"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:407
+#: 0c128edda47f460ca0f7b12181c4216e
+msgid "**Purpose**: Target stress tensor for variable-cell MD (NPT ensemble)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:418
+#: f40fd32c2bd344bfaa0e3017f394248a
+msgid "**Units**: `GPa`, `Ry/Bohr**3`, `eV/Ang**3`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:420
+#: 147997f4d244469b91f68c4146e95a67
+msgid "**Examples**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:422
+#: 2f8ca539b2de416486756976037b6615
+msgid "**1. Hydrostatic Pressure (0.5 GPa)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:428
+#: 9f3d29dc3c1542078c4b0736609b950e
+msgid "**2. Uniaxial Stress (1 GPa in z)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:433
+#: 2774a148665348fc9e0a865c9c463aef
+msgid "**3. Shear Stress**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:439
+#: 3d7a79de19b6493fbd25774e3137e4f6
+msgid "Requires `MD.VariableCell: True`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:440
+#: 54743682b1ec405d84a32b8e2adbe139
+msgid "Use with Parrinello-Rahman or similar algorithms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:441
+#: e63d9359701d4951b34154dec6a4deb2
+msgid "Stress components: (xx, yy, zz, xy, xz, yz)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:442
+#: 05ba41f8ad3b4475bdbe737cb6c46a20
+msgid "Negative values = compression (convention depends on SIESTA version)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:444
+#: 111919b1d9204cca95c76b5a065686ee
+msgid "**Typical MD Settings**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:458
+#: 9c170a9b508548ca8af122d275facb1f
+msgid "Block 5: ProjectedDensityOfStates (PDOS)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:460
+#: 5b3b2f5c2ea64181af165f8bc04a63d5
+msgid "**Purpose**: Calculate orbital-projected density of states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:471
+#: 2b0d4124f2c9461d9065dbbbd8ba6874
+msgid "**Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:472
+#: cc6f1f8fb74143a2a8855dce1815027a
+msgid "`Emin`: Lower energy bound"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:473
+#: 3c5d22588d244fcaa99ae009f657d2d0
+msgid "`Emax`: Upper energy bound"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:474
+#: d2801df8381447e69b8cf1d2077d2638
+msgid "`dE`: Energy resolution (broadening)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:475
+#: 98f51949bb734151b607c3af7c01d899
+msgid "`nE`: Number of points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:476
+#: f7086deb7b87499991c3ee00f067ea8d
+msgid "`units`: `eV`, `Ry`, `Har`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:478
+#: 84a3c753924144c59e77dc85a2129fa9
+msgid "**Example - Silicon PDOS**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:486
+#: ae2af4d6482a474e89ee90cc9cb20b5b
+msgid "**Dedicated K-Point Mesh**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:498
+#: 460d498c37684c519e86e0a19f30ee3f
+msgid "**Output Files**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:499
+#: e275cf6c6a0345a7872ce9b13601e0ac
+msgid "`SystemLabel.PDOS` - Total DOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:500
+#: f0ecbfff996d4368b4e552c3ee5a19ff
+msgid "`SystemLabel.PDOS.n.orbital` - Orbital projections (e.g., 1s, 2p)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:503
+#: 09bd4766b7a943e08a8e5e4fa92deb66
+msgid "Requires dense k-point mesh (often denser than SCF)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:504
+#: f72f0f8027f1446b9d34ca6bcb782c21
+msgid "Use `PDOS.kgrid_Monkhorst_Pack` for separate PDOS mesh"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:505
+#: ba2d918f97e749e6badf17b2e1764b3d
+msgid "Energy range should cover valence + conduction bands"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:506
+#: dcf28b602b4942da9e3e1131a25b1408
+msgid "Resolution trade-off: smaller dE = smoother, more points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:508
+#: 584e21c8be9545a2895692e0e8b5cde7
+msgid "**Analysis**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:519
+#: a67cc5c68f4f45c89649b852c74c2d00
+msgid "Block 6: DM.InitSpin"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:521
+#: 8cf2ad52327f43b19ab48a7fa5585456
+msgid "**Purpose**: Set initial spin polarization per atom (magnetic systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:533
+#: 03a839f396e949cd8ba68f718f159c7e
+msgid "**Units**: Bohr magnetons (μB)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:535
+#: 17688d757b7a4ac190692909fa468375
+msgid "**Example - Ferromagnetic Iron (2 atoms)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:546
+#: 7f268a0acd9e44afbec126394bcde0ee
+msgid "**Example - Antiferromagnetic**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:559
+#: c7bcdb8e1adb402285dcd92fa50c260d
+msgid "**Programmatic Generation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:570
+#: 5780b242e391445fbc3de3d6cd48571f
+msgid "Requires `Spin: polarized` or `Spin: spin-orbit`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:571
+#: a431a77708b0412d98635165359b0074
+msgid "Initial guess only (converges to self-consistent solution)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:572
+#: 9bec1f5e361345cdb68a1040fd64f188
+msgid "Accelerates convergence for magnetic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:573
+#: 337b2789b0b046d490ecaceb990ad902
+msgid "Large values may cause SCF instability (use ~actual magnetic moment)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:584
+#: b5e6c443fbc74241b4819b57a5dd69d0
+msgid "Block 7: Multiple Blocks Combined"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:586
+#: 52e178fd89b34f1283591735fe3552cb
+msgid "**Purpose**: Use several FDF blocks in one calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:588
+#: e8d29f078c514a08ac30af5fc4409245
+msgid "**Example - Iron Slab (Complex Setup)**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:614
+#: cbb729daa96840119485bceded91dabc
+msgid "**Compatibility Considerations**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:615
+#: ff6c4ceb7a8f4f508f1bcc373e36240f
+msgid "✅ **Compatible**: Constraints + Electric field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:616
+#: 43b1582a6c4746a2b5a1ba14eaec676f
+msgid "✅ **Compatible**: Spin + PDOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:617
+#: 7379e7b203bc4eaa93b9ee5432f2665a
+msgid "✅ **Compatible**: Most blocks can coexist"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:618
+#: 55c2e6de6cb740318ec0d11c9019bea6
+msgid ""
+"⚠️ **Careful**: BandLines + PDOS (both define k-points, separate "
+"calculations)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:619
+#: c44cc94ed46e43d2b996fe8158bb9f4b
+msgid ""
+"⚠️ **Careful**: MD.TargetStress + GeometryConstraints (constraints limit "
+"cell motion)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:621
+#: d09c835ab78347af9f0ec8a21d3db349
+msgid "**Best Practices**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:622
+#: 18df7c445e8e4032ac726b011c989b95
+msgid "Test blocks individually first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:623
+#: 4b5c784424b54e04afdff5794183a742
+msgid "Combine incrementally"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:624
+#: d320566c91ff4195a4e94533fee631b1
+msgid "Check for parameter conflicts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:625
+#: 286bca5f4f66462a98809b08daaf2eba
+msgid "Verify all blocks appear in `input.fdf`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:629
+#: b7a1a5a99e194ba3b934caca7c208c5f
+msgid "Debugging FDF Blocks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:631
+#: 3b9dd1ce7c084ecf8f2ff91b9b90da99
+msgid "Verification Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:633
+#: 5e012844b62f4c7e8defc99d04164648
+msgid "**1. Check Generated FDF File**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:642
+#: 30b2ca3688724d399f36c17df18b813e
+msgid "**2. Look for Block Syntax**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:650
+#: efaced4a9ff248a5b69cb179c4e729c9
+msgid "**3. Common Errors**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:652
+#: 7d2d32c2d3cb488487fd3d7ca0ce93c6
+msgid "**Error: Block not appearing in FDF**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:665
+#: 04616cf5274e468d80e44dcc3ead6fd0
+msgid "**Error: Syntax in block content**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:674
+#: 0759dc213eb1417fb9b0e0995cd6ba38
+msgid "**Error: Atom indexing**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:683
+#: ee4b77aa0d83446da3ce94cf7d9a77bc
+msgid "Validation Techniques"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:685
+#: 9301d70404e94fa4ada2e5e54b5f58d9
+msgid "**1. Electric Field**: Check dipole moment change"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:691
+#: 6a0e96653e45446681bf9998c9bd9351
+msgid "**2. Constraints**: Check forces on fixed atoms"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:697
+#: 3d435b5bdcb442afa0f846f4cd3908fe
+msgid "**3. Spin**: Verify initial vs. final magnetization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:703
+#: 5088082e13d8423e8161e65dce8dd7fd
+msgid "**4. PDOS**: Check output files exist"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:711
+#: 622028fb2669427ab505f275341e8452
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:713
+#: a105deaa41b64b49b557e6fd6c2f299a
+msgid "Issue 1: FDF Block Not Recognized"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:715
+#: 6a84947d480f42b2bf240cd84bfeb9b5
+msgid "**Symptoms**: Block doesn't appear in generated `input.fdf`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:717
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:738
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:763
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:783
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:807
+#: 4d94219d27b8414893cbd8a4650028c6 6a3decb363ee41d38277aa8b918126b6
+#: 6cba290492244db29a0e6899375a620c e2adaec6599c446e879610e78bcee2ac
+#: ffd5759789e245a58531d6f4d85ce06f
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:718
+#: b76eebda5dc54104819c9c6497b3ed66
+msgid "Ensure block name is a **list of strings**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:724
+#: 5c5b69bbedda475998de36abfaf90727
+msgid "Check spelling (case-sensitive):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:730
+#: c5838e0130424fff937808e062339b81
+msgid "Verify in `fdf_arguments` dictionary (not other params)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:732
+#: 1cac86b3b3c94f3899b9a5330237c73e
+msgid "Check atomate2siesta version supports block"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:734
+#: f5379d0e21b348a185d0bc6a21f76788
+msgid "Issue 2: SCF Not Converging with Electric Field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:736
+#: e4c41f043f3d4886b42c7af7fac94e99
+msgid "**Symptoms**: SCF cycles exceed max iterations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:739
+#: af427c518b8a41afae2c559f2b80bef7
+msgid "Increase max iterations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:744
+#: ecf0ab158bc841759a896c10da9ea457
+msgid "Reduce electric field strength (start small: 0.01 V/Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:746
+#: 5efe3d8c761a4dfdb7faf4ef8e608867
+msgid "Tighten DM tolerance:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:751
+#: 3228581b8d2a44af9a1b72d93d2f81d9
+msgid "Use mixing schemes:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:759
+#: 9e6091c742664e34939fae3ca83bd305
+msgid "Issue 3: Constraints Not Working"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:761
+#: 5ed3450739f746e99d95fd4def68749d
+msgid "**Symptoms**: \"Fixed\" atoms still moving"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:764
+#: 2e515be5606d432e94bc5451285f0026
+msgid "Check atom indexing (1-based, not 0-based!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:770
+#: 6c0b1d9367b5493c946e347f6a55cdbc
+msgid "Verify constraint appears in FDF:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:775
+#: 4ed194811e3b405c88a92c9147f43a19
+msgid "Check relaxation type (CG, Broyden support constraints)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:777
+#: 76bb3660b6a14a2d8bc7961877b6e470
+msgid "Inspect forces (should be ~0 on constrained atoms)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:779
+#: d787044931e846ed8b2be6b086c18cf5
+msgid "Issue 4: PDOS Files Empty or Missing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:781
+#: 11819b55d23f43daa964d3dd4b070214
+msgid "**Symptoms**: No `.PDOS` files generated"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:784
+#: c3d17b95fb0b4b9097b9a20c795d43c8
+msgid "Ensure PDOS block syntax correct:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:790
+#: 6e8884de618c401a9493018e7fb8991d
+msgid "Check k-point mesh is adequate:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:799
+#: b9a51c59e9e249638f25403880e740b1
+msgid "Verify calculation completed successfully"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:801
+#: 510da0a048784e5dbeb441aeef8c2f61
+msgid "Check energy range includes relevant states"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:803
+#: 7e92f0c2582745eaa84ad568e874657c
+msgid "Issue 5: Spin Initialization Ignored"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:805
+#: 47fdef68153c4250b11dafa4461f6113
+msgid "**Symptoms**: Calculation converges to non-magnetic solution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:808
+#: d48ef1cd2eef4aca8dddea1279f2e48c
+msgid "Enable spin polarization:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:813
+#: 464387d6dde4406abe6b1eb438ccefab
+msgid "Check initial spin values are reasonable (~actual magnetic moment)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:815
+#: 3a748de89f4a4840ac43648117ca5ea1
+msgid "May need to constrain total spin:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:821
+#: 22e81c020a0b42198cc361ec830e924d
+msgid "Verify system is actually magnetic (check literature)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:825
+#: 56962f8efb9d4be1880638d2c48895ef
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:827
+#: 0e6df72bfd23436e8775d5beee7709ec
+msgid "FDF Block Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:829
+#: fc12642ba882494f9c44c22ff8a165b7
+msgid "**1. Start Simple**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:830
+#: d685ef0716694a2cbc5a817fa2d008f1
+msgid "Test one block at a time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:831
+#: 764498beb7464a6c89858730806c6eb3
+msgid "Verify in dry-run mode first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:832
+#: ffd0fa42d1074c0da44217d2632601c1
+msgid "Check generated `input.fdf` carefully"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:834
+#: 8525aa04be8941adb8b9af14963e326c
+msgid "**2. Use Dry-Run for Debugging**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:840
+#: 20e91dd5fcf345cba090453770841e96
+msgid "**3. List Format is Critical**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:851
+#: 4dc150ba0dc249379798712965e7f6a2
+msgid "**4. Combine Logically**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:852
+#: cecd0d8e4f5c4ff2a3f0fade7903b523
+msgid "Group related blocks (e.g., PDOS + PDOS k-grid)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:853
+#: 44bc6c59a8b1454b9e7f4e074a793802
+msgid "Avoid conflicting settings (e.g., constraints + free cell MD)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:854
+#: 58f290bfec9349e5bcc377950df3164f
+msgid "Document complex combinations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:856
+#: fc47e1a78b46439aba81985ee502aa81
+msgid "Parameter Selection"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:859
+#: d522b4f70f5e4a03a309a06bff26f967
+msgid "2D materials: 0.01-0.5 V/Å typical"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:860
+#: e5e287616e3c4b87beff356ff46cbd32
+msgid "3D materials: Smaller fields (0.001-0.1 V/Å)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:861
+#: c3c803cc095844249838850d7560f43b
+msgid "Increase SCF iterations if needed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:864
+#: 65ef9d86e3714888bfeb2fdb2f403818
+msgid "Surface: Fix bottom 1-2 layers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:865
+#: 24429cd51da943b58b1edc9978d859df
+msgid "Defects: Fix atoms > 10 Å from defect"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:866
+#: c28c93f749834635b44f44c642832174
+msgid "Always verify force convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:869
+#: 315c8a36e1184fb7b7eaf801003ecab6
+msgid "Start with hydrostatic (equal diagonal components)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:870
+#: 8813de3e09b441538f72aee01be282a0
+msgid "Use realistic pressures (< 10 GPa for most materials)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:871
+#: 37263ba114c04c29be4e545fc1c7f355
+msgid "Monitor stress evolution during MD"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:874
+#: 37120bf8aff64c4fae900a8fee990413
+msgid "Energy range: Fermi ± 15-20 eV typical"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:875
+#: 4c27cd24451040499b25d6312ccfad01
+msgid "Resolution: 0.1 eV for metals, 0.05 eV for insulators"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:876
+#: f748541fb63f46c9afba1edaef4636c0
+msgid "K-mesh: Denser than SCF (often 2× or more)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:879
+#: 754fce91bfb442eea5a08b307e9eecfb
+msgid "Initialize close to expected moment"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:880
+#: c78ff80d235f440cb53edcd3874d63b6
+msgid "Ferromagnetic: All same sign"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:881
+#: 52a199ca6ea14fe584956f30a8e7d2c4
+msgid "Antiferromagnetic: Alternating signs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:883
+#: aece289967d74a05afcf75e698c7d238
+msgid "Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:885
+#: fe580d8c7b4d44318132b3c70d134227
+msgid "**Comment Your Blocks**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:901
+#: 75a74dc592d94677a1c524344ce049fe
+msgid "Tips for Success"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:903
+#: f77ad019df22485e92fe11cee5243684
+msgid ""
+"✅ **Always dry-run first**: Check generated FDF before expensive "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:905
+#: 9f61655982f04330a7b3900e4ce7459a
+msgid "✅ **List format for blocks**: FDF blocks must be lists of strings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:907
+#: 5e2bedb169b245d8a5bc79b94cdc0a74
+msgid "✅ **1-based atom indexing**: SIESTA atoms start at 1, not 0"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:909
+#: d9a9f732b10b414ebfc2e1d0ab81b3ab
+msgid "✅ **Include units**: Electric field, stress, PDOS energy all need units"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:911
+#: 764969b5596141cb951c7929c5e67fde
+msgid "✅ **Test individually**: Verify each block works alone before combining"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:913
+#: 7515e53c8337481cace9d0b7b12cb9fb
+msgid ""
+"✅ **Check output files**: Ensure expected files (.PDOS, .bands, etc.) are"
+" created"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:915
+#: 9116fc8a6ad14c5f801b56bd6ea1b615
+msgid "✅ **Start with defaults**: Use SIESTA manual recommended values initially"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:917
+#: 6fc154a9130d4b39b003792672729914
+msgid ""
+"✅ **Validate physically**: Electric field effects, constraint forces, "
+"spin moments should be reasonable"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:921
+#: 579700016c8a4179a8120bc37c536ee5
+msgid "Advanced Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:923
+#: e2693bde2e7344ea8fb2c48157678bb4
+msgid "Dynamic Block Generation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:925
+#: 468bc8fc53464a4b9301e221e18fac54
+msgid "**Example: Programmatic Constraint Creation**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:945
+#: c98a7b1a4b8c4cfaa750c18daffdfe79
+msgid "Combining with Powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:963
+#: 8e4279797e594aaf8483e7b0f98e477e
+msgid "Multi-Step Workflows with Blocks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:992
+#: 23cc4f3a427a43b884b497d32ec9835b
+msgid "Reference: Complete FDF Block List"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:994
+#: efa9067440ea423994d8adced4714475
+msgid "**Geometry & Constraints**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:995
+#: 718dc7a63e1d459da96ffcc834ce5665
+msgid "`GeometryConstraints` - Fix atoms or directions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:996
+#: 3fa7d72234df4007a43241345d75b5a4
+msgid "`Geometry.Constraints` - Alternative syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:998
+#: 35d475d551534b08acad6b17973141c6
+msgid "**Electronic Structure**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:999
+#: 0ef39ca927934b16ab59ea035db5466c
+msgid "`ExternalElectricField` - Applied electric field"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1000
+#: 1761d9b3a780443a91900c6160d55f4f
+msgid "`DM.InitSpin` - Initial spin polarization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1001
+#: ac4fb664e01847f4b3645701ed7a08bd
+msgid "`Spin.Fix` - Constrain total spin"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1003
+#: c3153ddb611f42e0be7c43e5578b9f39
+msgid "**K-Points & Bands**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1004
+#: 6cc2d2cbd59446beb19cea93bec3eb50
+msgid "`BandLines` - Custom k-point path"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1005
+#: 5af70a39519d422dbbea374fd466a1d4
+msgid "`BandLinesScale` - Coordinate system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1006
+#: f215b6f6d924448ea4114003a5205665
+msgid "`PDOS.kgrid_Monkhorst_Pack` - PDOS k-mesh"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1007
+#: 3f6841a9fade4119ba2ecf31b7474d6e
+msgid "`kgrid_Monkhorst_Pack` - SCF k-mesh (alternative to 3-integer format)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1009
+#: 6f95d5995cdb42e693be35c03deba0f4
+msgid "**Density of States**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1010
+#: f8de5d8006394a8784776206340430b3
+msgid "`ProjectedDensityOfStates` - PDOS parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1011
+#: 3891972aaf144637a2ebcd1fc21299df
+msgid "`LocalDensityOfStates` - LDOS (real-space)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1013
+#: d5bb9668531b466f8ced74903e2439bd
+msgid "**Molecular Dynamics**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1014
+#: 2cf0aebf94a14885b70a2f7679915c5a
+msgid "`MD.TargetStress` - Target stress tensor"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1015
+#: ffc3b0f30692447d8124506907687527
+msgid "`MD.TargetPressure` - Target pressure (scalar)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1017
+#: 0bd5558ccaa84c53bcf2e5e706132ecf
+msgid "**Advanced**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1018
+#: 17ecfe34169f44d5a9e2833135b0a62b
+msgid "`WaveFuncKPoints` - Specific k-points for wavefunctions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1019
+#: 493adad018304368a05333bde9c88748
+msgid "`COOP.Write` - Crystal orbital overlap population"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1020
+#: 325213b8c5154ec4a24401245ee4ab7a
+msgid "`TS.Contour.Eta` - Non-equilibrium contours (TranSIESTA)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1022
+#: 5b41af41506a457dbf6514d08873ad94
+msgid "**See SIESTA manual** (`siesta.pdf`) for complete list and syntax."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1026
+#: 234db9af38f54fd19c8d453cbb488fce
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1028
+#: 89ae5137d95b445bab02b977c05c7d3a
+msgid "After completing this tutorial:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1030
+#: 11f234386a0f464488535e85877fae88
+msgid "**Test all 7 examples**: Understand each block type individually"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1031
+#: ff146bfffb5846d8a6a99d2c3f454397
+msgid "**Combine blocks**: Try `multiple` example, create custom combinations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1032
+#: 7b4686828e5e4bfa9c21275c91aa1f52
+msgid "**Read SIESTA manual**: Deep dive into block syntax and options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1033
+#: 1dc7f2015c2b465e9f248ffbe100f49c
+msgid "**Apply to research**: Use FDF blocks in production calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1034
+#: 6e94627e5f6a4ac08a046516f76e3f12
+msgid "**Advanced blocks**: Explore TranSIESTA, COOP, LDOS blocks"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1035
+#: e4ed4631d53648f9a789dcaa17572dc8
+msgid "**Troubleshoot**: Practice debugging FDF syntax and validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1039
+#: 68f127bd6f9243a68ef0f16ce5a8add1
+msgid "Further Reading"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1041
+#: 1ef80a66d4924ca083a2c6cbdb3d9cf2
+msgid "**SIESTA Manual**: Complete FDF block reference (`siesta.pdf`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1042
+#: e899b1b8af634a9ba42974b3e55e472a
+msgid "**atomate2siesta Docs**: Parameter organization and dataclass hierarchy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1043
+#: 01fe0ac437d5462f92097fe03d5d94f0
+msgid "**Tutorial 01-relaxation**: Basic parameter passing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1044
+#: 307962a226684f9e8afdcb14607faa91
+msgid "**Tutorial 03-band-structure**: K-point paths and band calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1045
+#: f556546dc2d44764adb17d8406821977
+msgid "**Tutorial 18-tier-based-calculations**: Preset parameter sets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/04-fdf-blocks/README.md:1049
+#: db95a98d482b4277a7e5a424d4b53b2d
+msgid ""
+"*Back to [07-advanced-features](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+

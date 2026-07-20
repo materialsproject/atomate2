@@ -1,0 +1,323 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:1
+#: a6c5c1ed0cac458f911f80da00c862d0
+msgid "Catalysis and Surface Chemistry Recipes"
+msgstr "Ctlysis و Surfce Chemistry Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:3
+#: 8e46ce3401d84cbb9f96013568950c00
+msgid "Calculate surface and adsorption properties using RecipeBook one-liners."
+msgstr "Clculte surfce و dsیاption properties using RecipeBook one-liners."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:5
+#: 09f342bc31e742c38947a00b32b2d678
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:7
+#: 474f7005e6d246af828260356aa44290
+msgid "Recipes for catalysis and surface chemistry:"
+msgstr "Recipes برای ctlysis و surfce chemistry:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:8
+#: 734d5ecb84ba488785645cd316315e9c
+msgid "**Surface Energy**: Multi-surface energy calculations"
+msgstr "**Surfce Energy**: Multi-surfce energy clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:9
+#: f9ec3dbe47ee4737a13f526ee501bd31
+msgid "**Adsorption**: Adsorption site scanning and energies"
+msgstr "**Adsیاption**: Adsیاption site scnning و energies"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:10
+#: 65f8be6a33294133a3489e2e3e755bb4
+msgid "**Catalysis Study**: Complete catalytic characterization"
+msgstr "**Ctlysis Study**: Complete ctlytic chrcteriztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:12
+#: 28ea65684439407da0362a73de80cdea
+msgid "Files"
+msgstr "فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:14
+#: 84db3e8091a341108b43e5b6dafcd308
+msgid "`surface_energy_recipes.py` - Surface energy calculations (HIGH priority)"
+msgstr "`surface_energy_recipes.py` - Surface energy calculations (HIGH priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:15
+#: c5706620a7704821b9ddf954e8a0571a
+msgid "`adsorption_recipes.py` - Adsorption site screening (HIGH priority)"
+msgstr "`adsorption_recipes.py` - Adsorption site screening (HIGH priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:16
+#: b9dccf1eec4a424791e8893bd3f7074f
+msgid ""
+"`catalysis_study_recipes.py` - Complete catalysis workflow (MEDIUM "
+"priority)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:17
+#: 699570cc9ed54a2ea57e9addccb4e285
+msgid "`README.md` - This file"
+msgstr "`README.md` - This file"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:19
+#: 4aff731361914e2ca0a7070141950994
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:34
+#: 2c98181973aa4ceaa6c950ee12d21252
+msgid "Properties Calculated"
+msgstr "Properties Clculted"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:36
+#: 1b2d321fc0a249daa9fec32cefc6662d
+msgid "Surface Energy Workflow"
+msgstr "Surfce Energy گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:37
+#: 0cbc2fa5204c45a8b7de7e951fcf86fa
+msgid "Surface energies for multiple facets"
+msgstr "Surfce energies برای multiple fcets"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:38
+#: 340f070d16624178accc10b0bfac0bcd
+msgid "Surface stability plot"
+msgstr "Surfce stbility plot"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:39
+#: fc46ee79b9f04ed4ac46d07b63ffebe8
+msgid "Wulff construction"
+msgstr "Wulff construction"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:40
+#: 824f496e48624c02bbfcd94012da23bf
+msgid "Preferred surface terminations"
+msgstr "Preferred surfce termintions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:42
+#: 5ca6a8a4cc3e4ab8be1e0f5d37e90b68
+msgid "Adsorption Workflow"
+msgstr "Adsیاption گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:43
+#: 3553dc7f0e324bcfa92d990a8ebdbe1d
+msgid "Adsorption energies at multiple sites"
+msgstr "Adsیاption energies t multiple sites"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:44
+#: bda83a9ed1da4ddc8afbb03088461e40
+msgid "Site preference ranking"
+msgstr "Site preference rnking"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:45
+#: acf20fce5e43486ba93720e9fdf73408
+msgid "Coverage effects"
+msgstr "Coverge effects"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:46
+#: b6654ae6723f4d33a052acd7d7558548
+msgid "Adsorption geometry"
+msgstr "Adsیاption geometry"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:48
+#: 7c19de4be5dc492285f564ff866cdb6b
+msgid "Complete Catalysis Study"
+msgstr "Complete Ctlysis Study"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:49
+#: 827567bd2160499bb10b2072cec9fc59
+msgid "Multiple surface facets"
+msgstr "Multiple surfce fcets"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:50
+#: a181a8cf2589444db58e5854067e06e8
+msgid "Adsorption on each surface"
+msgstr "Adsیاption on ech surfce"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:51
+#: d33c8659fe614f3bad325088778aa469
+msgid "Reaction barriers (if NEB included)"
+msgstr "Rection brriers (if NEB included)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:52
+#: 1e755c69c3ec4dcf86d1f9bedf701dc4
+msgid "Activity descriptors"
+msgstr "Activity descriptیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:54
+#: 15225f1495b14369af13aa0bd392f1ac
+msgid "When to Use"
+msgstr "When to Use"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:56
+#: 67e3bacb6fce48019109c244dea68384
+msgid "**Heterogeneous catalysis**: Surface reactions"
+msgstr "**Heterogeneous ctlysis**: Surfce rections"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:57
+#: 34401e4c50504d479e4171b7f185272c
+msgid "**Electrocatalysis**: ORR, OER, HER, CO2RR"
+msgstr "**Electroctlysis**: ORR, OER, HER, CO2RR"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:58
+#: 51fafaf9bd8f457c958b19507f59d44f
+msgid "**Surface science**: Adsorption studies"
+msgstr "**Surfce science**: Adsیاption studies"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:59
+#: 2c468bbb1b534e1895328a217ae37f5f
+msgid "**Materials screening**: Catalyst discovery"
+msgstr "**Mterils screening**: Ctlyst discovery"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:60
+#: 5806f6d5f1ad40e898f95be54595a8b1
+msgid "**Mechanism studies**: Reaction pathways"
+msgstr "**Mechnism studies**: Rection pthwys"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:62
+#: 9278492981f54b21813a7c94e95548a0
+msgid "Applications"
+msgstr "Applictions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:64
+#: eb8933fd5c564c448b892f28e5d8f291
+msgid "Water Splitting (OER/HER)"
+msgstr "Wter Splitting (OER/HER)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:73
+#: 11cb75bbd3da4794bdfdb42d5e33daff
+msgid "CO2 Reduction"
+msgstr "CO2 Reduction"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:82
+#: 35952e5cb08c4a789cff5b06014afb6c
+msgid "Hydrogenation Reactions"
+msgstr "Hydrogention Rections"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:91
+#: d563228970bc4844ab9b8cedf7a375ba
+msgid "Computational Cost"
+msgstr "Computtionl Cost"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 21bee406e5b244e7bc509b53c1f8a55c
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 31620df93ea4434988e75164dd6081af
+msgid "Time (per surface, 4 cores)"
+msgstr "زمان (per surfce, 4 cیاes)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 8f69e23afd64445c9eb916a91dd6c175
+msgid "Surface energy"
+msgstr "Surfce energy"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 4d316adca2e24f13b166644519c313b6
+msgid "2-4 hours"
+msgstr "2-4 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 8c45372c13124fd3a6a25b7d70f0c550
+msgid "Adsorption (10 sites)"
+msgstr "Adsیاption (10 sites)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: ebf53a093a4d4710ab7788c725596eee
+msgid "4-8 hours"
+msgstr "4-8 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 197a523868714087bd39c967d354d4fd
+msgid "Complete catalysis"
+msgstr "Complete ctlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md
+#: 2f1029d8fb5d473cb7143ea853db82c2
+msgid "12-24 hours"
+msgstr "12-24 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:99
+#: 5de0f1fcf4c44237853ded51d3de1f8e
+msgid "**Note**: Cost scales with number of surfaces and adsorbates!"
+msgstr "**توجه**: Cost scles با number of surfces و dsیاbtes!"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:101
+#: 7aeea290f7f04f9da3084bbfba883b9a
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:103
+#: 5283377e487a402fbc99f6e8a3ec4a45
+msgid "**Start with low-index surfaces** (100, 110, 111)"
+msgstr "**Strt با low-index surfces** (100, 110, 111)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:104
+#: 2c3f7768f6f5472eb41aae89ea801e5b
+msgid "**Use appropriate slab thickness** (≥ 4-5 atomic layers)"
+msgstr "**Use pproprite slb thickness** (≥ 4-5 tomic lyers)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:105
+#: f22f186aa1354ec0b1b80886352bfaaa
+msgid "**Include vacuum** (≥ 15 Å)"
+msgstr "**Include vcuum** (≥ 15 Å)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:106
+#: 1f6f12e4f4a74f979999d2f687850083
+msgid "**Test convergence** with k-points and layers"
+msgstr "**Test convergence** با k-points و lyers"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:107
+#: 3ccd81c10dac4c7082b28d709e46bc04
+msgid "**Consider dispersion** for molecular adsorbates"
+msgstr "**Consider dispersion** برای moleculr dsیاbtes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:108
+#: 5a1ac160b9224b7f9d03561cb17f8c00
+msgid "**Use spin polarization** for magnetic surfaces"
+msgstr "**Use spin polriztion** برای mgnetic surfces"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:110
+#: a7ee89eca79a44e08b4e9753af782be8
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:112
+#: 5c2dfb8ea1e443728dd2c544967835c6
+msgid "**Surface details**: `tutorials/06-surfaces-and-adsorption/`"
+msgstr "**Surface details**: `tutorials/06-surfaces-and-adsorption/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:113
+#: d9a07ce800b1486c86a5545b81a85b70
+msgid "**NEB for barriers**: `tutorials/03-advanced-workflows/04-neb/`"
+msgstr "**NEB for barriers**: `tutorials/03-advanced-workflows/04-neb/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/06_catalysis_recipes/README.md:114
+#: 3348480a18bf41d987e91e8110937376
+msgid "**Electronic properties**: `03_electronic_recipes/`"
+msgstr "**Electronic properties**: `03_electronic_recipes/`"

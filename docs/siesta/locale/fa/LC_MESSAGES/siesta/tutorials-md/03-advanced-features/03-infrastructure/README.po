@@ -1,0 +1,581 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:1
+#: 75c6f11128f74503990b710a773ff352
+msgid "04: Infrastructure"
+msgstr "04: Infrstructure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:3
+#: 105721b26db449dbbee7b2f74d8bde92
+msgid "**Focus**: Production environment setup for large-scale calculations"
+msgstr "**Focus**: Production environment setup برای lrge-scle clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:5
+#: 90e2dbe5dfa74b1d9e5f6bca46b1fcbf
+msgid "**Difficulty**: Intermediate to Advanced"
+msgstr "**سطح سختی**: متوسط to پیشرفته"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:7
+#: 28cec83afeb647d3ac4c47762bb93761
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:8
+#: b9dd13ff2b774f379deeb1518dc0cbe8
+msgid "Completed basic tutorials ([01-basics](../01-basics/))"
+msgstr "Completed bsic tutیاils ([01-bsics](../01-bsics/))"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:9
+#: 9a41fc4393194590823b94391d0c409d
+msgid "Access to HPC cluster (for job submission tutorials)"
+msgstr "Access to HPC cluster (برای job submission tutیاils)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:10
+#: 9c2d4cdd36b8494191e16c9ebfcc89a3
+msgid "MongoDB installation (for database tutorials)"
+msgstr "MongoDB instlltion (برای dtbse tutیاils)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:14
+#: 9ab85250fce941a68cd99fa32135b9c2
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:16
+#: ee010cd762e040728da8b6072347257c
+msgid "[01-database-storage](01-database-storage/)"
+msgstr "[01-dtbse-stیاge](01-dtbse-stیاge/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:17
+#: 6c9c2e750568472dba4dcfdd6af58e9d
+msgid ""
+"**Description**: Storing calculation results in MongoDB for analysis and "
+"retrieval **Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~10 "
+"min (full setup) **Key Concepts**: MongoDB integration, jobflow stores, "
+"data persistence, querying results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:22
+#: 95d8f22629b14ed5b986a8df32d7fe8e
+msgid "[02-jobflow-remote](02-jobflow-remote/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:23
+#: 234d30c71a5742a19040f8e3dbd24c28
+msgid ""
+"**Description**: Submitting jobs to HPC clusters via jobflow-remote "
+"**Difficulty**: Intermediate **Time**: ~10 min (setup), varies "
+"(execution) **Key Concepts**: jobflow-remote, HPC integration, queue "
+"systems, job management"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:28
+#: 4b427788d38d4f429fa5f32b6444dbf9
+msgid "[03-error-handling](03-error-handling/)"
+msgstr "[03-errیا-hوling](03-errیا-hوling/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:29
+#: 716cafe8c8d24e78a394e2d3e03e17ab
+msgid ""
+"**Description**: Automatic error detection and recovery with custodian "
+"**Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~20 min (full "
+"example) **Key Concepts**: Custodian handlers, SCF convergence, error "
+"recovery, automatic corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:34
+#: 1b90c98409274aef893dab17ac325035
+msgid "[04-restart-recovery](04-restart-recovery/)"
+msgstr "[04-restrt-recovery](04-restrt-recovery/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:35
+#: f1ca6fbaeff249d39c8f1c507d75024d
+msgid ""
+"**Description**: SIESTA restart capabilities and calculation recovery "
+"**Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~15 min (full "
+"example) **Key Concepts**: DM file reuse, restart mechanisms, checkpoint "
+"recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:40
+#: 3a6679d8e3434cc1ad195d3a6548ebcd
+msgid "[05-dry-run-preview](05-dry-run-preview/)"
+msgstr "[05-dry-run-preview](05-dry-run-preview/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:41
+#: 6301baf0180141289ee6d8913fea31ee
+msgid ""
+"**Description**: Preview workflows and generate input files without "
+"running calculations **Difficulty**: Beginner **Time**: ~1 min (instant "
+"preview) **Key Concepts**: Dry-run mode, input file generation, workflow "
+"validation, resource planning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:48
+#: 185ef20c14f7401283cea8a6bbf6e8d6
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:50
+#: a3eb40560106419ba19a54aed9fded3d
+msgid "For production calculations, we recommend this sequence:"
+msgstr "Fیا production clcultions, we recommend this sequence:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:52
+#: 0c04f9f7eecc42ef817e99f120bbf69e
+msgid ""
+"**Start**: [05-dry-run-preview](05-dry-run-preview/) - Always preview "
+"workflows first!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:53
+#: 93da5d71f74c48399ddbdfa51b5d76ba
+msgid ""
+"**Data management**: [01-database-storage](01-database-storage/) - Set up"
+" result storage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:54
+#: eb9112b8401b45e8804444991ac12718
+#, fuzzy
+msgid "**HPC**: [02-jobflow-remote](02-jobflow-remote/) - Submit to cluster"
+msgstr "**HPC**: [02-job-submission](02-job-submission/) - Submit to cluster"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:55
+#: 0e78663b0df04feba1f20512fb7aeb41
+msgid ""
+"**Reliability**: [03-error-handling](03-error-handling/) - Enable "
+"automatic error recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:56
+#: 6e3921b6b5b94abb903510346049c30a
+msgid ""
+"**Advanced**: [04-restart-recovery](04-restart-recovery/) - Handle long "
+"calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:60
+#: f0a0cf75d54048d885af0a2a798fef62
+msgid "Why Infrastructure Matters"
+msgstr "Why Infrstructure Mtters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:62
+#: 716f9eb3aa824703992bfa33a6e325df
+msgid "Setting up proper infrastructure:"
+msgstr "راه‌اندازی proper infrstructure:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:63
+#: 488b2caec83947cbb97a6ddd87cec06e
+msgid "✅ **Saves time**: Automatic error recovery prevents wasted calculations"
+msgstr "✅ **Sves time**: Automtic errیا recovery prevents wsted clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:64
+#: cb31ff739ba446fdaf347a9cbdfcb6cd
+msgid "✅ **Organizes data**: Database storage makes results searchable"
+msgstr "✅ **Orgnizes dt**: Dtbse stیاge mkes results serchble"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:65
+#: 2fe3e80d2625483bada1811b7c743df0
+msgid "✅ **Scales up**: HPC submission enables large workflows"
+msgstr "✅ **Scles up**: HPC submission enbles lrge wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:66
+#: dde4d4b7b87340d082b974218724fb2c
+msgid "✅ **Reduces errors**: Dry-run previews catch mistakes early"
+msgstr "✅ **Reduces errیاs**: Dry-run previews ctch mistkes erly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:67
+#: b26aa4e673c446df89945b69415b5f68
+msgid "✅ **Enables collaboration**: Centralized database for team access"
+msgstr "✅ **Enbles collbیاtion**: Centrlized dtbse برای tem ccess"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:71
+#: 8547f78bd96e4d1fac05fbede826e9a6
+msgid "Quick Start Guide"
+msgstr "شروع سریع Guide"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:73
+#: 9c548e00dc2e47d0b86bc208058906c0
+msgid "Step 1: Preview First (Dry-Run)"
+msgstr "Step 1: Preview First (Dry-Run)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:81
+#: c27a3fcd288849fab477beb6fa7359be
+msgid "Step 2: Enable Database Storage"
+msgstr "Step 2: Enble Dtbse Stیاge"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:90
+#: 8d0ff8c3573240dc89b5df2aa6a87aae
+msgid "Step 3: Submit to HPC"
+msgstr "Step 3: Submit to HPC"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:98
+#: f8681272c3e545e0a65a851993394d0e
+msgid "Step 4: Enable Error Handling"
+msgstr "Step 4: Enble Errیا Hوling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:108
+#: 77840af43f13434a83f42fe954098979
+msgid "Database Setup"
+msgstr "Dtbse Setup"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:110
+#: e97cc6ca640f4306b3cba414d5d18858
+msgid "MongoDB Installation"
+msgstr "MongoDB Instlltion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:112
+#: e658495158104caeb2b82e5f1eac0d3f
+msgid "**Option 1: Local MongoDB**"
+msgstr "**Option 1: Locl MongoDB**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:123
+#: 18299b1fcc43499ea100a5b9c5f71587
+msgid "**Option 2: Cloud MongoDB (Atlas)**"
+msgstr "**Option 2: Cloud MongoDB (Atls)**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:124
+#: c3a6ebad57174c83bc1be5832b0cd5cf
+msgid "Free tier: 512 MB storage"
+msgstr "Free tier: 512 MB stیاge"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:125
+#: 4867664d7ea34b298ae6fa3183868079
+msgid "URL: https://www.mongodb.com/cloud/atlas"
+msgstr "URL: https://www.mongodb.com/cloud/atlas"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:127
+#: 3faeb905d60440299d12d53ab2ef99e3
+msgid "Configuration"
+msgstr "Configurtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:129
+#: b83795f86a654a9dbb5fe40f8ca370d8
+msgid "Create `~/.jobflow.yaml`:"
+msgstr "Create `~/.jobflow.yaml`:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:142
+#: 2b0127b19c1549b9979778b4c7320ce0
+msgid "HPC Setup"
+msgstr "HPC Setup"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:144
+#: f84fa9f9a6bf4078a25e4234511d4df8
+msgid "Jobflow-Remote Installation"
+msgstr "Jobflow-Remote Instlltion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:157
+#: d52d3c9c48d34a2280ac84d7863ca6f1
+msgid "Typical HPC Configuration"
+msgstr "Typicl HPC Configurtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:178
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:271
+#: 101888b1d3ac4497adaafef77ff4c0f5 aa7613989ddf47829522b80eed38e105
+msgid "Error Handling"
+msgstr "Errیا Hوling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:180
+#: 1b88f0dc11204b72aca63ca8f6dfddd2
+msgid "Common Error Types"
+msgstr "Common Errیا Types"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:182
+#: d0b633e35ab14f7995d46ebc75b3cd3a
+msgid "**SCF Convergence**: Mixer settings, occupation function"
+msgstr "**SCF همگرایی**: Mixer settings, occuption function"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:183
+#: 591091ddec8243999b0285df8e84bc44
+msgid "**Geometry Optimization**: Step size, convergence criteria"
+msgstr "**Geometry Optimiztion**: Step size, convergence criteri"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:184
+#: c67d3a987f8f4346851583750299a455
+msgid "**Memory Issues**: Insufficient RAM allocation"
+msgstr "**Memیاy Issues**: Insufficient RAM lloction"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:185
+#: 90cec8cfda82443abac6c519b5b36329
+msgid "**Pseudopotential**: Missing or incompatible pseudopotentials"
+msgstr "**Pseudopotentil**: Missing یا incomptible pseudopotentils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:187
+#: 5538251ea7d6429c85e5c5fef12b0fca
+msgid "Custodian Features"
+msgstr "Custodin ویژگی‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:189
+#: 1a4c2ffe37cc4119a41a2efcf435f128
+msgid "✅ **Automatic detection**: Parses SIESTA output for errors"
+msgstr "✅ **Automtic detection**: Prses SIESTA output برای errیاs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:190
+#: 3fd640c0252d43b28fac04f9da0ae6af
+msgid "✅ **Progressive fixes**: Tries multiple correction strategies"
+msgstr "✅ **Progressive fixes**: Tries multiple cیاrection strtegies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:191
+#: 0f31a5f09fef467c85c50e5e4d0c7fa4
+msgid "✅ **Logging**: Complete error history in `custodian.json`"
+msgstr "✅ **Logging**: Complete error history in `custodian.json`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:192
+#: b819d3d4f179420a84f308136ae49dce
+msgid "✅ **Limits**: Prevents infinite retry loops"
+msgstr "✅ **Limits**: Prevents infinite retry loops"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:196
+#: 89a6acbb9c9c45d593144291b5cfde78
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:198
+#: d940e74d2c1f4439b3d1bfe9803179e3
+msgid "Database Issues"
+msgstr "Dtbse Issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:200
+#: 4e2db2b3fbd54d6790d167cbd235d8d8
+msgid "**Issue**: \"Connection to MongoDB failed\" **Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:210
+#: 8acb46b9c98444ba81735732171bc74d
+msgid "**Issue**: \"Collection not found\" **Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:217
+#: 185931942c95408fb992ebe5146d8776
+msgid "HPC Issues"
+msgstr "HPC Issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:219
+#: 58099c5e01b34f0a87af345b84f930da
+msgid "**Issue**: \"jobflow-remote command not found\" **Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:226
+#: 167781d4a5064c17a6683c55a6b64b74
+msgid "**Issue**: \"Job submission failed\" **Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:228
+#: 015c3b0c5193463dae4ef20a7d649f9d
+msgid "Check scheduler type (slurm/pbs/sge)"
+msgstr "Check scheduler type (slurm/pbs/sge)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:229
+#: 5e623510bcd141fb964e2151f7b1b310
+msgid "Verify work_dir exists and has write permissions"
+msgstr "Verify wیاk_dir exists و hs write permissions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:230
+#: c34f022a10d444f487726ed75b587c2a
+msgid "Test with: `atomate2siesta-jobflow-remote test`"
+msgstr "Test with: `atomate2siesta-jobflow-remote test`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:232
+#: 89362ea13605444396a5b67a95eacead
+msgid "Error Handling Issues"
+msgstr "Errیا Hوling Issues"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:234
+#: f115ccbc1fcd40b6a8ea3a6ae06c5dc3
+msgid "**Issue**: \"Too many errors, calculation aborted\" **Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:244
+#: 41445aab875b495883cd95c2d0d73f2a
+msgid "**Issue**: \"Error handler not triggered\" **Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:246
+#: 620337238d83461e99a1608539d7dc2a
+msgid "Check error is in supported list (see tutorial 03)"
+msgstr "Check errیا is in suppیاted list (see tutیاil 03)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:247
+#: dd9d1215618e43a3880ef61ce253941e
+msgid "Verify custodian is enabled: `use_custodian=True`"
+msgstr "Verify custodian is enabled: `use_custodian=True`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:251
+#: 3b6d43d1ca674cd1a1bb94a310b45e46
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:253
+#: ee81f9d65d384ecb87f2313f5159a0de
+msgid "Dry-Run Workflow"
+msgstr "Dry-Run گردش کار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:254
+#: 70c7ac12219a48269c897ccd437a0f7b
+msgid "**Always start with dry-run**: Preview before running"
+msgstr "**Alwys strt با dry-run**: Preview beبرایe running"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:255
+#: 136b50f4e35d435d9e10e4e3569f5a2b
+msgid "**Check input files**: Inspect generated `siesta.fdf`"
+msgstr "**Check input files**: Inspect generated `siesta.fdf`"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:256
+#: 7dddb71dbb2c486f85a49c90713c2d3d
+msgid "**Verify structures**: Review structure transformations"
+msgstr "**Verify structures**: Review structure trnsبرایmtions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:257
+#: 4930eb11d9a348b4b5948b866fb24d63
+msgid "**Estimate resources**: Calculate job requirements"
+msgstr "**Estimte resources**: Clculte job requirements"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:259
+#: ee900ab327aa4944be89e4e28796557d
+msgid "Database Management"
+msgstr "Dtbse Mngement"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:260
+#: cc8cc640bfe2447f8eefce08e995c376
+msgid "**Regular backups**: Backup MongoDB regularly"
+msgstr "**Regulr bckups**: Bckup MongoDB regulrly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:261
+#: 5fed7892cea84eca9cd059b7b8bf5dca
+msgid "**Indexing**: Create indexes for frequently queried fields"
+msgstr "**Indexing**: Crete indexes برای frequently queried fields"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:262
+#: 2b65c3c314e54143aeeeb0ffc0108f4f
+msgid "**Cleanup**: Remove old test calculations"
+msgstr "**Clenup**: Remove old test clcultions"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:263
+#: f1a8c0fc8bc04bf1bcbd929392b67736
+msgid "**Documentation**: Tag calculations with metadata"
+msgstr "**Documenttion**: Tg clcultions با metdt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:265
+#: cc1216ee197c4f47bbe105f8b6bed4ab
+msgid "HPC Usage"
+msgstr "HPC Usge"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:266
+#: a6488b758bb7417390313de9d56b4b14
+msgid "**Resource requests**: Don't over-allocate (wastes queue time)"
+msgstr "**Resource requests**: Don't over-llocte (wstes queue time)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:267
+#: da2ba00aceb0470db2f74306f1327986
+msgid "**Job arrays**: Use for convergence studies"
+msgstr "**Job rrys**: Use برای convergence studies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:268
+#: 67cea3ece6854c9a85853693be557c93
+msgid "**Monitoring**: Check job status regularly"
+msgstr "**Monitیاing**: Check job sttus regulrly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:269
+#: a566f73403e74a6082277ee1a79f856f
+msgid "**Results retrieval**: Download results promptly"
+msgstr "**Results retrievl**: Downlod results promptly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:272
+#: 79470956c0044b6098647a53b3d992da
+msgid "**Enable by default**: Always use `use_custodian=True` for production"
+msgstr "**Enable by default**: Always use `use_custodian=True` for production"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:273
+#: f931e161c9d740b19f33471bf82bf892
+msgid "**Review logs**: Check `custodian.json` for patterns"
+msgstr "**Review logs**: Check `custodian.json` for patterns"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:274
+#: c674a45ce57b4bb9a9002588c614571d
+msgid "**Custom handlers**: Add project-specific error handlers if needed"
+msgstr "**Custom hوlers**: Add project-specific errیا hوlers if needed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:275
+#: 083ecc3ab8c34235a3df9134bfed584a
+msgid "**Limits**: Set reasonable `custodian_max_errors` (10-20)"
+msgstr "**Limits**: Set reasonable `custodian_max_errors` (10-20)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:279
+#: e956e082319e4baeaaa54d7b24ec2922
+msgid "CLI Tools Reference"
+msgstr "CLI Tools Reference"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:281
+#: 6c01e29228e04843bc62132f6ff997bc
+msgid "Database CLI"
+msgstr "Dtbse CLI"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:290
+#: ef4ca21cd2d543b9b57b158b5c99a42d
+msgid "Jobflow-Remote CLI"
+msgstr "Jobflow-Remote CLI"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:299
+#: 549d545e352348738a05f7426b267c7a
+msgid "Cluster Setup CLI"
+msgstr "Cluster Setup CLI"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:308
+#: 990519ccf1dc42d7856d8a5538f2a64d
+msgid "Next Category"
+msgstr "Next دسته‌بندی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:310
+#: 54bd7580325a440d97dd86a49288823e
+msgid "After setting up infrastructure, proceed to:"
+msgstr "After setting up infrstructure, proceed to:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:311
+#: 86c5433826a04a9a9c5113690c99c6e1
+msgid ""
+"**[03-advanced-workflows](../../02-workflows/)** - Run production "
+"workflows with your new setup"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:312
+#: e1cb4d09b4d1446c98e53b3dbd124eeb
+msgid ""
+"**[05-vibrational-properties](../05-vibrational-properties/)** - Large-"
+"scale phonon calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:313
+#: ae46e96a6d60494aa2c3f39c4b3aeed9
+msgid ""
+"**[06-surfaces-and-adsorption](../../02-workflows/03-surfaces-and-"
+"adsorption/)** - High-throughput surface screening"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/03-infrastructure/README.md:317
+#: 56942c3f07364d8ebb995bc97bea0300
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"
+
+#~ msgid "[02-job-submission](02-job-submission/)"
+#~ msgstr "[02-job-submission](02-job-submission/)"
+

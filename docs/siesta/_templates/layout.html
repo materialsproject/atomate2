@@ -1,0 +1,30 @@
+{% extends "!layout.html" %}
+
+{# Add language switcher to the navigation #}
+{% block menu %}
+  {{ super() }}
+  <div class="language-switcher">
+    <h3>Language / زبان</h3>
+    <ul>
+      {% for lang_code, lang_name in languages %}
+      <li>
+        {% if lang_code == language %}
+        <strong>{{ lang_name }}</strong>
+        {% else %}
+        {% if lang_code == 'en' %}
+          {# From Persian to English: go up one level #}
+          {% if language == 'fa' %}
+          <a href="../{{ pagename }}.html">{{ lang_name }}</a>
+          {% else %}
+          <a href="{{ pagename }}.html">{{ lang_name }}</a>
+          {% endif %}
+        {% else %}
+          {# From English to other language: go into subdirectory #}
+          <a href="{{ lang_code }}/{{ pagename }}.html">{{ lang_name }}</a>
+        {% endif %}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

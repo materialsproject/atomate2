@@ -1,0 +1,908 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:1
+#: d9f4adbab0ca4e2096d3aae6775210db
+msgid "Tutorial: Phonon Calculations with PhonopyMaker"
+msgstr "Tutorial: Phonon Calculations with PhonopyMaker"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:3
+#: dc934672f32941c2b2a7767a48fc3d82
+msgid ""
+"**Category**: 01-basics/07-PhonopyMaker **Difficulty**: Intermediate "
+"**Time**: ~5 min (dry-run), ~1-2 hours (full calculation)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:9
+#: ce8d6c1078424806a3c3a8fe55123933
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:11
+#: ff3694d975aa486bb5fcebf3a4ad8eb1
+msgid ""
+"This tutorial introduces phonon calculations using `PhonopyMaker`, which "
+"integrates SIESTA with Phonopy for phonon band structure, density of "
+"states, and thermal properties. Phonons are quantized lattice vibrations "
+"that govern thermal, mechanical, and transport properties of materials."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:13
+#: 0859e7feaf98436083f78bb67cacc90e
+msgid "**What Phonons Tell You**:"
+msgstr "**Wht فونون‌ها Tell You**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:14
+#: eae2f6c2fced4e83b8ab394dd76f76e2
+msgid "**Structural stability**: Imaginary modes → unstable structure"
+msgstr "**Structurl stbility**: Imginry modes → unstble structure"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:15
+#: 95b5c3417fc74758b395f30389c09a4f
+msgid "**Thermal properties**: Heat capacity, Debye temperature, entropy"
+msgstr "**Therml properties**: Het cpcity, Debye temperture, entropy"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:16
+#: 49dbf9816d9b4109850b2d3396d8f6f3
+msgid "**Sound velocities**: Acoustic mode slopes"
+msgstr "**Sound velocities**: Acoustic mode slopes"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:17
+#: 120fd278a395433a8fadf2a71a83ea83
+msgid "**Thermodynamics**: Free energy, thermal expansion (via QHA)"
+msgstr "**Thermodynmics**: Free energy, rml expnsion (vi QHA)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:21
+#: 1f729bffe4794d29a57c47cfe1b877c7
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:23
+#: fc1c012c37934deeb62d567770a20b60
+msgid "Using `PhonopyMaker` for phonon calculations"
+msgstr "Using `PhonopyMaker` for phonon calculations"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:24
+#: 17577747fdf34b649d1221d8090a41c2
+msgid "Supercell generation and finite displacement method"
+msgstr "Supercell genertion و finite displcement method"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:25
+#: b7e642e8f5774fd39f249bb0810d775c
+msgid "Phonon band structure and DOS analysis"
+msgstr "فونون bو structure و DOS nlysis"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:26
+#: 61ab8b94b1024741a937143a302f80dd
+msgid "Automatic phonon plotting"
+msgstr "Automtic phonon plotting"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:27
+#: 877f3e24488e4e1db3f2c0440a12aef4
+msgid "Thermal property calculations"
+msgstr "Therml property clcultions"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:28
+#: 5817d8553421423b92201c98e2a64245
+msgid "Integration with QHA workflows"
+msgstr "Integrtion با QHA wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:32
+#: 96d914fcb99c48a8a7d7a5c921e6cba6
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:34
+#: 6be3dc27923e4254922bd6aaa9d2a08b
+msgid "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
+msgstr "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:35
+#: 4ceff55f185540449483d387f7acf1db
+msgid "**Required knowledge**: Basic lattice dynamics, phonon concepts"
+msgstr "**مورد نیاز knowledge**: Bsic lttice dynmics, phonon concepts"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:36
+#: f80f214a58b747308e89f02d3265365e
+msgid "**Required software**:"
+msgstr "**مورد نیاز softwre**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:37
+#: 8f10054546284f5a8656e8b812812801
+msgid "SIESTA installed and configured"
+msgstr "SIESTA instlled و configured"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:38
+#: 82db1c50c00e4f29acb7ae3c754b0238
+msgid "Phonopy installed: `pip install phonopy`"
+msgstr "Phonopy installed: `pip install phonopy`"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:39
+#: e18ed583bb5e4bb8a1504e06ce285ca8
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:43
+#: dc4cf18224ec4de0a270d57a051472c4
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:45
+#: 1a2fe8d8f56947b5bc6138d0d5718062
+msgid "Phonon Theory Basics"
+msgstr "فونون Theیاy Bsics"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:47
+#: 4daeb56e2ec441e384827c06c299cef7
+msgid "**Phonon**: Quantized lattice vibration with:"
+msgstr "**فونون**: Quntized lttice vibrtion با:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:48
+#: b15d456f03af4846bfdc99850021899f
+msgid "Frequency $\\omega(q)$ at wavevector $q$"
+msgstr "Frequency $\\omeg(q)$ t wvevectیا $q$"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:49
+#: 3253a5b02aa74bed8b2ad8303e53e80e
+msgid "Dispersion relation: $\\omega = \\omega(q)$"
+msgstr "Dispersion reltion: $\\omeg = \\omeg(q)$"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:51
+#: 27611b4cd4dd49d189c01c070456851a
+msgid ""
+"**Dynamical Matrix**: $D_{\\alpha\\beta}(q) = \\frac{1}{\\sqrt{M_\\alpha "
+"M_\\beta}} \\Phi_{\\alpha\\beta}(q)$"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:52
+#: b68bbb339c314ccbbaffa4724f91790e
+msgid "$\\Phi$: Force constant matrix"
+msgstr "$\\Phi$: Fیاce constnt mtrix"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:53
+#: 216910db3c5644d8bbdef76993f873fa
+msgid "$M$: Atomic masses"
+msgstr "$M$: Atomic msses"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:55
+#: 9c73f7f54e454fd59e15ce19f1961856
+msgid "**Phonon Frequencies**: Eigenvalues of dynamical matrix"
+msgstr "**فونون Frequencies**: Eigenvlues of dynmicl mtrix"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:57
+#: d2f248ce9bbe4e9bacdf0fb3c2e8a024
+msgid "Finite Displacement Method"
+msgstr "Finite Displcement Method"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:59
+#: 202480d3a9ae49f5b25d5e9e4d1a7382
+msgid "Phonopy uses supercell approach:"
+msgstr "Phonopy uses supercell pproch:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:61
+#: 26018dfccf6f4ee790da4926cdd17d57
+msgid "**Create supercell**: Typically 2×2×2 or larger"
+msgstr "**Crete supercell**: Typiclly 2×2×2 یا lrger"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:62
+#: 99614b477c59474b86b05e86f2f11b37
+msgid "**Displace atoms**: Small displacements (0.01 Å) in symmetry-reduced set"
+msgstr "**Displce toms**: Smll displcements (0.01 Å) in symmetry-reduced set"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:63
+#: 8c92b7f5045843e483a56cd2d6d4333f
+msgid "**Calculate forces**: SIESTA computes forces on all atoms"
+msgstr "**Clculte برایces**: SIESTA computes برایces on ll toms"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:64
+#: 13e899a6b19142498f37086c95fc0cc7
+msgid "**Extract force constants**: From force-displacement relationship"
+msgstr "**Extrct برایce constnts**: From برایce-displcement reltionship"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:65
+#: 17984648aab447849f626a1978231908
+msgid "**Solve dynamical matrix**: Get phonon frequencies"
+msgstr "**Solve dynmicl mtrix**: Get phonon frequencies"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:67
+#: 43762feb2d654f149fee0eb914b0de7c
+msgid "**Supercell Size Requirements**:"
+msgstr "**Supercell Size Requirements**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:68
+#: 99a3aa89895c4c8cb2c153d4fe43457e
+msgid "Minimum: 2×2×2 (for simple systems)"
+msgstr "Minimum: 2×2×2 (برای simple systems)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:69
+#: 15f93d4ac0564a41bfc3be17e66c7f73
+msgid "Recommended: Ensure all cell dimensions > 15 Å"
+msgstr "Recommended: Ensure ll cell dimensions > 15 Å"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:70
+#: 281d69d65eeb489e87920378788f92ec
+msgid "Larger supercells: Better long-range interactions, more expensive"
+msgstr "Lrger supercells: Better long-rnge interctions, mیاe expensive"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:72
+#: ff1b2bd1cfd54434ad95c25b5fff0495
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:88
+#: bf42aebd3c4f4945ad749e2469dd65d4
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:90
+#: 15689e33ffde426a8e6c43702647533e
+msgid "This directory contains:"
+msgstr "This directیاy contins:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:92
+#: b0a2b3f407a9407e8ecf879f6616e265
+msgid "**`01_basic.py`** - Simple phonon calculation with automatic plotting"
+msgstr "**`01_basic.py`** - Simple phonon calculation with automatic plotting"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:93
+#: 7d7fc1f3489540cd8c7bcc2b332dfb64
+msgid "**`01_basic/`** - Subdirectory with additional examples"
+msgstr "**`01_basic/`** - Subdirectory with additional examples"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:97
+#: 039a4a4b746248c6914a0495f5c7b0d8
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:99
+#: efeb5177d5b549fe868e5a82d4cab5cd
+msgid "Example 1: Basic Phonon Calculation"
+msgstr "مثال 1: Bsic فونون محاسبه"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:120
+#: d77631850f2e4b8d9238da5f9778b3eb
+msgid "**Output**: Generates 3 automatic plots (bands, DOS, thermal properties)"
+msgstr "**Output**: Genertes 3 utomtic plots (bوs, DOS, rml properties)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:122
+#: aa485d141af845d4b9346b77f71a8274
+msgid "Example 2: Explicit Supercell Matrix"
+msgstr "مثال 2: Explicit Supercell Mtrix"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:134
+#: 4328a6d150b7442cb4cca58ff13de87a
+msgid "Example 3: Custom SIESTA Parameters"
+msgstr "مثال 3: Custom SIESTA Prmeters"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:157
+#: 92d63edfb646427c9f09a09b90bce9d1
+msgid "Example 4: With Relaxation First"
+msgstr "مثال 4: With Relxtion First"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:180
+#: 3887450cabcd42d094a97594d2c71a65
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:182
+#: fadfb0fc39414e0dac25c7aa2ba23429
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:188
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:209
+#: 0f73ddf58e6a488c99b31f4e78bab58e fb836fe2f7394034a794340c4a2af5a4
+msgid "**What happens**:"
+msgstr "**Wht hppens**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:189
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:211
+#: 482ed5303a2343d88978d92fe19c4b09 d6741b1682ad43d0b0c6f70c291c9d9b
+msgid "Creates supercell"
+msgstr "Cretes supercell"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:190
+#: ea2dd13d410945abb6eb35ab2384efaf
+msgid "Generates displaced structures"
+msgstr "Genertes displced structures"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:191
+#: ccb8ceea74b448f9893608e4541c0f70
+msgid "Shows how many force calculations needed"
+msgstr "Shows how mny برایce clcultions needed"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:192
+#: 50a230654a764a18bb10c76200222f47
+msgid "No SIESTA execution"
+msgstr "No SIESTA execution"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:194
+#: 74c4f2bc0fbb4a1ab20684af90906a84
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:202
+#: a04e7bb35bd042eb9da80527c95484e9
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:210
+#: 52364bc96faf4a4db5e7a4cceb6c6929
+msgid "Relaxes structure (if `bulk_relax_maker` set)"
+msgstr "Relaxes structure (if `bulk_relax_maker` set)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:212
+#: d2bf257cbb1c457db8e2db1caf24911b
+msgid "Runs ~20-50 force calculations (depending on symmetry)"
+msgstr "Runs ~20-50 برایce clcultions (depending on symmetry)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:213
+#: 003517eb1565483f8bb0067f0b09b606
+msgid "Extracts force constants"
+msgstr "Extrcts برایce constnts"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:214
+#: 6bc80cb696da4c4a99840d651d106aed
+msgid "Computes phonon bands and DOS"
+msgstr "Computes phonon bوs و DOS"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:215
+#: 9dc538e65eaa494e88a2f0408ce958a4
+msgid "**Automatically generates 3 plots**"
+msgstr "**Automticlly genertes 3 plots**"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:217
+#: 500db1881a08445f9c8ca0bfcf7e9cfe
+msgid "**Time**: 1-2 hours for Si (depends on supercell size and system)"
+msgstr "**زمان**: 1-2 hours برای Si (depends on supercell size و system)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:221
+#: b0587e5842a84134bb3ee6d04df1e6bb
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:223
+#: 018ef3c7bb7c496d98d33c447d4ef678
+msgid "Automatic Plots (NEW!)"
+msgstr "Automtic Plots (NEW!)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:225
+#: 8e14c720d23646bb8dfe3e8c5a69a842
+msgid "PhonopyMaker automatically generates 3 publication-quality plots:"
+msgstr "PhonopyMaker automatically generates 3 publication-quality plots:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:227
+#: f7b8377f8ad649cabb82b9d7758dbe97
+msgid "1. `phonon_bands.png`"
+msgstr "1. `phonon_bands.png`"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:228
+#: 5b2e2787fd57406fa4d38d2bde2be2ac
+msgid "Phonon dispersion along high-symmetry path"
+msgstr "فونون dispersion long high-symmetry pth"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:229
+#: e9258820174942699cb0451aa1ca9f2a
+msgid "Acoustic modes (3 branches starting at 0)"
+msgstr "Acoustic modes (3 brnches strting t 0)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:230
+#: 382d9f97ae1e448d8c473ccc345c6fee
+msgid "Optical modes (higher frequencies)"
+msgstr "Opticl modes (higher frequencies)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:231
+#: 5b546b21f08041f69f283b8c5a15f909
+msgid "Γ, X, W, L, K points labeled"
+msgstr "Γ, X, W, L, K points lbeled"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:233
+#: 4e703c026cbf4c58993ee6ab3f1adae5
+msgid "2. `phonon_dos.png`"
+msgstr "2. `phonon_dos.png`"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:234
+#: ebcb2b8cc6fd4817a6461843432d5e09
+msgid "Phonon density of states"
+msgstr "فونون density of sttes"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:235
+#: ae028a913cf2467f8c3c253f205b12e5
+msgid "Peaks correspond to van Hove singularities"
+msgstr "Peks cیاrespond to vn Hove singulrities"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:236
+#: b58e6e4f216b416885d0cd2a271fbaff
+msgid "Area under curve = 3N modes (N = number of atoms)"
+msgstr "Are under curve = 3N modes (N = number of toms)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:238
+#: e0de42ff48ba447995d4c488f4b37994
+msgid "3. `thermal_properties.png`"
+msgstr "3. `thermal_properties.png`"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:239
+#: 1023474850f34f2592f6491015ed8bd5
+msgid "Heat capacity Cv(T)"
+msgstr "Het cpcity Cv(T)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:240
+#: 107a741d4ab44b10bda9b07077ebcf3a
+msgid "Entropy S(T)"
+msgstr "Entropy S(T)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:241
+#: 988d29b32a4844d58fdb0fa55c03ebd2
+msgid "Free energy F(T)"
+msgstr "Free energy F(T)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:242
+#: 39131ea6d1474b308ff2117f3d7ebeae
+msgid "Temperature range: 0-1000 K"
+msgstr "Temperture rnge: 0-1000 K"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:244
+#: 5e6e471fcd6140e4900fa62b3781dcd5
+msgid "Analyzing Phonon Results"
+msgstr "Anlyzing فونون Results"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:275
+#: 553aa8bf2e604fc2a37cbe5a9b409139
+msgid "Zero-Point Energy"
+msgstr "Zero-Point Energy"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:292
+#: ed1b2f1f27714f3ebac7c52a19af413c
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:294
+#: 959e4cce76a14dffb58c741876b8273a
+msgid "Issue 1: \"Imaginary modes at Γ\""
+msgstr "Issue 1: \"Imginry modes t Γ\""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:296
+#: 0190736eb7f446b9adceb0205ad12d2b
+msgid "**Symptoms**: Negative frequencies at Γ point"
+msgstr "**Symptoms**: Negtive frequencies t Γ point"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:298
+#: 9a848c311ca6477da1e97e6946990a00
+msgid "**Causes & Solutions**:"
+msgstr "**Cuses & Solutions**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:300
+#: 67e5efe8b96f4aeca215a25b18924706
+msgid "**Structure not fully relaxed**:"
+msgstr "**Structure not fully relxed**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:308
+#: 4149c09b307940fcb3b3f4014ae407c4
+msgid "**Force calculation not converged**:"
+msgstr "**Fیاce clcultion not converged**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:319
+#: 45d17b1e7b5b4d9683e0fa16ea8a2527
+msgid "**Supercell too small**:"
+msgstr "**Supercell too smll**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:324
+#: 5ae35d3014a548c783eaec2f5f05c193
+msgid "Issue 2: \"Forces inconsistent between displacements\""
+msgstr "Issue 2: \"Fیاces inconsistent between displcements\""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:326
+#: 98128e6dd4e34569ba4319c3ca0927e0
+msgid "**Symptoms**: Phonopy warnings about force consistency"
+msgstr "**Symptoms**: Phonopy wrnings bout برایce consistency"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:328
+#: 77a7346b8f2d42d9a55c826cc45cb45e
+msgid "**Solution**: Increase SCF convergence"
+msgstr "**Solution**: Increse SCF convergence"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:337
+#: 62d4c71e1f8b408699e85ec752c390ec
+msgid "Issue 3: \"Phonon calculation takes too long\""
+msgstr "Issue 3: \"فونون clcultion tkes too long\""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:339
+#: 20e4e6a46b974517ba819ab38973ae63
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:340
+#: 6a655567e8bb42c2bbf13871b53e608e
+msgid "Large supercell (many atoms)"
+msgstr "Lrge supercell (mny toms)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:341
+#: e3bbcdf1602c41a8b38af5b135f76cf3
+msgid "Many displacement patterns"
+msgstr "Mny displcement ptterns"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:343
+#: a41c244dad6f42469839214395b30462
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:344
+#: d7669f35b5ac4549891dd8a931a2e890
+msgid "**Use symmetry** (Phonopy does this automatically)"
+msgstr "**Use symmetry** (Phonopy does this utomticlly)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:345
+#: 7ff96a1dee124a79b4fb34e6ae28eead
+msgid "**Smaller supercell** (but check convergence!)"
+msgstr "**Smller supercell** (but check convergence!)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:351
+#: ed35ca3a50224d0695bf6f65b4f7518b
+msgid ""
+"**Submit to HPC** (see [03-advanced-features/03-infrastructure](../../03"
+"-advanced-features/03-infrastructure/))"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:353
+#: 3c0cde67c5a94b3da364e4d25aa34240
+msgid "Issue 4: \"Plots not generated\""
+msgstr "Issue 4: \"Plots not generted\""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:355
+#: 0826c51c5db14250acd6940d6a8ab8d1
+msgid "**Cause**: Dry-run mode or analysis job failed"
+msgstr "**Cuse**: Dry-run mode یا nlysis job filed"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:357
+#: c103f96af44646e08c4f3623c6663db2
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:358
+#: aa008125763842169c2d94dbfcd3b657
+msgid "Check `dry_run=False`"
+msgstr "Check `dry_run=False`"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:359
+#: 1efba8879c9c4ff2b26b4a4245e2c94e
+msgid "Verify analysis job completed:"
+msgstr "Verify nlysis job completed:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:363
+#: 6c7b31fb63764a91b42224aaa369b388
+msgid "Check for errors in analysis job output"
+msgstr "Check برای errیاs in nlysis job output"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:367
+#: e8db6bb6356f425eb7a80a52aeb329d5
+msgid "Phonon Analysis Best Practices"
+msgstr "فونون Anlysis بهترین روش‌ها"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:369
+#: d01af68ed89e4b5a918113998e39f532
+msgid "1. Always Relax First"
+msgstr "1. Alwys Relx First"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:384
+#: 8721dbf0138c49599cbd27e1f160c920
+msgid "2. Use Tight Force Convergence"
+msgstr "2. Use Tight Fیاce همگرایی"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:386
+#: be2a049d36404dfc94e2e6bbd15b2041
+msgid "For accurate phonons:"
+msgstr "Fیا ccurte phonons:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:396
+#: 829223ec49cc43d5a445bd50d375ff0b
+msgid "3. Check Supercell Convergence"
+msgstr "3. Check Supercell همگرایی"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:398
+#: 5f62dd0778b14de99ea248c519dc3fdc
+msgid "Test phonon DOS with different supercell sizes:"
+msgstr "Test phonon DOS با different supercell sizes:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:407
+#: bcc4cfb9cc184962a74668f6668253c3
+msgid "4. Validate with Experiments"
+msgstr "4. Vlidte با Experiments"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:409
+#: 83a9ecdbc3804e6eb597024112aca396
+msgid "Compare calculated phonon frequencies with:"
+msgstr "Compre clculted phonon frequencies با:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:410
+#: c8b3e2b68b3b4f9b8dcd7ecdb8125293
+msgid "Raman spectroscopy"
+msgstr "Rmn spectroscopy"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:411
+#: 03930f4ce2b84ccfa8853840d80f1218
+msgid "Infrared spectroscopy"
+msgstr "Infrred spectroscopy"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:412
+#: 83d21fcbb7cc4b579c0d99f667e37f80
+msgid "Inelastic neutron scattering"
+msgstr "Inelstic neutron scttering"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:413
+#: a3f2660db5f6472ebb1019574bfccfb5
+msgid "Acoustic measurements (sound velocities from slope of acoustic branches)"
+msgstr "Acoustic mesurements (sound velocities from slope of coustic brnches)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:417
+#: f23a0d6b5be54d848419834c886ed390
+msgid "Advanced Features"
+msgstr "پیشرفته ویژگی‌ها"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:419
+#: a47a02bc127342298d157f3679e57342
+msgid "Phonon Calculation Workflow"
+msgstr "فونون محاسبه گردش کار"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:421
+#: a9a64c6b9a24472eb6959e9ff9323d27
+msgid ""
+"For more control, see the full workflow maker in [02-workflows/06"
+"-vibrational-properties](../../02-workflows/06-vibrational-properties/):"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:436
+#: 27ca5ad7e88e481ba959452d57171044
+msgid "Grüneisen Parameters and QHA"
+msgstr "Grüneisen Prmeters و QHA"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:438
+#: 592635bed7c94c67ab12e2eda9adaa3f
+msgid "For thermal expansion and temperature-dependent properties:"
+msgstr "Fیا rml expnsion و temperture-dependent properties:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:440
+#: 84deefec574e42d498162fa5bcc09eb3
+msgid ""
+"See [02-workflows/06-vibrational-"
+"properties/02-gruneisen](../../02-workflows/06-vibrational-"
+"properties/02-SiestaGruneisenFlowMaker/) and "
+"[03-qha](../../02-workflows/06-vibrational-"
+"properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:444
+#: 46d95b1ff50c4ccbace7a4ba05f9f4d4
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:446
+#: 9f548290fcc64e2ba7b2b768ba62ab1a
+msgid ""
+"✅ **Relax structure first**: Use tight convergence (0.01 eV/Å forces) ✅ "
+"**Check for imaginary modes**: Negative frequencies = problem ✅ **Use "
+"adequate supercell**: min_length ≥ 15 Å ✅ **Tight force calculations**: "
+"DM.Tolerance = 1e-6 ✅ **Verify plots generated**: Check all 3 PNG files "
+"created ✅ **Compare with experiments**: Validate frequencies and thermal "
+"properties"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:455
+#: a07f18f4f06a4fd782a70a1fcad280dd
+msgid "Comparison: PhonopyMaker vs SiestaPhononMaker"
+msgstr "Comparison: PhonopyMaker vs SiestaPhononMaker"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: e21ef401c68848a1a501afb30241b6fb
+msgid "Feature"
+msgstr "Feture"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 08702f465b54483fb86464bc422aa452
+msgid "PhonopyMaker"
+msgstr "PhonopyMaker"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 901f23757e9c404ea9daa6d82b37219b
+msgid "SiestaPhononMaker"
+msgstr "SiestaPhononMaker"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: a69b2112479a474080c94a9569f9ab5f
+msgid "Method"
+msgstr "Method"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: c7d10b525ac24ee6812e0960e0a37f49
+msgid "Finite displacements"
+msgstr "Finite displcements"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 34283ee8ed054bdba2578183808b69a4
+msgid "Force constants matrix"
+msgstr "Fیاce constnts mtrix"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: eb6261a3ca1147439fbc9f131c83df2c
+msgid "Software"
+msgstr "Softwre"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 0d6619d06dec4791b93e3cebeb8bb141
+msgid "Phonopy + SIESTA"
+msgstr "Phonopy + SIESTA"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 672127c9b9634c53860b8127ac929f7c
+msgid "SIESTA native"
+msgstr "SIESTA ntive"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 648e4d6534ca405ea13ad6c504dfad77
+msgid "Flexibility"
+msgstr "Flexibility"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: e9ba66a953db4f169133a5499ce79e98
+msgid "High (Phonopy features)"
+msgstr "High (Phonopy fetures)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: a5ea7eaa1e44438e9dbb853145cebe08
+msgid "Limited"
+msgstr "Limited"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: e93d22fe61254410bc48891d462b716f
+msgid "Automatic plots"
+msgstr "Automtic plots"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 7d7a64eda58c4e47b45c02f097e89152
+msgid "✓ Yes (3 plots)"
+msgstr "✓ Yes (3 plots)"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 3544ab3417174135a16e3ec489db0d09
+msgid "Depends"
+msgstr "Depends"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: f5b802c279cd47ad99b24e3e5e52d7d9
+msgid "QHA/Grüneisen"
+msgstr "QHA/Grüneisen"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 151baf2bb14a43da940cb7038546aef6
+msgid "✓ Easy integration"
+msgstr "✓ Esy integrtion"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: d4660fbfb619433e81b5dfcbab5f0010
+msgid "Manual"
+msgstr "Mnul"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 2d35e941623f4e7287ca61ef202979e0
+msgid "Computational cost"
+msgstr "Computtionl cost"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: bc214214b07046f48a5e091620ace731
+msgid "~20-50 calculations"
+msgstr "~20-50 clcultions"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 304611d6a4d34375bccf8d54a5ae0677
+msgid "~10-20 calculations"
+msgstr "~10-20 clcultions"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: f444dacedf734e53860e3452130a30d7
+msgid "**Recommendation**"
+msgstr "**Recommendtion**"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: d0131e4a9d554996bcb9d6513eb4dba4
+msgid "**Default choice**"
+msgstr "**Defult choice**"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md
+#: 3249e373b30d40f89e8d72f6f0d5dff4
+msgid "Special cases only"
+msgstr "Specil cses only"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:467
+#: 71ff240a6d784381887dfc86d5d5bb2b
+msgid ""
+"See [08-SiestaPhononMaker](../08-SiestaPhononMaker/) for native SIESTA "
+"phonon approach."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:471
+#: 64275caa7b284c3d81f3b26a7f2866ac
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:473
+#: d4ac0b163f9f4f3ca646277b1843d7f3
+msgid "After completing phonon tutorials:"
+msgstr "After completing phonon tutیاils:"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:475
+#: 67297e8c21eb4dbbb2d8a2f64c7a2694
+msgid ""
+"**Grüneisen parameters**: [02-workflows/06-vibrational-"
+"properties/02-gruneisen](../../02-workflows/06-vibrational-"
+"properties/02-SiestaGruneisenFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:476
+#: e10772b52e3c42fe85f9bb18d840c51c
+msgid ""
+"**Quasi-harmonic approximation (QHA)**: [02-workflows/06-vibrational-"
+"properties/03-qha](../../02-workflows/06-vibrational-"
+"properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:477
+#: b5a7d4ab2b56422f8192f6bce138c7be
+msgid "**Thermal expansion**: Combine phonons with EOS"
+msgstr "**Therml expnsion**: Combine phonons با EOS"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:478
+#: a3a6bb60812041598d696c86862625f7
+msgid ""
+"**Native SIESTA phonons**: "
+"[08-SiestaPhononMaker](../08-SiestaPhononMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:482
+#: 4a2475151b5341fabb6841586edfb111
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:484
+#: 18f11ac711cd42b99f44c0b0b49e6b3f
+msgid "**Phonopy Documentation**: https://phonopy.github.io/phonopy/"
+msgstr "**Phonopy Documentation**: https://phonopy.github.io/phonopy/"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:485
+#: abf38191ad4448c59498f2fca03c268b
+msgid "**SIESTA-Phonopy Interface**: SIESTA manual phonon chapter"
+msgstr "**SIESTA-Phonopy Interfce**: SIESTA mnul phonon chpter"
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:486
+#: 97f91e06397245f8a9a42852c652622e
+msgid "**Lattice Dynamics**: Dove \"Introduction to Lattice Dynamics\""
+msgstr "**Lttice Dynmics**: Dove \"Introduction to Lttice Dynmics\""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:487
+#: f4c8b839a1ca430fa89140969de08496
+msgid "**Thermal Properties**: Ashcroft & Mermin \"Solid State Physics\""
+msgstr "**Therml Properties**: Ashcroft & Mermin \"Solid Stte Physics\""
+
+#: ../../source/tutorials-md/01-basics/07-PhonopyMaker/README.md:491
+#: a7475aab8a4b4eddaaff8e5f81b36e3b
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

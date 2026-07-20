@@ -1,0 +1,790 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:1
+#: ff45dab7aa2f410989db9ef3762a9595
+msgid "Tutorial: Tier-Based Parameter System"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:3
+#: 530fbacc46144368b343228f27e368d9
+msgid ""
+"**Category**: 03-advanced-features **Difficulty**: Beginner to "
+"Intermediate **Time**: ~2 min (dry-run), ~10-20 min (full calculation) "
+"**Prerequisites**: Completed [01-basics](../../01-basics/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:10
+#: 3418b7766b5f4381a1d3ae271c0cd6c4
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:12
+#: 18cea6121e964dbb8205d5d212038cee
+msgid ""
+"The tier system provides a 5-level hierarchy for automatic parameter "
+"management in atomate2siesta. Instead of manually specifying individual "
+"parameters, you can select a tier level that automatically activates "
+"appropriate dataclass modules and sets recommended parameters."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:14
+#: 0e05b86bcad34da895abcd418ded3626
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:16
+#: 96064c3cce4d4c8a94ba6a1cf31a6c51
+msgid ""
+"Understanding the 5-tier hierarchy (basic → intermediate → advanced → "
+"expert → dirty/ultra)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:17
+#: ef3abc4f89e145669470a6667a05ef48
+msgid "How tier levels control module activation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:18
+#: 142963e647ea478b9e0062e957e9c289
+msgid "Using tier presets for material-specific parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:19
+#: f39a03253b6448e2a1feecce19c53ee4
+msgid "Customizing tier-based workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:20
+#: f8d899181140484a8543cb076bb0366c
+msgid "Combining tiers with custom parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:24
+#: bfef348f7a5b4745875f1503d49a29d3
+msgid "Tier Levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:26
+#: 10cec15a6daa44cfac7f94d6aa388d0e
+msgid "Five Core Tiers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 3bb8380e3aa44a8c8f6f6eff4a02d848
+msgid "Tier"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 1d7ae60d529148078e16d4ec12942f44
+msgid "Modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 42b258117d1b48a8aafa0af43e00b609
+msgid "Use Case"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: b80d6807b248446693ae354df5108b63
+msgid "Typical Runtime"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: e0144173e23a4fd09c0addbf079c153e
+msgid "**basic**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 9cf3135deb85469cbbc8be1795083e51
+msgid "6 core modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 9d1a3619d1be49f9a425eace050af160
+msgid "Standard calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 2f3c3d2750814a1996aa4dd5a63515b1
+msgid "1× (baseline)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: b5fc37c6b3254f8fa60fcad46a129f4d
+msgid "**intermediate**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 603428655a2a40b089fcb27d215c633e
+msgid "8 modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 476154e7f7964557b24cebd8332f4d9f
+msgid "Production quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 2ac74a4a71d044ada45768deb8277839
+msgid "1.5×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: f89c4cf2c3d046fe9622dde05b57c4f3
+msgid "**advanced**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 63cc5436081c47c6ba8c71f592606eae
+msgid "10 modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 50c2657d549b476fae23ceb0eb19d2d7
+msgid "High accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 48fcb1783f49456dbab6e75174596c72
+msgid "2-3×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 39cf760e6b744fdb87b5c79531400065
+msgid "**expert**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 16efd0fe29f84b65ad0082a35830424c
+msgid "12 modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: d96abee52a2348e490576c2469d82a46
+msgid "Publication/validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: e249932066a2436f9da82e9b31166cbf
+msgid "3-5×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: e55994b82d37424396674e6254609c9e
+msgid "**dirty**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 634d07ad8db94116b2cdbff2d2204aa0
+msgid "Minimal (maps to basic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 180d6f4ef90f406f883c232387b882d2
+msgid "Fast testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: d63d26fd4c54498ebe06e9ee74c75677
+msgid "0.3×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: beef8f2a158f48199ebf4beae8c12fc7
+msgid "**ultra**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: db8aabe6f94845b2ad9e23d498e20c81
+msgid "All modules (maps to expert)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: 404bbecc8e604652a5c15872dfaf718d
+msgid "Maximum accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md
+#: d1659ee4d45b4dfe98f3e2c5f02c8e62
+msgid "5-10×"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:37
+#: b392123eeb8a4ef79a0125d458b5d081
+msgid "Automatic Module Activation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:39
+#: dae1b7c3806f4d059877f7faf9f640c4
+msgid "Each tier level automatically enables appropriate dataclass modules:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:41
+#: d0aa1235e7e3404b832ae0bb8acef333
+msgid ""
+"**basic**: Core parameters (basis, k-points, mesh cutoff, SCF, solution "
+"method, XC functional)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:42
+#: d8c53b7090024be2ab174995c8189c49
+msgid "**intermediate**: + Mixing parameters, electronic temperature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:43
+#: a0d9157530d5489698705bd5f7ddaea8
+msgid "**advanced**: + Spin settings, DFT+U, vdW corrections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:44
+#: 8d41863a91934ae8b15cdbe3193098c3
+msgid ""
+"**expert**: + Advanced SCF options, optimization algorithms, performance "
+"tuning"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:48
+#: e4bf29746a1049bb87d39f9bd625e450
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:50
+#: a6f7ba1ba5e24a8dbd4d0164fefdc544
+msgid ""
+"This directory contains 5 focused examples demonstrating tier system "
+"usage:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:52
+#: 4c844c8c46d541aea3e5bd9e020f663a
+msgid "1. Basic Tier Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:54
+#: aff8ee5248544759a4298c15e0749f6e
+msgid "**`01_basic_tier.py`**: Basic tier with core modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:55
+#: c9dd0e485e664172bc1e32776b13360d
+msgid "Minimal parameter set for standard calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:56
+#: 624ed6b169704962a1d9c90c3b4f1bcb
+msgid "Comments show how to switch between tier levels"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:57
+#: eaf31b5c69574e44b0ee9a1ca6db95bb
+msgid "Good starting point for learning the tier system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:59
+#: 4cb41de352e04392a4451f73efb1d3e6
+msgid "2. Material-Specific Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:61
+#: abcdb19101a44344b69a45570a14a709
+msgid "**`02_preset_surface.py`**: Using tier presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:62
+#: 51c2c2af21f74867bbf325ddd58df297
+msgid "Demonstrates material-specific presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:63
+#: e0db4cfe61a44cf0a0ca46146150c8a7
+msgid "Example: surface calculations with optimized parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:64
+#: 2e5ef82db13a43c6a5206355966bd285
+msgid "Shows how to apply presets with `apply_tier_preset()`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:66
+#: 03f05cb6ee464dd996ad72b449d40453
+msgid "3. Custom Module Control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:68
+#: fdcead7aef994e119e92803d6018392f
+msgid "**`03_custom_modules.py`**: Fine-grained module activation control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:69
+#: b45c989b7eac4ba58336def7992c4511
+msgid "**Comprehensive 65-line docstring explaining module system**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:70
+#: 99f6d47b4d4e4f32a2fe22ea15294364
+msgid "Manually enable/disable specific modules with `enabled_modules`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:71
+#: 61e1fe36b6be4717982e161c297d5f06
+msgid "Override default tier behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:72
+#: 5d6193ab184c407594775a3ed3c5182d
+msgid "Lists all 28 available modules organized by tier"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:73
+#: 3e3999e6a6454bf7bdcf19fd0ad1184d
+msgid ""
+"5 use cases: minimal inputs, testing, hybrid configs, debugging, custom "
+"workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:75
+#: 44bebc44fe7b487bbd958e2aa9a05b10
+msgid "4. Disable Specific Modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:77
+#: 0aab3b61b9744800bf3a5308760a255b
+msgid "**`04_intermediate_no_spin.py`**: Intermediate tier without spin"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:78
+#: 7bbfc115044540108cc4a4cacd014952
+msgid "Disable specific modules while keeping tier"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:79
+#: 236f2f087fc14cb484e4df55bdbbe3a1
+msgid "Useful for non-magnetic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:80
+#: 3974f3d2fd604421940b9186437d8ae3
+msgid "Shows `disabled_modules` parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:82
+#: 77d89a520fd64cc79e95eaedb4b7e221
+msgid "5. Complete Custom Configuration"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:84
+#: bfce774990d141bcae7ec40441d1b672
+msgid "**`05_custom_parameters.py`**: Full control over parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:85
+#: cb371a972e2d40349a7a32746d73bd17
+msgid "Pass `user_params` directly to class methods (not input_set_generator!)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:86
+#: 731aaa7ee20d40a3abbac5bc522e4e49
+msgid "Demonstrates parameter priority and override logic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:87
+#: 5583bb6d896c4d748c2734bc68a54db3
+msgid "Examples for metallic, large, magnetic, and high-accuracy systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:91
+#: 782a4abf433342a1b6a8899090a12a94
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:93
+#: 4702f14dddad4bbabeb54f857e10934f
+msgid "1. Basic Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:103
+#: 9d33d3de73c148a0b669f75e996b0db6
+msgid "2. Preview with Dry-Run"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:112
+#: f486e78dd48b4dd1a03f281090fe91ac
+msgid "3. Run Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:121
+#: 8cd1a91313204328a38ace4cdd629032
+msgid "Understanding Module Activation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:123
+#: ac9990beed23402fbe4df0e2adda284c
+msgid "How Tiers Work"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:125
+#: 562818e367f14175a8006b058d70d0e2
+msgid "When you specify a tier level:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:127
+#: 0d66b274fdc743f1adcc359d4d7fc956
+msgid ""
+"**Module Selection**: System determines which dataclass modules to "
+"activate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:128
+#: 0f0fd1ea81684f83af72a8082658caeb
+msgid "**Parameter Generation**: Each active module contributes its parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:129
+#: 5fcf343759f340acafa42f7673c3993c
+msgid "**Validation**: Parameters are validated against SIESTA FDF schema"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:130
+#: ccba99a8f0334eadb2507e9ae427f705
+msgid "**FDF Generation**: Final FDF file is created with all parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:132
+#: 79bed53771e141c2b766472d906c6f99
+msgid "Module Hierarchy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:160
+#: 1492d9a62ed94f6b9ef62a4577161745
+msgid "Parameter Priority"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:162
+#: 44fc9431635b485e9f3718cc7675781c
+msgid "When combining tiers with custom parameters:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:164
+#: 9930927cb9f541f0b4a7895137b2a0ae
+msgid "**Tier baseline**: Tier level sets default parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:165
+#: 516ff6fa537c400f8f7de78cdcad575a
+msgid "**User overrides**: `user_params` override tier defaults"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:166
+#: e2d4bf0b8253475097f87ab024fe7d16
+msgid "**Powerups**: Powerup functions can modify parameters after creation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:168
+#: 60c93c1dc04e4b93889748dc5c797366
+msgid "Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:181
+#: aca4c344f5b1475d9ee2803da97cf611
+msgid "Common Use Cases"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:183
+#: 28024e10e9e5416f8f1443b9b15ca308
+msgid "Case 1: Quick Testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:193
+#: 311b3addc27c437f985f019e9e6313a3
+msgid "Case 2: Production Calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:202
+#: cebad0ec328f460ebf6c6a758eac67e9
+msgid "Case 3: High-Accuracy Validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:211
+#: 4d63e3b811d645a498f307a3587f6f23
+msgid "Case 4: Material-Specific Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:224
+#: 3d875b7fad0e4c8aa90c0f7be7c99b41
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:226
+#: bdd89b5fddbd4f0fa3637a85de947a1a
+msgid "**Start with basic**: Use `tier=\"basic\"` for initial calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:227
+#: 5bc1241a13c14841929c65b00f09ebad
+msgid ""
+"**Use presets**: Prefer tier presets over manual tier levels (see [06"
+"-tier-presets-customization](../06-tier-presets-customization/))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:228
+#: 1178c5a0de9641fe945729432dc09299
+msgid "**Preview first**: Always use `dry_run=True` to preview parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:229
+#: f0f60bec7bb54ceb9bf642d0673fe3a1
+msgid "**Document tier**: Keep track of which tier you used for reproducibility"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:230
+#: 716c5f810b5d414ea6a768e27d44c09f
+msgid "**Override sparingly**: Only override tier defaults when necessary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:231
+#: a0397496c9914faa91e491ec5ae9b8dc
+msgid ""
+"**Test convergence**: Verify results don't depend on tier level for your "
+"system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:235
+#: f71bcecb9c194bf2ac43d658d86145e7
+msgid "Tier vs Preset"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:237
+#: 21e7e57598744db39a87addabd5f39a5
+msgid "Tier Levels (This Tutorial)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:238
+#: 4041f91f78ea4b29b7c26645b37882d4
+msgid "**What**: Control module activation hierarchy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:239
+#: bd9d2b883b8b4086a4147c24c937e679
+msgid "**When**: Internal parameter system, basic control"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:240
+#: 80889c858a4e4a278a438f4dbea10d15
+msgid "**Example**: `tier=\"basic\"` activates 6 core modules"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:242
+#: 21e3cb26905f460c94d02ab51bca2cda
+msgid ""
+"Tier Presets ([06-tier-presets-customization](../06-tier-presets-"
+"customization/))"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:243
+#: 301749e612c04fd9a66ff000b61190d5
+msgid "**What**: Material-specific parameter collections"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:244
+#: c0ebb0dd91eb46c78165eb9e8c003cf9
+msgid "**When**: Recommended for most users, includes tier + optimized params"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:245
+#: 49e097cdde824b50864373d6f9efdd87
+msgid ""
+"**Example**: `\"relax_standard\"` preset contains `tier=\"basic\"` + "
+"recommended parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:247
+#: 99b674ed2eff492489dc6b3293a60d90
+msgid ""
+"**Recommendation**: Use tier presets (tutorial 06) instead of raw tier "
+"levels for production calculations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:251
+#: c736c16002764403b897c4ee60690337
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:253
+#: 07902e7a85f04beca41176faed987e35
+msgid "Issue 1: \"Invalid tier level\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:255
+#: 51399639e83245fab0402609598300b8
+msgid "**Symptoms**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:261
+#: fb78293241b5427ca3390c75f3117155
+msgid "**Solution**: Use tier **level**, not preset **name**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:274
+#: dd63fdc51c494c59bac4a88920472eb0
+msgid "Issue 2: \"Parameters not applied\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:276
+#: 10caeff8fc5f49d186fdd3a08f5d1c53
+msgid "**Symptoms**: Custom parameters don't appear in FDF file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:278
+#: bc413b8806fd4bbdbe8d2fe11f90d0b2
+msgid "**Cause**: User parameters passed to maker before tier applied"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:280
+#: 4f3ac15a762449ac844d43f120a0e1fb
+msgid "**Solution**: Use `apply_tier_preset()` with `override_params`:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:295
+#: f9c5b0bc3afa467d88b8e8d5b757ed13
+msgid "Issue 3: \"Too many parameters activated\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:297
+#: 65f7209427b74c419a68c583697f5d61
+msgid "**Symptoms**: FDF file has unexpected parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:299
+#: 503d3caaea7c43dea56105d58f01c02f
+msgid "**Solution**: Use lower tier level or disable specific modules:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:310
+#: 906dd4c8f26440e0ab055533370d2574
+msgid "Related Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:312
+#: 01be3d2cfac941149d2d26e836c79767
+msgid ""
+"**[06-tier-presets-customization](../06-tier-presets-customization/)**: "
+"Material-specific tier presets (recommended next step)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:313
+#: 91120b88afa34fb4b9510ad37b0de1a8
+msgid "**[03-powerups](../03-powerups/)**: Dynamic parameter modification"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:314
+#: 6edccd424f904896ada4b0b4e4ae5d9b
+msgid ""
+"**[02-fdf-block-inputs](../02-fdf-block-inputs/)**: Advanced FDF "
+"parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:318
+#: 2f221be2ed4248f795f2ec2346c2effb
+msgid "CLI Tools"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:336
+#: 4b72c096542f4f1ca7d9aab5e488c331
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:338
+#: 409d65903a294059b62beb8638499170
+msgid "**What we covered**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:339
+#: a0f9dae836a0484fa3e54a814b8a5101
+msgid ""
+"✅ 5-tier hierarchy (basic → intermediate → advanced → expert + "
+"dirty/ultra)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:340
+#: 026fa4f991b54b9daa64c3fb904284ef
+msgid "✅ Automatic module activation based on tier"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:341
+#: a376b496819b4ca5b24f5bef23f6d421
+msgid "✅ Using tier levels in makers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:342
+#: 5ed40caa79614ea7984ed3c4dc87adb2
+msgid "✅ Parameter priority and override logic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:343
+#: 37c0ae61a4884b04ba327f77ec13adb4
+msgid "✅ Difference between tiers and presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:345
+#: f87b4ac2e5c34c6498a62d189ef554bd
+msgid "**Key takeaways**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:346
+#: 4502b45f492148c380b82d817e3187d1
+msgid "Tiers control which dataclass modules are activated"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:347
+#: 4e84fa8fb4c04bfba18cd37fa1d4e8ac
+msgid "Higher tiers activate more modules (more parameters, slower calculations)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:348
+#: 33df038229534279bbdaea7d5c9254da
+msgid "Start with `tier=\"basic\"` for standard calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:349
+#: 78346e3599d94662ab188ce982efea07
+msgid "Prefer tier presets over raw tier levels (see tutorial 06)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:350
+#: f495821f1bc64f33a47e2ec6350941a3
+msgid "Use `dry_run=True` to preview parameters before running"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:352
+#: 192bcb3f7744477daf715b5034ea5ab7
+msgid ""
+"**Next step**: Proceed to [06-tier-presets-customization](../06-tier-"
+"presets-customization/) to learn about material-specific presets."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/03-advanced-features/01-parameter-systems/01-tier-system/README.md:356
+#: 02719a19265642fb801b0d06b780203a
+msgid ""
+"*Back to [03-advanced-features](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+

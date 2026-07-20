@@ -1,0 +1,883 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:1
+#: 2d70f7d1319f4738ab9ac6291e3cc259
+msgid "Tutorial: Mesh Cutoff Convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:3
+#: 91d73cfe27df4eb0b1c7649424345aaf
+msgid ""
+"**Category**: 02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker "
+"**Difficulty**: Beginner **Time**: ~5 min (dry-run), ~10-15 min (full "
+"calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:9
+#: 6ccd8a15a16147428d812f8a8ce77d85
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:11
+#: 8914d514483b4973b4ba01b72da0fd99
+msgid ""
+"This tutorial demonstrates mesh cutoff convergence testing using "
+"`MeshCutoffConvergenceFlowMaker`. The mesh cutoff parameter controls the "
+"fineness of the real-space grid used to represent wavefunctions and "
+"charge density in SIESTA calculations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:13
+#: cc7a0eaf18df49c99992dabd41fbc3ac
+msgid ""
+"**Key Goal**: Determine optimal mesh cutoff that provides accurate "
+"energies without excessive computational cost."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:17
+#: df1263735e0f44659c6ca1d11f36b93a
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:19
+#: aa533704c69046ccb8cda68c63170478
+msgid "Mesh cutoff convergence testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:20
+#: baa0f58ec2a04dc9906e29eb29cfedbd
+msgid "Real-space grid fineness optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:21
+#: 3fa8cf67d1c34b92a9218e823923fd05
+msgid "Energy convergence criteria (meV/atom)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:22
+#: 29597a24977d4e8c81b3bef120617c69
+msgid "Automatic convergence plotting and analysis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:23
+#: 802bede295784c0fb53d13f066f732fa
+msgid "Optimal cutoff selection for different pseudopotentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:27
+#: 787abb04d285492c82fd4a039ad986c6
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:29
+#: d91b698b7da8493cbe2299df0c094d0a
+msgid "**Required**: Basic understanding of real-space grids in DFT"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:30
+#: d90dd444d35d4bb6a313bcd3c46d038d
+msgid ""
+"**Recommended**: Complete [RelaxMaker "
+"tutorials](../../../01-basics/01-RelaxMaker/) first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:31
+#: 3611060acae0426ababe800c02e7d977
+msgid "**Structure files**: Si_mp-149_primitive.cif"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:35
+#: 9f9f1d04fad74f2294a033618b06051a
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:37
+#: a0775bc9024648ea8be5bb1bdd75f63c
+msgid "Mesh Cutoff (Mesh.Cutoff)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:39
+#: a2ce08416aa14409929dc57ed848cb4f
+msgid ""
+"**Purpose**: Controls fineness of real-space grid for representing "
+"wavefunctions and charge density"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:41
+#: 375b3740b6524666ba55c42557668704
+msgid "**Units**: Ry (Rydberg) or eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:42
+#: 13242cd5cb6249d6ad06057536b44fdd
+msgid "**Conversion**: 1 Ry = 13.6057 eV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:44
+#: f88966ef241b4c9f8a86ca3dc78da44c
+msgid "**Effect**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:45
+#: 1066cb820c624330a45c881234afcfd8
+msgid "Higher cutoff = finer grid = more accurate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:46
+#: 7bb6d6a7f7f24f6d922878d37a5f742f
+msgid "Computational cost scales as O(N_grid)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:47
+#: 68b32aa06a334a53896944bfc0f6119d
+msgid "Typical range: 100-500 Ry (200-300 Ry is common)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:49
+#: d6891ed5d75b46efb04b14013183aba9
+msgid ""
+"**Convergence Criterion**: Energy change < 1-5 meV/atom between "
+"successive cutoff values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:51
+#: 7fc05ce4fd1548bb80e3a0a17675c82c
+msgid "Test Range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:53
+#: bd664cc8d7844ec987fa7a77e8e94126
+msgid "Typical mesh cutoff test values:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:54
+#: 7f40469c43f1461eb991455eb9e310b9
+msgid "**Start**: 100 Ry (coarse, fast - just to see trend)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:55
+#: 31b77ecc6a254a32bcfb4a6bfed5e166
+msgid "**Intermediate**: 150, 200, 250, 300 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:56
+#: 0ebea08a55c8497fb37c662c26d0dcaf
+msgid "**High accuracy**: 350, 400, 450, 500 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:58
+#: 1b7e7ef33a1549ea8ebe472a40ac95d6
+msgid ""
+"**Rule of thumb**: Start low to see full convergence behavior, extend if "
+"not converged by 400 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:62
+#: ce140861a21045bab2f4dd4548aebeb9
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:64
+#: 21db58f1c6e5445cbc1e10baf2924d02
+msgid "This directory contains **1 basic example**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:66
+#: 41cab56f35844932a48eae0485aa0f73
+msgid "`MeshCutoffConvergenceFlowMaker.py`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:68
+#: d463bbb623d74eb8b48260e82f178fb7
+msgid "**Description**: Basic mesh cutoff convergence test for Silicon"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:70
+#: 81643da4b5354657aed1068b9238d4eb
+msgid "**Parameters**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:71
+#: c63b40e3ca524f0dbe5b2b015ebffad7
+msgid "Structure: Si_mp-149_primitive.cif (covalent semiconductor)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:72
+#: 04979d625fc041a295c26138dcdd75b5
+msgid "Mesh cutoffs tested: [100, 150, 200, 250, 300, 350, 400] Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:73
+#: 2455d9df3d1244af94c28d8c7ae941ef
+msgid "K-points: Fixed (typically 4×4×4 or pre-converged value)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:75
+#: e3696879f9754379beea3fff9eb9847d
+msgid "**Time**: ~10-15 minutes for 7 cutoff values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:79
+#: 89f3b0b7d96549068409e0121ec3ad36
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:81
+#: a3e05333632543f6956f74015f8d72d5
+msgid "Basic Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:98
+#: ea994c72c3264e8cbbb0f4e86f6d1f00
+msgid "With Fixed K-Points"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:118
+#: 14c13fb0a8aa492d9e9a6aac708ad404
+msgid "Expected Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:120
+#: 79c31d757da0455cb72128869827fdde
+msgid "Automatic Plots"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:122
+#: a765efe0cf7246b8a4a369572f1380d3
+msgid "The workflow generates convergence analysis plots:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:124
+#: 46e72b243f0349b4acd42904e5154d09
+msgid "1. **Energy vs. Mesh Cutoff** (`convergence_mesh_cutoff_energy.png`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:125
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:130
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:135
+#: 31467c31a6b84fc6b1fb838eb5382593 465af2b6b7e742ffbf7757085a8aa894
+#: 77f093d1cd07480d8efdf760c3613410
+msgid "X-axis: Mesh cutoff (Ry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:126
+#: 8c4bc35e7c64407296f473ece7743e2c
+msgid "Y-axis: Total energy (eV/atom)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:127
+#: 267617c6ef694a429a895425794cac57
+msgid "Shows monotonic decrease toward converged value"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:129
+#: 87bafbe8328447e5bbbe8700736409cc
+msgid "2. **Convergence Check** (`convergence_mesh_cutoff_convergence.png`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:131
+#: f6efd1ab5ba34406a7c13a92aa2fccfb
+msgid "Y-axis: Energy difference from finest mesh (meV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:132
+#: 357c3cffd5434075b42e758756fbb1e9
+msgid "Horizontal line: Convergence threshold (typically 1 meV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:134
+#: bffa112922934a629eb36710574d24e7
+msgid "3. **Fermi Energy** (`convergence_mesh_cutoff_fermi.png`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:136
+#: b3f1b2cf89824540a4ad91d0ea521951
+msgid "Y-axis: Fermi energy (eV)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:137
+#: adabe6c66e41422dbb9603956cb9242f
+msgid "Monitors electronic structure consistency"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:139
+#: 4de65a238bd743cc96858e2a7a3750f2
+msgid "Summary File (`convergence_mesh_cutoff.txt`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:163
+#: 0e9c2968f8b94d19bbfbe4c119c67a5c
+msgid "Common Cutoff Ranges"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:165
+#: 63777af25de3461abd9eb66549e096c8
+msgid "Conservative (Fast)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:170
+#: 36e5bc251ec24513b04582e1683718c9
+msgid "Standard (Recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:175
+#: d3dc6a98bed04b56a03ef1cac733e54e
+msgid "High Accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:180
+#: fdb09647d8e34776b444e7787f9993ca
+msgid "Hard Pseudopotentials (May need higher)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:187
+#: 8cf0519d5cbe43d49db4ee7c4e0bbf49
+msgid "Running the Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:194
+#: 1c371155db714c29a2e6794c2106bac7
+msgid "**What happens**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:195
+#: 3da0a7d397e5479981fc476fb1807ac1
+msgid "7 static SCF calculations run in parallel"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:196
+#: e9c282e7fa2f4ffc8a060a852ab46fb1
+msgid "Each with different mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:197
+#: 5ae977b575ea4a6ea91b10ef753ff9a5
+msgid "Generates 3 plots + summary file"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:198
+#: 1cc5a8bb365d478c82f86afd9a946faf
+msgid "Output in `MeshCutoffConvergenceFlowMaker/job_*/` directories"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:200
+#: 8736182a1cc54352a241353252cfd2e2
+msgid "**Check results**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:208
+#: d60c23db855b4957aca77fcf672a26c4
+msgid "Common Issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:210
+#: 44e7ec08f1b34bd38795ffdfaa20dbff
+msgid "Issue 1: \"Energy Doesn't Converge\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:212
+#: e46e7ac924154b36befb9a9a9c620bac
+msgid "**Symptoms**: Energy keeps decreasing even at 400-500 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:214
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:237
+#: 2d3482c950be4081ba54951739375632 9e89b272a4db4699a4baec1fd7d080b9
+msgid "**Causes**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:215
+#: b7faa75febf445e5919aa0c644a09598
+msgid "Hard pseudopotentials (transition metals, lanthanides)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:216
+#: 411f8d4bd2cf4510b5b824c50d622635
+msgid "Very localized orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:217
+#: db866728d6c54a08bbe886816df4d076
+msgid "Need finer mesh"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:219
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:242
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:263
+#: 1d16e991310e421db4a7e155f8c3ae18 4ee9bdfaa6de49bc87cc54c4d17ecdb3
+#: 7008aa0708da46629955cdd89f08ba8d
+msgid "**Solutions**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:220
+#: 83fa9cdf25174019b281f85aad311335
+msgid "**Extend cutoff range**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:225
+#: fa163484a0d446f180285eeae94917fb
+msgid "**Check pseudopotential quality**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:226
+#: e4831d604087450fbfe1365b2ac281a5
+msgid "Some pseudopotentials require higher cutoffs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:227
+#: 4af675c836224c2f81634307e62bec94
+msgid "Consider using softer pseudopotentials if available"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:229
+#: a7296b374a814e53966d088b1c2196b9
+msgid "**Verify this level of convergence is needed**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:230
+#: ae1e876cb7a746558cc9c11d35387077
+msgid "1 meV/atom for total energies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:231
+#: 5e1213fb3d97476eaa6e60c240441858
+msgid "May need tighter for forces/phonons"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:233
+#: 5052408532fc447baa9351d90b715718
+msgid "Issue 2: \"Oscillating Energy\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:235
+#: c6002121fb17444ea7ef848ce79ec544
+msgid "**Symptoms**: Energy doesn't decrease monotonically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:238
+#: bed567a58b304cc6a3bf1b1f89f8a8d7
+msgid "Structure not properly relaxed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:239
+#: e654a0e4882a453d8ac5b4b23287cb2f
+msgid "K-points causing noise"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:240
+#: a1b8b1b77f344bd68035085c65e859e8
+msgid "Pseudopotential issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:243
+#: bdb676e5981d48ee80a18bf5b0f3dda3
+msgid "**Relax structure first**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:250
+#: 99b07e35c0614e4096e17a23ad3c62df
+msgid "**Use denser k-points**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:255
+#: a4ce559b7f394e38b5cfada47a8d41b0
+msgid "**Check SCF convergence**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:256
+#: 8a0e56bae5b04e07891db88357f0b4ab
+msgid "Increase MaxSCFIterations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:257
+#: d79ec05f4b514b80802869492374f452
+msgid "Tighten DM.Tolerance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:259
+#: 58db97db35e74ebc8653562b44e6ff57
+msgid "Issue 3: \"Too Expensive\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:261
+#: eadf75527e7b4f0ea51920bb1896770c
+msgid "**Symptoms**: High cutoff calculations take too long"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:264
+#: ee99af62bd4b40e888e6cfd8cd8b33a7
+msgid "**Use coarser basis during testing**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:271
+#: a758915145eb46b0bde86d212e300648
+msgid "**Run on HPC cluster**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:272
+#: 6b0bf59d76494927b2476f1c40ee8309
+msgid ""
+"See [Job Submission tutorials](../../../04-infrastructure/02-job-"
+"submission/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:274
+#: 3b52b056991942bab5d25b10c006f808
+msgid "**Test subset of cutoffs first**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:279
+#: 834795051c634bdcb680d7cfcaa66ddd
+msgid "Issue 4: \"Calculation Crashes at Low Cutoff\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:281
+#: 056e5d5938e9462bb39ac25c70aab5f7
+msgid "**Symptoms**: 100 Ry or 150 Ry calculations fail"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:283
+#: eee5b26f1573472c9a58c52c79117033
+msgid "**Cause**: Grid too coarse for basis set"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:285
+#: 95b18539f7cd45658cfe28f2ba9a332f
+msgid "**Solution**: Start from higher cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:292
+#: 72847001261040abb42dcbca7cc773f6
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:294
+#: ca7016793b484e6883c928bc66dfd93b
+msgid ""
+"✅ **Use fixed k-points**: Keep k-point grid constant during mesh cutoff "
+"convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:296
+#: 793cd7a3409d46858747e1d72cc3f3ff
+msgid ""
+"✅ **Test broad range**: Start from 100 Ry to see full trend (even if it's"
+" inaccurate)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:298
+#: 478033da7650492e8d871b72a0d6142b
+msgid "✅ **Check monotonic decrease**: Energy should decrease smoothly"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:300
+#: d2aa278c03e14ba19e0bb24388219df4
+msgid "✅ **Plot results**: Visual inspection helps identify convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:302
+#: 9531c9761c024035bccc7f397e759c15
+msgid ""
+"✅ **Add safety margin**: Use 50-100 Ry above converged value for "
+"production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:304
+#: 0288bb69b09c46b78da2666ba6b0ec71
+msgid "✅ **Converge first**: Do this before k-point convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:306
+#: f2efe4b139674a1f997fc3e6b36c8791
+msgid "❌ **Don't use too few points**: At least 5-7 cutoff values recommended"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:308
+#: febef0d64cca40daa2ca106c0d692dee
+msgid "❌ **Don't skip low cutoffs**: Need to see full convergence behavior"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:310
+#: ff16793defdb49e49112ca334f2d61d3
+msgid "❌ **Don't ignore oscillations**: Non-monotonic behavior indicates problems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:314
+#: f86fcad1dfbb419aabcf29036a304995
+msgid "Interpreting Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:316
+#: c0511614f97847b3815f6f342b4106a4
+msgid "How to Read Energy vs. Cutoff Plot"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:318
+#: 3b01ce5d4d1043d59cb96a7f61038580
+msgid "**Good convergence**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:319
+#: 54ecc267c6be46fa8c288fd32b144463
+msgid "Energy decreases monotonically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:320
+#: 86653f226e794edfa208bbc96ed3ea78
+msgid "Flattens out at higher cutoffs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:321
+#: c92837aa15084fc8a7e5613efbdc647c
+msgid "Last 2-3 points differ by < 1 meV"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:323
+#: 24634bf36d6b45238dfca437f4522765
+msgid "**Example**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:336
+#: 9cbb2b4095a74a8f90bd5912ec8bb914
+msgid "**Poor convergence**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:337
+#: c4db77c6f825431799b8c0a4d75de38c
+msgid "Energy still changing significantly at 400 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:338
+#: 61e9f760f99b49b6b640bdb2642cab7a
+msgid "Need to extend test range"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:339
+#: ebebcd5734ba446d89ebc1d280cbec3b
+msgid "May indicate pseudopotential issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:343
+#: b4392f7c57934b90bb3290c270f3293e
+msgid "Material-Specific Guidelines"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:345
+#: 766552aeeef848cb948c7ec6d3216011
+msgid "Soft Elements (C, Si, O, N)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:346
+#: e7f74425cecc4a72bf304393a0ab0283
+msgid "**Typical**: 200-300 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:347
+#: ee3a07a4c26f458ba815de6c18ea27de
+msgid "**Start from**: 100 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:348
+#: d06987d219c94c4a9f325a3546737ba7
+msgid "**Rarely need**: > 400 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:350
+#: 7cbd8ebea91a40f6840a6a235e7abe37
+msgid "Transition Metals (Fe, Cu, Ni, Ti)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:351
+#: 40699069b0ef4ca297840a8d814a88f9
+msgid "**Typical**: 300-400 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:352
+#: 750544c0faba48cf92a721f542c0e24e
+msgid "**Start from**: 150 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:353
+#: 01a936bcacd9402189307a670a40cec4
+msgid "**May need**: 450-500 Ry for d-orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:355
+#: 565a06a5c5794c90945bc70e2a970989
+msgid "Hard Pseudopotentials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:356
+#: 8a2101593c694f34953c734d4fe9ebb8
+msgid "**Typical**: 400-500 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:357
+#: 8e5d427ce9624a9ebe5f958566e31367
+msgid "**Start from**: 200 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:358
+#: 35e7e3b630b54d61940f602281d4f3c6
+msgid "**May need**: 550-600 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:360
+#: 4f928814abd6492d8868069c829c4236
+msgid "Lanthanides/Actinides"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:361
+#: 9a83e3845f394b45a7680548ef351d16
+msgid "**Typical**: 400-600 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:362
+#: 48fbce1ffada45deb5e4683156af001d
+msgid "**Start from**: 250 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:363
+#: b1281f6ad8364baaa072c864adb6739c
+msgid "**May need**: > 600 Ry for f-orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:367
+#: b1855d2800bf48259eb0ba82b40edc64
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:369
+#: 65fa75eb7c0545c0bdab085ba2d6b5d0
+msgid "After mesh cutoff convergence:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:371
+#: 54297e2d6d5947bcbd487bf40c95d48f
+msgid ""
+"**K-points convergence**: "
+"[KpointsConvergenceFlowMaker](../KpointsConvergenceFlowMaker/) - Use "
+"converged cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:372
+#: 759b93e9359c417e96a31f7e8ce0a305
+msgid ""
+"**Combined verification**: "
+"[MeshKpointConvergenceFlowMaker](../MeshKpointConvergenceFlowMaker/) - "
+"Test both together"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:373
+#: 2a1a45fa5b1f4fa5a24f930959786b67
+msgid ""
+"**Basis parameters**: "
+"[BasisParametersConvergenceFlowMaker](../BasisParametersConvergenceFlowMaker/)"
+" - Fine-tune basis quality"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:374
+#: 27d116d4d81049bc82de057ef0adfcde
+msgid "**Production calculations**: Use converged cutoff in workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:378
+#: d4aa382f985a4fc7852e96d73d09763f
+msgid "Advanced: Pseudopotential-Specific Cutoffs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:380
+#: 7d91a41bcc734fd6b200400d9619d785
+msgid "Different pseudopotentials may require different cutoffs:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:395
+#: ea271b0a7cd142509e61a9f75696cbb5
+msgid "References"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:397
+#: 4e2d30505ac041d6ae1dde0e15df6ea4
+msgid ""
+"**Real-space grids**: Soler et al., *J. Phys.: Condens. Matter* 14, 2745 "
+"(2002)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:398
+#: f9709bbc1a424d229939fa5aa3e9c88a
+msgid "**SIESTA Manual**: Section on Mesh.Cutoff parameter"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:399
+#: 6fd31496515d4ff7a0cbec04ca530dc9
+msgid ""
+"**Pseudopotential theory**: Hamann et al., *Phys. Rev. Lett.* 43, 1494 "
+"(1979)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:403
+#: f5df3203ed434a35b86204d5e99731e8
+msgid "Summary"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:405
+#: 942f025dd2734da18b5c68e75aa5d559
+msgid "**Key Takeaways**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:406
+#: a35ecfa48b8e4ee39287f9d95be1a23c
+msgid "Mesh cutoff convergence is **first** convergence test (before k-points)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:407
+#: 7cf1221871d24a64a85b933cfbe7d697
+msgid "Energy should decrease monotonically with increasing cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:408
+#: 15995da7072d46f3ba5aa3e6b1f127ac
+msgid "200-300 Ry typical for soft elements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:409
+#: 3ba42d0605a149b1b8c3e3fc83090d4e
+msgid "300-400 Ry typical for transition metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:410
+#: 93d0f0555fa54432a7a0370e649dac2f
+msgid "Add 50-100 Ry safety margin for production"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:411
+#: 78ee73f276c24eec872bc2a5a4282094
+msgid "Visual inspection of convergence plot is critical"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/01-convergence/MeshCutoffConvergenceFlowMaker/README.md:415
+#: 3f0471444a23410f9120a406cf9dc4cf
+msgid ""
+"*Back to [Convergence Studies](../README.md) | [Main Tutorial "
+"Index](../../../README.md)*"
+msgstr ""
+

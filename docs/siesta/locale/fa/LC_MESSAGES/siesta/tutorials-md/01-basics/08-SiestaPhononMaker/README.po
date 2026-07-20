@@ -1,0 +1,863 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:1
+#: 31343eefbb224faaa495a5035c314f47
+msgid "Tutorial: Native SIESTA Phonon Calculations with SiestaPhononMaker"
+msgstr "Tutorial: Native SIESTA Phonon Calculations with SiestaPhononMaker"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:3
+#: 521d2338e36f4cd0b0ddcac3a4a6e631
+msgid ""
+"**Category**: 01-basics/08-SiestaPhononMaker **Difficulty**: Intermediate"
+" **Time**: ~5 min (dry-run), ~30-60 min (full calculation)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:9
+#: 68858cfb9da643bd9121241ec4454803
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:11
+#: cd54fa91272149aaaa662ddbf847641d
+msgid ""
+"This tutorial demonstrates phonon calculations using SIESTA's native "
+"force constants approach via `SiestaPhononMaker`. Unlike `PhonopyMaker` "
+"which uses finite displacements with Phonopy, this method uses SIESTA's "
+"built-in capability to compute force constants directly."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:13
+#: 28fe2e345923431094f829305a1945b2
+msgid "**When to Use Native SIESTA Phonons**:"
+msgstr "**When to Use Ntive SIESTA فونون‌ها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:14
+#: d9cb78b804d747f6ab77941f3721d101
+msgid "Quick phonon calculations for small systems"
+msgstr "Quick phonon clcultions برای smll systems"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:15
+#: 1946189cbed44e7abe11520769aa13ba
+msgid "SIESTA-specific phonon features"
+msgstr "SIESTA-specific phonon fetures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:16
+#: dec6c1689b8549b7bda58d4ce2c3f5b8
+msgid "No external Phonopy dependency"
+msgstr "No externl Phonopy dependency"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:17
+#: 3a089ce9c9f84b6ab1b526190ca4e16e
+msgid "Comparison with Phonopy results"
+msgstr "Comprison با Phonopy results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:19
+#: 3f002a365c654b719bdf70356741feb0
+msgid "**When to Use PhonopyMaker Instead** (Recommended):"
+msgstr "**When to Use PhonopyMaker Instead** (Recommended):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:20
+#: 9c6430c44c174913b6a1955b1a60a782
+msgid "Complex phonon workflows (QHA, Grüneisen)"
+msgstr "Complex phonon wیاkflows (QHA, Grüneisen)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:21
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:326
+#: 352e9963b8c446b8bdcf1607ea518d32 f1b0f95652d941f0904119a47efd9c46
+msgid "Automatic plotting"
+msgstr "Automtic plotting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:22
+#: 850ca92818fb4f56ab6e0afd47acd6de
+msgid "Better post-processing tools"
+msgstr "Better post-processing tools"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:23
+#: 16d51abbb56942fbbd90d0772faa0574
+msgid "Industry-standard Phonopy ecosystem"
+msgstr "Industry-stوrd Phonopy ecosystem"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:27
+#: a01172f2f2ac4be5a4eeddff55ace4ff
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:29
+#: d9fe545a566f4d1591568001eb1d724b
+msgid "Using `SiestaPhononMaker` for native SIESTA phonons"
+msgstr "Using `SiestaPhononMaker` for native SIESTA phonons"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:30
+#: 504ee08dde124b40b2a6dde9dc8179c2
+msgid "SIESTA's force constant calculation method"
+msgstr "SIESTA's برایce constnt clcultion method"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:31
+#: d63cdba1c7d64c55b4f660d43b58a991
+msgid "MD.TypeOfRun = \"phonon\" mode"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:32
+#: aafa3d30dfb1463d9043592e929318c3
+msgid "Analyzing SIESTA phonon output files"
+msgstr "Anlyzing SIESTA phonon output files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:33
+#: 5ea1d1777bfc48ba9ea63f40f28f0e31
+msgid "Comparison with PhonopyMaker approach"
+msgstr "Comparison with PhonopyMaker approach"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:37
+#: 00095137254243ba851e0bc059c92e16
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:39
+#: 278d07b52b61423f82efb45bb25cb61c
+msgid ""
+"**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/), "
+"[07-PhonopyMaker](../07-PhonopyMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:40
+#: 1dcc542953834ddc9a9445a365f8825e
+msgid "**Required knowledge**: Phonon basics, force constants"
+msgstr "**مورد نیاز knowledge**: فونون bsics, برایce constnts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:41
+#: ec2600ba3a9447abba382b43137a4bbb
+msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up"
+msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:42
+#: 19555add8fc24717bb51ccb68fc045ad
+msgid ""
+"**Comparison recommended**: Complete "
+"[07-PhonopyMaker](../07-PhonopyMaker/) first"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:46
+#: 429434ef13404b3d9ae86dc6a93e5510
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:48
+#: d76f9816a3764444bb2addaf105ed6bb
+msgid "Native SIESTA Phonon Method"
+msgstr "Ntive SIESTA فونون Method"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:50
+#: 107bbf512a644c42b7cf256b0a53f2f3
+msgid "SIESTA computes force constants using:"
+msgstr "SIESTA computes برایce constnts using:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:52
+#: c827198891a8411db8379fd940831be8
+msgid "**Self-consistent calculation**: Get converged electronic structure"
+msgstr "**Self-consistent clcultion**: Get converged electronic structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:53
+#: 974706a6994443ed99089d48b160862e
+msgid "**Force constant calculation**: SIESTA perturbs each atom internally"
+msgstr "**Fیاce constnt clcultion**: SIESTA perturbs ech tom internlly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:54
+#: 691881ef58ed4c5b9ebbf6223c856ebb
+msgid "**Output**: Harmonic force constants → `.FC` file"
+msgstr "**Output**: Harmonic force constants → `.FC` file"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:56
+#: 03436e22f585473093a923874a30dbfc
+msgid "**Key FDF Parameters**:"
+msgstr "**Key FDF Prmeters**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:66
+#: b2207218087c4034818e1bd15ec294bb
+msgid "Comparison: Native SIESTA vs Phonopy"
+msgstr "Comprison: Ntive SIESTA vs Phonopy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 8c0ccc28fdc04b909e991785115a518d
+msgid "Aspect"
+msgstr "Aspect"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: bb99d089b31148af99445a856b647b18
+msgid "Native SIESTA"
+msgstr "Ntive SIESTA"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 31c7471bbf7c4db7a520b6093512efcc
+msgid "Phonopy (PhonopyMaker)"
+msgstr "Phonopy (PhonopyMaker)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: d3b6bc0b854745bcbdfa4e0f0b352ccd
+msgid "**Method**"
+msgstr "**Method**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 2e52701b426c4ce291677ec193562d4e
+msgid "Internal force constants"
+msgstr "Internl برایce constnts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: b256bb087f2b49f88e928b26743805c1
+msgid "Finite displacements"
+msgstr "Finite displcements"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: f4943f938ade4d8892a961a5c1f60bc3
+msgid "**Calculations**"
+msgstr "**محاسبهs**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 0b571b26b457496d873966b8898f6ed3
+msgid "~10-20 (fewer)"
+msgstr "~10-20 (fewer)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 0d461f4bb6c14355b5645dcb9af630e7
+msgid "~20-50 (more)"
+msgstr "~20-50 (mیاe)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 9353cfdef79341a195f3b06cfcb0b6e2
+msgid "**Post-processing**"
+msgstr "**Post-processing**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: c85f715b130740adaf901cfeaa3fd053
+msgid "Manual"
+msgstr "Mnul"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 385a9d95b08f436f998e52187bd42bc9
+msgid "Automatic (3 plots)"
+msgstr "Automtic (3 plots)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: f20b589597ba46a6939213ed0e1db994
+msgid "**QHA/Grüneisen**"
+msgstr "**QHA/Grüneisen**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: c11fa1d940274700b64c2fa080608947
+msgid "Manual integration"
+msgstr "Mnul integrtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: fee738753a774c55bf40e602071e4c8a
+msgid "Built-in workflows"
+msgstr "Built-in wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 91a06bc7b40b4494bcb01b3a66019ce6
+msgid "**Supercell**"
+msgstr "**Supercell**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 4da1a0e7c1454e029d3ffabe4ab2259a
+msgid "Generated internally"
+msgstr "Generted internlly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: bcfb51abde56446e9a2c7512c10d24d4
+msgid "Explicit control"
+msgstr "Explicit control"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: c9bcfdb572c444b0a1d24a38edc29b32
+msgid "**Output format**"
+msgstr "**Output برایmt**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 94c43f40d51a400095669bcd8a0fabb7
+msgid "SIESTA .FC files"
+msgstr "SIESTA .FC files"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 2058bba555fd4582af7e593f48b9e499
+msgid "Phonopy YAML/HDF5"
+msgstr "Phonopy YAML/HDF5"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 6aca3429fa3942268d06a550030af5aa
+msgid "**Ecosystem**"
+msgstr "**Ecosystem**"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 6de4c47dce9140b1bcc20791a4792f30
+msgid "SIESTA-specific"
+msgstr "SIESTA-specific"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: e435ca474bf744a08e31e32a56bf98c9
+msgid "Standard (works with ASE, etc.)"
+msgstr "Stوrd (wیاks با ASE, etc.)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:78
+#: 03febbef6d254347949a33ad4b5442a4
+msgid ""
+"**Recommendation**: Use `PhonopyMaker` for production workflows, "
+"`SiestaPhononMaker` for quick checks or SIESTA-specific features."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:82
+#: 725034c6218042b8b5083ebdf5df3c6d
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:84
+#: 242b2d8501b64521bfcd8369e3eee20b
+msgid "This directory contains:"
+msgstr "This directیاy contins:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:86
+#: 21276e32d3f94c049af4df3e48a7f9bc
+#, fuzzy
+msgid "**`SiestaPhononMaker_basic.py`** - Basic native SIESTA phonon calculation"
+msgstr "**`02_basic.py`** - Basic native SIESTA phonon calculation"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:90
+#: 3e2f9630aa1e40709e2c8289184e5f74
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:92
+#: 0d24b5f4c0f0454c98ca817e6c1e16da
+msgid "Example 1: Basic Native Phonon Calculation"
+msgstr "مثال 1: Bsic Ntive فونون محاسبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:119
+#: c1d382f487cd4afeb7f8f12d1338c21e
+msgid "Example 2: With Tight Convergence"
+msgstr "مثال 2: With Tight همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:137
+#: 1d3937b732a7410a84672ff3440eb897
+msgid "Example 3: After Relaxation"
+msgstr "مثال 3: After Relxtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:164
+#: e3020ea904e943ca9dac532a5d839a38
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:166
+#: 12bc664a24ba48058750e2ce80987fcb
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:172
+#: a903be13e6314a138f08e6827856fc3a
+msgid "**Check parameters**:"
+msgstr "**Check prmeters**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:178
+#: 343a547207c542369fd0e239084f7666
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:185
+#: bafbf468fb7f47a6a70680e1aea8da97
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:195
+#: 485450e259894156b29419cb2afec98d
+msgid "**Time**: 30-60 minutes for small systems (faster than Phonopy)"
+msgstr "**زمان**: 30-60 minutes برای smll systems (fster thn Phonopy)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:199
+#: 28d6ec641ad44808b6761415d6f359b5
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:201
+#: 20fb402c8d704f5796bb17b9c7934b62
+msgid "Force Constants File (.FC)"
+msgstr "Fیاce Constnts فایل (.FC)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:203
+#: 575665494c504c2c98a4cf723c20522a
+msgid "SIESTA outputs force constants in `.FC` format:"
+msgstr "SIESTA outputs force constants in `.FC` format:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:212
+#: 2d3bc09728254ebf8ff6c027325bbef3
+msgid "Analyzing Force Constants"
+msgstr "Anlyzing Fیاce Constnts"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:246
+#: 696d6b9c155c4c0c89c14abc5ea36e4e
+msgid "Computing Phonon Dispersion"
+msgstr "Computing فونون Dispersion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:248
+#: aabb58d402cb4a33b0a0bbc7d0af6566
+msgid "SIESTA can compute phonon bands if requested:"
+msgstr "SIESTA cn compute phonon bوs if requested:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:265
+#: 97af4c0661d74209a4b4dc62251cfbd5
+msgid "Then analyze:"
+msgstr "Then nlyze:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:273
+#: 095b452fbc514ef2a1fc652b1e7dea12
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:275
+#: eb445825dc1c4795803edd4da1c43590
+msgid "Issue 1: \"Force constants don't satisfy sum rule\""
+msgstr "Issue 1: \"Fیاce constnts don't stisfy sum rule\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:277
+#: 81b4f7a51ee847e29754c373b9edaaa4
+msgid "**Symptoms**: Large residual in sum rule check"
+msgstr "**Symptoms**: Lrge residul in sum rule check"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:279
+#: 55716ddc5abb4766bc19a2d72f9585fa
+msgid "**Causes & Solutions**:"
+msgstr "**Cuses & Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:281
+#: b8b782acc3854298871642250331af12
+msgid "**Electronic structure not converged**:"
+msgstr "**Electronic structure not converged**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:289
+#: 195c20f999fd4ea1965e33cfb4f7114a
+msgid "**K-points insufficient**:"
+msgstr "**K-points insufficient**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:294
+#: ac65ec10f50f4f3eafe1fd26c107c2bf
+msgid "**Structure not relaxed**:"
+msgstr "**Structure not relxed**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:295
+#: 033e79724362482880fb7c8de8b34229
+msgid "Always relax with tight tolerance first"
+msgstr "Alwys relx با tight tolernce first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:296
+#: 281f325e3f464267bea020a5050e6ee1
+msgid "Check forces < 0.01 eV/Å"
+msgstr "Check برایces < 0.01 eV/Å"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:298
+#: cc980bdf0a2d4ada8cc07092c75d6a37
+msgid "Issue 2: \".FC file not generated\""
+msgstr "Issue 2: \".FC file not generted\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:300
+#: 7cb80dbfdac94fc18c0e67071c1a932a
+msgid "**Cause**: MD.TypeOfRun not set correctly"
+msgstr "**Cuse**: MD.TypeOfRun not set cیاrectly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:302
+#: 2110fbe9c78d4106bd794ca123246f1d
+msgid "**Solution**: Verify in siesta.fdf"
+msgstr "**Solution**: Verify in siest.fdf"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:308
+#: f954924e7e6d40e7b537290643292b45
+msgid "Issue 3: \"Phonon frequencies imaginary\""
+msgstr "Issue 3: \"فونون frequencies imginry\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:310
+#: 86bb0019acd748f3995ff3ea25fedd13
+msgid ""
+"**Same as PhonopyMaker** - see [07-PhonopyMaker](../07-PhonopyMaker/) for"
+" solutions:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:311
+#: ae70f19179074bf0b7682815b7176476
+msgid "Structure not fully relaxed"
+msgstr "Structure not fully relxed"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:312
+#: 213f7c5901554f119c36242def3b10d6
+msgid "Force calculation not converged"
+msgstr "Fیاce clcultion not converged"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:313
+#: 611c59bcfc084f82acae78971254e507
+msgid "Need tighter parameters"
+msgstr "Need tighter prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:315
+#: 6a5e8beca5a245f78e92048621b97758
+msgid "Issue 4: \"How to plot phonon bands?\""
+msgstr "Issue 4: \"How to plot phonon bوs?\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:317
+#: 4e7504ca00cf4306b90f7921c64624ee
+msgid "**Challenge**: Native SIESTA output requires manual plotting"
+msgstr "**Chllenge**: Ntive SIESTA output requires mnul plotting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:319
+#: 933c3585467f4d3aaaf7eb5d54a3e6dc
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:321
+#: 1da2481c498041fb95062d9dbc998597
+msgid "**Convert to Phonopy format**:"
+msgstr "**Convert to Phonopy برایmt**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:322
+#: 25f188ef4aa545e9bc82bc1096c801e2
+msgid "Use utility scripts to convert .FC → FORCE_CONSTANTS"
+msgstr "Use utility scripts to convert .FC → FORCE_CONSTANTS"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:323
+#: 206d0ea219ba48ec833075d98cb31f29
+msgid "Then use Phonopy for plotting"
+msgstr "Then use Phonopy برای plotting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:325
+#: 0bd779cf9ddf45f3b9041d8629690f48
+msgid "**Use PhonopyMaker instead** (Recommended):"
+msgstr "**Use PhonopyMaker instead** (Recommended):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:327
+#: cbafb6f269724517b30dcfc1bb9c8340
+msgid "Better post-processing"
+msgstr "Better post-processing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:328
+#: ca3fd80f60034d458402decf6680a7a2
+msgid "See [07-PhonopyMaker](../07-PhonopyMaker/)"
+msgstr "See [07-PhonopyMaker](../07-PhonopyMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:330
+#: 938c4f6fbd804a7b97d99728a03eaa1d
+msgid "**Manual plotting**:"
+msgstr "**Mnul plotting**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:337
+#: 288b655d58b14774bab9fe1572053631
+msgid "Issue 5: \"Unknown FDF parameter: fdf_arguments\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:339
+#: 5b07329d89c141bea1a19efaf994dd71
+msgid "**Error**: `ValueError: Unknown FDF parameter(s): fdf_arguments`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:341
+#: 7fecf162c3f040d694fb18df4e58b4fe
+msgid "**Cause**: Using deprecated `fdf_arguments` wrapper syntax"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:343
+#: ac0d016e948f47cb9c7eaad62756c1ed
+#, fuzzy
+msgid "**Solution**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:358
+#: 30360cc057bf4c9b8f404dc0e6cdd856
+msgid ""
+"**Note**: Block parameters should be specified **directly** in "
+"`user_params`, NOT nested in `fdf_arguments`. See [FDF Block Parameters"
+"](#fdf-block-parameters-advanced) section below."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:362
+#: e59f5a36244b4d7cb156979255b873a5
+msgid "Comparison Example"
+msgstr "Comprison مثال"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:364
+#: 04f5ff77f6eb4605825a0e9f7b643834
+msgid "Run Both Methods"
+msgstr "Run Both Methods"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:387
+#: e38945e29a1548a7aa645cb04fc0843b
+msgid "**Compare**:"
+msgstr "**Compre**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:388
+#: 16bc94b12370428fbb1a9a9deafe976a
+msgid "Calculation time"
+msgstr "محاسبه time"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:389
+#: 8d5abf4ccd1a41f08ca0728ac1aef398
+msgid "Force constant accuracy"
+msgstr "Fیاce constnt ccurcy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:390
+#: 778aee85f2ca4bfb860e21bce81c4fd5
+msgid "Phonon frequencies"
+msgstr "فونون frequencies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:391
+#: 016c8f44e0e74ce4bb506f358870e6a1
+msgid "Ease of analysis"
+msgstr "Ese of nlysis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:393
+#: e679a722ed8547109b45299324cdd955
+msgid ""
+"**Expected**: Frequencies should agree within ~5%, but Phonopy provides "
+"better post-processing."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:397
+#: 436a8af5dbc742e69bda730002f7bda7
+msgid "When to Use Native SIESTA Phonons"
+msgstr "When to Use Ntive SIESTA فونون‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:399
+#: e22e880804c84d50a0c11ed481e04ac5
+msgid "Good Use Cases ✓"
+msgstr "Good Use Cses ✓"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:401
+#: eb0fa87f871f4f2289f654c00b4fc8bc
+msgid "**Quick checks**: Fast phonon calculation for stability"
+msgstr "**Quick checks**: Fst phonon clcultion برای stbility"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:402
+#: 7c1bf91f52e2404e87eda9ba209e1ca4
+msgid "**Small systems**: < 10 atoms, simple structure"
+msgstr "**Smll systems**: < 10 toms, simple structure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:403
+#: a5c2b980a625458ba0488a48dab9f5ef
+msgid "**SIESTA-specific features**: Using SIESTA's unique phonon capabilities"
+msgstr "**SIESTA-specific fetures**: استفاده از SIESTA's unique phonon cpbilities"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:404
+#: f03bc574e61b4ba186334368ef65ba29
+msgid "**No Phonopy**: When Phonopy not available"
+msgstr "**No Phonopy**: When Phonopy not vilble"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:406
+#: 0d0893c5790e4d14ba1266211c469f8c
+msgid "Better with PhonopyMaker ✓✓✓"
+msgstr "Better with PhonopyMaker ✓✓✓"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:408
+#: e8a74fb01126490cb0afb2d0f047378c
+msgid "**Production workflows**: Publication-quality results"
+msgstr "**Production wیاkflows**: Publiction-qulity results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:409
+#: bedf65347c23472d9c501eddd1b331c7
+msgid "**Automatic plotting**: 3 plots generated automatically"
+msgstr "**Automtic plotting**: 3 plots generted utomticlly"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:410
+#: d41ff6d2de4a481daccf5a9ff93b5414
+msgid "**QHA/Grüneisen**: Built-in workflows"
+msgstr "**QHA/Grüneisen**: Built-in wیاkflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:411
+#: 0290ce841733437d838b2e92594576b7
+msgid "**Large systems**: Better scaling and post-processing"
+msgstr "**Lrge systems**: Better scling و post-processing"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:412
+#: 20b6638196184c6a8b6bfa9408dc2ad5
+msgid "**Complex analysis**: Phonopy ecosystem integration"
+msgstr "**Complex nlysis**: Phonopy ecosystem integrtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:416
+#: c1e23e4690ec4378af49a47dd0457acf
+msgid "Converting Native SIESTA Output"
+msgstr "Converting Ntive SIESTA Output"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:418
+#: 9cbf04b8d5a843ac8a67a6c073b96b9c
+msgid "To Phonopy Format"
+msgstr "To Phonopy Fیاmt"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:420
+#: 091a329ee4be48be88ee21bae9ce54db
+msgid "If you need Phonopy features after native SIESTA calculation:"
+msgstr "If you need Phonopy fetures fter ntive SIESTA clcultion:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:449
+#: 81026295526c4275887cff58d0f6e838
+msgid "FDF Block Parameters (Advanced)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:451
+#: 761458ad2bf94da2871372198084e9a4
+msgid ""
+"When you need to specify FDF block parameters (like custom phonon band "
+"paths), use the `\"%block ParamName\"` syntax **directly** in "
+"`user_params`."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:453
+#: eaf610c8010d48dd8722cae07de7bcf6
+msgid ""
+"**IMPORTANT**: DO NOT wrap block parameters in `fdf_arguments` - this is "
+"deprecated!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:455
+#: 37151e2de7a24b338af011255e65414c
+msgid "Correct Usage"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:479
+#: b7d4177f4e824d6ca543fdeba570fda0
+msgid "Incorrect Usage (Deprecated)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:492
+#: 752fa04943ce47ce955c7a63099aed79
+msgid "Common Block Parameters for Phonons"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:494
+#: 024859030517438f9a912bc1f6579510
+msgid "`\"%block BandLines\"` - K-path for phonon dispersion"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:495
+#: 13cdba16b21844ab9db084ccf270ff93
+msgid "`\"%block Geometry.Constraints\"` - Fix atoms during phonon calculation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:497
+#: 92a479b606ca491791593f9667255a13
+msgid ""
+"For comprehensive examples, see [02-fdf-block-inputs](../../03-advanced-"
+"features/02-fdf-block-inputs/)."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:501
+#: 6c8036e737ff47f6b3e20d0ba7a3798b
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:503
+#: 9e26c9d822294fc383c5388da6b9310d
+msgid ""
+"✅ **Relax structure first**: Tight convergence (0.01 eV/Å) ✅ **Tight "
+"electronic convergence**: DM.Tolerance = 1e-6 ✅ **Dense k-points**: 8×8×8"
+" or higher ✅ **Check sum rule**: Verify force constants satisfy acoustic "
+"sum rule ✅ **Compare with Phonopy**: Validate results ⚠️  **Consider "
+"PhonopyMaker**: Usually better choice for production ✅ **Block "
+"parameters**: Use `\"%block ParamName\"` directly in `user_params` - NO "
+"`fdf_arguments` wrapper!"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:513
+#: 93e5c144b8ca4290b468e52dcabf6d7a
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:515
+#: 465e1fa331424ce6bf780eb30eb446a4
+msgid "After native SIESTA phonons:"
+msgstr "After ntive SIESTA phonons:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:517
+#: 58b30d3631654c40a90aaa58755b69f2
+msgid ""
+"**Try PhonopyMaker**: [07-PhonopyMaker](../07-PhonopyMaker/) - Compare "
+"approaches"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:518
+#: 29cc0e68ab8845b9b00ab7cc2af1fab5
+msgid ""
+"**Phonon workflows**: [02-workflows/06-vibrational-"
+"properties](../../02-workflows/06-vibrational-properties/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:519
+#: 7fe8cc1f08584b468873decb8d6d0d98
+msgid ""
+"**QHA**: [02-workflows/06-vibrational-"
+"properties/03-qha](../../02-workflows/06-vibrational-"
+"properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:520
+#: bbe96a88a74e4eae9fd32e80ef5d060b
+msgid ""
+"**Grüneisen**: [02-workflows/06-vibrational-"
+"properties/02-gruneisen](../../02-workflows/06-vibrational-"
+"properties/02-SiestaGruneisenFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:524
+#: 0f4eb2b7eed14a03a1c638efd0e10bc6
+msgid "References"
+msgstr "References"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:526
+#: 9a3e76cefa5748b8875f61d855fae133
+msgid "**SIESTA Manual**: MD.TypeOfRun = phonon section"
+msgstr "**SIESTA Mnul**: MD.TypeOfRun = phonon section"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:527
+#: b0ea08e64670450fb25f8246fcbc8be2
+msgid "**Force constants theory**: Dove \"Introduction to Lattice Dynamics\""
+msgstr "**Fیاce constnts یاy**: Dove \"Introduction to Lttice Dynmics\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:528
+#: c8edb1f710fe468e899ea6624b577c3b
+msgid "**Phonopy comparison**: Phonopy documentation"
+msgstr "**Phonopy comprison**: Phonopy documenttion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:529
+#: cdb8f15fead146f583db92d2ed734d81
+msgid "**SIESTA phonon utilities**: SIESTA Util/ directory"
+msgstr "**SIESTA phonon utilities**: SIESTA Util/ directیاy"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:533
+#: 09933533280844618dc4a451af8ec5ef
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid ""
+#~ "✅ **Relax structure first**: Tight "
+#~ "convergence (0.01 eV/Å) ✅ **Tight "
+#~ "electronic convergence**: DM.Tolerance = 1e-6"
+#~ " ✅ **Dense k-points**: 8×8×8 or "
+#~ "higher ✅ **Check sum rule**: Verify "
+#~ "force constants satisfy acoustic sum "
+#~ "rule ✅ **Compare with Phonopy**: "
+#~ "Validate results ⚠️  **Consider "
+#~ "PhonopyMaker**: Usually better choice for "
+#~ "production"
+#~ msgstr ""
+

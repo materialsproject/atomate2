@@ -1,0 +1,33 @@
+/* Language switcher shown on translated (SIESTA) documentation pages. */
+.lang-switcher {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 1.5rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--color-background-border);
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.lang-switcher__label {
+  opacity: 0.7;
+}
+
+.lang-switcher__link {
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  color: var(--color-foreground-secondary);
+}
+
+.lang-switcher__link:hover {
+  color: var(--color-brand-content);
+}
+
+.lang-switcher__link--active {
+  font-weight: 600;
+  color: var(--color-foreground-primary);
+  background: var(--color-background-secondary);
+}

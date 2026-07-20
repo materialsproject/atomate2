@@ -1,0 +1,503 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:1
+#: 8017a7ad24f34db9a40d7b899429dd2d
+msgid "Common Errors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:3
+#: df18854b4e67450d980e65efb6758862
+msgid ""
+"**Category**: troubleshooting/common_errors **Difficulty**: Intermediate "
+"**Time**: 15-30 minutes per tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:7
+#: c43fa4770df647efba9af4b19c645929
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:9
+#: e7111910ccba4a3bbbcbba81190a0ce4
+msgid ""
+"This section provides detailed troubleshooting guides for the most "
+"frequently encountered calculation failures in atomate2siesta. Each guide"
+" includes symptom identification, root cause analysis, and step-by-step "
+"solutions."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:11
+#: cb0ebfbefa0645cba3d927e682ba7e28
+msgid "Available Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:13
+#: 3f1ade19b8564602af60ebbab2db7995
+msgid "scf_convergence_issues.py"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:15
+#: 631866dbf04b4227b0b8db5d9ac24a54
+msgid "**SCF Convergence Problems**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:17
+#: c87cb4d80cd6410ba0df6d6605c76d41
+msgid ""
+"Comprehensive guide to diagnosing and fixing self-consistent field (SCF) "
+"convergence failures."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:19
+#: cc097cdc5e6c4791bf929a0e91e7949f
+msgid "**Topics Covered**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:20
+#: cc74a1c7f35745deb554774cb5b07cfd
+msgid "Identifying SCF convergence problems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:21
+#: 4605887ded114062a9d45243bab51a9c
+msgid "Understanding causes of SCF failures"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:22
+#: 3b6a40de0bd648f19130d6a8fb82be6d
+msgid ""
+"Systematic fixes (mixer settings, electronic temperature, spin "
+"polarization)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:23
+#: ce3f948da5ac4786ae2bd86289410639
+msgid "Using custodian for automatic recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:24
+#: 32c9405081a3479e914c5f71e5a084bc
+msgid "Prevention strategies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:26
+#: 0ae2d2f336c840efabc2ea8ee44d5869
+msgid "**Common Symptoms**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:27
+#: 509064e9ff6c453e82fdd00c74f2e7f9
+msgid "\"SCF not converged after N iterations\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:28
+#: 53be3605323041aea18e24e64c12c496
+msgid "\"Density matrix did not converge\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:29
+#: 11b93112b4284c6188c8f823a032d316
+msgid "\"Oscillating SCF convergence\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:31
+#: 62ba7a667f7f40baa7828593e304fc99
+msgid "**Solutions Included**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:32
+#: cd227c8df5a54391b1a97e4ec9126a9f
+msgid "**Reduce mixing weight**: `SCF.Mixer.Weight: 0.01` (from default 0.1)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:33
+#: a0428dc259d1479489b6134c62ce5152
+msgid ""
+"**Add electronic temperature**: For metallic systems "
+"(`ElectronicTemperature: \"300 K\"`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:34
+#: 4e3d133b832e491c9723fea63c0deedd
+msgid "**Enable spin polarization**: For magnetic systems (`Spin: \"polarized\"`)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:35
+#: cf48fc4606804e1e9e8755ea531d75d1
+msgid "**Improve initial guess**: Better density matrix initialization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:36
+#: c449c332d8bf441c86d56803ceae7259
+msgid "**Increase accuracy**: Higher k-points and mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:37
+#: 9a20dbc5478143239d7ce4045e1c7012
+msgid "**Automatic recovery**: Using custodian handlers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:39
+#: 1595a153e57642e8b49d401fc0195121
+msgid "**Time**: 15 minutes (reading + examples)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:41
+#: d2cabaeba157480895a71c9bb1330757
+msgid "Quick Reference"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:43
+#: 9a9675e31bdb47ebb5768e82b372e3cb
+msgid "SCF Convergence - Most Common Fixes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:73
+#: 87ecd3d9a14b41fdbe866ef7f5127812
+msgid "Success Rates"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 663e95c9fcb54979a8ecf8d399d82c78
+msgid "Solution"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 98c3c6b00b254b1bbc68658ebd3293bc
+msgid "Success Rate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 4f83a4c21666480a93ac84ed844b247f
+msgid "When to Use"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: a410ec3979334ab785ff0413c72f2fe7
+msgid "Custodian automatic"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 838f820073de4ab487b7552fd071d25c
+msgid "high"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 019cbf1ddf7048f29287c90bba79f85a
+msgid "Always (recommended)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: a6a565565289489aa4e6cb1ffb00dda0
+msgid "Reduce mixer weight"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: afa68118a42e4562b578af3ba257ecee
+msgid "80%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: ce032ec68b074c2db7584168e3a693b6
+msgid "Oscillating convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 98e2c5a3fef546f987a75196be7a6c14
+msgid "Electronic temperature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 91e7de3dc7ea4e1b92194de02d2c1c6c
+msgid "90%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 07ac602ca00d4a97ae31939350ee4c6e
+msgid "Metallic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: d8c906eac7e24ef7adf0fd6ea1ec12c5
+msgid "Spin polarization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 5bd5ff28fe904231bb28dc365fbac149
+msgid "85%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 35520801a8d3482c86cf5c7614c1e9e6
+msgid "Magnetic elements"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 4e63d070e6864744906e8877deeef13f
+msgid "Increase accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 862b0b08f3d14a83bde0b1e3cd16b989
+msgid "70%"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md
+#: 507eb61f634d45b9874fe3f0dce12094
+msgid "Small/zero band gap"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:83
+#: b0a8882e6ac94046a66a68d51c8ed143
+msgid "Diagnostic Workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:85
+#: b5d30681a7984dda93c95235596922b0
+msgid "Step 1: Identify the Problem"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:94
+#: 7e8f627932c240b3bf6b8cc59ecb039a
+msgid "Step 2: Determine System Type"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:95
+#: 5b2776eb96224dbab543f1e3fc725cd4
+msgid "**Metallic?** → Need electronic temperature"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:96
+#: 70d596050a9642baa36360bba8427133
+msgid "**Magnetic elements?** (Fe, Co, Ni, Mn) → Need spin polarization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:97
+#: 6e796a2bebc646dbb50ae71f3cb68424
+msgid "**Oxide/insulator?** → Usually just need slower mixing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:99
+#: 9003209057c5418480bb936884f23443
+msgid "Step 3: Apply Appropriate Fix"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:100
+#: 9f650b761e84430e8815b13ec5b83c9a
+msgid "See `scf_convergence_issues.py` for detailed examples."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:102
+#: 28f365038b354ae88e0e3e16c0b02e65
+msgid "Step 4: Enable Custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:103
+#: 6ff8ddf3c08047569c273301f2fad032
+msgid "Let custodian handle it automatically for future calculations."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:105
+#: e563fa0311db4d048ab8d90a9e3dfd94
+msgid "Prevention Strategies"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:107
+#: 7834dc2044da43e5a42d02be094a3e2c
+msgid "1. Use Tier Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:109
+#: 1a83bc9e9c364162acb19c3be9b0b7c9
+msgid "Material-specific presets include appropriate SCF settings:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:123
+#: 40a006f6503344059b8aae0760fb7286
+msgid "2. Always Enable Custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:131
+#: 613734cae2b443bf89342ea26c6024d6
+msgid "high of SCF issues will be fixed automatically."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:133
+#: b8941cd8b5e648e9aa422033202905d5
+msgid "3. Test with Dry-Run First"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:144
+#: b45e4cc41a814d0f903440b32eeac8ee
+msgid "Common Misconceptions"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:146
+#: ba9959cb16d74235b48e808e1f1a3043
+msgid ""
+"❌ **\"SCF must converge to 1e-8\"** → 1e-4 is usually sufficient for most"
+" properties"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:149
+#: 3227688be872402f84a668bbdededaa1
+msgid ""
+"❌ **\"More iterations always helps\"** → If oscillating, need different "
+"parameters (not more iterations)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:152
+#: 0d3a912414344d2a92c3d3bea59982da
+msgid ""
+"❌ **\"Higher mesh cutoff fixes SCF\"** → SCF convergence is usually a "
+"mixer/smearing issue, not accuracy"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:155
+#: 7007d80e86cc4064a5934254222a7871
+#, python-format
+msgid ""
+"❌ **\"Calculation failed = code bug\"** → 99% of SCF failures are "
+"parameter issues, easily fixed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:158
+#: cf76ac6af6de402f906408798a978ad5
+msgid "Related Resources"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:160
+#: 16418df74d6744c5a5fbf29fc63eecb2
+msgid "Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:161
+#: b3b98fa059c54f0a906e6e902f43665a
+msgid ""
+"[debugging_workflows/01_tracing_job_failures.py](../debugging_workflows/01_tracing_job_failures.py)"
+" - General debugging"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:162
+#: 35acc8d7f1694caa919ceef544ee86d1
+msgid ""
+"[03-advanced-features/04-error-handling](../../03-advanced-features/04"
+"-error-handling/) - Custodian system"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:163
+#: e2847bf12a80454b87abf29f574e2b87
+msgid ""
+"[02-workflows/01-convergence](../../02-workflows/01-convergence/) - "
+"Parameter convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:165
+#: b73ef6ea180440a896c7e9788ee2f63d
+msgid "Documentation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:166
+#: c199237a3dac48808527db85cebb0555
+msgid "SIESTA manual: SCF convergence section"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:167
+#: ca7dd3ddf36445f6940c64336c17beb5
+msgid "Custodian handlers: `src/atomate2/siesta/custodian/`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:168
+#: 978213cba9264c0d8c794ec634e42f08
+msgid "Parameter reference: `docs/source/fdf-parameters.rst`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:170
+#: c3a6aadae26a4580a292192b3b3b53fd
+msgid "When to Ask for Help"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:172
+#: 131dcdda7476480da98cfe526cf00df6
+msgid "If SCF still doesn't converge after trying:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:173
+#: 9731c37c95cc496195bfaee6d6973e31
+msgid "✅ Reduced mixer weight to 0.005"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:174
+#: 15744f43b54e4466ab9ff94292e02b62
+msgid "✅ Added electronic temperature (if metallic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:175
+#: 88ebf939595c4e58ba2d7c699b688e42
+msgid "✅ Enabled spin polarization (if magnetic)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:176
+#: 0501b8c1c28649358a23606b010f4af2
+msgid "✅ Used custodian with 10 attempts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:177
+#: d2bfa09377ba4293a3b6ebf27599d89b
+msgid "✅ Increased k-points and mesh cutoff"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:179
+#: 672c4ac627ba4aeda4ce994d08bf169f
+msgid "Gather:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:180
+#: 408053d68a9b47df8f9055646f5e485d
+msgid "Complete error output: `tail -200 job_*/siesta.out`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:181
+#: 30240a7806b14c198667d3ee0f3adc4a
+msgid "Input file: `job_*/siesta.fdf`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:182
+#: 1da0c5e4f7ff42ec96b58201cdcbb500
+msgid "Structure: `job_*/siesta.XV`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:183
+#: 907bc42d11d5483ebb1d5a4d86e2d488
+msgid "System description (formula, metallic?, magnetic?)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:185
+#: 9bb11b048c9d4b3f94bf99b370c8c060
+msgid "Post at: https://github.com/materialsproject/atomate2/issues"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/05-troubleshooting/common_errors/README.md:189
+#: 7270a454f5634851a7bce03a59e5c8c8
+msgid "*Back to [Troubleshooting Index](../README.md)*"
+msgstr ""
+

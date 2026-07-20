@@ -1,0 +1,717 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:1
+#: 0a369620c49a46d2ae145d8520005583
+msgid "Tutorial: Equation of State (EOS) Workflows"
+msgstr "آموزش: Eqution of Stte (EOS) گردش کارs"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:3
+#: 0303b4ac99af4d5f8cd17523e5cf2531
+msgid ""
+"**Category**: 02-workflows/02-equation-of-states **Difficulty**: "
+"Intermediate **Time**: ~5 min (dry-run), ~30-60 min (full workflow)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:9
+#: d612d092aacc41e78bafc0236cf3119b
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:11
+#: fa2e7a28332d49098e5105c4969fe60b
+msgid ""
+"This tutorial demonstrates equation of state (EOS) calculations using "
+"various FlowMakers. The EOS describes how a material's energy varies with"
+" volume, providing crucial information about bulk modulus, equilibrium "
+"volume, and pressure-volume relationships."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:13
+#: ffd6756e30ba44e5bea12a9b95f5a942
+msgid "**What EOS Calculations Tell You**:"
+msgstr "**Wht EOS محاسبهs Tell You**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:14
+#: e5e1484d456c4854b714ecc9a091b9f3
+msgid "**Bulk modulus (B₀)**: Resistance to compression"
+msgstr "**Bulk modulus (B₀)**: Resistnce to compression"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:15
+#: d2f8aa447419474da1cfdebaee096b54
+msgid "**Equilibrium volume (V₀)**: Minimum energy volume"
+msgstr "**Equilibrium volume (V₀)**: Minimum energy volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:16
+#: ce57c2ea2b68429882c6db852a18c3a5
+msgid "**Pressure derivative (B'₀)**: How bulk modulus changes with pressure"
+msgstr "**Pressure derivtive (B'₀)**: How bulk modulus chnges با pressure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:17
+#: 8b215459be3040b39bb75f0686489001
+msgid "**Cohesive energy**: Binding energy of the crystal"
+msgstr "**Cohesive energy**: Binding energy of  crystl"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:21
+#: 15aabe05ce5249f1b21e56d26c74e822
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:23
+#: ecb2e9b6755041dbbe928fa005c32a41
+msgid "Using `SiestaEosFlowMaker` for basic EOS workflows"
+msgstr "Using `SiestaEosFlowMaker` for basic EOS workflows"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:24
+#: c3ba69a9afab4a13a3e7fc3dd3c226d9
+msgid "EOS fitting with Birch-Murnaghan equation"
+msgstr "EOS fitting با Birch-Murnghn eqution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:25
+#: 6aabd2c88641412bb4f89717e767eb77
+msgid "Combining EOS with basis set convergence"
+msgstr "Combining EOS با bsis set convergence"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:26
+#: 804f7bedb8b54f99abcf48620251348f
+msgid "Automatic EOS plotting"
+msgstr "Automtic EOS plotting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:27
+#: 57b9904a0afe4a40a99978a4fd56b08a
+msgid "Analyzing bulk modulus and equilibrium lattice parameters"
+msgstr "Anlyzing bulk modulus و equilibrium lttice prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:31
+#: db15e06d01c643b4a54edd04f40891a8
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:33
+#: 102e2877e2324ec292398ccb4dfe78e5
+msgid ""
+"**Required tutorials**: "
+"[01-basics/01-RelaxMaker](../../01-basics/01-RelaxMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:34
+#: f736437cb73644e2830bed54d6b7a24d
+msgid "**Required knowledge**: Basic thermodynamics, bulk modulus concept"
+msgstr "**مورد نیاز knowledge**: Bsic rmodynmics, bulk modulus concept"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:35
+#: 321577255220493c8a90c8952548694d
+msgid ""
+"**Recommended**: [01-convergence](../01-convergence/) - Converged "
+"parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:36
+#: a395536bdd3c468a8c9a84a5e7515b89
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:40
+#: c48f83b891bb4edb93d167c164d64144
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:42
+#: 2b7230a025854697baa9809daefa2d35
+msgid "Equation of State"
+msgstr "Eqution of Stte"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:44
+#: f978fe34f617427ab6a510f04771df37
+msgid "The EOS relates energy E to volume V:"
+msgstr "The EOS reltes energy E to volume V:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:46
+#: 967e38d4c4dc4c1a962de0781347fe7d
+msgid "**Birch-Murnaghan EOS (3rd order)**:"
+msgstr "**Birch-Murnghn EOS (3rd یاder)**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:48
+#: 5dd3fad5ceab4bf6963e1f4092bf661a
+msgid ""
+"\n"
+"E(V) = E_0 + \\frac{B_0 V}{B'_0} \\left[\\frac{(V_0/V)^{B'_0}}{B'_0 - 1} "
+"+ 1\\right] - \\frac{B_0 V_0}{B'_0 - 1}\n"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:52
+#: 23a90a22a7aa416dad156b984b506f00
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:53
+#: 264aa5a27e8843ce80abbcc0a14052cd
+msgid "$E_0$: Energy at equilibrium"
+msgstr "$E_0$: Energy t equilibrium"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:54
+#: 7fb0b90ebea34c5a8d6579ed3163b434
+msgid "$V_0$: Equilibrium volume"
+msgstr "$V_0$: Equilibrium volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:55
+#: b744e5527c734a658e3d41362ccc65ea
+msgid "$B_0$: Bulk modulus at V₀"
+msgstr "$B_0$: Bulk modulus t V₀"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:56
+#: dff72106d3d64c3ca1d204b6351b1a02
+msgid "$B'_0$: Pressure derivative of bulk modulus"
+msgstr "$B'_0$: Pressure derivtive of bulk modulus"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:58
+#: 4489f1e60e7b41b29704147515a6f9c7
+msgid "**Physical Meaning**:"
+msgstr "**Physicl Mening**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:59
+#: da26b4c7edd74766be24c89d190c1678
+msgid "$B_0$: How hard to compress (GPa)"
+msgstr "$B_0$: How hrd to compress (GP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:60
+#: bce323546a5f4953a0c5c52a08d5709c
+msgid "$V_0$: Most stable volume (Å³)"
+msgstr "$V_0$: Most stble volume (Å³)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:61
+#: e994cd15b3a74865a92905bd8609b1c6
+msgid "$B'_0$: Typically 3-6 for most materials"
+msgstr "$B'_0$: Typiclly 3-6 برای most mterils"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:63
+#: c9ca9e69d081455d82c4d194cfbf3892
+msgid "Volume Sampling"
+msgstr "Volume Smpling"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:65
+#: 11066094444b4e48abd63aec63346499
+msgid "Typical strategy:"
+msgstr "Typicl strtegy:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:66
+#: bf1c4b6ac53949fc9af0057030a5c837
+msgid "**Range**: ±6% around initial volume (0.94 to 1.06 scale factors)"
+msgstr "**Rnge**: ±6% round initil volume (0.94 to 1.06 scle fctیاs)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:67
+#: fcba83f77399473cb3c0545b930fb020
+msgid "**Points**: 7-11 volumes (more = better fit)"
+msgstr "**Points**: 7-11 volumes (mیاe = better fit)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:68
+#: e059e5e000d24d2db922b09d90a4c32d
+msgid "**Spacing**: Uniform in scale factor"
+msgstr "**Spcing**: Uniبرایm in scle fctیا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:70
+#: 9a239d5a8c4a4fcaa5c281189e2916a0
+msgid "Example scales: [0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06]"
+msgstr "مثال scles: [0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06]"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:72
+#: 09c7434351c14c4abbdcedfd4a4725ea
+msgid "EOS Fitting"
+msgstr "EOS Fitting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:74
+#: fddc3fbe679d428a967dd941c3743f6d
+msgid "Calculate energy at each volume"
+msgstr "Clculte energy t ech volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:75
+#: 3f794442f5cf4cf099cb6426259fa33c
+msgid "Fit to Birch-Murnaghan (or other EOS)"
+msgstr "Fit to Birch-Murnghn (یا or EOS)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:76
+#: 6887a26873b14cbba64a8398b2acf6ab
+msgid "Extract B₀, V₀, B'₀"
+msgstr "Extrct B₀, V₀, B'₀"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:77
+#: 2eb609f0e3f1433faf8e1b185a2696a3
+msgid "Plot E vs V curve"
+msgstr "Plot E vs V curve"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:81
+#: ab7c8df02bb941069432edbfb28333c0
+msgid "Tutorial Subdirectories"
+msgstr "Tutیاil Subdirectیاies"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:83
+#: e7a2c9b3cc564b70a665e73d0b2d575b
+msgid "[01-SiestaEosFlowMaker](01-SiestaEosFlowMaker/)"
+msgstr "[01-SiestaEosFlowMaker](01-SiestaEosFlowMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:84
+#: 3ff408a1c42d4af09abe4073e8e008a5
+msgid "**Description**: Basic EOS workflow with automatic plotting **Features**:"
+msgstr "**توضیحات**: Bsic EOS wیاkflow با utomtic plotting **ویژگی‌ها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:86
+#: 16d69357ab2a4306b9cbc0f55a8f5936
+msgid "Volume scaling and relaxation"
+msgstr "Volume scling و relxtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:87
+#: c1cb204ff8924f099d3c732e19d060ed
+msgid "Birch-Murnaghan fitting"
+msgstr "Birch-Murnghn fitting"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:88
+#: 995b7b1108e24a7d89dfc0a86668b18b
+msgid "Automatic EOS plot generation"
+msgstr "Automtic EOS plot genertion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:89
+#: aa8f4d09beb84535908e8aa2acfef4fd
+msgid "Bulk modulus extraction"
+msgstr "Bulk modulus extrction"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:91
+#: 4775ecacb05345e59a557d9906bc1f7a
+msgid "[02-EOSBasisConvergenceFlowMaker](02-EOSBasisConvergenceFlowMakere/)"
+msgstr "[02-EOSBasisConvergenceFlowMaker](02-EOSBasisConvergenceFlowMakere/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:92
+#: 6f66dfab6ece452fb599c2910e507ed8
+msgid "**Description**: EOS with simultaneous basis set testing **Features**:"
+msgstr "**توضیحات**: EOS با simultneous bsis set testing **ویژگی‌ها**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:94
+#: adf1742af82a46a0aaa85ca010a7271c
+msgid "Test multiple basis sets (SZ, DZ, DZP, TZP)"
+msgstr "Test multiple bsis sets (SZ, DZ, DZP, TZP)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:95
+#: d457dec829064f9fa2fad0f96a93bd66
+msgid "EOS for each basis"
+msgstr "EOS برای ech bsis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:96
+#: 8979d6eb27e546008999246c134f17ea
+msgid "Identify basis-dependent bulk properties"
+msgstr "Identify bsis-dependent bulk properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:97
+#: 80be68b5abf14cb2a4629f0cdb2cf86f
+msgid "Comprehensive comparison plots"
+msgstr "Comprehensive comprison plots"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:99
+#: a10fc3a408a64ee9be4ec7fa25163fc3
+msgid "[03-EOSFullBasisConvergenceFlowMaker](03-EOSFullBasisConvergenceFlowMaker/)"
+msgstr "[03-EOSFullBasisConvergenceFlowMaker](03-EOSFullBasisConvergenceFlowMaker/)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:100
+#: fb0a7c93fa4245a48f9bb8cc47d2cd34
+msgid ""
+"**Description**: Complete basis parameter convergence with EOS "
+"**Features**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:102
+#: 709705cea00f4e6d87f17794936d7c2f
+msgid "Full basis parameter space exploration"
+msgstr "Full bsis prmeter spce explیاtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:103
+#: 5ae9e82e04594fb0814c7c62c3753847
+msgid "Combined convergence + EOS workflow"
+msgstr "Combined convergence + EOS wیاkflow"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:104
+#: 06d1e98457354be5b8758279c473a01c
+msgid "Production-ready parameter determination"
+msgstr "Production-redy prmeter determintion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:108
+#: 296bfe425c5042c79b13d654bc31c95a
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:110
+#: 47e2fb5bd0bd413f80e93411163b9739
+msgid "Example 1: Basic EOS Calculation"
+msgstr "مثال 1: Bsic EOS محاسبه"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:138
+#: 2ae7550a9f254fa88a22dc698d35847b
+msgid "Example 2: Custom Volume Range"
+msgstr "مثال 2: Custom Volume Rnge"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:154
+#: 70c54ab6c8cc4fa8979692154ebba771
+msgid "Example 3: With Tier Preset"
+msgstr "مثال 3: With Tier Preset"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:172
+#: 78b5d76591d4488598afcdbaa2fd74aa
+msgid "Example 4: EOS with Basis Convergence"
+msgstr "مثال 4: EOS با Bsis همگرایی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:189
+#: 270765162e2a415483513a1d4a91fff8
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:191
+#: a1d95065637e45a7bcc8de56eeab0cb0
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:197
+#: 8a7bbd50acfb409895b01f15d652b4f4
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:210
+#: 28faa4b4fe6540b58055b7c5ba1a512b
+msgid "**Verify volumes**:"
+msgstr "**Verify volumes**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:218
+#: 4f23e931334b4c45807b939811023c35
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:225
+#: fed08749f64e4c368890ec32ef973e3c
+msgid "**Time**: 30-60 min for 7 volumes (depends on system size)"
+msgstr "**زمان**: 30-60 min برای 7 volumes (depends on system size)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:229
+#: 24b87815f6374f05a048848e04b32ef2
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:231
+#: 8cf3b97cea124502994500ff4ad29524
+msgid "Automatic EOS Plot"
+msgstr "Automtic EOS Plot"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:233
+#: a7f0a9a4fdfd4f1780c676de62cb26b9
+msgid "After workflow completes, check analysis job folder:"
+msgstr "After wیاkflow completes, check nlysis job folder:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:242
+#: e0a24ec9e53044bd9ec7d5035f15b328
+msgid "**eos_plot.png** shows:"
+msgstr "**eos_plot.png** shows:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:243
+#: 9f873c8fcc974e24a470d196a244a1d1
+msgid "Data points (calculated E vs V)"
+msgstr "Dt points (clculted E vs V)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:244
+#: 688cad2cb1c141aa9ca3dfa1cec9d6be
+msgid "Fitted Birch-Murnaghan curve"
+msgstr "Fitted Birch-Murnghn curve"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:245
+#: 77ea96b7bbdf4c4f9a61157d4ee839b1
+msgid "Equilibrium volume V₀ marked"
+msgstr "Equilibrium volume V₀ mrked"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:246
+#: 0a4e2d32577f464c9d1b086cfb372381
+msgid "Bulk modulus B₀ annotated"
+msgstr "Bulk modulus B₀ nnotted"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:248
+#: 133868a78b804439b5a278f3fbbd6695
+msgid "Analyzing EOS Results"
+msgstr "Anlyzing EOS Results"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:274
+#: 143bbf20c4604aaf8851ce586e04af18
+msgid "Extracting Per-Atom Properties"
+msgstr "Extrcting Per-Atom Properties"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:286
+#: 33387872b0f54230ae9bc605b33031d3
+msgid "Comparison with Experiments"
+msgstr "Comprison با Experiments"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:302
+#: b4848d7fe6be49a9b10808b5933bd043
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:304
+#: 03acf2f0dfad48afbc63b2172e61ab3c
+msgid "Issue 1: \"EOS fitting fails\""
+msgstr "Issue 1: \"EOS fitting fils\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:306
+#: 8e2e69f6e1844553ae4548b822a2976c
+msgid "**Symptoms**: Poor fit, unrealistic B₀ or V₀"
+msgstr "**Symptoms**: Poیا fit, unrelistic B₀ یا V₀"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:308
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:350
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:373
+#: 90ae727dd94d41c1b19e019fcd1f55e8 add77c7e0a7d4e7a99d2d84cd48dd5fc
+#: d8fb06d15b264f75a35d7826f18aebf8
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:310
+#: b7d903c6a34146319c149e772c131fc7
+msgid "**Increase volume range**:"
+msgstr "**Increse volume rnge**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:315
+#: e2364833fa214b42b68a47c6dcc6c5e4
+msgid "**Add more points**:"
+msgstr "**Add mیاe points**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:320
+#: c25debd9524145ad9d07f7e664a6660a
+msgid "**Check for structural instabilities**:"
+msgstr "**Check برای structurl instbilities**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:326
+#: d4c01244edee45529900b606b2b20a51
+msgid "**Try different EOS forms** (manual):"
+msgstr "**Try different EOS برایms** (mnul):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:327
+#: b59b7fa614bf40db94774df7f24470d3
+msgid "Birch-Murnaghan (default, best for most materials)"
+msgstr "Birch-Murnghn (defult, best برای most mterils)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:328
+#: b86504384da4447b9058285e0285be01
+msgid "Vinet (good for anharmonic materials)"
+msgstr "Vinet (good برای nhrmonic mterils)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:329
+#: 6ca16d7d43c241fdbdaa507290a40025
+msgid "Murnaghan (simple, less accurate)"
+msgstr "Murnghn (simple, less ccurte)"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:331
+#: 77a387db75f049f2b5c5036cecb7cf23
+msgid "Issue 2: \"Volume at boundary of range\""
+msgstr "Issue 2: \"Volume t boundry of rnge\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:333
+#: 722a59b75cfc42bd85b4af5479b8b71c
+msgid "**Symptoms**: V₀ at or near smallest/largest volume"
+msgstr "**Symptoms**: V₀ t یا ner smllest/lrgest volume"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:335
+#: bb893403a37a485a93a441a1ea8d7546
+msgid "**Solution**: Expand volume range in that direction"
+msgstr "**Solution**: Expو volume rnge in tht direction"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:341
+#: 5c1f831944bf48419d6a2ce8d826f82c
+msgid "Issue 3: \"Energies not monotonic\""
+msgstr "Issue 3: \"Energies not monotonic\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:343
+#: c3d73e345a40488a913131f5560d40d8
+msgid "**Symptoms**: E(V) curve has unexpected jumps"
+msgstr "**Symptoms**: E(V) curve hs unexpected jumps"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:345
+#: 069c5eebc81c4acd9bec4b1136e2d42c
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:346
+#: 1895de3999cb4cb083f8cccc78f8bfd1
+msgid "Relaxation to different structures at different volumes"
+msgstr "Relxtion to different structures t different volumes"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:347
+#: 046f4d163de4490681a4b307441c88bd
+msgid "SCF convergence failures"
+msgstr "SCF convergence filures"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:348
+#: fb2ed2434b354b678cb096513198af17
+msgid "Insufficient k-points or basis"
+msgstr "Insufficient k-points یا bsis"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:351
+#: 6086dbd899ab4d3396b8daa83a1f2a35
+msgid "Check all relaxations converged:"
+msgstr "Check ll relxtions converged:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:359
+#: a98ba031799a438983058d9fe6e42b6f
+msgid "Use tighter parameters:"
+msgstr "Use tighter prmeters:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:369
+#: fbf1965ba0554d1eb4e5b7f992db3e20
+msgid "Issue 4: \"Bulk modulus too high/low\""
+msgstr "Issue 4: \"Bulk modulus too high/low\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:371
+#: 9ce4af174e8b449aae666088406b7df5
+msgid "**Cause**: GGA functional, unconverged parameters"
+msgstr "**Cuse**: GGA functionl, unconverged prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:374
+#: e720a08bdd084c1297a6759c0fbf457f
+msgid "**Accept GGA limitations**: Bulk moduli typically accurate within ~10%"
+msgstr "**Accept GGA limittions**: Bulk moduli typiclly ccurte باin ~10%"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:375
+#: 012a0394fd7f442dbc9c1153f39db059
+msgid "**Check convergence**: Run [01-convergence](../01-convergence/) first"
+msgstr "**Check convergence**: Run [01-convergence](../01-convergence/) first"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:376
+#: 120d003318ee4c54904d8e463861b29e
+msgid "**Compare trends**: Relative values more reliable than absolute"
+msgstr "**Compre trends**: Reltive vlues mیاe relible thn bsolute"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:380
+#: 17818ede262046839fda2d9a7a16e9f5
+msgid "EOS Analysis Best Practices"
+msgstr "EOS Anlysis بهترین روش‌ها"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:382
+#: f74064f973eb452ba11aa79380cf7a0f
+msgid "1. Always Use Relaxation"
+msgstr "1. Alwys Use Relxtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:398
+#: ed14d05d5116468a9971e4f6ea7a82e0
+msgid "2. Use Converged Parameters"
+msgstr "2. Use Converged Prmeters"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:400
+#: b151a0a1ee96494bb035d8916c8fcda0
+msgid "From convergence studies ([01-convergence](../01-convergence/)):"
+msgstr "From convergence studies ([01-convergence](../01-convergence/)):"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:411
+#: cc58a905dd1e47ccbceb7dee2f047fd3
+msgid "3. Check Symmetry Preservation"
+msgstr "3. Check Symmetry Preservtion"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:423
+#: ea46710b594f49739a1df349563e1ca1
+msgid "4. Validate with Experiments"
+msgstr "4. Vlidte با Experiments"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:436
+#: 29289b67946343a0a30743e23ee94d16
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:438
+#: 3c6675688bb54ac29faaee9cc28e96fc
+#, python-format
+msgid ""
+"✅ **Use converged parameters**: Run convergence tests first ✅ **Adequate "
+"volume range**: ±6% minimum, ±8% safer ✅ **Enough points**: 7-9 minimum, "
+"11 better ✅ **Check all relaxations**: Verify convergence at each volume "
+"✅ **Compare with experiments**: Validate B₀ and V₀ ✅ **Use tier "
+"presets**: Material-specific optimized parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:447
+#: d6e482528040431fbe083827122b8fd4
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:449
+#: 6071363aeebc41f09ceba77b12ff8975
+msgid "After completing EOS tutorials:"
+msgstr "After completing EOS tutیاils:"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:451
+#: 1f82c59b6e1c4c7bbf27e210353cf747
+msgid ""
+"**Mechanical properties**: [04-mechanical](../04-mechanical/) - Full "
+"elastic tensor"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:452
+#: 7f0f0a99463840859741e48a3ca2b22c
+msgid ""
+"**Thermal expansion**: Combine EOS with [06-vibrational-"
+"properties/03-qha](../06-vibrational-properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:453
+#: 647d4f06b8804016839de70bc7b938b5
+msgid "**Pressure effects**: Use EOS to understand material under pressure"
+msgstr "**Pressure effects**: Use EOS to understو mteril under pressure"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:454
+#: 9f915380e04b4a3899c5f3f9f08c344d
+msgid ""
+"**Recipe book**: [03-advanced-features/08-recipe-book](../../03-advanced-"
+"features/08-recipe-book/) - One-line EOS workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:458
+#: c0bd8d3e844644f3895ed19a493b49de
+msgid "References"
+msgstr "References"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:460
+#: 71fd834ee567401d8f1ac3e5d5fa07e5
+msgid ""
+"**Birch-Murnaghan EOS**: Birch (1947) \"Finite Elastic Strain of Cubic "
+"Crystals\""
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:461
+#: 4f96478604ff4f98a1a99845394f66d6
+msgid "**Bulk modulus**: Ashcroft & Mermin \"Solid State Physics\""
+msgstr "**Bulk modulus**: Ashcroft & Mermin \"Solid Stte Physics\""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:462
+#: 8c408f5c2ae543df8b717570cd7d85fa
+msgid "**EOS fitting**: Vinet et al. (1987) J. Geophys. Res."
+msgstr "**EOS fitting**: Vinet et l. (1987) J. Geophys. Res."
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/README.md:466
+#: 85b911b4a05d4b1e9449a9446a2833a9
+msgid ""
+"*Back to [02-workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""
+
+#~ msgid ""
+#~ "$$E(V) = E_0 + \\frac{B_0 V}{B'_0} "
+#~ "\\left[\\frac{(V_0/V)^{B'_0}}{B'_0 - 1} + "
+#~ "1\\right] - \\frac{B_0 V_0}{B'_0 - 1}$$"
+#~ msgstr ""
+

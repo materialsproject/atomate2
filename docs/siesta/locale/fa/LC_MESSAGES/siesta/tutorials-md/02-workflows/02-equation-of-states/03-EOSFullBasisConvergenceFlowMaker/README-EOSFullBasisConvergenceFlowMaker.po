@@ -1,0 +1,944 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, materialsproject
+# This file is distributed under the same license as the atomate2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-06 15:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:1
+#: f64793af752649f5876e968d4f0565bd
+msgid "Tutorial: EOS Full Basis Parameter Optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:3
+#: 8f9fc84a0f5d45d79d27b04b21652d44
+msgid ""
+"**Category**: 02-equation-of-states **Difficulty**: Advanced **Time**: ~5"
+" min (dry-run), ~2-6 hours (full optimization)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:9
+#: 19951156a9ce4a82ace3f6ee40d6662b
+msgid "Overview"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:11
+#: 6cc4f0219ecf461cb9a0457b23f22409
+msgid ""
+"Comprehensive basis parameter optimization using equation of state (EOS) "
+"calculations. Tests ALL combinations of basis sizes, PAO.EnergyShift, and"
+" PAO.SplitNorm to find optimal parameters for accurate bulk properties."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:13
+#: 4e274a9d53444288beda13d811aa0a94
+msgid ""
+"This tutorial focuses on **complete parameter space exploration**, "
+"testing every combination of basis parameters with EOS fitting."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:17
+#: 75b014ecfdc44b9c86aefcca501eca83
+msgid "What You'll Learn"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:19
+#: 1c65336381ca42af841643b1fece4024
+msgid "Full basis parameter optimization with EOS"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:20
+#: 0b5ee886348243448073af805e822486
+msgid "Testing PAO.EnergyShift and PAO.SplitNorm combinations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:21
+#: 9aed1e9f1b724434a5ccbd98ca9e09db
+msgid "Comparing EOSBasisConvergenceFlowMaker vs EOSFullBasisConvergenceFlowMaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:22
+#: 30352a3adae84208965bfd0c4bd724df
+msgid "Automatic error handling with Custodian for parameter sweeps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:23
+#: 32323a782d3e4422961c69d620e8ee4d
+msgid "Finding optimal parameters for each basis set"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:24
+#: d8fc1a4110d5409ab94ef58f27e67e8f
+msgid "Bulk modulus convergence with basis parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:28
+#: 057b7946898a4d90abdfd7a459c63bd3
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:30
+#: 54c1297578754d04be00c17abbcff642
+msgid "**Required**: [01-RelaxMaker](../../../01-basics/01-RelaxMaker/) completed"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:31
+#: 03ef3ddcd16d4cee83487a473ac1710c
+msgid ""
+"**Required**: [01-SiestaEosFlowMaker](../01-SiestaEosFlowMaker/) - Basic "
+"EOS workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:32
+#: fbf41ddad92d4c0ab9a557fb97e339a7
+msgid ""
+"**Recommended**: "
+"[02-EOSBasisConvergenceFlowMaker](../02-EOSBasisConvergenceFlowMaker/) - "
+"Basis-only testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:33
+#: 3c38bb47774c4432888dabe8c7999f56
+msgid ""
+"**Recommended**: Understanding of PAO parameters (PAO.EnergyShift, "
+"PAO.SplitNorm)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:37
+#: 2d21534e60d7411ebe2cce7ab9bee0bf
+msgid "Key Concepts"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:39
+#: 644cc5bf78ad479cbce8a0fdf653b525
+msgid "EOSFullBasisConvergenceFlowMaker vs EOSBasisConvergenceFlowMaker"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:41
+#: 710a209cfc46418cbdba8bc772179f69
+msgid "**EOSBasisConvergenceFlowMaker** (Simpler):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:42
+#: 97588eefa50b4abfa666ce13132c3f64
+msgid "Tests only basis sets with FIXED parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:43
+#: 9a4c04b17b0d485eb9957cf990b7593d
+msgid "Example: DZ (ES=0.01), DZP (ES=0.01), TZP (ES=0.005)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:44
+#: 2e36720235284411a2b130effce0f6d0
+msgid "Result: 3 EOS calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:45
+#: 8bc12fcf295f41ee8064487be965d8f6
+msgid "Use when: You want to compare basis sizes only"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:47
+#: 8d09f4690ca247c782145b8b13a0c623
+msgid "**EOSFullBasisConvergenceFlowMaker** (This Tutorial):"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:48
+#: 79e0c14e9efd40f58a3df22557425a0b
+msgid "Tests ALL parameter combinations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:49
+#: fdd921f7863f401bab4b37fea32fe5f9
+msgid "Example: 2 basis × 3 ES × 2 SN = 12 EOS calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:50
+#: ec80e7bdfacf427eb48e0cd65d8e3929
+msgid "Result: Optimal parameters for EACH basis set"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:51
+#: 75eee4953497499491bcd44ee7b68f09
+msgid "Use when: You need to optimize PAO parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:53
+#: 974d01d8c13a4a4d92f9841f05d410ea
+msgid "PAO.EnergyShift (Energy Shift)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:55
+#: 4615a2fb5c004505bcd637cf7f130243
+msgid "**Purpose**: Controls basis orbital confinement radius"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:57
+#: baaf1b3e9de64cacb1d53ceb0ee6128d
+msgid "**Units**: Ry (Rydberg)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:59
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:72
+#: 7772063059c2467aa4e74daa1b6c8a84 99fb134b265c4dfdaeb7aa6a6ba769ba
+msgid "**Effect**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:60
+#: 8b9ad1c3c7f14bf688e20c9e370a6000
+msgid ""
+"Lower values (0.005-0.01 Ry): Larger orbitals, better accuracy, higher "
+"cost"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:61
+#: 9986b61a652a483f947b8e4013ed4e0e
+msgid "Higher values (0.02-0.05 Ry): Smaller orbitals, faster, less accurate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:62
+#: bec3fcc18d1549abb1be9eda321866ee
+msgid "Typical range: 0.01-0.02 Ry"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:64
+#: 6d9ac27a25734b5ebd9018182fe796a3
+msgid "**Convergence**: Test 3-5 values to find optimal balance"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:66
+#: 2eeeb3fd0ab34416b4e0d1f5eba276d0
+msgid "PAO.SplitNorm (Split Norm)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:68
+#: 9f793d35eb414ed28b7518ee63cb50b4
+msgid "**Purpose**: Threshold for generating multiple-zeta orbitals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:70
+#: fe8f3991cd38420184242276d72f6865
+msgid "**Units**: Dimensionless (0-1)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:73
+#: 4ce8c830f5d2443da7d76a6cb2ab1a2f
+msgid "Lower values (0.10-0.15): More aggressive splitting, larger basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:74
+#: e09c8db5de884d108a9e9d8171a3dfdc
+msgid "Higher values (0.20-0.30): Less splitting, smaller basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:75
+#: 228e731657c4498f9b0e91090d388121
+msgid "Typical range: 0.15-0.25"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:77
+#: dd9ed9fe550447d3a642366c6c7cbece
+msgid "**Convergence**: Test 2-3 values per basis size"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:79
+#: ae63188f0a7c4ead9434fe3dc45375af
+msgid "Computational Cost"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:81
+#: 3885ace47f624da0a638b8b2acaa09aa
+msgid "**Example**: 2 basis × 3 energy_shifts × 2 split_norms × 5 volumes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:82
+#: abb9e13bfd99480385fcbb9e9029e0da
+msgid "Total SIESTA runs: 2 × 3 × 2 × 5 = **60 calculations**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:83
+#: fc66aaccae15479fb9b1d1cedf4c3290
+msgid "Estimated time: 2-6 hours (system dependent)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:87
+#: 0ddfd66aa139494eb4d7312ce8d5e920
+msgid "Workflow Structure"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:107
+#: e06346a6ad4e4ad09bc4c976c0beb219
+msgid "Quick Start"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:109
+#: c5bc58465f574bcda36a2f255edd6de6
+msgid "Basic Example"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:135
+#: 57b7e30670ed46d2ae985aad20f6cc9b
+msgid "**Total calculations**: 2 × 3 × 2 × 5 = **60 SIESTA runs**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:139
+#: f50c18b232ff41729f511532d51bca3c
+msgid "Configuration Options"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:141
+#: e139bed8ce07433ba3a9c1d9d9256d59
+msgid "Parameter Ranges"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:163
+#: 778f5d8b439c481ea857f314344ab571
+msgid "Volume Sampling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:179
+#: 3881a61b189640bf942568d58eaab1a4
+msgid "K-Point Settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:194
+#: 2843fd6e56694ea8a6e34929bc200a22
+msgid "Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:196
+#: 439b12a4244a452e96801e21b058f3b1
+msgid "Per-Combination Results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:198
+#: c1d37aa5ba534cc0b0851a4cdaf0e8b9
+msgid "Each parameter combination produces:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:199
+#: 79314ec5cbc5458d94ffdc8764f59c87
+msgid "**EOS plot**: Energy vs volume curve"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:200
+#: 56cfb37d495c4c938ed065800a1e7106
+msgid "**Fitted parameters**: B₀, V₀, B'₀"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:201
+#: d54c450aa16a4ee5ab5f2e26599f00cc
+msgid "**Summary file**: Parameter values and bulk modulus"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:210
+#: 54d2a8cc7e4a4729ae96285adf486b43
+msgid "Analysis Output"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:219
+#: 4d1fee8ee5744b6a9099af602205af49
+msgid "**optimal_parameters.txt** example:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:238
+#: ce1fe5cfbd6b40d48b0b3ea7a9ddc522
+msgid "With Custodian Error Handling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:240
+#: 2f4a32b3c7ff485baa85983d6b8962cb
+msgid "Why Use Custodian?"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:242
+#: 0b70a006b896419b87f4de6bce74ed48
+msgid ""
+"When testing many parameter combinations, some may have SCF convergence "
+"issues:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:243
+#: 92abee6d372b4c27a22cd42cea6e853f
+msgid "Aggressive PAO.EnergyShift values (< 0.005 Ry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:244
+#: a7d4a233a2174bbb9e176c9ccbc9d9be
+msgid "Extreme PAO.SplitNorm values (< 0.10 or > 0.30)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:245
+#: 0aab1c5d1ea4404c81a4ef8aaccb7bbf
+msgid "Large parameter sweeps where occasional failures would waste compute time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:247
+#: 8568d1b6658b443c89aaa898d71011ca
+msgid "Custodian provides:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:248
+#: 6b9c118bec4f40db8ad62c0d934bb20f
+msgid "Automatic SCF convergence rescue (5-level strategies)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:249
+#: c24c9134dd6e46ffa0758acb25baec9d
+msgid "Mixer weight adjustment"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:250
+#: 0aab3f4338bb4528a1166e3d0ab1e3d0
+msgid "high error recovery rate"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:252
+#: 138b77f9ac8f4c91a758b13c83abcfbb
+msgid "Example with Custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:271
+#: d7aae14df89f487a87942427b589a815
+msgid "**Custodian Propagation**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:272
+#: 4a63b2f123f7422eac790a10f1e80076
+msgid "Automatically propagates to `initial_relax_maker` and `eos_relax_maker`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:273
+#: 4fcc6a56b871481aba63c38b14ad68d5
+msgid "All child jobs inherit `use_custodian=True`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:274
+#: 577a0c8328b240f38d460f02ff520dd4
+msgid "No need to configure each maker separately"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:278
+#: cee822f01ae64ab4b47baa9225f7ff82
+msgid "Best Practices"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:280
+#: 56f329fc97f14a7d96ab382c70259424
+msgid ""
+"✅ **Start small**: Test 2×2×2 combinations first (8 EOS calculations) ✅ "
+"**Use dry-run**: Verify structure before full run ✅ **Enable custodian**:"
+" Especially for aggressive parameter sweeps ✅ **Converge k-points**: Use "
+"converged k-point mesh from convergence studies ✅ **Check trends**: Bulk "
+"modulus should vary smoothly with parameters ✅ **Compare with basis-"
+"only**: Run EOSBasisConvergenceFlowMaker first for baseline"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:287
+#: e842e26ab25044feb2a726367111984d
+msgid ""
+"❌ **Don't test too many**: Start with 8-12 combinations, expand if needed"
+" ❌ **Don't use unconverged k-points**: Always use converged k-point mesh "
+"❌ **Don't ignore failures**: If custodian can't fix, parameters may be "
+"unphysical ❌ **Don't skip initial relaxation**: Use relaxed structure for"
+" accurate results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:294
+#: fd86e3c81278413ba90a0ea750dce35c
+msgid "Analysis and Interpretation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:296
+#: 3493c10198314d76a1ddf6c60eaf63e5
+msgid "Finding Optimal Parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:319
+#: abf3c22f89bd49f59e3f1bebe6885e23
+msgid "Convergence Criteria"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:321
+#: cb9db28ef6af4917938deb8c43c9e199
+msgid "**Energy Shift Convergence**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:322
+#: 174036fe793b491c8abc688c19b63bc7
+msgid "Bulk modulus change < 2 GPa between successive ES values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:323
+#: d92dd02116b34e92a8d6ae20abd41468
+msgid "Lattice parameter change < 0.01 Å"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:325
+#: 3af3ecee7c134855bc49375adf4177ed
+msgid "**Split Norm Convergence**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:326
+#: 792b8b442ed94d1193efff12d8447db1
+msgid "Bulk modulus change < 1 GPa between successive SN values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:327
+#: 266c8a1f076d4d0c8a5bcceca012457c
+msgid "Less sensitive than energy shift"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:329
+#: 4d65c95d8b5f4a86a277ef58a42725b9
+msgid "Validation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:343
+#: b47bab818e464d18abd3d95f82d9231a
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:345
+#: 22965f36dd344734b4cbaac118bfea07
+msgid "**Problem**: Many SCF convergence failures"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:347
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:356
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:365
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:374
+#: 3ce0149099034fb490da9df9a22cce31 ba28f77faef5402ebf48dbddab4ab8dd
+#: f52e2f88fe124c849825531cb196506b fc57445817924740a0b072c9f1ea549c
+msgid "**Solution**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:348
+#: 9d1c5983a6d7460c987355f16721fad6
+msgid "Enable custodian: `use_custodian=True`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:349
+#: 8ce7f7f2fc224025865329d1a08c182d
+msgid "Reduce parameter range (avoid ES < 0.005 Ry)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:350
+#: 66dfc214bc074005ab8da9f59dca0bd6
+msgid "Check structure is relaxed: Use `initial_relax=True`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:354
+#: 06bb29c4f0c04af6a5307470d9e00906
+msgid "**Problem**: Bulk modulus varies erratically"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:357
+#: 5d9c3a93a53541ef9ca102bccc969bc7
+msgid "Increase volume points: `number_of_frames=9`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:358
+#: b10f63f8c07a433ca952e0e8d4200949
+msgid "Use tighter convergence: `DM.Tolerance=\"1e-6\"`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:359
+#: 5c9d8e28a2b44dceb73e8fbe341f9b04
+msgid "Check k-point convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:363
+#: d2a4467d8f4546b399141251bd623814
+msgid "**Problem**: All combinations give similar results"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:366
+#: 343fcdf0e5824ecc978f19ff886baf56
+msgid "This may be correct! Some materials are insensitive to PAO parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:367
+#: 20c4a5571d23467896281b56df76e87b
+msgid "Check wider ES range: `[0.005, 0.01, 0.02, 0.03]`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:368
+#: 743ac76a6b8d4e6e9e09d5d62b7592f9
+msgid "Verify with forces/stress convergence"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:372
+#: b7542fafcc8c4806a682ba132ccfdeb3
+msgid "**Problem**: Too expensive (taking days)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:375
+#: 5288019d0a3c4bf48625ef5dc0f9fc8f
+msgid "Reduce combinations: Test 2×2×2 = 8 instead of 3×4×4 = 48"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:376
+#: 9ed34d847b974cd5a36a9f4908e2a622
+msgid "Reduce volumes: `number_of_frames=5` instead of 9"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:377
+#: 5c65c454e2ca46ef97ff212e706de6ef
+msgid "Coarser k-points for testing: `[4, 4, 4]`"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:378
+#: 849f689fccce434daf73bf31de4faf33
+msgid "Submit to HPC cluster"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:382
+#: b4f8f76605a14cc5a1015b919d88a396
+msgid "Tutorial Files"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:384
+#: 3700d1702756453d83fa1306e8e1b616
+msgid "This directory contains four tutorials demonstrating different approaches:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:386
+#: f3f1daf8c1744727abfd3adb2282a064
+msgid "Tutorial 01: Standard Full Optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:388
+#: d7c743783df14d059fcdf0511f21175f
+msgid "**`EOSFullBasisConvergenceFlowMaker_01_full.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:390
+#: a7d3187c3ae7436cb289052f161a725a
+msgid "Basic usage testing all parameter combinations:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:404
+#: e116a5ab0f484367934716dd17a22060
+msgid "**When to use**: Standard parameter optimization without error handling."
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:408
+#: 9e733906a67e4cc7b8137330c65cdd5c
+msgid "Tutorial 02: With Custodian Error Handling"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:410
+#: a5c8214e39a54d078adb9dc142446f63
+msgid "**`EOSFullBasisConvergenceFlowMaker_02_with_custodian.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:412
+#: 03bc718032a24e4da35102930d484be2
+msgid "Enable automatic SCF convergence recovery:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:423
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:460
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:496
+#: 492fd6936a774af2b6cef66a3ad0c2d2 5e81a5ab1f5d491da97cf28de91f7421
+#: 7958307e465d45488b0f7dbf3dff182f
+msgid "**When to use**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:424
+#: b86797e8f78747a1bb988ee5f43ed3a0
+msgid "Testing aggressive parameter values"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:425
+#: b2de5e08f77847edb87ff5bd81d00591
+msgid "Production runs on HPC clusters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:426
+#: 120621d3cece4c77b9b1730ad32e52a8
+msgid "Large parameter sweeps where failures would waste compute time"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:430
+#: c6a65672b21b4ca490e04df395a067ee
+msgid "Tutorial 03: Customizing with Powerups"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:432
+#: ab2c7d744d484a86adfe78a9b522d600
+msgid "**`EOSFullBasisConvergenceFlowMaker_03_powerups.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:434
+#: 14422c0a6e124916999c481d89bb2e15
+msgid "Use powerups to add parameters after workflow creation:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:461
+#: 21dd77d63faf443bae3dece1558f3d50
+msgid "Adding Mesh.Cutoff or SCF settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:462
+#: 2265b72c4a79489fbb7fa4bde090f3a1
+msgid "Fine-tuning parameters for specific runs"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:463
+#: c1ff92102a154a36a46f5bac1ac30561
+msgid "Modifying existing workflows without recreating makers"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:467
+#: aa3755783f64430aa425df8129212f2b
+msgid "Tutorial 04: Using Tier Presets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:469
+#: ceff79e6da894ad8acfdcc9e0de6f9e6
+msgid "**`EOSFullBasisConvergenceFlowMaker_04_presets.py`**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:471
+#: ad752dfef0e44860be35c87765184371
+msgid "Apply production-quality parameter sets via tier presets:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:497
+#: 8603d68176334e4cb7d94c872adf887b
+msgid "Production calculations requiring validated parameter sets"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:498
+#: 5a4e65c8050848bda576e20e4022c9b1
+msgid "Material-specific settings (semiconductors, metals, magnetic systems)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:499
+#: a41596482ecd47c6a886c665eaf7eee4
+msgid "Reproducible, documented workflows"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:501
+#: fb3b1dde1c1f47ff90407f5714c93c21
+msgid "**Available presets**:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:502
+#: a4100e71c54740df9f3d8c1b5ac8a987
+msgid "`relax_standard`: Standard relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:503
+#: 4e27f6e331644c5eb8a10150810378b3
+msgid "`relax_high_accuracy`: High-accuracy relaxation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:504
+#: 5616f0ae2b9d4fa88d570e86376200e5
+msgid "`bulk_semiconductor`: Optimized for bulk semiconductors"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:505
+#: eb3b8dbc59204eb0ac5741ba6e3a82b6
+msgid "`bulk_metal`: Optimized for bulk metals"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:506
+#: 3858361a75f34a1b973dbde53b1cd606
+msgid "`magnetic_*`: Optimized for magnetic systems"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:510
+#: 43c042ab5d34473ea10d496b11c164c9
+msgid "Comparison: Four Methods"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 0ba53db84c4140c9a4fd0435d6e351a6
+msgid "Tutorial"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: f400498657904b4b9d46c71be88c0892
+msgid "Method"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 43d214e4fb4645a0a784445faec7f51f e1e3ab8130aa4939a5f0398d02c6ea4c
+msgid "Custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 2827f0bbbe1643bcae71fbf5b7d22c43
+msgid "Best For"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 02a40ffdd38546c098b45725b042a1dd
+msgid "**01**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: c781363b831644839b95ea7419399b93
+msgid "Standard"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 9473604ea1cf4ff3b8e86b87ab5df997
+msgid "No"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 71afe5fb37b9416fa64eb1bd2615c2c7
+msgid "Quick parameter optimization"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 5242127f269e4eda8ae9e19d2f1178f0
+msgid "**02**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 2261b55a4fdc4260b20522b5fe6dc267 8baf84835f3d4effa108fbf7191b348b
+#: 9d9ad01ee9c447aa9fcb0c35d8a26816
+msgid "Yes"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 58966e36260942e7b87f163f8b0a45c1
+msgid "Robust runs with error recovery"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: e86a3382c14f46a4ae42cdd16e22a51a
+msgid "**03**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 2199b93e625648249a9cf98342fee519
+msgid "Powerups + Custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 53b214bebc5b4caea70602412ccd8610
+msgid "Adding Mesh.Cutoff, SCF settings"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 6369111d96a44591b5e1f77787ba5ef2
+msgid "**04**"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 795d58f4c75a4ad1b2b4506508d676b3
+msgid "Presets + Custodian"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md
+#: 20d1f9d874ba4945a5f5777b8aa408a8
+msgid "Production with validated parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:519
+#: e78d8b63e96e4da9b95d7d5ba2624c88
+msgid "Recommendation"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:521
+#: 76bd740fc2df4c6b993d22747fa9b534
+msgid "**Start with Tutorial 01** to understand the workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:522
+#: 6f12da3ba8834ddaa8aeec08a68c0d2f
+msgid "**Use Tutorial 02** for production runs (always enable custodian)"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:523
+#: 5ed698f715694cadb2c4c9961f176fe2
+msgid "**Use Tutorial 03** for adding custom parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:524
+#: 17cf968ec94e434793393421e512bcac
+msgid "**Use Tutorial 04** for publication-quality calculations"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:528
+#: a1a345a16bcc4f698581f126c9bdf763
+msgid "Next Steps"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:530
+#: c3d8b17bcbe945799cca90e5a45af866
+msgid "After completing full basis parameter optimization:"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:531
+#: f1df0f7b63b34887ba23802fea502b9a
+msgid ""
+"[04-mechanical/01-ElasticFlowMaker](../../04-mechanical/01-ElasticFlowMaker/)"
+" - Use optimized parameters for elastic constants"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:532
+#: a8f9b552dea342fc943562040bff8be7
+msgid ""
+"[06-vibrational-properties](../../06-vibrational-properties/) - Phonon "
+"calculations with optimized basis"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:533
+#: 87d73c41ece045e0b32a64d0e781a100
+msgid ""
+"[03-surfaces-and-adsorption](../../03-surfaces-and-adsorption/) - Surface"
+" energy with production parameters"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:537
+#: 4ba6ecff89da45348a946f94bac75f9a
+msgid "Related Tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:539
+#: 50d9833f72574db19e89e1a99a834ea9
+msgid "[01-SiestaEosFlowMaker](../01-SiestaEosFlowMaker/) - Basic EOS workflow"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:540
+#: 73a2c4d43547445da5bda9b5e37fb1d2
+msgid ""
+"[02-EOSBasisConvergenceFlowMaker](../02-EOSBasisConvergenceFlowMaker/) - "
+"Basis-only testing"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:541
+#: 5b19a3939db044688f2563a1c0f79b2b
+msgid "[EOS Overview](../README.md) - All EOS tutorials"
+msgstr ""
+
+#: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/tutorials-md/02-workflows/02-equation-of-states/03-EOSFullBasisConvergenceFlowMaker/README-EOSFullBasisConvergenceFlowMaker.md:545
+#: 215fec17bed84e8a937b4494e9ebcfc7
+msgid ""
+"**📚 [Back to EOS Workflows](../README.md)** | **📖 [All "
+"Tutorials](../../../README.md)**"
+msgstr ""
+

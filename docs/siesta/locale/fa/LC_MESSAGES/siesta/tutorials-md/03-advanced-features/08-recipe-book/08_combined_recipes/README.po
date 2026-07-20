@@ -1,0 +1,469 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:1
+#: 1ddbe2910956418bbcaa141bc3fda1b5
+msgid "Combined Workflow Recipes"
+msgstr "Combined گردش کار Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:3
+#: c44ea8de49f74a618efc18654dd6ae51
+msgid "Advanced recipes combining multiple calculation types for complex studies."
+msgstr "پیشرفته recipes combining multiple clcultion types برای complex studies."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:5
+#: 75021640481b4f4a87595b31643491c8
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:7
+#: e3e32386bec048a58af1ecb440b89166
+msgid ""
+"Combined recipes for sophisticated materials discovery and "
+"characterization:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:8
+#: a73fc6af14984f6ea73ee6d710c1bd35
+msgid "**High-Throughput Screening**: Batch processing and filtering"
+msgstr "**High-Throughput Screening**: Btch processing و filtering"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:9
+#: 28a61397fa9842c886728a8ce064953e
+msgid "**Materials Discovery**: Complete discovery pipeline"
+msgstr "**Mterils Discovery**: Complete discovery pipeline"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:10
+#: 260878655b64415896291005ebebf646
+msgid "**Publication-Ready**: High-accuracy comprehensive workflows"
+msgstr "**Publiction-Redy**: High-ccurcy comprehensive wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:12
+#: d77a76d04ea84a1991e6e0d2480bf82c
+msgid "Files"
+msgstr "فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:14
+#: dab42873d3db491f948f4a29cc9e1e0d
+msgid "`high_throughput_screening.py` - Batch screening workflow (HIGH priority)"
+msgstr "`high_throughput_screening.py` - Batch screening workflow (HIGH priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:15
+#: e28ac28b8cc14a0691a576e5dc8ca18e
+msgid "`materials_discovery.py` - Discovery pipeline (MEDIUM priority)"
+msgstr "`materials_discovery.py` - Discovery pipeline (MEDIUM priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:16
+#: 4a9c9cffede042d4a5803cbdd8999a26
+msgid ""
+"`publication_ready_workflow.py` - Publication-quality calculations "
+"(MEDIUM priority)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:17
+#: 8dc574aea3db4902ae660b84fb7a1873
+msgid "`README.md` - This file"
+msgstr "`README.md` - This file"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:19
+#: 7a9a3dd6b61d4cc9bff36733e7ced93b
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:35
+#: 2b3313d66ffd4bce8dd281a478111f90
+msgid "Workflows"
+msgstr "گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:37
+#: 0c7c3b87f4af4eebbe8202bbcc515647
+msgid "High-Throughput Screening"
+msgstr "High-Throughput Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:38
+#: 9f95f82b46e64c79a8c696c72c9568a4
+msgid "Quick characterization on all candidates"
+msgstr "Quick chrcteriztion on ll cوidtes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:39
+#: 8914f7dc1bb34d5a8070affcc074640e
+msgid "Filter based on criteria"
+msgstr "Filter bsed on criteri"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:40
+#: 9fdeb2a7396d477f8ceb3547239395f3
+msgid "Rank by target properties"
+msgstr "Rnk by trget properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:41
+#: fb8206af93e54697a68ba66c510bdfcd
+msgid "Export top candidates"
+msgstr "Expیاt top cوidtes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:43
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:56
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:69
+#: 72484f944d474ed8aebaf522e888e384 944783cd4e7e4329934b24bc5f1b8137
+#: aad1f0d17239476dbc96796424f98b74
+msgid "**Use for**:"
+msgstr "**Use برای**:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:44
+#: 9a6513a72fc444b0bead1047bdfaa61b
+msgid "Screening 100s-1000s of materials"
+msgstr "Screening 100s-1000s of mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:45
+#: b6fb5d1f8d6345bcaa2028eb2d5ffec9
+msgid "Initial property estimates"
+msgstr "Initil property estimtes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:46
+#: 4ec66011ea314ef4a4b278f235c3be65
+msgid "Rapid materials discovery"
+msgstr "Rpid mterils discovery"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:47
+#: 364aa9d5347540c8aa873ae0e543a350
+msgid "Database population"
+msgstr "Dtbse popultion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:49
+#: e713ebad6c794908981f6fe24e60f3b9
+msgid "Materials Discovery Pipeline"
+msgstr "Mterils Discovery Pipeline"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:50
+#: d8a2905e6d67407981ca3d9d81a43a66
+msgid "Initial screening (quick characterization)"
+msgstr "Initil screening (quick chrcteriztion)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:51
+#: 0bafadbe9aa34bfab3e37756646df4cf
+msgid "Filtered detailed study (complete material study)"
+msgstr "Filtered detiled study (complete mteril study)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:52
+#: 9df33f7d145243cca4326676e374caee
+msgid "Property-specific optimization"
+msgstr "Property-specific optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:53
+#: 20a91aa509304efd9e8f6a8eb00133d4
+msgid "Machine learning integration"
+msgstr "Mchine lerning integrtion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:54
+#: fb8c8084907f4c1cab3a3783e7d4f497
+msgid "Final validation"
+msgstr "Finl vlidtion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:57
+#: 8444efbb7a954fcf88517114b0fbf301
+msgid "Discovering new materials"
+msgstr "Discovering new mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:58
+#: f3eafe4241e14930bf11d4646b2d22c6
+msgid "Property-driven search"
+msgstr "Property-driven serch"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:59
+#: 1b6f847bd9fe4c51b3395f469b12e8ae
+msgid "Optimization campaigns"
+msgstr "Optimiztion cmpigns"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:60
+#: 8fb667cf023c433fba442754ec712b7c
+msgid "Research projects"
+msgstr "Reserch projects"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:62
+#: c422444186834d3fb89be7a3ec3806c8
+msgid "Publication-Ready Workflow"
+msgstr "Publiction-Redy گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:63
+#: ed9c98361e9c44b98daa84398db737a9
+msgid "Convergence testing"
+msgstr "همگرایی testing"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:64
+#: 80cc89726faa4e24adb8fe1a1e025ad5
+msgid "High-accuracy calculations"
+msgstr "High-ccurcy clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:65
+#: cd0362d3c4a2430cb0d3bcac404a37d4
+msgid "Complete property characterization"
+msgstr "Complete property chrcteriztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:66
+#: 3f438610c15849c49aed14352f1aa9c6
+msgid "Automatic figure generation"
+msgstr "Automtic figure genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:67
+#: 7a7f60f0706449b3a5fdf3816a3fc81d
+msgid "Comprehensive documentation"
+msgstr "Comprehensive documenttion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:70
+#: d45423aa2e8440b4b86eda7f3ba8777b
+msgid "Final calculations for papers"
+msgstr "Finl clcultions برای ppers"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:71
+#: 79eb9f09d85b4dc5aea502aeeeed0f37
+msgid "Experimental comparison"
+msgstr "Experimentl comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:72
+#: 985dbfa34e2044c5940835ba90a4a884
+msgid "Benchmark studies"
+msgstr "Benchmrk studies"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:73
+#: 1ca8ff0a61f9474ebc4bf09a03a4bbaa
+msgid "High-quality data generation"
+msgstr "High-qulity dt genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:75
+#: 71061de5c14f4b89895d1c1d58bdb54a
+msgid "Screening Criteria Examples"
+msgstr "Screening Criteri مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:77
+#: 137e38487ea74d119757dc25e6f4e7c0
+msgid "Band Gap Range"
+msgstr "Bو Gp Rnge"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:85
+#: 286a982786e64b5e8b8bcd06c69530e4
+msgid "Formation Energy"
+msgstr "Fیاmtion Energy"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:93
+#: 788890b7948e495aa729082c3a149bcf
+msgid "Multiple Criteria"
+msgstr "Multiple Criteri"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:105
+#: 2bb0c7efb2f2484ba5a1a46a024957c5
+msgid "Typical Workflows"
+msgstr "Typicl گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:107
+#: 360d2b43ffe743da8bfc6dcae08031b4
+msgid "Battery Cathode Screening"
+msgstr "Bttery Cthode Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:120
+#: dcca1b161fde4d80952087312748d0bd
+msgid "Solar Cell Material Discovery"
+msgstr "Solr Cell Mteril Discovery"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:131
+#: f430f7548c7c4100bf7aa8348cd304fa
+msgid "Thermoelectric Screening"
+msgstr "Thermoelectric Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:145
+#: 73faade0270140fcaebcb2ffebe28e18
+msgid "Computational Strategy"
+msgstr "Computtionl Strtegy"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:147
+#: 9538f94bf57e421a9ed08ae165b0ccb4
+msgid "Phase 1: Quick Screening"
+msgstr "Phse 1: Quick Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:148
+#: 5fa6e0c5946f484c8163673e281ff72b
+msgid "**Time**: Minutes per structure"
+msgstr "**زمان**: Minutes per structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:149
+#: 99d372aea0bc4d26bfa6781e984a6969
+msgid "**Accuracy**: ±10-20%"
+msgstr "**Accurcy**: ±10-20%"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:150
+#: d1deab80121e4590bbaca79a4cef43b8
+msgid "**Purpose**: Eliminate poor candidates"
+msgstr "**Purpose**: Eliminte poیا cوidtes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:151
+#: c4b832f4a7494b55828dbc38433c50ea
+#, python-format
+msgid "**Output**: 10-20% of initial set"
+msgstr "**Output**: 10-20% of initil set"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:153
+#: 6e93cd39d1d642b6992e64333a984abe
+msgid "Phase 2: Detailed Study"
+msgstr "Phse 2: Detiled Study"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:154
+#: 0f9ec97221274939b242f39e80731d6e
+msgid "**Time**: Hours per structure"
+msgstr "**زمان**: Hours per structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:155
+#: 4879a3f56e2a40b4918290f9332c1059
+msgid "**Accuracy**: Publication quality"
+msgstr "**Accurcy**: Publiction qulity"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:156
+#: d988c4805d1c4314aba46066698233b8
+msgid "**Purpose**: Full characterization"
+msgstr "**Purpose**: Full chrcteriztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:157
+#: 4a619ede6f554246baafee4924cdb017
+msgid "**Output**: Top 1-5 materials"
+msgstr "**Output**: Top 1-5 mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:159
+#: f1585d45af2945e38efe90050c18795c
+msgid "Phase 3: Validation"
+msgstr "Phse 3: Vlidtion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:160
+#: a14210ba91d748ec81867f2af0ac65b3
+msgid "**Time**: Days per material"
+msgstr "**زمان**: Dys per mteril"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:161
+#: 09a666dc98a24d0eaccbfbd6fc73b40f
+msgid "**Accuracy**: Highest possible"
+msgstr "**Accurcy**: Highest possible"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:162
+#: c21559ed27b74e8ca1b67c63e832e5cf
+msgid "**Purpose**: Final verification"
+msgstr "**Purpose**: Finl verifiction"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:163
+#: 4755e60ca0c94481ae4dca205ebe192a
+msgid "**Output**: Experimental candidates"
+msgstr "**Output**: Experimentl cوidtes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:165
+#: 9aaf8bef2f8b431ea2d23a45b9355409
+msgid "Time Savings Example"
+msgstr "زمان Svings مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:167
+#: 19f5d702b8034c69b2524a532b507593
+msgid "**Traditional approach** (complete study on all):"
+msgstr "**Trditionl pproch** (complete study on ll):"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:172
+#: 7f295fc3878f46e48001a3167b2d2a9f
+msgid "**High-throughput approach** (screening + selective detailed):"
+msgstr "**High-throughput pproch** (screening + selective detiled):"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:179
+#: 5731a6af459949169d61511426c0530f
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:181
+#: 0e3ec39ead6c425483aceaa4d98a6312
+msgid "**Define criteria before screening**"
+msgstr "**Define criteri beبرایe screening**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:182
+#: ecf12811c3e44e6e8169af3a1b02bf7f
+msgid "**Start with quick characterization**"
+msgstr "**Strt با quick chrcteriztion**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:183
+#: dea5ff42e6aa48eba85a0c18c31b92d6
+msgid "**Filter aggressively in early stages**"
+msgstr "**Filter ggressively in erly stges**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:184
+#: df5ba23a2a2943aaada2a7cea20e0800
+msgid "**Use database for result management**"
+msgstr "**Use dtbse برای result mngement**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:185
+#: d64ae300525043e5b75057bf4eb0b805
+msgid "**Automate analysis and ranking**"
+msgstr "**Automte nlysis و rnking**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:186
+#: 306d04b0bd124947b9e06c7250fb3832
+msgid "**Document decision process**"
+msgstr "**Document decision process**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:187
+#: 6f2575c11a404bc9a34df96300e734fa
+msgid "**Validate top candidates thoroughly**"
+msgstr "**Vlidte top cوidtes thیاoughly**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:189
+#: b00d4c97aa0c4055b447226af2aa307c
+msgid "Integration with Tools"
+msgstr "Integrtion با Tools"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:191
+#: a9afa9ef190a4bdab7299835260e6ecb
+msgid "Databases"
+msgstr "Dtbses"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:198
+#: 80cd83a54132448383234f85bcccc3c8
+msgid "Machine Learning"
+msgstr "Mchine Lerning"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:204
+#: 7149b9cc91f4436bab6f86859f584748
+msgid "Visualization"
+msgstr "Visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:210
+#: 9bce1446eb39474ca87701a34cecb804
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:212
+#: f8d70c0f6d264bd2bc053f4c7d1617d2
+msgid "**Screening basics**: `02_complete_workflows/quick_characterization.py`"
+msgstr "**Screening basics**: `02_complete_workflows/quick_characterization.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:213
+#: 89729d05a8d847fb93e2c3fda3924952
+msgid "**Convergence**: `07_convergence_recipes/`"
+msgstr "**Convergence**: `07_convergence_recipes/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:214
+#: 41b4cd7b7a6e4ed9a8495695cf0b0e65
+msgid "**Database setup**: `tutorials/04-infrastructure/13-database-storage/`"
+msgstr "**Database setup**: `tutorials/04-infrastructure/13-database-storage/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/08_combined_recipes/README.md:215
+#: 694578a8495a4dc2b9113e14166e61ec
+msgid "**HPC submission**: `tutorials/04-infrastructure/14-job-submission/`"
+msgstr "**HPC submission**: `tutorials/04-infrastructure/14-job-submission/`"

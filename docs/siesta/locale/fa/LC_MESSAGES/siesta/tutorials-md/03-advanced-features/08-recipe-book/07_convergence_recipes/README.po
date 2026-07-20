@@ -1,0 +1,405 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:1
+#: e065edcb4c274e20b157c874d9ed754c
+msgid "Convergence Testing Recipes"
+msgstr "همگرایی Testing Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:3
+#: 3903a063e2d44b258d5739ad20b54c64
+msgid "Automated convergence testing using RecipeBook one-liners."
+msgstr "Automted convergence testing using RecipeBook one-liners."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:5
+#: c11b6bf71fe74df5a38a7c3615f34069
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:7
+#: ce4be480079b404ebd9a44c2590b6e6b
+msgid "Recipes for parameter convergence studies:"
+msgstr "Recipes برای prmeter convergence studies:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:8
+#: e38945c659f44e2ab3a98625ab0ec589
+msgid "**K-Points Convergence**: Automatic k-mesh convergence testing"
+msgstr "**K-Points همگرایی**: Automtic k-mesh convergence testing"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:9
+#: c48b50bde97746449820844c87acd6cc
+msgid "**Basis Convergence**: Basis parameter optimization"
+msgstr "**Bsis همگرایی**: Bsis prmeter optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:10
+#: ca5947bf543040b288719e8c36b0ba7c
+msgid "**Complete Convergence**: Full convergence suite"
+msgstr "**Complete همگرایی**: Full convergence suite"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:12
+#: 872a4d02a7304a428ad2478a0bd043d8
+msgid "Files"
+msgstr "فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:14
+#: d01b22c932434c229f4c4c4569412f79
+msgid "`kpoints_convergence_recipes.py` - k-point convergence (HIGH priority)"
+msgstr "`kpoints_convergence_recipes.py` - k-point convergence (HIGH priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:15
+#: 4dc023024b8e4d19899be1fc68771f0a
+msgid ""
+"`basis_convergence_recipes.py` - Basis parameter convergence (HIGH "
+"priority)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:16
+#: df4b38fa51a2402e9004b605688fce4c
+msgid ""
+"`complete_convergence_recipes.py` - Full convergence study (MEDIUM "
+"priority)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:17
+#: 701509b64e744ddbb3f4756d1e4a61ab
+msgid "`README.md` - This file"
+msgstr "`README.md` - This file"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:19
+#: 33f99adff3c34d29b0dae75844ec351a
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:34
+#: c205935628214a01a54467af273f54f2
+msgid "Properties Tested"
+msgstr "Properties Tested"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:36
+#: 5cb8d40b262a42ecaf3b4565a307febd
+msgid "K-Points Convergence"
+msgstr "K-Points همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:37
+#: d248468d343a458cb9bdd83aef4f19e3
+msgid "Energy vs k-mesh density"
+msgstr "Energy vs k-mesh density"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:38
+#: 6efb6b39777545b5876fc1785eb4e1e5
+msgid "Automatic convergence criterion"
+msgstr "Automtic convergence criterion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:39
+#: 20e4984ed9f34c009b65d86365ad9c98
+msgid "Recommended k-mesh"
+msgstr "Recommended k-mesh"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:40
+#: d26b8428852c4356a8d2b450e1753ba2
+msgid "Convergence plot"
+msgstr "همگرایی plot"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:42
+#: ed53cd4ad9e84bf1a3e9c0102245d41c
+msgid "Basis Convergence"
+msgstr "Bsis همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:43
+#: 72d5f6186a1c49bd8c377394c4e24bfd
+msgid "PAO.EnergyShift convergence"
+msgstr "PAO.EnergyShift convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:44
+#: 8b9f85c923b0455a951197b49d802f14
+msgid "PAO.SplitNorm optimization"
+msgstr "PAO.SplitNیاm optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:45
+#: 410abba6b845483fa3eca5fcc9a1d290
+msgid "PAO.BasisSize comparison"
+msgstr "PAO.BsisSize comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:46
+#: c34aa81edfae4f53bc2b16ed17911cf5
+msgid "Accuracy vs cost tradeoff"
+msgstr "Accurcy vs cost trdeoff"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:48
+#: dc63396a169f46ec8957cc7d5dc20879
+msgid "Complete Convergence"
+msgstr "Complete همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:49
+#: 6cb355b671834cf4928f341b6776f6ca
+msgid "k-point convergence"
+msgstr "k-point convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:50
+#: 707877d153b842939f2fe06230906b96
+msgid "Mesh cutoff convergence"
+msgstr "Mesh cutoff convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:51
+#: c5983e00074b4b3a88cc21f3cb31c420
+msgid "Basis parameter convergence"
+msgstr "Bsis prmeter convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:52
+#: 18dbf05d12d6475f821f0d81867798ac
+msgid "Production-ready parameters"
+msgstr "Production-redy prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:54
+#: 52cd7f09248d424090e4457d546583c8
+msgid "When to Use"
+msgstr "When to Use"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:56
+#: 3378d17c4bd945849a0f8f1cd7033e69
+msgid "**Before production calculations**: Always test convergence first"
+msgstr "**Beبرایe production clcultions**: Alwys test convergence first"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:57
+#: 6a5a39024c98453db6bfd9d110ac0a07
+msgid "**New material types**: Different materials need different parameters"
+msgstr "**New mteril types**: Different mterils need different prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:58
+#: f8ad1330e53e4b02a9378c1260e541a0
+msgid "**Publication work**: Document converged parameters"
+msgstr "**Publiction wیاk**: Document converged prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:59
+#: 4fda7fd37cc94d4bb8600e0b5b4056e1
+msgid "**Method development**: Understand parameter effects"
+msgstr "**Method development**: Understو prmeter effects"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:60
+#: 68edc8828a57490c9e4f3ed7f4236d0e
+msgid "**Troubleshooting**: Check if parameters are adequate"
+msgstr "**عیب‌یابی**: Check if prmeters re dequte"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:62
+#: c12729d45ccd414782945a0a4c203fd7
+msgid "Convergence Criteria"
+msgstr "همگرایی Criteri"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:64
+#: cbb83b3de48d42d2b4ebc9f75f3c5034
+msgid "Energy Convergence"
+msgstr "Energy همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:65
+#: 246037e1701f46e5a0af99f85a7acfb5
+msgid "Target: < 0.01 eV/atom (tight)"
+msgstr "Trget: < 0.01 eV/tom (tight)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:66
+#: 47bc0401340b4ee28c6c40081846bcfa
+msgid "Acceptable: < 0.05 eV/atom (standard)"
+msgstr "Acceptble: < 0.05 eV/tom (stوrd)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:67
+#: 7dbcc0f86a674061a9f44602c1fbe4fe
+msgid "Screening: < 0.1 eV/atom (loose)"
+msgstr "Screening: < 0.1 eV/tom (loose)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:69
+#: 5d1a23308432498792dc0ca4a0dab439
+msgid "Force Convergence"
+msgstr "Fیاce همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:70
+#: c5f77bab9e6a4ffe871d5e1d4a67cd35
+msgid "Target: < 0.01 eV/Å (tight)"
+msgstr "Trget: < 0.01 eV/Å (tight)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:71
+#: 21393baf99cf432d90ca40f117433dd6
+msgid "Acceptable: < 0.05 eV/Å (standard)"
+msgstr "Acceptble: < 0.05 eV/Å (stوrd)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:73
+#: 15b3d2e31f4443bba715a6ba6b21ea01
+msgid "Stress Convergence"
+msgstr "Stress همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:74
+#: ee6866afa70746f29d400ad9b0140f82
+msgid "Target: < 0.1 GPa (tight)"
+msgstr "Trget: < 0.1 GP (tight)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:75
+#: 7235307eb7e24557a51bf1b868713dbd
+msgid "Acceptable: < 0.5 GPa (standard)"
+msgstr "Acceptble: < 0.5 GP (stوrd)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:77
+#: cd4d5ba3850541609ee576f0ed90376d
+msgid "Typical Converged Parameters"
+msgstr "Typicl Converged Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:79
+#: e8a7048efaf449debb863c3074c2c627
+msgid "Metals"
+msgstr "Metls"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:87
+#: 3f22f96e3f1f45d1a8f9a2f0ea135b32
+msgid "Semiconductors"
+msgstr "Semiconductیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:94
+#: 2d0c591fdc8a466fa898471225469bbb
+msgid "Insulators"
+msgstr "Insultیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:101
+#: 4b3aa3bf30074461b0575632839cdf1e
+msgid "Molecules"
+msgstr "Molecules"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:108
+#: 9588d15ea56a4e8796f6a89c566ff8de
+msgid "Computational Cost"
+msgstr "Computtionl Cost"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 318ff3d71941408c99bd703e81cd4293
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: d8c6069c328f498e82caf3633e1ccfb6
+msgid "Time (10 atoms, 4 cores)"
+msgstr "زمان (10 toms, 4 cیاes)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: f27aac68f04448ea9869aad0bde0f5e7
+msgid "Tests Performed"
+msgstr "Tests Perبرایmed"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 75c0b74addaa46f79eede046ad2ccee8
+msgid "k-points"
+msgstr "k-points"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 8199685cf7bc4ecba40c134b26229dd8
+msgid "1-2 hours"
+msgstr "1-2 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 4889dbeff9bc4477ac4ed30da618cc58
+msgid "5-7 k-meshes"
+msgstr "5-7 k-meshes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 0caf038e333c411d9c83fa1db6859558
+msgid "Basis"
+msgstr "Bsis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 39b5cd6c69bf46498dd965b06c8f067e
+msgid "2-4 hours"
+msgstr "2-4 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 3f15fd8365584d52ac037c0559df31f8
+msgid "10-15 parameters"
+msgstr "10-15 prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 96e2e2e02b7946fe81f90a02242cf605
+msgid "Complete"
+msgstr "Complete"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: 261f8411585848eb87502abc49f4d5b5
+msgid "4-8 hours"
+msgstr "4-8 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md
+#: a441342abfef4dfba64e4dff5746f379
+msgid "All tests"
+msgstr "All tests"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:116
+#: 644c8cecd32843f0854338791aca651b
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:118
+#: 49169c182a6643f0a1bb628ed439b693
+msgid "**Always test convergence** before production"
+msgstr "**Alwys test convergence** beبرایe production"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:119
+#: 11c22543b8bb43f2a49bf7c39cbb6d2c
+msgid "**Test one parameter at a time**"
+msgstr "**Test one prmeter t  time**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:120
+#: 2979ef93688d46bcb8f9489eb171e385
+msgid "**Start with coarse, refine progressively**"
+msgstr "**Strt با corse, refine progressively**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:121
+#: 8c84092ad53b4dc99acb5a7eb9db29cb
+msgid "**Document converged parameters**"
+msgstr "**Document converged prmeters**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:122
+#: f2c7af182e25419ea7e08aaba452b6b9
+msgid "**Use same parameters for series**"
+msgstr "**Use sme prmeters برای series**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:123
+#: b3b066b0493c4e9981515dcfbc13a0c8
+msgid "**Retest for different properties**"
+msgstr "**Retest برای different properties**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:124
+#: 9bdf248743814c43b741e9b823920b73
+msgid "**Plot convergence curves**"
+msgstr "**Plot convergence curves**"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:126
+#: 4c9d35252f924525a632f43557eb2719
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:128
+#: ba1ff6b5b56b4f7085c89557da8c45ec
+msgid "**Apply converged parameters**: `02_complete_workflows/`"
+msgstr "**Apply converged parameters**: `02_complete_workflows/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:129
+#: 8c21b4a0d1034eb49c3cf6e676b375ff
+msgid "**Production calculations**: `08_combined_recipes/`"
+msgstr "**Production calculations**: `08_combined_recipes/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/07_convergence_recipes/README.md:130
+#: a520d149f42947c1adbdad1f9fc4fb5f
+msgid "**Manual convergence**: `tutorials/02-convergence/`"
+msgstr "**Manual convergence**: `tutorials/02-convergence/`"
