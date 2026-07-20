@@ -100,8 +100,10 @@ TWO_DIMENSION_PRESETS: dict[str, dict[str, Any]] = {
             "Mesh.Cutoff": "300 Ry",
             # Grimme D3 van der Waals correction with automatic XC-dependent parameters
             "DFTD3": True,
-            "DFTD3.UseXCDefaults": True,  # Auto-select s6, s8, a1, a2 based on XC functional
-            "DFTD3.BJdamping": True,  # Use Becke-Johnson damping (better than zero-damping)
+            # Auto-select s6, s8, a1, a2 based on XC functional
+            "DFTD3.UseXCDefaults": True,
+            # Use Becke-Johnson damping (better than zero-damping)
+            "DFTD3.BJdamping": True,
             # Optional: Adjust cutoffs if needed (defaults usually fine)
             # "DFTD3.2BodyCutOff": "60.0 Bohr",
             # "DFTD3.3BodyCutOff": "40.0 Bohr",
@@ -122,8 +124,10 @@ TWO_DIMENSION_PRESETS: dict[str, dict[str, Any]] = {
             "Mesh.Cutoff": "150 Ry",
             # Grimme D3 van der Waals correction with automatic XC-dependent parameters
             "DFTD3": True,
-            "DFTD3.UseXCDefaults": True,  # Auto-select s6, s8, a1, a2 based on XC functional
-            "DFTD3.BJdamping": True,  # Use Becke-Johnson damping (better than zero-damping)
+            # Auto-select s6, s8, a1, a2 based on XC functional
+            "DFTD3.UseXCDefaults": True,
+            # Use Becke-Johnson damping (better than zero-damping)
+            "DFTD3.BJdamping": True,
             # Optional: Adjust cutoffs if needed (defaults usually fine)
             # "DFTD3.2BodyCutOff": "60.0 Bohr",
             # "DFTD3.3BodyCutOff": "40.0 Bohr",

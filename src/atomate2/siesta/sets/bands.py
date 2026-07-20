@@ -1,19 +1,26 @@
+"""SIESTA band-structure k-path generation and .bands file utilities."""
+
+from __future__ import annotations
+
 import argparse
 import logging
 import sys
+from typing import TYPE_CHECKING
 
 import click
 import numpy as np
-from pymatgen.core import Structure
 from pymatgen.symmetry.bandstructure import HighSymmKpath
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
 
-def band_paymatgen_to_siesta(structure: Structure, interpolations=None):
-    """
-    Reading pyamtgen structure returning siesta band
-    """
+def band_paymatgen_to_siesta(
+    structure: Structure, interpolations: list[int] | None = None
+) -> list[str]:
+    """Read a pymatgen structure and return the SIESTA band k-path."""
     logger.info("band_paymatgen_to_siesta()")
 
     # Generate the k-path using symmetry of the structure
@@ -24,9 +31,7 @@ def band_paymatgen_to_siesta(structure: Structure, interpolations=None):
     path = kpath.kpath["path"]
 
     # Interpolation settings: define the number of points between high-symmetry k-points
-    if interpolations is not None:
-        interpolations = interpolations
-    else:
+    if interpolations is None:
         interpolations = [20]  # Customize as needed
 
     # if wave_func_k_point_scale is None:
@@ -42,11 +47,13 @@ def band_paymatgen_to_siesta(structure: Structure, interpolations=None):
             # Write the start point (always start with 1)
             if counter == 0:
                 band_fdf_arguments.append(
-                    f"{1} {kpoints[kp][0]:.6f} {kpoints[kp][1]:.6f} {kpoints[kp][2]:.6f} # {kp}"
+                    f"{1} {kpoints[kp][0]:.6f} {kpoints[kp][1]:.6f} "
+                    f"{kpoints[kp][2]:.6f} # {kp}"
                 )
             else:
                 band_fdf_arguments.append(
-                    f"{n_points} {kpoints[kp][0]:.6f} {kpoints[kp][1]:.6f} {kpoints[kp][2]:.6f} # {kp}"
+                    f"{n_points} {kpoints[kp][0]:.6f} {kpoints[kp][1]:.6f} "
+                    f"{kpoints[kp][2]:.6f} # {kp}"
                 )
             counter = +1
 
@@ -54,7 +61,7 @@ def band_paymatgen_to_siesta(structure: Structure, interpolations=None):
     return band_fdf_arguments  # tuple(band_fdf_arguments)
 
 
-class GnuBands_Old:
+class GnuBands_Old:  # noqa: N801  public legacy class name referenced by tests
     """
     Legacy band structure parser and plotter for SIESTA .bands files.
 
@@ -62,7 +69,7 @@ class GnuBands_Old:
     This is a legacy implementation - consider using modern plotting tools instead.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize GnuBands_Old with default band structure parameters."""
         self.ef = None
         self.kmin = None
@@ -85,7 +92,7 @@ class GnuBands_Old:
         self.labels = None
         logger.info("GnuBands_Old.__init__()")
 
-    def read_bands_file(self, bandfile):
+    def read_bands_file(self, bandfile: str) -> None:
         """
         Read band structure data from a SIESTA .bands file.
 
@@ -111,7 +118,7 @@ class GnuBands_Old:
                     for iband in range(self.nband):
                         self.e[iband, ispin, ik] = float(line[1 + iband])
 
-    def process_options(self, args):
+    def process_options(self, args: list[str]) -> None:
         """
         Process command-line arguments for band structure plotting options.
 
@@ -151,7 +158,7 @@ class GnuBands_Old:
         if opts.o:
             self.outfile = opts.o
 
-    def validate_options(self):
+    def validate_options(self) -> None:
         """
         Validate band structure plotting options and ranges.
 
@@ -173,12 +180,14 @@ class GnuBands_Old:
             self.min_band = 1
         if self.min_band > self.nband:
             logger.error(
-                f"Min_band is too large (min_band, nband): {self.min_band}, {self.nband}"
+                f"Min_band is too large (min_band, nband): "
+                f"{self.min_band}, {self.nband}"
             )
             sys.exit(1)
         if self.max_band > self.nband:
             logger.warning(
-                f"Max_band is too large (max_band, nband): {self.max_band}, {self.nband}"
+                f"Max_band is too large (max_band, nband): "
+                f"{self.max_band}, {self.nband}"
             )
             logger.warning(
                 "Max_band will be effectively reset to its maximum allowed value"
@@ -186,17 +195,18 @@ class GnuBands_Old:
             self.max_band = self.nband
         if self.max_band < self.min_band:
             logger.error(
-                f"Max_band is less than min_band: (max_band, eff min_band): {self.max_band}, {self.min_band}"
+                f"Max_band is less than min_band: (max_band, eff min_band): "
+                f"{self.max_band}, {self.min_band}"
             )
             sys.exit(1)
 
-    def shift_fermi_level(self):
+    def shift_fermi_level(self) -> None:
         """Shift band energies so that the Fermi level is at zero energy."""
         logger.info("GnuBands_Old.shift_fermi_level()")
         if self.fermi_shift:
             self.e -= self.ef
 
-    def write_output(self):
+    def write_output(self) -> None:
         """
         Write formatted band structure data for plotting with GNUplot.
 
@@ -209,7 +219,8 @@ class GnuBands_Old:
         logger.info("GnuBands_Old.write_output()")
         output = []
         output.append(
-            "# GNUBANDS: Utility for SIESTA to transform bands output into Gnuplot format"
+            "# GNUBANDS: Utility for SIESTA to transform bands output "
+            "into Gnuplot format"
         )
         output.append(f"# E_F = {self.ef}")
         output.append(f"# k_min, k_max = {self.kmin}, {self.kmax}")
@@ -228,17 +239,18 @@ class GnuBands_Old:
                         <= self.e[iband - 1, ispin - 1, ik]
                         <= self.emax + delta
                     ):
-                        output.append(
-                            f"{self.k[ik]:14.6f} {self.e[iband - 1, ispin - 1, ik]:14.6f} {ispin:3d}"
+                        output.append(  # noqa: PERF401  nested conditional loop
+                            f"{self.k[ik]:14.6f} "
+                            f"{self.e[iband - 1, ispin - 1, ik]:14.6f} {ispin:3d}"
                         )
 
         if self.outfile:
             with open(self.outfile, "w") as f:
                 f.write("\n".join(output))
         else:
-            print("\n".join(output))
+            print("\n".join(output))  # noqa: T201  CLI writes result to stdout
 
-    def run(self, args, bandfile):
+    def run(self, args: list[str], bandfile: str) -> None:
         """
         Execute complete workflow for processing SIESTA band structure file.
 
@@ -276,7 +288,7 @@ class GnuBands:
     Provides filtering options for spins, bands, and energy ranges.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize GnuBands with default band structure parameters."""
         logger.info("GnuBands.run()")
         self.ef = None
@@ -299,7 +311,7 @@ class GnuBands:
         self.listk = None
         self.labels = None
 
-    def read_bands_file(self, bandfile):
+    def read_bands_file(self, bandfile: str) -> None:
         """
         Read band structure data from a SIESTA .bands file.
 
@@ -325,7 +337,7 @@ class GnuBands:
                     for iband in range(self.nband):
                         self.e[iband, ispin, ik] = float(line[1 + iband])
 
-    def validate_options(self):
+    def validate_options(self) -> None:
         """
         Validate band structure plotting options and ranges.
 
@@ -347,12 +359,14 @@ class GnuBands:
             self.min_band = 1
         if self.min_band > self.nband:
             logger.error(
-                f"Min_band is too large (min_band, nband): {self.min_band}, {self.nband}"
+                f"Min_band is too large (min_band, nband): "
+                f"{self.min_band}, {self.nband}"
             )
             sys.exit(1)
         if self.max_band > self.nband:
             logger.warning(
-                f"Max_band is too large (max_band, nband): {self.max_band}, {self.nband}"
+                f"Max_band is too large (max_band, nband): "
+                f"{self.max_band}, {self.nband}"
             )
             logger.warning(
                 "Max_band will be effectively reset to its maximum allowed value"
@@ -360,17 +374,18 @@ class GnuBands:
             self.max_band = self.nband
         if self.max_band < self.min_band:
             logger.error(
-                f"Max_band is less than min_band: (max_band, eff min_band): {self.max_band}, {self.min_band}"
+                f"Max_band is less than min_band: (max_band, eff min_band): "
+                f"{self.max_band}, {self.min_band}"
             )
             sys.exit(1)
 
-    def shift_fermi_level(self):
+    def shift_fermi_level(self) -> None:
         """Shift band energies so that the Fermi level is at zero energy."""
         logger.info("GnuBands.shift_fermi_level()")
         if self.fermi_shift:
             self.e -= self.ef
 
-    def write_output(self):
+    def write_output(self) -> None:
         """
         Write formatted band structure data for plotting with GNUplot.
 
@@ -383,7 +398,8 @@ class GnuBands:
         logger.info("GnuBands.write_output()")
         output = []
         output.append(
-            "# GNUBANDS: Utility for SIESTA to transform bands output into Gnuplot format"
+            "# GNUBANDS: Utility for SIESTA to transform bands output "
+            "into Gnuplot format"
         )
         output.append(f"# E_F = {self.ef}")
         output.append(f"# k_min, k_max = {self.kmin}, {self.kmax}")
@@ -402,28 +418,29 @@ class GnuBands:
                         <= self.e[iband - 1, ispin - 1, ik]
                         <= self.emax + delta
                     ):
-                        output.append(
-                            f"{self.k[ik]:14.6f} {self.e[iband - 1, ispin - 1, ik]:14.6f} {ispin:3d}"
+                        output.append(  # noqa: PERF401  nested conditional loop
+                            f"{self.k[ik]:14.6f} "
+                            f"{self.e[iband - 1, ispin - 1, ik]:14.6f} {ispin:3d}"
                         )
 
         if self.outfile:
             with open(self.outfile, "w") as f:
                 f.write("\n".join(output))
         else:
-            print("\n".join(output))
+            print("\n".join(output))  # noqa: T201  CLI writes result to stdout
 
     def run(
         self,
-        bandfile,
-        spin_idx,
-        fermi_shift,
-        emin,
-        emax,
-        min_band,
-        max_band,
-        gnu_ticks,
-        outfile,
-    ):
+        bandfile: str,
+        spin_idx: int,
+        fermi_shift: bool,
+        emin: float | None,
+        emax: float | None,
+        min_band: int | None,
+        max_band: int | None,
+        gnu_ticks: bool,
+        outfile: str | None,
+    ) -> None:
         """
         Execute complete workflow for processing SIESTA band structure file.
 
@@ -483,8 +500,16 @@ class GnuBands:
 )
 @click.option("-o", "--outfile", type=click.Path(), help="Specify output file")
 def cli(
-    bandfile, spin_idx, fermi_shift, emin, emax, min_band, max_band, gnu_ticks, outfile
-):
+    bandfile: str,
+    spin_idx: int,
+    fermi_shift: bool,
+    emin: float | None,
+    emax: float | None,
+    min_band: int | None,
+    max_band: int | None,
+    gnu_ticks: bool,
+    outfile: str | None,
+) -> None:
     """Process bands file and generate Gnuplot-ready output."""
     gnubands = GnuBands()
     gnubands.run(

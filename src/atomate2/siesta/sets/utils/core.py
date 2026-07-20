@@ -1,17 +1,27 @@
+"""Utilities for structure conversion, magnetism, and SIESTA I/O helpers."""
+
+from __future__ import annotations
+
 import json
 import logging
+from typing import TYPE_CHECKING
 
 import numpy as np
 import sisl
 import yaml
 from ase import Atoms
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core import PeriodicSite, Structure
+
 logger = logging.getLogger(__name__)
 
 
-def _get_site_atomic_number(site) -> int:
+def _get_site_atomic_number(site: PeriodicSite) -> int:
     """
-    Get atomic number from a pymatgen site, handling both regular and fractional occupancy.
+    Get atomic number from a pymatgen site, handling regular and fractional occupancy.
 
     This handles sites from read_cif_with_ghost() which have fractional occupancy
     (e.g., {'S': 0.001} for ghost atoms) where site.specie doesn't work.
@@ -30,7 +40,7 @@ def _get_site_atomic_number(site) -> int:
         # Regular Element/Species with direct Z attribute
         return site.species.Z
     # Composition (fractional occupancy) - get first element's Z
-    return list(site.species.keys())[0].Z
+    return next(iter(site.species.keys())).Z
 
 
 # Define magnetic elements and their default moments as module-level constants
@@ -85,8 +95,10 @@ ELEMENT_MAGMOMS = {
 
 
 def get_default_initial_magnetic_moments(
-    structure, default_magmom=1.0, magnetic_ordering="ferromagnetic"
-):
+    structure: Structure,
+    default_magmom: float = 1.0,
+    magnetic_ordering: str = "ferromagnetic",
+) -> list[float] | None:
     """
     Automatically detect magnetic elements and assign initial magnetic moments.
 
@@ -117,7 +129,8 @@ def get_default_initial_magnetic_moments(
     - 4d transition metals: Mo, Tc, Ru, Rh (42-45)
     - Lanthanides: La-Tm (57-69)
     - Actinides: Ac-Es (89-99)
-    - Element-specific defaults: Cr(4.0), Mn(5.0), Fe(4.0), Co(3.0), Ni(2.0), Cu(0.6), Gd(7.0)
+    - Element-specific defaults: Cr(4.0), Mn(5.0), Fe(4.0), Co(3.0), Ni(2.0),
+      Cu(0.6), Gd(7.0)
 
     Examples
     --------
@@ -178,12 +191,12 @@ def get_default_initial_magnetic_moments(
 
 
 def set_magnetic_ordering(
-    structure,
-    ordering="ferromagnetic",
-    default_magmom=None,
-    magnetic_species=None,
-    afm_pattern=None,
-):
+    structure: Structure,
+    ordering: str = "ferromagnetic",
+    default_magmom: float | None = None,
+    magnetic_species: list[str | int] | None = None,
+    afm_pattern: list[int] | None = None,
+) -> list[float]:
     """
     Set magnetic ordering for a structure with various magnetic configurations.
 
@@ -204,7 +217,8 @@ def set_magnetic_ordering(
         List of species (element symbols or atomic numbers) to make magnetic.
         If None, auto-detects all magnetic elements.
     afm_pattern : list of int, optional
-        Custom pattern for magnetic ordering. Values should be +1 (up), -1 (down), or 0 (non-magnetic).
+        Custom pattern for magnetic ordering. Values should be +1 (up), -1 (down),
+        or 0 (non-magnetic).
         Used when ordering="custom". Length must match number of atoms.
 
     Returns
@@ -275,14 +289,13 @@ def set_magnetic_ordering(
     if ordering in ["FERROMAGNETIC", "FM"]:
         # All moments parallel (positive)
         magmoms = base_magmoms.copy()
-        logger.info(
-            f"Applied ferromagnetic ordering: {sum(1 for m in magmoms if m > 0)} spin-up atoms"
-        )
+        n_up_atoms = sum(1 for m in magmoms if m > 0)
+        logger.info(f"Applied ferromagnetic ordering: {n_up_atoms} spin-up atoms")
 
     elif ordering in ["ANTIFERROMAGNETIC", "AFM"]:
         # Alternating up/down for magnetic atoms
         magnetic_count = 0
-        for i, base_mag in enumerate(base_magmoms):
+        for base_mag in base_magmoms:
             if base_mag != 0:
                 # Alternate sign for magnetic atoms
                 sign = 1 if (magnetic_count % 2 == 0) else -1
@@ -294,7 +307,8 @@ def set_magnetic_ordering(
         n_up = sum(1 for m in magmoms if m > 0)
         n_down = sum(1 for m in magmoms if m < 0)
         logger.info(
-            f"Applied antiferromagnetic ordering: {n_up} spin-up, {n_down} spin-down atoms"
+            f"Applied antiferromagnetic ordering: {n_up} spin-up, "
+            f"{n_down} spin-down atoms"
         )
 
     elif ordering in ["FERRIMAGNETIC", "FIM"]:
@@ -302,7 +316,7 @@ def set_magnetic_ordering(
         # For simplicity: alternating with different magnitudes
         # Users should customize this for specific materials
         magnetic_count = 0
-        for i, base_mag in enumerate(base_magmoms):
+        for base_mag in base_magmoms:
             if base_mag != 0:
                 if magnetic_count % 2 == 0:
                     # First sublattice: full moment, spin up
@@ -322,11 +336,13 @@ def set_magnetic_ordering(
             raise ValueError("Must provide afm_pattern for custom magnetic ordering")
         if len(afm_pattern) != n_atoms:
             raise ValueError(
-                f"afm_pattern length ({len(afm_pattern)}) must match number of atoms ({n_atoms})"
+                f"afm_pattern length ({len(afm_pattern)}) must match number "
+                f"of atoms ({n_atoms})"
             )
 
         magmoms = [
-            pattern * base_mag for pattern, base_mag in zip(afm_pattern, base_magmoms)
+            pattern * base_mag
+            for pattern, base_mag in zip(afm_pattern, base_magmoms, strict=False)
         ]
         logger.info(f"Applied custom magnetic ordering: {afm_pattern}")
 
@@ -340,7 +356,7 @@ def set_magnetic_ordering(
     return magmoms
 
 
-def get_magnetic_structure_info(structure):
+def get_magnetic_structure_info(structure: Structure) -> dict:
     """
     Analyze a structure and return information about magnetic elements.
 
@@ -376,9 +392,7 @@ def get_magnetic_structure_info(structure):
     magnetic_indices = [
         i for i, z in enumerate(atomic_numbers) if z in MAGNETIC_ELEMENTS
     ]
-    magnetic_elements = list(
-        set([structure[i].specie.symbol for i in magnetic_indices])
-    )
+    magnetic_elements = list({structure[i].specie.symbol for i in magnetic_indices})
 
     has_magnetic = len(magnetic_indices) > 0
     n_magnetic = len(magnetic_indices)
@@ -413,10 +427,13 @@ def get_magnetic_structure_info(structure):
 
 
 def pymatgen_to_ase(
-    structure, ghost_tags=None, auto_magmoms=True, magnetic_ordering=None
-):
+    structure: Structure,
+    ghost_tags: list[bool] | None = None,
+    auto_magmoms: bool = True,
+    magnetic_ordering: str | None = None,
+) -> Atoms:
     """
-    Converts a Pymatgen Structure object to an ASE Atoms object.
+    Convert a Pymatgen Structure object to an ASE Atoms object.
 
     Parameters
     ----------
@@ -426,7 +443,8 @@ def pymatgen_to_ase(
         List indicating which atoms are ghost atoms.
         If None, the function will check for 'ghost_tags' in structure.site_properties.
     auto_magmoms : bool, optional
-        If True, automatically detect and set initial magnetic moments for magnetic elements.
+        If True, automatically detect and set initial magnetic moments for
+        magnetic elements.
         Default: True
     magnetic_ordering : str, optional
         Type of magnetic ordering to apply. Options: "FM", "AFM", "FiM", "custom".
@@ -463,7 +481,8 @@ def pymatgen_to_ase(
     atomic_positions = structure.frac_coords  # Fractional atomic coordinates
 
     # Get atomic numbers
-    # Get atomic numbers - handles both regular sites and fractional occupancy (ghost atoms)
+    # Get atomic numbers - handles both regular sites and fractional occupancy
+    # (ghost atoms)
     atomic_numbers = [_get_site_atomic_number(site) for site in structure]
 
     # Check if 'ghost_tags' is available in site properties
@@ -471,12 +490,14 @@ def pymatgen_to_ase(
         ghost_tags = structure.site_properties["ghost_tags"]
         # Adjust atomic numbers based on ghost tags
         atomic_numbers = [
-            -num if ghost else num for num, ghost in zip(atomic_numbers, ghost_tags)
+            -num if ghost else num
+            for num, ghost in zip(atomic_numbers, ghost_tags, strict=False)
         ]
     else:
-        # If ghost_tags are not available, show a message and proceed without ghost atoms
+        # If ghost_tags are not available, show a message and proceed without them
         logger.info(
-            "The structure does not have 'ghost_tags' site property. Proceeding without ghost atoms."
+            "The structure does not have 'ghost_tags' site property. "
+            "Proceeding without ghost atoms."
         )
 
     # Convert fractional coordinates to Cartesian coordinates
@@ -500,12 +521,12 @@ def pymatgen_to_ase(
         # species_Z_dict: maps species number (1-based) to atomic number
         unique_labels = sorted(set(species_labels))
         species_dict = {}
-        species_Z_dict = {}
+        species_Z_dict = {}  # noqa: N806  Z = atomic number
 
         for idx, label in enumerate(unique_labels, start=1):
             # Find first atom with this label to get atomic number
-            for i, (site_label, atom_num) in enumerate(
-                zip(species_labels, atomic_numbers)
+            for site_label, atom_num in zip(
+                species_labels, atomic_numbers, strict=False
             ):
                 if site_label == label:
                     species_dict[idx] = label
@@ -546,7 +567,7 @@ def pymatgen_to_ase(
     return ase_atoms
 
 
-def pymatgen_to_ase_v2(structure, auto_magmoms=True):
+def pymatgen_to_ase_v2(structure: Structure, auto_magmoms: bool = True) -> Atoms:
     """
     Convert a pymatgen Structure to an ASE Atoms object (version 2).
 
@@ -557,7 +578,8 @@ def pymatgen_to_ase_v2(structure, auto_magmoms=True):
     structure : Structure
         Pymatgen Structure object to convert
     auto_magmoms : bool, optional
-        If True, automatically detect and set initial magnetic moments for magnetic elements.
+        If True, automatically detect and set initial magnetic moments for
+        magnetic elements.
         Default: True
 
     Returns
@@ -591,14 +613,13 @@ def pymatgen_to_ase_v2(structure, auto_magmoms=True):
 
         if magmoms is not None:
             ase_atoms.set_initial_magnetic_moments(magmoms)
-            logger.info(
-                f"Set initial magnetic moments for {len([m for m in magmoms if m != 0])} magnetic atoms"
-            )
+            n_mag = len([m for m in magmoms if m != 0])
+            logger.info(f"Set initial magnetic moments for {n_mag} magnetic atoms")
 
     return ase_atoms
 
 
-def ase_v2_to_pymatgen(ase_atoms):
+def ase_v2_to_pymatgen(ase_atoms: Atoms) -> Structure:
     """
     Convert an ASE Atoms object to a pymatgen Structure (version 2).
 
@@ -622,13 +643,14 @@ def ase_v2_to_pymatgen(ase_atoms):
     from pymatgen.io.ase import AseAtomsAdaptor
 
     # Convert ASE Atoms to pymatgen Structure
-    structure = AseAtomsAdaptor.get_structure(ase_atoms)
-    return structure
+    return AseAtomsAdaptor.get_structure(ase_atoms)
 
 
-def pymatgen_to_sisl(structure, ghost_tags=None):
+def pymatgen_to_sisl(
+    structure: Structure, ghost_tags: list[bool] | None = None
+) -> sisl.Geometry:
     """
-    Converts a Pymatgen Structure object to a sisl Geometry object.
+    Convert a Pymatgen Structure object to a sisl Geometry object.
 
     Parameters
     ----------
@@ -655,14 +677,17 @@ def pymatgen_to_sisl(structure, ghost_tags=None):
     if "ghost_tags" in structure.site_properties:
         ghost_tags = structure.site_properties["ghost_tags"]
         atomic_numbers = [
-            -num if ghost else num for num, ghost in zip(atomic_numbers, ghost_tags)
+            -num if ghost else num
+            for num, ghost in zip(atomic_numbers, ghost_tags, strict=False)
         ]
     else:
         logger.info(
-            "The structure does not have 'ghost_tags' site property. Proceeding without ghost atoms."
+            "The structure does not have 'ghost_tags' site property. "
+            "Proceeding without ghost atoms."
         )
         # Optionally, you could also use a warning
-        # warnings.warn("The structure does not have 'ghost_tags' site property. Proceeding without ghost atoms.")
+        # warnings.warn("The structure does not have 'ghost_tags' site "
+        #               "property. Proceeding without ghost atoms.")
         ghost_tags = [False] * len(atomic_numbers)  # No ghost atoms
         # raise ("The structure does not have 'ghost_tags' site property.")
         # pass
@@ -671,14 +696,12 @@ def pymatgen_to_sisl(structure, ghost_tags=None):
     atoms = [sisl.Atom(an) for an in atomic_numbers]
 
     # Create sisl Geometry object
-    geo = sisl.Geometry(atomic_positions, atoms, lattice=lattice_matrix)
-
-    return geo
+    return sisl.Geometry(atomic_positions, atoms, lattice=lattice_matrix)
 
 
-def read_outvars(file_path):
+def read_outvars(file_path: str) -> dict | None:
     """
-    Reads the OUTVARS.yml file and returns its contents as a dictionary.
+    Read the OUTVARS.yml file and return its contents as a dictionary.
 
     Parameters
     ----------
@@ -694,14 +717,20 @@ def read_outvars(file_path):
     try:
         with open(file_path) as file:
             data = yaml.safe_load(file)
-        return data
     except FileNotFoundError:
-        logger.error(f"The file {file_path} does not exist.")
-    except yaml.YAMLError as e:
-        logger.error(f"Error reading the YAML file: {e}")
+        logger.exception(f"The file {file_path} does not exist.")
+    except yaml.YAMLError:
+        logger.exception("Error reading the YAML file")
+    else:
+        return data
+    return None
 
 
-def siesta_fdf_to_json(siesta_fdf_path, json_output_path, fdf_data=None):
+def siesta_fdf_to_json(
+    siesta_fdf_path: str | Path,
+    json_output_path: str | Path,
+    fdf_data: dict | None = None,
+) -> None:
     """
     Convert a SIESTA FDF (Flexible Data Format) file to JSON format.
 
@@ -779,7 +808,7 @@ def write_parameter_evolution_log(
     powerup_added: dict = None,
     powerup_modified: dict = None,
     powerup_removed: dict = None,
-):
+) -> Path:
     """Write parameter evolution to a log file.
 
     Args:
@@ -789,7 +818,8 @@ def write_parameter_evolution_log(
         after_dataclass_params: Parameters after dataclass processing
         final_fdf_params: Final FDF parameters
         powerup_added: Parameters added by powerups
-        powerup_modified: Parameters modified by powerups (dict of {key: (old_val, new_val)})
+        powerup_modified: Parameters modified by powerups
+            (dict of {key: (old_val, new_val)})
         powerup_removed: Parameters removed by powerups
     """
     from datetime import datetime
@@ -801,7 +831,9 @@ def write_parameter_evolution_log(
         f.write("=" * 80 + "\n")
         f.write("SIESTA PARAMETER EVOLUTION LOG\n")
         f.write("=" * 80 + "\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        # Local timestamp is intentional for a human-readable log
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
+        f.write(f"Generated: {timestamp}\n")
         f.write("=" * 80 + "\n\n")
 
         # Add legend
@@ -917,9 +949,8 @@ def write_parameter_evolution_log(
         f.write(f"Total parameters in FDF:        {len(final_fdf_params)}\n")
         f.write(f"From user (explicit):           {len(explicit_user_params)}\n")
         f.write(f"From maker defaults:            {len(maker_defaults)}\n")
-        f.write(
-            f"Auto-generated by dataclasses:  {len(final_fdf_params) - len(initial_params)}\n"
-        )
+        n_auto = len(final_fdf_params) - len(initial_params)
+        f.write(f"Auto-generated by dataclasses:  {n_auto}\n")
         if powerup_added:
             f.write(f"Added by powerups:              {len(powerup_added)}\n")
         if powerup_modified:

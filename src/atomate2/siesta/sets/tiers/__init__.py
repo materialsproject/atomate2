@@ -92,24 +92,20 @@ from .presets import (
 )
 
 __all__ = [
-    # Core functions
+    "MAGNETIC_PRESETS",
+    "MOLECULAR_PRESETS",
+    "OPTICAL_PRESETS",
+    "PERFORMANCE_PRESETS",
+    "PHONON_PRESETS",
+    "STRUCTURAL_PRESETS",
+    "SURFACE_PRESETS",
+    "TIER_CATEGORIES",
+    "TIER_DEFAULTS",
+    "TIER_PRESETS",
+    "TWO_DIMENSION_PRESETS",
     "apply_tier_preset",
+    "get_presets_by_category",
     "get_tier_preset",
     "list_tier_presets",
     "print_tier_presets",
-    # Defaults
-    "TIER_DEFAULTS",
-    # All presets (aggregated and by category)
-    "TIER_PRESETS",
-    "STRUCTURAL_PRESETS",
-    "SURFACE_PRESETS",
-    "MOLECULAR_PRESETS",
-    "MAGNETIC_PRESETS",
-    "PHONON_PRESETS",
-    "OPTICAL_PRESETS",
-    "PERFORMANCE_PRESETS",
-    "TWO_DIMENSION_PRESETS",
-    # Categories
-    "TIER_CATEGORIES",
-    "get_presets_by_category",
 ]

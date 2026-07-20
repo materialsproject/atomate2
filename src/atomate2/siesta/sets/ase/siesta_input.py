@@ -1,19 +1,25 @@
 # fmt: off
 
-"""SiestaInput"""
+"""Input generation helpers for the ASE SIESTA calculator interface."""
+from __future__ import annotations
+
 import logging
 import warnings
+from typing import TYPE_CHECKING
 
 import numpy as np
-
-from ase import Atoms
 from ase.constraints import FixAtoms, FixCartesian, FixedLine, FixedPlane
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from ase import Atoms
 
 logger = logging.getLogger(__name__)
 
 
 class SiestaInput:
-    """SiestaInput"""
+    """Build SIESTA FDF input fragments from ASE objects."""
 
     @classmethod
     def is_along_cartesian(cls, norm_dir: np.ndarray) -> bool:
@@ -29,7 +35,7 @@ class SiestaInput:
         return False
 
     @classmethod
-    def generate_kpts(cls, kpts):
+    def generate_kpts(cls, kpts: np.ndarray) -> Iterator[str]:
         """Write kpts."""
         yield "\n"
         yield "#KPoint grid\n"
@@ -51,20 +57,28 @@ class SiestaInput:
         yield "\n"
 
     @classmethod
-    def get_species(cls, atoms: Atoms, species: list, basis_set: str):
+    def get_species(
+        cls, atoms: Atoms, species: list, basis_set: str
+    ) -> tuple[list, np.ndarray]:
         """
-        Determine species from atoms object and species input, using atoms.info if available.
+        Determine species from atoms object and species input.
+
+        Uses ``atoms.info`` (``species_dict`` / ``species_Z_dict``) if available.
 
         Args:
-            atoms (Atoms): ASE Atoms object, potentially with info['species_dict'] and info['species_Z_dict'].
-            species (list): List of species dictionaries with keys 'symbol', 'tag', 'basis_set', 'pseudopotential', 'ghost'.
-            basis_set (str): Default basis set for species not specified in the species list.
+            atoms (Atoms): ASE Atoms object, potentially with
+                info['species_dict'] and info['species_Z_dict'].
+            species (list): List of species dictionaries with keys 'symbol',
+                'tag', 'basis_set', 'pseudopotential', 'ghost'.
+            basis_set (str): Default basis set for species not specified in the
+                species list.
 
         Returns
         -------
             tuple: (all_species, species_numbers)
                 - all_species: List of Species objects.
-                - species_numbers: Array of species indices for each atom (1-based for FDF).
+                - species_numbers: Array of species indices for each atom
+                  (1-based for FDF).
         """
         from atomate2.siesta.sets.ase.parameters import Species
         logger.debug("SiestaInput.get_species()")
@@ -77,12 +91,16 @@ class SiestaInput:
         if "species_dict" in atoms.info and "species_Z_dict" in atoms.info:
             logger.debug("Using species information from atoms.info")
             species_dict = atoms.info["species_dict"]
-            species_Z_dict = atoms.info["species_Z_dict"]
-            species_labels = atoms.info.get("species_labels", atoms.get_chemical_symbols())
+            species_Z_dict = atoms.info["species_Z_dict"]  # noqa: N806  Z = atomic number
+            species_labels = atoms.info.get(
+                "species_labels", atoms.get_chemical_symbols()
+            )
 
-            # Create a map of labels to species indices
+            # Create a map of labels to species indices (1-based indexing)
             unique_labels = sorted(set(species_dict.values()))
-            species_map = {label: idx for idx, label in enumerate(unique_labels, 1)}  # 1-based indexing
+            species_map = {
+                label: idx for idx, label in enumerate(unique_labels, 1)
+            }
 
             # Match species list entries to species_dict
             for idx, label in species_dict.items():
@@ -91,7 +109,10 @@ class SiestaInput:
                 base_symbol = label.split("_")[0] if "_" in label else label
 
                 # Find matching species in the provided species list
-                matching_species = [s for s in species if s["symbol"] == base_symbol and s["tag"] == label]
+                matching_species = [
+                    s for s in species
+                    if s["symbol"] == base_symbol and s["tag"] == label
+                ]
                 if matching_species:
                     # Use the basis_set from the provided species list
                     spec = Species(
@@ -132,7 +153,9 @@ class SiestaInput:
                     )
                     default_species.append(spec)
                     default_symbols.append(symbol)
-            assert len(default_species) == len(set(atoms.symbols))
+            assert len(default_species) == len(  # noqa: S101  internal invariant
+                set(atoms.symbols)
+            )
 
             # Assign default species numbers
             i = 1
@@ -158,7 +181,7 @@ class SiestaInput:
         return all_species, species_numbers
 
     @classmethod
-    def make_xyz_constraints(cls, atoms: Atoms):
+    def make_xyz_constraints(cls, atoms: Atoms) -> np.ndarray:
         """Create coordinate-resolved list of constraints [natoms, 0:3]."""
         moved = np.ones((len(atoms), 3), dtype=int)
         for const in atoms.constraints:
@@ -167,17 +190,21 @@ class SiestaInput:
             elif isinstance(const, FixedLine):
                 norm_dir = const.dir / np.linalg.norm(const.dir)
                 if not cls.is_along_cartesian(norm_dir):
-                    raise RuntimeError(f"norm_dir {norm_dir} is not one of the Cartesian axes")
+                    raise RuntimeError(
+                        f"norm_dir {norm_dir} is not one of the Cartesian axes"
+                    )
                 norm_dir = norm_dir.round().astype(int)
                 moved[const.get_indices()] = norm_dir
             elif isinstance(const, FixedPlane):
                 norm_dir = const.dir / np.linalg.norm(const.dir)
                 if not cls.is_along_cartesian(norm_dir):
-                    raise RuntimeError(f"norm_dir {norm_dir} is not one of the Cartesian axes")
+                    raise RuntimeError(
+                        f"norm_dir {norm_dir} is not one of the Cartesian axes"
+                    )
                 norm_dir = norm_dir.round().astype(int)
                 moved[const.get_indices()] = abs(1 - norm_dir)
             elif isinstance(const, FixCartesian):
                 moved[const.get_indices()] = 1 - const.mask.astype(int)
             else:
-                warnings.warn(f"Constraint {const!s} is ignored")
+                warnings.warn(f"Constraint {const!s} is ignored", stacklevel=2)
         return moved

@@ -1,8 +1,16 @@
-import logging
-from typing import Any
+"""Helpers for formatting SIESTA FDF input from ASE objects."""
 
-from ase import Atoms
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING, Any
+
 from atomate2.siesta.sets.ase.siesta_input import SiestaInput
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+
+    from ase import Atoms
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +36,7 @@ def _nonpolarized_alias(_: list, kwargs: dict[str, Any]) -> bool:
 
 # Utilities for generating bits of strings.
 #
-def format_block(name, block):
+def format_block(name: str, block: Iterable) -> str:
     """
     Format a SIESTA block for FDF input file.
 
@@ -49,7 +57,7 @@ def format_block(name, block):
     return "\n".join(lines)
 
 
-def bandpath2bandpoints(path):
+def bandpath2bandpoints(path: Any) -> str:
     """
     Convert a band path to SIESTA BandPoints block format.
 
@@ -72,7 +80,7 @@ def bandpath2bandpoints(path):
 # We are re-aliasing format_fdf and format_block in the anticipation
 # that they may change, or we might move this onto a Formatter object
 # which applies consistent spacings etc.
-def var(key, value):
+def var(key: str, value: Any) -> str:
     """
     Format a single FDF variable.
 
@@ -88,7 +96,7 @@ def var(key, value):
     return format_fdf(key, value)
 
 
-def block(name, data):
+def block(name: str, data: Iterable) -> str:
     """
     Format a SIESTA FDF block.
 
@@ -104,7 +112,7 @@ def block(name, data):
     return format_block(name, data)
 
 
-def format_fdf(key, value):
+def format_fdf(key: str, value: Any) -> str:
     """
     Write an fdf key-word value pair.
 
@@ -151,7 +159,7 @@ def format_fdf(key, value):
     return string
 
 
-def format_value(value):
+def format_value(value: Any) -> str:
     """
     Format python values to fdf-format.
 
@@ -171,22 +179,20 @@ def format_value(value):
     return value
 
 
-def format_key(key):
-    """Fix the fdf-key replacing '_' with '.' and '__' with '_'"""
+def format_key(key: str) -> str:
+    """Fix the fdf-key replacing '_' with '.' and '__' with '_'."""
     key = key.replace("__", "#")
-    key = key.replace("_", ".")
+    return key.replace("_", ".")
     # key = key.replace('#', '_')
     # if key == '#':
     #     # If the key is '#', treat the value as a comment and use comment_in_box
     #     # return comment_in_box([key])
     #     return ''.join(list(comment_in_box([key])))
 
-    return key
-
 
 def generate_atomic_coordinates(
-    atoms: Atoms, species_numbers, atomic_coord_format: str
-):
+    atoms: Atoms, species_numbers: Any, atomic_coord_format: str
+) -> Iterator[str]:
     """
     Generate atomic coordinates block for FDF file.
 
@@ -219,7 +225,9 @@ def generate_atomic_coordinates(
     raise RuntimeError(f"Unknown atomic_coord_format: {atomic_coord_format}")
 
 
-def generate_atomic_coordinates_zmatrix(atoms: Atoms, species_numbers):
+def generate_atomic_coordinates_zmatrix(
+    atoms: Atoms, species_numbers: Any
+) -> Iterator[str]:
     """
     Generate atomic coordinates in Z-matrix format.
 
@@ -249,7 +257,9 @@ def generate_atomic_coordinates_zmatrix(atoms: Atoms, species_numbers):
     fstr = "{:5d}" + "{:20.10f}" * 3 + "{:3d}" * 3 + "{:7d} {:s}\n"
     a2constr = SiestaInput.make_xyz_constraints(atoms)
     a2p, a2s = atoms.get_positions(), atoms.symbols
-    for ia, (sp, xyz, ccc, sym) in enumerate(zip(species_numbers, a2p, a2constr, a2s)):
+    for ia, (sp, xyz, ccc, sym) in enumerate(
+        zip(species_numbers, a2p, a2constr, a2s, strict=False)
+    ):
         yield fstr.format(
             sp, xyz[0], xyz[1], xyz[2], ccc[0], ccc[1], ccc[2], ia + 1, sym
         )
@@ -259,7 +269,9 @@ def generate_atomic_coordinates_zmatrix(atoms: Atoms, species_numbers):
     # yield block('AtomicCoordinatesOrigin', [origin])
 
 
-def generate_atomic_coordinates_xyz(atoms: Atoms, species_numbers):
+def generate_atomic_coordinates_xyz(
+    atoms: Atoms, species_numbers: Any
+) -> Iterator[str]:
     """
     Generate atomic coordinates in XYZ format.
 
@@ -291,7 +303,9 @@ def generate_atomic_coordinates_xyz(atoms: Atoms, species_numbers):
         # AA: Had to change for vibra cz it needs masses
         [
             [*atom.position, number, mass]
-            for atom, number, mass in zip(atoms, species_numbers, atoms.get_masses())
+            for atom, number, mass in zip(
+                atoms, species_numbers, atoms.get_masses(), strict=False
+            )
         ],
     )
     yield "\n"
@@ -300,9 +314,10 @@ def generate_atomic_coordinates_xyz(atoms: Atoms, species_numbers):
     # yield block('AtomicCoordinatesOrigin', [origin])
 
 
-def comment_in_box(text_lines):
+def comment_in_box(text_lines: list[str]) -> Iterator[str]:
     """
     Format a list of text lines into a boxed comment block for SIESTA FDF files.
+
     Each line is prefixed with '#' and enclosed in a border of '#'.
 
     Args:

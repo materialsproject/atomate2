@@ -88,7 +88,7 @@ def read_cif_with_ghost(
             symbol = site.species.symbol
         else:
             # Composition-like species - get first element
-            symbol = list(site.species.keys())[0].symbol
+            symbol = next(iter(site.species.keys())).symbol
 
         if is_ghost:
             species_labels.append(f"{symbol}_ghost")
@@ -165,7 +165,7 @@ def read_siesta_with_ghost(filename: str | Path, use_xv: bool = False) -> Struct
 
     # Add ghost_tags based on species_Z (negative Z = ghost) or species_label
     if "species_Z" in structure.site_properties:
-        species_Z = structure.site_properties["species_Z"]
+        species_Z = structure.site_properties["species_Z"]  # noqa: N806  Z = atomic number
         ghost_tags = [Z < 0 for Z in species_Z]
     elif "species_label" in structure.site_properties:
         species_labels = structure.site_properties["species_label"]
@@ -229,20 +229,17 @@ def write_cif_with_ghost(structure: Structure, filename: str | Path) -> None:
         for i, site in enumerate(structure):
             is_ghost = structure.site_properties["ghost_tags"][i]
 
-            # Get element symbol - handle both Element and Composition (fractional occupancy)
+            # Get element symbol - handle both Element and Composition
+            # (fractional occupancy)
             if hasattr(site.species, "symbol"):
                 symbol = site.species.symbol
             else:
                 # Composition (fractional occupancy) - get first element
-                symbol = list(site.species.keys())[0].symbol
+                symbol = next(iter(site.species.keys())).symbol
 
-            if is_ghost:
-                # Ghost atom: use composition dict with occupancy=0.001
-                # Can't use 0.0 because pymatgen removes sites with zero occupancy
-                species = {symbol: 0.001}
-            else:
-                # Normal atom: occupancy=1.0
-                species = symbol
+            # Ghost atom: use composition dict with occupancy=0.001 (can't use 0.0
+            # because pymatgen removes sites with zero occupancy). Normal: occupancy=1.0
+            species = {symbol: 0.001} if is_ghost else symbol
 
             new_site = PeriodicSite(
                 species,
@@ -253,9 +250,8 @@ def write_cif_with_ghost(structure: Structure, filename: str | Path) -> None:
             new_sites.append(new_site)
 
         structure_to_write = PMGStructure.from_sites(new_sites)
-        logger.info(
-            f"Writing CIF with {sum(structure.site_properties['ghost_tags'])} ghost atoms"
-        )
+        n_ghost = sum(structure.site_properties["ghost_tags"])
+        logger.info(f"Writing CIF with {n_ghost} ghost atoms")
     else:
         # No ghost atoms, write structure as-is
         structure_to_write = structure

@@ -1,4 +1,3 @@
-# ruff: noqa: INP001
 """(Work)flows for Siesta."""
 
 from __future__ import annotations

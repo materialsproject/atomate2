@@ -209,7 +209,7 @@ def detect_surface_atoms(
     structure: Structure,
     surface_layers: int = 1,
     layer_tolerance: float = 0.5,
-    vacuum_threshold: float = 5.0,
+    vacuum_threshold: float = 5.0,  # noqa: ARG001  kept for public API compatibility
     vacuum_direction: str | None = None,
     include_both_surfaces: bool = True,
 ) -> dict:

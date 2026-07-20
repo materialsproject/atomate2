@@ -122,7 +122,7 @@ class PAOShell:
     delta: float | None = None
     contraction: str | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate shell parameters."""
         # Validate l
         if self.l < 0 or self.l > 3:
@@ -139,11 +139,10 @@ class PAOShell:
             )
 
         # Validate split_norm if provided
-        if self.split_norm is not None:
-            if not (0.0 <= self.split_norm <= 1.0):
-                raise ValueError(
-                    f"split_norm={self.split_norm} must be between 0.0 and 1.0"
-                )
+        if self.split_norm is not None and not (0.0 <= self.split_norm <= 1.0):
+            raise ValueError(
+                f"split_norm={self.split_norm} must be between 0.0 and 1.0"
+            )
 
         # Auto-set nzeta_pol for polarization orbitals
         if self.polarization and self.nzeta_pol is None:

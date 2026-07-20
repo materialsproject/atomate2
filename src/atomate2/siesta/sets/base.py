@@ -102,7 +102,7 @@ def filter_internal_params(user_params: dict) -> tuple[dict, dict]:
     # Top-level InputGenerator fields that are NOT FDF parameters.
     # If these leak into user_params they must be filtered out so they
     # never reach merge_fdf_parameters() validation.
-    _INPUT_GEN_FIELDS = {"enabled_modules", "disabled_modules"}
+    _INPUT_GEN_FIELDS = {"enabled_modules", "disabled_modules"}  # noqa: N806  local constant set
 
     fdf_params = {}
     internal_params = {}
@@ -160,11 +160,7 @@ def normalize_internal_params(user_params: dict) -> dict:
         ValueError: Legacy parameter 'kpts' is no longer supported...
     """
     # Check for legacy unprefixed parameters
-    legacy_params_found = []
-
-    for key in user_params:
-        if key in LEGACY_INTERNAL_PARAMS:
-            legacy_params_found.append(key)
+    legacy_params_found = [key for key in user_params if key in LEGACY_INTERNAL_PARAMS]
 
     if legacy_params_found:
         # Build helpful error message with suggestions
@@ -172,11 +168,13 @@ def normalize_internal_params(user_params: dict) -> dict:
         for old_key in legacy_params_found:
             new_key = LEGACY_INTERNAL_PARAMS[old_key]
             suggestions.append(
-                f"  - '{old_key}' → '{new_key}' or '{INTERNAL_PARAM_PREFIX_FULL}{old_key.replace('a2s_', '')}'"
+                f"  - '{old_key}' → '{new_key}' or "
+                f"'{INTERNAL_PARAM_PREFIX_FULL}{old_key.replace('a2s_', '')}'"
             )
 
         error_msg = (
-            f"Legacy unprefixed parameter(s) detected: {', '.join(legacy_params_found)}\n\n"
+            f"Legacy unprefixed parameter(s) detected: "
+            f"{', '.join(legacy_params_found)}\n\n"
             f"As of v1.0.0, all atomate2siesta-specific parameters MUST use prefix.\n"
             f"Use 'a2s_' (alias) or 'atomate2siesta_' (full):\n\n"
             + "\n".join(suggestions)
@@ -194,7 +192,7 @@ def normalize_internal_params(user_params: dict) -> dict:
 
 # Initialize FDF registry by instantiating all dataclasses
 # This ensures the registry is populated before any validation happens
-def _initialize_fdf_registry():
+def _initialize_fdf_registry() -> None:
     """
     Initialize the FDF parameter registry.
 
@@ -301,9 +299,7 @@ console = Console()
 
 
 class SiestaInputSet(InputSet):
-    """
-    A class to represent a set of SIESTA inputs.
-    """
+    """A class to represent a set of SIESTA inputs."""
 
     # Class-level verbosity control
     CONSOLE_VERBOSITY: VerbosityLevel = (
@@ -313,7 +309,7 @@ class SiestaInputSet(InputSet):
     def __init__(
         self,
         structure: Structure | Molecule,
-        siesta_input=Siesta,
+        siesta_input: Siesta = Siesta,
     ) -> None:
         """
         Construct the SiestaInputSet.
@@ -339,17 +335,13 @@ class SiestaInputSet(InputSet):
 
     @property
     def siesta_input(self) -> Siesta:
-        """
-        Get the Siesta object.
-        """
+        """Get the Siesta object."""
         logger.info("SiestaInputSet.siesta_input()")
         return self[SIESTA_FDF_FILE_NAME]
 
     @property
     def params_json(self) -> str | slice | InputFile:
-        """
-        The JSON representation of the parameters dict.
-        """
+        """Return the JSON representation of the parameters dict."""
         logger.info("SiestaInputSet.params_json()")
         return self[SIESTA_PARAMS_JSON_FILE_NAME]
 
@@ -359,7 +351,7 @@ class SiestaInputSet(InputSet):
         make_dir: bool = True,
         overwrite: bool = True,
         zip_inputs: bool = False,
-    ):
+    ) -> None:
         """
         Write SIESTA input files to a directory.
 
@@ -391,10 +383,10 @@ class SiestaInputSet(InputSet):
         finally:
             os.chdir(old_cwd)
 
-    def write_siesta_fdf(self, structure: Structure, directory=None):
-        """
-        Writes SIESTA FDF input file and converts to JSON format.
-        """
+    def write_siesta_fdf(
+        self, structure: Structure, directory: str | Path | None = None
+    ) -> None:
+        """Write SIESTA FDF input file and convert to JSON format."""
         logger.info("SiestaInputSet.write_siesta_fdf()")
 
         # DEBUG: Check what's in fdf_arguments before writing
@@ -428,13 +420,17 @@ class SiestaInputGenerator(InputGenerator):
 
     Attributes
     ----------
-        user_params (OrderedDict[str, Any]): Updates the default parameters for the SIESTA calculator.
-        user_kpoints_settings (OrderedDict[str, Any]): Settings used to create the k-grid parameters for SIESTA.
-        fdf_arguments (OrderedDict[str, Any]): Explicitly given fdf arguments using SIESTA keywords as in the manual.
-            List values are written as fdf blocks with each element on a separate line, while tuples write elements
+        user_params (OrderedDict[str, Any]): Updates the default parameters for
+            the SIESTA calculator.
+        user_kpoints_settings (OrderedDict[str, Any]): Settings used to create the
+            k-grid parameters for SIESTA.
+        fdf_arguments (OrderedDict[str, Any]): Explicitly given fdf arguments using
+            SIESTA keywords as in the manual.
+            List values are written as fdf blocks with each element on a separate
+            line, while tuples write elements
             on a single line. ASE units are assumed.
             Example:
-            ```python
+            ```
             fdf_arguments={union() {
                 'DM.MixingWeight': 0.1,
                 'MaxSCFIterations': 100,
@@ -451,31 +447,43 @@ class SiestaInputGenerator(InputGenerator):
                 GGA PBE 0.5 0.25
             %endblock XC.mix
             ```
-        CONSOLE_VERBOSITY (VerbosityLevel): Controls console output verbosity, defaults to ERROR.
+        CONSOLE_VERBOSITY (VerbosityLevel): Controls console output verbosity,
+            defaults to ERROR.
         enable_lua (bool): Flag to enable Lua settings, defaults to True.
-        perform_siesta_default_basis (bool): Whether to use SIESTA's default basis, defaults to True.
-        energy_shift (float): Energy shift for basis set generation in eV, defaults to 0.01.
+        perform_siesta_default_basis (bool): Whether to use SIESTA's default basis,
+            defaults to True.
+        energy_shift (float): Energy shift for basis set generation in eV, defaults
+            to 0.01.
         basis_set_size (str): Basis set size, defaults to 'SZ'.
-        basis_set_block (Optional[List[PAOBasisBlock]]): Custom basis set block, defaults to None.
+        basis_set_block (Optional[List[PAOBasisBlock]]): Custom basis set block,
+            defaults to None.
         xc (str): Exchange-correlation functional, defaults to 'PBE'.
         mesh_cutoff (float): Mesh cutoff energy in eV, defaults to 100.0.
         kpts (List[int]): K-point grid, defaults to [1, 1, 1].
-        species (List[Species]): List of species for the calculation, defaults to empty list.
-        pseudo_path (Optional[str]): Path to pseudopotential files, defaults to SIESTA_PP_PATH or SETTINGS.SIESTA_PP_PATH.
+        species (List[Species]): List of species for the calculation, defaults to
+            empty list.
+        pseudo_path (Optional[str]): Path to pseudopotential files, defaults to
+            SIESTA_PP_PATH or SETTINGS.SIESTA_PP_PATH.
 
     Methods
     -------
-        get_input_set(structure: Structure | Molecule | None = None, prev_dir: PathLike | None = None) -> SiestaInputSet:
-            Generates a SiestaInputSet object for the given structure or from a previous calculation directory.
+        get_input_set(structure=None, prev_dir=None) -> SiestaInputSet:
+            Generates a SiestaInputSet object for the given structure or from a
+            previous calculation directory.
             Raises ValueError if no structure can be determined.
-        _read_previous(prev_dir: PathLike | None = None) -> tuple[Structure | Molecule | None, dict[str, Any], dict[str, Any]]:
-            Reads previous calculation results from a specified directory, returning the structure, parameters, and results.
-        _get_input_parameters(structure: Structure | Molecule, prev_parameters: dict[str, Any] | None = None) -> dict[str, Any]:
-            Generates SIESTA input parameters for a given structure, incorporating user parameters and settings for basis, spin, XC, mesh, k-points, and pseudopotentials.
-        get_parameter_updates(structure: Structure | Molecule, prev_parameters: dict[str, Any]) -> dict[str, Any]:
-            Updates parameters for a given calculation type based on the structure and previous parameters.
+        _read_previous(prev_dir=None) -> tuple:
+            Reads previous calculation results from a specified directory, returning
+            the structure, parameters, and results.
+        _get_input_parameters(structure, prev_parameters=None) -> dict[str, Any]:
+            Generates SIESTA input parameters for a given structure, incorporating
+            user parameters and settings for basis, spin, XC, mesh, k-points, and
+            pseudopotentials.
+        get_parameter_updates(structure, prev_parameters) -> dict[str, Any]:
+            Updates parameters for a given calculation type based on the structure
+            and previous parameters.
         setup_fdf_arguments(user_params):
-            Sets up fdf arguments for SIESTA input by updating with user-provided parameters and adding default settings for 'LongOutput' and 'WriteForces'.
+            Sets up fdf arguments for SIESTA input by updating with user-provided
+            parameters and adding default settings for 'LongOutput' and 'WriteForces'.
 
     """
 
@@ -515,16 +523,20 @@ class SiestaInputGenerator(InputGenerator):
             os.getenv("SIESTA_PP_PATH") or getattr(SETTINGS, "SIESTA_PP_PATH", None)
         ),
         metadata={
-            "description": "Path to pseudopotential files, defaults to SIESTA_PP_PATH or SETTINGS.SIESTA_PP_PATH."
+            "description": (
+                "Path to pseudopotential files, defaults to SIESTA_PP_PATH "
+                "or SETTINGS.SIESTA_PP_PATH."
+            )
         },
     )
 
     # Instance of GeneralSystemDescriptors
     # AA
-    # general_system_descriptors: GeneralSystemDescriptors = field(default_factory=GeneralSystemDescriptors)
+    # general_system_descriptors: GeneralSystemDescriptors = field(
+    #     default_factory=GeneralSystemDescriptors)
     # spin_settings : SpinSettings = field(default_factory=SpinSettings)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Apply tier-specific default parameters and validate parameter names."""
         from atomate2.siesta.sets.tiers import TIER_DEFAULTS
 
@@ -551,7 +563,8 @@ class SiestaInputGenerator(InputGenerator):
                 self.user_params = tier_defaults
                 logger.info(f"Applied tier '{self.tier}' defaults: {self.user_params}")
 
-        # Validate internal parameter names AFTER tier merging (v1.0.0: strict validation)
+        # Validate internal parameter names AFTER tier merging
+        # (v1.0.0: strict validation)
         # This ensures legacy unprefixed parameters are caught early
         if self.user_params:
             normalize_internal_params(self.user_params)
@@ -565,7 +578,8 @@ class SiestaInputGenerator(InputGenerator):
             fdf_params, _internal_params = filter_internal_params(self.user_params)
 
             # Validate only the FDF parameters
-            # This will raise ValueError if unknown parameters found and force_unknown=False
+            # This will raise ValueError if unknown parameters found and
+            # force_unknown=False
             if fdf_params:
                 merge_fdf_parameters(fdf_params, force_unknown=self.force_unknown)
 
@@ -578,7 +592,8 @@ class SiestaInputGenerator(InputGenerator):
         Generate a SiestaInputSet object.
 
         Args:
-            structure (Structure or Molecule, optional): Structure or Molecule to generate the input set for.
+            structure (Structure or Molecule, optional): Structure or Molecule to
+                generate the input set for.
             prev_dir (str or Path, optional): Path to the previous working directory.
 
         Returns
@@ -612,11 +627,13 @@ class SiestaInputGenerator(InputGenerator):
         Read in previous calculation results.
 
         Args:
-            prev_dir (str or Path, optional): The previous directory for the calculation.
+            prev_dir (str or Path, optional): The previous directory for the
+                calculation.
 
         Returns
         -------
-            tuple: A tuple containing the previous structure (Structure or Molecule or None),
+            tuple: A tuple containing the previous structure (Structure or Molecule
+                   or None),
                    previous parameters (dict), and previous results (dict).
         """
         logger.info("SiestaInputGenerator._read_previous()")
@@ -673,19 +690,22 @@ class SiestaInputGenerator(InputGenerator):
                             split_prev_path = actual_dir
 
                 if param_file_path is None:
-                    # Check if this is a dry-run directory (contains .cif/.xsf files but no siesta_parameters.json)
-                    # In dry-run mode, we don't have previous calculation parameters to read
+                    # Check if this is a dry-run directory (contains .cif/.xsf
+                    # files but no siesta_parameters.json). In dry-run mode, we
+                    # don't have previous calculation parameters to read
                     dry_run_files = list(split_prev_path.glob("*.cif")) + list(
                         split_prev_path.glob("*.xsf")
                     )
                     if dry_run_files:
                         logger.info(
-                            f"Skipping prev_dir reading - appears to be dry-run directory: {split_prev_dir}"
+                            "Skipping prev_dir reading - appears to be dry-run "
+                            f"directory: {split_prev_dir}"
                         )
                         return prev_structure, prev_params, prev_results
                     raise FileNotFoundError(
                         f"Could not find siesta_parameters.json in {split_prev_dir} "
-                        f"(checked main directory, dry_run_output/, and siesta_compressed/ subfolder)"
+                        "(checked main directory, dry_run_output/, and "
+                        "siesta_compressed/ subfolder)"
                     )
 
             # Read with appropriate method
@@ -723,9 +743,10 @@ class SiestaInputGenerator(InputGenerator):
                     if structure_files:
                         prev_structure = Structure.from_file(str(structure_files[0]))
                         logger.info(
-                            f"Read structure from dry-run file: {structure_files[0].name}"
+                            "Read structure from dry-run file: "
+                            f"{structure_files[0].name}"
                         )
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001  best-effort fallback read
                     logger.warning(f"Could not read structure from prev_dir: {e}")
 
         return prev_structure, prev_params, prev_results
@@ -739,7 +760,8 @@ class SiestaInputGenerator(InputGenerator):
         Generate SIESTA input parameters.
 
         Args:
-            structure (Structure or Molecule): The system to generate input parameters for.
+            structure (Structure or Molecule): The system to generate input
+                parameters for.
             prev_parameters (dict[str, Any], optional): Previous calculation parameters.
 
         Returns
@@ -757,15 +779,14 @@ class SiestaInputGenerator(InputGenerator):
             k.lower(): v.lower() if isinstance(v, str) else v
             for k, v in self.user_params.items()
         }
-        user_params_ = OrderedDict(
-            {k: v if isinstance(v, str) else v for k, v in self.user_params.items()}
-        )
+        user_params_ = OrderedDict(self.user_params)
 
         if user_params_:
             # Filter out non-SIESTA parameters:
             # 1. Internal atomate2siesta parameters (with prefix)
             # 2. Pseudopotential metadata (for path construction only)
-            # Note: xc.functional and xc.authors ARE real SIESTA parameters, so we keep them
+            # Note: xc.functional and xc.authors ARE real SIESTA parameters,
+            # so we keep them
 
             fdf_params_only, internal_params_found = filter_internal_params(
                 user_params_
@@ -811,7 +832,10 @@ class SiestaInputGenerator(InputGenerator):
                     # Display explicit user parameters if any
                     if explicit_params:
                         table = Table(
-                            title="[bold cyan]Explicit User-Provided Parameters[/bold cyan]",
+                            title=(
+                                "[bold cyan]Explicit User-Provided "
+                                "Parameters[/bold cyan]"
+                            ),
                             show_header=True,
                             header_style="bold magenta",
                         )
@@ -858,7 +882,8 @@ class SiestaInputGenerator(InputGenerator):
         # PSEUDO_PATH PARSING (must happen BEFORE module initialization)
         # =====================================================================
         # If user provided explicit pseudo_path, parse it to extract XC metadata
-        # This allows XC parameters to be auto-detected and used by ExchangeCorrelationFunctionals
+        # This allows XC parameters to be auto-detected and used by
+        # ExchangeCorrelationFunctionals
         if "pseudo_path" in user_params_:
             parsed_metadata = Pseudopotentials.parse_pseudo_path(
                 user_params_["pseudo_path"]
@@ -883,7 +908,9 @@ class SiestaInputGenerator(InputGenerator):
                     ].lower()
                 if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
                     console.print(
-                        f"[green]Auto-detected XC from pseudo_path: {parsed_metadata['xc_functional']}/{parsed_metadata['xc_authors']}[/green]"
+                        "[green]Auto-detected XC from pseudo_path: "
+                        f"{parsed_metadata['xc_functional']}/"
+                        f"{parsed_metadata['xc_authors']}[/green]"
                     )
 
         # =====================================================================
@@ -907,12 +934,14 @@ class SiestaInputGenerator(InputGenerator):
         # Pseudopotentials (returns path, not FDF arguments)
         self.pseudo_path = SETTINGS.SIESTA_PP_PATH
 
-        # Prepare pseudopotential parameters with XC information for automatic path construction
+        # Prepare pseudopotential parameters with XC information for automatic
+        # path construction
         pseudo_params = dict(
             user_params_
         )  # Copy user params (includes any parsed XC info)
 
-        # Extract XC information from user_params (includes auto-detected XC from pseudo_path parsing)
+        # Extract XC information from user_params (includes auto-detected XC from
+        # pseudo_path parsing)
         xc_functional = user_params_lower.get(
             "xc_functional", user_params_lower.get("xc.functional", "GGA")
         )
@@ -930,14 +959,16 @@ class SiestaInputGenerator(InputGenerator):
             pseudo_params["xc_authors"] = xc_authors
 
         # Use SIESTA_PP_PATH as pseudo_base_path if not explicitly set
-        if "pseudo_base_path" not in pseudo_params and not pseudo_params.get(
-            "pseudo_path"
+        # Try to use parent directory of SIESTA_PP_PATH as base path
+        if (
+            "pseudo_base_path" not in pseudo_params
+            and not pseudo_params.get("pseudo_path")
+            and self.pseudo_path
+            and os.path.isdir(self.pseudo_path)
         ):
-            # Try to use parent directory of SIESTA_PP_PATH as base path
-            if self.pseudo_path and os.path.isdir(self.pseudo_path):
-                parent_dir = os.path.dirname(self.pseudo_path)
-                if os.path.isdir(parent_dir):
-                    pseudo_params["pseudo_base_path"] = parent_dir
+            parent_dir = os.path.dirname(self.pseudo_path)
+            if os.path.isdir(parent_dir):
+                pseudo_params["pseudo_base_path"] = parent_dir
 
         pseudos_settings = Pseudopotentials.setup_pseudos(
             pseudo_params, default_pseudo_path=self.pseudo_path
@@ -950,7 +981,8 @@ class SiestaInputGenerator(InputGenerator):
         # =====================================================================
         # Validate that XC functional matches pseudopotentials
         if pseudos_settings and pseudos_settings.pseudo_path:
-            # Extract XC from FDF arguments (already set by ExchangeCorrelationFunctionals module)
+            # Extract XC from FDF arguments (already set by
+            # ExchangeCorrelationFunctionals module)
             xc_functional = self.fdf_arguments.get("XC.Functional", "GGA")
             xc_authors = self.fdf_arguments.get("XC.Authors", "PBE")
 
@@ -969,7 +1001,8 @@ class SiestaInputGenerator(InputGenerator):
                 >= VerbosityLevel.VERBOSE.value
             ):
                 console.print(
-                    "[yellow]Using Lua settings due to used [bold]Maker[/bold]...[/yellow]"
+                    "[yellow]Using Lua settings due to used "
+                    "[bold]Maker[/bold]...[/yellow]"
                 )
             self.lua_settings = ExternalControlAndScripting.setup_lua_settings(
                 user_params_
@@ -979,7 +1012,8 @@ class SiestaInputGenerator(InputGenerator):
             get_verbosity_value(self.CONSOLE_VERBOSITY) >= VerbosityLevel.VERBOSE.value
         ):
             console.print(
-                "[yellow]Skipping Lua settings due to used [bold]Maker[/bold]...[/yellow]"
+                "[yellow]Skipping Lua settings due to used "
+                "[bold]Maker[/bold]...[/yellow]"
             )
 
         # To check
@@ -998,7 +1032,7 @@ class SiestaInputGenerator(InputGenerator):
 
         # Now create Siesta object with the UPDATED fdf_arguments
         # (includes both module FDF and get_parameter_updates() additions)
-        parameters = Siesta(
+        return Siesta(
             label=self.general_system_descriptors.system_label,
             xc=self.xc,
             mesh_cutoff=self.mesh_cutoff * Ry,
@@ -1010,14 +1044,13 @@ class SiestaInputGenerator(InputGenerator):
             species=self.species,
             pseudo_path=pseudos_settings.pseudo_path,
             # spin = spin,
-            # pseudo_path = self.pseudo_path, #"/home/akhtar/.siesta/pseudos/ONCVPSP-PBEsol-FR-PDv0.4-Standard/",
+            # pseudo_path = self.pseudo_path,
+            # "/home/akhtar/.siesta/pseudos/ONCVPSP-PBEsol-FR-PDv0.4-Standard/",
         )
 
-        return parameters
-
     def _display_parameter_evolution(
-        self, stage: str = "after_dataclass", final_fdf_params: dict = None
-    ):
+        self, stage: str = "after_dataclass", final_fdf_params: dict | None = None
+    ) -> None:
         """
         Display parameter changes at different stages of processing.
 
@@ -1069,10 +1102,10 @@ class SiestaInputGenerator(InputGenerator):
             for key, value in current_fdf.items():
                 key_upper = key.upper()
                 # Check if this was in initial params
-                if key_upper in {k.upper() for k in initial_params.keys()}:
+                if key_upper in {k.upper() for k in initial_params}:
                     # Find the original key (might have different case)
                     orig_key = next(
-                        (k for k in initial_params.keys() if k.upper() == key_upper),
+                        (k for k in initial_params if k.upper() == key_upper),
                         None,
                     )
                     if orig_key and str(initial_params[orig_key]) != str(value):
@@ -1097,7 +1130,8 @@ class SiestaInputGenerator(InputGenerator):
 
                 console.print(
                     Panel.fit(
-                        "[bold yellow]Parameter Evolution After Dataclass Processing[/bold yellow]",
+                        "[bold yellow]Parameter Evolution After Dataclass "
+                        "Processing[/bold yellow]",
                         border_style="yellow",
                         box=box.DOUBLE,
                     )
@@ -1106,7 +1140,9 @@ class SiestaInputGenerator(InputGenerator):
                 # Show added parameters
                 if added_params:
                     table_added = Table(
-                        title="[bold green]Parameters Added by Dataclasses[/bold green]",
+                        title=(
+                            "[bold green]Parameters Added by Dataclasses[/bold green]"
+                        ),
                         show_header=True,
                         header_style="bold green",
                         border_style="green",
@@ -1138,7 +1174,10 @@ class SiestaInputGenerator(InputGenerator):
                 # Show modified parameters
                 if modified_params:
                     table_modified = Table(
-                        title="[bold yellow]Parameters Modified by Dataclasses[/bold yellow]",
+                        title=(
+                            "[bold yellow]Parameters Modified by "
+                            "Dataclasses[/bold yellow]"
+                        ),
                         show_header=True,
                         header_style="bold yellow",
                         border_style="yellow",
@@ -1166,7 +1205,8 @@ class SiestaInputGenerator(InputGenerator):
                     f"  • Added by dataclasses: [green]{len(added_params)}[/green]"
                 )
                 console.print(
-                    f"  • Modified by dataclasses: [yellow]{len(modified_params)}[/yellow]"
+                    f"  • Modified by dataclasses: "
+                    f"[yellow]{len(modified_params)}[/yellow]"
                 )
                 console.print(f"  • Unchanged: {len(unchanged_params)}")
                 console.print(
@@ -1197,9 +1237,9 @@ class SiestaInputGenerator(InputGenerator):
             for key, value in final_fdf_params.items():
                 key_upper = key.upper()
                 # Check if this was in previous FDF
-                if key_upper in {k.upper() for k in prev_fdf.keys()}:
+                if key_upper in {k.upper() for k in prev_fdf}:
                     orig_key = next(
-                        (k for k in prev_fdf.keys() if k.upper() == key_upper), None
+                        (k for k in prev_fdf if k.upper() == key_upper), None
                     )
                     if orig_key and str(prev_fdf[orig_key]) != str(value):
                         powerup_modified[key] = {
@@ -1210,7 +1250,7 @@ class SiestaInputGenerator(InputGenerator):
                     powerup_added[key] = value
 
             # Check for removed parameters
-            for key in prev_fdf.keys():
+            for key in prev_fdf:
                 if key.upper() not in {k.upper() for k in final_fdf_params}:
                     powerup_removed[key] = prev_fdf[key]
 
@@ -1224,13 +1264,17 @@ class SiestaInputGenerator(InputGenerator):
 
             if powerup_added or powerup_modified or powerup_removed:
                 console.print(
-                    "\n[bold cyan]Changes from Powerups/Flow Modifications:[/bold cyan]\n"
+                    "\n[bold cyan]Changes from Powerups/Flow "
+                    "Modifications:[/bold cyan]\n"
                 )
 
                 # Show added parameters
                 if powerup_added:
                     table_added = Table(
-                        title="[bold green]Parameters Added by Powerups/Flows[/bold green]",
+                        title=(
+                            "[bold green]Parameters Added by "
+                            "Powerups/Flows[/bold green]"
+                        ),
                         show_header=True,
                         header_style="bold green",
                         border_style="green",
@@ -1246,7 +1290,10 @@ class SiestaInputGenerator(InputGenerator):
                 # Show modified parameters
                 if powerup_modified:
                     table_modified = Table(
-                        title="[bold yellow]Parameters Modified by Powerups/Flows[/bold yellow]",
+                        title=(
+                            "[bold yellow]Parameters Modified by "
+                            "Powerups/Flows[/bold yellow]"
+                        ),
                         show_header=True,
                         header_style="bold yellow",
                         border_style="yellow",
@@ -1313,7 +1360,7 @@ class SiestaInputGenerator(InputGenerator):
                 for idx, (key, value) in enumerate(sorted(real_params.items()), 1):
                     # Determine status
                     key_upper = key.upper()
-                    if key_upper in {k.upper() for k in initial_params.keys()}:
+                    if key_upper in {k.upper() for k in initial_params}:
                         status = "U"  # User
                         status_style = "bold green"
                     elif key in powerup_added or key_upper in {
@@ -1330,7 +1377,8 @@ class SiestaInputGenerator(InputGenerator):
                         status = "A"  # Auto
                         status_style = "dim"
 
-                    # Format value for display (truncate if too long, remove SIESTA DEFAULT comments)
+                    # Format value for display (truncate if too long, remove
+                    # SIESTA DEFAULT comments)
                     value_str = str(value)
 
                     # Remove SIESTA DEFAULT VALUE comments for cleaner display
@@ -1353,17 +1401,22 @@ class SiestaInputGenerator(InputGenerator):
 
                 # Add legend for status codes
                 console.print(
-                    "\n[dim]Status: [bold green]U[/bold green]=User, [bold yellow]P[/bold yellow]=Powerup, [bold yellow]M[/bold yellow]=Modified, A=Auto[/dim]"
+                    "\n[dim]Status: [bold green]U[/bold green]=User, "
+                    "[bold yellow]P[/bold yellow]=Powerup, "
+                    "[bold yellow]M[/bold yellow]=Modified, A=Auto[/dim]"
                 )
 
             # Final statistics
             console.print("\n[bold]Final Parameter Statistics:[/bold]")
             console.print(
-                f"  • Total parameters in FDF: [bold cyan]{len(final_fdf_params)}[/bold cyan]"
+                f"  • Total parameters in FDF: "
+                f"[bold cyan]{len(final_fdf_params)}[/bold cyan]"
             )
-            console.print(
-                f"  • From user: {len([k for k in final_fdf_params if k.upper() in {p.upper() for p in initial_params}])}"
+            initial_upper = {p.upper() for p in initial_params}
+            n_from_user = len(
+                [k for k in final_fdf_params if k.upper() in initial_upper]
             )
+            console.print(f"  • From user: {n_from_user}")
             console.print(
                 f"  • Auto-generated: {len(final_fdf_params) - len(initial_params)}"
             )
@@ -1373,7 +1426,8 @@ class SiestaInputGenerator(InputGenerator):
                 )
             if powerup_modified:
                 console.print(
-                    f"  • Modified by powerups: [yellow]{len(powerup_modified)}[/yellow]"
+                    f"  • Modified by powerups: "
+                    f"[yellow]{len(powerup_modified)}[/yellow]"
                 )
             if powerup_removed:
                 console.print(
@@ -1421,13 +1475,14 @@ class SiestaInputGenerator(InputGenerator):
         logger.info("SiestaInputGenerator.get_parameter_updates()")
         return prev_parameters
 
-    def setup_fdf_arguments(self, user_params):
+    def setup_fdf_arguments(self, user_params: dict[str, Any]) -> None:
         """
         Set up fdf arguments for SIESTA input.
 
         Uses the FDF registry system to identify known vs unknown FDF parameters.
         Known parameters are handled by dataclasses, unknown parameters are either
-        passed through (if force_unknown=True) or raise an error (if force_unknown=False).
+        passed through (if force_unknown=True) or raise an error (if
+        force_unknown=False).
 
         FDF parameters can be provided in two ways:
         1. Nested in "fdf_arguments" key (explicit)
@@ -1439,7 +1494,8 @@ class SiestaInputGenerator(InputGenerator):
 
         Note:
             This method updates self.fdf_arguments in-place. It's called during
-            input parameter generation to ensure all FDF settings are properly configured.
+            input parameter generation to ensure all FDF settings are properly
+            configured.
         """
         logger.info("SiestaInputGenerator.setup_fdf_arguments()")
 
@@ -1450,7 +1506,8 @@ class SiestaInputGenerator(InputGenerator):
             if "Spin" in user_params.get("fdf_arguments", {}):
                 self.fdf_arguments["_user_set_spin"] = True
 
-        # Method 2: Use merge_fdf_parameters to separate known from unknown FDF parameters
+        # Method 2: Use merge_fdf_parameters to separate known from unknown
+        # FDF parameters
         # Non-FDF parameters (handled by other mechanisms, not FDF registry)
         non_fdf_params = {
             # Internal parameters (not SIESTA FDF parameters)
@@ -1498,47 +1555,44 @@ class SiestaInputGenerator(InputGenerator):
         # Use final_fdf_params for validation
         fdf_candidate_params = final_fdf_params
 
-        # Use merge_fdf_parameters to validate
-        try:
-            known_params, unknown_params = merge_fdf_parameters(
-                fdf_candidate_params, force_unknown=self.force_unknown
-            )
+        # Use merge_fdf_parameters to validate.
+        # Raises ValueError if unknown parameters found and force_unknown=False
+        # (colored error already printed by merge_fdf_parameters()).
+        known_params, unknown_params = merge_fdf_parameters(
+            fdf_candidate_params, force_unknown=self.force_unknown
+        )
 
-            # Add known FDF parameters (handled by dataclasses - will be processed later)
-            # These don't go to fdf_arguments directly, they're passed to dataclasses
-            logger.debug(
-                f"Known FDF parameters (handled by dataclasses): {list(known_params.keys())}"
-            )
+        # Add known FDF parameters (handled by dataclasses - will be processed later)
+        # These don't go to fdf_arguments directly, they're passed to dataclasses
+        logger.debug(
+            f"Known FDF parameters (handled by dataclasses): "
+            f"{list(known_params.keys())}"
+        )
 
-            # Group known FDF parameters by which dataclass handles them
-            from atomate2.siesta.dataclass.base import FDFDataclass
+        # Group known FDF parameters by which dataclass handles them
+        from atomate2.siesta.dataclass.base import FDFDataclass
 
-            params_by_dataclass = {}
-            for key, value in known_params.items():
-                handler = FDFDataclass.get_handler(key)
-                if handler not in params_by_dataclass:
-                    params_by_dataclass[handler] = {}
-                params_by_dataclass[handler][key] = value
+        params_by_dataclass = {}
+        for key, value in known_params.items():
+            handler = FDFDataclass.get_handler(key)
+            if handler not in params_by_dataclass:
+                params_by_dataclass[handler] = {}
+            params_by_dataclass[handler][key] = value
 
-            logger.debug(
-                f"Grouped {len(known_params)} known FDF parameters "
-                f"into {len(params_by_dataclass)} dataclasses"
-            )
+        logger.debug(
+            f"Grouped {len(known_params)} known FDF parameters "
+            f"into {len(params_by_dataclass)} dataclasses"
+        )
 
-            # Store for later routing during module initialization
-            self._params_by_dataclass = params_by_dataclass
+        # Store for later routing during module initialization
+        self._params_by_dataclass = params_by_dataclass
 
-            # Add unknown FDF parameters to fdf_arguments (if force_unknown=True)
-            for key, value in unknown_params.items():
-                self.fdf_arguments[key] = value
-                # Track if user explicitly set Spin parameter (case-insensitive)
-                if key.lower() == "spin":
-                    self.fdf_arguments["_user_set_spin"] = True
-
-        except ValueError:
-            # Unknown parameters found and force_unknown=False
-            # Colored error already printed by merge_fdf_parameters()
-            raise
+        # Add unknown FDF parameters to fdf_arguments (if force_unknown=True)
+        for key, value in unknown_params.items():
+            self.fdf_arguments[key] = value
+            # Track if user explicitly set Spin parameter (case-insensitive)
+            if key.lower() == "spin":
+                self.fdf_arguments["_user_set_spin"] = True
 
         # Always add LongOutput (needed for proper output)
         # Note: WriteForces is now handled by MolecularDynamicsAndRelaxation dataclass
@@ -1607,14 +1661,15 @@ class SiestaInputGenerator(InputGenerator):
             # MD/Relaxation parameters
             # Note: MD.FC* parameters (FCDispl, FCfirst, FClast) go to phonons module
             elif param.startswith("md"):
-                # Check if it's a phonon FC parameter (MD.FCDispl, MD.FCfirst, MD.FClast)
+                # Check if it's a phonon FC parameter
+                # (MD.FCDispl, MD.FCfirst, MD.FClast)
                 if "mdfc" in param:
                     needed_modules.add("phonons")
                 else:
                     needed_modules.add("md_relaxation")
 
             # Spin parameters
-            elif param.startswith("spin") or param in ("noncollinearspin",):
+            elif param.startswith("spin") or param == "noncollinearspin":
                 needed_modules.add("spin")
 
             # DFT+U parameters
@@ -1622,7 +1677,7 @@ class SiestaInputGenerator(InputGenerator):
                 needed_modules.add("dftu")
 
             # Optical properties
-            elif param.startswith("optical") or param.startswith("polarization"):
+            elif param.startswith(("optical", "polarization")):
                 needed_modules.add("optical")
 
             # DOS/Band structure
@@ -1654,7 +1709,7 @@ class SiestaInputGenerator(InputGenerator):
                 needed_modules.add("hamiltonian_overlap")
 
             # Phonon parameters
-            elif param.startswith("fc") or param in ("bandlinesscale",):
+            elif param.startswith("fc") or param == "bandlinesscale":
                 needed_modules.add("phonons")
 
             # Constraints
@@ -1698,8 +1753,7 @@ class SiestaInputGenerator(InputGenerator):
                     "gridsmax",
                 )
             ) or (
-                param.startswith(("grid", "fftmesh"))
-                and param not in ("gridcellsampling",)
+                param.startswith(("grid", "fftmesh")) and param != "gridcellsampling"
             ):
                 needed_modules.add("grids_advanced")
 
@@ -1728,7 +1782,7 @@ class SiestaInputGenerator(InputGenerator):
                 needed_modules.add("rttddft")
 
             # Solvers
-            elif param.startswith("diag") or param in ("solutionmethod",):
+            elif param.startswith("diag") or param == "solutionmethod":
                 needed_modules.add("solvers")
 
         return needed_modules
@@ -1737,10 +1791,13 @@ class SiestaInputGenerator(InputGenerator):
         self, user_params: dict[str, Any] | None = None
     ) -> dict[str, Any]:
         """
-        Determine which dataclass modules to initialize based on tier, user_params, and overrides.
+        Determine which dataclass modules to initialize.
+
+        Selection is based on tier, user_params, and overrides.
 
         Args:
-            user_params: User-provided parameters to check for module-specific parameters
+            user_params: User-provided parameters to check for module-specific
+                parameters
 
         Returns
         -------
@@ -1749,7 +1806,8 @@ class SiestaInputGenerator(InputGenerator):
 
         Notes
         -----
-            - Gets all modules for the specified tier (hierarchical: basic < intermediate < advanced < expert)
+            - Gets all modules for the specified tier
+              (hierarchical: basic < intermediate < advanced < expert)
             - Auto-detects needed modules from user_params (smart activation)
             - Applies enabled_modules override to force-enable specific modules
             - Applies disabled_modules override to force-disable specific modules
@@ -1798,11 +1856,13 @@ class SiestaInputGenerator(InputGenerator):
 
         Notes
         -----
-            - Modules are initialized in priority order (lower priority = initialized first)
+            - Modules are initialized in priority order
+              (lower priority = initialized first)
             - Each module's setup_*() method is called to process user_params
             - FDF arguments from each module are collected and merged
             - Special handling for modules that need structure (e.g., kpoints)
-            - Special handling for modules with non-standard attributes (e.g., basis_sets)
+            - Special handling for modules with non-standard attributes
+              (e.g., basis_sets)
         """
         import importlib
 
@@ -1816,9 +1876,11 @@ class SiestaInputGenerator(InputGenerator):
                 "general_system",
                 "lua_scripting",
             ]:
-                # pseudopotentials: Handled separately via setup_pseudos() in _get_input_parameters
+                # pseudopotentials: Handled separately via setup_pseudos() in
+                # _get_input_parameters
                 # general_system: Handled separately (system descriptors)
-                # lua_scripting: Handled separately at lines 841-844 (creates self.lua_settings attribute)
+                # lua_scripting: Handled separately at lines 841-844
+                # (creates self.lua_settings attribute)
                 continue
 
             try:
@@ -1835,7 +1897,8 @@ class SiestaInputGenerator(InputGenerator):
                 elif (
                     module_meta.name == "spin"
                 ):  # Module name is "spin", not "spin_settings"
-                    # SpinSettings needs structure for auto-generating DM.InitSpin from magmom
+                    # SpinSettings needs structure for auto-generating DM.InitSpin
+                    # from magmom
                     # Get magnetic_ordering from internal_params (prefixed or legacy)
                     magnetic_ordering = self._internal_params.get(
                         "magnetic_ordering", "antiferromagnetic"
@@ -1876,8 +1939,9 @@ class SiestaInputGenerator(InputGenerator):
                         )
 
                         # CRITICAL: Regenerate FDF after updating from user parameters
-                        # The setup_method() already generated FDF with default/auto values.
-                        # Now that we've updated attributes from user FDF, regenerate to reflect user values.
+                        # The setup_method() already generated FDF with
+                        # default/auto values. Now that we've updated attributes
+                        # from user FDF, regenerate to reflect user values.
                         if hasattr(settings, "generate_fdf"):
                             regenerated_fdf = settings.generate_fdf()
                             if regenerated_fdf:
@@ -1886,10 +1950,11 @@ class SiestaInputGenerator(InputGenerator):
                                     settings, module_meta.fdf_attribute, regenerated_fdf
                                 )
                                 logger.info(
-                                    f"Regenerated FDF for {dataclass_name} with user values"
+                                    f"Regenerated FDF for {dataclass_name} "
+                                    f"with user values"
                                 )
 
-                    except Exception as e:
+                    except Exception as e:  # noqa: BLE001  fall back to defaults
                         logger.warning(
                             f"Failed to update {dataclass_name} from FDF: {e}. "
                             f"Using default values."
@@ -1903,11 +1968,13 @@ class SiestaInputGenerator(InputGenerator):
 
                 # GENERAL: Store the updated module instance for reuse by other code
                 # This ensures ONE instance per module, updated with user params
-                # Store with underscore prefix to avoid conflicts with existing attributes
+                # Store with underscore prefix to avoid conflicts with existing
+                # attributes
                 instance_attr_name = f"_{module_meta.instance_attribute}_module"
                 setattr(self, instance_attr_name, settings)
                 logger.debug(
-                    f"Stored updated {module_meta.name} instance as self.{instance_attr_name}"
+                    f"Stored updated {module_meta.name} instance as "
+                    f"self.{instance_attr_name}"
                 )
 
                 # Handle special module-specific attributes
@@ -1919,13 +1986,15 @@ class SiestaInputGenerator(InputGenerator):
                         self.energy_shift = settings.pao_energy_shift
 
                 logger.debug(
-                    f"Initialized module: {module_meta.name} (tier={module_meta.tier}, priority={module_meta.priority})"
+                    f"Initialized module: {module_meta.name} "
+                    f"(tier={module_meta.tier}, priority={module_meta.priority})"
                 )
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001  skip module, continue with rest
                 logger.warning(
                     f"Failed to initialize module {module_meta.name}: {e}. "
-                    "This module's parameters will not be available for this calculation."
+                    "This module's parameters will not be available for this "
+                    "calculation."
                 )
 
         # Store state after dataclass processing for later comparison

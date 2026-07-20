@@ -1,4 +1,3 @@
-# ruff: noqa: INP001
 """Base flow maker for SIESTA workflows with automatic dry-run propagation."""
 
 from __future__ import annotations

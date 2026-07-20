@@ -1,4 +1,3 @@
-# ruff: noqa: INP001
 """Flows for calculating elastic constants with SIESTA."""
 
 from __future__ import annotations

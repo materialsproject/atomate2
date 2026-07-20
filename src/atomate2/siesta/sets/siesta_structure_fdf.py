@@ -1,3 +1,5 @@
+"""SIESTA structure.fdf generation from ASE Atoms or FDF/XV files."""
+
 import logging
 from pathlib import Path
 
@@ -27,7 +29,8 @@ def generate_structure_fdf(
         atoms: ASE Atoms object to convert to FDF. If provided, takes precedence.
         input_file: Path to input FDF or XV file to read structure from.
         output_file: Path to output structure.fdf file (default: 'structure.fdf').
-        xv: If True and input_file is provided, read geometry from XV file instead of FDF.
+        xv: If True and input_file is provided, read geometry from XV file
+            instead of FDF.
 
     Returns
     -------
@@ -35,7 +38,8 @@ def generate_structure_fdf(
 
     Raises
     ------
-        ValueError: If neither atoms nor input_file is provided, or if input validation fails.
+        ValueError: If neither atoms nor input_file is provided, or if input
+            validation fails.
         FileNotFoundError: If input_file is specified but does not exist.
         IOError: If writing to output_file fails or directory cannot be created.
 
@@ -57,7 +61,9 @@ def generate_structure_fdf(
             output_path.parent.mkdir(parents=True, exist_ok=True)
             logger.debug(f"Created output directory: {output_path.parent}")
         except OSError as e:
-            raise OSError(f"Cannot create output directory {output_path.parent}: {e}")
+            raise OSError(
+                f"Cannot create output directory {output_path.parent}: {e}"
+            ) from e
 
     if input_file:
         # Read from existing FDF/XV file
@@ -98,18 +104,20 @@ def generate_structure_fdf(
 
             # Get species information from atoms.info if available
             species_labels = atoms.info.get("species_labels", symbols)
-            species_Z = atoms.info.get("species_Z", atomic_numbers.tolist())
+            species_Z = atoms.info.get(  # noqa: N806  Z is the atomic number symbol
+                "species_Z", atomic_numbers.tolist()
+            )
 
             # Validate species information consistency
             if len(species_labels) != len(atoms):
-                raise ValueError(
+                raise ValueError(  # noqa: TRY301  explicit input validation
                     f"species_labels length ({len(species_labels)}) does not match "
                     f"number of atoms ({len(atoms)})"
                 )
 
             # Build mapping from unique species labels to atomic numbers
             unique_labels = sorted(set(species_labels))
-            species_Z_map = {}
+            species_Z_map = {}  # noqa: N806  Z is the atomic number symbol
             for label in unique_labels:
                 # Find first occurrence of this label to get its atomic number
                 idx = species_labels.index(label)
@@ -133,7 +141,9 @@ def generate_structure_fdf(
 
             # Verify file was written
             if not output_path.exists():
-                raise OSError(f"Structure file was not created: {output_file}")
+                raise OSError(  # noqa: TRY301  explicit post-write validation
+                    f"Structure file was not created: {output_file}"
+                )
 
             logger.info(f"Successfully wrote structure to {output_file}")
 

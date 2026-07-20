@@ -1,3 +1,5 @@
+"""Parse SIESTA version information from executable output."""
+
 import logging
 import re
 import shutil
@@ -27,8 +29,7 @@ def parse_siesta_version(output: bytes) -> str:
     if match is None:
         raise RuntimeError(f"Could not get Siesta version info from output {output!r}")
 
-    string = match.group(1).decode("ascii")
-    return string
+    return match.group(1).decode("ascii")
 
 
 def get_siesta_version(executable: str) -> str:
@@ -56,7 +57,8 @@ def get_siesta_version(executable: str) -> str:
             [executable], stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=temp_dirname
         )
         output, _ = proc.communicate()
-        # SIESTA will exit with status 1 if no input is provided (e.g., missing Chemical_species_label).
+        # SIESTA will exit with status 1 if no input is provided
+        # (e.g., missing Chemical_species_label).
     finally:
         shutil.rmtree(temp_dirname)
 

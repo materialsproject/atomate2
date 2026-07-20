@@ -37,22 +37,16 @@ logger = logging.getLogger(__name__)
 
 
 class ParseError(Exception):
-    """
-    Parse error during reading of a file.
-    """
+    """Parse error during reading of a file."""
 
     logger.info("ParseError")
 
 
 class SiestaParseError(Exception):
-    """
-    Exception raised if an error occurs when parsing an SIESTA output file.
-    """
+    """Exception raised if an error occurs when parsing an SIESTA output file."""
 
     def __init__(self, message: str) -> None:
-        """
-        Initialize the error with the message, message.
-        """
+        """Initialize the error with the message, message."""
         logger.info("SiestaParseError.__init__()")
         self.message = message
         super().__init__(self.message)
@@ -153,18 +147,14 @@ class SiestaOutChunk:
 
 @dataclass
 class SiestaOutHeaderChunk(SiestaOutChunk):
-    """
-    The header of the siesta.out file containing general information.
-    """
+    """The header of the siesta.out file containing general information."""
 
     lines: list[str] = field(default_factory=list)
     _cache: dict[str, Any] = field(default_factory=dict)
 
     @property
     def commit_hash(self) -> str:
-        """
-        The commit hash for the SIESTA version.
-        """
+        """The commit hash for the SIESTA version."""
         logger.info("SiestaOutHeaderChunk.commit_hash()")
         line_start = self.reverse_search_for(["Commit number"])
         if line_start == LINE_NOT_FOUND:
@@ -176,9 +166,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def siesta_uuid(self) -> str:
-        """
-        The siesta-uuid for the calculation.
-        """
+        """The siesta-uuid for the calculation."""
         logger.info("SiestaOutHeaderChunk.siesta_uuid()")
         line_start = self.reverse_search_for(["siesta_uuid"])
         if line_start == LINE_NOT_FOUND:
@@ -190,9 +178,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def version_number(self) -> str:
-        """
-        The commit hash for the SIESTA version.
-        """
+        """The commit hash for the SIESTA version."""
         logger.info("SiestaOutHeaderChunk.version_number()")
         line_start = self.reverse_search_for(["SIESTA version"])
         if line_start == LINE_NOT_FOUND:
@@ -204,9 +190,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def fortran_compiler(self) -> str | None:
-        """
-        The fortran compiler used to make SIESTA.
-        """
+        """The fortran compiler used to make SIESTA."""
         logger.info("SiestaOutHeaderChunk.fortran_compiler()")
         line_start = self.reverse_search_for(["Fortran compiler      :"])
         if line_start == LINE_NOT_FOUND:
@@ -218,9 +202,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def c_compiler(self) -> str | None:
-        """
-        The C compiler used to make SIESTA
-        """
+        """The C compiler used to make SIESTA."""
         logger.info("SiestaOutHeaderChunk.c_compiler()")
         line_start = self.reverse_search_for(["C compiler            :"])
         if line_start == LINE_NOT_FOUND:
@@ -230,9 +212,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def fortran_compiler_flags(self) -> str | None:
-        """
-        The fortran compiler flags used to make SIESTA.
-        """
+        """The fortran compiler flags used to make SIESTA."""
         logger.info("SiestaOutHeaderChunk.fortran_compiler_flags()")
         line_start = self.reverse_search_for(["Fortran compiler flags"])
         if line_start == LINE_NOT_FOUND:
@@ -244,9 +224,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def c_compiler_flags(self) -> str | None:
-        """
-        The C compiler flags used to make SIESTA.
-        """
+        """The C compiler flags used to make SIESTA."""
         logger.info("SiestaOutHeaderChunk.c_compiler_flags()")
         line_start = self.reverse_search_for(["C compiler flags"])
         if line_start == LINE_NOT_FOUND:
@@ -256,9 +234,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def build_type(self) -> list[str]:
-        """
-        The optional build flags passed to cmake.
-        """
+        """The optional build flags passed to cmake."""
         logger.info("SiestaOutHeaderChunk.build_type()")
         line_end = self.reverse_search_for(["Linking against:"])
         line_inds = self.search_for_all("Using", line_end=line_end)
@@ -267,9 +243,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def linked_against(self) -> list[str]:
-        """
-        All libraries used to link the SIESTA executable.
-        """
+        """All libraries used to link the SIESTA executable."""
         logger.info("SiestaOutHeaderChunk.linked_against()")
         line_start = self.reverse_search_for(["Linking against:"])
         if line_start == LINE_NOT_FOUND:
@@ -285,9 +259,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def initial_lattice(self) -> Lattice | None:
-        """
-        The initial lattice vectors from the siesta.out file.
-        """
+        """The initial lattice vectors from the siesta.out file."""
         logger.info("SiestaOutHeaderChunk.initial_lattice()")
         line_start = self.reverse_search_for(["| Unit cell:"])
         if line_start == LINE_NOT_FOUND:
@@ -349,9 +321,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def initial_charges(self) -> Sequence[float]:
-        """
-        The initial charges for the structure.
-        """
+        """The initial charges for the structure."""
         logger.info("SiestaOutHeaderChunk.initial_charges()")
         if "initial_charges" not in self._cache:
             self._parse_initial_charges_and_moments()
@@ -359,18 +329,14 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def initial_magnetic_moments(self) -> Sequence[float]:
-        """
-        The initial magnetic Moments.
-        """
+        """The initial magnetic Moments."""
         logger.info("SiestaOutHeaderChunk.initial_magnetic_moments()")
         if "initial_magnetic_moments" not in self._cache:
             self._parse_initial_charges_and_moments()
         return self._cache["initial_magnetic_moments"]
 
     def _parse_initial_charges_and_moments(self) -> None:
-        """
-        Parse the initial charges and magnetic moments from a file.
-        """
+        """Parse the initial charges and magnetic moments from a file."""
         logger.info("SiestaOutHeaderChunk._parse_initial_charges_and_moments()")
         charges = np.zeros(self.n_atoms)
         magmoms = None
@@ -396,9 +362,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def is_md(self) -> bool:
-        """
-        Is the output for a molecular dynamics calculation?
-        """
+        """Whether the output is for a molecular dynamics calculation."""
         logger.info("SiestaOutHeaderChunk.is_md()")
         return (
             self.reverse_search_for(["Complete information for previous time-step:"])
@@ -407,16 +371,12 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def is_relaxation(self) -> bool:
-        """
-        Is the output for a relaxation?
-        """
+        """Whether the output is for a relaxation."""
         logger.info("SiestaOutHeaderChunk.is_relaxation()")
         return self.reverse_search_for(["Geometry relaxation:"]) != LINE_NOT_FOUND
 
     def _parse_k_points(self) -> None:
-        """
-        Parse the list of k-points used in the calculation.
-        """
+        """Parse the list of k-points used in the calculation."""
         logger.info("SiestaOutHeaderChunk._parse_k_points()")
         n_kpts = self.parse_scalar("n_kpts")
         if n_kpts is None:
@@ -442,9 +402,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def n_atoms(self) -> int:
-        """
-        The number of atoms for the material.
-        """
+        """The number of atoms for the material."""
         logger.info("SiestaOutHeaderChunk.n_atoms()")
         n_atoms = self.parse_scalar("n_atoms")
         if n_atoms is None:
@@ -455,9 +413,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def n_bands(self) -> int | None:
-        """
-        The number of Kohn-Sham states for the chunk.
-        """
+        """The number of Kohn-Sham states for the chunk."""
         logger.info("SiestaOutHeaderChunk.n_bands()")
         line_start = self.reverse_search_for(SCALAR_PROPERTY_TO_LINE_KEY["n_bands"])
 
@@ -474,9 +430,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def n_electrons(self) -> int | None:
-        """
-        The number of electrons for the chunk.
-        """
+        """The number of electrons for the chunk."""
         logger.info("SiestaOutHeaderChunk.n_electrons()")
         line_start = self.reverse_search_for(SCALAR_PROPERTY_TO_LINE_KEY["n_electrons"])
 
@@ -490,9 +444,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def n_k_points(self) -> int | None:
-        """
-        The number of k_ppoints for the calculation.
-        """
+        """The number of k_ppoints for the calculation."""
         logger.info("SiestaOutHeaderChunk.n_k_points()")
         n_kpts = self.parse_scalar("n_kpts")
         if n_kpts is None:
@@ -502,9 +454,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def n_spins(self) -> int | None:
-        """
-        The number of spin channels for the chunk.
-        """
+        """The number of spin channels for the chunk."""
         logger.info("SiestaOutHeaderChunk.n_spins()")
         n_spins = self.parse_scalar("n_spins")
         if n_spins is None:
@@ -515,9 +465,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def electronic_temperature(self) -> float:
-        """
-        The electronic temperature for the chunk.
-        """
+        """The electronic temperature for the chunk."""
         logger.info("SiestaOutHeaderChunk.electronic_temperature()")
         line_start = self.reverse_search_for(
             SCALAR_PROPERTY_TO_LINE_KEY["electronic_temp"]
@@ -531,9 +479,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def k_points(self) -> Sequence[Vector3D]:
-        """
-        All k-points listed in the calculation.
-        """
+        """All k-points listed in the calculation."""
         logger.info("SiestaOutHeaderChunk.k_points()")
         if "k_points" not in self._cache:
             self._parse_k_points()
@@ -542,9 +488,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def k_point_weights(self) -> Sequence[float]:
-        """
-        The k-point weights for the calculation.
-        """
+        """The k-point weights for the calculation."""
         logger.info("SiestaOutHeaderChunk.k_point_weights()")
         if "k_point_weights" not in self._cache:
             self._parse_k_points()
@@ -553,9 +497,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def header_summary(self) -> dict[str, Any]:
-        """
-        Dictionary summarizing the information inside the header.
-        """
+        """Dictionary summarizing the information inside the header."""
         logger.info("SiestaOutHeaderChunk.header_summary()")
         return {
             "initial_structure": self.initial_structure,
@@ -574,9 +516,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
     @property
     def metadata_summary(self) -> dict[str, list[str] | str | None]:
-        """
-        Dictionary containing all metadata for SIESTA build.
-        """
+        """Dictionary containing all metadata for SIESTA build."""
         logger.info("SiestaOutHeaderChunk.metadata_summary()")
         return {
             "commit_hash": self.commit_hash,
@@ -592,9 +532,7 @@ class SiestaOutHeaderChunk(SiestaOutChunk):
 
 
 class SiestaOutCalcChunk(SiestaOutChunk):
-    """
-    A part of the siesta.out file corresponding to a single structure.
-    """
+    """A part of the siesta.out file corresponding to a single structure."""
 
     def __init__(self, lines: list[str], header: SiestaOutHeaderChunk) -> None:
         """
@@ -722,9 +660,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def species(self) -> list[str]:
-        """
-        The list of atomic symbols for all atoms in the structure.
-        """
+        """The list of atomic symbols for all atoms in the structure."""
         logger.info("SiestaOutCalcChunk.species()")
         if "species" not in self._cache:
             (
@@ -737,9 +673,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def coords(self) -> list[Vector3D]:
-        """
-        The cartesian coordinates of the atoms.
-        """
+        """The cartesian coordinates of the atoms."""
         logger.info("SiestaOutCalcChunk.coords()")
         if "coords" not in self._cache:
             (
@@ -752,9 +686,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def velocities(self) -> list[Vector3D]:
-        """
-        The velocities of the atoms.
-        """
+        """The velocities of the atoms."""
         logger.info("SiestaOutCalcChunk.velocities()")
         if "velocities" not in self._cache:
             (
@@ -767,9 +699,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def lattice(self) -> Lattice:
-        """
-        The Lattice object for the structure.
-        """
+        """The Lattice object for the structure."""
         logger.info("SiestaOutCalcChunk.lattice()")
         if "lattice" not in self._cache:
             (
@@ -782,9 +712,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def forces(self) -> np.ndarray | None:
-        """
-        The forces from the siesta.out file.
-        """
+        """The forces from the siesta.out file."""
         logger.info("SiestaOutCalcChunk.forces()")
         line_start = self.reverse_search_for(["Total atomic forces"])
         if line_start == LINE_NOT_FOUND:
@@ -801,9 +729,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def stresses(self) -> np.ndarray | None:
-        """
-        The stresses from the siesta.out file and convert to kBar.
-        """
+        """The stresses from the siesta.out file and convert to kBar."""
         logger.info("SiestaOutCalcChunk.stresses()")
         line_start = self.reverse_search_for(
             ["Per atom stress (eV) used for heat flux calculation"]
@@ -820,9 +746,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def stress(self) -> Matrix3D | None:
-        """
-        The stress from the siesta.out file and convert to kBar.
-        """
+        """The stress from the siesta.out file and convert to kBar."""
         logger.info("SiestaOutCalcChunk.stress()")
         line_start = self.reverse_search_for(
             ["Analytical stress tensor - Symmetrized", "Numerical stress tensor"]
@@ -838,22 +762,19 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def is_metallic(self) -> bool:
-        """
-        Is the system is metallic.
-        """
+        """Is the system is metallic."""
         logger.info("SiestaOutCalcChunk.is_metallic()")
         line_start = self.reverse_search_for(
             [
-                "material is metallic within the approximate finite broadening function (occupation_type)"
+                "material is metallic within the approximate finite broadening "
+                "function (occupation_type)"
             ]
         )
         return line_start != LINE_NOT_FOUND
 
     @property
     def energy(self) -> float:
-        """
-        The energy from the siesta.out file.
-        """
+        """The energy from the siesta.out file."""
         logger.info("SiestaOutCalcChunk.energy()")
         if self.initial_lattice is not None and self.is_metallic:
             line_ind = self.reverse_search_for(["Total energy corrected"])
@@ -866,9 +787,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def dipole(self) -> Vector3D | None:
-        """
-        The electric dipole moment from the siesta.out file.
-        """
+        """The electric dipole moment from the siesta.out file."""
         logger.info("SiestaOutCalcChunk.dipole()")
         line_start = self.reverse_search_for(["Total dipole moment [eAng]"])
         if line_start == LINE_NOT_FOUND:
@@ -879,9 +798,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def dielectric_tensor(self) -> Matrix3D | None:
-        """
-        The dielectric tensor from the siesta.out file.
-        """
+        """The dielectric tensor from the siesta.out file."""
         logger.info("SiestaOutCalcChunk.dielectric_tensor()")
         line_start = self.reverse_search_for(["PARSE DFPT_dielectric_tensor"])
         if line_start == LINE_NOT_FOUND:
@@ -895,9 +812,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def polarization(self) -> Vector3D | None:
-        """
-        The polarization vector from the siesta.out file.
-        """
+        """The polarization vector from the siesta.out file."""
         logger.info("SiestaOutCalcChunk.polarization()")
         line_start = self.reverse_search_for(["| Cartesian Polarization"])
         if line_start == LINE_NOT_FOUND:
@@ -906,9 +821,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
         return np.array([float(s) for s in line.split()[-3:]])
 
     def _parse_homo_lumo(self) -> dict[str, float]:
-        """
-        Parse the HOMO/LUMO values and get band gap if periodic.
-        """
+        """Parse the HOMO/LUMO values and get band gap if periodic."""
         logger.info("SiestaOutCalcChunk._parse_homo_lumo()")
         line_start = self.reverse_search_for(["Highest occupied state (VBM)"])
         homo = float(self.lines[line_start].split(" at ")[1].split("eV")[0].strip())
@@ -941,9 +854,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
     def _parse_hirshfeld(
         self,
     ) -> None:
-        """
-        Parse the Hirshfled charges volumes, and dipole moments.
-        """
+        """Parse the Hirshfled charges volumes, and dipole moments."""
         logger.info("SiestaOutCalcChunk._parse_hirshfeld()")
         line_start = self.reverse_search_for(
             ["Performing Hirshfeld analysis of fragment charges and moments."]
@@ -992,9 +903,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def structure(self) -> Structure | Molecule:
-        """
-        The pytmagen SiteCollection of the chunk.
-        """
+        """The pytmagen SiteCollection of the chunk."""
         logger.info("SiestaOutCalcChunk.structure()")
         if "structure" not in self._cache:
             self._cache["structure"] = self._parse_structure()
@@ -1002,9 +911,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def results(self) -> dict[str, Any]:
-        """
-        Convert an SiestaOutChunk to a Results Dictionary.
-        """
+        """Convert an SiestaOutChunk to a Results Dictionary."""
         logger.info("SiestaOutCalcChunk.results()")
         results = {
             "energy": self.energy,
@@ -1033,97 +940,73 @@ class SiestaOutCalcChunk(SiestaOutChunk):
     # Properties from the siesta.out header
     @property
     def initial_structure(self) -> Structure | Molecule:
-        """
-        The initial structure for the calculation.
-        """
+        """The initial structure for the calculation."""
         logger.info("SiestaOutCalcChunk.initial_structure()")
         return self._header["initial_structure"]
 
     @property
     def initial_lattice(self) -> Lattice | None:
-        """
-        The initial Lattice of the structure.
-        """
+        """The initial Lattice of the structure."""
         logger.info("SiestaOutCalcChunk.initial_lattice()")
         return self._header["initial_lattice"]
 
     @property
     def n_atoms(self) -> int:
-        """
-        The number of atoms in the structure.
-        """
+        """The number of atoms in the structure."""
         logger.info("SiestaOutCalcChunk.n_atoms()")
         return self._header["n_atoms"]
 
     @property
     def n_bands(self) -> int:
-        """
-        The number of Kohn-Sham states for the chunk.
-        """
+        """The number of Kohn-Sham states for the chunk."""
         logger.info("SiestaOutCalcChunk.n_bands()")
         return self._header["n_bands"]
 
     @property
     def n_electrons(self) -> int:
-        """
-        The number of electrons for the chunk.
-        """
+        """The number of electrons for the chunk."""
         logger.info("SiestaOutCalcChunk.n_electrons()")
         return self._header["n_electrons"]
 
     @property
     def n_spins(self) -> int:
-        """
-        The number of spin channels for the chunk.
-        """
+        """The number of spin channels for the chunk."""
         logger.info("SiestaOutCalcChunk.n_spins()")
         return self._header["n_spins"]
 
     @property
     def electronic_temperature(self) -> float:
-        """
-        The electronic temperature for the chunk.
-        """
+        """The electronic temperature for the chunk."""
         logger.info("SiestaOutCalcChunk.electronic_temperature()")
         return self._header["electronic_temperature"]
 
     @property
     def n_k_points(self) -> int:
-        """
-        The number of k_ppoints for the calculation.
-        """
+        """The number of k_ppoints for the calculation."""
         logger.info("SiestaOutCalcChunk.n_k_points()")
         return self._header["n_k_points"]
 
     @property
     def k_points(self) -> Sequence[Vector3D]:
-        """
-        All k-points listed in the calculation.
-        """
+        """All k-points listed in the calculation."""
         logger.info("SiestaOutCalcChunk.k_points()")
         return self._header["k_points"]
 
     @property
     def k_point_weights(self) -> Sequence[float]:
-        """
-        The k-point weights for the calculation.
-        """
+        """The k-point weights for the calculation."""
         logger.info("SiestaOutCalcChunk.k_point_weights()")
         return self._header["k_point_weights"]
 
     @property
     def free_energy(self) -> float | None:
-        """
-        The free energy of the calculation.
-        """
+        """The free energy of the calculation."""
         logger.info("SiestaOutCalcChunk.free_energy()")
         return self.parse_scalar("free_energy")
 
     @property
     def n_iter(self) -> int | None:
-        """
-        The number of steps needed to converge the SCF cycle for the chunk.
-        """
+        """The number of steps needed to converge the SCF cycle for the chunk."""
         logger.info("SiestaOutCalcChunk.n_iter()")
         val = self.parse_scalar("number_of_iterations")
         if val is not None:
@@ -1132,33 +1015,25 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def magmom(self) -> float | None:
-        """
-        The magnetic moment of the structure.
-        """
+        """The magnetic moment of the structure."""
         logger.info("SiestaOutCalcChunk.magmom()")
         return self.parse_scalar("magnetic_moment")
 
     @property
-    def E_f(self) -> float | None:
-        """
-        The Fermi energy.
-        """
+    def E_f(self) -> float | None:  # noqa: N802  Fermi energy (physics symbol E_f)
+        """The Fermi energy."""
         logger.info("SiestaOutCalcChunk.E_f()")
         return self.parse_scalar("fermi_energy")
 
     @property
     def converged(self) -> bool:
-        """
-        True if the calculation is converged.
-        """
+        """True if the calculation is converged."""
         logger.info("SiestaOutCalcChunk.converged()")
         return (len(self.lines) > 0) and ("Have a nice day." in self.lines[-5:])
 
     @property
     def hirshfeld_charges(self) -> Sequence[float] | None:
-        """
-        The Hirshfeld charges of the system.
-        """
+        """The Hirshfeld charges of the system."""
         logger.info("SiestaOutCalcChunk.hirshfeld_charges()")
         if "hirshfeld_charges" not in self._cache:
             self._parse_hirshfeld()
@@ -1166,9 +1041,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def hirshfeld_atomic_dipoles(self) -> Sequence[Vector3D] | None:
-        """
-        The Hirshfeld atomic dipoles of the system.
-        """
+        """The Hirshfeld atomic dipoles of the system."""
         logger.info("SiestaOutCalcChunk.hirshfeld_atomic_dipoles()")
         if "hirshfeld_atomic_dipoles" not in self._cache:
             self._parse_hirshfeld()
@@ -1176,9 +1049,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def hirshfeld_volumes(self) -> Sequence[float] | None:
-        """
-        The Hirshfeld atomic dipoles of the system.
-        """
+        """The Hirshfeld atomic dipoles of the system."""
         logger.info("SiestaOutCalcChunk.hirshfeld_volumes()")
         if "hirshfeld_volumes" not in self._cache:
             self._parse_hirshfeld()
@@ -1186,9 +1057,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def hirshfeld_dipole(self) -> None | Vector3D:
-        """
-        The Hirshfeld dipole of the system.
-        """
+        """The Hirshfeld dipole of the system."""
         logger.info("SiestaOutCalcChunk.hirshfeld_dipole()")
         if "hirshfeld_dipole" not in self._cache:
             self._parse_hirshfeld()
@@ -1197,33 +1066,25 @@ class SiestaOutCalcChunk(SiestaOutChunk):
 
     @property
     def vbm(self) -> float:
-        """
-        The valance band maximum.
-        """
+        """The valance band maximum."""
         logger.info("SiestaOutCalcChunk.vbm()")
         return self._parse_homo_lumo()["vbm"]
 
     @property
     def cbm(self) -> float:
-        """
-        The conduction band minimnum.
-        """
+        """The conduction band minimnum."""
         logger.info("SiestaOutCalcChunk.cbm()")
         return self._parse_homo_lumo()["cbm"]
 
     @property
     def gap(self) -> float:
-        """
-        The band gap.
-        """
+        """The band gap."""
         logger.info("SiestaOutCalcChunk.gap()")
         return self._parse_homo_lumo()["gap"]
 
     @property
     def direct_gap(self) -> float:
-        """
-        The direct bandgap.
-        """
+        """The direct bandgap."""
         logger.info("SiestaOutCalcChunk.direct_gap()")
         return self._parse_homo_lumo()["direct_gap"]
 
@@ -1321,7 +1182,8 @@ def get_siesta_out_chunks(
             # don't end chunk on next Re-initialization
             patterns = [
                 (
-                    "Self-consistency cycle not yet converged - restarting mixer to attempt better convergence."
+                    "Self-consistency cycle not yet converged - restarting mixer to "
+                    "attempt better convergence."
                 ),
                 (
                     "Components of the stress tensor (for mathematical "
@@ -1348,8 +1210,10 @@ def check_convergence(
     Check if the siesta output file is for a converged calculation.
 
     Args:
-        chunks(list[.SiestaOutCalcChunk]): The list of chunks for the siesta calculations
-        non_convergence_ok(bool): True if it is okay for the calculation to not be converged
+        chunks(list[.SiestaOutCalcChunk]): The list of chunks for the siesta
+            calculations
+        non_convergence_ok(bool): True if it is okay for the calculation to not
+            be converged
         chunks: list[SiestaOutCalcChunk]:
         non_convergence_ok: bool:  (Default value = False)
 
@@ -1480,8 +1344,8 @@ def read_siesta_output(
 
 def read_siesta_output_structure(
     filename: str | Path,
-    index: int | slice = -1,
-    non_convergence_ok: bool = False,
+    index: int | slice = -1,  # noqa: ARG001  kept for API/future trajectory support
+    non_convergence_ok: bool = False,  # noqa: ARG001  kept for API compatibility
 ) -> Structure | Molecule | Sequence[Structure | Molecule]:
     """
     Read structure from SIESTA XV (geometry) output file.
@@ -1515,6 +1379,4 @@ def read_siesta_output_structure(
     siesta_xv = xvSileSiesta(filename)
     sisl_structure = siesta_xv.read_geometry()  # final structure
     logger.debug(f"sisl_structure={sisl_structure}")
-    structure = sisl_structure.to.pymatgen()
-
-    return structure
+    return sisl_structure.to.pymatgen()

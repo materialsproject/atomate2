@@ -1,10 +1,10 @@
+"""SIESTA input-set generators for core calculation types."""
+
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
-
-from pymatgen.core import Structure
 
 from atomate2.siesta.dataclass.density_of_states_and_band_structure import (
     DensityOfStatesAndBandStructure,
@@ -17,7 +17,7 @@ from atomate2.siesta.dataclass.phonon_calculations import PhononCalculations
 from atomate2.siesta.sets.base import SiestaInputGenerator
 
 if TYPE_CHECKING:
-    from pymatgen.core import Molecule
+    from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -40,10 +40,8 @@ class RelaxSetGenerator(SiestaInputGenerator):
     # works before the input set is generated
     enable_lua: bool = False  # Disable Lua for RelaxSetGenerator
 
-    def __post_init__(self):
-        """
-        Initialize the relaxation settings after the class is initialized.
-        """
+    def __post_init__(self) -> None:
+        """Initialize the relaxation settings after the class is initialized."""
         logger.info("RelaxSetGenerator.__post_init__()")
 
         # Force-enable md_relaxation module since RelaxSetGenerator requires it
@@ -51,7 +49,7 @@ class RelaxSetGenerator(SiestaInputGenerator):
         if self.enabled_modules is None:
             self.enabled_modules = ["md_relaxation"]
         elif "md_relaxation" not in self.enabled_modules:
-            self.enabled_modules = list(self.enabled_modules) + ["md_relaxation"]
+            self.enabled_modules = [*self.enabled_modules, "md_relaxation"]
 
         # Call parent's __post_init__ to apply tier defaults
         super().__post_init__()
@@ -180,7 +178,7 @@ class LuaSetGenerator(SiestaInputGenerator):
     )  # Initialized lazily in _initialize_modules(); repr=False so repr()
     # works before the input set is generated
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """
         Initialize the relaxation settings after the class is initialized.
 
@@ -188,7 +186,8 @@ class LuaSetGenerator(SiestaInputGenerator):
         """
         logger.info("LuaSetGenerator.__post_init__()")
 
-        # IMPORTANT: Call parent __post_init__ to initialize _explicit_user_params and other base attributes
+        # IMPORTANT: Call parent __post_init__ to initialize _explicit_user_params
+        # and other base attributes
         super().__post_init__()
 
         self.relaxation = MolecularDynamicsAndRelaxation(
@@ -265,13 +264,15 @@ class PhononSetGenerator(SiestaInputGenerator):
     md_fc_last : int
         The last atom index to calculate force constants for. Defaults to 1.
     md_fc_displ : float
-        The displacement to use when calculating the force constants. Defaults to 0.04.
+        The displacement to use when calculating the force constants.
+        Defaults to 0.04.
 
     Attributes
     ----------
     phonon : PhononCalculations
-        An instance of the `PhononCalculations` class that stores phonon-related settings
-        and methods for generating the phonon-related blocks for the input file.
+        An instance of the `PhononCalculations` class that stores phonon-related
+        settings and methods for generating the phonon-related blocks for the
+        input file.
 
     Methods
     -------
@@ -279,8 +280,9 @@ class PhononSetGenerator(SiestaInputGenerator):
         Initializes the phonon-related settings after the class is initialized.
 
     get_parameter_updates(structure, prev_parameters):
-        Updates the FDF (SIESTA input) arguments with phonon-specific and band structure
-        parameters, ensuring they are properly generated and validated before the SIESTA run.
+        Updates the FDF (SIESTA input) arguments with phonon-specific and band
+        structure parameters, ensuring they are properly generated and validated
+        before the SIESTA run.
     """
 
     md_type_of_run: str = "FC"
@@ -290,10 +292,8 @@ class PhononSetGenerator(SiestaInputGenerator):
 
     phonon: PhononCalculations = field(init=False)
 
-    def __post_init__(self):
-        """
-        Initialize the phonon settings after the class is initialized.
-        """
+    def __post_init__(self) -> None:
+        """Initialize the phonon settings after the class is initialized."""
         logger.info("PhononSetGenerator.__post_init__()")
         self.phonon = PhononCalculations(
             md_type_of_run=self.md_type_of_run,
@@ -338,7 +338,8 @@ class PhononSetGenerator(SiestaInputGenerator):
         self.fdf_arguments.update(self.phonon_fdf_arguments)
 
         # Generate k-path for phonon dispersion using HighSymmKpath
-        # (automatically determines correct reciprocal lattice directions from structure symmetry)
+        # (automatically determines correct reciprocal lattice directions from
+        # structure symmetry)
         bands = DensityOfStatesAndBandStructure()
         bands.generate_band_structure_block(structure=structure)
 
@@ -354,25 +355,31 @@ class PhononSetGenerator(SiestaInputGenerator):
 @dataclass
 class OpticalSetGenerator(SiestaInputGenerator):
     """
-    This class is responsible for generating input files for optical property calculations
-    using the SIESTA package. It extends the `SiestaInputGenerator` to include settings
-    for optical calculations.
+    Generate SIESTA input files for optical property calculations.
+
+    Extends the `SiestaInputGenerator` to include settings for optical
+    calculations using the SIESTA package.
 
     Attributes
     ----------
-        optical_calculation (str | None): Specifies the type of optical calculation to be performed.
-        optical (OpticalProperties): Instance of `OpticalProperties` containing validated
-                                     optical calculation parameters.
+    optical_calculation : str | None
+        Specifies the type of optical calculation to be performed.
+    optical : OpticalProperties
+        Instance of `OpticalProperties` containing validated optical
+        calculation parameters.
     """
 
-    def __init__(self, *args, optical_calculation=None, **kwargs):
+    def __init__(self, *args, optical_calculation: str | None = None, **kwargs) -> None:
         """
-        Initialize the OpticalSetGenerator class with specific settings for optical calculations.
+        Initialize the OpticalSetGenerator with optical calculation settings.
 
         Args:
-            optical_calculation (str | None): Type of optical calculation to be performed.
-            *args: Variable length argument list passed to the SiestaInputGenerator.
-            **kwargs: Keyword arguments containing both optical-specific and general SIESTA parameters.
+            optical_calculation (str | None): Type of optical calculation to be
+                performed.
+            *args: Variable length argument list passed to the
+                SiestaInputGenerator.
+            **kwargs: Keyword arguments containing both optical-specific and
+                general SIESTA parameters.
         """
         logger.info("OpticalSetGenerator.__init__()")
         # Extract optical properties kwargs
@@ -396,16 +403,17 @@ class OpticalSetGenerator(SiestaInputGenerator):
         self, structure: Structure | Molecule, prev_parameters: dict[str, Any]
     ) -> dict:
         """
-        Updates the FDF (input) arguments for the SIESTA calculation by incorporating optical and band
-        structure settings.
+        Update the FDF arguments with optical and band structure settings.
 
         Args:
-            structure (Structure | Molecule): The structure for which the optical properties are calculated.
+            structure (Structure | Molecule): The structure for which the
+                optical properties are calculated.
             prev_parameters (dict): Previous calculation parameters.
 
         Returns
         -------
-            dict: Updated FDF parameters including optical properties and band structure information.
+            dict: Updated FDF parameters including optical properties and band
+                structure information.
         """
         logger.info("OpticalSetGenerator.get_parameter_updates()")
         self.optical.validate()
@@ -417,7 +425,8 @@ class OpticalSetGenerator(SiestaInputGenerator):
         self.fdf_arguments.update(self.optical_fdf_arguments)
 
         # Generate k-path for electronic band structure using HighSymmKpath
-        # (automatically determines correct reciprocal lattice directions from structure symmetry)
+        # (automatically determines correct reciprocal lattice directions from
+        # structure symmetry)
         bands = DensityOfStatesAndBandStructure()
         bands.generate_band_structure_block(structure=structure)
 
@@ -473,7 +482,7 @@ class DOSSetGenerator(SiestaInputGenerator):
     The DOS is calculated on an energy grid around the Fermi level.
     """
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Initialize the DOS settings after the class is initialized."""
         logger.info("DOSSetGenerator.__post_init__()")
         # Call parent's __post_init__ to apply tier defaults and initialize modules
@@ -563,7 +572,7 @@ class PDOSSetGenerator(SiestaInputGenerator):
     Output files: siesta.DOS (total), siesta.PDOS (projected), siesta.PDOS.xml
     """
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Initialize the PDOS settings after the class is initialized."""
         logger.info("PDOSSetGenerator.__post_init__()")
         # Call parent's __post_init__ to apply tier defaults and initialize modules
@@ -625,7 +634,8 @@ class PDOSSetGenerator(SiestaInputGenerator):
             ]
 
         # Check if user provided custom ProjectedDensityOfStates block
-        # If so, store it directly so generate_dos_block() uses it instead of generating a new one
+        # If so, store it directly so generate_dos_block() uses it instead of
+        # generating a new one
         user_pdos_block = self.user_params.get("%block ProjectedDensityOfStates")
         if user_pdos_block:
             # Store user's block - generate_dos_block() will use it directly
