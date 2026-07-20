@@ -2017,7 +2017,7 @@ def generate_density_plot(
         plt.xlabel(f"Fractional Coordinate ({'xyz'[axis]}-axis)", fontsize=12)
         plt.ylabel("Δρ (electrons/Ų)", fontsize=12)
         plt.title(title, fontsize=13, fontweight="bold")
-        plt.grid(True, alpha=0.3)
+        plt.grid(True, alpha=0.3)  # noqa: FBT003
         plt.tight_layout()
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
         plt.close()
@@ -2129,7 +2129,7 @@ def generate_dielectric_profile_plot(
         ax.set_ylabel("Dielectric constant ε", fontsize=12)
         ax.set_title("Dielectric Profile for 2D Slab", fontsize=13, fontweight="bold")
         ax.legend(fontsize=11)
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
         ax.set_ylim(0, max(epsilon_parallel, epsilon_perpendicular) + 1)
 
         plt.tight_layout()
@@ -2249,7 +2249,7 @@ def generate_radial_distribution_plot(
                 "Charge Density Difference", fontsize=12, fontweight="bold"
             )
             axes[0].legend(fontsize=10)
-            axes[0].grid(True, alpha=0.3)
+            axes[0].grid(True, alpha=0.3)  # noqa: FBT003
 
         else:
             # Gaussian approximation
@@ -2278,7 +2278,7 @@ def generate_radial_distribution_plot(
                 fontweight="bold",
             )
             axes[0].legend(fontsize=10)
-            axes[0].grid(True, alpha=0.3)
+            axes[0].grid(True, alpha=0.3)  # noqa: FBT003
 
         # --- Plot 2: Electrostatic potential ΔV(r) ---
         if defect_vt_files and host_vt_files:
@@ -2308,7 +2308,7 @@ def generate_radial_distribution_plot(
                 "Electrostatic Potential Difference", fontsize=12, fontweight="bold"
             )
             axes[1].legend(fontsize=10)
-            axes[1].grid(True, alpha=0.3)
+            axes[1].grid(True, alpha=0.3)  # noqa: FBT003
 
         else:
             # Point charge approximation: V(r) = q/(4πε₀r)
@@ -2327,7 +2327,7 @@ def generate_radial_distribution_plot(
                 "Electrostatic Potential (Point)", fontsize=12, fontweight="bold"
             )
             axes[1].legend(fontsize=10)
-            axes[1].grid(True, alpha=0.3)
+            axes[1].grid(True, alpha=0.3)  # noqa: FBT003
             axes[1].set_yscale("log")
 
         plt.suptitle(

@@ -727,7 +727,7 @@ def plot_srh_lifetimes(
         if use_log:
             ax.set_yscale("log")
 
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
 
         plt.tight_layout()
         plt.savefig(filename, dpi=300, bbox_inches="tight")
@@ -808,7 +808,7 @@ def plot_srh_recombination_rates(
         if use_log:
             ax.set_yscale("log")
 
-        ax.grid(True, alpha=0.3, axis="y")
+        ax.grid(True, alpha=0.3, axis="y")  # noqa: FBT003
 
         # Add text for dominant defect
         ax.text(

@@ -714,7 +714,7 @@ def plot_basis_params_convergence(
         "Energy Convergence vs PAO.EnergyShift", fontsize=13, fontweight="bold"
     )
     ax1.legend(loc="best", fontsize=10)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Plot 2: Energy vs SplitNorm (for each EnergyShift)
     ax2 = plt.subplot(2, 2, 2)
@@ -741,7 +741,7 @@ def plot_basis_params_convergence(
     ax2.set_ylabel("Total Energy (eV)", fontsize=12, fontweight="bold")
     ax2.set_title("Energy Convergence vs PAO.SplitNorm", fontsize=13, fontweight="bold")
     ax2.legend(loc="best", fontsize=10)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Plot 3: 2D Energy Heatmap
     ax3 = plt.subplot(2, 2, 3)
@@ -832,7 +832,7 @@ def plot_basis_params_convergence(
         fontsize=13,
         fontweight="bold",
     )
-    ax4.grid(True, alpha=0.3)
+    ax4.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Add convergence zones
     ax4.axhline(y=0.15, color="gray", linestyle="--", alpha=0.5, linewidth=1)
@@ -889,7 +889,7 @@ def plot_basis_params_convergence(
         "Energy Convergence vs PAO.EnergyShift", fontsize=13, fontweight="bold"
     )
     ax1.legend(loc="best", fontsize=10)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
     file1 = str(output_dir / f"{base_name}_energy_vs_shift.png")
     plt.savefig(file1, dpi=150, bbox_inches="tight")
     plt.close()
@@ -916,7 +916,7 @@ def plot_basis_params_convergence(
     ax2.set_ylabel("Total Energy (eV)", fontsize=12, fontweight="bold")
     ax2.set_title("Energy Convergence vs PAO.SplitNorm", fontsize=13, fontweight="bold")
     ax2.legend(loc="best", fontsize=10)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
     file2 = str(output_dir / f"{base_name}_energy_vs_norm.png")
     plt.savefig(file2, dpi=150, bbox_inches="tight")
     plt.close()
@@ -995,7 +995,7 @@ def plot_basis_params_convergence(
         fontsize=13,
         fontweight="bold",
     )
-    ax4.grid(True, alpha=0.3)
+    ax4.grid(True, alpha=0.3)  # noqa: FBT003
     ax4.axhline(y=0.15, color="gray", linestyle="--", alpha=0.5, linewidth=1)
     ax4.axhline(y=0.25, color="gray", linestyle="--", alpha=0.5, linewidth=1)
     ax4.axvline(x=0.01, color="gray", linestyle="--", alpha=0.5, linewidth=1)
@@ -1043,7 +1043,7 @@ def plot_basis_params_convergence(
             fontweight="bold",
         )
         ax5.legend(loc="best", fontsize=10)
-        ax5.grid(True, alpha=0.3)
+        ax5.grid(True, alpha=0.3)  # noqa: FBT003
         file5 = str(output_dir / f"{base_name}_timing_vs_shift.png")
         plt.savefig(file5, dpi=150, bbox_inches="tight")
         plt.close()
@@ -1077,7 +1077,7 @@ def plot_basis_params_convergence(
             fontweight="bold",
         )
         ax6.legend(loc="best", fontsize=10)
-        ax6.grid(True, alpha=0.3)
+        ax6.grid(True, alpha=0.3)  # noqa: FBT003
         file6 = str(output_dir / f"{base_name}_timing_vs_norm.png")
         plt.savefig(file6, dpi=150, bbox_inches="tight")
         plt.close()
@@ -1122,7 +1122,7 @@ def plot_basis_params_convergence(
             fontsize=13,
             fontweight="bold",
         )
-        ax7.grid(True, alpha=0.3)
+        ax7.grid(True, alpha=0.3)  # noqa: FBT003
         file7 = str(output_dir / f"{base_name}_timing_heatmap.png")
         plt.savefig(file7, dpi=150, bbox_inches="tight")
         plt.close()
@@ -1168,7 +1168,7 @@ def plot_basis_params_convergence(
             fontsize=13,
             fontweight="bold",
         )
-        ax8.grid(True, alpha=0.3)
+        ax8.grid(True, alpha=0.3)  # noqa: FBT003
 
         # Add "optimal zone" annotation
         ax8.axhline(
@@ -1297,7 +1297,7 @@ def plot_basis_functions(
         fontweight="bold",
     )
     ax1.legend(loc="best", fontsize=10)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
     ax1.set_xlim(0, 10)
 
     # Plot 2: Schematic showing split-valence orbitals
@@ -1328,7 +1328,7 @@ def plot_basis_functions(
         fontweight="bold",
     )
     ax2.legend(loc="best", fontsize=10)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
     ax2.set_xlim(0, 8)
 
     # Plot 3: Basis quality indicator - orbital overlap
@@ -1373,7 +1373,7 @@ def plot_basis_functions(
         fontweight="bold",
     )
     ax3.legend(loc="best", fontsize=9)
-    ax3.grid(True, alpha=0.3)
+    ax3.grid(True, alpha=0.3)  # noqa: FBT003
     ax3.set_xlim(0, 15)
 
     # Plot 4: Summary diagram
@@ -1472,7 +1472,7 @@ def plot_basis_functions(
         fontweight="bold",
     )
     ax1.legend(loc="best", fontsize=10)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
     ax1.set_xlim(0, 10)
     file1 = str(output_dir / f"{base_name}_orbital_extent.png")
     plt.savefig(file1, dpi=150, bbox_inches="tight")
@@ -1513,7 +1513,7 @@ def plot_basis_functions(
         fontweight="bold",
     )
     ax2.legend(loc="best", fontsize=9)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
     ax2.set_xlim(0, 8)
     file2 = str(output_dir / f"{base_name}_split_valence.png")
     plt.savefig(file2, dpi=150, bbox_inches="tight")
@@ -1553,7 +1553,7 @@ def plot_basis_functions(
         fontweight="bold",
     )
     ax3.legend(loc="best", fontsize=10)
-    ax3.grid(True, alpha=0.3)
+    ax3.grid(True, alpha=0.3)  # noqa: FBT003
     file3 = str(output_dir / f"{base_name}_bonding_overlap.png")
     plt.savefig(file3, dpi=150, bbox_inches="tight")
     plt.close()
@@ -1908,7 +1908,7 @@ def plot_real_basis_functions(
                 fancybox=True,
                 framealpha=0.9,
             )
-            ax.grid(True, alpha=0.3)
+            ax.grid(True, alpha=0.3)  # noqa: FBT003
             ax.set_xlim(left=0)
 
     # Overall title - include basis size if available from metadata
@@ -2020,7 +2020,7 @@ def plot_real_basis_functions(
                 framealpha=0.9,
             )
 
-            ax_ind.grid(True, alpha=0.3)
+            ax_ind.grid(True, alpha=0.3)  # noqa: FBT003
             ax_ind.set_xlim(left=0)
 
             # Save individual plot with element name
@@ -2813,7 +2813,7 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
     axes[0].set_title("Equilibrium Volume", fontsize=14, fontweight="bold")
     axes[0].set_xticks(range(len(basis_sets)))
     axes[0].set_xticklabels(basis_sets, rotation=45)
-    axes[0].grid(True, alpha=0.3)
+    axes[0].grid(True, alpha=0.3)  # noqa: FBT003
 
     # Plot E0
     axes[1].plot(
@@ -2824,7 +2824,7 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
     axes[1].set_title("Equilibrium Energy", fontsize=14, fontweight="bold")
     axes[1].set_xticks(range(len(basis_sets)))
     axes[1].set_xticklabels(basis_sets, rotation=45)
-    axes[1].grid(True, alpha=0.3)
+    axes[1].grid(True, alpha=0.3)  # noqa: FBT003
 
     # Plot B0
     axes[2].plot(
@@ -2840,7 +2840,7 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
     axes[2].set_title("Bulk Modulus", fontsize=14, fontweight="bold")
     axes[2].set_xticks(range(len(basis_sets)))
     axes[2].set_xticklabels(basis_sets, rotation=45)
-    axes[2].grid(True, alpha=0.3)
+    axes[2].grid(True, alpha=0.3)  # noqa: FBT003
 
     # Plot timing if available
     if has_timing:
@@ -2863,7 +2863,7 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
         axes[3].set_title("Calculation Time", fontsize=14, fontweight="bold")
         axes[3].set_xticks(range(len(valid_basis)))
         axes[3].set_xticklabels(valid_basis, rotation=45)
-        axes[3].grid(True, alpha=0.3)
+        axes[3].grid(True, alpha=0.3)  # noqa: FBT003
 
     plt.suptitle("EOS Parameters vs Basis Set", fontsize=16, fontweight="bold", y=1.02)
     plt.tight_layout()
@@ -2996,7 +2996,7 @@ def plot_eos_overlay(flow_results: dict[str, Any], job_metadata: list[dict]) -> 
         ncol=1 if plotted_count <= 4 else 2,
     )
 
-    ax.grid(True, alpha=0.3, linestyle="--")
+    ax.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
     ax.tick_params(labelsize=12)
 
     # Add text box with info
@@ -3136,7 +3136,7 @@ def generate_eos_basis_outputs(
                 ax.set_ylabel("Energy (eV)", fontsize=14, fontweight="bold")
                 ax.set_title(f"EOS - {basis_set} Basis", fontsize=16, fontweight="bold")
                 ax.legend(fontsize=12)
-                ax.grid(True, alpha=0.3)
+                ax.grid(True, alpha=0.3)  # noqa: FBT003
 
                 plot_file = output_path / f"eos_fit_{basis_set}.png"
                 plt.tight_layout()
@@ -3199,7 +3199,7 @@ def generate_eos_basis_outputs(
         axes[0].set_title("Equilibrium Volume", fontsize=14, fontweight="bold")
         axes[0].set_xticks(range(len(basis_sets)))
         axes[0].set_xticklabels(basis_sets, rotation=45)
-        axes[0].grid(True, alpha=0.3)
+        axes[0].grid(True, alpha=0.3)  # noqa: FBT003
 
         # E0 plot
         axes[1].plot(
@@ -3215,7 +3215,7 @@ def generate_eos_basis_outputs(
         axes[1].set_title("Equilibrium Energy", fontsize=14, fontweight="bold")
         axes[1].set_xticks(range(len(basis_sets)))
         axes[1].set_xticklabels(basis_sets, rotation=45)
-        axes[1].grid(True, alpha=0.3)
+        axes[1].grid(True, alpha=0.3)  # noqa: FBT003
 
         # B0 plot
         axes[2].plot(
@@ -3231,7 +3231,7 @@ def generate_eos_basis_outputs(
         axes[2].set_title("Bulk Modulus", fontsize=14, fontweight="bold")
         axes[2].set_xticks(range(len(basis_sets)))
         axes[2].set_xticklabels(basis_sets, rotation=45)
-        axes[2].grid(True, alpha=0.3)
+        axes[2].grid(True, alpha=0.3)  # noqa: FBT003
 
         plt.suptitle("EOS Parameters vs Basis Set", fontsize=16, fontweight="bold")
         plt.tight_layout()
@@ -3299,7 +3299,7 @@ def generate_eos_basis_outputs(
     ax.set_title(
         "EOS Comparison: All Basis Sets Overlaid", fontsize=16, fontweight="bold"
     )
-    ax.grid(True, alpha=0.3, linestyle="--")
+    ax.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
     ax.legend(loc="best", fontsize=10, ncol=2, framealpha=0.9)
 
     plt.tight_layout()

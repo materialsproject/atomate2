@@ -149,7 +149,7 @@ def plot_ase_neb_results(neb_data: dict) -> dict:
     plt.xlabel("Reaction Coordinate", fontsize=12)
     plt.ylabel("Energy (meV)", fontsize=12)
     plt.title("NEB Energy Profile", fontsize=14)
-    plt.grid(True, alpha=0.3)
+    plt.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Add activation energy annotation
     plt.text(
@@ -568,7 +568,7 @@ def plot_neb_results(
     plt.xlabel("Reaction Coordinate", fontsize=12)
     plt.ylabel("Energy (meV)", fontsize=12)
     plt.title(f"NEB Energy Profile\nEnergy Barrier: {barrier:.1f} meV", fontsize=14)
-    plt.grid(True, alpha=0.3)
+    plt.grid(True, alpha=0.3)  # noqa: FBT003
     plt.legend()
     plt.tight_layout()
 
@@ -624,7 +624,7 @@ def plot_neb_results(
         plt.xlabel("Reaction Coordinate", fontsize=12)
         plt.ylabel("Max Force (eV/Å)", fontsize=12)
         plt.title("Force Convergence Across Iterations", fontsize=14)
-        plt.grid(True, alpha=0.3)
+        plt.grid(True, alpha=0.3)  # noqa: FBT003
         plt.legend()
         plt.tight_layout()
 
@@ -656,7 +656,7 @@ def plot_neb_results(
         plt.xlabel("Iteration Number", fontsize=12)
         plt.ylabel("Energy Barrier (meV)", fontsize=12)
         plt.title("Barrier Height Convergence", fontsize=14)
-        plt.grid(True, alpha=0.3)
+        plt.grid(True, alpha=0.3)  # noqa: FBT003
         plt.legend()
         plt.tight_layout()
 
@@ -703,7 +703,7 @@ def plot_neb_results(
         plt.xlabel("Reaction Coordinate", fontsize=12)
         plt.ylabel("Curvature (eV/Å²)", fontsize=12)
         plt.title("Curvature Evolution Across Iterations", fontsize=14)
-        plt.grid(True, alpha=0.3)
+        plt.grid(True, alpha=0.3)  # noqa: FBT003
         plt.legend()
         plt.tight_layout()
 

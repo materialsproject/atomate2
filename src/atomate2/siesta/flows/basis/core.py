@@ -591,7 +591,7 @@ def plot_eos_basis_comparison(
     ax1.plot(range(len(basis_sets)), v0, "o-", linewidth=2, markersize=8, color="blue")
     ax1.set_ylabel("V₀ (Ų)", fontsize=12)
     ax1.set_title("EOS Parameters vs Basis Set", fontsize=14, fontweight="bold")
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
     ax1.set_xticks(range(len(basis_sets)))
     ax1.set_xticklabels([])
 
@@ -599,7 +599,7 @@ def plot_eos_basis_comparison(
     ax2 = axes[1]
     ax2.plot(range(len(basis_sets)), e0, "s-", linewidth=2, markersize=8, color="green")
     ax2.set_ylabel("E₀ (eV)", fontsize=12)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
     ax2.set_xticks(range(len(basis_sets)))
     ax2.set_xticklabels([])
 
@@ -608,7 +608,7 @@ def plot_eos_basis_comparison(
     ax3.plot(range(len(basis_sets)), b0, "^-", linewidth=2, markersize=8, color="red")
     ax3.set_ylabel("B₀ (GPa)", fontsize=12)
     ax3.set_xlabel("Basis Set", fontsize=12)
-    ax3.grid(True, alpha=0.3)
+    ax3.grid(True, alpha=0.3)  # noqa: FBT003
     ax3.set_xticks(range(len(basis_sets)))
     ax3.set_xticklabels(basis_sets, rotation=45, ha="right")
 
@@ -782,7 +782,7 @@ def plot_eos_overlay(
     ax.set_title(
         "EOS Comparison: All Basis Sets Overlaid", fontsize=16, fontweight="bold"
     )
-    ax.grid(True, alpha=0.3, linestyle="--")
+    ax.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
     ax.legend(loc="best", fontsize=10, ncol=2, framealpha=0.9)
 
     plt.tight_layout()

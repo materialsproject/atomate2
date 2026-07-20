@@ -493,7 +493,7 @@ def plot_adsorption_sites(
     ax2.set_aspect("equal")
     ax2.set_xlim(0, 1)
     ax2.set_ylim(0, 1)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
     cbar2 = plt.colorbar(scatter, ax=ax2)
     cbar2.set_label("Adsorption Energy (eV)", fontsize=11, fontweight="bold")

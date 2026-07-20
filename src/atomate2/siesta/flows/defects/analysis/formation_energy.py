@@ -564,7 +564,7 @@ def plot_formation_energy_diagram(
     ax.set_ylabel("Formation Energy E$_f$ [eV]", fontsize=14)
     ax.set_title("Defect Formation Energy Diagram", fontsize=16, fontweight="bold")
     ax.legend(loc="best", fontsize=10)
-    ax.grid(True, alpha=0.3)
+    ax.grid(True, alpha=0.3)  # noqa: FBT003
     ax.set_xlim(E_F_min, E_F_max)
 
     plt.tight_layout()

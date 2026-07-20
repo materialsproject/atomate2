@@ -164,7 +164,7 @@ def plot_free_energy_diagram(
     ax.set_xticklabels(step_labels, rotation=45, ha="right")
 
     # Grid
-    ax.grid(True, alpha=0.3, linestyle="--")
+    ax.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
     ax.legend(loc="best", fontsize=10)
 
     # Tight layout
@@ -304,7 +304,7 @@ def plot_overpotential_summary(
     )
 
     # Grid
-    ax.grid(True, axis="y", alpha=0.3, linestyle="--")
+    ax.grid(True, axis="y", alpha=0.3, linestyle="--")  # noqa: FBT003
 
     plt.tight_layout()
 
@@ -377,7 +377,7 @@ def plot_bifunctional_comparison(
 
     ax1.set_ylabel("Overpotential, η (V)", fontsize=12, fontweight="bold")
     ax1.set_title("Individual Overpotentials", fontsize=14, fontweight="bold")
-    ax1.grid(True, axis="y", alpha=0.3, linestyle="--")
+    ax1.grid(True, axis="y", alpha=0.3, linestyle="--")  # noqa: FBT003
     ax1.set_ylim(0, max(overpotentials) * 1.3)
 
     # Right plot: Bifunctional gap
@@ -431,7 +431,7 @@ def plot_bifunctional_comparison(
         "Overpotential Gap, η_ORR + η_OER (V)", fontsize=12, fontweight="bold"
     )
     ax2.set_title("Bifunctional Performance", fontsize=14, fontweight="bold")
-    ax2.grid(True, axis="y", alpha=0.3, linestyle="--")
+    ax2.grid(True, axis="y", alpha=0.3, linestyle="--")  # noqa: FBT003
     ax2.set_ylim(0, max(2.0, gap * 1.3))
 
     # Add performance guide

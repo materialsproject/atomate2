@@ -1055,7 +1055,7 @@ def plot_stress_strain_curves(
                 fontsize=11,
                 fontweight="bold",
             )
-            ax.grid(True, alpha=0.3)
+            ax.grid(True, alpha=0.3)  # noqa: FBT003
             ax.axhline(y=0, color="black", linewidth=0.5)
             ax.axvline(x=0, color="black", linewidth=0.5)
 
@@ -1564,7 +1564,7 @@ def plot_pugh_ratio_diagram(
         )
 
         ax.legend(loc="upper left", fontsize=9)
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
 
         ax.set_title(
             f"Pugh's Ductility Criterion - {formula}\n"

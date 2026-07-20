@@ -149,7 +149,7 @@ def plot_gruneisen_band_structure(
         fontweight="bold",
         pad=15,
     )
-    ax1.grid(True, alpha=0.3, linestyle=":")
+    ax1.grid(True, alpha=0.3, linestyle=":")  # noqa: FBT003
     ax1.axhline(y=0, color="r", linewidth=0.8, linestyle="-", alpha=0.7)
     ax1.set_xlim(distances[0], distances[-1])
 
@@ -175,7 +175,7 @@ def plot_gruneisen_band_structure(
     ax2.set_xlim(distances[0], distances[-1])
     ax2.set_xticks(special_points)
     ax2.set_xticklabels([label.replace("GAMMA", "Γ") for label in labels], fontsize=11)
-    ax2.grid(True, alpha=0.3, linestyle=":")
+    ax2.grid(True, alpha=0.3, linestyle=":")  # noqa: FBT003
     ax2.axhline(y=0, color="k", linewidth=1.0, linestyle="-", alpha=0.5)
 
     # Add colorbar for Grüneisen scale
@@ -295,7 +295,7 @@ def plot_gruneisen_vs_frequency(
         fontsize=14,
         fontweight="bold",
     )
-    ax.grid(True, alpha=0.3, linestyle=":")
+    ax.grid(True, alpha=0.3, linestyle=":")  # noqa: FBT003
     ax.legend(fontsize=11, loc="best", framealpha=0.9)
 
     # Add colorbar
@@ -441,7 +441,7 @@ def plot_gruneisen_distribution(
         fontweight="bold",
     )
     ax.legend(fontsize=11, loc="best", framealpha=0.9)
-    ax.grid(True, alpha=0.3, axis="y", linestyle=":")
+    ax.grid(True, alpha=0.3, axis="y", linestyle=":")  # noqa: FBT003
 
     # Add statistics text
     stats_text = (
@@ -905,7 +905,7 @@ def plot_thermal_expansion(
         "Thermal Expansion Coefficient vs Temperature", fontsize=14, fontweight="bold"
     )
     ax.legend(fontsize=10, loc="best", framealpha=0.9)
-    ax.grid(True, alpha=0.3, linestyle=":")
+    ax.grid(True, alpha=0.3, linestyle=":")  # noqa: FBT003
     ax.set_xlim(temps[0], temps[-1])
 
     # Add parameters text

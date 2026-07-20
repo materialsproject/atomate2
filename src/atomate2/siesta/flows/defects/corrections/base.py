@@ -41,7 +41,7 @@ class CorrectionResult(BaseModel):
     charge_model: str = Field(description="Charge model used (point, gaussian, etc.)")
 
     converged: bool = Field(
-        True,
+        True,  # noqa: FBT003
         description="Whether the correction calculation converged",
     )
 

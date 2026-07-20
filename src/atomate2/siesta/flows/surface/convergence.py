@@ -579,7 +579,7 @@ def _create_convergence_plots(
             fontsize=14,
             fontweight="bold",
         )
-        ax1.grid(True, alpha=0.3)
+        ax1.grid(True, alpha=0.3)  # noqa: FBT003
         ax1.set_xticks(layers)
 
         # Convergence (difference from reference)
@@ -601,7 +601,7 @@ def _create_convergence_plots(
             fontsize=14,
             fontweight="bold",
         )
-        ax2.grid(True, alpha=0.3)
+        ax2.grid(True, alpha=0.3)  # noqa: FBT003
         ax2.legend(fontsize=11)
         ax2.set_xticks(layers)
 
@@ -627,7 +627,7 @@ def _create_convergence_plots(
             fontsize=14,
             fontweight="bold",
         )
-        ax1.grid(True, alpha=0.3)
+        ax1.grid(True, alpha=0.3)  # noqa: FBT003
 
         # Convergence
         ref_energy = energies[-1]
@@ -648,7 +648,7 @@ def _create_convergence_plots(
             fontsize=14,
             fontweight="bold",
         )
-        ax2.grid(True, alpha=0.3)
+        ax2.grid(True, alpha=0.3)  # noqa: FBT003
         ax2.legend(fontsize=11)
 
         plt.tight_layout()
@@ -737,7 +737,7 @@ def _create_convergence_plots(
             fontweight="bold",
         )
         ax1.legend(title="Vacuum", fontsize=10)
-        ax1.grid(True, alpha=0.3)
+        ax1.grid(True, alpha=0.3)  # noqa: FBT003
 
         # Group by layers (plot energy vs. vacuum for each layer count)
         for n_layers in layers:
@@ -760,7 +760,7 @@ def _create_convergence_plots(
             fontweight="bold",
         )
         ax2.legend(title="Layers", fontsize=10)
-        ax2.grid(True, alpha=0.3)
+        ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
         plt.tight_layout()
         filename2 = "surface_convergence_lines.png"

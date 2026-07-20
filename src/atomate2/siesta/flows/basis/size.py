@@ -404,7 +404,7 @@ def plot_basis_size_convergence(
     )
     ax1.set_xticks(x_pos)
     ax1.set_xticklabels(sorted_basis, fontsize=11)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Panel 2: Energy differences
     ax2 = axes[1]
@@ -425,7 +425,7 @@ def plot_basis_size_convergence(
     ax2.set_xticks(x_pos)
     ax2.set_xticklabels(sorted_basis, fontsize=11)
     ax2.legend(loc="upper right", fontsize=10)
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Panel 3: Forces
     ax3 = axes[2]
@@ -438,7 +438,7 @@ def plot_basis_size_convergence(
     ax3.set_xticks(x_pos)
     ax3.set_xticklabels(sorted_basis, fontsize=11)
     ax3.legend(loc="upper right", fontsize=10)
-    ax3.grid(True, alpha=0.3)
+    ax3.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Panel 4: Stresses
     ax4 = axes[3]
@@ -451,7 +451,7 @@ def plot_basis_size_convergence(
     ax4.set_xticks(x_pos)
     ax4.set_xticklabels(sorted_basis, fontsize=11)
     ax4.legend(loc="upper right", fontsize=10)
-    ax4.grid(True, alpha=0.3)
+    ax4.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Panel 5: Timing (if available)
     if n_panels == 5:
@@ -472,7 +472,7 @@ def plot_basis_size_convergence(
             )
             ax5.set_xticks(x_pos)
             ax5.set_xticklabels(sorted_basis, fontsize=11)
-            ax5.grid(True, alpha=0.3)
+            ax5.grid(True, alpha=0.3)  # noqa: FBT003
 
     plt.suptitle("SIESTA Basis Size Convergence Study", fontsize=15, fontweight="bold")
     plt.tight_layout()

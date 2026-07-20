@@ -262,7 +262,7 @@ def plot_convergence(
     ax.set_title(
         f"Total Energy vs. {parameter_name.replace('_', ' ').title()}", fontsize=14
     )
-    ax.grid(True, alpha=0.3)
+    ax.grid(True, alpha=0.3)  # noqa: FBT003
     plt.tight_layout()
     energy_file = f"{base_name}_energy.png"
     plt.savefig(energy_file, dpi=150, bbox_inches="tight")
@@ -282,7 +282,7 @@ def plot_convergence(
     ax.set_title(
         f"Convergence: ΔE vs. {parameter_name.replace('_', ' ').title()}", fontsize=14
     )
-    ax.grid(True, alpha=0.3)
+    ax.grid(True, alpha=0.3)  # noqa: FBT003
     ax.legend(fontsize=11)
     plt.tight_layout()
     convergence_file = f"{base_name}_convergence.png"
@@ -308,7 +308,7 @@ def plot_convergence(
         ax.set_title(
             f"Fermi Energy vs. {parameter_name.replace('_', ' ').title()}", fontsize=14
         )
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
         plt.tight_layout()
         fermi_file = f"{base_name}_fermi.png"
         plt.savefig(fermi_file, dpi=150, bbox_inches="tight")
@@ -338,7 +338,7 @@ def plot_convergence(
         ax.set_title(
             f"Band Gap vs. {parameter_name.replace('_', ' ').title()}", fontsize=14
         )
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
         plt.tight_layout()
         bandgap_file = f"{base_name}_bandgap.png"
         plt.savefig(bandgap_file, dpi=150, bbox_inches="tight")
@@ -382,7 +382,7 @@ def plot_convergence(
         ax.set_title(
             f"Max Forces vs. {parameter_name.replace('_', ' ').title()}", fontsize=14
         )
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
         ax.legend(fontsize=11)
         plt.tight_layout()
         force_file = f"{base_name}_forces.png"
@@ -408,7 +408,7 @@ def plot_convergence(
         ax.set_title(
             f"Max Stress vs. {parameter_name.replace('_', ' ').title()}", fontsize=14
         )
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
         plt.tight_layout()
         stress_file = f"{base_name}_stress.png"
         plt.savefig(stress_file, dpi=150, bbox_inches="tight")

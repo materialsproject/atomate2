@@ -429,7 +429,7 @@ def plot_potential_alignment(
     ax1.plot(pos_defect, pot_defect, "r-", label="Defect", linewidth=2, alpha=0.7)
     ax1.set_ylabel("Electrostatic Potential (eV)", fontsize=12)
     ax1.legend(fontsize=11)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
     ax1.set_title(
         "Planar-Averaged Electrostatic Potentials", fontsize=13, fontweight="bold"
     )
@@ -440,7 +440,7 @@ def plot_potential_alignment(
     ax2.set_xlabel(f"Fractional Coordinate ({'xyz'[axis]}-axis)", fontsize=12)
     ax2.set_ylabel("Potential Difference (eV)", fontsize=12)
     ax2.set_title("ΔV = V_defect - V_host", fontsize=13, fontweight="bold")
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Add alignment value annotation
     alignment_value = np.mean(pot_diff)

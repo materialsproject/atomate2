@@ -860,7 +860,7 @@ def plot_brouwer_diagram(
     ax.legend(loc="best", fontsize=10, framealpha=0.9)
 
     # Grid
-    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5)
+    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.5)  # noqa: FBT003
 
     # Tight layout
     plt.tight_layout()

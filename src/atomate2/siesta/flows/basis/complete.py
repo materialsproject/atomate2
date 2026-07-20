@@ -513,7 +513,7 @@ def plot_complete_basis_convergence(
     ax1.set_title("Energy vs Basis Size", fontsize=12, fontweight="bold")
     ax1.set_xticks(range(len(unique_basis)))
     ax1.set_xticklabels(unique_basis, fontsize=10)
-    ax1.grid(True, alpha=0.3)
+    ax1.grid(True, alpha=0.3)  # noqa: FBT003
     if color_idx <= 6:
         ax1.legend(fontsize=8, loc="best")
 
@@ -551,7 +551,7 @@ def plot_complete_basis_convergence(
         "Energy vs EnergyShift (avg over SplitNorm)", fontsize=12, fontweight="bold"
     )
     ax2.legend(fontsize=9, loc="best")
-    ax2.grid(True, alpha=0.3)
+    ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Panel 3: Energy vs SplitNorm (for each basis)
     ax3 = plt.subplot(2, 3, 3)
@@ -586,7 +586,7 @@ def plot_complete_basis_convergence(
         "Energy vs SplitNorm (avg over EnergyShift)", fontsize=12, fontweight="bold"
     )
     ax3.legend(fontsize=9, loc="best")
-    ax3.grid(True, alpha=0.3)
+    ax3.grid(True, alpha=0.3)  # noqa: FBT003
 
     # Panel 4: Minimum energy for each basis
     ax4 = plt.subplot(2, 3, 4)
@@ -605,7 +605,7 @@ def plot_complete_basis_convergence(
     ax4.set_title("Lowest Energy for Each Basis", fontsize=12, fontweight="bold")
     ax4.set_xticks(x_pos)
     ax4.set_xticklabels(unique_basis, fontsize=10)
-    ax4.grid(True, alpha=0.3, axis="y")
+    ax4.grid(True, alpha=0.3, axis="y")  # noqa: FBT003
 
     # Panel 5: Energy range for each basis
     ax5 = plt.subplot(2, 3, 5)
@@ -631,7 +631,7 @@ def plot_complete_basis_convergence(
     ax5.set_xticks(x_pos)
     ax5.set_xticklabels(unique_basis, fontsize=10)
     ax5.legend(fontsize=9, loc="best")
-    ax5.grid(True, alpha=0.3, axis="y")
+    ax5.grid(True, alpha=0.3, axis="y")  # noqa: FBT003
 
     # Panel 6: Timing and efficiency analysis
     ax6 = plt.subplot(2, 3, 6)
@@ -691,7 +691,7 @@ def plot_complete_basis_convergence(
         )
         ax6.set_xticks(x_pos)
         ax6.set_xticklabels(unique_basis, fontsize=10)
-        ax6.grid(True, alpha=0.3, axis="y")
+        ax6.grid(True, alpha=0.3, axis="y")  # noqa: FBT003
         ax6.set_ylim(bottom=0)
     else:
         # No timing data available - show placeholder message
@@ -777,7 +777,7 @@ def plot_complete_basis_convergence(
             f"{basis} Basis: Energy vs PAO.EnergyShift", fontsize=13, fontweight="bold"
         )
         ax1.legend(loc="best", fontsize=10)
-        ax1.grid(True, alpha=0.3)
+        ax1.grid(True, alpha=0.3)  # noqa: FBT003
 
         # Panel 2: Energy vs SplitNorm (for each EnergyShift)
         ax2 = plt.subplot(2, 2, 2)
@@ -807,7 +807,7 @@ def plot_complete_basis_convergence(
             f"{basis} Basis: Energy vs PAO.SplitNorm", fontsize=13, fontweight="bold"
         )
         ax2.legend(loc="best", fontsize=10)
-        ax2.grid(True, alpha=0.3)
+        ax2.grid(True, alpha=0.3)  # noqa: FBT003
 
         # Panel 3: 2D Energy Heatmap
         ax3 = plt.subplot(2, 2, 3)

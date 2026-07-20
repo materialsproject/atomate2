@@ -967,7 +967,7 @@ def plot_eos_parameter_fits_from_data(
                 f"[green]✓ Successfully plotted {n_plotted} curves ({n_basis} basis sizes)[/green]"
             )
 
-    ax.grid(True, alpha=0.3, linestyle="--")
+    ax.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
 
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches="tight")
@@ -1055,7 +1055,7 @@ def plot_eos_parameter_timing(
     ax1.set_ylabel("Wall Time (seconds)", fontsize=11)
     ax1.set_title("EOS Timing vs EnergyShift", fontsize=12, fontweight="bold")
     ax1.legend(title="Basis", fontsize=9)
-    ax1.grid(True, alpha=0.3, linestyle="--")
+    ax1.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
 
     # Plot 2: Timing comparison by basis (box plot or bar)
     basis_time_data = []
@@ -1081,7 +1081,7 @@ def plot_eos_parameter_timing(
     ax2.set_xlabel("Basis Size", fontsize=11)
     ax2.set_ylabel("Wall Time (seconds)", fontsize=11)
     ax2.set_title("Timing Distribution by Basis", fontsize=12, fontweight="bold")
-    ax2.grid(True, alpha=0.3, linestyle="--", axis="y")
+    ax2.grid(True, alpha=0.3, linestyle="--", axis="y")  # noqa: FBT003
 
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches="tight")

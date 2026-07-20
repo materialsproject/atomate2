@@ -154,7 +154,7 @@ def plot_phonon_band_structure(
             fontsize=14,
             fontweight="bold",
         )
-        ax.grid(True, alpha=0.3)
+        ax.grid(True, alpha=0.3)  # noqa: FBT003
         ax.axhline(y=0, color="r", linewidth=0.8, linestyle="-", alpha=0.7)
 
         plt.tight_layout()
@@ -251,7 +251,7 @@ def plot_phonon_dos(
     ax.set_title(
         f"Phonon DOS - {structure.composition.formula}", fontsize=14, fontweight="bold"
     )
-    ax.grid(True, alpha=0.3)
+    ax.grid(True, alpha=0.3)  # noqa: FBT003
     ax.axvline(x=0, color="r", linewidth=0.8, linestyle="--", alpha=0.7)
     ax.set_xlim(frequencies[0], frequencies[-1])
 
@@ -325,18 +325,18 @@ def plot_thermal_properties(
         fontsize=14,
         fontweight="bold",
     )
-    axes[0].grid(True, alpha=0.3)
+    axes[0].grid(True, alpha=0.3)  # noqa: FBT003
 
     # Entropy
     axes[1].plot(temps, entropy, "g-", linewidth=2)
     axes[1].set_ylabel("Entropy (eV/K)", fontsize=11)
-    axes[1].grid(True, alpha=0.3)
+    axes[1].grid(True, alpha=0.3)  # noqa: FBT003
 
     # Free energy
     axes[2].plot(temps, free_energy, "b-", linewidth=2)
     axes[2].set_xlabel("Temperature (K)", fontsize=12)
     axes[2].set_ylabel("Free Energy (eV)", fontsize=11)
-    axes[2].grid(True, alpha=0.3)
+    axes[2].grid(True, alpha=0.3)  # noqa: FBT003
 
     plt.tight_layout()
 
