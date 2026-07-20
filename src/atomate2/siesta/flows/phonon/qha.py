@@ -147,7 +147,8 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
     def __post_init__(self) -> None:
         """Initialize the QHA maker with appropriate EOS settings.
 
-        BaseSiestaFlowMaker's __post_init__ will handle dry_run/custodian/tier propagation.
+        BaseSiestaFlowMaker's __post_init__ handles dry_run/custodian/tier
+        propagation.
         """
         # Map structure_optimizer to parent class parameters
         # CommonQhaMaker expects initial_relax_maker and eos_relax_maker
@@ -176,7 +177,8 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
                 number_of_frames=9,  # Use more frames for initial EOS
             )
             logger.info(
-                f"Created default EOS maker (eos_type will be used during fitting: {self.eos_type})"
+                f"Created default EOS maker (eos_type will be used during "
+                f"fitting: {self.eos_type})"
             )
 
         # Validate number of frames
@@ -202,8 +204,9 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
                 self.phonon_maker, "static_maker", None
             )
 
-        # Call parent's __post_init__ to run validation checks AND propagate dry_run/custodian/tier
-        # This will propagate to all child makers (structure_optimizer, eos_maker, phonon_maker, etc.)
+        # Call parent's __post_init__ to run validation checks AND propagate
+        # dry_run/custodian/tier. This will propagate to all child makers
+        # (structure_optimizer, eos_maker, phonon_maker, etc.)
         super().__post_init__()
 
     @property
@@ -300,7 +303,8 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
             )
         else:
             logger.warning(
-                "No supercell_matrix or min_length specified, using CommonQhaMaker defaults"
+                "No supercell_matrix or min_length specified, "
+                "using CommonQhaMaker defaults"
             )
 
         # Call parent implementation with supercell_matrix if available

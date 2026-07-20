@@ -14,6 +14,7 @@ from matplotlib.patches import Rectangle
 from monty.json import MSONable
 
 if TYPE_CHECKING:
+    import plotly.graph_objects as go
     from pymatgen.core import Structure
 
     from atomate2.siesta.flows.defects.schemas import DefectDocument
@@ -203,15 +204,17 @@ class FormationEnergyDiagram(MSONable):
         defects = []
         for name, docs in defect_groups.items():
             # Sort by charge state
-            docs = sorted(docs, key=lambda d: d.charge_state)
+            sorted_docs = sorted(docs, key=lambda d: d.charge_state)
 
-            charge_states = [d.charge_state for d in docs]
+            charge_states = [d.charge_state for d in sorted_docs]
             if use_corrected:
-                formation_energies = [d.corrected_formation_energy for d in docs]
+                formation_energies = [
+                    d.corrected_formation_energy for d in sorted_docs
+                ]
             else:
-                formation_energies = [d.raw_formation_energy for d in docs]
+                formation_energies = [d.raw_formation_energy for d in sorted_docs]
 
-            defect_type = docs[0].defect_type
+            defect_type = sorted_docs[0].defect_type
 
             defect_data = DefectFormationEnergyData(
                 defect_name=name,
@@ -427,7 +430,8 @@ def plot_formation_energy_diagram(
         ):
             E_formation = E_formation_0 + q * E_F_range  # noqa: N806
 
-            # Color based on charge: positive = red, negative = blue, neutral = base_color
+            # Color based on charge: positive = red, negative = blue,
+            # neutral = base_color
             if q > 0:
                 color = "red"
                 label = f"{defect.defect_name} (q={q:+d})"
@@ -585,7 +589,7 @@ def plot_formation_energy_diagram_plotly(
     width: int = 900,
     height: int = 600,
     save_path: str | None = None,
-):
+) -> go.Figure:
     """
     Plot interactive formation energy diagram using Plotly.
 
@@ -627,10 +631,10 @@ def plot_formation_energy_diagram_plotly(
     """
     try:
         import plotly.graph_objects as go
-    except ImportError:
+    except ImportError as err:
         raise ImportError(
             "Plotly is required for interactive plots. Install with: pip install plotly"
-        )
+        ) from err
 
     # Set Fermi range
     if fermi_range is None:
@@ -891,7 +895,7 @@ def export_formation_energy_json(
         from datetime import datetime
 
         data["metadata"] = {
-            "export_date": datetime.now().isoformat(),
+            "export_date": datetime.now().isoformat(),  # noqa: DTZ005
             "code": "atomate2siesta",
             "description": "Formation energy diagram data for defect analysis",
         }
@@ -980,12 +984,12 @@ def plot_formation_energy_job(
 
 
 def write_defect_summary(
-    defect_doc,
+    defect_doc: DefectDocument,
     defect_type: str,
     charge_state: int,
     defect_species: str | None,
     mu_defect: float,
-):
+) -> None:
     """
     Write human-readable defect summary to text file.
 
@@ -1038,7 +1042,11 @@ def write_defect_summary(
 
         # Add position
         if defect_doc.defect_site is not None:
-            pos_str = f"[{defect_doc.defect_site[0]:.4f}, {defect_doc.defect_site[1]:.4f}, {defect_doc.defect_site[2]:.4f}]"
+            pos_str = (
+                f"[{defect_doc.defect_site[0]:.4f}, "
+                f"{defect_doc.defect_site[1]:.4f}, "
+                f"{defect_doc.defect_site[2]:.4f}]"
+            )
             f.write(f"Position (frac):     {pos_str}\n")
 
         f.write(f"Supercell size:      {defect_doc.supercell_natoms} atoms\n")
@@ -1051,10 +1059,12 @@ def write_defect_summary(
 
         if charge_state != 0:
             f.write(
-                f"Correction:          {defect_doc.correction_energy:.4f} eV ({defect_doc.correction_scheme})\n"
+                f"Correction:          {defect_doc.correction_energy:.4f} eV "
+                f"({defect_doc.correction_scheme})\n"
             )
             f.write(
-                f"Corrected:           {defect_doc.corrected_formation_energy:.4f} eV @ E_F = 0 (VBM)\n"
+                f"Corrected:           "
+                f"{defect_doc.corrected_formation_energy:.4f} eV @ E_F = 0 (VBM)\n"
             )
         else:
             f.write("Correction:          N/A (neutral defect)\n")
@@ -1080,10 +1090,12 @@ def write_defect_summary(
                 removed_sp = defect_doc.removed_species or "removed"
                 added_sp = defect_species or "added"
                 f.write(
-                    f"Chemical potential (μ_{removed_sp}): {defect_doc.mu_removed:+.4f} eV  (removed)\n"
+                    f"Chemical potential (μ_{removed_sp}): "
+                    f"{defect_doc.mu_removed:+.4f} eV  (removed)\n"
                 )
                 f.write(
-                    f"Chemical potential (μ_{added_sp}):   {defect_doc.mu_added:+.4f} eV  (added)\n"
+                    f"Chemical potential (μ_{added_sp}):   "
+                    f"{defect_doc.mu_added:+.4f} eV  (added)\n"
                 )
                 f.write(f"Net Δμ (μ_removed - μ_added): {mu_defect:+.4f} eV\n")
         # For vacancy/interstitial: show single μ
@@ -1092,14 +1104,17 @@ def write_defect_summary(
             f.write(f"Chemical potential ({mu_label}): {mu_defect:+.4f} eV\n")
 
         f.write(
-            f"Raw E_formation (incl. μ):           {defect_doc.raw_formation_energy:.4f} eV\n"
+            f"Raw E_formation (incl. μ):           "
+            f"{defect_doc.raw_formation_energy:.4f} eV\n"
         )
         if charge_state != 0:
             f.write(
-                f"Correction (E_corr):                 {defect_doc.correction_energy:+.4f} eV\n"
+                f"Correction (E_corr):                 "
+                f"{defect_doc.correction_energy:+.4f} eV\n"
             )
             f.write(
-                f"Final E_formation (corrected):       {defect_doc.corrected_formation_energy:.4f} eV\n"
+                f"Final E_formation (corrected):       "
+                f"{defect_doc.corrected_formation_energy:.4f} eV\n"
             )
         f.write("\n")
 
@@ -1117,11 +1132,13 @@ def write_defect_summary(
                 f.write("\n")
             if "characteristic_length_angstrom" in metadata:
                 f.write(
-                    f"Characteristic length: {metadata['characteristic_length_angstrom']:.2f} Å\n"
+                    f"Characteristic length: "
+                    f"{metadata['characteristic_length_angstrom']:.2f} Å\n"
                 )
             if "gaussian_width_angstrom" in metadata:
                 f.write(
-                    f"Gaussian width (σ):    {metadata['gaussian_width_angstrom']:.2f} Å\n"  # noqa: RUF001
+                    f"Gaussian width (σ):    "  # noqa: RUF001
+                    f"{metadata['gaussian_width_angstrom']:.2f} Å\n"
                 )
             if "lattice_term_eV" in metadata:
                 f.write(f"Lattice term:        {metadata['lattice_term_eV']:.4f} eV\n")
@@ -1144,7 +1161,8 @@ def write_defect_summary(
         if defect_type == "vacancy":
             f.write("For vacancy defects:\n")
             f.write(
-                "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
+                "  E_formation = E_defect - E_host + "
+                "μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
             )
             f.write("Where:\n")
             f.write("  E_defect = Total energy of defect supercell\n")
@@ -1156,7 +1174,8 @@ def write_defect_summary(
         elif defect_type == "substitution":
             f.write("For substitution defects:\n")
             f.write(
-                "  E_formation = E_defect - E_host + (μ_removed - μ_added) + q × E_F + E_corr\n\n"  # noqa: RUF001
+                "  E_formation = E_defect - E_host + "
+                "(μ_removed - μ_added) + q × E_F + E_corr\n\n"  # noqa: RUF001
             )
             f.write("Where:\n")
             f.write("  E_defect  = Total energy of defect supercell\n")
@@ -1211,8 +1230,8 @@ def write_combined_defect_summary(
     defect_documents: list[DefectDocument],
     filename: str = "defect_summary_all_charges.txt",
     bandgap: float | None = None,
-    vbm_energy: float = 0.0,
-):
+    vbm_energy: float = 0.0,  # noqa: ARG001
+) -> Path:
     """
     Job to write a combined summary for all charge states.
 
@@ -1259,7 +1278,7 @@ def write_combined_defect_summary(
         # Process each defect type
         for defect_name, docs in defect_groups.items():
             # Sort by charge state
-            docs = sorted(docs, key=lambda d: d.charge_state)
+            docs = sorted(docs, key=lambda d: d.charge_state)  # noqa: PLW2901
 
             # Defect information
             f.write("DEFECT INFORMATION\n")
@@ -1271,7 +1290,8 @@ def write_combined_defect_summary(
             f.write(f"Supercell size:      {docs[0].supercell_natoms} atoms\n")
             f.write(f"Number of charge states: {len(docs)}\n")
             f.write(
-                f"Charge states:       {', '.join([f'{d.charge_state:+d}' for d in docs])}\n"
+                f"Charge states:       "
+                f"{', '.join([f'{d.charge_state:+d}' for d in docs])}\n"
             )
             f.write("\n")
 
@@ -1280,16 +1300,22 @@ def write_combined_defect_summary(
             f.write("-" * 120 + "\n")
             f.write(
                 f"{'Charge':>8}  {'Position (frac)':>26}  "
-                f"{'Uncorrected':>12}  {'Correction':>12}  {'Corrected':>12}  {'Scheme':>15}\n"
+                f"{'Uncorrected':>12}  {'Correction':>12}  "
+                f"{'Corrected':>12}  {'Scheme':>15}\n"
             )
             f.write(
-                f"{'-' * 8}  {'-' * 26}  {'-' * 12}  {'-' * 12}  {'-' * 12}  {'-' * 15}\n"
+                f"{'-' * 8}  {'-' * 26}  {'-' * 12}  "
+                f"{'-' * 12}  {'-' * 12}  {'-' * 15}\n"
             )
 
             for doc in docs:
                 # Format position
                 if doc.defect_site is not None:
-                    pos_str = f"[{doc.defect_site[0]:6.4f}, {doc.defect_site[1]:6.4f}, {doc.defect_site[2]:6.4f}]"
+                    pos_str = (
+                        f"[{doc.defect_site[0]:6.4f}, "
+                        f"{doc.defect_site[1]:6.4f}, "
+                        f"{doc.defect_site[2]:6.4f}]"
+                    )
                 else:
                     pos_str = "N/A"
 
@@ -1344,12 +1370,14 @@ def write_combined_defect_summary(
                     # Table header (with or without position column)
                     if bandgap is not None:
                         f.write(
-                            f"{'Transition':>12}  {'ε (eV)':>10}  {'Position':>25}  {'E_formation (eV)':>16}\n"
+                            f"{'Transition':>12}  {'ε (eV)':>10}  "
+                            f"{'Position':>25}  {'E_formation (eV)':>16}\n"
                         )
                         f.write(f"{'-' * 12}  {'-' * 10}  {'-' * 25}  {'-' * 16}\n")
                     else:
                         f.write(
-                            f"{'Transition':>12}  {'ε (eV)':>10}  {'E_formation (eV)':>16}\n"
+                            f"{'Transition':>12}  {'ε (eV)':>10}  "
+                            f"{'E_formation (eV)':>16}\n"
                         )
                         f.write(f"{'-' * 12}  {'-' * 10}  {'-' * 16}\n")
 
@@ -1387,14 +1415,16 @@ def write_combined_defect_summary(
                     f.write("\n")
                     f.write("Notes:\n")
                     f.write(
-                        "• ε(q₁/q₂) is the Fermi level where charge states q₁ and q₂ have equal E_formation\n"
+                        "• ε(q₁/q₂) is the Fermi level where charge states "
+                        "q₁ and q₂ have equal E_formation\n"
                     )
                     f.write("• At E_F < ε(q₁/q₂): charge state q₁ is more stable\n")
                     f.write("• At E_F > ε(q₁/q₂): charge state q₂ is more stable\n")
                     f.write("• All energies referenced to VBM (valence band maximum)\n")
                 else:
                     f.write(
-                        "No charge transition levels (only one charge state or duplicate charges)\n"
+                        "No charge transition levels "
+                        "(only one charge state or duplicate charges)\n"
                     )
 
                 f.write("\n")
@@ -1410,7 +1440,11 @@ def write_combined_defect_summary(
 
                 # Add position
                 if doc.defect_site is not None:
-                    pos_str = f"[{doc.defect_site[0]:.4f}, {doc.defect_site[1]:.4f}, {doc.defect_site[2]:.4f}]"
+                    pos_str = (
+                        f"[{doc.defect_site[0]:.4f}, "
+                        f"{doc.defect_site[1]:.4f}, "
+                        f"{doc.defect_site[2]:.4f}]"
+                    )
                     f.write(f"  Position (frac):   {pos_str}\n")
 
                 f.write(f"  Defect energy:     {doc.defect_energy:.4f} eV\n")
@@ -1422,10 +1456,12 @@ def write_combined_defect_summary(
                 )
                 if doc.charge_state != 0:
                     f.write(
-                        f"  Correction:                {doc.correction_energy:+.4f} eV\n"
+                        f"  Correction:                "
+                        f"{doc.correction_energy:+.4f} eV\n"
                     )
                     f.write(
-                        f"  Corrected E_formation:     {doc.corrected_formation_energy:.4f} eV\n"
+                        f"  Corrected E_formation:     "
+                        f"{doc.corrected_formation_energy:.4f} eV\n"
                     )
             f.write("\n")
 
@@ -1444,7 +1480,11 @@ def write_combined_defect_summary(
 
                         # Add position
                         if doc.defect_site is not None:
-                            pos_str = f"[{doc.defect_site[0]:.4f}, {doc.defect_site[1]:.4f}, {doc.defect_site[2]:.4f}]"
+                            pos_str = (
+                                f"[{doc.defect_site[0]:.4f}, "
+                                f"{doc.defect_site[1]:.4f}, "
+                                f"{doc.defect_site[2]:.4f}]"
+                            )
                             f.write(f"  Position (frac): {pos_str}\n")
 
                         metadata = doc.correction_metadata
@@ -1456,19 +1496,23 @@ def write_combined_defect_summary(
                             f.write("\n")
                         if "supercell_length" in metadata:
                             f.write(
-                                f"  Supercell length:  {metadata['supercell_length']:.2f} Å\n"
+                                f"  Supercell length:  "
+                                f"{metadata['supercell_length']:.2f} Å\n"
                             )
                         if "gaussian_width_angstrom" in metadata:
                             f.write(
-                                f"  Gaussian width (σ): {metadata['gaussian_width_angstrom']:.2f} Å\n"  # noqa: RUF001
+                                f"  Gaussian width (σ): "  # noqa: RUF001
+                                f"{metadata['gaussian_width_angstrom']:.2f} Å\n"
                             )
                         if "lattice_term" in metadata:
                             f.write(
-                                f"  Lattice term:      {metadata.get('lattice_term', 0.0):.4f} eV\n"
+                                f"  Lattice term:      "
+                                f"{metadata.get('lattice_term', 0.0):.4f} eV\n"
                             )
                         if "alignment_energy" in metadata:
                             f.write(
-                                f"  Alignment energy:  {metadata.get('alignment_energy', 0.0):.4f} eV\n"
+                                f"  Alignment energy:  "
+                                f"{metadata.get('alignment_energy', 0.0):.4f} eV\n"
                             )
                 f.write("\n")
 
@@ -1479,7 +1523,8 @@ def write_combined_defect_summary(
             if defect_type == "vacancy":
                 f.write("For vacancy defects:\n")
                 f.write(
-                    "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
+                    "  E_formation = E_defect - E_host + "
+                    "μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
                 )
                 f.write("Where:\n")
                 f.write("  E_defect = Total energy of defect supercell\n")
@@ -1491,7 +1536,8 @@ def write_combined_defect_summary(
             elif defect_type == "substitution":
                 f.write("For substitution defects:\n")
                 f.write(
-                    "  E_formation = E_defect - E_host + (μ_removed - μ_added) + q × E_F + E_corr\n\n"  # noqa: RUF001
+                    "  E_formation = E_defect - E_host + "
+                    "(μ_removed - μ_added) + q × E_F + E_corr\n\n"  # noqa: RUF001
                 )
                 f.write("Where:\n")
                 f.write("  E_defect  = Total energy of defect supercell\n")
@@ -1551,7 +1597,7 @@ def plot_formation_energy_diagram_plotly_job(
     filename: str = "formation_energy_interactive.html",
     show_ctls: bool = True,
     show_band_edges: bool = True,
-):
+) -> Path:
     """
     Job to create interactive Plotly formation energy diagram.
 
@@ -1690,7 +1736,7 @@ def _extract_bandgap_from_defect_docs(defect_docs: list) -> float:
 
 @job
 def _extract_effective_masses_from_defect_docs(
-    defect_docs: list,
+    defect_docs: list,  # noqa: ARG001
 ) -> tuple[float, float]:
     """
     Extract effective masses from band structure calculations.
@@ -1919,7 +1965,7 @@ class FormationEnergyDiagramFlowMaker:
         # Collect jobs (include extraction jobs if created)
         # Handle both single Flow and list of Flows from from_pristine_structure()
         if isinstance(defect_flows, list):
-            jobs = defect_flows + [plot_job, summary_job]
+            jobs = [*defect_flows, plot_job, summary_job]
         else:
             jobs = [defect_flows, plot_job, summary_job]
 

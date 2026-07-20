@@ -24,7 +24,7 @@ def generate_slabs_for_miller_index(
     miller_index: tuple[int, int, int],
     min_slab_size: float = 10.0,
     min_vacuum_size: float = 15.0,
-    max_index: int = 1,
+    max_index: int = 1,  # noqa: ARG001
     symmetrize: bool = False,
     lll_reduce: bool = False,
     center_slab: bool = True,
@@ -177,7 +177,8 @@ def generate_slabs_for_all_miller_indices(
         # Get all symmetrically distinct Miller indices
         miller_indices = get_symmetrically_distinct_miller_indices(structure, max_index)
         logger.info(
-            f"Auto-generated {len(miller_indices)} unique Miller indices up to {max_index}"
+            f"Auto-generated {len(miller_indices)} unique Miller indices "
+            f"up to {max_index}"
         )
     else:
         logger.info(f"Using {len(miller_indices)} user-specified Miller indices")

@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 from jobflow import job
+
+if TYPE_CHECKING:
+    from pandas import DataFrame
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +64,8 @@ def _write_ase_neb_info(
         if max_neb_force is not None:
             f.write(f"Final max NEB force: {max_neb_force:.4f} eV/Å\n")
         f.write(
-            f"Activation energy: {max(energies_rel):.2f} meV ({max(energies_rel) / 1000:.4f} eV)\n"
+            f"Activation energy: {max(energies_rel):.2f} meV "
+            f"({max(energies_rel) / 1000:.4f} eV)\n"
         )
         f.write(f"Transition state at image: {energies_rel.index(max(energies_rel))}\n")
         if any(mf is not None for mf in max_forces):
@@ -180,7 +185,7 @@ def plot_ase_neb_results(neb_data: dict) -> dict:
 
 def _write_neb_summary(
     all_iterations_df: list,
-    final_df,
+    final_df: DataFrame,
     barrier: float,
     ts_coord: float,
     ts_energy: float,
@@ -241,7 +246,8 @@ def _write_neb_summary(
         f.write(f"Transition state image:     {ts_index}\n")
         f.write(f"TS reaction coordinate:     {ts_coord:.6f}\n")
         f.write(
-            f"TS energy:                  {ts_energy:.2f} meV ({ts_energy / 1000:.6f} eV)\n"
+            f"TS energy:                  {ts_energy:.2f} meV "
+            f"({ts_energy / 1000:.6f} eV)\n"
         )
 
         # Get TS curvature if available
@@ -254,7 +260,8 @@ def _write_neb_summary(
         f.write("CONVERGENCE EVOLUTION:\n")
         f.write("-" * 80 + "\n")
         f.write(
-            f"{'Iter':<6} {'Barrier (meV)':<15} {'Max Force (eV/Å)':<20} {'Status':<15}\n"
+            f"{'Iter':<6} {'Barrier (meV)':<15} "
+            f"{'Max Force (eV/Å)':<20} {'Status':<15}\n"
         )
         f.write("-" * 80 + "\n")
 
@@ -269,7 +276,8 @@ def _write_neb_summary(
             status = "Converged" if iter_max_force < force_tol else "Running"
 
             f.write(
-                f"{i + 1:<6} {iter_barrier:<15.2f} {iter_max_force:<20.4f} {status:<15}\n"
+                f"{i + 1:<6} {iter_barrier:<15.2f} "
+                f"{iter_max_force:<20.4f} {status:<15}\n"
             )
         f.write("\n")
 
@@ -319,7 +327,8 @@ def _write_neb_summary(
         f.write(f"Initial energy:             {energies[0]:.6f} eV\n")
         f.write(f"Final energy:               {energies[-1]:.6f} eV\n")
         f.write(
-            f"Reaction energy:            {(energies[-1] - energies[0]) * 1000:.2f} meV\n"
+            f"Reaction energy:            "
+            f"{(energies[-1] - energies[0]) * 1000:.2f} meV\n"
         )
         f.write(
             f"Average spacing (RC):       {np.mean(np.diff(reaction_coords)):.6f}\n"
@@ -467,7 +476,8 @@ def plot_neb_results(
         return {"activation_energy": None, "plot_file": None}
 
     # Parse NEB.results file with full column data
-    # Expected columns: Image, reaction-coordinate, Energy, E-diff, Curvature, F-max(atom)
+    # Expected columns: Image, reaction-coordinate, Energy, E-diff, Curvature,
+    # F-max(atom)
     column_names = [
         "Image",
         "reaction-coordinate",
@@ -489,8 +499,8 @@ def plot_neb_results(
             lines = f.readlines()
 
     # Parse data blocks
-    for line in lines:
-        line = line.strip()
+    for raw_line in lines:
+        line = raw_line.strip()
         if line.startswith("#"):
             continue  # Skip header lines
         if not line:  # Empty line marks end of iteration
@@ -500,7 +510,7 @@ def plot_neb_results(
                     df = df.apply(pd.to_numeric, errors="coerce").dropna()
                     if not df.empty:
                         all_iterations_df.append(df)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Failed to parse iteration: {e}")
                 current_data = []
         else:
@@ -515,7 +525,7 @@ def plot_neb_results(
             df = df.apply(pd.to_numeric, errors="coerce").dropna()
             if not df.empty:
                 all_iterations_df.append(df)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to parse last iteration: {e}")
 
     if not all_iterations_df:
@@ -523,7 +533,8 @@ def plot_neb_results(
         return {"activation_energy": None, "plot_file": None}
 
     logger.info(
-        f"Found {len(all_iterations_df)} NEB iterations with {len(all_iterations_df[-1])} images each"
+        f"Found {len(all_iterations_df)} NEB iterations with "
+        f"{len(all_iterations_df[-1])} images each"
     )
 
     # Get final iteration
@@ -735,6 +746,6 @@ def plot_neb_results(
 
 
 @job
-def print_dir(d):
+def print_dir(d: str) -> None:
     """Debug utility to log directory information."""
     logger.debug(f"Directory contents: {d}")

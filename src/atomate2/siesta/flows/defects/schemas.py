@@ -23,7 +23,10 @@ class DefectDocument(SiestaTaskDoc):
 
     defect_species: str | None = Field(
         None,
-        description="Species of the defect (added species for substitution, removed for vacancy)",
+        description=(
+            "Species of the defect (added species for substitution, "
+            "removed for vacancy)"
+        ),
     )
 
     removed_species: str | None = Field(
@@ -64,17 +67,26 @@ class DefectDocument(SiestaTaskDoc):
     # Chemical potential and Fermi level
     chemical_potential: float = Field(
         0.0,
-        description="Net chemical potential contribution (eV): μ for vacancy/interstitial, Δμ for substitution",
+        description=(
+            "Net chemical potential contribution (eV): "
+            "μ for vacancy/interstitial, Δμ for substitution"
+        ),
     )
 
     mu_removed: float = Field(
         0.0,
-        description="Chemical potential of removed species (eV), for substitution/vacancy",
+        description=(
+            "Chemical potential of removed species (eV), "
+            "for substitution/vacancy"
+        ),
     )
 
     mu_added: float = Field(
         0.0,
-        description="Chemical potential of added species (eV), for substitution/interstitial",
+        description=(
+            "Chemical potential of added species (eV), "
+            "for substitution/interstitial"
+        ),
     )
 
     fermi_level: float = Field(

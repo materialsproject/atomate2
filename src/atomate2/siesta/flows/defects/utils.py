@@ -7,6 +7,7 @@ for use in advanced finite-size correction schemes.
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from pathlib import Path
 
@@ -63,7 +64,7 @@ def read_siesta_grid_file(
     except ImportError:
         raise ImportError(
             "sisl is required to read SIESTA grid files. Install with: pip install sisl"
-        )
+        ) from None
 
     file_path = Path(file_path)
 
@@ -82,7 +83,7 @@ def read_siesta_grid_file(
         with gzip.open(file_path, "rb") as f_in:
             # Create temp file with correct extension (.VT, .RHO, etc.)
             suffix = file_path.stem.split(".")[-1]  # Get .VT from siesta.VT.gz
-            temp_file = tempfile.NamedTemporaryFile(
+            temp_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
                 mode="wb", suffix=f".{suffix}", delete=False
             )
             temp_file.write(f_in.read())
@@ -110,10 +111,8 @@ def read_siesta_grid_file(
     finally:
         # Clean up temp file if created
         if temp_file is not None:
-            try:
+            with contextlib.suppress(Exception):
                 Path(temp_file.name).unlink()
-            except Exception:
-                pass
 
     # Extract data
     data = grid.grid  # 3D numpy array
@@ -227,9 +226,8 @@ def read_siesta_density(
     --------
     >>> density = read_siesta_density("siesta.RHO")
     >>> print(f"Density grid: {density['grid_shape']}")
-    >>> print(
-    ...     f"Total electrons: {density['data'].sum() * volume / np.prod(density['grid_shape'])}"
-    ... )
+    >>> n_grid = np.prod(density["grid_shape"])
+    >>> print(f"Total electrons: {density['data'].sum() * volume / n_grid}")
 
     Notes
     -----
@@ -408,7 +406,7 @@ def plot_potential_alignment(
     except ImportError:
         raise ImportError(
             "matplotlib is required for plotting. Install with: pip install matplotlib"
-        )
+        ) from None
 
     # Read potential files
     defect_data = read_siesta_grid_file(defect_vt_path, file_type="VT")

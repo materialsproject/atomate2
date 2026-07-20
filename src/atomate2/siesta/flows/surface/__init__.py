@@ -16,14 +16,10 @@ from atomate2.siesta.flows.surface.multi_surface import (
 )
 
 __all__ = [
-    # From adsorption.py
-    "AdsorptionScanFlowMaker",
     "AdsorptionOptimizationFlowMaker",
-    # From convergence.py
-    "SurfaceEnergyConvergenceFlowMaker",
-    # From core.py (was surface.py)
-    "SurfaceEnergyFlowMaker",
-    # From multi_surface.py
+    "AdsorptionScanFlowMaker",
     "MultiSurfaceEnergyFlowMaker",
+    "SurfaceEnergyConvergenceFlowMaker",
+    "SurfaceEnergyFlowMaker",
     "calculate_multi_surface_energies",
 ]

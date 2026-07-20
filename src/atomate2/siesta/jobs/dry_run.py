@@ -35,7 +35,7 @@ def dry_run_save_structure(
     metadata: dict | None = None,
 ) -> dict:
     """
-    Save structure to file without running calculations (fundamental dry-run operation).
+    Save structure without running calculations (fundamental dry-run operation).
 
     This is the atomic unit of dry-run operations. All job-level dry-runs
     use this function to save their output structures consistently.
@@ -102,11 +102,11 @@ def dry_run_save_structure(
             structure.to(filename=str(filename), fmt=output_format)
         logger.info(f"[DRY RUN] Saved {label}: {filename}")
     except Exception as e:
-        logger.exception(f"[DRY RUN] Failed to save {label}: {e}")
+        logger.exception(f"[DRY RUN] Failed to save {label}: {e}")  # noqa: TRY401
         raise
 
     # Collect structure information
-    result = {
+    return {
         "dry_run": True,
         "label": label,
         "structure_file": str(filename),
@@ -123,8 +123,6 @@ def dry_run_save_structure(
         },
         "metadata": metadata or {},
     }
-
-    return result
 
 
 @job
@@ -222,7 +220,7 @@ def dry_run_save_multiple_structures(
                 }
             )
         except Exception as e:
-            logger.exception(f"[DRY RUN] Failed to save {label}: {e}")
+            logger.exception(f"[DRY RUN] Failed to save {label}: {e}")  # noqa: TRY401
             raise
 
     logger.info(f"[DRY RUN] Saved {len(structure_files)} structures to {output_dir}")
@@ -294,7 +292,7 @@ def dry_run_workflow_summary(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now()
+    timestamp = datetime.now()  # noqa: DTZ005
 
     # Create summary file
     summary_file = output_dir / "dry_run_summary.txt"
@@ -333,7 +331,8 @@ def dry_run_workflow_summary(
                         formula = output.get("formula", "N/A")
                         num_atoms = output.get("num_atoms", 0)
                         f.write(
-                            f"  {i:2d}. {label:30s} {formula:15s} ({num_atoms:3d} atoms)\n"
+                            f"  {i:2d}. {label:30s} "
+                            f"{formula:15s} ({num_atoms:3d} atoms)\n"
                         )
                 else:
                     f.write(f"  {i:2d}. Non-dry-run output (skipped)\n")

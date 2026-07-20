@@ -38,37 +38,30 @@ from atomate2.siesta.flows.defects.utils import (
 )
 
 __all__ = [
-    # Main workflows
-    "DefectFlowMaker",
-    "FormationEnergyDiagramFlowMaker",
     "CorrectionComparisonFlowMaker",
-    # Makers
-    "DefectRelaxMaker",
-    "DefectStaticMaker",
-    # Schemas
     "DefectDocument",
-    # Analysis jobs
-    "write_combined_defect_summary",
-    # Generation utilities
-    "create_vacancy_with_ghost",
-    "create_vacancy_with_ghost_from_site",
+    "DefectFlowMaker",
+    "DefectRelaxMaker",
+    "DefectSite",
+    "DefectStaticMaker",
+    "FormationEnergyDiagramFlowMaker",
+    "LayerInfo",
+    "SiestaInterstitialGenerator",
+    "SiestaSubstitutionGenerator",
     "SiestaVacancyGenerator",
-    "SurfaceVacancyGenerator",
     "SurfaceInterstitialGenerator",
     "SurfaceSubstitutionGenerator",
-    "SiestaSubstitutionGenerator",
-    "SiestaInterstitialGenerator",
-    "DefectSite",
-    "LayerInfo",
-    # File I/O utilities
-    "read_siesta_grid_file",
-    "read_siesta_density",
+    "SurfaceVacancyGenerator",
+    "calculate_planar_average",
+    "create_vacancy_with_ghost",
+    "create_vacancy_with_ghost_from_site",
+    "find_vt_files",
+    "plot_potential_alignment",
     "prepare_density_data",
     "prepare_freysoldt_potential_data",
-    "find_vt_files",
-    # Analysis utilities
-    "calculate_planar_average",
-    "plot_potential_alignment",
+    "read_siesta_density",
+    "read_siesta_grid_file",
+    "write_combined_defect_summary",
     # Future workflows (to be implemented)
     # "DefectMigrationFlowMaker",
     # "ComplexDefectFlowMaker",

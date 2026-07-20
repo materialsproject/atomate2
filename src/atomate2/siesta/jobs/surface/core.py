@@ -206,7 +206,7 @@ def plot_surface_energies(
     ax1.tick_params(axis="both", labelsize=10)
 
     # Add value labels on bars
-    for i, (name, energy) in enumerate(zip(names, energies_eV, strict=False)):
+    for i, (_name, energy) in enumerate(zip(names, energies_eV, strict=False)):
         ax1.text(
             i,
             energy,
@@ -232,7 +232,7 @@ def plot_surface_energies(
     ax2.tick_params(axis="both", labelsize=10)
 
     # Add value labels on bars
-    for i, (name, energy) in enumerate(zip(names, energies_Jm2, strict=False)):
+    for i, (_name, energy) in enumerate(zip(names, energies_Jm2, strict=False)):
         ax2.text(
             i,
             energy,
@@ -282,7 +282,7 @@ def write_surface_energy_summary(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
 
     lines = []
     lines.append("=" * 80)

@@ -1,3 +1,4 @@
+# ruff: noqa: INP001
 """Base flow maker for SIESTA workflows with automatic dry-run propagation."""
 
 from __future__ import annotations
@@ -16,8 +17,8 @@ class BaseSiestaFlowMaker(Maker):
     """
     Base flow maker with automatic dry-run, custodian, and tier propagation.
 
-    This base class automatically propagates dry-run, custodian, and tier settings to all
-    child makers that support these features. When a flow has `dry_run=True`,
+    This base class automatically propagates dry-run, custodian, and tier settings
+    to all child makers that support these features. When a flow has `dry_run=True`,
     `use_custodian=True`, or `tier="basic"`, all child job makers automatically inherit
     these settings without manual configuration.
 
@@ -40,12 +41,14 @@ class BaseSiestaFlowMaker(Maker):
         Maximum number of errors before giving up. Propagated to all child makers.
     tier : str, optional
         Calculation tier: "basic", "intermediate", "advanced", or "expert".
-        This setting is automatically propagated to all child makers' input_set_generators.
+        This setting is automatically propagated to all child makers'
+        input_set_generators.
         If None, child makers use their default tier settings.
     manager_config : dict[str, Any], optional
         Configuration for jobflow-remote resource management. When set, this dict is
         automatically propagated to all child makers. Format:
-        ``{"resources": {"ntasks_per_node": 24, "time": "24:00:00", "partition": "RES"}}``.
+        ``{"resources": {"ntasks_per_node": 24, "time": "24:00:00",
+        "partition": "RES"}}``.
         Useful for setting base HPC resources across all jobs in a workflow.
         If None, child makers keep their own manager_config settings.
 
@@ -106,8 +109,8 @@ class BaseSiestaFlowMaker(Maker):
     tier: str | None = None
     manager_config: dict[str, Any] | None = None
 
-    def __post_init__(self):
-        """Propagate dry-run, custodian, and tier settings to all child makers after initialization."""
+    def __post_init__(self) -> None:
+        """Propagate dry-run, custodian, and tier settings to all child makers."""
         if self.dry_run:
             logger.info(
                 f"{self.__class__.__name__}: dry_run=True, propagating to child makers"
@@ -116,19 +119,22 @@ class BaseSiestaFlowMaker(Maker):
 
         if self.use_custodian:
             logger.info(
-                f"{self.__class__.__name__}: use_custodian=True, propagating to child makers"
+                f"{self.__class__.__name__}: use_custodian=True, "
+                "propagating to child makers"
             )
             self._propagate_custodian()
 
         if self.tier is not None:
             logger.info(
-                f"{self.__class__.__name__}: tier='{self.tier}', propagating to child makers"
+                f"{self.__class__.__name__}: tier='{self.tier}', "
+                "propagating to child makers"
             )
             self._propagate_tier()
 
         if self.manager_config is not None:
             logger.info(
-                f"{self.__class__.__name__}: manager_config set, propagating to child makers"
+                f"{self.__class__.__name__}: manager_config set, "
+                "propagating to child makers"
             )
             self._propagate_manager_config()
 
@@ -191,7 +197,7 @@ class BaseSiestaFlowMaker(Maker):
 
         # Recursively propagate if this maker is also a flow
         if isinstance(maker, BaseSiestaFlowMaker):
-            maker._propagate_dry_run()
+            maker._propagate_dry_run()  # noqa: SLF001
 
     def _propagate_custodian(self) -> None:
         """
@@ -246,14 +252,15 @@ class BaseSiestaFlowMaker(Maker):
 
         logger.info(
             f"  → Enabled custodian for {maker_name} "
-            f"(type: {maker.__class__.__name__}, max_errors={self.custodian_max_errors})"
+            f"(type: {maker.__class__.__name__}, "
+            f"max_errors={self.custodian_max_errors})"
         )
 
         # Recursively propagate if this maker is also a flow
         if isinstance(maker, BaseSiestaFlowMaker):
-            maker._propagate_custodian()
+            maker._propagate_custodian()  # noqa: SLF001
 
-    def propagate_custodian_to_maker(self, maker: Maker):
+    def propagate_custodian_to_maker(self, maker: Maker) -> None:
         """
         Propagate custodian settings from this flow maker to a child maker.
 
@@ -363,7 +370,7 @@ class BaseSiestaFlowMaker(Maker):
 
         # Recursively propagate if this maker is also a flow
         if isinstance(maker, BaseSiestaFlowMaker):
-            maker._propagate_tier()
+            maker._propagate_tier()  # noqa: SLF001
 
     def _propagate_manager_config(self) -> None:
         """
@@ -421,9 +428,9 @@ class BaseSiestaFlowMaker(Maker):
 
         # Recursively propagate if this maker is also a flow
         if isinstance(maker, BaseSiestaFlowMaker):
-            maker._propagate_manager_config()
+            maker._propagate_manager_config()  # noqa: SLF001
 
-    def propagate_manager_config_to_maker(self, maker: Maker):
+    def propagate_manager_config_to_maker(self, maker: Maker) -> None:
         """
         Propagate manager_config from this flow maker to a child maker.
 

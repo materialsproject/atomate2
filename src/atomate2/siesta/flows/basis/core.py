@@ -47,16 +47,22 @@ def print_energies(
     flow_results: dict[str, Any], job_metadata: list[dict]
 ) -> dict[str, float]:
     """
-    Retrieve and print the total energies from each job in the Flow's results using job.output.
+    Retrieve and print the total energies from each job in the Flow's results.
+
+    Uses job.output to access the energies.
 
     Args:
-        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
-        job_metadata (list[dict]): List of dictionaries containing job names and UUIDs.
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
+        flow_results (Dict[str, Any]): The results dictionary returned by
+            jobflow's run_locally.
+        job_metadata (list[dict]): List of dictionaries containing job names
+            and UUIDs.
+        verbosity (VerbosityLevel): Verbosity level for console output.
+            Defaults to INFO.
 
     Returns
     -------
-        Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
+        Dict[str, float]: A dictionary mapping job names to their total
+        energies (in eV).
     """
     verbosity = DifferentBasisSCFAdvanceFlowMaker.CONSOLE_VERBOSITY
     energies = {}
@@ -78,13 +84,15 @@ def print_energies(
             if job_uuid not in flow_results:
                 if verbosity.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]No results found for job {job_name} (UUID: {job_uuid})[/yellow]"
+                        f"[yellow]No results found for job {job_name} "
+                        f"(UUID: {job_uuid})[/yellow]"
                     )
                 continue
         except (KeyError, TypeError, ValueError, AttributeError) as e:
             if verbosity.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[red]Error processing job {job_name} (UUID: {job_uuid}): {e}[/red]"
+                    f"[red]Error processing job {job_name} "
+                    f"(UUID: {job_uuid}): {e}[/red]"
                 )
             continue
 
@@ -102,16 +110,21 @@ def print_energies(
 @job
 def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, float]:
     """
-    Retrieve and print the total energies from each job in the Flow's results using job.output.
+    Retrieve and print the total energies from each job in the Flow's results.
+
+    Uses job.output to access the energies.
 
     Args:
         flow (Flow): The Flow object containing the SCF jobs.
-        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to DEBUG.
+        flow_results (Dict[str, Any]): The results dictionary returned by
+            jobflow's run_locally.
+        verbosity (VerbosityLevel): Verbosity level for console output.
+            Defaults to DEBUG.
 
     Returns
     -------
-        Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
+        Dict[str, float]: A dictionary mapping job names to their total
+        energies (in eV).
     """
     verbosity = DifferentBasisSCFAdvanceFlowMaker.CONSOLE_VERBOSITY
     if verbosity.value >= VerbosityLevel.INFO.value:
@@ -131,7 +144,7 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
                 console.print(f"[green]The job in flow uuid:{job_uuid=}[/green]")
 
                 result = flow_results[job_uuid]
-                input = result.input
+                input = result.input  # noqa: A001
                 output = result.output  # Access SiestaTaskDoc
                 energy = output.energy
                 energies[job_name] = energy
@@ -145,14 +158,16 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
             if job_uuid not in flow_results:
                 if verbosity.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]No results found for job {job_name} (UUID: {job_uuid})[/yellow]"
+                        f"[yellow]No results found for job {job_name} "
+                        f"(UUID: {job_uuid})[/yellow]"
                     )
                 continue
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
             if verbosity.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[red]Error processing job {job_name} (UUID: {job_uuid}): {e}[/red]"
+                    f"[red]Error processing job {job_name} "
+                    f"(UUID: {job_uuid}): {e}[/red]"
                 )
             continue
 
@@ -170,13 +185,15 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
 @job
 def plot_energies(
     energies: dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
-):
+) -> None:
     """
     Plot total energies vs. basis size.
 
     Args:
-        energies (Dict[str, float]): Dictionary mapping job names to total energies (in eV).
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
+        energies (Dict[str, float]): Dictionary mapping job names to total
+            energies (in eV).
+        verbosity (VerbosityLevel): Verbosity level for console output.
+            Defaults to INFO.
     """
     import matplotlib.pyplot as plt
 
@@ -218,9 +235,7 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
         structure: Structure | Molecule,
         prev_dir: str | Path | None = None,
     ) -> Flow:
-        """
-        Create a Flow with SCF jobs for different basis sizes.
-        """
+        """Create a Flow with SCF jobs for different basis sizes."""
         # Get the docstring from the class
         doc_to_print = self.__doc__
 
@@ -324,7 +339,8 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
             jobs.append(scf_maker_basis_job)
 
         #  Create a flow from the parallel SCF jobs
-        # scf_flow = Flow(jobs, name="Parallel SCF Calculations",output={job_.uuid: job_.output for job_ in jobs})
+        # scf_flow = Flow(jobs, name="Parallel SCF Calculations",
+        #   output={job_.uuid: job_.output for job_ in jobs})
         scf_flow = Flow(
             jobs,
             name="Parallel SCF Calculations",
@@ -364,14 +380,13 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
 
         # # The final flow contains the initial SCF flow and the two subsequent jobs.
         # # Jobflow automatically resolves the dependency chain.
-        final_flow = Flow(
+        # We can expose the energies dictionary as the final output of the
+        # entire workflow.
+        return Flow(
             [scf_flow, print_job, plot_job],
             name=self.name,
-            # We can expose the energies dictionary as the final output of the entire workflow.
             output=print_job.output,
         )
-
-        return final_flow
 
 
 @job
@@ -421,7 +436,8 @@ def collect_eos_basis_data(
             output = flow_results[job_uuid]
 
             logger.debug(
-                f"Processing {job_name}, output keys: {output.keys() if isinstance(output, dict) else 'not a dict'}"
+                f"Processing {job_name}, output keys: "
+                f"{output.keys() if isinstance(output, dict) else 'not a dict'}"
             )
 
             # Extract EOS fit results (use Birch-Murnaghan as default)
@@ -441,7 +457,7 @@ def collect_eos_basis_data(
                     bm_data = eos_data["birch_murnaghan"]
                 else:
                     # Use first successful fit
-                    for model_name, model_data in eos_data.items():
+                    for model_data in eos_data.values():
                         if "exception" not in model_data:
                             bm_data = model_data
                             break
@@ -454,8 +470,9 @@ def collect_eos_basis_data(
                     data["b0"].append(bm_data.get("b0 GPa", None))
                     data["b1"].append(bm_data.get("b1", None))
 
-                    # Extract equilibrium lattice parameters by scaling reference structure to V₀
-                    # The EOS applies isotropic strain, so lattice parameters scale as V^(1/3)
+                    # Extract equilibrium lattice parameters by scaling
+                    # reference structure to V₀. The EOS applies isotropic
+                    # strain, so lattice parameters scale as V^(1/3)
                     v0 = bm_data.get("v0")
                     structures = output["relax"].get("structure", [])
                     volumes = output["relax"].get("volume", [])
@@ -484,12 +501,14 @@ def collect_eos_basis_data(
                             data["lattice_gamma"].append(ref_lattice.gamma)
 
                             logger.info(
-                                f"Scaled lattice from V_ref={v_ref:.3f} Å³ to V₀={v0:.3f} Å³ "
+                                f"Scaled lattice from V_ref={v_ref:.3f} Å³ "
+                                f"to V₀={v0:.3f} Å³ "
                                 f"(scale={scale:.6f})"
                             )
                         except AttributeError:
                             logger.warning(
-                                f"Could not extract lattice from structure for {job_name}, using cubic approximation"
+                                f"Could not extract lattice from structure "
+                                f"for {job_name}, using cubic approximation"
                             )
                             a_cubic = v0 ** (1.0 / 3.0)
                             data["lattice_a"].append(a_cubic)
@@ -501,7 +520,8 @@ def collect_eos_basis_data(
                     else:
                         # Fallback: calculate from volume assuming cubic
                         logger.warning(
-                            f"No structures available for {job_name}, using cubic approximation"
+                            f"No structures available for {job_name}, "
+                            f"using cubic approximation"
                         )
                         if v0:
                             a_cubic = v0 ** (1.0 / 3.0)
@@ -531,8 +551,8 @@ def collect_eos_basis_data(
                     f"Expected 'relax/EOS' structure not found in output for {job_name}"
                 )
 
-        except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.exception(f"Error processing job {job_name}: {e}")
+        except (KeyError, TypeError, ValueError, AttributeError):
+            logger.exception(f"Error processing job {job_name}")
             import traceback
 
             logger.debug(traceback.format_exc())
@@ -542,7 +562,8 @@ def collect_eos_basis_data(
         logger.warning("No EOS data retrieved for basis set comparison")
     else:
         logger.info(
-            f"Successfully collected {len(data['basis_sets'])} EOS results for basis comparison"
+            f"Successfully collected {len(data['basis_sets'])} "
+            f"EOS results for basis comparison"
         )
 
     return data
@@ -703,7 +724,7 @@ def plot_eos_overlay(
                             fit_data = eos_fits["birch_murnaghan"]
                         else:
                             # Use first successful fit
-                            for model_name, model_data in eos_fits.items():
+                            for model_data in eos_fits.values():
                                 if "exception" not in model_data:
                                     fit_data = model_data
                                     break
@@ -749,13 +770,13 @@ def plot_eos_overlay(
 
                                 plotted_count += 1
 
-                            except Exception as e:
+                            except Exception as e:  # noqa: BLE001
                                 logger.warning(
                                     f"Could not plot fit for {basis_set}: {e}"
                                 )
 
-        except Exception as e:
-            logger.exception(f"Error plotting {job_name}: {e}")
+        except Exception:
+            logger.exception(f"Error plotting {job_name}")
             continue
 
     if plotted_count == 0:
@@ -833,7 +854,8 @@ def write_eos_basis_summary(
         f.write("EQUILIBRIUM PROPERTIES:\n")
         f.write("-" * 80 + "\n")
         f.write(
-            f"{'Basis Set':<12} {'V₀ (Ų)':<12} {'E₀ (eV)':<15} {'B₀ (GPa)':<12} {'B₁':<10}\n"
+            f"{'Basis Set':<12} {'V₀ (Ų)':<12} {'E₀ (eV)':<15} "
+            f"{'B₀ (GPa)':<12} {'B₁':<10}\n"
         )
         f.write("-" * 80 + "\n")
 
@@ -894,10 +916,12 @@ def write_eos_basis_summary(
 
             f.write("Bulk Properties:\n")
             f.write(
-                f"  V₀ range: {v0_range:.6f} Ų ({v0_range / np.mean(basis_data['v0']) * 100:.2f}%)\n"
+                f"  V₀ range: {v0_range:.6f} Ų "
+                f"({v0_range / np.mean(basis_data['v0']) * 100:.2f}%)\n"
             )
             f.write(
-                f"  B₀ range: {b0_range:.4f} GPa ({b0_range / np.mean(basis_data['b0']) * 100:.2f}%)\n"
+                f"  B₀ range: {b0_range:.4f} GPa "
+                f"({b0_range / np.mean(basis_data['b0']) * 100:.2f}%)\n"
             )
 
             # Lattice constant convergence
@@ -920,7 +944,8 @@ def write_eos_basis_summary(
                     ):
                         f.write("  (Cubic system detected: a = b = c)\n")
                         f.write(
-                            f"  Lattice constant 'a' converges from {min(a_values):.6f} Å to {max(a_values):.6f} Å\n"
+                            f"  Lattice constant 'a' converges from "
+                            f"{min(a_values):.6f} Å to {max(a_values):.6f} Å\n"
                         )
 
             f.write(

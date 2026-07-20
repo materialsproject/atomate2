@@ -2,7 +2,8 @@
 Freysoldt-Neugebauer-Van de Walle finite-size correction scheme.
 
 Implementation of the Freysoldt correction with potential alignment:
-Freysoldt, C., Neugebauer, J., & Van de Walle, C. G. (2009). Phys. Rev. Lett., 102, 016402.
+Freysoldt, C., Neugebauer, J., & Van de Walle, C. G. (2009).
+Phys. Rev. Lett., 102, 016402.
 DOI: 10.1103/PhysRevLett.102.016402
 
 Improvements over Lany-Zunger and Makov-Payne:
@@ -283,7 +284,8 @@ class FreysoldtCorrection(CorrectionScheme):
                         )
                         alignment_plot_path = str(plot_output)
                         logger.info(
-                            f"Generated Freysoldt alignment plot (VT): {alignment_plot_path}"
+                            "Generated Freysoldt alignment plot (VT): "
+                            f"{alignment_plot_path}"
                         )
                         logger.info(
                             f"Mean ΔV (VT) = {plot_data['mean_alignment']:.4f} eV "
@@ -306,12 +308,14 @@ class FreysoldtCorrection(CorrectionScheme):
                                 show_plot=False,
                             )
                             logger.info(
-                                f"Generated Freysoldt alignment plot (VH): {plot_output_vh}"
+                                "Generated Freysoldt alignment plot (VH): "
+                                f"{plot_output_vh}"
                             )
                             logger.info(
-                                f"Mean ΔV (VH) = {plot_data_vh['mean_alignment']:.4f} eV"
+                                "Mean ΔV (VH) = "
+                                f"{plot_data_vh['mean_alignment']:.4f} eV"
                             )
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Failed to generate alignment plot: {e}")
 
         else:
@@ -412,9 +416,7 @@ class FreysoldtCorrection(CorrectionScheme):
 
         # Anisotropy factor: ratio of geometric to arithmetic mean
         # Closer to 1.0 for more isotropic systems
-        f_aniso = geometric_mean / arithmetic_mean
-
-        return f_aniso
+        return geometric_mean / arithmetic_mean
 
     def _estimate_gaussian_width(self, structure: Structure) -> float:
         """
@@ -443,11 +445,11 @@ class FreysoldtCorrection(CorrectionScheme):
         """  # noqa: RUF002
         # Find minimum nearest-neighbor distance
         min_nn_dist = float("inf")
-        for i, site in enumerate(structure):
+        for _i, site in enumerate(structure):
             neighbors = structure.get_neighbors(site, 4.0)  # Search within 4 Å
             if neighbors:
                 distances = [n.nn_distance for n in neighbors]
-                min_nn_dist = min(min_nn_dist, min(distances))
+                min_nn_dist = min(min_nn_dist, *distances)
 
         if min_nn_dist == float("inf"):
             # Fallback: use 1.5 Å (typical for localized defects)
@@ -461,9 +463,7 @@ class FreysoldtCorrection(CorrectionScheme):
         sigma = 0.5 * min_nn_dist
 
         # Clamp to reasonable range
-        sigma = np.clip(sigma, 0.5, 3.0)
-
-        return sigma
+        return np.clip(sigma, 0.5, 3.0)
 
     def _calculate_potential_alignment(
         self,
@@ -512,9 +512,7 @@ class FreysoldtCorrection(CorrectionScheme):
         avg_pot_diff = np.mean(pot_diff[mask])
 
         # Alignment energy = q * ΔV
-        alignment_energy = charge_state * avg_pot_diff
-
-        return alignment_energy
+        return charge_state * avg_pot_diff
 
     def _get_alignment_mask(
         self, grid_shape: tuple, defect_site: list[float], structure: Structure
@@ -561,9 +559,7 @@ class FreysoldtCorrection(CorrectionScheme):
         max_dist = np.sqrt(3.0) / 2.0  # Maximum possible distance in fractional coords
         cutoff_dist = max_dist * self.alignment_cutoff
 
-        mask = dist >= cutoff_dist
-
-        return mask
+        return dist >= cutoff_dist
 
     def _get_outer_region_mask(self, grid_shape: tuple) -> np.ndarray:
         """

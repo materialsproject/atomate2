@@ -39,7 +39,8 @@ class NebVacancyExchangeFlowMaker(BaseSiestaFlowMaker):
     name : str
         Name of the flow produced by this maker.
     relax_maker : Maker
-        Job maker for relaxing structures. Default is RelaxMaker.fixed_cell_relaxation().
+        Job maker for relaxing structures. Default is
+        RelaxMaker.fixed_cell_relaxation().
     neb_maker : Maker
         Job maker for running NEB calculation. Default is LuaMaker.neb().
     number_of_images : int
@@ -71,7 +72,7 @@ class NebVacancyExchangeFlowMaker(BaseSiestaFlowMaker):
     def generate_neb_images(
         self,
         structure: Structure,
-        A: int,
+        A: int,  # noqa: N803
         B: int,  # noqa: N803
     ) -> list[Structure]:
         """
@@ -160,28 +161,41 @@ class NebVacancyExchangeFlowMaker(BaseSiestaFlowMaker):
         neb_image_job.name = f"{self.name}_NEB_Image_Generation"
         jobs.append(neb_image_job)
 
-        # Step 4: NEB calculation (this part would depend on specific NEB jobs you're using)
+        # Step 4: NEB calculation (this part would depend on specific NEB jobs
+        # you're using)
         # Assuming you have a NEB maker or job to run the calculation
         # neb_job = self.neb_maker.make(images=neb_band)
         # neb_job.name = f"{self.name} NEB Calculation"
         # Step 4: NEB calculation using LuaMaker
         # neb_job = self.run_neb_calculation(relaxed_initial,neb_image_jobs.output)
-        # neb_job = self.neb_maker.make(relaxed_initial) # Pass the list of NEB images to be handled)
+        # neb_job = self.neb_maker.make(relaxed_initial)
+        # Pass the list of NEB images to be handled)
         # jobs.append(neb_job)
 
-        # images = neb_image_jobs.output["images"]  # Access the images from the job's output
+        # images = neb_image_jobs.output["images"]
+        # Access the images from the job's output
 
         neb_maker_instance = self.neb_maker  # Create an instance of LuaMaker
-        # neb_maker_instance.write_additional_data = {"siesta.1.txt": neb_image_jobs.images[0].positions}  # Pass NEB images
-        # neb_maker_instance.write_additional_data = {f"siesta.{i+1}.xyz": file for i, file in enumerate(neb_image_jobs.images[0])}
-        # neb_maker_instance.write_additional_data = {f"siesta.{i+1}.xyz": image for i, image in enumerate(images)}
+        # neb_maker_instance.write_additional_data = {
+        #     "siesta.1.txt": neb_image_jobs.images[0].positions
+        # }  # Pass NEB images
+        # neb_maker_instance.write_additional_data = {
+        #     f"siesta.{i+1}.xyz": file
+        #     for i, file in enumerate(neb_image_jobs.images[0])
+        # }
+        # neb_maker_instance.write_additional_data = {
+        #     f"siesta.{i+1}.xyz": image for i, image in enumerate(images)
+        # }
         # print("Job output:")
         image_dir = neb_image_job.output  # neb_image_job.output.job_dir
         logger.debug(f"NEB image directory: {image_dir}")
         # print (f"{neb_image_job.output.output_dir["dir_name"]=}")
         # print(f"{neb_image_job.output.output. .output.job_dir=}")
         # write(neb_image_job[0])
-        # neb_maker_instance.write_additional_data = {f"siesta.{i+1}.xyz": file for i, file in enumerate(neb_image_job.output.neb_image_files)}
+        # neb_maker_instance.write_additional_data = {
+        #     f"siesta.{i+1}.xyz": file
+        #     for i, file in enumerate(neb_image_job.output.neb_image_files)
+        # }
         neb_job = neb_maker_instance.make(
             relaxed_initial, extra_dir=image_dir
         )  # ,prev_dir=neb_image_job.output.dir_name) #.output.dir_name)

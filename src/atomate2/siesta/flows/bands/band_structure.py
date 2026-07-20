@@ -13,13 +13,15 @@ from atomate2.siesta.jobs.core import BandStructureMaker, RelaxMaker, StaticMake
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Any
 
+    import numpy as np
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
 
 
-def _get_attr(obj, *attrs, default=None):
+def _get_attr(obj: Any, *attrs: str, default: Any = None) -> Any:
     """Get nested attribute from object or dict."""
     result = obj
     for attr in attrs:
@@ -32,7 +34,7 @@ def _get_attr(obj, *attrs, default=None):
     return result if result is not None else default
 
 
-def _read_bands_file(bands_output) -> dict | None:
+def _read_bands_file(bands_output: Any) -> dict | None:
     """
     Read SIESTA .bands file and return parsed data.
 
@@ -72,10 +74,7 @@ def _read_bands_file(bands_output) -> dict | None:
         return None
 
     # Read file
-    if is_gzipped:
-        f = gzip.open(bands_file, "rt")
-    else:
-        f = open(bands_file)
+    f = gzip.open(bands_file, "rt") if is_gzipped else open(bands_file)  # noqa: SIM115
 
     try:
         ef_file = float(f.readline())
@@ -114,7 +113,14 @@ def _read_bands_file(bands_output) -> dict | None:
     }
 
 
-def _calculate_effective_mass(k, energies, band_idx, k_idx, efermi, is_cbm=True):
+def _calculate_effective_mass(
+    k: np.ndarray,
+    energies: np.ndarray,
+    band_idx: int,
+    k_idx: int,
+    efermi: float,  # noqa: ARG001
+    is_cbm: bool = True,  # noqa: ARG001
+) -> float | None:
     """
     Calculate effective mass at a band extremum using parabolic fitting.
 
@@ -177,11 +183,11 @@ def _calculate_effective_mass(k, energies, band_idx, k_idx, efermi, is_cbm=True)
         m_eff_ratio = m_eff / electron_mass
 
         return abs(m_eff_ratio)
-    except Exception:
+    except Exception:  # noqa: BLE001
         return None
 
 
-def _analyze_band_gaps(k, energies, efermi):
+def _analyze_band_gaps(k: np.ndarray, energies: np.ndarray, efermi: float) -> dict:
     """
     Analyze band gaps: direct vs indirect, locations, effective masses.
 
@@ -255,7 +261,7 @@ def _analyze_band_gaps(k, energies, efermi):
     }
 
 
-def _calculate_bandwidth(energies, efermi):
+def _calculate_bandwidth(energies: np.ndarray, efermi: float) -> dict:
     """
     Calculate bandwidth of valence and conduction bands.
 
@@ -298,9 +304,9 @@ def _calculate_bandwidth(energies, efermi):
     }
 
 
-def _calculate_band_velocities(k, energies):
+def _calculate_band_velocities(k: np.ndarray, energies: np.ndarray) -> np.ndarray:
     """
-    Calculate group velocities for all bands: v = (1/hbar) * dE/dk
+    Calculate group velocities for all bands: v = (1/hbar) * dE/dk.
 
     Returns
     -------
@@ -330,11 +336,16 @@ def _calculate_band_velocities(k, energies):
 
 
 def _plot_band_velocities(
-    k, velocities, efermi, energies, formula, kmin, kmax, structure=None
-):
-    """
-    Plot band velocities (group velocity) with high-symmetry k-point labels.
-    """
+    k: np.ndarray,
+    velocities: np.ndarray,
+    efermi: float,
+    energies: np.ndarray,
+    formula: str,
+    kmin: float,
+    kmax: float,
+    structure: Structure | None = None,
+) -> str:
+    """Plot band velocities (group velocity) with high-symmetry k-point labels."""
     import matplotlib.pyplot as plt
     import numpy as np
 
@@ -387,8 +398,8 @@ def _plot_band_velocities(
 
 @job
 def analyze_band_structure(
-    bands_output,
-    scf_output,
+    bands_output: Any,
+    scf_output: Any,
     plot_bands: bool = True,
     energy_range: tuple[float, float] | None = None,
 ) -> dict:
@@ -518,11 +529,13 @@ def analyze_band_structure(
             f.write("-" * 70 + "\n")
             if summary.get("effective_mass_hole") is not None:
                 f.write(
-                    f"  Hole effective mass (m_h*): {summary['effective_mass_hole']:.4f} m_e\n"
+                    f"  Hole effective mass (m_h*): "
+                    f"{summary['effective_mass_hole']:.4f} m_e\n"
                 )
             if summary.get("effective_mass_electron") is not None:
                 f.write(
-                    f"  Electron effective mass (m_e*): {summary['effective_mass_electron']:.4f} m_e\n"
+                    f"  Electron effective mass (m_e*): "
+                    f"{summary['effective_mass_electron']:.4f} m_e\n"
                 )
 
         # Bandwidth
@@ -532,7 +545,8 @@ def analyze_band_structure(
             f.write(f"  Valence band width: {summary['valence_bandwidth_eV']:.4f} eV\n")
             if summary.get("conduction_bandwidth_eV") is not None:
                 f.write(
-                    f"  Conduction band width: {summary['conduction_bandwidth_eV']:.4f} eV\n"
+                    f"  Conduction band width: "
+                    f"{summary['conduction_bandwidth_eV']:.4f} eV\n"
                 )
 
         # Transport properties
@@ -540,7 +554,8 @@ def analyze_band_structure(
             f.write("\nTRANSPORT PROPERTIES\n")
             f.write("-" * 70 + "\n")
             f.write(
-                f"  Maximum group velocity: {summary['max_group_velocity_1e6_m_s']:.2f} × 10⁶ m/s\n"  # noqa: RUF001
+                f"  Maximum group velocity: "
+                f"{summary['max_group_velocity_1e6_m_s']:.2f} × 10⁶ m/s\n"  # noqa: RUF001
             )
 
         f.write("\n" + "=" * 70 + "\n")
@@ -567,7 +582,7 @@ def analyze_band_structure(
                 summary["plots"]["band_velocities"] = velocity_plot
                 logger.info(f"Generated band velocities plot: {velocity_plot}")
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             import traceback
 
             logger.warning(f"Error generating plots: {e}")
@@ -581,7 +596,7 @@ def analyze_band_structure(
             )
             if plot_file:
                 summary["plots"]["band_structure"] = plot_file
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Could not generate band structure plot: {e}")
 
     # For backward compatibility
@@ -590,7 +605,7 @@ def analyze_band_structure(
     return summary
 
 
-def _get_kpath_labels(structure) -> tuple[list[str], list[float]]:
+def _get_kpath_labels(structure: Structure) -> tuple[list[str], list[float]]:
     """
     Get high-symmetry k-path labels and positions from structure using pymatgen.
 
@@ -653,11 +668,11 @@ def _get_kpath_labels(structure) -> tuple[list[str], list[float]]:
         if positions and positions[-1] > 0:
             positions = [p / positions[-1] for p in positions]
 
-        return labels, positions
-
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Could not generate k-path labels: {e}")
         return [], []
+    else:
+        return labels, positions
 
 
 def _plot_band_structure(
@@ -694,7 +709,8 @@ def _plot_band_structure(
     logger.info(f"Looking for .bands file in: {calc_path.absolute()}")
 
     # Look for bands file with various patterns in multiple locations
-    # First check siesta_compressed/ subdirectory (where SIESTA stores compressed outputs)
+    # First check siesta_compressed/ subdirectory (where SIESTA stores compressed
+    # outputs)
     search_dirs = [
         calc_path / "siesta_compressed",
         calc_path,
@@ -736,7 +752,8 @@ def _plot_band_structure(
             if compressed_dir.exists():
                 compressed_files = list(compressed_dir.iterdir())
                 logger.warning(
-                    f"siesta_compressed/ contains: {[f.name for f in compressed_files[:10]]}"
+                    f"siesta_compressed/ contains: "
+                    f"{[f.name for f in compressed_files[:10]]}"
                 )
         else:
             logger.warning(f"Directory does not exist: {calc_dir}")
@@ -747,10 +764,7 @@ def _plot_band_structure(
         import numpy as np
 
         # Read bands file (handle gzipped files)
-        if is_gzipped:
-            f = gzip.open(bands_file, "rt")
-        else:
-            f = open(bands_file)
+        f = gzip.open(bands_file, "rt") if is_gzipped else open(bands_file)  # noqa: SIM115
 
         # Parse bands file
         try:
@@ -846,14 +860,14 @@ def _plot_band_structure(
         plt.savefig(plot_file, dpi=300, bbox_inches="tight")
         plt.close()
 
-        return plot_file
-
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         import traceback
 
         logger.warning(f"Error generating band plot: {e}")
         logger.warning(traceback.format_exc())
         return None
+    else:
+        return plot_file
 
 
 @dataclass

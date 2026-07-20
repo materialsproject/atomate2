@@ -1,9 +1,10 @@
 """
 Comprehensive Basis Set Convergence Workflows for SIESTA.
 
-This module provides workflows for systematic testing of SIESTA basis set convergence,
-combining both basis size (SZ, DZ, DZP, TZP, etc.) and basis parameters (PAO.EnergyShift,
-PAO.SplitNorm) to find optimal settings for accuracy and computational efficiency.
+This module provides workflows for systematic testing of SIESTA basis set
+convergence, combining both basis size (SZ, DZ, DZP, TZP, etc.) and basis
+parameters (PAO.EnergyShift, PAO.SplitNorm) to find optimal settings for
+accuracy and computational efficiency.
 
 Key Features:
 - Tests multiple basis sizes in parallel
@@ -54,9 +55,9 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
     """
     Maker to test convergence with different basis set sizes.
 
-    This workflow runs SCF calculations with different basis sizes (SZ, DZ, DZP, TZP, etc.)
-    using fixed PAO.EnergyShift and PAO.SplitNorm parameters. It helps determine the
-    minimum basis size needed for converged results.
+    This workflow runs SCF calculations with different basis sizes (SZ, DZ, DZP,
+    TZP, etc.) using fixed PAO.EnergyShift and PAO.SplitNorm parameters. It helps
+    determine the minimum basis size needed for converged results.
 
     Parameters
     ----------
@@ -93,7 +94,7 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
     kpts: list[int] | None = None
     static_maker: StaticMaker | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Set default basis sizes if not provided."""
         if self.basis_sizes is None:
             self.basis_sizes = ["SZ", "DZ", "DZP", "TZP"]
@@ -123,7 +124,8 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
             Jobflow Flow with all basis size jobs and analysis
         """
         logger.info(
-            f"BasisSizeConvergenceFlowMaker.make() for {len(self.basis_sizes)} basis sizes"
+            f"BasisSizeConvergenceFlowMaker.make() for "
+            f"{len(self.basis_sizes)} basis sizes"
         )
 
         jobs = []
@@ -131,12 +133,9 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
 
         # Calculate total number of jobs
         total_jobs = len(self.basis_sizes)
-        job_counter = 0
 
         # Create a static job for each basis size
-        for basis_size in self.basis_sizes:
-            job_counter += 1
-
+        for job_counter, basis_size in enumerate(self.basis_sizes, start=1):
             # Update user parameters with basis settings
             user_params = {
                 "PAO.BasisSize": basis_size,
@@ -187,8 +186,7 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
         jobs.append(summary_job)
 
         # Create flow
-        flow = Flow(jobs, output=collect_job.output, name=self.name)
-        return flow
+        return Flow(jobs, output=collect_job.output, name=self.name)
 
 
 @job
@@ -214,7 +212,8 @@ def collect_basis_size_data(
 
     logger.info("Collecting basis size convergence data")
     logger.info(
-        f"Received {len(job_outputs)} job outputs and {len(job_metadata)} metadata entries"
+        f"Received {len(job_outputs)} job outputs and "
+        f"{len(job_metadata)} metadata entries"
     )
     logger.info(f"First output type: {type(job_outputs[0]) if job_outputs else 'None'}")
 
@@ -304,8 +303,8 @@ def collect_basis_size_data(
                 f"max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"  # noqa: RUF001
             )
 
-        except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.exception(f"Error processing job {job_name}: {e}")
+        except (KeyError, TypeError, ValueError, AttributeError):
+            logger.exception(f"Error processing job {job_name}")
             import traceback
 
             logger.exception(traceback.format_exc())
@@ -352,7 +351,7 @@ def plot_basis_size_convergence(
     # Check if we have data
     if len(energies) == 0:
         logger.error("No energy data to plot - creating empty plot with error message")
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
         ax.text(
             0.5,
             0.5,
@@ -374,13 +373,10 @@ def plot_basis_size_convergence(
     basis_order = ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP", "QZ", "QZP"]
 
     # Sort data by basis size
-    indices = []
-    for bs in basis_order:
-        if bs in basis_sizes:
-            indices.append(basis_sizes.index(bs))
+    indices = [basis_sizes.index(bs) for bs in basis_order if bs in basis_sizes]
 
     # If any basis sizes not in standard order, append them
-    for i, bs in enumerate(basis_sizes):
+    for i, _bs in enumerate(basis_sizes):
         if i not in indices:
             indices.append(i)
 
@@ -524,7 +520,8 @@ def write_basis_size_summary(
             f.write("This usually means:\n")
             f.write("1. The SCF calculations failed\n")
             f.write(
-                "2. The job outputs were not properly passed to the collection function\n"
+                "2. The job outputs were not properly passed to the collection "
+                "function\n"
             )
             f.write("3. The output format was not recognized\n\n")
             f.write("Check the individual job directories for calculation outputs.\n")
@@ -532,11 +529,8 @@ def write_basis_size_summary(
 
     # Sort by basis size
     basis_order = ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP", "QZ", "QZP"]
-    indices = []
-    for bs in basis_order:
-        if bs in basis_sizes:
-            indices.append(basis_sizes.index(bs))
-    for i, bs in enumerate(basis_sizes):
+    indices = [basis_sizes.index(bs) for bs in basis_order if bs in basis_sizes]
+    for i, _bs in enumerate(basis_sizes):
         if i not in indices:
             indices.append(i)
 

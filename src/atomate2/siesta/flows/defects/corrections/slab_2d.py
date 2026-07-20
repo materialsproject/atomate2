@@ -420,7 +420,8 @@ class Slab2DCorrection(CorrectionScheme):
             logger.warning(
                 f"Structure does not appear to be a 2D slab "
                 f"(vacuum thickness = {slab_info['vacuum_thickness']:.2f} Å < "
-                f"{self.vacuum_threshold} Å). Consider using 3D bulk corrections instead."
+                f"{self.vacuum_threshold} Å). "
+                "Consider using 3D bulk corrections instead."
             )
 
         # Create dielectric profile

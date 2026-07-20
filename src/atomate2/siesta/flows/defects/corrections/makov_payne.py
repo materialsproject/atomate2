@@ -187,7 +187,7 @@ class MakovPayneCorrection(CorrectionScheme):
                 )
                 Q_calculated_from_density = True  # noqa: N806
                 logger.info(f"Using quadrupole moment from density: Q = {Q:.4f} eÅ²")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(
                     f"Failed to calculate quadrupole from density: {e}. "
                     f"Using fallback value."
@@ -247,8 +247,8 @@ class MakovPayneCorrection(CorrectionScheme):
             if not Q_calculated_from_density:
                 warnings.append(
                     "Quadrupole moment Q=0 assumed (conservative estimate). "
-                    "For accurate corrections, provide density_data from SIESTA .RHO files "
-                    "to calculate Q from charge density."
+                    "For accurate corrections, provide density_data from SIESTA "
+                    ".RHO files to calculate Q from charge density."
                 )
             else:
                 warnings.append(

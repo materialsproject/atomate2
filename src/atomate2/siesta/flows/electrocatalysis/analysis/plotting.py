@@ -32,7 +32,7 @@ def plot_free_energy_diagram(
     filename: str | Path = "free_energy_diagram.png",
     show_values: bool = True,
     figsize: tuple[float, float] = (10, 6),
-):
+) -> Path:
     """
     Plot free energy diagram for electrochemical reaction pathway.
 
@@ -75,7 +75,7 @@ def plot_free_energy_diagram(
     # step_labels has n elements (just the steps)
     # Prepend '*' for initial state if needed
     if len(step_labels) == len(cumulative_G) - 1:
-        step_labels = ["*"] + list(step_labels)
+        step_labels = ["*", *list(step_labels)]
     elif len(step_labels) != len(cumulative_G):
         raise ValueError(
             f"step_labels length ({len(step_labels)}) must equal "
@@ -187,7 +187,7 @@ def plot_overpotential_summary(
     U_onset: float,  # noqa: N803
     filename: str | Path = "overpotential_summary.png",
     figsize: tuple[float, float] = (8, 6),
-):
+) -> Path:
     """
     Plot overpotential summary with visual performance indicator.
 
@@ -322,7 +322,7 @@ def plot_bifunctional_comparison(
     gap: float,
     filename: str | Path = "bifunctional_comparison.png",
     figsize: tuple[float, float] = (10, 6),
-):
+) -> Path:
     """
     Plot bifunctional catalyst performance comparison.
 
@@ -473,7 +473,7 @@ def write_analysis_summary(
     delta_G: Sequence[float],  # noqa: N803
     filename: str | Path = "analysis_summary.txt",
     dry_run: bool = False,
-):
+) -> Path:
     """
     Write text summary of electrocatalysis analysis.
 

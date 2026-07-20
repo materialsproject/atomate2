@@ -74,8 +74,8 @@ class SiestaPhononFlowMaker(PhonopyMaker):
     kpts: list[int] | None = None
     mesh: tuple[int, int, int] = (50, 50, 50)
 
-    def __post_init__(self):
-        """Initialize static maker with proper settings and apply kpts to both makers."""
+    def __post_init__(self) -> None:
+        """Initialize static maker settings and apply kpts to both makers."""
         from collections import OrderedDict
 
         # Create default static maker if not provided
@@ -106,11 +106,14 @@ class SiestaPhononFlowMaker(PhonopyMaker):
                 )
 
         # Also apply k-points to relax_maker if provided
-        if self.kpts is not None and self.relax_maker is not None:
-            if hasattr(self.relax_maker, "input_set_generator"):
-                if self.relax_maker.input_set_generator.user_params is None:
-                    self.relax_maker.input_set_generator.user_params = OrderedDict()
-                self.relax_maker.input_set_generator.user_params["a2s_kpts"] = self.kpts
+        if (
+            self.kpts is not None
+            and self.relax_maker is not None
+            and hasattr(self.relax_maker, "input_set_generator")
+        ):
+            if self.relax_maker.input_set_generator.user_params is None:
+                self.relax_maker.input_set_generator.user_params = OrderedDict()
+            self.relax_maker.input_set_generator.user_params["a2s_kpts"] = self.kpts
 
     def make(
         self,
@@ -124,7 +127,7 @@ class SiestaPhononFlowMaker(PhonopyMaker):
         Parameters
         ----------
         structure : Structure
-            Input structure (should be relaxed or will be relaxed if relax_maker provided)
+            Input structure (relaxed, or will be relaxed if relax_maker provided)
         prev_dir : str | Path | None
             Previous directory for reusing files
         supercell_matrix : list[list[int]] | None

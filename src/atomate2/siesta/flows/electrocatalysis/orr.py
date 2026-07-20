@@ -1,6 +1,7 @@
 """Oxygen Reduction Reaction (ORR) workflows for electrocatalysis.
 
-This module provides automated workflows for calculating ORR activity on catalyst surfaces.
+This module provides automated workflows for calculating ORR activity on
+catalyst surfaces.
 The ORR is the cathode reaction in fuel cells and metal-air batteries:
 
     O₂ + 4H⁺ + 4e⁻ → 2H₂O  (acidic media, E° = 1.23 V vs. SHE)
@@ -58,7 +59,7 @@ def _analyze_orr_pathway(
     plot_results: bool = True,
     write_summary: bool = True,
     surface_name: str = "ORR_catalyst",
-):
+) -> dict:
     """
     Analyze ORR pathway and calculate overpotential.
 

@@ -123,7 +123,7 @@ def get_madelung_constant(
             )
             return alpha_M, citation
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Could not analyze structure symmetry: {e}")
 
     # Fallback to Wigner-Seitz approximation

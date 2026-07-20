@@ -382,7 +382,8 @@ class SurfaceVacancyGenerator:
             surface_layers.extend(bottom_layers)
 
             logger.debug(
-                f"Bottom surface: layers {[layer.layer_index for layer in bottom_layers]}"
+                "Bottom surface: layers "
+                f"{[layer.layer_index for layer in bottom_layers]}"
             )
 
         return surface_layers
@@ -652,10 +653,12 @@ class SurfaceVacancyGenerator:
                     # Fallback: find first atom in same layer
                     layer_z = site_info["layer_z_position"]
                     for i, site in enumerate(host_structure):
-                        if site.specie.symbol == site_info["species"]:
-                            if abs(site.coords[2] - layer_z) < self.layer_tolerance:
-                                site_index_in_sc = i
-                                break
+                        if (
+                            site.specie.symbol == site_info["species"]
+                            and abs(site.coords[2] - layer_z) < self.layer_tolerance
+                        ):
+                            site_index_in_sc = i
+                            break
 
                 if site_index_in_sc is None:
                     logger.error(f"Could not find {site_info['species']} in supercell!")
@@ -703,7 +706,8 @@ class SurfaceVacancyGenerator:
 
         logger.info(
             f"Generated {len(defects)} surface vacancy defect(s) "
-            f"({len(surface_sites)} unique site(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
+            f"({len(surface_sites)} unique site(s) × "  # noqa: RUF001
+            f"{len(charge_states)} charge state(s))"
         )
 
         return defects

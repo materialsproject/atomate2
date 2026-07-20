@@ -1,6 +1,7 @@
 """Hydrogen Evolution Reaction (HER) workflows for electrocatalysis.
 
-This module provides automated workflows for calculating HER activity on catalyst surfaces.
+This module provides automated workflows for calculating HER activity on
+catalyst surfaces.
 The HER is the cathode reaction in water electrolysis:
 
     2H⁺ + 2e⁻ → H₂  (acidic media, E° = 0.00 V vs. SHE)
@@ -54,7 +55,7 @@ def _analyze_her_pathway(
     plot_results: bool = True,
     write_summary: bool = True,
     surface_name: str = "HER_catalyst",
-):
+) -> dict:
     """
     Analyze HER pathway and calculate overpotential from H binding energy.
 

@@ -31,7 +31,7 @@ from atomate2.siesta.utils.common import print_in_box_rich
 from atomate2.siesta.utils.logo import print_fancy_logo
 
 
-def display_welcome_banner():
+def display_welcome_banner() -> None:
     """
     Display the atomate2siesta welcome banner and configuration settings.
 
@@ -69,7 +69,7 @@ def display_welcome_banner():
 
                     text_dict["DATABASE"] = f"{database} @ {host}:{port}"
                     text_dict["COLLECTION"] = collection
-        except Exception:
+        except Exception:  # noqa: BLE001, S110
             # If we can't read the config, silently skip database info
             pass
 
@@ -182,15 +182,17 @@ class BaseSiestaMaker(Maker):
         If True, validator will fail if geometry does not converge (forces above
         tolerance). If False (default), non-converged relaxations are allowed
         (useful for dirty/fast calculations). This is independent of use_custodian:
-        - use_custodian=False, strict_convergence=False: Fast, may not converge (dirty mode)
+        - use_custodian=False, strict_convergence=False: Fast, may not converge
+          (dirty mode)
         - use_custodian=True, strict_convergence=False: Auto-recovery, lenient (default)
         - use_custodian=False, strict_convergence=True: Must converge or fail (strict)
-        - use_custodian=True, strict_convergence=True: Auto-recovery + strict check (paranoid)
+        - use_custodian=True, strict_convergence=True: Auto-recovery + strict
+          check (paranoid)
     dry_run : bool
         If True, skip SIESTA calculation and generate all input files without running.
-        This generates complete SIESTA input files (siesta.fdf, structure.fdf, pseudopotentials)
-        and saves the structure, allowing full validation of calculation setup before running
-        expensive calculations.
+        This generates complete SIESTA input files (siesta.fdf, structure.fdf,
+        pseudopotentials) and saves the structure, allowing full validation of
+        calculation setup before running expensive calculations.
     dry_run_output_dir : str
         Base directory to save dry-run outputs. A subdirectory will be created for each
         calculation using the label. Only used if dry_run=True.
@@ -198,8 +200,9 @@ class BaseSiestaMaker(Maker):
         Output format for structure file (e.g., "cif", "xsf", "json").
         Only used if dry_run=True.
     dry_run_label : str or None
-        Custom label for dry-run output directory and structure file. If None, automatically
-        generated from maker name and formula. Only used if dry_run=True.
+        Custom label for dry-run output directory and structure file. If None,
+        automatically generated from maker name and formula. Only used if
+        dry_run=True.
     manager_config : dict[str, Any] or None
         Configuration for jobflow-remote resource management. When set, this dict is
         propagated to jobs via ``job.update_config()`` to control HPC resources.
@@ -213,7 +216,8 @@ class BaseSiestaMaker(Maker):
     input_set_generator: SiestaInputGenerator = field(
         default_factory=SiestaInputGenerator
     )
-    # input_set_generator: SiestaInputGenerator = field(default_factory=SiestaInputGenerator(Structure))
+    # input_set_generator: SiestaInputGenerator = field(
+    #     default_factory=SiestaInputGenerator(Structure))
     # input_set_generator: SiestaInputGenerator | None = None  # Allow None
     write_input_set_kwargs: dict[str, Any] = field(default_factory=dict)
     copy_siesta_kwargs: dict[str, Any] = field(default_factory=dict)
@@ -313,7 +317,8 @@ class BaseSiestaMaker(Maker):
                 write_siesta_input_set(
                     structure,
                     self.input_set_generator,
-                    directory=".",  # Write to current directory (which is already output_dir)
+                    # Write to current directory (which is already output_dir)
+                    directory=".",
                     prev_dir=prev_dir,
                     **self.write_input_set_kwargs,
                 )
@@ -329,7 +334,7 @@ class BaseSiestaMaker(Maker):
                 # Always restore original directory
                 os.chdir(original_dir)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Dry-run: Failed to generate input files: {e}")
             input_files = []
             input_files_generated = False
@@ -376,7 +381,8 @@ class BaseSiestaMaker(Maker):
             "num_atoms": len(structure),
             "lattice": lattice_info,
             "metadata": metadata,
-            "structure": structure,  # Include structure for jobflow reference resolution
+            # Include structure for jobflow reference resolution
+            "structure": structure,
             "dir_name": str(output_dir),  # Include dir_name for EOS/other flows
             "energy": 0.0,  # Dummy energy for compatibility with analysis flows
             "stress": [
@@ -401,7 +407,7 @@ class BaseSiestaMaker(Maker):
         prev_dir: str | Path | None = None,
         extra_dir: str | Path | None = None,
     ) -> Response:
-        """Normal SIESTA calculation (full calculation workflow).
+        """Run the normal SIESTA calculation (full calculation workflow).
 
         Parameters
         ----------
@@ -441,9 +447,10 @@ class BaseSiestaMaker(Maker):
 
         # Force SCF.MustConverge=True when using custodian
         # This ensures SIESTA fails (non-zero exit) when SCF doesn't converge,
-        # which triggers error handlers to apply corrections (remove DM, adjust mixer, etc.)
-        # Without this, dirty presets set SCF.MustConverge=False → SIESTA exits successfully
-        # → handlers never trigger → no error recovery
+        # which triggers error handlers to apply corrections
+        # (remove DM, adjust mixer, etc.)
+        # Without this, dirty presets set SCF.MustConverge=False
+        # → SIESTA exits successfully → handlers never trigger → no error recovery
         if self.use_custodian:
             from atomate2.siesta.custodian.fdf_utils import update_fdf_file
 
@@ -451,7 +458,8 @@ class BaseSiestaMaker(Maker):
             if fdf_file.exists():
                 update_fdf_file(fdf_file, {"SCF.MustConverge": True})
                 logger.info(
-                    "Custodian enabled: Forcing SCF.MustConverge=True for error recovery"
+                    "Custodian enabled: "
+                    "Forcing SCF.MustConverge=True for error recovery"
                 )
 
         # run SIESTA (with or without custodian)
@@ -470,7 +478,8 @@ class BaseSiestaMaker(Maker):
                 )
                 for h in handlers:
                     logger.info(
-                        f"  {type(h).__name__}: max_num_corrections={h.max_num_corrections}"
+                        f"  {type(h).__name__}: "
+                        f"max_num_corrections={h.max_num_corrections}"
                     )
             else:
                 handlers = DEFAULT_HANDLERS.copy()
@@ -537,7 +546,7 @@ class BaseSiestaMaker(Maker):
             # Validate the calculation (check() returns True if validation FAILS)
             validation_failed = validator.check(str(Path.cwd()))
             if validation_failed:
-                errors = validator._get_validation_errors(Path.cwd())
+                errors = validator._get_validation_errors(Path.cwd())  # noqa: SLF001
                 error_msg = "\n".join(errors)
                 raise ValueError(
                     f"Validation failed in strict convergence mode:\n{error_msg}"
@@ -562,20 +571,22 @@ class BaseSiestaMaker(Maker):
             output=task_doc if self.store_output_data else None,
         )
 
-    def run_post_siesta(self):
+    def run_post_siesta(self) -> None:
         """
-        Run post-processing steps after the SIESTA calculation, specifically for phonon calculations.
+        Run post-processing steps after SIESTA, specifically for phonon jobs.
 
-        This method checks if the `input_set_generator` is an instance of `PhononSetGenerator`,
-        which indicates that the job is related to phonon calculations. If it is a phonon job,
-        the method will proceed to run the `vibra` command to perform vibrational analysis.
+        This method checks if the `input_set_generator` is an instance of
+        `PhononSetGenerator`, which indicates that the job is related to phonon
+        calculations. If it is a phonon job, the method will proceed to run the
+        `vibra` command to perform vibrational analysis.
 
-        PhononSetGenerator is typically used for generating inputs for phonon-related calculations
-        in SIESTA. After the main SIESTA calculation is completed, vibrational modes can be
-        analyzed using the `vibra` binary.
+        PhononSetGenerator is typically used for generating inputs for
+        phonon-related calculations in SIESTA. After the main SIESTA calculation
+        is completed, vibrational modes can be analyzed using the `vibra` binary.
 
-        The `vibra` command reads the SIESTA input and output files (e.g., `siesta.fdf`) and
-        produces vibrational analysis results (e.g., `siesta.vibra.out`).
+        The `vibra` command reads the SIESTA input and output files (e.g.,
+        `siesta.fdf`) and produces vibrational analysis results (e.g.,
+        `siesta.vibra.out`).
 
         Parameters
         ----------
@@ -584,14 +595,14 @@ class BaseSiestaMaker(Maker):
         Returns
         -------
         None
-            This method does not return any values but performs actions that involve running
-            post-SIESTA calculations for phonon jobs.
+            This method does not return any values but performs actions that
+            involve running post-SIESTA calculations for phonon jobs.
 
         Notes
         -----
         - This method should be called after the SIESTA calculation has finished.
-        - The `run_vibra` function will use the same keyword arguments (`run_siesta_kwargs`)
-          passed to the main `run_siesta` method.
+        - The `run_vibra` function will use the same keyword arguments
+          (`run_siesta_kwargs`) passed to the main `run_siesta` method.
 
         """
         logger.info("BaseSiestaMaker.run_post_siesta()")

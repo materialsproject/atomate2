@@ -38,7 +38,7 @@ from atomate2.siesta.flows.defects.analysis.srh import (
     write_srh_summary_job,
 )
 
-__all__ = [
+__all__ = [  # noqa: RUF022
     # Formation energy
     "FormationEnergyDiagram",
     "FormationEnergyDiagramFlowMaker",

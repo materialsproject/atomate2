@@ -46,16 +46,21 @@ def print_energies(
     flow_results: dict[str, Any], job_metadata: list[dict]
 ) -> dict[str, float]:
     """
-    Retrieve and print the total energies from each job in the Flow's results using job.output.
+    Retrieve and print the total energies from each job in the Flow's results.
+
+    Uses ``job.output`` to access each job's result.
 
     Args:
-        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
+        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's
+            run_locally.
         job_metadata (list[dict]): List of dictionaries containing job names and UUIDs.
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
+        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to
+            INFO.
 
     Returns
     -------
-        Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
+        Dict[str, float]: A dictionary mapping job names to their total energies
+            (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
 
@@ -79,13 +84,15 @@ def print_energies(
             if job_uuid not in flow_results:
                 if verbosity.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]No results found for job {job_name} (UUID: {job_uuid})[/yellow]"
+                        f"[yellow]No results found for job {job_name} "
+                        f"(UUID: {job_uuid})[/yellow]"
                     )
                 continue
         except (KeyError, TypeError, ValueError, AttributeError) as e:
             if verbosity.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[red]Error processing job {job_name} (UUID: {job_uuid}): {e}[/red]"
+                    f"[red]Error processing job {job_name} "
+                    f"(UUID: {job_uuid}): {e}[/red]"
                 )
             continue
 
@@ -103,16 +110,21 @@ def print_energies(
 @job
 def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, float]:
     """
-    Retrieve and print the total energies from each job in the Flow's results using job.output.
+    Retrieve and print the total energies from each job in the Flow's results.
+
+    Uses ``job.output`` to access each job's result.
 
     Args:
         flow (Flow): The Flow object containing the SCF jobs.
-        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to DEBUG.
+        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's
+            run_locally.
+        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to
+            DEBUG.
 
     Returns
     -------
-        Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
+        Dict[str, float]: A dictionary mapping job names to their total energies
+            (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
 
@@ -134,7 +146,7 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
                 console.print(f"[green]The job in flow uuid:{job_uuid=}[/green]")
 
                 result = flow_results[job_uuid]
-                input = result.input
+                input = result.input  # noqa: A001
                 output = result.output  # Access SiestaTaskDoc
                 energy = output.energy
                 energies[job_name] = energy
@@ -148,14 +160,16 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
             if job_uuid not in flow_results:
                 if verbosity.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]No results found for job {job_name} (UUID: {job_uuid})[/yellow]"
+                        f"[yellow]No results found for job {job_name} "
+                        f"(UUID: {job_uuid})[/yellow]"
                     )
                 continue
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
             if verbosity.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[red]Error processing job {job_name} (UUID: {job_uuid}): {e}[/red]"
+                    f"[red]Error processing job {job_name} "
+                    f"(UUID: {job_uuid}): {e}[/red]"
                 )
             continue
 
@@ -173,13 +187,15 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
 @job
 def plot_energies(
     energies: dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
-):
+) -> None:
     """
     Plot total energies vs. basis size.
 
     Args:
-        energies (Dict[str, float]): Dictionary mapping job names to total energies (in eV).
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
+        energies (Dict[str, float]): Dictionary mapping job names to total energies
+            (in eV).
+        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to
+            INFO.
     """
     import matplotlib.pyplot as plt
 
@@ -309,7 +325,8 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         )
         collect_job.name = f"{self.name}-collect"
 
-        # Create unified output job that generates all plots and summaries in one directory
+        # Create unified output job that generates all plots and summaries in one
+        # directory
         unified_output_job = generate_eos_basis_outputs(
             flow_results=eos_flows.output,
             job_metadata=job_metadata,
@@ -330,7 +347,7 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
 # =============================================================================
 
 
-def _extract_siesta_timing(siesta_out_path):
+def _extract_siesta_timing(siesta_out_path: str | Path) -> float:
     """Extract wall time from siesta.out file (handles both plain and gzipped)."""
     import gzip
     from pathlib import Path
@@ -349,7 +366,8 @@ def _extract_siesta_timing(siesta_out_path):
                 # Match multiple timing formats:
                 # 1. "timer: Elapsed wall time (sec)"  (old format)
                 # 2. "Elapsed wall time (sec)"          (old format variant)
-                # 3. "timer: Total elapsed wall-clock time (sec)" (new format in siesta.times)
+                # 3. "timer: Total elapsed wall-clock time (sec)"
+                #    (new format in siesta.times)
                 if (
                     "timer: Elapsed wall time (sec)" in line
                     or "Elapsed wall time (sec)" in line
@@ -359,10 +377,11 @@ def _extract_siesta_timing(siesta_out_path):
                     if len(parts) == 2:
                         time_val = float(parts[1].strip())
                         logger.debug(
-                            f"Extracted timing {time_val:.2f}s from {Path(siesta_out_path).name}"
+                            f"Extracted timing {time_val:.2f}s from "
+                            f"{Path(siesta_out_path).name}"
                         )
                         return time_val
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.debug(f"Could not extract timing from {siesta_out_path}: {e}")
     return 0.0
 
@@ -376,11 +395,13 @@ def collect_basis_params_data(
 
     Args:
         flow_results: Results dictionary from jobflow's run_locally
-        job_metadata: List of dictionaries with job info (uuid, name, energy_shift, split_norm)
+        job_metadata: List of dictionaries with job info (uuid, name, energy_shift,
+            split_norm)
 
     Returns
     -------
-        Dictionary with energy_shifts, split_norms, energies, forces, stresses, and timings
+        Dictionary with energy_shifts, split_norms, energies, forces, stresses, and
+        timings
     """
     logger.info("Collecting basis parameter convergence data")
 
@@ -427,7 +448,8 @@ def collect_basis_params_data(
                 logger.info(f"Found timing {wall_time:.2f}s in {job_dir.name}")
 
     logger.info(
-        f"Found {len(set(timing_by_dir.values()))} job directories with timing information"
+        f"Found {len(set(timing_by_dir.values()))} job directories with timing "
+        "information"
     )
 
     # Also try to build a mapping by inspecting job directories for their parameters
@@ -472,9 +494,10 @@ def collect_basis_params_data(
                 if es is not None and sn is not None:
                     timing_by_params[(es, sn)] = timing_by_dir[job_dir_path]
                     logger.info(
-                        f"Mapped {job_dir.name} -> ES={es}, SN={sn}, t={timing_by_dir[job_dir_path]:.2f}s"
+                        f"Mapped {job_dir.name} -> ES={es}, SN={sn}, "
+                        f"t={timing_by_dir[job_dir_path]:.2f}s"
                     )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.debug(f"Could not read parameters from {fdf_file}: {e}")
 
     logger.info(f"Successfully mapped {len(timing_by_params)} jobs by parameters")
@@ -535,7 +558,8 @@ def collect_basis_params_data(
             if param_key in timing_by_params:
                 run_time = timing_by_params[param_key]
                 logger.debug(
-                    f"Matched timing {run_time:.2f}s for {job_name} by parameters ES={energy_shift}, SN={split_norm}"
+                    f"Matched timing {run_time:.2f}s for {job_name} by parameters "
+                    f"ES={energy_shift}, SN={split_norm}"
                 )
 
             # Strategy 2: Try to get directory from output object
@@ -556,11 +580,12 @@ def collect_basis_params_data(
                         if path_variant in timing_by_dir:
                             run_time = timing_by_dir[path_variant]
                             logger.debug(
-                                f"Matched timing {run_time:.2f}s for {job_name} from directory {path_variant}"
+                                f"Matched timing {run_time:.2f}s for {job_name} "
+                                f"from directory {path_variant}"
                             )
                             break
 
-                    # If still not found, try to extract directly (check both .gz and plain)
+                    # If still not found, try to extract directly (check .gz and plain)
                     if run_time == 0.0:
                         siesta_out = Path(calc_dir) / "siesta.out"
                         siesta_out_gz = Path(calc_dir) / "siesta.out.gz"
@@ -569,13 +594,15 @@ def collect_basis_params_data(
                             run_time = _extract_siesta_timing(siesta_out_gz)
                             if run_time > 0:
                                 logger.debug(
-                                    f"Extracted timing {run_time:.2f}s directly from {siesta_out_gz}"
+                                    f"Extracted timing {run_time:.2f}s directly "
+                                    f"from {siesta_out_gz}"
                                 )
                         elif siesta_out.exists():
                             run_time = _extract_siesta_timing(siesta_out)
                             if run_time > 0:
                                 logger.debug(
-                                    f"Extracted timing {run_time:.2f}s directly from {siesta_out}"
+                                    f"Extracted timing {run_time:.2f}s directly "
+                                    f"from {siesta_out}"
                                 )
 
             # Strategy 3: If parameters don't match exactly, try with tolerance
@@ -588,17 +615,20 @@ def collect_basis_params_data(
                     ):
                         run_time = time_val
                         logger.debug(
-                            f"Matched timing {run_time:.2f}s for {job_name} by approximate parameters"
+                            f"Matched timing {run_time:.2f}s for {job_name} "
+                            f"by approximate parameters"
                         )
                         break
 
             # Warn if no timing found
             if run_time == 0.0:
                 logger.warning(
-                    f"Could not find timing for {job_name} (ES={energy_shift}, SN={split_norm})"
+                    f"Could not find timing for {job_name} "
+                    f"(ES={energy_shift}, SN={split_norm})"
                 )
                 logger.warning(
-                    f"  Available parameter mappings: {list(timing_by_params.keys())[:5]}"
+                    f"  Available parameter mappings: "
+                    f"{list(timing_by_params.keys())[:5]}"
                 )
 
             data["names"].append(job_name)
@@ -615,11 +645,12 @@ def collect_basis_params_data(
 
             logger.debug(
                 f"{job_name}: E={energy:.6f} eV, ES={energy_shift}, SN={split_norm}, "
-                f"max_F={max_force:.6f} eV/Å, max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"  # noqa: RUF001
+                f"max_F={max_force:.6f} eV/Å, "
+                f"max_σ={max_stress:.4f} GPa, t={run_time:.1f}s"  # noqa: RUF001
             )
 
-        except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.exception(f"Error processing job {job_name}: {e}")
+        except (KeyError, TypeError, ValueError, AttributeError):
+            logger.exception(f"Error processing job {job_name}")
             import traceback
 
             logger.debug(traceback.format_exc())
@@ -629,7 +660,8 @@ def collect_basis_params_data(
         logger.warning("No basis parameter data retrieved")
     else:
         logger.info(
-            f"Successfully collected {len(data['energies'])} results for basis parameter analysis"
+            f"Successfully collected {len(data['energies'])} results for basis "
+            f"parameter analysis"
         )
 
     return data
@@ -1072,7 +1104,8 @@ def plot_basis_params_convergence(
         ax6.set_xlabel("PAO.SplitNorm", fontsize=12, fontweight="bold")
         ax6.set_ylabel("Wall Time (s)", fontsize=12, fontweight="bold")
         ax6.set_title(
-            "Computational Time vs PAO.SplitNorm\n(Higher SN → More split orbitals → Slower)",
+            "Computational Time vs PAO.SplitNorm\n"
+            "(Higher SN → More split orbitals → Slower)",
             fontsize=13,
             fontweight="bold",
         )
@@ -1207,15 +1240,16 @@ def plot_basis_params_convergence(
 
 @job
 def plot_basis_functions(
-    flow_results: dict[str, Any],
+    flow_results: dict[str, Any],  # noqa: ARG001
     job_metadata: list[dict],
     output_file: str = "basis_functions_visualization.png",
 ) -> dict[str, str]:
     """
-    Plot actual PAO basis functions from ion.xml files (inspired by plot_siesta_basis.py).
+    Plot actual PAO basis functions from ion.xml files.
 
-    This creates a combined visualization and individual plots of the numerical atomic
-    orbitals generated with different PAO.EnergyShift and PAO.SplitNorm parameters.
+    Inspired by ``plot_siesta_basis.py``. This creates a combined visualization and
+    individual plots of the numerical atomic orbitals generated with different
+    PAO.EnergyShift and PAO.SplitNorm parameters.
 
     Args:
         flow_results: Results dictionary from jobflow's run_locally
@@ -1253,7 +1287,7 @@ def plot_basis_functions(
                 "found": False,
             }
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.debug(f"Could not process job {job_info['name']}: {e}")
             continue
 
@@ -1265,7 +1299,7 @@ def plot_basis_functions(
 
     # Get unique EnergyShift values
     unique_shifts = sorted(
-        set([d["energy_shift"] for d in basis_functions_data.values()])
+        {d["energy_shift"] for d in basis_functions_data.values()}
     )
 
     # Create schematic orbitals
@@ -1353,7 +1387,7 @@ def plot_basis_functions(
         # Overlap
         overlap = phi_a * phi_b
         # np.trapz was renamed to np.trapezoid in numpy 2.0
-        trapezoid = getattr(np, "trapezoid", None) or np.trapz
+        trapezoid = getattr(np, "trapezoid", None) or np.trapz  # noqa: NPY201
         overlap_integral = trapezoid(overlap, r)
 
         ax3.fill_between(
@@ -1399,7 +1433,7 @@ def plot_basis_functions(
     summary_text.append("Tested Parameter Combinations:")
 
     # Add tested combinations
-    for label, data in sorted(
+    for label, _data in sorted(
         basis_functions_data.items(),
         key=lambda x: (x[1]["energy_shift"], x[1]["split_norm"]),
     ):
@@ -1448,7 +1482,7 @@ def plot_basis_functions(
     # Individual Plot 1: Orbital Extent vs EnergyShift
     _fig1, ax1 = plt.subplots(figsize=(10, 7))
     unique_shifts = sorted(
-        set([d["energy_shift"] for d in basis_functions_data.values()])
+        {d["energy_shift"] for d in basis_functions_data.values()}
     )
     radial = np.linspace(0, 10, 200)
     colors = plt.cm.viridis(np.linspace(0, 1, len(unique_shifts)))
@@ -1484,7 +1518,7 @@ def plot_basis_functions(
     r = np.linspace(0, 8, 200)
     es_demo = 0.010
     unique_norms = sorted(
-        set([d["split_norm"] for d in basis_functions_data.values()])
+        {d["split_norm"] for d in basis_functions_data.values()}
     )[:3]
     colors2 = plt.cm.plasma(np.linspace(0, 1, len(unique_norms)))
     for i, sn in enumerate(unique_norms):
@@ -1561,7 +1595,8 @@ def plot_basis_functions(
 
     logger.info(f"Individual schematic plots saved: {list(individual_files.values())}")
     console.print(
-        f"[green]Individual schematic plots saved ({len(individual_files) - 1} files)[/green]"
+        f"[green]Individual schematic plots saved "
+        f"({len(individual_files) - 1} files)[/green]"
     )
 
     return individual_files
@@ -1604,7 +1639,8 @@ def plot_real_basis_functions(
     console.print("[green]Plotting real PAO basis functions from ion.xml files[/green]")
 
     # Structure to store basis function data per element
-    # basis_data[element][label] = {'energy_shift': ..., 'split_norm': ..., 'orbitals': [...]}
+    # basis_data[element][label] = {'energy_shift': ..., 'split_norm': ...,
+    #                               'orbitals': [...]}
     basis_data: dict[str, Any] = {}
 
     # Try to find and read ion.xml files from job directories
@@ -1636,7 +1672,8 @@ def plot_real_basis_functions(
                 possible_files = [
                     f"{job_dir}/*.ion.xml",  # Uncompressed in main dir
                     f"{job_dir}/*.ion.xml.gz",  # Compressed in main dir
-                    f"{job_dir}/siesta_compressed/*.ion.xml.gz",  # Compressed in subfolder
+                    # Compressed in subfolder
+                    f"{job_dir}/siesta_compressed/*.ion.xml.gz",
                     f"{job_dir}/*/*.ion.xml",  # One level deep
                 ]
                 for pattern in possible_files:
@@ -1660,11 +1697,13 @@ def plot_real_basis_functions(
             possible_patterns = [
                 f"{parent_dir}/job_*/*.ion.xml",  # Direct in SCF job dir
                 f"{parent_dir}/job_*/*.ion.xml.gz",  # Compressed in SCF job dir
-                f"{parent_dir}/job_*/siesta_compressed/*.ion.xml.gz",  # Compressed in subfolder
+                # Compressed in subfolder
+                f"{parent_dir}/job_*/siesta_compressed/*.ion.xml.gz",
                 f"{parent_dir}/job_*/*/*.ion.xml",  # One level deep
                 "job_*/*.ion.xml",  # Search from current dir
                 "job_*/*.ion.xml.gz",  # Compressed from current dir
-                "job_*/siesta_compressed/*.ion.xml.gz",  # Compressed in subfolder from current dir
+                # Compressed in subfolder from current dir
+                "job_*/siesta_compressed/*.ion.xml.gz",
             ]
 
             for pattern in possible_patterns:
@@ -1686,9 +1725,9 @@ def plot_real_basis_functions(
 
                 if job_ion_file.endswith(".gz"):
                     with gzip.open(job_ion_file, "rt") as f:
-                        tree = ET.parse(f)
+                        tree = ET.parse(f)  # noqa: S314
                 else:
-                    tree = ET.parse(job_ion_file)
+                    tree = ET.parse(job_ion_file)  # noqa: S314
                 root = tree.getroot()
 
                 # Get element symbol for THIS file
@@ -1752,11 +1791,12 @@ def plot_real_basis_functions(
                                 )
 
                                 logger.debug(
-                                    f"  {element_symbol}: Read orbital {n}{['s', 'p', 'd', 'f', 'g'][l]}ζ{z}: "
+                                    f"  {element_symbol}: Read orbital "
+                                    f"{n}{['s', 'p', 'd', 'f', 'g'][l]}ζ{z}: "
                                     f"{len(r)} points, r_c={cutoff:.3f} bohr"
                                 )
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"Could not read {job_ion_file}: {e}")
                 continue
 
@@ -1805,7 +1845,8 @@ def plot_real_basis_functions(
 
         logger.info(f"Info plot saved to {output_file}")
         console.print(
-            f"[yellow]Info plot saved to: {output_file} (no ion.xml files found)[/yellow]"
+            f"[yellow]Info plot saved to: {output_file} "
+            f"(no ion.xml files found)[/yellow]"
         )
         return {"info": output_file}
 
@@ -1825,9 +1866,10 @@ def plot_real_basis_functions(
             for orb in label_data["orbitals"]:
                 all_l_values_set.add(orb["l"])
 
-    all_l_values = sorted(list(all_l_values_set))
+    all_l_values = sorted(all_l_values_set)
 
-    # Create combined plot with subplots for each element × l combination  # noqa: RUF003
+    # Create combined plot with subplots for each
+    # element × l combination  # noqa: RUF003
     # Calculate grid size
     n_plots = len(all_elements) * len(all_l_values)
     n_cols = min(3, max(len(all_l_values), 2))
@@ -1853,10 +1895,11 @@ def plot_real_basis_functions(
             ax = plt.subplot(n_rows, n_cols, plot_idx)
             plot_idx += 1
 
-            color_idx = 0
-            for label, data in sorted(
-                element_data.items(),
-                key=lambda x: (x[1]["energy_shift"], x[1]["split_norm"]),
+            for color_idx, (_label, data) in enumerate(
+                sorted(
+                    element_data.items(),
+                    key=lambda x: (x[1]["energy_shift"], x[1]["split_norm"]),
+                )
             ):
                 es = data["energy_shift"]
                 sn = data["split_norm"]
@@ -1871,7 +1914,10 @@ def plot_real_basis_functions(
                         cutoff = orb["cutoff"]
 
                         # Create label with cutoff radius
-                        orb_label = f"{n}{l_labels.get(l, f'l={l}')}ζ{z} (ES={es:.3f}, SN={sn:.2f}, r_c={cutoff:.2f})"
+                        orb_label = (
+                            f"{n}{l_labels.get(l, f'l={l}')}ζ{z} "
+                            f"(ES={es:.3f}, SN={sn:.2f}, r_c={cutoff:.2f})"
+                        )
 
                         ax.plot(
                             r,
@@ -1888,8 +1934,6 @@ def plot_real_basis_functions(
                             alpha=0.3,
                             linewidth=1,
                         )
-
-                color_idx += 1
 
             ax.set_xlabel("r (bohr)", fontsize=11, fontweight="bold")
             ax.set_ylabel("φ(r)", fontsize=11, fontweight="bold")
@@ -1914,11 +1958,11 @@ def plot_real_basis_functions(
     # Overall title - include basis size if available from metadata
     basis_size = None
     if job_metadata and "basis_size" in job_metadata[0]:
-        basis_sizes_in_meta = set(
+        basis_sizes_in_meta = {
             m.get("basis_size") for m in job_metadata if m.get("basis_size")
-        )
+        }
         if len(basis_sizes_in_meta) == 1:
-            basis_size = list(basis_sizes_in_meta)[0]
+            basis_size = next(iter(basis_sizes_in_meta))
 
     title = f"SIESTA PAO Basis Functions: {', '.join(all_elements)}"
     if basis_size:
@@ -1958,12 +2002,13 @@ def plot_real_basis_functions(
 
             _fig_ind, ax_ind = plt.subplots(figsize=(10, 8))
 
-            color_idx = 0
             legend_entries = []
 
-            for label, data in sorted(
-                element_data.items(),
-                key=lambda x: (x[1]["energy_shift"], x[1]["split_norm"]),
+            for color_idx, (_label, data) in enumerate(
+                sorted(
+                    element_data.items(),
+                    key=lambda x: (x[1]["energy_shift"], x[1]["split_norm"]),
+                )
             ):
                 es = data["energy_shift"]
                 sn = data["split_norm"]
@@ -1978,7 +2023,10 @@ def plot_real_basis_functions(
                         cutoff = orb["cutoff"]
 
                         # Create label with cutoff radius
-                        orb_label = f"{n}{l_labels.get(l, f'l={l}')}ζ{z} (ES={es:.3f}, SN={sn:.2f}, r_c={cutoff:.2f})"
+                        orb_label = (
+                            f"{n}{l_labels.get(l, f'l={l}')}ζ{z} "
+                            f"(ES={es:.3f}, SN={sn:.2f}, r_c={cutoff:.2f})"
+                        )
 
                         (line,) = ax_ind.plot(
                             r,
@@ -1997,8 +2045,6 @@ def plot_real_basis_functions(
                             alpha=0.3,
                             linewidth=1,
                         )
-
-                color_idx += 1
 
             ax_ind.set_xlabel("r (bohr)", fontsize=13, fontweight="bold")
             ax_ind.set_ylabel("φ(r)", fontsize=13, fontweight="bold")
@@ -2034,7 +2080,8 @@ def plot_real_basis_functions(
 
     logger.info(f"Individual real basis plots saved: {list(individual_files.values())}")
     console.print(
-        f"[green]Individual real basis plots saved ({len(individual_files) - 1} files)[/green]"
+        f"[green]Individual real basis plots saved "
+        f"({len(individual_files) - 1} files)[/green]"
     )
 
     return individual_files
@@ -2096,7 +2143,8 @@ def write_basis_params_summary(
             f"{'ΔE (meV)':<12} {'Max Force':<12} {'Max Stress':<12} {'Time (s)':<12}\n"
         )
         f.write(
-            f"{'(Ry)':<14} {'':<12} {'':<16} {'vs min':<12} {'(eV/Å)':<12} {'(GPa)':<12} {'wall':<12}\n"
+            f"{'(Ry)':<14} {'':<12} {'':<16} {'vs min':<12} "
+            f"{'(eV/Å)':<12} {'(GPa)':<12} {'wall':<12}\n"
         )
         f.write("-" * 120 + "\n")
 
@@ -2140,10 +2188,12 @@ def write_basis_params_summary(
         # Force and stress analysis
         f.write("Force and Stress Analysis:\n")
         f.write(
-            f"  Max force range:  {np.min(max_forces):.6f} - {np.max(max_forces):.6f} eV/Å\n"
+            f"  Max force range:  {np.min(max_forces):.6f} - "
+            f"{np.max(max_forces):.6f} eV/Å\n"
         )
         f.write(
-            f"  Max stress range: {np.min(max_stresses):.6f} - {np.max(max_stresses):.6f} GPa\n"
+            f"  Max stress range: {np.min(max_stresses):.6f} - "
+            f"{np.max(max_stresses):.6f} GPa\n"
         )
         f.write(f"  Average max force:  {np.mean(max_forces):.6f} eV/Å\n")
         f.write(f"  Average max stress: {np.mean(max_stresses):.6f} GPa\n\n")
@@ -2157,7 +2207,8 @@ def write_basis_params_summary(
         if len(valid_times) > 0:
             f.write("Computational Performance:\n")
             f.write(
-                f"  Total wall time:   {np.sum(valid_times):.1f} s ({np.sum(valid_times) / 60:.1f} min)\n"
+                f"  Total wall time:   {np.sum(valid_times):.1f} s "
+                f"({np.sum(valid_times) / 60:.1f} min)\n"
             )
             f.write(f"  Average time:      {np.mean(valid_times):.1f} s\n")
             f.write(f"  Fastest calc:      {np.min(valid_times):.1f} s\n")
@@ -2179,8 +2230,10 @@ def write_basis_params_summary(
                     valid_shift_times = shift_times[shift_times > 0]
                     if len(valid_shift_times) > 0:
                         f.write(
-                            f"    ES={shift:.6f} Ry: avg={np.mean(valid_shift_times):.1f} s "
-                            f"(range: {np.min(valid_shift_times):.1f}-{np.max(valid_shift_times):.1f} s)\n"
+                            f"    ES={shift:.6f} Ry: "
+                            f"avg={np.mean(valid_shift_times):.1f} s "
+                            f"(range: {np.min(valid_shift_times):.1f}-"
+                            f"{np.max(valid_shift_times):.1f} s)\n"
                         )
             f.write("\n")
         else:
@@ -2197,7 +2250,8 @@ def write_basis_params_summary(
                 std_e = np.std(energies[mask])
                 avg_energies_by_shift.append(avg_e)
                 f.write(
-                    f"  ES={shift:.6f}: E_avg={avg_e:.6f} eV (σ={std_e * 1000:.2f} meV)\n"  # noqa: RUF001
+                    f"  ES={shift:.6f}: E_avg={avg_e:.6f} eV "
+                    f"(σ={std_e * 1000:.2f} meV)\n"  # noqa: RUF001
                 )
 
             shift_range = (
@@ -2215,7 +2269,8 @@ def write_basis_params_summary(
                 std_e = np.std(energies[mask])
                 avg_energies_by_norm.append(avg_e)
                 f.write(
-                    f"  SN={norm:.4f}: E_avg={avg_e:.6f} eV (σ={std_e * 1000:.2f} meV)\n"  # noqa: RUF001
+                    f"  SN={norm:.4f}: E_avg={avg_e:.6f} eV "
+                    f"(σ={std_e * 1000:.2f} meV)\n"  # noqa: RUF001
                 )
 
             norm_range = (
@@ -2265,10 +2320,12 @@ def write_basis_params_summary(
         f.write("=" * 90 + "\n\n")
 
         f.write(
-            "The workflow generates plots of actual PAO basis functions extracted from SIESTA\n"
+            "The workflow generates plots of actual PAO basis functions extracted "
+            "from SIESTA\n"
         )
         f.write(
-            "ion.xml output files. These show the real radial functions φ(r) used in the\n"
+            "ion.xml output files. These show the real radial functions φ(r) used "
+            "in the\n"
         )
         f.write("calculation, not schematic representations.\n\n")
 
@@ -2315,7 +2372,8 @@ def write_basis_params_summary(
             "   • d-orbitals: Five degenerate orbitals, important for polarization\n"
         )
         f.write(
-            "   • Higher ℓ channels added based on basis type (SZ, DZ, DZP, TZ, etc.)\n\n"  # noqa: RUF001
+            "   • Higher ℓ channels added based on basis type "  # noqa: RUF001
+            "(SZ, DZ, DZP, TZ, etc.)\n\n"
         )
 
         f.write("Material-Specific Considerations:\n\n")
@@ -2401,7 +2459,8 @@ def write_basis_params_summary(
 
         f.write("4. Anglada et al., Phys. Rev. B 66, 205101 (2002)\n")
         f.write(
-            "   'Systematic generation of finite-range atomic basis sets for linear-scaling'\n"
+            "   'Systematic generation of finite-range atomic basis sets "
+            "for linear-scaling'\n"
         )
         f.write("   DOI: 10.1103/PhysRevB.66.205101\n")
         f.write("   • Automatic basis set generation\n")
@@ -2416,7 +2475,8 @@ def write_basis_params_summary(
 
         f.write("6. Cuadrado et al., J. Phys.: Condens. Matter 24, 086005 (2012)\n")
         f.write(
-            "   'Approach to an optimal basis set for density-functional calculations'\n"
+            "   'Approach to an optimal basis set for density-functional "
+            "calculations'\n"
         )
         f.write("   DOI: 10.1088/0953-8984/24/8/086005\n")
         f.write("   • Systematic basis optimization\n")
@@ -2476,9 +2536,10 @@ def collect_eos_basis_data(
     logger.info("Collecting EOS basis convergence data")
     logger.info(f"Job metadata entries: {len(job_metadata)}")
     logger.info(f"Flow results type: {type(flow_results)}")
-    logger.info(
-        f"Flow results keys: {list(flow_results.keys()) if isinstance(flow_results, dict) else 'Not a dict'}"
+    keys_repr = (
+        list(flow_results.keys()) if isinstance(flow_results, dict) else "Not a dict"
     )
+    logger.info(f"Flow results keys: {keys_repr}")
 
     basis_data: dict[str, Any] = {
         "basis_sets": [],
@@ -2525,8 +2586,10 @@ def collect_eos_basis_data(
                         eos_fit = eos_models["murnaghan"]
                         v0 = eos_fit["v0"]
 
-                        # Extract equilibrium lattice parameters by scaling reference structure to V₀
-                        # The EOS applies isotropic strain, so lattice parameters scale as V^(1/3)
+                        # Extract equilibrium lattice parameters by scaling
+                        # reference structure to V₀
+                        # The EOS applies isotropic strain, so lattice parameters
+                        # scale as V^(1/3)
                         structures = result["relax"].get("structure", [])
                         volumes = result["relax"].get("volume", [])
                         a, b, c = None, None, None
@@ -2558,20 +2621,24 @@ def collect_eos_basis_data(
                                 )
 
                                 logger.info(
-                                    f"Scaled lattice from V_ref={v_ref:.3f} Å³ to V₀={v0:.3f} Å³ "
-                                    f"(scale={scale:.6f}): a={a:.4f}, b={b:.4f}, c={c:.4f} Å"
+                                    f"Scaled lattice from V_ref={v_ref:.3f} Å³ "
+                                    f"to V₀={v0:.3f} Å³ (scale={scale:.6f}): "
+                                    f"a={a:.4f}, b={b:.4f}, c={c:.4f} Å"
                                 )
                             except AttributeError:
                                 logger.warning(
-                                    f"Could not extract lattice from structure for {basis_set}, using cubic approximation"
+                                    f"Could not extract lattice from structure "
+                                    f"for {basis_set}, using cubic approximation"
                                 )
                                 a = v0 ** (1.0 / 3.0)
                                 b, c = a, a
                                 alpha, beta, gamma = 90.0, 90.0, 90.0
                         else:
-                            # Fallback: calculate assuming cubic if no structures available
+                            # Fallback: calculate assuming cubic if no structures
+                            # available
                             logger.warning(
-                                f"No structures available for {basis_set}, using cubic approximation"
+                                f"No structures available for {basis_set}, "
+                                f"using cubic approximation"
                             )
                             a = v0 ** (1.0 / 3.0)
                             b, c = a, a
@@ -2616,9 +2683,13 @@ def collect_eos_basis_data(
                         basis_data["names"].append(job_name)
 
                         logger.info(
-                            f"✓ Collected EOS data for {basis_set}: V0={v0:.3f}, a={a:.6f} Å, B0={eos_fit['b0 GPa']:.1f} GPa, t={run_time:.1f}s"
+                            f"✓ Collected EOS data for {basis_set}: "
+                            f"V0={v0:.3f}, a={a:.6f} Å, "
+                            f"B0={eos_fit['b0 GPa']:.1f} GPa, t={run_time:.1f}s"
                             if run_time
-                            else f"✓ Collected EOS data for {basis_set}: V0={v0:.3f}, a={a:.6f} Å, B0={eos_fit['b0 GPa']:.1f} GPa"
+                            else f"✓ Collected EOS data for {basis_set}: "
+                            f"V0={v0:.3f}, a={a:.6f} Å, "
+                            f"B0={eos_fit['b0 GPa']:.1f} GPa"
                         )
                     else:
                         logger.warning(f"No murnaghan EOS fit found for {job_name}")
@@ -2630,11 +2701,12 @@ def collect_eos_basis_data(
             else:
                 logger.warning(f"Unexpected result structure for {job_name}")
                 logger.warning(
-                    f"Result type: {type(result)}, keys: {list(result.keys()) if isinstance(result, dict) else 'N/A'}"
+                    f"Result type: {type(result)}, keys: "
+                    f"{list(result.keys()) if isinstance(result, dict) else 'N/A'}"
                 )
 
-        except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.exception(f"Error processing job {job_name} (UUID: {job_uuid}): {e}")
+        except (KeyError, TypeError, ValueError, AttributeError):
+            logger.exception(f"Error processing job {job_name} (UUID: {job_uuid})")
             import traceback
 
             logger.exception(traceback.format_exc())
@@ -2644,10 +2716,12 @@ def collect_eos_basis_data(
         logger.error("No EOS data collected from any job!")
     else:
         logger.info(
-            f"Successfully collected EOS data for {len(basis_data['basis_sets'])} basis sets"
+            f"Successfully collected EOS data for "
+            f"{len(basis_data['basis_sets'])} basis sets"
         )
         console.print(
-            f"[green]Collected EOS data for basis sets: {', '.join(basis_data['basis_sets'])}[/green]"
+            f"[green]Collected EOS data for basis sets: "
+            f"{', '.join(basis_data['basis_sets'])}[/green]"
         )
 
     return basis_data
@@ -2692,7 +2766,8 @@ def write_eos_basis_summary(basis_data: dict[str, Any]) -> str:
         # Write table header
         if has_timing:
             f.write(
-                f"{'Basis':<12} {'V0 (Ų)':<15} {'E0 (eV)':<15} {'B0 (GPa)':<15} {'Time (s)':<12}\n"
+                f"{'Basis':<12} {'V0 (Ų)':<15} {'E0 (eV)':<15} "
+                f"{'B0 (GPa)':<15} {'Time (s)':<12}\n"
             )
             f.write("-" * 90 + "\n")
         else:
@@ -2724,10 +2799,12 @@ def write_eos_basis_summary(basis_data: dict[str, Any]) -> str:
 
             f.write("Convergence Analysis:\n")
             f.write(
-                f"  V0 variation: {v0_range:.4f} Ų ({v0_range / max(basis_data['V0']) * 100:.2f}%)\n"
+                f"  V0 variation: {v0_range:.4f} Ų "
+                f"({v0_range / max(basis_data['V0']) * 100:.2f}%)\n"
             )
             f.write(
-                f"  B0 variation: {b0_range:.2f} GPa ({b0_range / max(basis_data['B0']) * 100:.2f}%)\n"
+                f"  B0 variation: {b0_range:.2f} GPa "
+                f"({b0_range / max(basis_data['B0']) * 100:.2f}%)\n"
             )
             f.write("\n")
 
@@ -2739,12 +2816,14 @@ def write_eos_basis_summary(basis_data: dict[str, Any]) -> str:
             ):
                 f.write("  ✓ EOS parameters well converged with respect to basis set\n")
                 f.write(
-                    f"  ✓ Recommended basis: {basis_data['basis_sets'][-2]} (good balance)\n"
+                    f"  ✓ Recommended basis: {basis_data['basis_sets'][-2]} "
+                    f"(good balance)\n"
                 )
             else:
                 f.write("  ⚠ Significant basis set dependence observed\n")
                 f.write(
-                    f"  ⚠ Consider using: {basis_data['basis_sets'][-1]} for production\n"
+                    f"  ⚠ Consider using: {basis_data['basis_sets'][-1]} "
+                    f"for production\n"
                 )
 
         f.write("\n")
@@ -2802,7 +2881,7 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
 
     # Create figure with 3 or 4 subplots depending on timing availability
     if has_timing:
-        fig, axes = plt.subplots(1, 4, figsize=(20, 5))
+        _fig, axes = plt.subplots(1, 4, figsize=(20, 5))
     else:
         _fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -2915,7 +2994,8 @@ def plot_eos_overlay(flow_results: dict[str, Any], job_metadata: list[dict]) -> 
 
             result = flow_results[job_uuid]
 
-            # EOS flow returns dict with structure: result["relax"]["volume"], result["relax"]["energy"]
+            # EOS flow returns dict with structure: result["relax"]["volume"],
+            # result["relax"]["energy"]
             # and result["relax"]["EOS"]["murnaghan"] for fitted parameters
             if isinstance(result, dict) and "relax" in result:
                 relax_data = result["relax"]
@@ -3086,7 +3166,7 @@ def generate_eos_basis_outputs(
                 energies = np.array(relax_data["energy"])
 
                 # Create EOS fit plot
-                fig, ax = plt.subplots(figsize=(10, 6))
+                _fig, ax = plt.subplots(figsize=(10, 6))
                 ax.plot(
                     volumes,
                     energies,
@@ -3129,7 +3209,7 @@ def generate_eos_basis_outputs(
                                     label=f"V₀={v0:.2f} ų",
                                     zorder=10,
                                 )
-                        except Exception as e:
+                        except Exception as e:  # noqa: BLE001
                             logger.warning(f"Could not plot fit for {basis_set}: {e}")
 
                 ax.set_xlabel("Volume (ų)", fontsize=14, fontweight="bold")
@@ -3159,13 +3239,16 @@ def generate_eos_basis_outputs(
                         f.write("Murnaghan Equation of State Fit:\n")
                         f.write("-" * 80 + "\n")
                         f.write(
-                            f"  V₀ (equilibrium volume):   {eos_fit.get('v0', 'N/A'):.6f} ų\n"
+                            f"  V₀ (equilibrium volume):   "
+                            f"{eos_fit.get('v0', 'N/A'):.6f} ų\n"
                         )
                         f.write(
-                            f"  E₀ (equilibrium energy):   {eos_fit.get('e0', 'N/A'):.6f} eV\n"
+                            f"  E₀ (equilibrium energy):   "
+                            f"{eos_fit.get('e0', 'N/A'):.6f} eV\n"
                         )
                         f.write(
-                            f"  B₀ (bulk modulus):         {eos_fit.get('b0 GPa', 'N/A'):.4f} GPa\n"
+                            f"  B₀ (bulk modulus):         "
+                            f"{eos_fit.get('b0 GPa', 'N/A'):.4f} GPa\n"
                         )
                         f.write(
                             f"  B₁ (pressure derivative):  {eos_fit.get('b1', 'N/A')}\n"
@@ -3183,7 +3266,7 @@ def generate_eos_basis_outputs(
         e0_values = basis_data["E0"]
         b0_values = basis_data["B0"]
 
-        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+        _fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
         # V0 plot
         axes[0].plot(
@@ -3291,7 +3374,7 @@ def generate_eos_basis_outputs(
                                 alpha=0.7,
                                 label=f"{basis_set} (fit)",
                             )
-                        except Exception:
+                        except Exception:  # noqa: S110, BLE001
                             pass
 
     ax.set_xlabel("Volume (ų)", fontsize=14, fontweight="bold")
@@ -3335,7 +3418,8 @@ def generate_eos_basis_outputs(
             f.write("-" * 120 + "\n")
             f.write(
                 f"{'Basis Set':<12} {'V₀ (ų)':<12} {'E₀ (eV)':<15} {'B₀ (GPa)':<12} "
-                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} {'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
+                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} "
+                f"{'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
             )
             f.write("-" * 120 + "\n")
 
@@ -3351,7 +3435,8 @@ def generate_eos_basis_outputs(
                 gamma = basis_data["lattice_gamma"][i]
                 f.write(
                     f"{basis:<12} {v0:<12.6f} {e0:<15.6f} {b0:<12.4f} "
-                    f"{a:<10.6f} {b:<10.6f} {c:<10.6f} {alpha:<8.2f} {beta:<8.2f} {gamma:<8.2f}\n"
+                    f"{a:<10.6f} {b:<10.6f} {c:<10.6f} "
+                    f"{alpha:<8.2f} {beta:<8.2f} {gamma:<8.2f}\n"
                 )
 
             f.write("\n")
@@ -3412,17 +3497,20 @@ def generate_eos_basis_outputs(
                 if v0_percent < 0.5 and b0_percent < 2.0:
                     f.write("  ✓ EXCELLENT: EOS parameters well converged\n")
                     f.write(
-                        f"  ✓ Recommended: {basis_data['basis_sets'][-2]} (good balance)\n"
+                        f"  ✓ Recommended: {basis_data['basis_sets'][-2]} "
+                        f"(good balance)\n"
                     )
                 elif v0_percent < 1.0 and b0_percent < 5.0:
                     f.write("  ✓ GOOD: Adequate convergence for most purposes\n")
                     f.write(
-                        f"  → Consider: {basis_data['basis_sets'][-1]} for high accuracy\n"
+                        f"  → Consider: {basis_data['basis_sets'][-1]} "
+                        f"for high accuracy\n"
                     )
                 else:
                     f.write("  ⚠ FAIR: Significant basis set dependence\n")
                     f.write(
-                        f"  → Use: {basis_data['basis_sets'][-1]} for production calculations\n"
+                        f"  → Use: {basis_data['basis_sets'][-1]} "
+                        f"for production calculations\n"
                     )
                     f.write("  → Consider testing larger basis (TZP, TZDP)\n")
 
@@ -3515,7 +3603,8 @@ def generate_eos_basis_outputs(
         f"[cyan]  Individual plots: {len(output_files['individual_plots'])}[/cyan]"
     )
     console.print(
-        f"[cyan]  Individual summaries: {len(output_files['individual_summaries'])}[/cyan]"
+        f"[cyan]  Individual summaries: "
+        f"{len(output_files['individual_summaries'])}[/cyan]"
     )
 
     return output_files

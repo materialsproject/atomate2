@@ -98,13 +98,15 @@ def _create_neb_lua_script(n_intermediate_images: int) -> None:
         Number of intermediate images (excluding initial and final).
     """
     print(  # noqa: T201
-        f"DEBUG: _create_neb_lua_script called with n_intermediate_images={n_intermediate_images}"
+        "DEBUG: _create_neb_lua_script called with "
+        f"n_intermediate_images={n_intermediate_images}"
     )
     # Get FLOS path from settings
     flos_path = SETTINGS.FLOS_PATH
     if flos_path is None:
         raise ValueError(
-            "FLOS_PATH not set. Please set it in ~/.atomate2siesta.yaml or as an environment variable."
+            "FLOS_PATH not set. Please set it in ~/.atomate2siesta.yaml or as "
+            "an environment variable."
         )
 
     flos_path = Path(flos_path)
@@ -159,10 +161,12 @@ def _create_neb_lua_script(n_intermediate_images: int) -> None:
         logger.info(f"After replacement: '{new_match.group()}'")
         if str(n_intermediate_images) not in new_match.group():
             print(  # noqa: T201
-                f"DEBUG: Replacement FAILED! Expected {n_intermediate_images}, got: {new_match.group()}"
+                f"DEBUG: Replacement FAILED! Expected {n_intermediate_images}, "
+                f"got: {new_match.group()}"
             )
             logger.error(
-                f"Replacement FAILED! Expected {n_intermediate_images}, got: {new_match.group()}"
+                f"Replacement FAILED! Expected {n_intermediate_images}, "
+                f"got: {new_match.group()}"
             )
     else:
         print("DEBUG: No match found after replacement!")  # noqa: T201

@@ -5,8 +5,12 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from pymatgen.io.ase import AseAtomsAdaptor
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 from atomate2.siesta.sets.siesta_structure_fdf import generate_structure_fdf
 from atomate2.siesta.sets.utils.core import _get_site_atomic_number
@@ -37,7 +41,8 @@ def write_defects_to_folders(
     ----------
     defects : list[dict]
         List of defect dictionaries from any generator
-        (SiestaVacancyGenerator, SiestaSubstitutionGenerator, SiestaInterstitialGenerator)
+        (SiestaVacancyGenerator, SiestaSubstitutionGenerator,
+        SiestaInterstitialGenerator)
     output_dir : str or Path
         Base output directory. Default: "defects"
     write_cif : bool
@@ -346,7 +351,11 @@ def _generate_defect_readme(defect: dict, defect_name: str) -> str:
     return "\n".join(lines)
 
 
-def _write_fdf_file(structure, fdf_path: Path, system_label: str) -> None:
+def _write_fdf_file(
+    structure: Structure,
+    fdf_path: Path,
+    system_label: str,  # noqa: ARG001
+) -> None:
     """Write FDF file showing ghost atoms correctly."""
     # Convert pymatgen Structure to ASE Atoms
     adaptor = AseAtomsAdaptor()

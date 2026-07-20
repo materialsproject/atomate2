@@ -37,7 +37,7 @@ U_EQ_CO2RR_C2H4 = 0.08  # V (2CO₂ + 12H⁺ + 12e⁻ → C₂H₄ + 4H₂O)
 
 def calculate_orr_overpotential(
     delta_G: Sequence[float],  # noqa: N803
-    method: str = "max_uphill",
+    method: str = "max_uphill",  # noqa: ARG001
 ) -> dict[str, float]:
     """
     Calculate ORR overpotential from free energy profile.

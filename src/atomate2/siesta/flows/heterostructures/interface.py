@@ -453,15 +453,16 @@ def find_supercell_match(
 
         # Find supercell size: N such that N×a ≈ λ_moiré  # noqa: RUF003
         N_ideal = moire_wavelength / a  # noqa: N806
-        N = max(
+        N = max(  # noqa: N806
             2, int(np.round(N_ideal))
-        )  # At least 2×2 supercell  # noqa: N806, RUF003
+        )  # At least 2×2 supercell  # noqa: RUF003
 
         # Ensure within max_size
         if max_size < N:
             logger.warning(
                 f"Moiré supercell size {N}×{N} exceeds max_size={max_size}. "  # noqa: RUF001
-                f"Using {max_size}×{max_size} instead. Increase max_supercell_size for accuracy."  # noqa: RUF001
+                f"Using {max_size}×{max_size} instead. "  # noqa: RUF001
+                f"Increase max_supercell_size for accuracy."
             )
             N = max_size  # noqa: N806
 
@@ -536,8 +537,10 @@ def find_supercell_match(
             score = area_mismatch + supercell_penalty
 
             # Update best if better than current
-            # CRITICAL: Check BOTH area AND dimension matching to prevent discontinuities
-            # Area matching alone allows: Graphene 1×5 (b=12.3) + MoS2 1×3 (b=9.48)  # noqa: RUF003
+            # CRITICAL: Check BOTH area AND dimension matching to prevent
+            # discontinuities
+            # Area matching alone allows: Graphene 1×5 (b=12.3) + MoS2  # noqa: RUF003
+            # 1×3 (b=9.48)  # noqa: RUF003
             # which creates gaps because MoS2 only covers 77% of interface
             if (
                 score < min_score
@@ -579,7 +582,10 @@ def find_supercell_match(
             "top_dimensions": [top_a, top_b],
             "total_atoms": len(bottom) + len(top),
             "recommended": False,
-            "error": f"No supercell match found within size {max_size} and mismatch {max_area_mismatch:.2%}",
+            "error": (
+                f"No supercell match found within size {max_size} "
+                f"and mismatch {max_area_mismatch:.2%}"
+            ),
         }
 
     logger.info(
@@ -780,14 +786,16 @@ def build_interface_structure(
                 strain_factor_a = top_copy.lattice.a / bottom_copy.lattice.a - 1
                 strain_factor_b = top_copy.lattice.b / bottom_copy.lattice.b - 1
                 logger.info(
-                    f"Applying strain to bottom layer: Δa={strain_factor_a:.2%}, Δb={strain_factor_b:.2%}"
+                    f"Applying strain to bottom layer: "
+                    f"Δa={strain_factor_a:.2%}, Δb={strain_factor_b:.2%}"
                 )
                 bottom_copy.apply_strain([strain_factor_a, strain_factor_b, 0])
             else:
                 strain_factor_a = bottom_copy.lattice.a / top_copy.lattice.a - 1
                 strain_factor_b = bottom_copy.lattice.b / top_copy.lattice.b - 1
                 logger.info(
-                    f"Applying strain to top layer: Δa={strain_factor_a:.2%}, Δb={strain_factor_b:.2%}"
+                    f"Applying strain to top layer: "
+                    f"Δa={strain_factor_a:.2%}, Δb={strain_factor_b:.2%}"
                 )
                 top_copy.apply_strain([strain_factor_a, strain_factor_b, 0])
         elif apply_strain_to == "both":
@@ -859,7 +867,8 @@ def build_interface_structure(
 
     # Note: Do NOT wrap fractional coordinates for twisted bilayers!
     # Wrapping breaks the moiré pattern by moving rotated atoms to wrong positions.
-    # Negative fractional coordinates are fine - they represent the correct Cartesian positions.
+    # Negative fractional coordinates are fine - they represent the correct
+    # Cartesian positions.
 
     return {
         "structure": interface,
@@ -876,7 +885,7 @@ def scan_interlayer_distance(
     base_structure: Structure,
     distance_range: tuple[float, float],
     steps: int,
-    relax_maker: RelaxMaker,
+    relax_maker: RelaxMaker,  # noqa: ARG001
 ) -> dict:
     """
     Optimize interlayer distance by scanning range and finding minimum energy.
@@ -1150,7 +1159,7 @@ def calculate_interface_binding_energy(
 
         logger.info(f"✓ Generated plot: {plot_file}")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate plot: {e}")
 
     # Save structure files
@@ -1167,7 +1176,7 @@ def calculate_interface_binding_energy(
             interface_structure.to(filename=str(interface_xsf), fmt="xsf")
             structure_files["interface_xsf"] = str(interface_xsf)
             logger.info(f"✓ Saved interface structure: {interface_xsf}")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to save interface structure: {e}")
 
     if bottom_structure is not None:
@@ -1176,7 +1185,7 @@ def calculate_interface_binding_energy(
             bottom_structure.to(filename=str(bottom_cif), fmt="cif")
             structure_files["bottom_cif"] = str(bottom_cif)
             logger.info(f"✓ Saved bottom layer: {bottom_cif}")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to save bottom layer: {e}")
 
     if top_structure is not None:
@@ -1185,7 +1194,7 @@ def calculate_interface_binding_energy(
             top_structure.to(filename=str(top_cif), fmt="cif")
             structure_files["top_cif"] = str(top_cif)
             logger.info(f"✓ Saved top layer: {top_cif}")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to save top layer: {e}")
 
     return {

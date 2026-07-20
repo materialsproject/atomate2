@@ -99,8 +99,8 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
 
     # Note: dry_run, use_custodian, and tier support inherited from BaseSiestaFlowMaker
 
-    def __post_init__(self):
-        """Call parent __post_init__ for automatic propagation of dry_run/custodian/tier."""
+    def __post_init__(self) -> None:
+        """Propagate dry_run/custodian/tier via the parent ``__post_init__``."""
         super().__post_init__()
 
     @property

@@ -272,10 +272,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
         >>> # Returns 3 defects (one per dopant)
         """  # noqa: RUF002
         # Convert species to list
-        if isinstance(species, str):
-            species_list = [species]
-        else:
-            species_list = species
+        species_list = [species] if isinstance(species, str) else species
 
         # Convert dopants to list of Elements
         if isinstance(dopants, str):
@@ -373,7 +370,8 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
                     defects.append(defect_info)
 
                     logger.debug(
-                        f"Generated: {dopant.symbol}_{site_info['species']}^{charge:+d} "
+                        f"Generated: {dopant.symbol}_{site_info['species']}"
+                        f"^{charge:+d} "
                         f"in layer {site_info['layer_index']} "
                         f"(z={site_info['layer_z_position']:.2f} Å)"
                     )

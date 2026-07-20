@@ -385,7 +385,8 @@ def write_phonon_summary(
         f.write("=" * 80 + "\n")
         f.write("PHONON CALCULATION SUMMARY\n")
         f.write("=" * 80 + "\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        generated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
+        f.write(f"Generated: {generated}\n\n")
 
         # Structure information
         f.write("-" * 80 + "\n")
@@ -420,10 +421,12 @@ def write_phonon_summary(
         f.write(f"Minimum frequency: {phonon_doc['min_frequency']:.6f} THz\n")
         f.write(f"Maximum frequency: {phonon_doc['max_frequency']:.6f} THz\n")
         f.write(
-            f"Frequency range: {phonon_doc['max_frequency'] - phonon_doc['min_frequency']:.6f} THz\n"
+            f"Frequency range: "
+            f"{phonon_doc['max_frequency'] - phonon_doc['min_frequency']:.6f} THz\n"
         )
         f.write(
-            f"Imaginary frequencies: {'Yes' if phonon_doc['has_imaginary_frequencies'] else 'No'}\n\n"
+            f"Imaginary frequencies: "
+            f"{'Yes' if phonon_doc['has_imaginary_frequencies'] else 'No'}\n\n"
         )
 
         if phonon_doc["has_imaginary_frequencies"]:
@@ -440,7 +443,9 @@ def write_phonon_summary(
             f.write("THERMAL PROPERTIES\n")
             f.write("-" * 80 + "\n")
             f.write(
-                f"Temperature range: {min(thermal['temperatures']):.1f} - {max(thermal['temperatures']):.1f} K\n\n"
+                f"Temperature range: "
+                f"{min(thermal['temperatures']):.1f} - "
+                f"{max(thermal['temperatures']):.1f} K\n\n"
             )
 
             f.write(

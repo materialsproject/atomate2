@@ -67,10 +67,7 @@ def _create_geometry_constraints_block(slab_atom_indices: list[int]) -> list[str
     """
     # SIESTA format: atom [list of atoms]
     # This fixes all coordinates (x, y, z) of the specified atoms
-    constraints = []
-    for idx in slab_atom_indices:
-        constraints.append(f"atom {idx}")
-    return constraints
+    return [f"atom {idx}" for idx in slab_atom_indices]
 
 
 @job
@@ -91,7 +88,7 @@ def _analyze_bifunctional_pathway(
     plot_results: bool = True,
     write_summary: bool = True,
     surface_name: str = "bifunctional_catalyst",
-):
+) -> dict:
     """
     Analyze both ORR and OER pathways for bifunctional activity.
 
@@ -575,7 +572,8 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
             clean_energy_ref = clean_surface_job.output.output.energy
         else:
             logger.info(
-                f"Using pre-calculated clean surface energy: {self.clean_surface_energy} eV"
+                f"Using pre-calculated clean surface energy: "
+                f"{self.clean_surface_energy} eV"
             )
             clean_energy_ref = self.clean_surface_energy
 

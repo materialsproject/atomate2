@@ -235,7 +235,8 @@ class KumagaiCorrection(CorrectionScheme):
                         )
                         alignment_plot_path = str(plot_output)
                         logger.info(
-                            f"Generated Kumagai alignment plot (VT): {alignment_plot_path}"
+                            "Generated Kumagai alignment plot (VT): "
+                            f"{alignment_plot_path}"
                         )
                         logger.info(
                             f"Mean ΔV (VT) = {plot_data['mean_alignment']:.4f} eV "
@@ -256,12 +257,14 @@ class KumagaiCorrection(CorrectionScheme):
                                 show_plot=False,
                             )
                             logger.info(
-                                f"Generated Kumagai alignment plot (VH): {plot_output_vh}"
+                                "Generated Kumagai alignment plot (VH): "
+                                f"{plot_output_vh}"
                             )
                             logger.info(
-                                f"Mean ΔV (VH) = {plot_data_vh['mean_alignment']:.4f} eV"
+                                "Mean ΔV (VH) = "
+                                f"{plot_data_vh['mean_alignment']:.4f} eV"
                             )
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Failed to generate alignment plot: {e}")
 
         else:
@@ -320,8 +323,7 @@ class KumagaiCorrection(CorrectionScheme):
             Characteristic length in Angstroms
         """
         a, b, c = structure.lattice.abc
-        L = (a + b + c) / 3.0  # noqa: N806
-        return L
+        return (a + b + c) / 3.0
 
     def _calculate_atomic_site_alignment(
         self,

@@ -417,7 +417,8 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
                 pos_key = tuple(np.round(interstitial_cart, 3))
                 if pos_key in generated_hollow_positions:
                     logger.debug(
-                        f"Skipping duplicate hollow site at z={interstitial_cart[2]:.2f} Å"
+                        "Skipping duplicate hollow site at "
+                        f"z={interstitial_cart[2]:.2f} Å"
                     )
                     continue
                 generated_hollow_positions.add(pos_key)
@@ -476,12 +477,14 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
                 logger.debug(
                     f"Generated: {interstitial_species.symbol}_i^{charge:+d} "
                     f"in layer {site_info['layer_index']} "
-                    f"(z={interstitial_cart[2]:.2f} Å, {self.interstitial_site_type} site)"
+                    f"(z={interstitial_cart[2]:.2f} Å, "
+                    f"{self.interstitial_site_type} site)"
                 )
 
         logger.info(
             f"Generated {len(defects)} surface interstitial defect(s) "
-            f"({len(surface_sites)} unique site(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
+            f"({len(surface_sites)} unique site(s) × "  # noqa: RUF001
+            f"{len(charge_states)} charge state(s))"
         )
 
         return defects

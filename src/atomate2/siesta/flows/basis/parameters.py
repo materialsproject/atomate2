@@ -54,16 +54,21 @@ def print_energies(
     flow_results: dict[str, Any], job_metadata: list[dict]
 ) -> dict[str, float]:
     """
-    Retrieve and print the total energies from each job in the Flow's results using job.output.
+    Retrieve and print the total energies from each job in the Flow's results.
+
+    Energies are accessed via ``job.output``.
 
     Args:
-        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
+        flow_results (Dict[str, Any]): The results dictionary returned by
+            jobflow's run_locally.
         job_metadata (list[dict]): List of dictionaries containing job names and UUIDs.
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
+        verbosity (VerbosityLevel): Verbosity level for console output.
+            Defaults to INFO.
 
     Returns
     -------
-        Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
+        Dict[str, float]: A dictionary mapping job names to their total
+        energies (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
 
@@ -87,13 +92,15 @@ def print_energies(
             if job_uuid not in flow_results:
                 if verbosity.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]No results found for job {job_name} (UUID: {job_uuid})[/yellow]"
+                        f"[yellow]No results found for job {job_name} "
+                        f"(UUID: {job_uuid})[/yellow]"
                     )
                 continue
         except (KeyError, TypeError, ValueError, AttributeError) as e:
             if verbosity.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[red]Error processing job {job_name} (UUID: {job_uuid}): {e}[/red]"
+                    f"[red]Error processing job {job_name} "
+                    f"(UUID: {job_uuid}): {e}[/red]"
                 )
             continue
 
@@ -111,16 +118,21 @@ def print_energies(
 @job
 def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, float]:
     """
-    Retrieve and print the total energies from each job in the Flow's results using job.output.
+    Retrieve and print the total energies from each job in the Flow's results.
+
+    Energies are accessed via ``job.output``.
 
     Args:
         flow (Flow): The Flow object containing the SCF jobs.
-        flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to DEBUG.
+        flow_results (Dict[str, Any]): The results dictionary returned by
+            jobflow's run_locally.
+        verbosity (VerbosityLevel): Verbosity level for console output.
+            Defaults to DEBUG.
 
     Returns
     -------
-        Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
+        Dict[str, float]: A dictionary mapping job names to their total
+        energies (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
 
@@ -142,7 +154,7 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
                 console.print(f"[green]The job in flow uuid:{job_uuid=}[/green]")
 
                 result = flow_results[job_uuid]
-                input = result.input
+                input = result.input  # noqa: A001
                 output = result.output  # Access SiestaTaskDoc
                 energy = output.energy
                 energies[job_name] = energy
@@ -156,14 +168,16 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
             if job_uuid not in flow_results:
                 if verbosity.value >= VerbosityLevel.WARNING.value:
                     console.print(
-                        f"[yellow]No results found for job {job_name} (UUID: {job_uuid})[/yellow]"
+                        f"[yellow]No results found for job {job_name} "
+                        f"(UUID: {job_uuid})[/yellow]"
                     )
                 continue
 
         except (KeyError, TypeError, ValueError, AttributeError) as e:
             if verbosity.value >= VerbosityLevel.WARNING.value:
                 console.print(
-                    f"[red]Error processing job {job_name} (UUID: {job_uuid}): {e}[/red]"
+                    f"[red]Error processing job {job_name} "
+                    f"(UUID: {job_uuid}): {e}[/red]"
                 )
             continue
 
@@ -181,13 +195,15 @@ def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, fl
 @job
 def plot_energies(
     energies: dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
-):
+) -> None:
     """
     Plot total energies vs. basis size.
 
     Args:
-        energies (Dict[str, float]): Dictionary mapping job names to total energies (in eV).
-        verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
+        energies (Dict[str, float]): Dictionary mapping job names to total
+            energies (in eV).
+        verbosity (VerbosityLevel): Verbosity level for console output.
+            Defaults to INFO.
     """
     import matplotlib.pyplot as plt
 
@@ -301,7 +317,8 @@ class BasisParametersConvergenceFlowMaker(BaseSiestaFlowMaker):
                     else self.static_maker
                 )
 
-                # Propagate custodian settings (scf() creates new maker that loses settings)
+                # Propagate custodian settings (scf() creates new maker that
+                # loses settings)
                 self.propagate_custodian_to_maker(maker)
 
                 # Configure basis parameters
@@ -359,7 +376,8 @@ class BasisParametersConvergenceFlowMaker(BaseSiestaFlowMaker):
         plot_job = plot_basis_params_convergence(basis_params_data=collect_job.output)
         plot_job.name = f"{self.name}-plot"
 
-        # Create basis function visualization (schematic - inspired by plot_siesta_basis.py)
+        # Create basis function visualization (schematic - inspired by
+        # plot_siesta_basis.py)
         basis_viz_job = plot_basis_functions(
             flow_results=scf_flow.output,
             job_metadata=job_metadata,

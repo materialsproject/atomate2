@@ -24,10 +24,12 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Structure
 
+    from atomate2.siesta.sets.base import SiestaInputGenerator
+
 logger = logging.getLogger(__name__)
 
 
-def _enable_modules(input_gen, modules: list[str]) -> None:
+def _enable_modules(input_gen: SiestaInputGenerator, modules: list[str]) -> None:
     """Add modules to an input generator's ``enabled_modules`` list (in-place).
 
     Parameters
@@ -101,7 +103,8 @@ class DefectFlowMaker(Maker):
         {"O": -5.0, "Mg": -2.0, ...}
         For vacancy: μ_removed is ADDED to formation energy
         For substitution: μ_removed - μ_added
-        If not provided, chemical potential term is omitted (will give wrong E_formation!)
+        If not provided, chemical potential term is omitted (will give wrong
+        E_formation!)
     auto_calculate_chemical_potentials : bool
         If True, automatically calculate chemical potentials from reference
         structures (O2, H2, N2 molecules; bulk metals). Default: False
@@ -171,7 +174,7 @@ class DefectFlowMaker(Maker):
         defect_site: list[float] | None = None,
         defect_species: str | None = None,
         removed_species: str | None = None,
-        host_task_doc=None,
+        host_task_doc: Any = None,
     ) -> Flow | list[Flow]:
         """
         Create the defect calculation flow.
@@ -260,7 +263,7 @@ class DefectFlowMaker(Maker):
         # Single charge state - continue with normal flow creation
 
         # Validate chemical potentials are provided when needed
-        if defect_species and not self.auto_calculate_chemical_potentials:
+        if defect_species and not self.auto_calculate_chemical_potentials:  # noqa: SIM102
             if (
                 not self.chemical_potentials
                 or (
@@ -282,7 +285,8 @@ class DefectFlowMaker(Maker):
                     else defect_species
                 )
                 raise ValueError(
-                    f"Chemical potentials required for {species_str} defect but not provided!\n"
+                    f"Chemical potentials required for {species_str} "
+                    f"defect but not provided!\n"
                     f"Formation energy calculation requires chemical potentials.\n\n"
                     f"Either:\n"
                     f"  1. Provide chemical_potentials dict with NUMERIC values (eV):\n"
@@ -311,8 +315,9 @@ class DefectFlowMaker(Maker):
                 )
             elif not any(defect_structure.site_properties.get("ghost_tags", [])):
                 logger.warning(
-                    "use_ghost_atoms=True but no ghost atoms found in defect_structure. "
-                    "For SIESTA vacancy calculations, use create_vacancy_with_ghost() "
+                    "use_ghost_atoms=True but no ghost atoms found in "
+                    "defect_structure. For SIESTA vacancy calculations, use "
+                    "create_vacancy_with_ghost() "
                     "to properly create ghost atoms at vacancy sites."
                 )
 
@@ -369,7 +374,8 @@ class DefectFlowMaker(Maker):
                 f"Auto-enabled .VT file writing for {self.correction_scheme} correction"
             )
 
-        # Enable .RHO files for Makov-Payne-Quadrupole (quadrupole calculation from density)
+        # Enable .RHO files for Makov-Payne-Quadrupole (quadrupole calculation
+        # from density)
         # Note: basic "makov-payne" does NOT need .RHO (uses Q=0)
         if scheme_lower in ["makov-payne-quadrupole", "mp-quad", "makov-payne-full"]:
             # Add to defect maker
@@ -401,7 +407,8 @@ class DefectFlowMaker(Maker):
             }
 
             logger.info(
-                f"Auto-enabled .RHO file writing for {self.correction_scheme} correction (quadrupole calculation from density)"
+                f"Auto-enabled .RHO file writing for {self.correction_scheme} "
+                f"correction (quadrupole calculation from density)"
             )
 
         # Enable band structure / PDOS output in BOTH defect and host calculations.
@@ -551,7 +558,8 @@ class DefectFlowMaker(Maker):
             defect_maker.input_set_generator.user_params = updated_params
 
             logger.info(
-                f"Setting NetCharge = {self.charge_state} for charged defect calculation"
+                f"Setting NetCharge = {self.charge_state} "
+                f"for charged defect calculation"
             )
 
         if self.skip_relax:
@@ -591,7 +599,8 @@ class DefectFlowMaker(Maker):
                 and defect_species
             ):
                 logger.info(
-                    f"Auto-calculating chemical potentials for {defect_species}_{removed_species} substitution..."
+                    f"Auto-calculating chemical potentials for "
+                    f"{defect_species}_{removed_species} substitution..."
                 )
 
                 # Calculate μ for removed species (e.g., Mg)
@@ -649,7 +658,8 @@ class DefectFlowMaker(Maker):
                 ref_jobs = [ref_static_job, mu_extract_job]
             else:
                 logger.warning(
-                    "auto_calculate_chemical_potentials=True but defect_species not provided. "
+                    "auto_calculate_chemical_potentials=True but "
+                    "defect_species not provided. "
                     "Cannot calculate chemical potential!"
                 )
                 chemical_potentials = self.chemical_potentials or {}
@@ -741,13 +751,11 @@ class DefectFlowMaker(Maker):
             base_jobs.append(host_static_job)
         jobs = base_jobs + ref_jobs + [finalize_job] + plot_jobs
 
-        flow = Flow(
+        return Flow(
             jobs,
             output=finalize_job.output,
             name=self.name,
         )
-
-        return flow
 
     @classmethod
     def from_pristine_structure(
@@ -796,7 +804,8 @@ class DefectFlowMaker(Maker):
             If False, generate defects at ALL sites (no symmetry reduction).
             Useful for slabs, specific site selection, or testing.
         tier_preset : str, optional
-            Tier preset name to apply to makers (e.g., "defect_dirty", "defect_standard")
+            Tier preset name to apply to makers (e.g., "defect_dirty",
+            "defect_standard")
             If provided, automatically creates makers with tier preset applied
             If None, use default makers or provide custom makers via kwargs
         use_custodian : bool
@@ -955,7 +964,8 @@ class DefectFlowMaker(Maker):
                 # Generate substitutions with specified dopants
                 if species is None:
                     raise ValueError(
-                        "For substitution defects, 'species' (host species to replace) must be specified"
+                        "For substitution defects, 'species' "
+                        "(host species to replace) must be specified"
                     )
                 defects = generator.generate_defects(
                     species=species,
@@ -969,7 +979,8 @@ class DefectFlowMaker(Maker):
             )
             if species is None:
                 raise ValueError(
-                    "For interstitial defects, 'species' (interstitial species) must be specified"
+                    "For interstitial defects, 'species' "
+                    "(interstitial species) must be specified"
                 )
             defects = generator.generate_defects(
                 species=species,
@@ -1098,7 +1109,8 @@ class DefectFlowMaker(Maker):
                 logger.info(
                     f"Creating shared chemical potential calculations for "
                     f"{len(unique_species)} unique species: {sorted(unique_species)} "
-                    f"(saves {len(defects) * len(unique_species) - len(unique_species)} "
+                    f"(saves "
+                    f"{len(defects) * len(unique_species) - len(unique_species)} "
                     f"redundant reference calculations)"
                 )
 
@@ -1124,7 +1136,8 @@ class DefectFlowMaker(Maker):
 
                 logger.info(
                     f"Created {len(shared_ref_jobs)} shared reference jobs "
-                    f"(instead of {len(defects) * len(unique_species) * 2} per-defect jobs)"
+                    f"(instead of "
+                    f"{len(defects) * len(unique_species) * 2} per-defect jobs)"
                 )
 
         # Create flows for each defect
@@ -1200,7 +1213,8 @@ class DefectFlowMaker(Maker):
             logger.info("Added combined summary job: all_defects_summary.txt")
             if shared_host_job is not None:
                 logger.info(
-                    f"Shared host calculation saves {len(flows) - 1} redundant calculations"
+                    f"Shared host calculation saves {len(flows) - 1} "
+                    f"redundant calculations"
                 )
 
             return parent_flow
@@ -1399,7 +1413,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
 
 @job
 def extract_chemical_potential(
-    task_doc,
+    task_doc: Any,
     species: str,
     n_atoms: int,
 ) -> float:
@@ -1421,7 +1435,7 @@ def extract_chemical_potential(
         Chemical potential (eV)
     """
     # Get energy from task document
-    if isinstance(task_doc, dict):
+    if isinstance(task_doc, dict):  # noqa: SIM108
         # Dry-run mode
         total_energy = -10.0  # Placeholder
     else:
@@ -1441,8 +1455,8 @@ def extract_chemical_potential(
 
 @job
 def finalize_defect_calculation(
-    defect_task_doc,
-    host_task_doc,
+    defect_task_doc: Any,
+    host_task_doc: Any,
     host_structure: Structure,
     epsilon_static: float,
     correction_scheme_name: str,
@@ -1576,7 +1590,7 @@ def finalize_defect_calculation(
                     )
                     vt_file_paths = {"defect": str(defect_vt), "host": str(host_vt)}
                     logger.info("Successfully loaded .VT files for potential alignment")
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Failed to read .VT files: {e}")
                     potential_data = None
                     vt_file_paths = None
@@ -1597,7 +1611,7 @@ def finalize_defect_calculation(
                     logger.info(
                         "Successfully loaded .RHO files for quadrupole calculation"
                     )
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Failed to read .RHO files: {e}")
                     density_data = None
             else:
@@ -1654,7 +1668,8 @@ def finalize_defect_calculation(
             correction_kwargs["potential_data"] = potential_data
             correction_kwargs["vt_file_paths"] = vt_file_paths
 
-        # Add density_data for Makov-Payne-Quadrupole (enables automatic quadrupole calculation)
+        # Add density_data for Makov-Payne-Quadrupole (enables automatic
+        # quadrupole calculation)
         # Note: basic "makov-payne" does NOT get density_data (uses Q=0)
         if (
             scheme_name_lower
@@ -1699,7 +1714,8 @@ def finalize_defect_calculation(
             mu_defect = chemical_potentials.get(defect_species, 0.0)
             mu_removed = mu_defect
             logger.info(
-                f"Chemical potential for {defect_species} vacancy: μ = {mu_defect:.4f} eV"
+                f"Chemical potential for {defect_species} vacancy: "
+                f"μ = {mu_defect:.4f} eV"
             )
         elif defect_type == "substitution" and defect_species and removed_species:
             # For substitution: μ_removed - μ_added
@@ -1717,7 +1733,8 @@ def finalize_defect_calculation(
             mu_defect = -chemical_potentials.get(defect_species, 0.0)
             mu_added = -mu_defect
             logger.info(
-                f"Chemical potential for {defect_species} interstitial: μ = {mu_defect:.4f} eV"
+                f"Chemical potential for {defect_species} interstitial: "
+                f"μ = {mu_defect:.4f} eV"
             )
     # Note: Missing chemical potentials are now caught early in make() method
 
@@ -1850,11 +1867,11 @@ def _find_rho_files(
 
 @job
 def generate_potential_plot(
-    defect_task_doc,
-    host_task_doc,
+    defect_task_doc: Any,
+    host_task_doc: Any,
     output_name: str = "potential_alignment.png",
     axis: int = 2,
-):
+) -> dict:
     """
     Generate potential alignment plot from VT files.
 
@@ -1925,18 +1942,18 @@ def generate_potential_plot(
             "axis": axis,
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate potential plot: {e}")
         return {"status": "failed", "error": str(e)}
 
 
 @job
 def generate_density_plot(
-    defect_task_doc,
-    host_task_doc,
+    defect_task_doc: Any,
+    host_task_doc: Any,
     output_name: str = "density_difference.png",
     axis: int = 2,
-):
+) -> dict:
     """
     Generate charge density difference plot.
 
@@ -2031,18 +2048,18 @@ def generate_density_plot(
             "axis": axis,
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate density plot: {e}")
         return {"status": "failed", "error": str(e)}
 
 
 @job
 def generate_dielectric_profile_plot(
-    defect_task_doc,
+    defect_task_doc: Any,
     epsilon_parallel: float,
     epsilon_perpendicular: float,
     output_name: str = "dielectric_profile.png",
-):
+) -> dict:
     """
     Generate dielectric profile ε(z) plot for Slab2D correction.
 
@@ -2146,19 +2163,19 @@ def generate_dielectric_profile_plot(
             "slab_thickness": slab_info["slab_thickness"],
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate profile plot: {e}")
         return {"status": "failed", "error": str(e)}
 
 
 @job
 def generate_radial_distribution_plot(
-    defect_task_doc,
-    host_task_doc,
+    defect_task_doc: Any,
+    host_task_doc: Any,
     defect_site_frac: list,
     charge_state: int,
     output_name: str = "radial_distribution.png",
-):
+) -> dict:
     """
     Generate radial distribution plots for Δρ(r) and ΔV(r).
 
@@ -2351,7 +2368,7 @@ def generate_radial_distribution_plot(
             "has_real_vt": bool(defect_vt_files and host_vt_files),
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate radial plot: {e}")
         return {"status": "failed", "error": str(e)}
 
@@ -2362,7 +2379,7 @@ def _calculate_radial_distribution(
     cell: np.ndarray,
     center_cart: np.ndarray,
     num_bins: int = 100,
-):
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Calculate radial average and std of 3D grid data.
 

@@ -158,12 +158,14 @@ class SiestaVacancyGenerator:
         self.use_symmetry = use_symmetry
         self.symprec = symprec
 
-        # Analyze symmetry (always do this for Wyckoff labels, even if not using for reduction)
+        # Analyze symmetry (always do this for Wyckoff labels, even if not
+        # using for reduction)
         self.sga = SpacegroupAnalyzer(structure, symprec=symprec)
         self.symmetrized_structure = self.sga.get_symmetrized_structure()
 
         logger.info(
-            f"Initialized SiestaVacancyGenerator for {structure.composition.reduced_formula}"
+            "Initialized SiestaVacancyGenerator for "
+            f"{structure.composition.reduced_formula}"
         )
         logger.info(
             f"  Space group: {self.sga.get_space_group_symbol()} "
@@ -229,7 +231,7 @@ class SiestaVacancyGenerator:
 
         if self.use_symmetry:
             # Use symmetry reduction: one site per equivalent group
-            for i, equiv_sites in enumerate(
+            for _i, equiv_sites in enumerate(
                 self.symmetrized_structure.equivalent_sites
             ):
                 # Get representative site (first in equivalent set)
@@ -253,7 +255,8 @@ class SiestaVacancyGenerator:
 
                 if site_index is None:
                     logger.warning(
-                        f"Could not find index for site at {representative_site.frac_coords}"
+                        "Could not find index for site at "
+                        f"{representative_site.frac_coords}"
                     )
                     continue
 
@@ -392,8 +395,10 @@ class SiestaVacancyGenerator:
                 host_structure.make_supercell(supercell_matrix)
 
                 # Find corresponding site index in supercell
-                # Use first atom of same species that matches the original site's position
-                # Supercell transformation: new_frac = M^-1 @ original_frac (for origin cell)
+                # Use first atom of same species that matches the original
+                # site's position
+                # Supercell transformation: new_frac = M^-1 @ original_frac
+                # (for origin cell)
                 site_index_in_sc = None
                 original_frac = np.array(defect_site.frac_coords)
 
@@ -403,7 +408,8 @@ class SiestaVacancyGenerator:
                         sc_frac = site.frac_coords
 
                         # Map to unit cell coordinates (scaled by supercell matrix)
-                        # For 2×2×2 supercell, original [0.5, 0.5, 0.5] maps to [0.25, 0.25, 0.25]  # noqa: RUF003
+                        # For 2x2x2 supercell, original [0.5, 0.5, 0.5] maps
+                        # to [0.25, 0.25, 0.25]
                         sc_matrix = np.array(supercell_matrix)
                         # Diagonal elements give scaling
                         scaling = np.diag(sc_matrix)
@@ -421,7 +427,8 @@ class SiestaVacancyGenerator:
                 if site_index_in_sc is None:
                     logger.warning(
                         f"Could not find site {defect_site.species} at "
-                        f"{defect_site.frac_coords} in supercell. Using first {defect_site.species} atom."
+                        f"{defect_site.frac_coords} in supercell. Using first "
+                        f"{defect_site.species} atom."
                     )
                     # Fallback: use first atom of same species
                     for i, site in enumerate(host_structure):
@@ -472,7 +479,8 @@ class SiestaVacancyGenerator:
 
         logger.info(
             f"Generated {len(defects)} vacancy defect(s) "
-            f"({len(unique_sites)} unique site(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
+            f"({len(unique_sites)} unique site(s) × "  # noqa: RUF001
+            f"{len(charge_states)} charge state(s))"
         )
 
         return defects

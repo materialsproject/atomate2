@@ -1,9 +1,10 @@
 """
 Comprehensive Basis Set Convergence Workflows for SIESTA.
 
-This module provides workflows for systematic testing of SIESTA basis set convergence,
-combining both basis size (SZ, DZ, DZP, TZP, etc.) and basis parameters (PAO.EnergyShift,
-PAO.SplitNorm) to find optimal settings for accuracy and computational efficiency.
+This module provides workflows for systematic testing of SIESTA basis set
+convergence, combining both basis size (SZ, DZ, DZP, TZP, etc.) and basis
+parameters (PAO.EnergyShift, PAO.SplitNorm) to find optimal settings for
+accuracy and computational efficiency.
 
 Key Features:
 - Tests multiple basis sizes in parallel
@@ -105,7 +106,7 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     kpts: list[int] | None = None
     static_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Set defaults if not provided."""
         if self.basis_sizes is None:
             self.basis_sizes = ["DZ", "DZP", "TZP"]
@@ -141,7 +142,8 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             f"CompleteBasisConvergenceFlowMaker.make() - {n_total} total calculations"
         )
         logger.info(
-            f"  {len(self.basis_sizes)} basis sizes × {len(self.energy_shifts)} shifts × "  # noqa: RUF001
+            f"  {len(self.basis_sizes)} basis sizes × "  # noqa: RUF001
+            f"{len(self.energy_shifts)} shifts × "  # noqa: RUF001
             f"{len(self.split_norms)} norms"
         )
 
@@ -247,7 +249,7 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         # Create real basis function plots - one per basis size
         real_basis_jobs = []
         unique_basis = sorted(
-            set([m["basis_size"] for m in all_metadata]),
+            {m["basis_size"] for m in all_metadata},
             key=lambda x: (
                 ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
                 if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
@@ -275,11 +277,11 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             plot_job,
             summary_job,
             basis_viz_job,
-        ] + real_basis_jobs
+            *real_basis_jobs,
+        ]
 
         # Create final flow
-        flow = Flow(all_jobs, output=collect_job.output, name=self.name)
-        return flow
+        return Flow(all_jobs, output=collect_job.output, name=self.name)
 
 
 @job
@@ -328,7 +330,8 @@ def collect_complete_basis_data(
             continue
 
         try:
-            # Extract energy - output is SiestaTaskDoc, energy is in output.output.energy
+            # Extract energy - output is SiestaTaskDoc,
+            # energy is in output.output.energy
             energy = (
                 output.output.energy
                 if hasattr(output, "output") and output.output
@@ -381,8 +384,8 @@ def collect_complete_basis_data(
                 f"Collected data from {job_name}: E={energy:.6f} eV, t={run_time:.1f}s"
             )
 
-        except Exception as e:
-            logger.exception(f"Failed to extract data from {job_name}: {e}")
+        except Exception:
+            logger.exception(f"Failed to extract data from {job_name}")
             import traceback
 
             logger.exception(traceback.format_exc())
@@ -424,7 +427,8 @@ def plot_complete_basis_convergence(
 
     if console:
         console.print(
-            "[green]Plotting complete basis convergence (detailed per-basis analysis)[/green]"
+            "[green]Plotting complete basis convergence "
+            "(detailed per-basis analysis)[/green]"
         )
 
     basis_sizes = np.array(data["basis_sizes"])
@@ -672,7 +676,7 @@ def plot_complete_basis_convergence(
         )
 
         # Add value labels on bars
-        for i, (x, y) in enumerate(zip(x_pos, avg_times, strict=False)):
+        for _i, (x, y) in enumerate(zip(x_pos, avg_times, strict=False)):
             if y > 0:
                 ax6.text(
                     x,
@@ -713,7 +717,8 @@ def plot_complete_basis_convergence(
         ax6.set_yticks([])
 
     plt.suptitle(
-        "Complete Basis Convergence Study - Overview\n(Comparison Across All Basis Sizes)",
+        "Complete Basis Convergence Study - Overview\n"
+        "(Comparison Across All Basis Sizes)",
         fontsize=15,
         fontweight="bold",
     )
@@ -1004,7 +1009,8 @@ def write_complete_basis_summary(
         f.write("=" * 90 + "\n\n")
 
         f.write(
-            f"Tested {len(unique_basis)} basis sizes with {len(np.unique(energy_shifts))} "
+            f"Tested {len(unique_basis)} basis sizes with "
+            f"{len(np.unique(energy_shifts))} "
             f"EnergyShift × {len(np.unique(split_norms))} SplitNorm values\n"  # noqa: RUF001
         )
         f.write(f"Total calculations: {len(energies)}\n\n")
@@ -1017,7 +1023,8 @@ def write_complete_basis_summary(
         f.write("Minimum Energy for Each Basis:\n")
         f.write("-" * 90 + "\n")
         f.write(
-            f"{'Basis':<10} {'Min Energy (eV)':<18} {'ΔE (meV)':<12} {'Optimal ES':<14} {'Optimal SN':<12} {'Time (s)':<10}\n"
+            f"{'Basis':<10} {'Min Energy (eV)':<18} {'ΔE (meV)':<12} "
+            f"{'Optimal ES':<14} {'Optimal SN':<12} {'Time (s)':<10}\n"
         )
         f.write("-" * 90 + "\n")
 
@@ -1047,7 +1054,8 @@ def write_complete_basis_summary(
                 time_str = f"{opt_time:.1f}" if opt_time > 0 else "N/A"
 
                 f.write(
-                    f"{basis:<10} {min_e:<18.8f} {de:<12.4f} {opt_es:<14.6f} {opt_sn:<12.4f} {time_str:<10}\n"
+                    f"{basis:<10} {min_e:<18.8f} {de:<12.4f} "
+                    f"{opt_es:<14.6f} {opt_sn:<12.4f} {time_str:<10}\n"
                 )
 
         f.write("\n")
@@ -1105,10 +1113,12 @@ def write_complete_basis_summary(
             f.write(f"Parameter Variation for {basis}:\n")
             f.write(f"  Energy range:   {e_range:.4f} meV\n")
             f.write(
-                f"  Force range:    {basis_forces.min():.6f} - {basis_forces.max():.6f} eV/Å\n"
+                f"  Force range:    {basis_forces.min():.6f} - "
+                f"{basis_forces.max():.6f} eV/Å\n"
             )
             f.write(
-                f"  Stress range:   {basis_stresses.min():.6f} - {basis_stresses.max():.6f} GPa\n"
+                f"  Stress range:   {basis_stresses.min():.6f} - "
+                f"{basis_stresses.max():.6f} GPa\n"
             )
 
             if np.any(basis_times > 0):

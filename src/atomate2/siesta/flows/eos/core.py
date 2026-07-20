@@ -146,13 +146,14 @@ class SiestaEosFlowMaker(BaseSiestaFlowMaker, CommonEosMaker):
     _suppress_print: bool = False
     _global_counter: tuple[int, int, int, int] | None = None
 
-    def __post_init__(self):
-        """Propagate settings (dry_run, custodian, tier, manager_config) to child makers."""
+    def __post_init__(self) -> None:
+        """Propagate dry_run/custodian/tier/manager_config settings to child makers."""
         # Call parent to handle dry_run, use_custodian, tier, manager_config propagation
         super().__post_init__()
 
     @classmethod
-    # def from_parameters(cls, parameters: dict[str, Any], **kwargs) -> SiestaEosFlowMaker:
+    # def from_parameters(cls, parameters: dict[str, Any], **kwargs)
+    # -> SiestaEosFlowMaker:
     def from_parameters(
         cls, parameters: dict[str, Any], **kwargs
     ) -> SiestaEosFlowMaker:
@@ -194,8 +195,10 @@ EOSFlowMaker = SiestaEosFlowMaker
 @dataclass
 class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     """
-    Full basis convergence testing with EOS: tests all combinations of basis sizes
-    and PAO parameters (EnergyShift, SplitNorm).
+    Full basis convergence testing with EOS.
+
+    Tests all combinations of basis sizes and PAO parameters (EnergyShift,
+    SplitNorm).
 
     This comprehensive workflow runs EOS calculations for every combination of:
     - Basis sizes (SZ, DZ, DZP, TZP, etc.)
@@ -205,13 +208,15 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     Use this for complete parameter optimization to determine the best basis settings
     for accurate bulk properties (V₀, E₀, B₀).
 
-    For simple basis comparison with fixed parameters, use EOSBasisConvergenceMaker instead.
+    For simple basis comparison with fixed parameters, use
+    EOSBasisConvergenceMaker instead.
 
     Inherits from BaseSiestaFlowMaker, so dry_run=True automatically propagates
     to child makers (initial_relax_maker, eos_relax_maker, static_maker).
 
     The workflow:
-    1. Creates EOS calculations for each basis size × EnergyShift × SplitNorm combination
+    1. Creates EOS calculations for each basis size × EnergyShift × SplitNorm
+       combination
     2. Collects EOS results (equilibrium volume, energy, bulk modulus)
     3. Analyzes convergence for each basis size
     4. Determines optimal PAO parameters for each basis
@@ -274,7 +279,7 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     eos_relax_maker: Maker | None = None
     static_maker: Maker | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Set defaults for lists if not provided."""
         if self.basis_sizes is None:
             self.basis_sizes = ["DZ", "DZP", "TZP"]
@@ -329,11 +334,14 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             )
             console.print(f"  Basis sizes: {', '.join(self.basis_sizes)}")
             console.print(
-                f"  Testing {len(self.basis_sizes)} × {len(self.energy_shifts)} × {len(self.split_norms)} = "  # noqa: RUF001
+                f"  Testing {len(self.basis_sizes)} × "  # noqa: RUF001
+                f"{len(self.energy_shifts)} × "  # noqa: RUF001
+                f"{len(self.split_norms)} = "
                 f"{n_total} EOS workflows"
             )
             console.print(
-                f"  {n_total} × {self.number_of_frames} = {n_total * self.number_of_frames} total calculations"  # noqa: RUF001
+                f"  {n_total} × {self.number_of_frames} = "  # noqa: RUF001
+                f"{n_total * self.number_of_frames} total calculations"
             )
 
         # Create EOS jobs for each basis size × parameter combination  # noqa: RUF003
@@ -430,18 +438,20 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         )
         collect_job.name = f"{self.name}-collect"
 
-        # Create unified output job that generates all plots and summaries in ONE directory
+        # Create unified output job that generates all plots and summaries in ONE
+        # directory
         unified_output_job = generate_eos_full_basis_outputs(
             data=collect_job.output,
         )
         unified_output_job.name = f"{self.name}-outputs"
 
         # Combine all jobs into workflow
-        all_jobs = eos_jobs + [collect_job, unified_output_job]
+        all_jobs = [*eos_jobs, collect_job, unified_output_job]
         flow = Flow(all_jobs, output=unified_output_job.output, name=self.name)
 
         logger.info(
-            f"Created EOS parameter convergence flow with {len(eos_jobs)} EOS calculations"
+            f"Created EOS parameter convergence flow with "
+            f"{len(eos_jobs)} EOS calculations"
         )
 
         return flow
@@ -497,7 +507,7 @@ def collect_eos_parameter_data(
     all_energies = []
     run_times = []  # Total wall time for each EOS workflow
 
-    for idx, (output, metadata) in enumerate(
+    for _idx, (output, metadata) in enumerate(
         zip(eos_outputs, job_metadata, strict=False)
     ):
         try:
@@ -516,7 +526,8 @@ def collect_eos_parameter_data(
 
             if not isinstance(output, dict):
                 logger.warning(
-                    f"Output is not a dict for {metadata['label']}: {type(output).__name__}"
+                    f"Output is not a dict for {metadata['label']}: "
+                    f"{type(output).__name__}"
                 )
                 if console:
                     console.print("    → [yellow]Output is not a dict[/yellow]")
@@ -532,7 +543,8 @@ def collect_eos_parameter_data(
                 logger.warning(f"No EOS data found in output for {metadata['label']}")
                 if console:
                     console.print(
-                        f"    → [yellow]No EOS data found. Available keys: {list(output.keys())}[/yellow]"
+                        f"    → [yellow]No EOS data found. "
+                        f"Available keys: {list(output.keys())}[/yellow]"
                     )
                 continue
 
@@ -543,7 +555,8 @@ def collect_eos_parameter_data(
             volumes = output[job_type].get("volume", [])
             energies = output[job_type].get("energy", [])
 
-            # Get EOS fit parameters (use birch_murnaghan as default, or first available)
+            # Get EOS fit parameters (use birch_murnaghan as default, or first
+            # available)
             eos_models = output[job_type]["EOS"]
 
             # Prefer birch_murnaghan, otherwise use first available model
@@ -577,7 +590,8 @@ def collect_eos_parameter_data(
                 logger.warning(f"Missing EOS parameters for {metadata['label']}")
                 continue
 
-            # Extract equilibrium lattice parameters by scaling reference structure to V₀
+            # Extract equilibrium lattice parameters by scaling reference
+            # structure to V₀
             # The EOS applies isotropic strain, so lattice parameters scale as V^(1/3)
             # We take a reference structure and scale it to the equilibrium volume V₀
             structures = output[job_type].get("structure", [])
@@ -593,7 +607,8 @@ def collect_eos_parameter_data(
 
                 try:
                     ref_lattice = ref_structure.lattice
-                    # Scale factor: since V scales as (length)^3, length scales as V^(1/3)
+                    # Scale factor: since V scales as (length)^3, length scales
+                    # as V^(1/3)
                     # a₀/a_ref = (V₀/V_ref)^(1/3)
                     scale = (v0 / v_ref) ** (1.0 / 3.0)
 
@@ -614,7 +629,8 @@ def collect_eos_parameter_data(
                     )
                 except AttributeError:
                     logger.warning(
-                        f"Could not extract lattice from structure for {metadata['label']}, using cubic approximation"
+                        f"Could not extract lattice from structure for "
+                        f"{metadata['label']}, using cubic approximation"
                     )
                     a = v0 ** (1.0 / 3.0)
                     b, c = a, a
@@ -622,7 +638,8 @@ def collect_eos_parameter_data(
             else:
                 # Fallback: calculate assuming cubic if no structures available
                 logger.warning(
-                    f"No structures available for {metadata['label']}, using cubic approximation"
+                    f"No structures available for {metadata['label']}, "
+                    f"using cubic approximation"
                 )
                 a = v0 ** (1.0 / 3.0)
                 b, c = a, a
@@ -661,7 +678,8 @@ def collect_eos_parameter_data(
                 if valid_times:
                     total_time = sum(valid_times)
                     logger.info(
-                        f"Total run time for {metadata['label']}: {total_time:.1f}s ({len(valid_times)} calcs)"
+                        f"Total run time for {metadata['label']}: "
+                        f"{total_time:.1f}s ({len(valid_times)} calcs)"
                     )
 
             run_times.append(total_time)
@@ -673,7 +691,7 @@ def collect_eos_parameter_data(
                 )
 
         except Exception as e:
-            logger.exception(f"Error extracting EOS for {metadata['label']}: {e}")
+            logger.exception(f"Error extracting EOS for {metadata['label']}")
             if console:
                 console.print(f"  [red]✗ {metadata['label']}: Error - {e}[/red]")
 
@@ -733,7 +751,7 @@ def plot_eos_parameter_fits_from_data(
     if len(basis_sizes_array) == 0:
         logger.error("No basis size data in collected results")
         # Create empty plot with error message
-        fig, ax = plt.subplots(figsize=(12, 8))
+        _fig, ax = plt.subplots(figsize=(12, 8))
         ax.text(
             0.5,
             0.5,
@@ -825,8 +843,8 @@ def plot_eos_parameter_fits_from_data(
         )
     ):
         try:
-            volumes = np.array(volumes)
-            energies = np.array(energies)
+            volumes = np.array(volumes)  # noqa: PLW2901
+            energies = np.array(energies)  # noqa: PLW2901
 
             if len(volumes) == 0 or len(energies) == 0:
                 if console:
@@ -835,8 +853,8 @@ def plot_eos_parameter_fits_from_data(
 
             # Sort by volume for cleaner lines
             sort_idx = np.argsort(volumes)
-            volumes = volumes[sort_idx]
-            energies = energies[sort_idx]
+            volumes = volumes[sort_idx]  # noqa: PLW2901
+            energies = energies[sort_idx]  # noqa: PLW2901
 
             # Get color and marker for this entry
             color = basis_colors[basis]
@@ -896,7 +914,7 @@ def plot_eos_parameter_fits_from_data(
                     zorder=10,
                 )
 
-            except Exception as fit_error:
+            except Exception as fit_error:  # noqa: BLE001
                 logger.warning(f"Could not fit EOS for {label}: {fit_error}")
                 # Just plot line connecting points
                 ax.plot(
@@ -916,7 +934,7 @@ def plot_eos_parameter_fits_from_data(
                 console.print(f"  ✓ Plotted {label}: {len(volumes)} points")
 
         except Exception as e:
-            logger.exception(f"Error plotting curve {i}: {e}")
+            logger.exception(f"Error plotting curve {i}")
             if console:
                 console.print(f"  [red]✗ Curve {i}: {e}[/red]")
 
@@ -964,7 +982,8 @@ def plot_eos_parameter_fits_from_data(
         )
         if console:
             console.print(
-                f"[green]✓ Successfully plotted {n_plotted} curves ({n_basis} basis sizes)[/green]"
+                f"[green]✓ Successfully plotted {n_plotted} curves "
+                f"({n_basis} basis sizes)[/green]"
             )
 
     ax.grid(True, alpha=0.3, linestyle="--")  # noqa: FBT003
@@ -1161,7 +1180,8 @@ def write_eos_parameter_summary(
         f.write("=" * 90 + "\n\n")
 
         f.write(
-            f"Tested {len(unique_basis)} basis sizes with {len(np.unique(energy_shifts))} "
+            f"Tested {len(unique_basis)} basis sizes with "
+            f"{len(np.unique(energy_shifts))} "
             f"EnergyShift × {len(np.unique(split_norms))} SplitNorm values\n"  # noqa: RUF001
         )
         f.write(f"Total EOS calculations: {len(v0_values)}\n\n")
@@ -1174,7 +1194,8 @@ def write_eos_parameter_summary(
         f.write("Optimal EOS Parameters for Each Basis:\n")
         f.write("-" * 110 + "\n")
         f.write(
-            f"{'Basis':<10} {'V₀ (Ų)':<14} {'E₀ (eV)':<16} {'B₀ (GPa)':<12} {'Opt ES':<12} {'Opt SN':<10} {'Time (s)':<12}\n"
+            f"{'Basis':<10} {'V₀ (Ų)':<14} {'E₀ (eV)':<16} "
+            f"{'B₀ (GPa)':<12} {'Opt ES':<12} {'Opt SN':<10} {'Time (s)':<12}\n"
         )
         f.write("-" * 110 + "\n")
 
@@ -1195,8 +1216,10 @@ def write_eos_parameter_summary(
                     else f"{'N/A':<12}"
                 )
                 f.write(
-                    f"{basis:<10} {basis_v0[opt_idx]:<14.4f} {basis_e0[opt_idx]:<16.6f} "
-                    f"{basis_b0[opt_idx]:<12.2f} {basis_es[opt_idx]:<12.3f} {basis_sn[opt_idx]:<10.2f} {time_str}\n"
+                    f"{basis:<10} {basis_v0[opt_idx]:<14.4f} "
+                    f"{basis_e0[opt_idx]:<16.6f} "
+                    f"{basis_b0[opt_idx]:<12.2f} {basis_es[opt_idx]:<12.3f} "
+                    f"{basis_sn[opt_idx]:<10.2f} {time_str}\n"
                 )
 
         f.write("\n")
@@ -1225,15 +1248,18 @@ def write_eos_parameter_summary(
             f.write("EQUILIBRIUM PROPERTIES (with lattice parameters):\n")
             f.write("-" * 120 + "\n")
             f.write(
-                f"{'Basis Set':<12} {'V₀ (Ų)':<12} {'E₀ (eV)':<15} {'B₀ (GPa)':<12} "
-                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} {'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
+                f"{'Basis Set':<12} {'V₀ (Ų)':<12} "
+                f"{'E₀ (eV)':<15} {'B₀ (GPa)':<12} "
+                f"{'a (Å)':<10} {'b (Å)':<10} {'c (Å)':<10} "
+                f"{'α (°)':<8} {'β (°)':<8} {'γ (°)':<8}\n"  # noqa: RUF001
             )
             f.write("-" * 120 + "\n")
         else:
             f.write("EQUILIBRIUM PROPERTIES:\n")
             f.write("-" * 90 + "\n")
             f.write(
-                f"{'Basis Set':<12} {'V₀ (Ų)':<14} {'E₀ (eV)':<18} {'B₀ (GPa)':<14} {'B₁':<12}\n"
+                f"{'Basis Set':<12} {'V₀ (Ų)':<14} "
+                f"{'E₀ (eV)':<18} {'B₀ (GPa)':<14} {'B₁':<12}\n"
             )
             f.write("-" * 90 + "\n")
 
@@ -1294,11 +1320,13 @@ def write_eos_parameter_summary(
                     opt_b_list.append(a_opt)
                     opt_c_list.append(a_opt)
 
-                    # B₁ is typically around 4 for most materials (assume 4.0 as placeholder)
+                    # B₁ is typically around 4 for most materials (assume 4.0 as
+                    # placeholder)
                     b1_opt = 4.0
 
                     f.write(
-                        f"{basis:<12} {v0_opt:<14.6f} {e0_opt:<18.6f} {b0_opt:<14.4f} {b1_opt:<12.1f}\n"
+                        f"{basis:<12} {v0_opt:<14.6f} {e0_opt:<18.6f} "
+                        f"{b0_opt:<14.4f} {b1_opt:<12.1f}\n"
                     )
 
         f.write("\n")
@@ -1350,7 +1378,8 @@ def write_eos_parameter_summary(
             f.write("  (Cubic approximation from V₀)\n")
 
         f.write(
-            f"  Lattice constant 'a' converges from {opt_a_arr.min():.6f} Å to {opt_a_arr.max():.6f} Å\n\n"
+            f"  Lattice constant 'a' converges from {opt_a_arr.min():.6f} Å "
+            f"to {opt_a_arr.max():.6f} Å\n\n"
         )
 
         f.write("Recommendation: Choose basis set where parameters have converged\n")
@@ -1363,7 +1392,7 @@ def write_eos_parameter_summary(
         f.write("  Poor:      > 2.0% variation (need higher basis quality)\n\n")
 
         # Assessment
-        def assess_convergence(pct) -> str:
+        def assess_convergence(pct: float) -> str:
             if pct < 0.5:
                 return "Excellent ✓"
             if pct < 1.0:
@@ -1411,13 +1440,16 @@ def write_eos_parameter_summary(
 
             f.write(f"Parameter Variation for {basis}:\n")
             f.write(
-                f"  V₀ range:   {basis_v0.min():.4f} - {basis_v0.max():.4f} Ų ({v0_var:.2f}%)\n"
+                f"  V₀ range:   {basis_v0.min():.4f} - {basis_v0.max():.4f} "
+                f"Ų ({v0_var:.2f}%)\n"
             )
             f.write(
-                f"  E₀ range:   {basis_e0.min():.6f} - {basis_e0.max():.6f} eV ({e0_var:.2f} meV)\n"
+                f"  E₀ range:   {basis_e0.min():.6f} - {basis_e0.max():.6f} "
+                f"eV ({e0_var:.2f} meV)\n"
             )
             f.write(
-                f"  B₀ range:   {basis_b0.min():.2f} - {basis_b0.max():.2f} GPa ({b0_var:.2f}%)\n\n"
+                f"  B₀ range:   {basis_b0.min():.2f} - {basis_b0.max():.2f} "
+                f"GPa ({b0_var:.2f}%)\n\n"
             )
 
             # Convergence assessment
@@ -1449,20 +1481,24 @@ def write_eos_parameter_summary(
 
             f.write("Convergence Assessment:\n")
             f.write(
-                f"  {v0_status} V₀: {v0_var:.2f}% variation (threshold: {v0_threshold}%)\n"
+                f"  {v0_status} V₀: {v0_var:.2f}% variation "
+                f"(threshold: {v0_threshold}%)\n"
             )
             f.write(
-                f"  {e0_status} E₀: {e0_var:.2f} meV variation (threshold: {e0_threshold} meV)\n"
+                f"  {e0_status} E₀: {e0_var:.2f} meV variation "
+                f"(threshold: {e0_threshold} meV)\n"
             )
             f.write(
-                f"  {b0_status} B₀: {b0_var:.2f}% variation (threshold: {b0_threshold}%)\n\n"
+                f"  {b0_status} B₀: {b0_var:.2f}% variation "
+                f"(threshold: {b0_threshold}%)\n\n"
             )
 
             # Detailed results table for this basis
             f.write(f"Detailed Results for {basis} Basis:\n")
             f.write("-" * 90 + "\n")
             f.write(
-                f"{'ES (Ry)':<12} {'SN':<10} {'V₀ (Ų)':<14} {'E₀ (eV)':<16} {'B₀ (GPa)':<12}\n"
+                f"{'ES (Ry)':<12} {'SN':<10} {'V₀ (Ų)':<14} "
+                f"{'E₀ (eV)':<16} {'B₀ (GPa)':<12}\n"
             )
             f.write("-" * 90 + "\n")
 

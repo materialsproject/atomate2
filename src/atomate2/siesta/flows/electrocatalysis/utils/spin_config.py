@@ -256,9 +256,9 @@ def get_siesta_spin_config(formula: str) -> dict[str, bool | dict | float | int 
 
     # Try case-insensitive match
     formula_upper = formula_normalized.upper()
-    for key in spin_config_db:
+    for key, value in spin_config_db.items():
         if key.upper() == formula_upper:
-            return spin_config_db[key]
+            return value
 
     # Default: assume closed-shell if not in database
     # (Conservative choice - user can override if needed)

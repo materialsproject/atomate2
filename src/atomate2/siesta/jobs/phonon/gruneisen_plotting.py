@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def _get_attr(obj, key, default=None):
+def _get_attr(obj: Any, key: str, default: Any = None) -> Any:
     """
     Get attribute from either dict or Pydantic object.
 
@@ -509,7 +509,8 @@ def write_gruneisen_summary(
         f.write("=" * 80 + "\n")
         f.write("GRÜNEISEN PARAMETER CALCULATION SUMMARY\n")
         f.write("=" * 80 + "\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        generated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
+        f.write(f"Generated: {generated}\n")
         code = _get_attr(gruneisen_doc, "code", "Unknown")
         f.write(f"Code: {code}\n\n")
 
@@ -518,7 +519,8 @@ def write_gruneisen_summary(
         f.write("STRUCTURE INFORMATION\n")
         f.write("-" * 80 + "\n")
 
-        # Check if we have structure object (dict case) or metadata fields (Pydantic case)
+        # Check if we have structure object (dict case) or metadata fields
+        # (Pydantic case)
         structure = _get_attr(gruneisen_doc, "structure")
         if structure:
             # Dict case: has structure object
@@ -607,7 +609,8 @@ def write_gruneisen_summary(
                 f.write("  → Typical anharmonicity\n")
             else:
                 f.write(
-                    "  → Strong anharmonicity (potential for low thermal conductivity)\n"
+                    "  → Strong anharmonicity "
+                    "(potential for low thermal conductivity)\n"
                 )
             f.write("\n")
 

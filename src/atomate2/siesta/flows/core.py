@@ -1,4 +1,5 @@
-"""(Work)flows for Siesta"""
+# ruff: noqa: INP001
+"""(Work)flows for Siesta."""
 
 from __future__ import annotations
 
@@ -26,8 +27,10 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
     A maker to run SCF calculations with different basis sizes.
 
     This class supports multiple strategies for basis set parameters:
-    - "standard": Fixed parameters (pao.energy.shift=0.01, pao.split.norm=0.15) for all basis sets
-    - "advanced": Customized parameters per basis set size (SZ, DZ, TZ get different values)
+    - "standard": Fixed parameters (pao.energy.shift=0.01, pao.split.norm=0.15)
+      for all basis sets
+    - "advanced": Customized parameters per basis set size (SZ, DZ, TZ get
+      different values)
     - "legacy": Uses the legacy StaticMaker.scf(basis_set_size) interface
 
     Parameters
@@ -191,9 +194,9 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
 # These classes are deprecated. Use DifferentBasisSCF with strategy parameter instead.
 
 
-def DifferentBasisSCFAdvance(*args, **kwargs):  # noqa: N802
+def DifferentBasisSCFAdvance(*args, **kwargs) -> DifferentBasisSCFFlowMaker:  # noqa: N802
     """
-    Deprecated: Use DifferentBasisSCF(strategy="advanced") instead.
+    Build a maker via the deprecated DifferentBasisSCF(strategy="advanced") path.
 
     This function provides backward compatibility for code using the old
     DifferentBasisSCFAdvance class.
@@ -201,7 +204,8 @@ def DifferentBasisSCFAdvance(*args, **kwargs):  # noqa: N802
     import warnings
 
     warnings.warn(
-        "DifferentBasisSCFAdvance is deprecated. Use DifferentBasisSCF(strategy='advanced') instead.",
+        "DifferentBasisSCFAdvance is deprecated. Use "
+        "DifferentBasisSCF(strategy='advanced') instead.",
         DeprecationWarning,
         stacklevel=2,
     )
@@ -209,9 +213,9 @@ def DifferentBasisSCFAdvance(*args, **kwargs):  # noqa: N802
     return DifferentBasisSCFFlowMaker(*args, **kwargs)
 
 
-def DifferentBasisSCFOld(*args, **kwargs):  # noqa: N802
+def DifferentBasisSCFOld(*args, **kwargs) -> DifferentBasisSCFFlowMaker:  # noqa: N802
     """
-    Deprecated: Use DifferentBasisSCF(strategy="legacy") instead.
+    Build a maker via the deprecated DifferentBasisSCF(strategy="legacy") path.
 
     This function provides backward compatibility for code using the old
     DifferentBasisSCFOld class.
@@ -219,7 +223,8 @@ def DifferentBasisSCFOld(*args, **kwargs):  # noqa: N802
     import warnings
 
     warnings.warn(
-        "DifferentBasisSCFOld is deprecated. Use DifferentBasisSCF(strategy='legacy') instead.",
+        "DifferentBasisSCFOld is deprecated. Use "
+        "DifferentBasisSCF(strategy='legacy') instead.",
         DeprecationWarning,
         stacklevel=2,
     )
@@ -325,7 +330,7 @@ class DifferentBasisFlowMaker(BaseSiestaFlowMaker):
 
 @dataclass
 class DifferentBasisRelaxFlowMaker(BaseSiestaFlowMaker):
-    """Double relaxation maker for SIESTA with different basis sets and fixed/variable cell.
+    """Double relaxation maker for SIESTA with basis sets and fixed/variable cell.
 
     A maker to perform relaxations in SIESTA with different basis sets (SZ, DZ, etc.)
     and optionally fixed or variable cell relaxation.

@@ -1,6 +1,7 @@
 """Oxygen Evolution Reaction (OER) workflows for electrocatalysis.
 
-This module provides automated workflows for calculating OER activity on catalyst surfaces.
+This module provides automated workflows for calculating OER activity on
+catalyst surfaces.
 The OER is the anode reaction in water electrolysis and metal-air battery charging:
 
     2H₂O → O₂ + 4H⁺ + 4e⁻  (acidic media, E° = 1.23 V vs. SHE)
@@ -58,7 +59,7 @@ def _analyze_oer_pathway(
     plot_results: bool = True,
     write_summary: bool = True,
     surface_name: str = "OER_catalyst",
-):
+) -> dict:
     """
     Analyze OER pathway and calculate overpotential.
 

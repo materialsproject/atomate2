@@ -34,6 +34,7 @@ from atomate2.siesta.sets.core import (
 from atomate2.siesta.sets.parser import read_siesta_output
 
 if TYPE_CHECKING:
+    from jobflow import Flow
     from pymatgen.core import Molecule, Structure
 
     # from atomate2.siesta.sets.base_first import SiestaInputGenerator
@@ -113,7 +114,8 @@ class StaticMaker(BaseSiestaMaker):
         Create a SCF maker.
 
         Parameters are split into two groups:
-        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format, dry_run_label, etc.
+        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format,
+          dry_run_label, etc.
         - InputSetGenerator parameters: user_params, etc.
         """
         logger.info("StaticMaker.scf()")
@@ -166,7 +168,8 @@ class RelaxMaker(BaseSiestaMaker):
     ---------------
     1. Read initial structure and setup calculation
     2. Calculate forces and stresses via SCF at current geometry
-    3. Update atomic positions (and lattice if variable-cell) using optimization algorithm
+    3. Update atomic positions (and lattice if variable-cell) using
+       optimization algorithm
     4. Repeat steps 2-3 until convergence:
        - Maximum force < MD.MaxForceTol (default: 0.04 eV/Å)
        - Maximum stress < MD.MaxStressTol (default: 1.0 GPa, variable-cell only)
@@ -240,14 +243,16 @@ class RelaxMaker(BaseSiestaMaker):
     calc_type: str = "relax"
     name: str = "Relaxation calculation"
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Initialize RelaxMaker with appropriate custodian handlers."""
-        # If custodian is enabled but no handlers specified, use relaxation-specific handlers
+        # If custodian is enabled but no handlers specified, use
+        # relaxation-specific handlers
         if self.use_custodian and self.custodian_handlers is None:
             from atomate2.siesta.custodian.handlers import DEFAULT_RELAXATION_HANDLERS
 
             # Use DEFAULT_RELAXATION_HANDLERS which includes SCFRelaxationHandler
-            # This handler removes DM file and increases SCF.MaxIter for better convergence
+            # This handler removes DM file and increases SCF.MaxIter for better
+            # convergence
             object.__setattr__(
                 self, "custodian_handlers", DEFAULT_RELAXATION_HANDLERS.copy()
             )
@@ -262,7 +267,8 @@ class RelaxMaker(BaseSiestaMaker):
         Create a fixed cell relaxation maker.
 
         Parameters are split into two groups:
-        - Maker parameters: use_custodian, custodian_handlers, custodian_max_errors, etc.
+        - Maker parameters: use_custodian, custodian_handlers,
+          custodian_max_errors, etc.
         - InputSetGenerator parameters: user_params, etc.
         """
         logger.info("RelaxMaker.fixed_cell_relaxation()")
@@ -309,7 +315,8 @@ class RelaxMaker(BaseSiestaMaker):
         Create a variable cell relaxation maker.
 
         Parameters are split into two groups:
-        - Maker parameters: use_custodian, custodian_handlers, custodian_max_errors, etc.
+        - Maker parameters: use_custodian, custodian_handlers,
+          custodian_max_errors, etc.
         - InputSetGenerator parameters: user_params, etc.
         """
         logger.info("RelaxMaker.variable_cell_relaxation()")
@@ -440,7 +447,8 @@ class LuaMaker(BaseSiestaMaker):
         Create a fixed cell relaxation maker.
 
         Parameters are split into two groups:
-        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format, dry_run_label, etc.
+        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format,
+          dry_run_label, etc.
         - InputSetGenerator parameters: user_params, etc.
         """
         logger.info("LuaMaker.fixed_cell_relaxation()")
@@ -482,7 +490,7 @@ class LuaMaker(BaseSiestaMaker):
         # Only set default Lua.Script if user hasn't provided it
         user_params = input_gen_kwargs["user_params"]
         if "Lua.Script" not in user_params and "lua.script" not in {
-            k.lower() for k in user_params.keys()
+            k.lower() for k in user_params
         }:
             user_params["Lua.Script"] = "relax_geometry_lbfgs.lua"
             input_gen_kwargs["user_params"] = user_params
@@ -501,7 +509,8 @@ class LuaMaker(BaseSiestaMaker):
         Create a variable cell relaxation maker.
 
         Parameters are split into two groups:
-        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format, dry_run_label, etc.
+        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format,
+          dry_run_label, etc.
         - InputSetGenerator parameters: user_params, etc.
         """
         logger.info("LuaMaker.variable_cell_relaxation()")
@@ -543,7 +552,7 @@ class LuaMaker(BaseSiestaMaker):
         # Only set default Lua.Script if user hasn't provided it
         user_params = input_gen_kwargs["user_params"]
         if "Lua.Script" not in user_params and "lua.script" not in {
-            k.lower() for k in user_params.keys()
+            k.lower() for k in user_params
         }:
             user_params["Lua.Script"] = "relax_cell_geometry.lua"
             input_gen_kwargs["user_params"] = user_params
@@ -562,7 +571,8 @@ class LuaMaker(BaseSiestaMaker):
         Create a fixed cell neb maker.
 
         Parameters are split into two groups:
-        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format, dry_run_label, etc.
+        - Maker parameters: dry_run, dry_run_output_dir, dry_run_format,
+          dry_run_label, etc.
         - InputSetGenerator parameters: user_params, etc.
         """
         logger.info("LuaMaker.neb()")
@@ -604,7 +614,7 @@ class LuaMaker(BaseSiestaMaker):
         # Only set default Lua.Script if user hasn't provided it
         user_params = input_gen_kwargs["user_params"]
         if "Lua.Script" not in user_params and "lua.script" not in {
-            k.lower() for k in user_params.keys()
+            k.lower() for k in user_params
         }:
             user_params["Lua.Script"] = "neb.lua"
             input_gen_kwargs["user_params"] = user_params
@@ -1670,7 +1680,9 @@ class SiestaPhononMaker(Maker):
     write_summary: bool = True
     dry_run: bool = False
 
-    def make(self, structure: Structure, prev_dir: str | Path | None = None):
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> Flow:
         """
         Create phonon calculation workflow with optional plotting.
 

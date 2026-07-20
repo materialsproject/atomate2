@@ -1,3 +1,4 @@
+# ruff: noqa: INP001
 """Flows for calculating elastic constants with SIESTA."""
 
 from __future__ import annotations
@@ -14,6 +15,8 @@ from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from pymatgen.core import Structure
+
     from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 
@@ -24,11 +27,13 @@ class ElasticFlowMaker(BaseSiestaFlowMaker, BaseElasticMaker):
 
     Calculate the elastic tensor of a material using SIESTA. The workflow:
 
-    1. **Structural relaxation**: Performs a tight relaxation to achieve ~zero stress state
+    1. **Structural relaxation**: Performs a tight relaxation to achieve ~zero stress
+       state
     2. **Apply deformations**: Generates strain perturbations on the lattice
     3. **Calculate stresses**: Runs SIESTA calculations for each deformed structure
     4. **Fit elastic tensor**: Uses linear elasticity to fit the 6×6 elastic tensor
-    5. **Derive properties**: Calculates bulk modulus, shear modulus, Young's modulus, etc.
+    5. **Derive properties**: Calculates bulk modulus, shear modulus, Young's modulus,
+       etc.
 
     The elastic tensor relates stress (σ) and strain (ε) via Hooke's law:
         σᵢⱼ = Cᵢⱼₖₗ εₖₗ
@@ -121,7 +126,12 @@ class ElasticFlowMaker(BaseSiestaFlowMaker, BaseElasticMaker):
         """Name of argument for previous calculation directory in SIESTA."""
         return "prev_dir"
 
-    def make(self, structure, prev_dir: str | Path | None = None, **kwargs) -> Flow:
+    def make(
+        self,
+        structure: Structure,
+        prev_dir: str | Path | None = None,
+        **kwargs,
+    ) -> Flow:
         """
         Make flow to calculate elastic constants with automatic result saving.
 
@@ -181,7 +191,7 @@ class ElasticFlowMaker(BaseSiestaFlowMaker, BaseElasticMaker):
 
 
 @job
-def save_elastic_results_job(elastic_doc, output_folder: str = "."):
+def save_elastic_results_job(elastic_doc: Any, output_folder: str = ".") -> dict:
     """
     Job to save elastic constants results with JSON and TXT formats.
 
@@ -208,7 +218,7 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
     if output_folder != ".":
         output_path.mkdir(exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
 
     # Convert to dict if it's a pydantic model
     if hasattr(elastic_doc, "model_dump"):
@@ -292,7 +302,8 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
         f.write(f"Formula:              {formula}\n")
         f.write(f"Crystal System:       {crystal_system}\n")
         f.write(
-            f"Space Group:          {symmetry.get('symbol', 'N/A')} (#{symmetry.get('number', 'N/A')})\n"
+            f"Space Group:          {symmetry.get('symbol', 'N/A')} "
+            f"(#{symmetry.get('number', 'N/A')})\n"
         )
         f.write(f"Fitting Method:       {fitting_method}\n")
         f.write(f"Tensor Order:         {order}\n")
@@ -622,13 +633,16 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
 
         if console:
             console.print(
-                "\n[bold red]⚠️  WARNING: Negative elastic constants detected![/bold red]"
+                "\n[bold red]⚠️  WARNING: Negative elastic constants "
+                "detected![/bold red]"
             )
             console.print(
-                "[yellow]The elastic tensor contains negative diagonal elements.[/yellow]"
+                "[yellow]The elastic tensor contains negative diagonal "
+                "elements.[/yellow]"
             )
             console.print(
-                "[yellow]This indicates mechanical instability or poor convergence.[/yellow]"
+                "[yellow]This indicates mechanical instability or poor "
+                "convergence.[/yellow]"
             )
             console.print("\n[cyan]Recommendations:[/cyan]")
             console.print("  • Increase k-points: Use ≥6×6×6 (better: 8×8×8)")  # noqa: RUF001
@@ -790,7 +804,7 @@ def plot_elastic_tensor_heatmap(
 
         return str(output_file)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Warning: Could not create elastic tensor heatmap: {e}")  # noqa: T201
         return None
 
@@ -799,7 +813,7 @@ def plot_mechanical_properties_bar(
     k_vrh: float | None,
     g_vrh: float | None,
     y_mod: float | None,
-    poisson: float | None,
+    poisson: float | None,  # noqa: ARG001
     formula: str,
     output_path: Path,
     timestamp: str,
@@ -871,7 +885,7 @@ def plot_mechanical_properties_bar(
                 continue
 
             # Current material + references
-            materials = [formula] + list(references.keys())
+            materials = [formula, *list(references.keys())]
             values = [value] + [references[mat][key] for mat in references]
 
             # Create bars
@@ -927,7 +941,7 @@ def plot_mechanical_properties_bar(
 
         return str(output_file)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Warning: Could not create mechanical properties bar chart: {e}")  # noqa: T201
         return None
 
@@ -1073,7 +1087,7 @@ def plot_stress_strain_curves(
 
         return str(output_file)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Warning: Could not create stress-strain curves: {e}")  # noqa: T201
         return None
 
@@ -1231,7 +1245,7 @@ def plot_youngs_modulus_3d(
 
         return str(output_file)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Warning: Could not create 3D Young's modulus plot: {e}")  # noqa: T201
         return None
 
@@ -1395,7 +1409,7 @@ def plot_linear_compressibility_3d(
 
         return str(output_file)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Warning: Could not create 3D compressibility plot: {e}")  # noqa: T201
         return None
 
@@ -1593,6 +1607,6 @@ def plot_pugh_ratio_diagram(
 
         return str(output_file)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Warning: Could not create Pugh's ratio diagram: {e}")  # noqa: T201
         return None

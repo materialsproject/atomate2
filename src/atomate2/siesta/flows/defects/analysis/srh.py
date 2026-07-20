@@ -339,7 +339,7 @@ class SRHAnalysisResult(MSONable):
     total_recombination_rate: float
     dominant_defect: str = ""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Determine dominant defect after initialization."""
         if not self.dominant_defect and self.defect_results:
             # Find defect with maximum recombination rate
@@ -441,9 +441,7 @@ class SRHAnalyzer:
         N_v = prefactor * (self.m_h_eff * M_E) ** 1.5 * 1e-6  # noqa: N806
 
         # Intrinsic concentration
-        n_i = np.sqrt(N_c * N_v) * np.exp(-self.bandgap / (2.0 * K_B * temperature))
-
-        return n_i
+        return np.sqrt(N_c * N_v) * np.exp(-self.bandgap / (2.0 * K_B * temperature))
 
     def calculate_thermal_velocity(
         self,
@@ -689,7 +687,7 @@ def plot_srh_lifetimes(
         Output filename for the plot
     """
     try:
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
 
         defect_names = [d.defect_name for d in srh_result.defect_results]
         tau_n = np.array(
@@ -770,7 +768,7 @@ def plot_srh_recombination_rates(
         Output filename for the plot
     """
     try:
-        fig, ax = plt.subplots(figsize=(10, 6))
+        _fig, ax = plt.subplots(figsize=(10, 6))
 
         defect_names = [d.defect_name for d in srh_result.defect_results]
         rec_rates = np.array([d.recombination_rate for d in srh_result.defect_results])
@@ -879,7 +877,7 @@ def write_srh_summary(
         f.write("=" * 80 + "\n")
         f.write(" " * 20 + "SRH RECOMBINATION ANALYSIS SUMMARY\n")
         f.write("=" * 80 + "\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")  # noqa: DTZ005
         f.write("=" * 80 + "\n\n")
 
         # Add warning if using fallback data
@@ -918,18 +916,22 @@ def write_srh_summary(
         f.write("SYSTEM PROPERTIES\n")
         f.write("-" * 80 + "\n")
         f.write(
-            f"Intrinsic carrier conc. (n_i):  {srh_result.intrinsic_carrier_concentration:>10.3e} cm⁻³\n"
+            f"Intrinsic carrier conc. (n_i):  "
+            f"{srh_result.intrinsic_carrier_concentration:>10.3e} cm⁻³\n"
         )
 
         if concentration_result is not None:
             f.write(
-                f"Electron concentration (n):     {concentration_result.electron_concentration:>10.3e} cm⁻³\n"
+                f"Electron concentration (n):     "
+                f"{concentration_result.electron_concentration:>10.3e} cm⁻³\n"
             )
             f.write(
-                f"Hole concentration (p):         {concentration_result.hole_concentration:>10.3e} cm⁻³\n"
+                f"Hole concentration (p):         "
+                f"{concentration_result.hole_concentration:>10.3e} cm⁻³\n"
             )
             f.write(
-                f"Fermi level (E_F):              {concentration_result.fermi_level:>10.3f} eV (from VBM)\n"
+                f"Fermi level (E_F):              "
+                f"{concentration_result.fermi_level:>10.3f} eV (from VBM)\n"
             )
             fermi_frac = concentration_result.fermi_level / srh_result.bandgap * 100
             f.write(
@@ -941,7 +943,8 @@ def write_srh_summary(
         f.write("RECOMBINATION SUMMARY\n")
         f.write("-" * 80 + "\n")
         f.write(
-            f"Total recombination rate:       {srh_result.total_recombination_rate:>10.3e} cm⁻³ s⁻¹\n"
+            f"Total recombination rate:       "
+            f"{srh_result.total_recombination_rate:>10.3e} cm⁻³ s⁻¹\n"
         )
         f.write(f"Dominant defect:                {srh_result.dominant_defect}\n")
 
@@ -949,10 +952,11 @@ def write_srh_summary(
         all_tau_n = [d.lifetimes.tau_n for d in srh_result.defect_results]
         all_tau_p = [d.lifetimes.tau_p for d in srh_result.defect_results]
         if all_tau_n and all_tau_p:
-            min_tau = min(min(all_tau_n), min(all_tau_p))
-            max_tau = max(max(all_tau_n), max(all_tau_p))
+            min_tau = min(*all_tau_n, *all_tau_p)
+            max_tau = max(*all_tau_n, *all_tau_p)
             f.write(
-                f"Lifetime range:                 {min_tau:>10.3e} - {max_tau:>10.3e} s\n"
+                f"Lifetime range:                 "
+                f"{min_tau:>10.3e} - {max_tau:>10.3e} s\n"
             )
         f.write("\n")
 
@@ -966,15 +970,18 @@ def write_srh_summary(
                 f"  Defect level:              {dr.defect_level:>10.3f} eV (from VBM)\n"
             )
             f.write(
-                f"  Defect concentration:      {dr.lifetimes.defect_concentration:>10.3e} cm⁻³\n"
+                f"  Defect concentration:      "
+                f"{dr.lifetimes.defect_concentration:>10.3e} cm⁻³\n"
             )
             f.write("\n")
             f.write("  Capture cross-sections:\n")
             f.write(
-                f"    σ_n (electron):          {dr.lifetimes.capture_params.sigma_n:>10.3e} cm²\n"  # noqa: RUF001
+                f"    σ_n (electron):          "  # noqa: RUF001
+                f"{dr.lifetimes.capture_params.sigma_n:>10.3e} cm²\n"
             )
             f.write(
-                f"    σ_p (hole):              {dr.lifetimes.capture_params.sigma_p:>10.3e} cm²\n"  # noqa: RUF001
+                f"    σ_p (hole):              "  # noqa: RUF001
+                f"{dr.lifetimes.capture_params.sigma_p:>10.3e} cm²\n"
             )
             f.write(
                 f"    Method:                  {dr.lifetimes.capture_params.method}\n"
@@ -992,42 +999,48 @@ def write_srh_summary(
             # Show ns if in range 1e-12 to 1.0 seconds (1 ps to 1 s)
             if 1e-12 <= tau_n_s <= 1.0:
                 f.write(
-                    f"    τ_n (electron):          {tau_n_s:>10.3e} s  ({tau_n_s * 1e9:>10.3f} ns)\n"
+                    f"    τ_n (electron):          "
+                    f"{tau_n_s:>10.3e} s  ({tau_n_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_n (electron):          {tau_n_s:>10.3e} s\n")
 
             if 1e-12 <= tau_p_s <= 1.0:
                 f.write(
-                    f"    τ_p (hole):              {tau_p_s:>10.3e} s  ({tau_p_s * 1e9:>10.3f} ns)\n"
+                    f"    τ_p (hole):              "
+                    f"{tau_p_s:>10.3e} s  ({tau_p_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_p (hole):              {tau_p_s:>10.3e} s\n")
 
             if 1e-12 <= tau_eff_s <= 1.0:
                 f.write(
-                    f"    τ_eff (effective):       {tau_eff_s:>10.3e} s  ({tau_eff_s * 1e9:>10.3f} ns)\n"
+                    f"    τ_eff (effective):       "
+                    f"{tau_eff_s:>10.3e} s  ({tau_eff_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_eff (effective):       {tau_eff_s:>10.3e} s\n")
 
             if 1e-12 <= tau_min_s <= 1.0:
                 f.write(
-                    f"    τ_min (minority):        {tau_min_s:>10.3e} s  ({tau_min_s * 1e9:>10.3f} ns)\n"
+                    f"    τ_min (minority):        "
+                    f"{tau_min_s:>10.3e} s  ({tau_min_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_min (minority):        {tau_min_s:>10.3e} s\n")
             f.write("\n")
             f.write("  Recombination:\n")
             f.write(
-                f"    Recombination rate:      {dr.recombination_rate:>10.3e} cm⁻³ s⁻¹\n"
+                f"    Recombination rate:      "
+                f"{dr.recombination_rate:>10.3e} cm⁻³ s⁻¹\n"
             )
             f.write(
                 f"    Generation rate:         {dr.generation_rate:>10.3e} cm⁻³ s⁻¹\n"
             )
             f.write("    Carrier concentrations:\n")
             f.write(
-                f"      n (electron):          {dr.electron_concentration:>10.3e} cm⁻³\n"
+                f"      n (electron):          "
+                f"{dr.electron_concentration:>10.3e} cm⁻³\n"
             )
             f.write(
                 f"      p (hole):              {dr.hole_concentration:>10.3e} cm⁻³\n"
@@ -1093,7 +1106,8 @@ def calculate_srh_analysis_job(
     )
 
     logger.info(
-        f"SRH analysis complete. Total rate: {result.total_recombination_rate:.3e} cm⁻³ s⁻¹"
+        f"SRH analysis complete. Total rate: "
+        f"{result.total_recombination_rate:.3e} cm⁻³ s⁻¹"
     )
     logger.info(f"Dominant defect: {result.dominant_defect}")
 

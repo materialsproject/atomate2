@@ -19,6 +19,8 @@ from atomate2.siesta.schemas.adsorption import (
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Maker
+
 logger = logging.getLogger(__name__)
 
 
@@ -116,7 +118,8 @@ def generate_adsorption_sites(
     """
     total_sites = grid_size[0] * grid_size[1]
     logger.info(
-        f"[PROGRESS] Generating {total_sites} adsorption sites ({grid_size[0]}×{grid_size[1]} grid)"  # noqa: RUF001
+        f"[PROGRESS] Generating {total_sites} adsorption sites "
+        f"({grid_size[0]}×{grid_size[1]} grid)"  # noqa: RUF001
     )
 
     nx, ny = grid_size
@@ -125,10 +128,7 @@ def generate_adsorption_sites(
     x_positions = (np.arange(nx) + 0.5) / nx
     y_positions = (np.arange(ny) + 0.5) / ny
 
-    sites = []
-    for x in x_positions:
-        for y in y_positions:
-            sites.append((x, y))
+    sites = [(x, y) for x in x_positions for y in y_positions]
 
     logger.info(f"Generated {len(sites)} adsorption sites")
     return sites
@@ -136,13 +136,13 @@ def generate_adsorption_sites(
 
 @job
 def calculate_adsorption_energy_single_site(
-    slab: Structure,
-    adsorbate: Structure | Molecule,
+    slab: Structure,  # noqa: ARG001
+    adsorbate: Structure | Molecule,  # noqa: ARG001
     site: tuple[float, float],
-    height: float,
-    slab_energy: float,
-    adsorbate_energy: float,
-    slab_maker,
+    height: float,  # noqa: ARG001
+    slab_energy: float,  # noqa: ARG001
+    adsorbate_energy: float,  # noqa: ARG001
+    slab_maker: Maker,  # noqa: ARG001
 ) -> AdsorptionSiteResult:
     """
     Calculate adsorption energy at a single site.
@@ -201,7 +201,8 @@ def analyze_adsorption_scan(
     adsorbate : Structure | Molecule
         Adsorbate structure.
     site_energies : list[dict]
-        List of dictionaries with 'site', 'height', 'total_energy' for each site at each height.
+        List of dictionaries with 'site', 'height', 'total_energy' for each
+        site at each height.
     slab_energy : float
         Energy of clean slab (eV).
     adsorbate_energy : float
@@ -222,7 +223,8 @@ def analyze_adsorption_scan(
     n_heights = len(heights)
     xy_sites = grid_size[0] * grid_size[1]
     logger.info(
-        f"[PROGRESS] Analyzing {total_sites} results ({xy_sites} xy sites × {n_heights} heights)"  # noqa: RUF001
+        f"[PROGRESS] Analyzing {total_sites} results "
+        f"({xy_sites} xy sites × {n_heights} heights)"  # noqa: RUF001
     )
 
     # Calculate surface area and slab thickness
@@ -379,7 +381,7 @@ def plot_adsorption_sites(
 
     # Check if multiple heights were scanned
     # Look at ALL heights in scan_doc, not just the best ones
-    all_heights = set([s.height for s in scan_doc.site_results])
+    all_heights = {s.height for s in scan_doc.site_results}
     multiple_heights = len(all_heights) > 1
 
     # Create grid for interpolation
@@ -399,7 +401,7 @@ def plot_adsorption_sites(
 
     # Create figure (3 plots if height-scanned, 2 otherwise)
     if multiple_heights:
-        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(24, 6))
+        _fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(24, 6))
     else:
         _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
 
@@ -484,9 +486,12 @@ def plot_adsorption_sites(
     ax2.set_ylabel("Y (fractional)", fontsize=12, fontweight="bold")
 
     # Update scatter plot title with height info
-    scatter_title = f"Discrete Adsorption Sites\n{scan_doc.grid_size[0]}×{scan_doc.grid_size[1]} Grid"  # noqa: RUF001
+    scatter_title = (
+        f"Discrete Adsorption Sites\n"
+        f"{scan_doc.grid_size[0]}×{scan_doc.grid_size[1]} Grid"  # noqa: RUF001
+    )
     if multiple_heights:
-        n_heights = len(set([s.height for s in scan_doc.site_results]))
+        n_heights = len({s.height for s in scan_doc.site_results})
         scatter_title += f" × {n_heights} heights"  # noqa: RUF001
 
     ax2.set_title(scatter_title, fontsize=14, fontweight="bold")
@@ -587,7 +592,7 @@ def write_adsorption_summary(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # noqa: DTZ005
 
     lines = []
     lines.append("=" * 80)
@@ -625,7 +630,8 @@ def write_adsorption_summary(
     lines.append("BEST ADSORPTION SITE")
     lines.append("-" * 80)
     lines.append(
-        f"  Position (frac):      ({scan_doc.best_site_position[0]:.4f}, {scan_doc.best_site_position[1]:.4f})"
+        f"  Position (frac):      "
+        f"({scan_doc.best_site_position[0]:.4f}, {scan_doc.best_site_position[1]:.4f})"
     )
     lines.append(f"  Adsorption energy:    {scan_doc.best_adsorption_energy:.6f} eV")
     lines.append(f"  Energy per area:      {scan_doc.best_energy_per_area:.6f} eV/Ų")
@@ -662,7 +668,8 @@ def write_adsorption_summary(
             f"  Position (fractional):    ({site.site_x:.6f}, {site.site_y:.6f})"
         )
         lines.append(
-            f"  Position (Cartesian):     ({site.site_x_cart:.6f}, {site.site_y_cart:.6f}) Å"
+            f"  Position (Cartesian):     "
+            f"({site.site_x_cart:.6f}, {site.site_y_cart:.6f}) Å"
         )
         lines.append("")
         lines.append(f"  Adsorption energy:        {site.adsorption_energy:>12.6f} eV")

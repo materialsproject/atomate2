@@ -23,7 +23,8 @@ def collect_convergence_data(
     Args:
         flow_results: Results dictionary from jobflow's run_locally
         job_metadata: List of dictionaries containing job names and UUIDs
-        parameter_name: Name of the parameter being converged ('mesh_cutoff' or 'kpoints')
+        parameter_name: Name of the parameter being converged
+            ('mesh_cutoff' or 'kpoints')
 
     Returns
     -------
@@ -95,7 +96,8 @@ def collect_convergence_data(
             # Extract parameter value from job name
             # Handle both formats:
             # - "K-points Convergence-2x2x2" (from KpointsConvergenceFlowMaker)
-            # - "Mesh-Kpoint Convergence - Stage 1 - Mesh 200Ry" (from MeshKpointConvergenceFlowMaker)
+            # - "Mesh-Kpoint Convergence - Stage 1 - Mesh 200Ry"
+            #   (from MeshKpointConvergenceFlowMaker)
             param_value = job_name.split("-")[-1].strip()
 
             # If param_value starts with "Mesh " or "Kpoints ", extract just the value
@@ -118,15 +120,16 @@ def collect_convergence_data(
                 f"Gap={bandgap} eV, MaxF={max_force} eV/Å"
             )
 
-        except (KeyError, TypeError, ValueError, AttributeError) as e:
-            logger.exception(f"Error processing job {job_name}: {e}")
+        except (KeyError, TypeError, ValueError, AttributeError):
+            logger.exception(f"Error processing job {job_name}")
             continue
 
     if not data["energies"]:
         logger.warning(f"No energies retrieved for {parameter_name} convergence")
     else:
         logger.info(
-            f"Successfully collected {len(data['energies'])} data points for {parameter_name}"
+            f"Successfully collected {len(data['energies'])} data points "
+            f"for {parameter_name}"
         )
 
     return data
@@ -204,7 +207,7 @@ def plot_convergence(
                     param_values.append(kpts[0])
                 # Handle "[2, 2, 2]" format
                 elif "[" in p:
-                    kpts = eval(p)
+                    kpts = eval(p)  # noqa: S307
                     param_values.append(
                         kpts[0] if isinstance(kpts, (list, tuple)) else kpts
                     )
@@ -255,7 +258,7 @@ def plot_convergence(
     plot_files = {}
 
     # Plot 1: Total Energy
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+    _fig, ax = plt.subplots(1, 1, figsize=(8, 6))
     ax.plot(param_values, energies, "o-", linewidth=2, markersize=8, color="#1f77b4")
     ax.set_xlabel(xlabel, fontsize=12)
     ax.set_ylabel("Total Energy (eV)", fontsize=12)
@@ -271,7 +274,7 @@ def plot_convergence(
     logger.info(f"Energy plot saved to {energy_file}")
 
     # Plot 2: Energy Differences (Convergence)
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+    _fig, ax = plt.subplots(1, 1, figsize=(8, 6))
     ax.plot(param_values, energy_diff, "s-", linewidth=2, markersize=8, color="red")
     ax.axhline(y=1, color="green", linestyle="--", label="1 meV threshold", linewidth=2)
     ax.axhline(
@@ -299,7 +302,7 @@ def plot_convergence(
         ]
         valid_fermi = fermi_energies_array[valid_indices]
 
-        fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+        _fig, ax = plt.subplots(1, 1, figsize=(8, 6))
         ax.plot(
             valid_params, valid_fermi, "^-", linewidth=2, markersize=8, color="blue"
         )
@@ -324,7 +327,7 @@ def plot_convergence(
         ]
         valid_bandgaps = bandgaps_array[valid_indices]
 
-        fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+        _fig, ax = plt.subplots(1, 1, figsize=(8, 6))
         ax.plot(
             valid_params,
             valid_bandgaps,
@@ -354,7 +357,7 @@ def plot_convergence(
         ]
         valid_forces = max_forces_array[valid_indices]
 
-        fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+        _fig, ax = plt.subplots(1, 1, figsize=(8, 6))
         ax.plot(
             valid_params,
             valid_forces,
@@ -605,7 +608,8 @@ def plot_convergence(
 
         if converged_1mev_idx is not None:
             f.write(
-                f"For high accuracy (< 1 meV): use {parameters[converged_1mev_idx]} or higher\n"
+                f"For high accuracy (< 1 meV): use "
+                f"{parameters[converged_1mev_idx]} or higher\n"
             )
         else:
             f.write(
@@ -614,11 +618,13 @@ def plot_convergence(
 
         if converged_5mev_idx is not None:
             f.write(
-                f"For standard accuracy (< 5 meV): use {parameters[converged_5mev_idx]} or higher\n"
+                f"For standard accuracy (< 5 meV): use "
+                f"{parameters[converged_5mev_idx]} or higher\n"
             )
         else:
             f.write(
-                "For standard accuracy (< 5 meV): increase parameter beyond tested range\n"
+                "For standard accuracy (< 5 meV): "
+                "increase parameter beyond tested range\n"
             )
 
         f.write("\n")

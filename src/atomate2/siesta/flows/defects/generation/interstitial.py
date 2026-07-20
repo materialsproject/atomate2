@@ -103,7 +103,8 @@ class SiestaInterstitialGenerator:
         self.sga = SpacegroupAnalyzer(structure, symprec=symprec)
 
         logger.info(
-            f"Initialized SiestaInterstitialGenerator for {structure.composition.reduced_formula}"
+            "Initialized SiestaInterstitialGenerator for "
+            f"{structure.composition.reduced_formula}"
         )
         logger.info(
             f"  Space group: {self.sga.get_space_group_symbol()} "
@@ -173,7 +174,7 @@ class SiestaInterstitialGenerator:
                 if min_dist_to_atoms >= self.min_dist:
                     void_sites.append(np.array(frac_coords))
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Interstitial site search failed: {e}")
             logger.warning("Returning empty list of interstitial sites")
             return []
@@ -211,7 +212,7 @@ class SiestaInterstitialGenerator:
             symmetrized = sga_voids.get_symmetrized_structure()
             seen_wyckoffs = set()
 
-            for i, equiv_sites in enumerate(symmetrized.equivalent_sites):
+            for _i, equiv_sites in enumerate(symmetrized.equivalent_sites):
                 representative_site = equiv_sites[0]
 
                 # Check if this is a void site
@@ -249,7 +250,7 @@ class SiestaInterstitialGenerator:
             logger.info(f"Found {len(sites)} symmetry-unique interstitial site(s)")
         else:
             # No symmetry reduction: return ALL candidate sites
-            for i, void_idx in enumerate(void_indices):
+            for _i, void_idx in enumerate(void_indices):
                 site_frac = structure_with_voids[void_idx].frac_coords
                 wyckoff = wyckoff_symbols[void_idx]
 
@@ -323,10 +324,7 @@ class SiestaInterstitialGenerator:
         ... )
         """  # noqa: RUF002
         # Convert to list
-        if isinstance(species, str):
-            species_list = [species]
-        else:
-            species_list = species
+        species_list = [species] if isinstance(species, str) else species
 
         # Get charge states
         if charge_states is None:
@@ -389,7 +387,9 @@ class SiestaInterstitialGenerator:
 
         logger.info(
             f"Generated {len(defects)} interstitial defect(s) "
-            f"({len(unique_sites)} unique site(s) × {len(species_list)} species × {len(charge_states)} charge state(s))"  # noqa: RUF001
+            f"({len(unique_sites)} unique site(s) "
+            f"× {len(species_list)} species "  # noqa: RUF001
+            f"× {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects

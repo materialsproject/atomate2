@@ -104,7 +104,8 @@ class SiestaSubstitutionGenerator:
         self.symmetrized_structure = self.sga.get_symmetrized_structure()
 
         logger.info(
-            f"Initialized SiestaSubstitutionGenerator for {structure.composition.reduced_formula}"
+            "Initialized SiestaSubstitutionGenerator for "
+            f"{structure.composition.reduced_formula}"
         )
         logger.info(
             f"  Space group: {self.sga.get_space_group_symbol()} "
@@ -159,7 +160,7 @@ class SiestaSubstitutionGenerator:
 
         if self.use_symmetry:
             # Use symmetry reduction: one site per equivalent group
-            for i, equiv_sites in enumerate(
+            for _i, equiv_sites in enumerate(
                 self.symmetrized_structure.equivalent_sites
             ):
                 representative_site = equiv_sites[0]
@@ -180,7 +181,8 @@ class SiestaSubstitutionGenerator:
 
                 if site_index is None:
                     logger.warning(
-                        f"Could not find index for site at {representative_site.frac_coords}"
+                        "Could not find index for site at "
+                        f"{representative_site.frac_coords}"
                     )
                     continue
 
@@ -296,15 +298,9 @@ class SiestaSubstitutionGenerator:
         ... )
         """  # noqa: RUF002
         # Convert to lists
-        if isinstance(species, str):
-            species_list = [species]
-        else:
-            species_list = species
+        species_list = [species] if isinstance(species, str) else species
 
-        if isinstance(dopants, str):
-            dopants_list = [dopants]
-        else:
-            dopants_list = dopants
+        dopants_list = [dopants] if isinstance(dopants, str) else dopants
 
         # Get charge states
         if charge_states is None:
@@ -325,7 +321,8 @@ class SiestaSubstitutionGenerator:
                 # Skip if dopant is same as original species
                 if dopant == defect_site.species:
                     logger.debug(
-                        f"Skipping {dopant} on {defect_site.species} site (same species)"
+                        f"Skipping {dopant} on {defect_site.species} site "
+                        "(same species)"
                     )
                     continue
 
@@ -354,7 +351,8 @@ class SiestaSubstitutionGenerator:
 
                     if site_index_in_sc is None:
                         logger.warning(
-                            f"Could not find site {defect_site.species} in supercell. Using first {defect_site.species} atom."
+                            f"Could not find site {defect_site.species} in "
+                            f"supercell. Using first {defect_site.species} atom."
                         )
                         for i, site in enumerate(host_structure):
                             if site.specie.symbol == defect_site.species:
@@ -403,7 +401,8 @@ class SiestaSubstitutionGenerator:
 
         logger.info(
             f"Generated {len(defects)} substitutional defect(s) "
-            f"({len(unique_sites)} unique site(s) × {len(dopants_list)} dopant(s) × {len(charge_states)} charge state(s))"  # noqa: RUF001
+            f"({len(unique_sites)} unique site(s) × {len(dopants_list)} dopant(s) "  # noqa: RUF001
+            f"× {len(charge_states)} charge state(s))"  # noqa: RUF001
         )
 
         return defects
@@ -450,7 +449,7 @@ class SiestaSubstitutionGenerator:
         ... )
         """  # noqa: RUF002
         # Get all unique species in structure
-        species_in_structure = list(set(site.specie.symbol for site in self.structure))
+        species_in_structure = list({site.specie.symbol for site in self.structure})
 
         logger.info(f"Generating antisite defects for species: {species_in_structure}")
 

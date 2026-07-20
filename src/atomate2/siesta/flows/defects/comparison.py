@@ -39,6 +39,8 @@ from atomate2.siesta.flows.defects.utils import (
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
+    from atomate2.siesta.schemas.task import SiestaTaskDoc
+
 logger = logging.getLogger(__name__)
 
 
@@ -257,7 +259,8 @@ class CorrectionComparisonFlowMaker(Maker):
             }
 
             logger.info(
-                "Auto-enabled .VT and .VH file writing for Freysoldt/Kumagai corrections"
+                "Auto-enabled .VT and .VH file writing for "
+                "Freysoldt/Kumagai corrections"
             )
 
         # CRITICAL: Set NetCharge for charged defects on the right maker
@@ -282,7 +285,8 @@ class CorrectionComparisonFlowMaker(Maker):
             defect_maker.input_set_generator.user_params = updated_params
 
             logger.info(
-                f"Setting NetCharge = {self.charge_state} for charged defect calculation"
+                f"Setting NetCharge = {self.charge_state} "
+                "for charged defect calculation"
             )
 
         # Job 1: Defect calculation (shared by all corrections)
@@ -329,8 +333,8 @@ class CorrectionComparisonFlowMaker(Maker):
             ref_jobs = [ref_static_job, mu_extract_job]
         elif self.auto_calculate_chemical_potentials and not defect_species:
             logger.warning(
-                "auto_calculate_chemical_potentials=True but defect_species not provided. "
-                "Cannot calculate chemical potential!"
+                "auto_calculate_chemical_potentials=True but defect_species "
+                "not provided. Cannot calculate chemical potential!"
             )
             chemical_potentials = self.chemical_potentials
             ref_jobs = []
@@ -432,18 +436,27 @@ class CorrectionComparisonFlowMaker(Maker):
         if ref_jobs:
             # Include chemical potential calculation
             flow = Flow(
-                [defect_relax_job, host_static_job]
-                + ref_jobs
-                + [comparison_job, summary_job]
-                + plot_jobs,
+                [
+                    defect_relax_job,
+                    host_static_job,
+                    *ref_jobs,
+                    comparison_job,
+                    summary_job,
+                    *plot_jobs,
+                ],
                 output=summary_job.output,
                 name=self.name,
             )
         else:
             # Standard flow without μ calculation
             flow = Flow(
-                [defect_relax_job, host_static_job, comparison_job, summary_job]
-                + plot_jobs,
+                [
+                    defect_relax_job,
+                    host_static_job,
+                    comparison_job,
+                    summary_job,
+                    *plot_jobs,
+                ],
                 output=summary_job.output,
                 name=self.name,
             )
@@ -453,8 +466,8 @@ class CorrectionComparisonFlowMaker(Maker):
 
 @job
 def compare_all_corrections(
-    defect_task_doc,
-    host_task_doc,
+    defect_task_doc: SiestaTaskDoc | dict,
+    host_task_doc: SiestaTaskDoc | dict,
     host_structure: Structure,
     epsilon_static: float,
     correction_schemes: list[str],
@@ -464,7 +477,7 @@ def compare_all_corrections(
     defect_species: str | None = None,
     chemical_potentials: dict[str, float] | None = None,
     calculation_dirs: dict[str, str] | None = None,
-    plot_alignment: bool = True,
+    plot_alignment: bool = True,  # noqa: ARG001
     epsilon_parallel: float | None = None,
     epsilon_perpendicular: float | None = None,
 ) -> dict:
@@ -551,13 +564,15 @@ def compare_all_corrections(
             # For vacancy: add back energy of removed atom
             mu_defect = chemical_potentials.get(defect_species, 0.0)
             logger.info(
-                f"Chemical potential for {defect_species} vacancy: μ = {mu_defect:.4f} eV"
+                f"Chemical potential for {defect_species} vacancy: "
+                f"μ = {mu_defect:.4f} eV"
             )
         elif defect_type == "substitutional":
             # For substitution: μ_removed - μ_added (would need both species)
             mu_defect = chemical_potentials.get(defect_species, 0.0)
             logger.warning(
-                "Substitutional defects need both removed and added species for correct μ"
+                "Substitutional defects need both removed and added "
+                "species for correct μ"
             )
         # For interstitial: subtract energy of added atom (negative μ)
     elif defect_species:
@@ -604,7 +619,7 @@ def compare_all_corrections(
                         "Corrections will auto-generate alignment plots if applicable"
                     )
 
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Failed to read .VT files: {e}")
                     logger.warning(
                         "Corrections will use lattice term only (dry-run mode)"
@@ -695,7 +710,8 @@ def compare_all_corrections(
             )
 
             # Store results
-            # Use original scheme name (not correction_result.scheme_name) to differentiate variants
+            # Use original scheme name (not correction_result.scheme_name)
+            # to differentiate variants
             results["schemes"].append(scheme_name)
             results["correction_energies"].append(correction_result.correction_energy)
             results["corrected_formation_energies"].append(
@@ -708,7 +724,9 @@ def compare_all_corrections(
             )
 
         except Exception as e:
-            logger.exception(f"Failed to apply {scheme_name} correction: {e}")
+            logger.exception(
+                f"Failed to apply {scheme_name} correction: {e}"  # noqa: TRY401
+            )
             continue
 
     # Calculate statistics
@@ -854,23 +872,28 @@ def generate_comparison_summary(
                             lines.append(f"      ({metadata['madelung_citation']})")
                     if "characteristic_length_angstrom" in metadata:
                         lines.append(
-                            f"    Characteristic length: {metadata['characteristic_length_angstrom']:.2f} Å"
+                            "    Characteristic length: "
+                            f"{metadata['characteristic_length_angstrom']:.2f} Å"
                         )
                     if "gaussian_width_angstrom" in metadata:
                         lines.append(
-                            f"    Gaussian width (σ):    {metadata['gaussian_width_angstrom']:.2f} Å"  # noqa: RUF001
+                            "    Gaussian width (σ):    "  # noqa: RUF001
+                            f"{metadata['gaussian_width_angstrom']:.2f} Å"
                         )
                     if "lattice_term_eV" in metadata:
                         lines.append(
-                            f"    Lattice term:        {metadata['lattice_term_eV']:.4f} eV"
+                            "    Lattice term:        "
+                            f"{metadata['lattice_term_eV']:.4f} eV"
                         )
                     if "alignment_energy_eV" in metadata:
                         lines.append(
-                            f"    Alignment term:      {metadata['alignment_energy_eV']:.4f} eV"
+                            "    Alignment term:      "
+                            f"{metadata['alignment_energy_eV']:.4f} eV"
                         )
                     if "quadrupole_term_eV" in metadata:
                         lines.append(
-                            f"    Quadrupole term:     {metadata['quadrupole_term_eV']:.4f} eV"
+                            "    Quadrupole term:     "
+                            f"{metadata['quadrupole_term_eV']:.4f} eV"
                         )
 
         lines.append("")
@@ -929,13 +952,14 @@ def generate_comparison_summary(
         f.write("\n")
 
         # Add standard footer
+        std_correction = comparison_results["statistics"].get("std_correction", 0.0)
         f.write(
             get_standard_footer(
                 width=70,
                 additional_info={
                     "Defect": f"{comparison_results.get('defect_type', 'unknown')}",
                     "Schemes": f"{len(schemes)}",
-                    "Spread": f"{comparison_results['statistics'].get('std_correction', 0.0):.4f} eV",
+                    "Spread": f"{std_correction:.4f} eV",
                 },
             )
         )

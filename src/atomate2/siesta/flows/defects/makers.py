@@ -110,7 +110,8 @@ class DefectStaticMaker(StaticMaker):
             "Spin": "polarized",  # Defects commonly have unpaired electrons
             "SCF.Mixer.Weight": 0.1,  # Conservative mixing
             "SCF.Mixer.History": 8,  # Better convergence (Pulay history)
-            "DM.Tolerance": 1e-5,  # Tighter tolerance (legacy alias for SCF.DM.Tolerance)
+            # Tighter tolerance (legacy alias for SCF.DM.Tolerance)
+            "DM.Tolerance": 1e-5,
         }
 
         # Only add defaults that aren't already specified
@@ -220,7 +221,8 @@ class DefectRelaxMaker(RelaxMaker):
             "MD.MaxForceTol": "0.02 eV/Ang",  # Tighter than default 0.04
             "SCF.Mixer.Weight": 0.1,  # Conservative mixing
             "SCF.Mixer.History": 8,  # Better convergence (Pulay history)
-            "DM.Tolerance": 1e-5,  # Tighter tolerance (legacy alias for SCF.DM.Tolerance)
+            # Tighter tolerance (legacy alias for SCF.DM.Tolerance)
+            "DM.Tolerance": 1e-5,
         }
 
         # Only add defaults that aren't already specified

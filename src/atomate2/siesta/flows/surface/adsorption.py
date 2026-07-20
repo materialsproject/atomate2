@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Response, job
 from pymatgen.core import Molecule
@@ -19,12 +19,20 @@ from atomate2.siesta.jobs.surface.adsorption import (
 )
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
+
+    from atomate2.siesta.schemas.adsorption import (
+        AdsorptionOptimizationResult,
+        AdsorptionScanDocument,
+    )
 
 logger = logging.getLogger(__name__)
 
 
-def _molecular_spin_setup(molecule, structure):
+def _molecular_spin_setup(
+    molecule: Molecule, structure: Structure
+) -> tuple[Structure, dict]:
     """Apply the correct spin state to an isolated adsorbate molecule.
 
     Open-shell adsorbates (O2, O, OH, ...) have a non-singlet ground state.
@@ -67,7 +75,13 @@ def _molecular_spin_setup(molecule, structure):
 
 
 @job
-def _save_best_structure(scan_doc, slab, adsorbate, placement, output_dir="."):
+def _save_best_structure(
+    scan_doc: AdsorptionScanDocument,
+    slab: Structure,
+    adsorbate: Structure | Molecule,
+    placement: str,
+    output_dir: str | Path = ".",
+) -> dict:
     """
     Save the structure with adsorbate at the best site.
 
@@ -109,25 +123,26 @@ def _save_best_structure(scan_doc, slab, adsorbate, placement, output_dir="."):
     best_structure.to(filename=str(output_file))
     logger.info(
         f"✓ Saved best structure to {output_file} "
-        f"(E_ads = {best_site.adsorption_energy:.3f} eV at height = {best_site.height:.2f} Å)"
+        f"(E_ads = {best_site.adsorption_energy:.3f} eV "
+        f"at height = {best_site.height:.2f} Å)"
     )
     return {"structure": best_structure, "structure_file": str(output_file)}
 
 
 @job
 def _consolidated_analysis(
-    slab,
-    adsorbate,
-    site_energies,
-    slab_energy,
-    adsorbate_energy,
-    grid_size,
-    heights,
-    miller_indices,
-    placement,
-    plot_results,
-    write_summary,
-):
+    slab: Structure,
+    adsorbate: Structure | Molecule,
+    site_energies: list[dict],
+    slab_energy: float,
+    adsorbate_energy: float,
+    grid_size: tuple[int, int],
+    heights: list[float],
+    miller_indices: tuple[int, int, int] | None,
+    placement: str,
+    plot_results: bool,
+    write_summary: bool,
+) -> AdsorptionScanDocument:
     """
     Run analysis and create all output files in same directory.
 
@@ -197,7 +212,8 @@ def _consolidated_analysis(
     best_structure.to(filename=str(output_file))
     logger.info(
         f"✓ Saved best structure to {output_file} "
-        f"(E_ads = {best_site.adsorption_energy:.3f} eV at height = {best_site.height:.2f} Å)"
+        f"(E_ads = {best_site.adsorption_energy:.3f} eV "
+        f"at height = {best_site.height:.2f} Å)"
     )
 
     # Create plot directly (not a separate job)
@@ -214,7 +230,7 @@ def _consolidated_analysis(
 
 
 @job
-def _extract_site_energy(site, height, static_job_output):
+def _extract_site_energy(site: tuple, height: float, static_job_output: Any) -> dict:
     """
     Extract energy from static calculation output.
 
@@ -250,17 +266,17 @@ def _extract_site_energy(site, height, static_job_output):
 
 @job
 def _calc_site_energy_impl(
-    slab,
-    adsorbate,
-    site,
-    height,
-    placement,
-    slab_static_maker,
-    site_index,
-    grid_size,
-    job_num=0,
-    total_jobs=0,
-):
+    slab: Structure,
+    adsorbate: Structure | Molecule,
+    site: tuple,
+    height: float,
+    placement: str,
+    slab_static_maker: StaticMaker,
+    site_index: int,
+    grid_size: tuple,
+    job_num: int = 0,
+    total_jobs: int = 0,
+) -> Response:
     """
     Calculate energy for a specific adsorption site.
 
@@ -364,7 +380,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
     height : float
         Initial adsorbate height above surface (Å). Used if heights is None.
     heights : list[float], optional
-        Explicit list of heights to scan (Å). If provided, overrides height/height_min/height_max.
+        Explicit list of heights to scan (Å). If provided, overrides
+        height/height_min/height_max.
     height_min : float, optional
         Minimum height for automatic range generation (Å).
     height_max : float, optional
@@ -391,7 +408,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         Placement of adsorbate: 'top' or 'bottom' of slab (default: 'top').
     dry_run : bool
         If True, generate and save structures without running SIESTA calculations.
-        Useful for previewing adsorption geometries (inherited from BaseSiestaFlowMaker).
+        Useful for previewing adsorption geometries (inherited from
+        BaseSiestaFlowMaker).
     dry_run_output_dir : str
         Directory to save structures when dry_run=True (default: 'preview_structures').
     dry_run_format : str
@@ -546,7 +564,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         )
         logger.info(
             f"Creating workflow with {total_jobs} total jobs "
-            f"({total_sites} xy sites × {n_heights} heights = {total_sites_with_heights} total calculations)"  # noqa: RUF001
+            f"({total_sites} xy sites × {n_heights} heights = "  # noqa: RUF001
+            f"{total_sites_with_heights} total calculations)"
         )
 
         # Global counter for progress tracking
@@ -558,7 +577,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             prepare_molecule_with_orientation,
         )
 
-        # Apply orientation if this is a Molecule and orientation parameters are provided
+        # Apply orientation if this is a Molecule and orientation parameters are
+        # provided
         if isinstance(adsorbate, Molecule) and (
             self.custom_mol_file or self.target_vector is not None
         ):
@@ -578,7 +598,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         if self.precalc_slab_energy is None:
             job_counter["current"] += 1
             logger.info(
-                f"[{job_counter['current']}/{job_counter['total']}] Creating clean slab energy calculation..."
+                f"[{job_counter['current']}/{job_counter['total']}] "
+                f"Creating clean slab energy calculation..."
             )
             slab_job = self.slab_static_maker.make(slab, prev_dir=prev_dir)
             slab_job.name = (
@@ -593,7 +614,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         if self.precalc_adsorbate_energy is None:
             job_counter["current"] += 1
             logger.info(
-                f"[{job_counter['current']}/{job_counter['total']}] Creating adsorbate energy calculation..."
+                f"[{job_counter['current']}/{job_counter['total']}] "
+                f"Creating adsorbate energy calculation..."
             )
             # Convert Molecule to Structure if needed (molecules need a box for SIESTA)
             if isinstance(adsorbate, Molecule):
@@ -611,11 +633,15 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
                     ads_job = update_user_siesta_settings(ads_job, spin_params)
             else:
                 ads_job = self.adsorbate_static_maker.make(adsorbate)
-            ads_job.name = f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_adsorbate"
+            ads_job.name = (
+                f"[{job_counter['current']}_of_{job_counter['total']}]"
+                f"_{self.name}_adsorbate"
+            )
             jobs.append(ads_job)
         else:
             logger.info(
-                "Reusing precalculated adsorbate energy - skipping adsorbate calculation"
+                "Reusing precalculated adsorbate energy - skipping adsorbate "
+                "calculation"
             )
 
         # 3. Generate adsorption sites
@@ -625,13 +651,17 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             f"Generating {self.grid_size[0]}×{self.grid_size[1]} adsorption sites..."  # noqa: RUF001
         )
         sites_job = generate_adsorption_sites(grid_size=self.grid_size)
-        sites_job.name = f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_generate_sites"
+        sites_job.name = (
+            f"[{job_counter['current']}_of_{job_counter['total']}]"
+            f"_{self.name}_generate_sites"
+        )
         jobs.append(sites_job)
 
         # 4. Calculate energies for each site at each height
         logger.info(
             f"Setting up {total_sites_with_heights} site energy calculations "
-            f"(jobs {job_counter['current'] + 1}-{job_counter['current'] + total_sites_with_heights * 2})..."
+            f"(jobs {job_counter['current'] + 1}-"
+            f"{job_counter['current'] + total_sites_with_heights * 2})..."
         )
         site_calc_jobs = []
 
@@ -648,18 +678,25 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
                     site_index=site_idx,
                     height=height,
                     height_index=height_idx,
-                    progress=f"[{job_counter['current'] - 1}-{job_counter['current']}_of_{job_counter['total']}]",
+                    progress=(
+                        f"[{job_counter['current'] - 1}-"
+                        f"{job_counter['current']}_of_{job_counter['total']}]"
+                    ),
                     job_num=job_counter["current"] - 1,  # static job number
                     total_jobs=job_counter["total"],
                 )
-                site_job.name = f"[{job_counter['current'] - 1}_of_{job_counter['total']}]_{self.name}_h{height_idx:02d}_site_{site_idx:03d}"
+                site_job.name = (
+                    f"[{job_counter['current'] - 1}_of_{job_counter['total']}]"
+                    f"_{self.name}_h{height_idx:02d}_site_{site_idx:03d}"
+                )
                 jobs.append(site_job)
                 site_calc_jobs.append(site_job)
 
         # 5. Analyze all results and create output files in analysis job directory
         job_counter["current"] += 1
         logger.info(
-            f"[{job_counter['current']}/{job_counter['total']}] Creating analysis job with consolidated outputs..."
+            f"[{job_counter['current']}/{job_counter['total']}] "
+            f"Creating analysis job with consolidated outputs..."
         )
         analysis_job = self._create_consolidated_analysis_job(
             slab=slab,
@@ -687,14 +724,14 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         self,
         slab: Structure,
         adsorbate: Structure | Molecule,
-        sites_output,
+        sites_output: Any,
         site_index: int,
         height: float,
         height_index: int,
         progress: str = "",
         job_num: int = 0,
         total_jobs: int = 0,
-    ):
+    ) -> Job:
         """
         Create job for calculating energy at a single site at specific height.
 
@@ -743,7 +780,10 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
 
         # Set the job name
         if job_num > 0:
-            calc_job.name = f"[{job_num}_of_{total_jobs}]_adsorption_scan_h{height_index:02d}_site_{site_index:03d}"
+            calc_job.name = (
+                f"[{job_num}_of_{total_jobs}]_adsorption_scan"
+                f"_h{height_index:02d}_site_{site_index:03d}"
+            )
         else:
             calc_job.name = f"adsorption_scan_h{height_index:02d}_site_{site_index:03d}"
 
@@ -753,12 +793,12 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         self,
         slab: Structure,
         adsorbate: Structure | Molecule,
-        slab_job,
-        ads_job,
-        sites_job,
+        slab_job: Job,
+        ads_job: Job,
+        sites_job: Job,
         site_calc_jobs: list,
         heights: list[float],
-    ):
+    ) -> Job:
         """
         Create job that analyzes all site results.
 
@@ -785,12 +825,10 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             Analysis job.
         """
         # Collect site energies as a list
-        site_energies = []
-        for site_job in site_calc_jobs:
-            site_energies.append(site_job.output)
+        site_energies = [site_job.output for site_job in site_calc_jobs]
 
         # Run analysis (this is already a @job, so just call it directly)
-        analysis_job = analyze_adsorption_scan(
+        return analyze_adsorption_scan(
             slab=slab,
             adsorbate=adsorbate,
             site_energies=site_energies,
@@ -801,22 +839,20 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             miller_indices=self.miller_indices,
         )
 
-        return analysis_job
-
     def _create_consolidated_analysis_job(
         self,
         slab: Structure,
         adsorbate: Structure | Molecule,
-        slab_job,
-        ads_job,
-        sites_job,
+        slab_job: Job | None,
+        ads_job: Job | None,
+        sites_job: Job,
         site_calc_jobs: list,
         heights: list[float],
         placement: str,
         plot_results: bool,
         write_summary: bool,
         job_counter: dict,
-    ):
+    ) -> Job:
         """
         Create consolidated analysis job that creates all outputs in one directory.
 
@@ -854,9 +890,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             Consolidated analysis job.
         """
         # Collect site energies as a list
-        site_energies = []
-        for site_job in site_calc_jobs:
-            site_energies.append(site_job.output)
+        site_energies = [site_job.output for site_job in site_calc_jobs]
 
         # Reference energies: either from the static jobs or precalculated
         # values (plain floats or jobflow OutputReferences from another flow)
@@ -872,7 +906,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         )
 
         # Create analysis job that creates all files in its directory
-        analysis_job = _consolidated_analysis(
+        return _consolidated_analysis(
             slab=slab,
             adsorbate=adsorbate,
             site_energies=site_energies,
@@ -885,8 +919,6 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             plot_results=plot_results,
             write_summary=write_summary,
         )
-
-        return analysis_job
 
 
 @dataclass
@@ -988,7 +1020,7 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
 
         # 1. Create initial structure with adsorbate
         @job(name=f"{self.name}_create_structure")
-        def create_ads_structure():
+        def create_ads_structure() -> Structure:
             """Create initial adsorption structure."""
             return add_adsorbate_to_slab(slab, adsorbate, best_site, height)
 
@@ -997,7 +1029,7 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
 
         # 2. Optionally set constraints
         @job(name=f"{self.name}_add_constraints")
-        def add_constraints():
+        def add_constraints() -> Structure:
             """Add selective dynamics if needed."""
             struct = initial_struct_job.output
 
@@ -1029,7 +1061,7 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
 
         # 5. Analyze optimization
         @job(name=f"{self.name}_analyze")
-        def analyze_optimization():
+        def analyze_optimization() -> AdsorptionOptimizationResult:
             """Analyze optimization results."""
             from atomate2.siesta.schemas.adsorption import AdsorptionOptimizationResult
             from atomate2.siesta.schemas.calculation import TaskState

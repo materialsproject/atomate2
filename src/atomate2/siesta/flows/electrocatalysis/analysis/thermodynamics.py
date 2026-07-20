@@ -1,4 +1,6 @@
-"""Thermodynamic analysis for electrocatalysis using the Computational Hydrogen Electrode (CHE) model.
+"""Thermodynamic analysis for electrocatalysis using the CHE model.
+
+Here CHE denotes the Computational Hydrogen Electrode.
 
 The CHE model simplifies electrochemical thermodynamics by referencing all potentials
 to the Standard Hydrogen Electrode (SHE). This allows calculation of reaction free
@@ -178,7 +180,9 @@ def calculate_reaction_free_energies(
     potential: float = 0.0,
 ) -> dict[str, list[float] | list[str] | float]:
     """
-    Calculate reaction free energies using the Computational Hydrogen Electrode (CHE) model.
+    Calculate reaction free energies using the CHE model.
+
+    Here CHE denotes the Computational Hydrogen Electrode.
 
     The CHE model relates electrochemical reactions to H₂ as a reference:
         μ(H⁺ + e⁻) = ½μ(H₂) - eU
@@ -228,7 +232,7 @@ def calculate_reaction_free_energies(
             'step_labels': list[str],
             'absolute_energies': list[float],  # E_DFT for each step
             'delta_E': list[float],            # Energy differences (no corrections)
-            'delta_G': list[float],            # Free energy differences (with corrections)
+            'delta_G': list[float],  # Free energy differences (with corrections)
             'cumulative_G': list[float],       # Cumulative free energies
             'thermodynamic_overpotential': float,  # η (V) from CHE model
         }
@@ -308,9 +312,11 @@ def calculate_reaction_free_energies(
     cumulative_G = [0.0]  # Start at ΔG = 0 for clean surface  # noqa: N806
 
     # pH correction (affects all proton-coupled steps)
-    # μ(H⁺) = μ°(H⁺) - k_B T ln(10) × pH, so a step CONSUMING (H⁺ + e⁻)  # noqa: RUF003
-    # becomes harder at higher pH: ΔG_pH = +k_B T ln(10) × pH per pair  # noqa: RUF003
-    # (≈ +0.059 eV × pH at 298 K, SHE scale; on the RHE scale pH cancels)  # noqa: RUF003
+    # μ(H⁺) = μ°(H⁺) - k_B T ln(10) × pH, so a step  # noqa: RUF003
+    # CONSUMING (H⁺ + e⁻) becomes harder at higher pH:
+    # ΔG_pH = +k_B T ln(10) × pH per pair  # noqa: RUF003
+    # (≈ +0.059 eV × pH at 298 K, SHE scale;  # noqa: RUF003
+    # on the RHE scale pH cancels)
     ph_correction = KB * temperature * np.log(10) * ph  # eV
 
     for i, step in enumerate(pathway_steps):
@@ -322,15 +328,18 @@ def calculate_reaction_free_energies(
         dG = delta_E[i]  # noqa: N806
 
         # Gas-phase reference energies
-        # Only apply gas-phase corrections if there's actual electron/proton transfer (not reference states)
-        # Sign of n_H determines if species is consumed (reactant) or produced (product):
+        # Only apply gas-phase corrections if there's actual electron/proton
+        # transfer (not reference states)
+        # Sign of n_H determines if species is consumed (reactant) or produced
+        # (product):
         # - For H2O: n_H > 0 means product (ORR), n_H < 0 means reactant (OER)
         # - For O2: Always check context (ORR vs OER) based on pathway
         species: str | None = (
             None if step.get("species") is None else str(step.get("species"))
         )
 
-        # Skip gas-phase corrections for reference states (n_H=0, n_e=0) that don't involve actual transfer
+        # Skip gas-phase corrections for reference states (n_H=0, n_e=0) that
+        # don't involve actual transfer
         # Exception: O2 adsorption (n_H=0, n_e=0) in ORR DOES consume O2 from gas phase
         is_reference_state = n_H == 0 and n_e == 0 and species != "O2"
 
@@ -350,7 +359,8 @@ def calculate_reaction_free_energies(
                     # ORR: O2 is consumed from gas phase
                     dG -= gas_phase_energies[species]  # noqa: N806
                 else:
-                    # OER: O2 is produced to gas phase (rare, usually pathway ends at O2*)
+                    # OER: O2 is produced to gas phase
+                    # (rare, usually pathway ends at O2*)
                     dG += gas_phase_energies[species]  # noqa: N806
             else:
                 # Default: assume reactant (consumed)
@@ -417,8 +427,8 @@ def calculate_reaction_free_energies(
 
 
 def identify_rate_limiting_step(
-    delta_G: Sequence[float],
-    step_labels: Sequence[str] | None = None,  # noqa: N803
+    delta_G: Sequence[float],  # noqa: N803
+    step_labels: Sequence[str] | None = None,
 ) -> dict[str, int | str | float]:
     """
     Identify the rate-limiting step (RLS) in a reaction pathway.

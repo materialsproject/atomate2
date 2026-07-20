@@ -95,7 +95,7 @@ class PhonopyMaker(Maker):
     dry_run_output_dir: str = "dry_run_output"
     dry_run_format: str = "cif"
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Propagate dry-run settings to child makers."""
         if self.dry_run:
             # Propagate to relax_maker
@@ -121,7 +121,8 @@ class PhonopyMaker(Maker):
         Parameters
         ----------
         structure : Structure
-            Input structure (should be relaxed or will be relaxed if relax_maker provided)
+            Input structure (should be relaxed or will be relaxed if
+            relax_maker provided)
         prev_dir : str | Path | None
             Previous directory for reusing files
         supercell_matrix : list[list[int]] | None
@@ -195,7 +196,8 @@ class PhonopyMaker(Maker):
         jobs.append(phonopy_job)
 
         # Note: Plots and summary are generated directly within the phonopy_job
-        # (see run_phonopy_analysis function). This avoids creating extra empty job folders.
+        # (see run_phonopy_analysis function). This avoids creating extra empty
+        # job folders.
 
         return Flow(jobs, output=phonopy_job.output, name=self.name)
 
@@ -259,7 +261,8 @@ def generate_phonon_displacements(
         if min_length is None:
             min_length = 10.0
             logger.warning(
-                f"No supercell_matrix or min_length specified, using min_length={min_length} Å"
+                f"No supercell_matrix or min_length specified, "
+                f"using min_length={min_length} Å"
             )
 
         supercell_matrix = _get_supercell_matrix(
@@ -271,10 +274,11 @@ def generate_phonon_displacements(
     import numpy as np
 
     sc_matrix = np.array(supercell_matrix)
-    sc_mult = int(round(abs(np.linalg.det(sc_matrix))))
+    sc_mult = round(abs(np.linalg.det(sc_matrix)))
     expected_atoms = structure.num_sites * sc_mult
     logger.info(
-        f"Final supercell: {structure.num_sites} atoms × {sc_mult} = {expected_atoms} atoms"  # noqa: RUF001
+        f"Final supercell: {structure.num_sites} atoms × "  # noqa: RUF001
+        f"{sc_mult} = {expected_atoms} atoms"
     )
 
     # Create Phonopy object
@@ -421,7 +425,8 @@ def run_phonopy_analysis(
         Min temperature in K
     filename_phonopy_yaml : str
         Filename for saving phonopy.yaml (default: "phonopy.yaml").
-        Gruneisen workflows use ground_phonopy.yaml, plus_phonopy.yaml, minus_phonopy.yaml
+        Gruneisen workflows use ground_phonopy.yaml, plus_phonopy.yaml,
+        minus_phonopy.yaml
 
     Returns
     -------
@@ -459,12 +464,13 @@ def run_phonopy_analysis(
     for i, force_set in enumerate(forces):
         if force_set is None:
             raise ValueError(
-                f"Forces for displacement {i} are None! Check SIESTA calculation output."
+                f"Forces for displacement {i} are None! "
+                f"Check SIESTA calculation output."
             )
 
         # Convert to numpy array if needed
         if not isinstance(force_set, np.ndarray):
-            force_set = np.array(force_set)
+            force_set = np.array(force_set)  # noqa: PLW2901
 
         # Ensure correct shape
         if force_set.ndim != 2 or force_set.shape[1] != 3:
@@ -563,7 +569,8 @@ def run_phonopy_analysis(
         }
 
     logger.info(
-        f"Phonopy analysis complete. Imaginary modes: {results['has_imaginary_frequencies']}"
+        f"Phonopy analysis complete. "
+        f"Imaginary modes: {results['has_imaginary_frequencies']}"
     )
 
     # Store the full path to the phonopy.yaml file for Gruneisen workflows
@@ -586,26 +593,26 @@ def run_phonopy_analysis(
     try:
         plot_phonon_band_structure.original(phonon_doc=results, output_dir=output_dir)
         logger.info("Generated phonon band structure plot")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate band structure plot: {e}")
 
     try:
         plot_phonon_dos.original(phonon_doc=results, output_dir=output_dir)
         logger.info("Generated phonon DOS plot")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate DOS plot: {e}")
 
     if create_thermal_properties:
         try:
             plot_thermal_properties.original(phonon_doc=results, output_dir=output_dir)
             logger.info("Generated thermal properties plot")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to generate thermal properties plot: {e}")
 
     try:
         write_phonon_summary.original(phonon_doc=results, output_dir=output_dir)
         logger.info("Generated phonon summary file")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate summary file: {e}")
 
     return results
@@ -643,10 +650,8 @@ def _get_supercell_matrix(
         multipliers = [m + 1 if m < 3 else m for m in multipliers]
 
     # Create diagonal supercell matrix
-    supercell_matrix = [
+    return [
         [multipliers[0], 0, 0],
         [0, multipliers[1], 0],
         [0, 0, multipliers[2]],
     ]
-
-    return supercell_matrix

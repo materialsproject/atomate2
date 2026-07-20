@@ -36,7 +36,7 @@ class ConvergenceCriteria:
     bandgap_tol: float | None = None  # eV - band gap difference tolerance
 
     def __str__(self) -> str:
-        """String representation of criteria."""
+        """Return a string representation of criteria."""
         parts = [f"ΔE < {self.energy_tol} meV"]
         if self.fermi_tol is not None:
             parts.append(f"ΔEf < {self.fermi_tol} eV")
@@ -52,7 +52,7 @@ class ConvergenceCriteria:
 @dataclass
 class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
     """
-    Combined workflow for converging both mesh cutoff and k-points with intelligent stopping.
+    Combined workflow for converging mesh cutoff and k-points with intelligent stopping.
 
     This workflow performs two-stage adaptive convergence testing:
 

@@ -285,7 +285,7 @@ class DefectConcentrationAnalyzer:
     n_sites: float | None = None
     effective_density_of_states: dict[str, float] | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Initialize derived quantities."""
         # Estimate n_sites if not provided
         if self.n_sites is None:
@@ -372,9 +372,7 @@ class DefectConcentrationAnalyzer:
         kT = K_B * self.temperature  # noqa: N806
 
         # Concentration: [D^q] = N_sites × exp(-E_formation / kT)  # noqa: RUF003
-        concentration = self.n_sites * np.exp(-E_formation / kT)
-
-        return concentration
+        return self.n_sites * np.exp(-E_formation / kT)
 
     def charge_neutrality_residual(self, fermi_level: float) -> float:
         """
@@ -407,9 +405,7 @@ class DefectConcentrationAnalyzer:
             defect_charge += q * concentration
 
         # Charge neutrality condition
-        residual = defect_charge + n - p
-
-        return residual
+        return defect_charge + n - p
 
     def solve_fermi_level(
         self, ef_min: float | None = None, ef_max: float | None = None
@@ -493,7 +489,8 @@ class DefectConcentrationAnalyzer:
             except ValueError as e:
                 logger.warning(
                     f"Could not solve Fermi level ({e}). Using midgap as fallback. "
-                    "This may indicate unrealistic formation energies (e.g., dry-run mode)."
+                    "This may indicate unrealistic formation energies "
+                    "(e.g., dry-run mode)."
                 )
                 fermi_level = self.vbm_energy + self.bandgap / 2
                 fermi_level_converged = False
@@ -1001,7 +998,8 @@ def write_concentration_summary(
         # Position relative to bands
         if result.fermi_level < vbm_energy:
             f.write(
-                f"Position:              {abs(result.fermi_level - vbm_energy):.3f} eV below VBM\n"
+                f"Position:              "
+                f"{abs(result.fermi_level - vbm_energy):.3f} eV below VBM\n"
             )
         elif result.fermi_level < cbm:
             frac = (result.fermi_level - vbm_energy) / bandgap * 100
@@ -1038,18 +1036,19 @@ def write_concentration_summary(
         for defect_name, concentrations in defect_groups.items():
             f.write(f"\n{defect_name}:\n")
             f.write(
-                f"{'Charge':>8}  {'[D^q] (cm^-3)':>15}  {'E_formation (eV)':>16}  {'Fraction':>10}\n"
+                f"{'Charge':>8}  {'[D^q] (cm^-3)':>15}  "
+                f"{'E_formation (eV)':>16}  {'Fraction':>10}\n"
             )
             f.write(f"{'-' * 8}  {'-' * 15}  {'-' * 16}  {'-' * 10}\n")
 
             # Sort by concentration (highest first)
-            concentrations = sorted(
+            sorted_concentrations = sorted(
                 concentrations, key=lambda x: x.concentration, reverse=True
             )
 
-            total_conc = sum(c.concentration for c in concentrations)
+            total_conc = sum(c.concentration for c in sorted_concentrations)
 
-            for dc in concentrations:
+            for dc in sorted_concentrations:
                 fraction = dc.concentration / total_conc if total_conc > 0 else 0
                 f.write(
                     f"{dc.charge_state:+8d}  "
