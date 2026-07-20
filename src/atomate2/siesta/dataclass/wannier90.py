@@ -16,7 +16,7 @@ __all__ = ["Wannier90"]
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 
@@ -230,6 +230,8 @@ class Wannier90(FDFDataclass):
             "SIESTA keyword": "%block Wannier.k",
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 from xml.etree import ElementTree as ET
 
 import click
@@ -46,14 +47,14 @@ def parse_psml(file_path: str) -> tuple:
         click.echo(f"Extracted radial grid with {len(radial_grid)} points")
 
         # Extract valence configuration
-        valence_config = []
+        valence_config: list[dict[str, Any]] = []
         valence = root.find(".//psml:valence-configuration", namespaces=ns)
         if valence is None:
             click.echo("Warning: No <valence-configuration> element found")
         else:
             for shell in valence.findall("psml:shell", namespaces=ns):
                 try:
-                    n = int(shell.get("n"))
+                    n: Any = int(shell.get("n"))
                     l_str = shell.get("l")
                     l = {"s": 0, "p": 1, "d": 2, "f": 3}.get(l_str, -1)  # noqa: E741
                     if l == -1:
@@ -73,7 +74,7 @@ def parse_psml(file_path: str) -> tuple:
             click.echo("Warning: No <nonlocal-projectors> element found")
         else:
             # Map projectors to n values based on l and sequence
-            l_to_n = {0: [], 1: [], 2: [], 3: []}
+            l_to_n: dict[int, list[Any]] = {0: [], 1: [], 2: [], 3: []}
             for conf in valence_config:
                 l_to_n[conf["l"]].append(conf["n"])
             for proj in projectors.findall("psml:proj", namespaces=ns):
@@ -117,7 +118,7 @@ def parse_psml(file_path: str) -> tuple:
             click.echo(f"Extracted {len(wavefunctions)} wavefunctions (projectors)")
 
         # Extract potentials
-        potentials = []
+        potentials: list[dict[str, Any]] = []
         local_pot = root.find(".//psml:local-potential", namespaces=ns)
         if local_pot is not None:
             radfunc = local_pot.find("psml:radfunc/psml:data", namespaces=ns)
@@ -247,7 +248,7 @@ def plot_potentials(
     ax.set_title(f"{element_name} Pseudopotentials (Polar Representation)", fontsize=14)
     ax.set_xlabel("Radial Distance (bohr)", fontsize=12)
     if r_max is not None:
-        ax.set_rlim(0, r_max)
+        ax.set_rlim(0, r_max)  # type: ignore[attr-defined]  # polar Axes method
     plt.legend()
     plt.tight_layout()
     plt.savefig(output_file, dpi=300)

@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow.core.flow import Flow
 from jobflow.core.job import job
@@ -42,6 +42,7 @@ from atomate2.siesta.utils.verbosity import VerbosityLevel
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Maker
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -330,8 +331,11 @@ class BasisParametersConvergenceFlowMaker(BaseSiestaFlowMaker):
                     "a2s_kpts": self.kpts,
                 }
 
-                maker = update_user_siesta_settings(
-                    maker, siesta_updates, class_filter=StaticMaker
+                maker = cast(
+                    "Maker",
+                    update_user_siesta_settings(
+                        maker, siesta_updates, class_filter=StaticMaker
+                    ),
                 )
 
                 # Create job with counter

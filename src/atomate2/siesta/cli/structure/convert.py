@@ -382,7 +382,7 @@ def main(
         elif file_ext == ".xsf":
             # XSF file - read using ASE, then convert to sisl
             console.print("[cyan]Detected: XSF file[/cyan]")
-            structure_ase_temp = ase_read(input_file)
+            structure_ase_temp = ase_read(input_file)  # type: ignore[assignment]  # ase.io.read single-Atoms path
             # Convert ASE to sisl Geometry
             cell = structure_ase_temp.get_cell()[:]
             xyz = structure_ase_temp.get_positions()
@@ -563,7 +563,7 @@ def main(
 
     # Convert to pymatgen Structure for Atomate2
     try:
-        structure_pymatgen = AseAtomsAdaptor.get_structure(structure_ase)
+        structure_pymatgen: Structure = AseAtomsAdaptor.get_structure(structure_ase)
     except Exception as e:
         console.print(
             f"[red]Error converting ASE Atoms to pymatgen Structure: {e!s}[/red]"
@@ -679,7 +679,7 @@ def main(
 
     # Convert ASE Atoms (no ghost) to pymatgen Structure
     try:
-        structure_pymatgen_no_ghost = AseAtomsAdaptor.get_structure(
+        structure_pymatgen_no_ghost: Structure = AseAtomsAdaptor.get_structure(
             structure_ase_no_ghost
         )
     except Exception as e:

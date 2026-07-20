@@ -34,7 +34,7 @@ from atomate2.siesta.sets.core import (
 from atomate2.siesta.sets.parser import read_siesta_output
 
 if TYPE_CHECKING:
-    from jobflow import Flow
+    from jobflow import Flow, Job
     from pymatgen.core import Molecule, Structure
 
     # from atomate2.siesta.sets.base_first import SiestaInputGenerator
@@ -303,7 +303,9 @@ class RelaxMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=RelaxSetGenerator(
-                *args, relax_cell=False, **input_gen_kwargs
+                *args,  # type: ignore[misc]  # relax_cell passed by keyword; *args is structure-only
+                relax_cell=False,
+                **input_gen_kwargs,
             ),
             name=cls.name + "-fixed-cell",
             **maker_kwargs,
@@ -351,7 +353,9 @@ class RelaxMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=RelaxSetGenerator(
-                *args, relax_cell=True, **input_gen_kwargs
+                *args,  # type: ignore[misc]  # relax_cell passed by keyword; *args is structure-only
+                relax_cell=True,
+                **input_gen_kwargs,
             ),
             name=cls.name + "-variable-cell",
             **maker_kwargs,
@@ -497,7 +501,10 @@ class LuaMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=LuaSetGenerator(
-                *args, lua_type="lua_relaxation", relax_cell=False, **input_gen_kwargs
+                *args,  # type: ignore[misc]  # lua_type/relax_cell passed by keyword; *args is structure-only
+                lua_type="lua_relaxation",
+                relax_cell=False,
+                **input_gen_kwargs,
             ),
             name=cls.name + "-fixed-cell",
             **maker_kwargs,
@@ -559,7 +566,10 @@ class LuaMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=LuaSetGenerator(
-                *args, lua_type="lua_relaxation", relax_cell=True, **input_gen_kwargs
+                *args,  # type: ignore[misc]  # lua_type/relax_cell passed by keyword; *args is structure-only
+                lua_type="lua_relaxation",
+                relax_cell=True,
+                **input_gen_kwargs,
             ),
             name=cls.name + "-variable-cell",
             **maker_kwargs,
@@ -621,7 +631,10 @@ class LuaMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=LuaSetGenerator(
-                *args, lua_type="lua_neb", relax_cell=False, **input_gen_kwargs
+                *args,  # type: ignore[misc]  # lua_type/relax_cell passed by keyword; *args is structure-only
+                lua_type="lua_neb",
+                relax_cell=False,
+                **input_gen_kwargs,
             ),
             name=cls.name + "-neb-with-fix-cell",
             **maker_kwargs,
@@ -754,7 +767,7 @@ class SocketIOStaticMaker(BaseSiestaMaker):
                 images = [images]
 
             for img in images:
-                img.calc = None
+                img.calc = None  # type: ignore[union-attr]  # ASE Atoms from read_siesta_output
 
             for ii in range(-1 * len(structure), 0, -1):
                 if structure[ii] in images:
@@ -771,7 +784,7 @@ class SocketIOStaticMaker(BaseSiestaMaker):
             dumpfn(data, filename.replace(":", "."))
 
         # run SIESTA
-        run_siesta_socket(structure, **self.run_aims_kwargs)
+        run_siesta_socket(structure, **self.run_aims_kwargs)  # type: ignore[attr-defined]  # attribute does not exist at runtime; every other maker uses run_siesta_kwargs
 
         # parse SIESTA outputs
         task_doc = SiestaTaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
@@ -1353,7 +1366,9 @@ class PhononMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=PhononSetGenerator(
-                *args, md_type_of_run="FC", **input_gen_kwargs
+                *args,  # type: ignore[misc]  # md_type_of_run passed by keyword; *args is structure-only
+                md_type_of_run="FC",
+                **input_gen_kwargs,
             ),
             name=cls.name + "-phonon",
             **maker_kwargs,
@@ -1512,7 +1527,9 @@ class OpticalMaker(BaseSiestaMaker):
 
         return cls(
             input_set_generator=OpticalSetGenerator(
-                *args, optical_calculation=True, **input_gen_kwargs
+                *args,
+                optical_calculation=True,  # type: ignore[arg-type]  # runtime accepts truthy flag; annotation is str | None
+                **input_gen_kwargs,
             ),
             name=cls.name,
             **maker_kwargs,
@@ -1680,9 +1697,7 @@ class SiestaPhononMaker(Maker):
     write_summary: bool = True
     dry_run: bool = False
 
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Create phonon calculation workflow with optional plotting.
 
@@ -1707,7 +1722,7 @@ class SiestaPhononMaker(Maker):
 
         from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
 
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # Apply dry_run to static_maker if specified
         static_maker = self.static_maker

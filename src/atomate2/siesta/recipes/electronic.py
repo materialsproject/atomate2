@@ -12,6 +12,7 @@ from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -91,7 +92,7 @@ def electronic_properties(
             preset = analysis.recommended_preset
 
         # Build recommended params
-        auto_user_params = {
+        auto_user_params: dict[str, Any] = {
             "a2s_kpts": analysis.recommended_kpts,
             "Mesh.Cutoff": analysis.recommended_cutoff,
             "PAO.BasisSize": analysis.recommended_basis,
@@ -113,7 +114,7 @@ def electronic_properties(
         user_params = auto_user_params
 
     # Create jobs
-    jobs = []
+    jobs: list[Flow | Job] = []
 
     if relax:
         # Relaxation job - use class method that accepts user_params
@@ -321,7 +322,7 @@ def dos_workflow(
         dos_kpts = [int(k * dos_kpts_density) for k in analysis.recommended_kpts]
 
         # Build recommended params
-        auto_user_params = {
+        auto_user_params: dict[str, Any] = {
             "a2s_kpts": dos_kpts,
             "Mesh.Cutoff": analysis.recommended_cutoff,
             "PAO.BasisSize": analysis.recommended_basis,
@@ -343,7 +344,7 @@ def dos_workflow(
         user_params = auto_user_params
 
     # Create jobs
-    jobs = []
+    jobs: list[Flow | Job] = []
 
     if relax_first:
         # Relaxation job

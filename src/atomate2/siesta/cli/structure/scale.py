@@ -176,7 +176,7 @@ def scale(
                     from pymatgen.io.xcrysden import XSF
 
                     xsf = XSF(scaled_structure)
-                    xsf.to_file(output_file)
+                    xsf.to_file(output_file)  # type: ignore[attr-defined]  # pymatgen XSF API (see flagged note)
                 elif format == "json":
                     scaled_structure.to(filename=output_file, fmt="json")
 
@@ -288,7 +288,7 @@ def scale(
                 from pymatgen.io.xcrysden import XSF
 
                 xsf = XSF(scaled_structure)
-                xsf.to_file(output)
+                xsf.to_file(output)  # type: ignore[attr-defined]  # pymatgen XSF API (see flagged note)
             elif format == "json":
                 scaled_structure.to(filename=output, fmt="json")
 

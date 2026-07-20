@@ -21,7 +21,10 @@ if TYPE_CHECKING:
     from io import TextIOWrapper
     from typing import Any
 
-    from pymatgen.util.typing import Matrix3D, Vector3D
+    # Matrix3D / Vector3D were removed from pymatgen.util.typing; keep them as
+    # permissive aliases (values may be tuples, lists or ndarrays) as before.
+    Vector3D = Any
+    Matrix3D = Any
 
 __author__ = "Arsalan Akhtar Inspired by FHI-Aims"
 __version__ = "1.0"
@@ -562,7 +565,7 @@ class SiestaOutCalcChunk(SiestaOutChunk):
         logger.info("SiestaOutCalcChunk._parse_structure()")
         species, coords, velocities, lattice = self._parse_lattice_atom_pos()
 
-        site_properties: dict[str, Sequence[Any]] = {}
+        site_properties: dict[str, Any] = {}
         if len(velocities) > 0:
             site_properties["velocity"] = np.array(velocities)
 
@@ -740,7 +743,9 @@ class SiestaOutCalcChunk(SiestaOutChunk):
         stresses = []
         for line in self.lines[line_start : line_start + self.n_atoms]:
             xx, yy, zz, xy, xz, yz = (float(d) for d in line.split()[2:8])
-            stresses.append(Tensor.from_voigt([xx, yy, zz, yz, xz, xy]))
+            stresses.append(
+                Tensor.from_voigt(cast("np.ndarray", [xx, yy, zz, yz, xz, xy]))
+            )
 
         return np.array(stresses) * EV_PER_A3_TO_KBAR
 

@@ -76,8 +76,8 @@ class ParallelDistributionHandler(ErrorHandler):
         bool
             True if parallel distribution error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         for error in errors:
             if error.error_type == ErrorType.PARALLEL:
                 logger.warning(
@@ -102,7 +102,7 @@ class ParallelDistributionHandler(ErrorHandler):
         dict
             Custodian format: {"errors": [...], "actions": [...]}
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
 
         attempt = self.n_applied_corrections + 1
@@ -113,13 +113,13 @@ class ParallelDistributionHandler(ErrorHandler):
         )
 
         # Get current basis size
-        current_basis = self._get_current_basis(directory)
+        current_basis = self._get_current_basis(dir_path)
         new_basis = self._increase_basis_size(current_basis)
 
         if new_basis == current_basis:
             # Already at maximum basis, cannot increase further
-            n_procs = self._estimate_mpi_processes(directory)
-            n_orbitals = self._estimate_orbitals(directory)
+            n_procs = self._estimate_mpi_processes(dir_path)
+            n_orbitals = self._estimate_orbitals(dir_path)
             recommended = max(1, n_orbitals // 2)
 
             error_msg = (
@@ -149,7 +149,7 @@ class ParallelDistributionHandler(ErrorHandler):
         )
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_fdf_file(fdf_file, corrections)
 
         return {

@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import shutil
 import tarfile
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import click
 import requests
@@ -19,6 +19,8 @@ from rich.table import Table
 from rich.text import Text
 
 if TYPE_CHECKING:
+    import builtins
+
     import numpy as np
 
 # Import plotting functions from same package
@@ -45,7 +47,7 @@ BASE_URL = (
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 # List of available pseudos with local and remote file information
-PSEUDOS = {
+PSEUDOS: dict[str, dict[str, Any]] = {
     "ONCVPSP-PBE-FR-PDv0.4-Standard": {
         "filename": "nc-fr-04_pbe_standard_psml.tgz",
         "local_path": "nc-fr-04_pbe_standard_psml.tgz",
@@ -1479,7 +1481,7 @@ def basis(
 
 def extract_rc_from_psml(
     radial_grid: np.ndarray,
-    wavefunctions: list[dict],
+    wavefunctions: builtins.list[dict],
     n: int,
     ang_mom: int,
     threshold: float = 0.05,
@@ -1603,13 +1605,13 @@ def get_rc_hydrogenic(element: str, n: int, ang_mom: int) -> float:
 
 def generate_pao_basis_block(
     element: str,
-    valence_config: list[dict],
+    valence_config: builtins.list[dict],
     basis_size: str,
     num_n_shells: int = 1,
     rc_method: str = "psml",
     rc_threshold: float = 0.05,
     radial_grid: np.ndarray | None = None,
-    wavefunctions: list[dict] | None = None,
+    wavefunctions: builtins.list[dict] | None = None,
 ) -> str:
     """Generate PAO.Basis block for SIESTA from valence configuration.
 
@@ -1641,7 +1643,7 @@ def generate_pao_basis_block(
     n_zeta_pol = zeta_map[basis_size]["polarization"]
 
     # Group valence orbitals by l (angular momentum)
-    orbitals_by_l = {}
+    orbitals_by_l: dict[Any, builtins.list[Any]] = {}
     for conf in valence_config:
         ang_mom = conf["l"]
         if ang_mom not in orbitals_by_l:

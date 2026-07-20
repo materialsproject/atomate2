@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow.core.flow import Flow
 from jobflow.core.job import job
@@ -35,6 +35,7 @@ from atomate2.siesta.utils.verbosity import VerbosityLevel
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Maker
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -313,7 +314,7 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
         # Dictionary to store job outputs for dependency tracking
         for basis in allowed_basis_size:
             # print(f"DEBUG: {basis=}")
-            maker = self.static_maker.scf()
+            maker = self.static_maker.scf()  # type: ignore[attr-defined]  # dynamic factory
 
             # Propagate custodian settings
             self.propagate_custodian_to_maker(maker)
@@ -328,8 +329,11 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
             maker = update_user_siesta_settings(
                 maker, siesta_updates, class_filter=StaticMaker
             )
-            maker = update_user_siesta_settings(
-                maker, {"a2s_kpts": [3, 3, 3]}, class_filter=StaticMaker
+            maker = cast(
+                "Maker",
+                update_user_siesta_settings(
+                    maker, {"a2s_kpts": [3, 3, 3]}, class_filter=StaticMaker
+                ),
             )
             scf_maker_basis_job = maker.make(structure, prev_dir=None)
             scf_maker_basis_job.name += f"-{basis}"
@@ -738,7 +742,8 @@ def plot_eos_overlay(
                             try:
                                 # Refit to get smooth curve
                                 eos_obj = EOS(eos_name="birch_murnaghan").fit(
-                                    volumes, energies
+                                    volumes,  # type: ignore[arg-type]  # ndarray accepted
+                                    energies,  # type: ignore[arg-type]  # ndarray accepted
                                 )
                                 energy_fit = eos_obj.func(vol_fit)
 

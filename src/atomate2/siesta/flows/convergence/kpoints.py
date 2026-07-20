@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from jobflow.core.flow import Flow
 
@@ -20,6 +20,7 @@ from atomate2.siesta.utils.verbosity import VerbosityLevel
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow.core.job import Job
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -97,7 +98,7 @@ class KpointsConvergenceFlowMaker(BaseSiestaFlowMaker):
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
 
-        jobs = []
+        jobs: list[Job | Flow] = []
         job_metadata = []
 
         for kpoints in self.kpoints_list:
@@ -105,7 +106,9 @@ class KpointsConvergenceFlowMaker(BaseSiestaFlowMaker):
             static_job = self.static_maker.make(structure, prev_dir=prev_dir)
 
             # Update kpoints parameter
-            static_job = update_user_siesta_settings(static_job, {"a2s_kpts": kpoints})
+            static_job = cast(
+                "Job", update_user_siesta_settings(static_job, {"a2s_kpts": kpoints})
+            )
 
             # Set job name
             kpts_str = "x".join(map(str, kpoints))

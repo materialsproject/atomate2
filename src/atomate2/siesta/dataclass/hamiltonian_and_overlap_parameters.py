@@ -18,7 +18,7 @@ __all__ = ["HamiltonianAndOverlapParameters"]
 
 import logging
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
@@ -119,6 +119,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
 
     # Track which parameters were explicitly provided by user
     _user_provided_params: set = field(default_factory=set, init=False, repr=False)
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

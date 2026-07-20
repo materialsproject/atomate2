@@ -461,7 +461,7 @@ def _display_layer_info(structure: Structure, dir_idx: int) -> None:
     z_coords = coords[:, dir_idx]
 
     # Find unique layers (tolerance 0.5 Å)
-    unique_z = []
+    unique_z: list[float] = []
     for z in sorted(z_coords):
         if not unique_z or abs(z - unique_z[-1]) > 0.5:
             unique_z.append(z)

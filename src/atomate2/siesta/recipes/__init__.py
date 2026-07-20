@@ -28,6 +28,8 @@ Example Usage:
     >>> flow = RecipeBook.thermal_properties(structure)
 """
 
+from typing import Any
+
 from atomate2.siesta.recipes.base import RecipeBook
 from atomate2.siesta.recipes.catalysis import (
     adsorption_scanning_workflow,
@@ -74,37 +76,40 @@ from atomate2.siesta.recipes.thermal import (
     thermal_properties,
 )
 
-# Dynamically attach recipe methods to RecipeBook class
-RecipeBook.complete_material_study = staticmethod(complete_material_study)
-RecipeBook.quick_characterization = staticmethod(quick_characterization)
-RecipeBook.battery_cathode_screening = staticmethod(battery_cathode_screening)
-RecipeBook.thermoelectric_analysis = staticmethod(thermoelectric_analysis)
-RecipeBook.high_temperature_ceramic = staticmethod(high_temperature_ceramic)
-RecipeBook.magnetic_material_study = staticmethod(magnetic_material_study)
-RecipeBook.semiconductor_device_study = staticmethod(semiconductor_device_study)
-RecipeBook.structural_phase_transition = staticmethod(structural_phase_transition)
-RecipeBook.electronic_properties = staticmethod(electronic_properties)
-RecipeBook.band_structure_workflow = staticmethod(band_structure_workflow)
-RecipeBook.dos_workflow = staticmethod(dos_workflow)
-RecipeBook.mechanical_properties = staticmethod(mechanical_properties)
-RecipeBook.elastic_constants_workflow = staticmethod(elastic_constants_workflow)
-RecipeBook.eos_workflow = staticmethod(eos_workflow)
-RecipeBook.thermal_properties = staticmethod(thermal_properties)
-RecipeBook.phonon_workflow = staticmethod(phonon_workflow)
-RecipeBook.qha_workflow = staticmethod(qha_workflow)
-RecipeBook.gruneisen_workflow = staticmethod(gruneisen_workflow)
-RecipeBook.surface_energy_workflow = staticmethod(surface_energy_workflow)
-RecipeBook.adsorption_scanning_workflow = staticmethod(adsorption_scanning_workflow)
-RecipeBook.catalysis_study = staticmethod(catalysis_study)
-RecipeBook.convergence_suite = staticmethod(convergence_suite)
-RecipeBook.kpoints_convergence = staticmethod(kpoints_convergence)
-RecipeBook.basis_convergence = staticmethod(basis_convergence)
-RecipeBook.complete_convergence = staticmethod(complete_convergence)
-RecipeBook.complete_defect_study = staticmethod(complete_defect_study)
-RecipeBook.vacancy_study = staticmethod(vacancy_study)
-RecipeBook.substitution_study = staticmethod(substitution_study)
-RecipeBook.antisite_study = staticmethod(antisite_study)
-RecipeBook.interstitial_study = staticmethod(interstitial_study)
+# Dynamically attach recipe methods to RecipeBook class.
+# Use an ``Any``-typed alias (the same class object) so that mypy does not flag
+# the dynamically assigned attributes; this is a no-op at runtime.
+_recipe_book: Any = RecipeBook
+_recipe_book.complete_material_study = staticmethod(complete_material_study)
+_recipe_book.quick_characterization = staticmethod(quick_characterization)
+_recipe_book.battery_cathode_screening = staticmethod(battery_cathode_screening)
+_recipe_book.thermoelectric_analysis = staticmethod(thermoelectric_analysis)
+_recipe_book.high_temperature_ceramic = staticmethod(high_temperature_ceramic)
+_recipe_book.magnetic_material_study = staticmethod(magnetic_material_study)
+_recipe_book.semiconductor_device_study = staticmethod(semiconductor_device_study)
+_recipe_book.structural_phase_transition = staticmethod(structural_phase_transition)
+_recipe_book.electronic_properties = staticmethod(electronic_properties)
+_recipe_book.band_structure_workflow = staticmethod(band_structure_workflow)
+_recipe_book.dos_workflow = staticmethod(dos_workflow)
+_recipe_book.mechanical_properties = staticmethod(mechanical_properties)
+_recipe_book.elastic_constants_workflow = staticmethod(elastic_constants_workflow)
+_recipe_book.eos_workflow = staticmethod(eos_workflow)
+_recipe_book.thermal_properties = staticmethod(thermal_properties)
+_recipe_book.phonon_workflow = staticmethod(phonon_workflow)
+_recipe_book.qha_workflow = staticmethod(qha_workflow)
+_recipe_book.gruneisen_workflow = staticmethod(gruneisen_workflow)
+_recipe_book.surface_energy_workflow = staticmethod(surface_energy_workflow)
+_recipe_book.adsorption_scanning_workflow = staticmethod(adsorption_scanning_workflow)
+_recipe_book.catalysis_study = staticmethod(catalysis_study)
+_recipe_book.convergence_suite = staticmethod(convergence_suite)
+_recipe_book.kpoints_convergence = staticmethod(kpoints_convergence)
+_recipe_book.basis_convergence = staticmethod(basis_convergence)
+_recipe_book.complete_convergence = staticmethod(complete_convergence)
+_recipe_book.complete_defect_study = staticmethod(complete_defect_study)
+_recipe_book.vacancy_study = staticmethod(vacancy_study)
+_recipe_book.substitution_study = staticmethod(substitution_study)
+_recipe_book.antisite_study = staticmethod(antisite_study)
+_recipe_book.interstitial_study = staticmethod(interstitial_study)
 
 __all__ = [
     "RecipeBook",

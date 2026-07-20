@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow, job
 
@@ -36,6 +36,7 @@ from atomate2.siesta.jobs.core import StaticMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Job, Maker
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -148,7 +149,7 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         )
 
         jobs = []
-        all_metadata = []
+        all_metadata: list[dict[str, Any]] = []
 
         # Calculate total number of jobs
         total_jobs = (
@@ -183,8 +184,11 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
                         "a2s_kpts": self.kpts if self.kpts is not None else [4, 4, 4],
                     }
 
-                    maker = update_user_siesta_settings(
-                        maker, siesta_updates, class_filter=StaticMaker
+                    maker = cast(
+                        "Maker",
+                        update_user_siesta_settings(
+                            maker, siesta_updates, class_filter=StaticMaker
+                        ),
                     )
 
                     # Create job with counter
@@ -271,7 +275,7 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             real_basis_jobs.append(real_basis_job)
 
         # Combine all jobs
-        all_jobs = [
+        all_jobs: list[Flow | Job] = [
             scf_flow,
             collect_job,
             plot_job,

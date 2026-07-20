@@ -62,8 +62,8 @@ class BasisSetHandler(ErrorHandler):
         bool
             True if basis set error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         return any(error.error_type == ErrorType.BASIS for error in errors)
 
     def correct(self, directory: str = "./") -> dict:
@@ -79,7 +79,7 @@ class BasisSetHandler(ErrorHandler):
         dict
             Custodian format: {"errors": [...], "actions": [...]}
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
 
         attempt = self.n_applied_corrections + 1
@@ -90,7 +90,7 @@ class BasisSetHandler(ErrorHandler):
         )
 
         # Check if this is a hydrogen split-norm error
-        output_file = directory / "siesta.out"
+        output_file = dir_path / "siesta.out"
         is_hydrogen_error = False
         if output_file.exists():
             with open(output_file) as f:
@@ -101,7 +101,7 @@ class BasisSetHandler(ErrorHandler):
         if is_hydrogen_error:
             # Hydrogen-specific correction: reduce basis size
             logger.info("  Detected hydrogen split-norm error")
-            corrections = self._fix_hydrogen_basis(directory, attempt)
+            corrections = self._fix_hydrogen_basis(dir_path, attempt)
             strategy = corrections.get("strategy", "Reduce hydrogen basis")
         else:
             # General basis corrections
@@ -111,7 +111,7 @@ class BasisSetHandler(ErrorHandler):
         logger.info(f"  Strategy: {strategy}")
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_params = {k: v for k, v in corrections.items() if k != "strategy"}
         if update_params:
             update_fdf_file(fdf_file, update_params)

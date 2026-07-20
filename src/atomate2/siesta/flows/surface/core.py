@@ -6,7 +6,7 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, job
 from pymatgen.core import Structure
@@ -138,7 +138,7 @@ class SurfaceEnergyFlowMaker(BaseSiestaFlowMaker):
 
         logger.info("SurfaceEnergyFlowMaker.make()")
 
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # 1. Calculate bulk energy
         logger.info("Creating bulk energy calculation job...")
@@ -294,7 +294,7 @@ class SurfaceEnergyFlowMaker(BaseSiestaFlowMaker):
         """
 
         @job(name=f"{self.name}_analysis")
-        def analyze_surface_energies() -> dict[str, Any]:
+        def analyze_surface_energies() -> Job:
             """Collect slab data and calculate surface energies."""
             # Collect slab data
             slab_data = [

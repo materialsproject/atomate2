@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow, job
 
@@ -109,10 +109,10 @@ class ElasticFlowMaker(BaseSiestaFlowMaker, BaseElasticMaker):
     order: int = 2
     sym_reduce: bool = True
     symprec: float = 1e-5
-    bulk_relax_maker: BaseSiestaMaker | None = field(
+    bulk_relax_maker: BaseSiestaMaker | None = field(  # type: ignore[assignment]  # SIESTA maker replaces VASP/aims/FF maker
         default_factory=RelaxMaker.variable_cell_relaxation
     )
-    elastic_relax_maker: BaseSiestaMaker = field(default_factory=StaticMaker)
+    elastic_relax_maker: BaseSiestaMaker = field(default_factory=StaticMaker)  # type: ignore[assignment]  # SIESTA maker replaces VASP/aims/FF maker
     max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
@@ -125,7 +125,7 @@ class ElasticFlowMaker(BaseSiestaFlowMaker, BaseElasticMaker):
         """Name of argument for previous calculation directory in SIESTA."""
         return "prev_dir"
 
-    def make(
+    def make(  # type: ignore[override]  # SIESTA accepts **kwargs in place of typed elastic args
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
@@ -286,7 +286,7 @@ def save_elastic_results_job(elastic_doc: Any, output_folder: str = ".") -> dict
     if ieee_tensor:
         tensor_array = np.array(ieee_tensor)
         diagonal = np.diag(tensor_array)
-        has_negative_constants = np.any(diagonal < 0)
+        has_negative_constants = cast("bool", np.any(diagonal < 0))
 
     # Save TXT summary
     txt_file = output_path / f"elastic_summary_{timestamp}.txt"
@@ -353,11 +353,11 @@ def save_elastic_results_job(elastic_doc: Any, output_folder: str = ".") -> dict
 
         # Check for negative elastic constants (indicates problems)
         has_negative = False
-        negative_indices = []
+        negative_indices: Any = []
         if ieee_tensor:
             tensor_array = np.array(ieee_tensor)
             diagonal = np.diag(tensor_array)
-            has_negative = np.any(diagonal < 0)
+            has_negative = cast("bool", np.any(diagonal < 0))
             negative_indices = np.where(diagonal < 0)[0]
 
         # WARNING if negative constants found
@@ -1019,7 +1019,7 @@ def plot_stress_strain_curves(
             ]
 
             # Find dominant strain component
-            dominant_idx = np.argmax(np.abs(strain_voigt))
+            dominant_idx = int(np.argmax(np.abs(strain_voigt)))
 
             strain_stress_data[dominant_idx]["strains"].append(
                 strain_voigt[dominant_idx]
@@ -1598,7 +1598,9 @@ def plot_pugh_ratio_diagram(
             color="gray",
         )
 
-        plt.tight_layout(rect=[0, 0.03, 1, 1])  # Leave room for footnote
+        plt.tight_layout(
+            rect=cast("tuple[float, float, float, float]", [0, 0.03, 1, 1])
+        )  # Leave room for footnote
 
         output_file = output_path / f"pugh_ratio_diagram_{timestamp}.png"
         plt.savefig(output_file, dpi=150, bbox_inches="tight")

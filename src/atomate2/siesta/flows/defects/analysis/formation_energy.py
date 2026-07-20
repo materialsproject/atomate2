@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,6 +15,7 @@ from monty.json import MSONable
 
 if TYPE_CHECKING:
     import plotly.graph_objects as go
+    from jobflow import Job
     from pymatgen.core import Structure
 
     from atomate2.siesta.flows.defects.schemas import DefectDocument
@@ -208,9 +209,7 @@ class FormationEnergyDiagram(MSONable):
 
             charge_states = [d.charge_state for d in sorted_docs]
             if use_corrected:
-                formation_energies = [
-                    d.corrected_formation_energy for d in sorted_docs
-                ]
+                formation_energies = [d.corrected_formation_energy for d in sorted_docs]
             else:
                 formation_energies = [d.raw_formation_energy for d in sorted_docs]
 
@@ -1161,8 +1160,7 @@ def write_defect_summary(
         if defect_type == "vacancy":
             f.write("For vacancy defects:\n")
             f.write(
-                "  E_formation = E_defect - E_host + "
-                "μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
+                "  E_formation = E_defect - E_host + μ_removed + q × E_F + E_corr\n\n"  # noqa: RUF001
             )
             f.write("Where:\n")
             f.write("  E_defect = Total energy of defect supercell\n")
@@ -1928,15 +1926,17 @@ class FormationEnergyDiagramFlowMaker:
         # Extract bandgap from calculations if requested
         if self.auto_bandgap and self.bandgap is None:
             bandgap_job = _extract_bandgap_from_defect_docs(defect_outputs)
-            bandgap_value = bandgap_job.output
+            # jobflow resolves the lazy output reference to a float at run time
+            bandgap_value = cast("float", bandgap_job.output)
         else:
             bandgap_value = self.bandgap if self.bandgap is not None else 0.0
 
         # Extract effective masses if requested
         if self.auto_effective_masses:
             eff_mass_job = _extract_effective_masses_from_defect_docs(defect_outputs)
-            m_e = eff_mass_job.output[0]
-            m_h = eff_mass_job.output[1]
+            # jobflow resolves the lazy output references to floats at run time
+            m_e = cast("float", eff_mass_job.output[0])
+            m_h = cast("float", eff_mass_job.output[1])
         else:
             m_e = (
                 self.effective_mass_electron
@@ -1964,6 +1964,7 @@ class FormationEnergyDiagramFlowMaker:
 
         # Collect jobs (include extraction jobs if created)
         # Handle both single Flow and list of Flows from from_pristine_structure()
+        jobs: list[Flow | Job]
         if isinstance(defect_flows, list):
             jobs = [*defect_flows, plot_job, summary_job]
         else:

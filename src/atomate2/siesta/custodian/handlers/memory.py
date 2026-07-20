@@ -60,8 +60,8 @@ class MemoryHandler(ErrorHandler):
         bool
             True if memory error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         return any(error.error_type == ErrorType.MEMORY for error in errors)
 
     def correct(self, directory: str = "./") -> dict:
@@ -77,7 +77,7 @@ class MemoryHandler(ErrorHandler):
         dict
             Custodian format: {"errors": [...], "actions": [...]}
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
 
         attempt = self.n_applied_corrections + 1
@@ -100,7 +100,7 @@ class MemoryHandler(ErrorHandler):
 
         elif attempt == 3:
             # Level 3: Reduce mesh cutoff
-            current_cutoff = self._get_current_cutoff(directory)
+            current_cutoff = self._get_current_cutoff(dir_path)
             new_cutoff = max(200.0, current_cutoff * 0.85)  # Reduce by 15%
             corrections["Diag.Memory"] = 0.3
             corrections["Diag.ParallelOverK"] = True
@@ -109,7 +109,7 @@ class MemoryHandler(ErrorHandler):
 
         else:
             # Level 4: Reduce basis size (last resort)
-            current_basis = self._get_current_basis(directory)
+            current_basis = self._get_current_basis(dir_path)
             new_basis = self._reduce_basis_size(current_basis)
             corrections["Diag.Memory"] = 0.3
             corrections["Diag.ParallelOverK"] = True
@@ -119,7 +119,7 @@ class MemoryHandler(ErrorHandler):
         logger.info(f"  Strategy: {strategy}")
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_fdf_file(fdf_file, corrections)
 
         return {

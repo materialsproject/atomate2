@@ -8,6 +8,8 @@ This tool provides:
 - Code reduction demonstrations
 """
 
+from typing import Any
+
 import click
 from rich import box
 from rich.console import Console
@@ -23,7 +25,7 @@ from atomate2.siesta.cli.recipe.code_reduction import (
 console = Console()
 
 # Recipe database organized by category
-RECIPES = {
+RECIPES: dict[str, dict[str, Any]] = {
     "complete": {
         "name": "Complete Workflows",
         "recipes": [

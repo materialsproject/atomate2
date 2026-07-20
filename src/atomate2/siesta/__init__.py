@@ -9,7 +9,7 @@ try:
 except ImportError:
     from atomate2.siesta.siesta_settings import ExtendedAtomate2Settings
 
-    SETTINGS = ExtendedAtomate2Settings()
+    SETTINGS = ExtendedAtomate2Settings()  # type: ignore[assignment, call-arg]  # env-populated settings; distinct BaseSettings subclass in fallback branch
 
 # Version information (managed by versioningit)
 try:

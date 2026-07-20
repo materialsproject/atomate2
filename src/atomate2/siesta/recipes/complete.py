@@ -16,6 +16,7 @@ from atomate2.siesta.recipes.mechanical import mechanical_properties
 from atomate2.siesta.recipes.thermal import thermal_properties
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -116,7 +117,7 @@ def complete_material_study(
     elif isinstance(properties, str):
         properties = [properties]
 
-    jobs = []
+    jobs: list[Flow | Job] = []
 
     # Convergence testing (optional, runs first)
     if test_convergence:

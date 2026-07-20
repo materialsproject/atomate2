@@ -21,7 +21,7 @@ def show_workflows() -> None:
     flowmakers = discover_flowmakers()
 
     # Categorize FlowMakers by type
-    categories = {
+    categories: dict[str, list[tuple[str, str | None, str]]] = {
         "Single Jobs": [
             ("RelaxMaker", "Structure relaxation (fixed/variable cell)", "5-15 min"),
             ("StaticMaker", "Single-point energy calculation", "2-5 min"),

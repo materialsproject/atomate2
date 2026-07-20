@@ -20,7 +20,7 @@ __all__ = ["MolecularDynamicsAndRelaxation"]
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_force
@@ -571,6 +571,8 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
             "SIESTA keyword": None,
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

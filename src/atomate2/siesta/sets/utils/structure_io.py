@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -182,7 +182,8 @@ def read_siesta_with_ghost(filename: str | Path, use_xv: bool = False) -> Struct
     else:
         logger.debug("Read SIESTA file with no ghost atoms")
 
-    return structure
+    # siesta_to_pymatgen is typed Structure | Molecule; ghost/defect inputs are crystals
+    return cast("Structure", structure)
 
 
 def write_cif_with_ghost(structure: Structure, filename: str | Path) -> None:

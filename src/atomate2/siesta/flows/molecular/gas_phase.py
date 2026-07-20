@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
-from jobflow import Flow, job
+from jobflow import Flow, Job, job
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker
@@ -152,7 +152,7 @@ class GasPhaseMoleculeMaker(BaseSiestaFlowMaker):
         Flow
             Complete workflow for gas-phase calculation
         """
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # 1. Prepare molecule in box
         molecule_in_box_job = _prepare_molecule_in_box(
@@ -221,7 +221,7 @@ class GasPhaseMoleculeMaker(BaseSiestaFlowMaker):
         if params:
             from atomate2.siesta.powerups import update_user_siesta_settings
 
-            relax_job = update_user_siesta_settings(relax_job, params)
+            relax_job = cast("Job", update_user_siesta_settings(relax_job, params))
 
         jobs.append(relax_job)
 

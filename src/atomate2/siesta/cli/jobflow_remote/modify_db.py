@@ -301,7 +301,7 @@ def _modify_job_in_database(
         database = queue_store.get("database", "jobflow_remote")
         collection_name = queue_store.get("collection_name", "jobs")
 
-        client = MongoClient(host, port)
+        client: MongoClient = MongoClient(host, port)
         db = client[database]
         collection = db[collection_name]
 

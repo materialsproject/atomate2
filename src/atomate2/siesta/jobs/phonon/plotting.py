@@ -100,7 +100,7 @@ def plot_phonon_band_structure(
 
         # Create band structure
         bands = []
-        distances = []
+        distances: list[float] = []
         special_points = [0]
 
         npoints = 51  # Points per segment

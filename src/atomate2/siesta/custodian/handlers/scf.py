@@ -75,8 +75,8 @@ class SCFConvergenceHandler(ErrorHandler):
         bool
             True if SCF convergence error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         return any(error.error_type == ErrorType.SCF_CONVERGENCE for error in errors)
 
     def correct(self, directory: str = "./") -> dict:
@@ -96,7 +96,7 @@ class SCFConvergenceHandler(ErrorHandler):
             Custodian format: {"errors": [...], "actions": [...]}
             Returns {"errors": [...], "actions": None} if unfixable
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
 
         # Use custodian's auto-tracked n_applied_corrections
@@ -207,7 +207,7 @@ class SCFConvergenceHandler(ErrorHandler):
         logger.info(f"  Strategy: {strategy}")
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_fdf_file(fdf_file, corrections)
 
         # Return custodian format

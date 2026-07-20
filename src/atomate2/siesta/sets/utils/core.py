@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import sisl
@@ -487,7 +487,7 @@ def pymatgen_to_ase(
 
     # Check if 'ghost_tags' is available in site properties
     if "ghost_tags" in structure.site_properties:
-        ghost_tags = structure.site_properties["ghost_tags"]
+        ghost_tags = cast("list[bool]", structure.site_properties["ghost_tags"])
         # Adjust atomic numbers based on ghost tags
         atomic_numbers = [
             -num if ghost else num
@@ -675,7 +675,7 @@ def pymatgen_to_sisl(
 
     # Check if 'ghost_tags' is available in site properties
     if "ghost_tags" in structure.site_properties:
-        ghost_tags = structure.site_properties["ghost_tags"]
+        ghost_tags = cast("list[bool]", structure.site_properties["ghost_tags"])
         atomic_numbers = [
             -num if ghost else num
             for num, ghost in zip(atomic_numbers, ghost_tags, strict=False)

@@ -155,7 +155,7 @@ def plot_gruneisen_band_structure(
 
     # Plot Grüneisen parameters (bottom panel)
     # Use colormap for better visualization
-    cmap = plt.cm.get_cmap("RdYlBu_r")
+    cmap = plt.cm.get_cmap("RdYlBu_r")  # type: ignore[attr-defined]  # matplotlib dynamic cm
     for band_idx in range(all_gru.shape[1]):
         gru_values = all_gru[:, band_idx]
         # Normalize colors based on Grüneisen values
@@ -250,8 +250,8 @@ def plot_gruneisen_vs_frequency(
     )
 
     # Extract frequencies and Grüneisen parameters from mesh
-    frequencies = grun_param.frequencies.flatten()
-    gruneisen_values = grun_param.gruneisen.flatten()
+    frequencies = grun_param.frequencies.flatten()  # type: ignore[union-attr]  # pymatgen ndarray
+    gruneisen_values = grun_param.gruneisen.flatten()  # type: ignore[union-attr]  # pymatgen ndarray
 
     # Remove zero/negative frequencies (acoustic modes at gamma)
     mask = frequencies > 0.1  # THz threshold
@@ -389,8 +389,8 @@ def plot_gruneisen_distribution(
     )
 
     # Extract Grüneisen parameters
-    gruneisen_values = grun_param.gruneisen.flatten()
-    frequencies = grun_param.frequencies.flatten()
+    gruneisen_values = grun_param.gruneisen.flatten()  # type: ignore[union-attr]  # pymatgen ndarray
+    frequencies = grun_param.frequencies.flatten()  # type: ignore[union-attr]  # pymatgen ndarray
 
     # Filter physical modes
     mask = frequencies > 0.1  # THz
@@ -404,9 +404,9 @@ def plot_gruneisen_distribution(
     )
 
     # Color bars by value
-    cmap = plt.cm.get_cmap("RdYlBu_r")
+    cmap = plt.cm.get_cmap("RdYlBu_r")  # type: ignore[attr-defined]  # matplotlib dynamic cm
     norm = plt.Normalize(vmin=-3, vmax=3)
-    for i, patch in enumerate(patches):
+    for i, patch in enumerate(patches):  # type: ignore[arg-type]  # BarContainer is iterable
         bin_center = (bin_edges[i] + bin_edges[i + 1]) / 2
         patch.set_facecolor(cmap(norm(bin_center)))
 
@@ -776,7 +776,7 @@ def calculate_thermal_expansion(
     cv_array = np.zeros(n_points)
 
     # Get phonon frequencies and calculate Debye temperature roughly
-    frequencies = grun_param.frequencies.flatten()
+    frequencies = grun_param.frequencies.flatten()  # type: ignore[union-attr]  # pymatgen ndarray
     # Filter physical modes
     mask = frequencies > 0.1
     frequencies = frequencies[mask]

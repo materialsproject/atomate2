@@ -241,7 +241,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
         )
         return None
 
-    def generate_defects(
+    def generate_defects(  # type: ignore[override]  # extends base signature with interstitial_species
         self,
         species: str | list[str] | None = None,
         interstitial_species: str | Element | None = None,

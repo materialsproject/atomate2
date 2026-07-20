@@ -92,7 +92,7 @@ class InputDoc(BaseModel):
                     logger.error(  # noqa: TRY400
                         f"Failed to load compressed parameters: {e}"
                     )
-                    return cls()
+                    return cls()  # type: ignore[call-arg]  # all fields default to None
             else:
                 # Fall back to parsing the FDF file directly
                 logger.warning("siesta_parameters.json not found, parsing FDF file")
@@ -102,7 +102,7 @@ class InputDoc(BaseModel):
                         "Neither siesta_parameters.json nor siesta.fdf found "
                         f"in {calc_doc.dir_name}"
                     )
-                    return cls()
+                    return cls()  # type: ignore[call-arg]  # all fields default to None
 
                 # Parse FDF file
                 siesta_input = cls._parse_fdf_file(fdf_file)
@@ -354,7 +354,7 @@ class OutputDoc(BaseModel):
             The calculation output summary.
         """
         logger.info("OutputDoc.from_siesta_calc_doc()")
-        return cls(
+        return cls(  # type: ignore[call-arg]  # omitted fields default to None
             structure=calc_doc.output.structure,
             energy=calc_doc.output.total_energy,
             efermi=calc_doc.output.efermi,

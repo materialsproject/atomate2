@@ -35,7 +35,7 @@ class BandStructureValidator(SiestaOutputValidator):
         list of str
             Validation error messages
         """
-        errors = super().get_validation_errors(directory)
+        errors = super().get_validation_errors(directory)  # type: ignore[misc]  # BUG: parent defines _get_validation_errors (underscore); this method/call name is wrong and never invoked by check()
 
         # Check for .bands file
         directory = Path(directory)

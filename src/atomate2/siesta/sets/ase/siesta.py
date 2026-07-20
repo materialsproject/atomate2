@@ -66,7 +66,7 @@ class Siesta(FileIOCalculator):
     }
     name = "siesta"
     _legacy_default_command = "siesta < PREFIX.fdf > PREFIX.out"
-    implemented_properties: ClassVar[list[str]] = [
+    implemented_properties: ClassVar[list[str]] = [  # type: ignore[misc]  # ASE BaseCalculator declares this as an instance variable
         "energy",
         "free_energy",
         "forces",

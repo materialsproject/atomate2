@@ -13,7 +13,7 @@ __all__ = ["AuxiliaryForceField"]
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 
@@ -256,6 +256,8 @@ class AuxiliaryForceField(FDFDataclass):
             "SIESTA keyword": "DFTD3.a2",
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

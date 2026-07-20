@@ -76,16 +76,14 @@ class DefectDocument(SiestaTaskDoc):
     mu_removed: float = Field(
         0.0,
         description=(
-            "Chemical potential of removed species (eV), "
-            "for substitution/vacancy"
+            "Chemical potential of removed species (eV), for substitution/vacancy"
         ),
     )
 
     mu_added: float = Field(
         0.0,
         description=(
-            "Chemical potential of added species (eV), "
-            "for substitution/interstitial"
+            "Chemical potential of added species (eV), for substitution/interstitial"
         ),
     )
 

@@ -14,7 +14,7 @@ __all__ = ["KPointSampling"]
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar, cast
 
 from pymatgen.core import Structure
 from pymatgen.io.vasp.inputs import Kpoints
@@ -103,6 +103,8 @@ class KPointSampling(FDFDataclass):
             "SIESTA keyword": None,
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
@@ -224,7 +226,10 @@ class KPointSampling(FDFDataclass):
                 and isinstance(value, (list, tuple))
                 and len(value) == 3
             ):
-                self.k_shift = tuple(float(v) for v in value)
+                self.k_shift = cast(
+                    "tuple[float, float, float]",
+                    tuple(float(v) for v in value),
+                )
 
     def generate_fdf(self) -> dict[str, Any]:
         """
@@ -245,7 +250,7 @@ class KPointSampling(FDFDataclass):
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]KPointSampling.generate_fdf()[/green]")
 
-        fdf = OrderedDict()
+        fdf: OrderedDict[str, Any] = OrderedDict()
         fdf["#KPointSampling"] = "KPointSampling"
 
         # Determine which k-point method to use
@@ -338,7 +343,7 @@ class KPointSampling(FDFDataclass):
 
         # Check for kgrid.cutoff first
         kgrid_cutoff = None
-        k_density = 1000
+        k_density: float = 1000
         if kpoint_settings_instance._user_params:
             for key in kpoint_settings_instance._user_params:
                 if key.lower() in ["kgrid.cutoff", "kgrid_cutoff"]:
@@ -422,9 +427,10 @@ class KPointSampling(FDFDataclass):
                 and all(isinstance(v, (int, float)) for v in kpts_value)
             ):
                 try:
-                    kpoint_settings_instance.k_points = [
-                        tuple(int(v) for v in kpts_value)
-                    ]
+                    kpoint_settings_instance.k_points = cast(
+                        "list[tuple[int, int, int]]",
+                        [tuple(int(v) for v in kpts_value)],
+                    )
                     # Mark as absolute k-points (don't scale with structure size)
                     kpoint_settings_instance._use_absolute_kpts = True
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
@@ -443,9 +449,10 @@ class KPointSampling(FDFDataclass):
                 isinstance(k, (list, tuple)) and len(k) == 3 for k in kpts_value
             ):
                 try:
-                    kpoint_settings_instance.k_points = [
-                        tuple(int(v) for v in k) for k in kpts_value
-                    ]
+                    kpoint_settings_instance.k_points = cast(
+                        "list[tuple[int, int, int]]",
+                        [tuple(int(v) for v in k) for k in kpts_value],
+                    )
                     # Mark as absolute k-points (don't scale with structure size)
                     kpoint_settings_instance._use_absolute_kpts = True
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
@@ -472,11 +479,14 @@ class KPointSampling(FDFDataclass):
                     "generating k-points with k_density.[/blue]"
                 )
             try:
-                kpoints = Kpoints.automatic_density_by_vol(structure, k_density)
+                kpoints = Kpoints.automatic_density_by_vol(
+                    structure, cast("int", k_density)
+                )
                 if kpoints.kpts and len(kpoints.kpts[0]) == 3:
-                    kpoint_settings_instance.k_points = [
-                        tuple(int(max(1, round(v))) for v in kpoints.kpts[0])
-                    ]
+                    kpoint_settings_instance.k_points = cast(
+                        "list[tuple[int, int, int]]",
+                        [tuple(int(max(1, round(v))) for v in kpoints.kpts[0])],
+                    )
                 else:
                     if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
                         console.print(
@@ -540,8 +550,9 @@ class KPointSampling(FDFDataclass):
                     and len(value) == 3
                 ):
                     try:
-                        kpoint_settings_instance.k_shift = tuple(
-                            float(v) for v in value
+                        kpoint_settings_instance.k_shift = cast(
+                            "tuple[float, float, float]",
+                            tuple(float(v) for v in value),
                         )
                     except (ValueError, TypeError):
                         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
@@ -599,4 +610,4 @@ class KPointSampling(FDFDataclass):
         # Call generate_fdf() which uses the current dataclass attributes
         # (these have been updated from user_params/powerups/tiers
         # via update_from_fdf())
-        self.kpoint_fdf_arguments = self.generate_fdf()
+        self.kpoint_fdf_arguments = cast("OrderedDict[str, Any]", self.generate_fdf())

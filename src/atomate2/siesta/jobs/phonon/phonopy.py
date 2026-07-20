@@ -101,13 +101,13 @@ class PhonopyMaker(Maker):
             # Propagate to relax_maker
             if self.relax_maker and hasattr(self.relax_maker, "dry_run"):
                 self.relax_maker.dry_run = True
-                self.relax_maker.dry_run_output_dir = self.dry_run_output_dir
-                self.relax_maker.dry_run_format = self.dry_run_format
+                self.relax_maker.dry_run_output_dir = self.dry_run_output_dir  # type: ignore[attr-defined]  # dynamic maker attr
+                self.relax_maker.dry_run_format = self.dry_run_format  # type: ignore[attr-defined]  # dynamic maker attr
             # Propagate to static_maker
             if self.static_maker and hasattr(self.static_maker, "dry_run"):
                 self.static_maker.dry_run = True
-                self.static_maker.dry_run_output_dir = self.dry_run_output_dir
-                self.static_maker.dry_run_format = self.dry_run_format
+                self.static_maker.dry_run_output_dir = self.dry_run_output_dir  # type: ignore[attr-defined]  # dynamic maker attr
+                self.static_maker.dry_run_format = self.dry_run_format  # type: ignore[attr-defined]  # dynamic maker attr
 
     def make(
         self,
@@ -149,8 +149,8 @@ class PhonopyMaker(Maker):
             relax = self.relax_maker.make(structure, prev_dir=prev_dir)
             relax.name = f"{self.name}_relax"
             jobs.append(relax)
-            structure = relax.output.structure
-            prev_dir = relax.output.dir_name
+            structure = relax.output.structure  # type: ignore[assignment]  # jobflow OutputReference
+            prev_dir = relax.output.dir_name  # type: ignore[assignment]  # jobflow OutputReference
 
         # Step 2: Generate supercell and displacements
         logger.info("Generating displacements")
@@ -335,7 +335,7 @@ def run_force_calculations(
     displaced_structures: list[Structure],
     static_maker: Maker,
     prev_dir: str | Path | None = None,
-) -> dict[str, Any]:
+) -> Response:
     """
     Run SIESTA force calculations for displaced structures.
 
@@ -528,7 +528,7 @@ def run_phonopy_analysis(
     # Calculate phonon frequencies and check for imaginary modes
     phonon.run_mesh(mesh)
     mesh_dict = phonon.get_mesh_dict()
-    frequencies = mesh_dict["frequencies"]
+    frequencies = mesh_dict["frequencies"]  # type: ignore[typeddict-item]  # phonopy mesh dict
 
     results["has_imaginary_frequencies"] = bool(np.any(frequencies < -0.01))
     results["min_frequency"] = float(np.min(frequencies))
@@ -591,26 +591,26 @@ def run_phonopy_analysis(
     # Call the underlying functions (without job decorator) using .original
     # This avoids creating separate job objects
     try:
-        plot_phonon_band_structure.original(phonon_doc=results, output_dir=output_dir)
+        plot_phonon_band_structure.original(phonon_doc=results, output_dir=output_dir)  # type: ignore[attr-defined]  # jobflow @job .original
         logger.info("Generated phonon band structure plot")
     except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate band structure plot: {e}")
 
     try:
-        plot_phonon_dos.original(phonon_doc=results, output_dir=output_dir)
+        plot_phonon_dos.original(phonon_doc=results, output_dir=output_dir)  # type: ignore[attr-defined]  # jobflow @job .original
         logger.info("Generated phonon DOS plot")
     except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate DOS plot: {e}")
 
     if create_thermal_properties:
         try:
-            plot_thermal_properties.original(phonon_doc=results, output_dir=output_dir)
+            plot_thermal_properties.original(phonon_doc=results, output_dir=output_dir)  # type: ignore[attr-defined]  # jobflow @job .original
             logger.info("Generated thermal properties plot")
         except Exception as e:  # noqa: BLE001
             logger.warning(f"Failed to generate thermal properties plot: {e}")
 
     try:
-        write_phonon_summary.original(phonon_doc=results, output_dir=output_dir)
+        write_phonon_summary.original(phonon_doc=results, output_dir=output_dir)  # type: ignore[attr-defined]  # jobflow @job .original
         logger.info("Generated phonon summary file")
     except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to generate summary file: {e}")

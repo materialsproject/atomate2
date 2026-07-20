@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from typing import TypedDict
@@ -206,7 +206,10 @@ def get_band_gap_from_eig(filepath: str | Path) -> BandGapInfo:
     logger.info(f"get_band_gap_from_eig({filepath})")
 
     eig_data = parse_eig_file(filepath)
-    gap_info = calculate_band_gap(eig_data["eigenvalues"], eig_data["fermi_energy"])
+    gap_info = calculate_band_gap(
+        cast("list[float]", eig_data["eigenvalues"]),
+        cast("float", eig_data["fermi_energy"]),
+    )
 
     logger.info(
         f"Band gap analysis: VBM={gap_info['vbm']:.3f} eV, "

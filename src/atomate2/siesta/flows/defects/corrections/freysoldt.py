@@ -73,6 +73,11 @@ class FreysoldtCorrection(CorrectionScheme):
     - Potential alignment set to 0 with a warning
     """  # noqa: RUF002
 
+    # Freysoldt stores the dielectric tensor as a numpy array (base class uses a
+    # list); annotate the narrowed types used throughout this subclass.
+    epsilon_tensor: np.ndarray | None  # type: ignore[assignment]  # ndarray override of base list
+    epsilon_avg: float
+
     def __init__(
         self,
         epsilon_static: float | list[float],
@@ -119,7 +124,7 @@ class FreysoldtCorrection(CorrectionScheme):
                     "Anisotropic epsilon must have 3 components [ε_xx, ε_yy, ε_zz]"
                 )
             self.epsilon_tensor = np.array(epsilon_static)
-            self.epsilon_avg = np.mean(self.epsilon_tensor)
+            self.epsilon_avg = float(np.mean(self.epsilon_tensor))
             self.is_anisotropic = True
         else:
             self.epsilon_tensor = np.array([epsilon_static] * 3)
@@ -360,6 +365,7 @@ class FreysoldtCorrection(CorrectionScheme):
             scheme_name=self.name,
             metadata=metadata,
             charge_model=self.charge_model,
+            alignment_energy=None,
             converged=True,
             warnings=warnings,
         )

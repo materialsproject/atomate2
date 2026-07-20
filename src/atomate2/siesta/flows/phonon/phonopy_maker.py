@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Maker
 
@@ -16,6 +16,7 @@ from atomate2.siesta.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class SiestaPhononFlowMaker(PhonopyMaker):
 
         # Create default static maker if not provided
         if self.static_maker is None:
-            user_params = OrderedDict(
+            user_params: OrderedDict[str, Any] = OrderedDict(
                 {
                     "PAO.BasisSize": "DZP",
                     "Mesh.Cutoff": "300 Ry",  # Use "Mesh.Cutoff" with dot
@@ -210,7 +211,7 @@ class PhononConvergenceFlowMaker(BaseSiestaFlowMaker):
 
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
 
-        jobs = []
+        jobs: list[Job | Flow] = []
 
         for i, supercell_matrix in enumerate(self.supercell_sizes):
             for j, displacement in enumerate(self.displacement_values):

@@ -261,11 +261,16 @@ def _build_auto_resources(
         try:
             from atomate2.siesta.cluster_profiles import ClusterProfile
 
-            predefined = {p.name: p for p in ClusterProfile.list_predefined()}
+            # NOTE: iterating a dict yields its str keys, so ``p`` here is a
+            # profile-name string, not a ClusterProfile (see flagged bug below).
+            predefined = {
+                p.name: p  # type: ignore[attr-defined]  # BUG: p is a str key, not ClusterProfile
+                for p in ClusterProfile.list_predefined()
+            }
             if profile_name in predefined:
                 profile = predefined[profile_name]
                 console.print(
-                    f"[green]>[/green] Using cluster profile: {profile.summary()}"
+                    f"[green]>[/green] Using cluster profile: {profile.summary()}"  # type: ignore[attr-defined]  # BUG: profile is a str, see above
                 )
             else:
                 console.print(
@@ -280,7 +285,7 @@ def _build_auto_resources(
             )
 
     if profile:
-        resources = _estimate_resources(num_atoms, profile=profile)
+        resources = _estimate_resources(num_atoms, profile=profile)  # type: ignore[arg-type]  # BUG: profile is a str, see above
     else:
         resources = _estimate_resources_heuristic(num_atoms)
 
@@ -440,6 +445,7 @@ def _update_resources_in_db(
         username = queue_store.get("username")
         password = queue_store.get("password")
 
+        client: MongoClient
         if username and password:
             client = MongoClient(
                 host, port, username=username, password=password, authSource=database

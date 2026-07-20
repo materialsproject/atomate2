@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from types import TracebackType
-    from typing import Any, TextIO
+    from typing import Any, Literal, TextIO
 
 
 def get_standard_header(
@@ -205,7 +205,7 @@ class TextFileWriter:
         self.width = width
         self.include_timestamp = include_timestamp
         self.additional_info = additional_info
-        self._file = None
+        self._file: TextIO | None = None
 
     def __enter__(self) -> TextIO:
         """Open file and write header."""
@@ -219,7 +219,7 @@ class TextFileWriter:
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
-    ) -> bool:
+    ) -> Literal[False]:
         """Write footer and close file."""
         if self._file:
             footer = get_standard_footer(

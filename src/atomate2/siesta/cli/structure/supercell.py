@@ -275,7 +275,7 @@ def supercell(
             from pymatgen.io.xcrysden import XSF
 
             xsf = XSF(supercell_structure)
-            xsf.to_file(output)
+            xsf.to_file(output)  # type: ignore[attr-defined]  # pymatgen XSF API (see flagged note)
         elif format == "json":
             supercell_structure.to(filename=output, fmt="json")
 

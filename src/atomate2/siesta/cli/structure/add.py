@@ -5,6 +5,8 @@ This module provides the `add` subcommand for atomate2siesta-structure.
 
 from __future__ import annotations
 
+from typing import Any
+
 import click
 import numpy as np
 from pymatgen.core import Element, Molecule, Structure
@@ -14,7 +16,7 @@ from rich.table import Table
 console = Console()
 
 # Simple molecule library
-MOLECULE_LIBRARY = {
+MOLECULE_LIBRARY: dict[str, dict[str, Any]] = {
     "H2": {
         "species": ["H", "H"],
         "coords": [[0.0, 0.0, 0.0], [0.74, 0.0, 0.0]],
@@ -214,8 +216,8 @@ def add(
         console.print(f"  Sites: {structure.num_sites}")
 
         # Determine what to add
-        new_species = []
-        new_coords = []
+        new_species: list[str] = []
+        new_coords: Any = []
 
         if element:
             # Single atom

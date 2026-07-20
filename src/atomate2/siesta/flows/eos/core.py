@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow, Maker, job
 
@@ -17,6 +17,7 @@ from atomate2.siesta.powerups import update_user_siesta_settings
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Job
     from pymatgen.core import Structure
 
     from atomate2.common.jobs.eos import EOSPostProcessor  # noqa: F401
@@ -345,7 +346,7 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             )
 
         # Create EOS jobs for each basis size × parameter combination  # noqa: RUF003
-        eos_jobs = []
+        eos_jobs: list[Flow] = []
         job_metadata = []
 
         # Calculate total jobs across all EOS workflows
@@ -404,19 +405,21 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
                     if self.a2s_kpts is not None:
                         basis_params["a2s_kpts"] = self.a2s_kpts
 
-                    eos_flow = update_user_siesta_settings(eos_flow, basis_params)
+                    eos_flow = cast(
+                        "Flow", update_user_siesta_settings(eos_flow, basis_params)
+                    )
                     eos_flow.name = f"{self.name}-{label}"
 
                     # Rename the plot and summary jobs to include parameters in filename
                     for eos_job in eos_flow.jobs:
                         if "plot" in eos_job.name.lower():
                             # Update the output_file parameter for plot
-                            eos_job.function_kwargs["output_file"] = (
+                            cast("Job", eos_job).function_kwargs["output_file"] = (
                                 f"eos_fit_{label}.png"
                             )
                         elif "summary" in eos_job.name.lower():
                             # Update the output_file parameter for summary
-                            eos_job.function_kwargs["output_file"] = (
+                            cast("Job", eos_job).function_kwargs["output_file"] = (
                                 f"eos_summary_{label}.txt"
                             )
 
@@ -446,7 +449,7 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         unified_output_job.name = f"{self.name}-outputs"
 
         # Combine all jobs into workflow
-        all_jobs = [*eos_jobs, collect_job, unified_output_job]
+        all_jobs: list[Job | Flow] = [*eos_jobs, collect_job, unified_output_job]
         flow = Flow(all_jobs, output=unified_output_job.output, name=self.name)
 
         logger.info(
@@ -885,7 +888,7 @@ def plot_eos_parameter_fits_from_data(
 
             try:
                 eos = EOS(eos_name="birch_murnaghan")
-                eos_fit = eos.fit(volumes, energies)
+                eos_fit = eos.fit(volumes, energies)  # type: ignore[arg-type]  # EOS.fit accepts ndarray at runtime
 
                 # Generate smooth curve
                 v_fit = np.linspace(volumes.min() * 0.95, volumes.max() * 1.05, 100)
@@ -1603,7 +1606,7 @@ def generate_eos_full_basis_outputs(
 
     # Generate combined EOS plot
     plot_file = output_path / "eos_parameter_fits_combined.png"
-    result = plot_eos_parameter_fits_from_data.__wrapped__(
+    result = plot_eos_parameter_fits_from_data.__wrapped__(  # type: ignore[attr-defined]  # @job wraps fn; __wrapped__ set by functools.wraps
         data=data, output_file=str(plot_file)
     )
     output_files["combined_plot"] = result.get("plot")
@@ -1611,7 +1614,7 @@ def generate_eos_full_basis_outputs(
 
     # Generate timing plot
     timing_file = output_path / "eos_timing.png"
-    result = plot_eos_parameter_timing.__wrapped__(
+    result = plot_eos_parameter_timing.__wrapped__(  # type: ignore[attr-defined]  # @job wraps fn; __wrapped__ set by functools.wraps
         data=data, output_file=str(timing_file)
     )
     output_files["timing_plot"] = result.get("plot")
@@ -1619,7 +1622,7 @@ def generate_eos_full_basis_outputs(
 
     # Generate summary
     summary_file = output_path / "eos_parameter_convergence_summary.txt"
-    result = write_eos_parameter_summary.__wrapped__(
+    result = write_eos_parameter_summary.__wrapped__(  # type: ignore[attr-defined]  # @job wraps fn; __wrapped__ set by functools.wraps
         data=data, output_file=str(summary_file)
     )
     output_files["summary"] = result.get("summary")

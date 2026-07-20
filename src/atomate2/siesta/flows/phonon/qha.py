@@ -119,11 +119,11 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
     name: str = "siesta qha"
     structure_optimizer: RelaxMaker | None = field(default_factory=RelaxMaker)
     eos_maker: SiestaEosFlowMaker | None = None
-    phonon_maker: PhonopyMaker = field(default_factory=PhonopyMaker)
+    phonon_maker: PhonopyMaker = field(default_factory=PhonopyMaker)  # type: ignore[assignment]  # SIESTA PhonopyMaker replaces BasePhononMaker
     number_of_frames: int = 5
     ignore_imaginary_modes: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
-    pressure: float | list[float] = 0.0
+    pressure: float | list[float] = 0.0  # type: ignore[assignment]  # SIESTA allows a list of pressures
     temperature: float | list[float] = field(
         default_factory=lambda: [
             0.0,
@@ -152,7 +152,7 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
         """
         # Map structure_optimizer to parent class parameters
         # CommonQhaMaker expects initial_relax_maker and eos_relax_maker
-        self.initial_relax_maker = self.structure_optimizer
+        self.initial_relax_maker = self.structure_optimizer  # type: ignore[assignment]  # SIESTA RelaxMaker replaces VASP/FF maker
 
         # Create eos_relax_maker with same user_params as structure_optimizer
         # to preserve k-points and other settings
@@ -162,11 +162,11 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
             user_params = getattr(
                 self.structure_optimizer.input_set_generator, "user_params", {}
             )
-            self.eos_relax_maker = RelaxMaker.fixed_cell_relaxation(
+            self.eos_relax_maker = RelaxMaker.fixed_cell_relaxation(  # type: ignore[assignment]  # SIESTA RelaxMaker replaces VASP/FF maker
                 user_params=user_params
             )
         else:
-            self.eos_relax_maker = RelaxMaker.fixed_cell_relaxation()
+            self.eos_relax_maker = RelaxMaker.fixed_cell_relaxation()  # type: ignore[assignment]  # SIESTA RelaxMaker replaces VASP/FF maker
 
         # Create default EOS maker if not provided
         if self.eos_maker is None:
@@ -196,11 +196,11 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
         # Add compatibility attributes for CommonQhaMaker.__post_init__
         # PhonopyMaker uses different attribute names than VASP's BasePhononMaker
         if not hasattr(self.phonon_maker, "bulk_relax_maker"):
-            self.phonon_maker.bulk_relax_maker = getattr(
+            self.phonon_maker.bulk_relax_maker = getattr(  # type: ignore[attr-defined]  # compat attr for CommonQhaMaker
                 self.phonon_maker, "relax_maker", None
             )
         if not hasattr(self.phonon_maker, "static_energy_maker"):
-            self.phonon_maker.static_energy_maker = getattr(
+            self.phonon_maker.static_energy_maker = getattr(  # type: ignore[attr-defined]  # compat attr for CommonQhaMaker
                 self.phonon_maker, "static_maker", None
             )
 
@@ -221,7 +221,7 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
         """
         return "prev_dir"
 
-    def make(self, structure: Structure) -> Flow:
+    def make(self, structure: Structure) -> Flow:  # type: ignore[override]  # SIESTA fixes supercell_matrix/prev_dir internally
         """
         Create the quasi-harmonic approximation workflow.
 
@@ -308,7 +308,7 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
             )
 
         # Call parent implementation with supercell_matrix if available
-        return super().make(structure=structure, supercell_matrix=supercell_matrix)
+        return super().make(structure=structure, supercell_matrix=supercell_matrix)  # type: ignore[arg-type]  # list supercell accepted at runtime
 
     def _validate_structure(self, structure: Structure) -> None:
         """

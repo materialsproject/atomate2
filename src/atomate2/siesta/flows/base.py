@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Maker
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +153,7 @@ class BaseSiestaFlowMaker(Maker):
         """
         # Get all field names from the dataclass
         if hasattr(self, "__dataclass_fields__"):
-            field_names = self.__dataclass_fields__.keys()
+            field_names: Iterable[str] = self.__dataclass_fields__.keys()
         else:
             # Fallback for non-dataclass makers
             field_names = [
@@ -186,9 +189,9 @@ class BaseSiestaFlowMaker(Maker):
         maker_name : str
             Name of the maker (for logging).
         """
-        maker.dry_run = True
-        maker.dry_run_output_dir = self.dry_run_output_dir
-        maker.dry_run_format = self.dry_run_format
+        maker.dry_run = True  # type: ignore[attr-defined]  # SIESTA makers carry dry_run fields (guarded by hasattr)
+        maker.dry_run_output_dir = self.dry_run_output_dir  # type: ignore[attr-defined]  # SIESTA maker field
+        maker.dry_run_format = self.dry_run_format  # type: ignore[attr-defined]  # SIESTA maker field
 
         logger.info(
             f"  → Enabled dry_run for {maker_name} (type: {maker.__class__.__name__})"
@@ -211,7 +214,7 @@ class BaseSiestaFlowMaker(Maker):
         """
         # Get all field names from the dataclass
         if hasattr(self, "__dataclass_fields__"):
-            field_names = self.__dataclass_fields__.keys()
+            field_names: Iterable[str] = self.__dataclass_fields__.keys()
         else:
             # Fallback for non-dataclass makers
             field_names = [
@@ -278,10 +281,10 @@ class BaseSiestaFlowMaker(Maker):
         >>> self.propagate_custodian_to_maker(maker)  # Propagate settings
         """
         if self.use_custodian:
-            maker.use_custodian = True
-            maker.custodian_max_errors = self.custodian_max_errors
+            maker.use_custodian = True  # type: ignore[attr-defined]  # SIESTA maker field
+            maker.custodian_max_errors = self.custodian_max_errors  # type: ignore[attr-defined]  # SIESTA maker field
             if self.custodian_handlers is not None:
-                maker.custodian_handlers = self.custodian_handlers
+                maker.custodian_handlers = self.custodian_handlers  # type: ignore[attr-defined]  # SIESTA maker field
 
     def _propagate_tier(self) -> None:
         """
@@ -296,7 +299,7 @@ class BaseSiestaFlowMaker(Maker):
         """
         # Get all field names from the dataclass
         if hasattr(self, "__dataclass_fields__"):
-            field_names = self.__dataclass_fields__.keys()
+            field_names: Iterable[str] = self.__dataclass_fields__.keys()
         else:
             # Fallback for non-dataclass makers
             field_names = [
@@ -339,9 +342,9 @@ class BaseSiestaFlowMaker(Maker):
         maker_name : str
             Name of the maker (for logging).
         """
-        if hasattr(maker.input_set_generator, "tier"):
+        if hasattr(maker.input_set_generator, "tier"):  # type: ignore[attr-defined]  # SIESTA maker field
             # Get the current generator and its EXPLICIT user params only
-            current_gen = maker.input_set_generator
+            current_gen = maker.input_set_generator  # type: ignore[attr-defined]  # SIESTA maker field
             generator_class = current_gen.__class__
 
             # Use _explicit_user_params to preserve ONLY user-set params,
@@ -350,7 +353,7 @@ class BaseSiestaFlowMaker(Maker):
 
             # Recreate the generator with new tier and only explicit params
             # The new tier defaults will be applied, and explicit params will override
-            maker.input_set_generator = generator_class(
+            maker.input_set_generator = generator_class(  # type: ignore[attr-defined]  # SIESTA maker field
                 user_params=explicit_params,  # Only explicit user params
                 tier=self.tier,  # New tier
             )
@@ -383,7 +386,7 @@ class BaseSiestaFlowMaker(Maker):
         Handles both single makers and lists of makers (for multi-maker flows).
         """
         if hasattr(self, "__dataclass_fields__"):
-            field_names = self.__dataclass_fields__.keys()
+            field_names: Iterable[str] = self.__dataclass_fields__.keys()
         else:
             field_names = [
                 name
@@ -448,4 +451,4 @@ class BaseSiestaFlowMaker(Maker):
         >>> self.propagate_manager_config_to_maker(maker)  # Propagate settings
         """
         if self.manager_config is not None:
-            maker.manager_config = self.manager_config
+            maker.manager_config = self.manager_config  # type: ignore[attr-defined]  # SIESTA maker field

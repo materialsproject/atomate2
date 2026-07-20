@@ -7,7 +7,7 @@ import os
 import shutil
 from glob import glob
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from monty.serialization import loadfn
 from rich.console import Console
@@ -151,7 +151,9 @@ def write_siesta_input_set(
         structure,
         prev_dir=prev_dir,
     )
-    siesta_fdf_is.write_siesta_fdf(structure=structure, directory=directory)
+    siesta_fdf_is.write_siesta_fdf(
+        structure=cast("Structure", structure), directory=directory
+    )
 
     # Handle Lua script files for FLOS (if MD.TypeOfRun is set to 'LUA')
     lua = siesta_fdf_is.siesta_input.parameters
@@ -352,7 +354,7 @@ def extract_siesta_timing(dir_name: str | Path) -> float | None:
                         match = re.search(
                             r"timer:\s+Total elapsed wall-clock time "
                             r"\(sec\)\s+=\s+([\d.]+)",
-                            line,
+                            cast("str", line),
                         )
                         if match:
                             return float(match.group(1))
@@ -379,7 +381,7 @@ def extract_siesta_timing(dir_name: str | Path) -> float | None:
                         match = re.search(
                             r"timer:\s+(?:Total elapsed |Elapsed )"
                             r"wall(?:-clock)? time \(sec\)\s+=\s+([\d.]+)",
-                            line,
+                            cast("str", line),
                         )
                         if match:
                             return float(match.group(1))

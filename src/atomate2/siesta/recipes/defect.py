@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from atomate2.siesta.flows.defects import DefectFlowMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
@@ -106,7 +106,7 @@ def complete_defect_study(
             epsilon_static = 12.0
         logger.info(f"Auto-estimated epsilon_static = {epsilon_static}")
 
-    all_flows = []
+    all_flows: list[Flow] = []
 
     # Generate all vacancies
     logger.info("Generating vacancy defects...")
@@ -120,7 +120,7 @@ def complete_defect_study(
         auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
-    all_flows.extend(vacancy_flows)
+    all_flows.extend(cast("list[Flow]", vacancy_flows))
     logger.info(f"  → Generated {len(vacancy_flows)} vacancy flows")
 
     # Generate antisite defects (or dopant substitutions)
@@ -136,7 +136,7 @@ def complete_defect_study(
         auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
         dry_run=dry_run,
     )
-    all_flows.extend(substitution_flows)
+    all_flows.extend(cast("list[Flow]", substitution_flows))
     logger.info(f"  → Generated {len(substitution_flows)} substitution flows")
 
     # Generate interstitial defects (if species provided)
@@ -154,7 +154,7 @@ def complete_defect_study(
                 auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
                 dry_run=dry_run,
             )
-            all_flows.extend(interstitial_flows)
+            all_flows.extend(cast("list[Flow]", interstitial_flows))
             logger.info(
                 f"  → Generated {len(interstitial_flows)} {species} interstitial flows"
             )
@@ -238,7 +238,7 @@ def vacancy_study(
     )
 
     logger.info(f"Generated {len(flows)} vacancy flows")
-    return flows
+    return cast("list[Flow]", flows)
 
 
 def substitution_study(
@@ -327,7 +327,7 @@ def substitution_study(
         epsilon_static = 10.0 if analysis.is_metal else 8.0
         logger.info(f"Auto-estimated epsilon_static = {epsilon_static}")
 
-    all_flows = []
+    all_flows: list[Flow] = []
     for dopant in dopants:
         flows = DefectFlowMaker.from_pristine_structure(
             structure,
@@ -341,7 +341,7 @@ def substitution_study(
             auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
             dry_run=dry_run,
         )
-        all_flows.extend(flows)
+        all_flows.extend(cast("list[Flow]", flows))
         logger.info(f"Generated {len(flows)} {dopant} substitution flows")
 
     logger.info(f"Total substitution flows: {len(all_flows)}")
@@ -424,7 +424,7 @@ def antisite_study(
     )
 
     logger.info(f"Generated {len(flows)} antisite flows")
-    return flows
+    return cast("list[Flow]", flows)
 
 
 def interstitial_study(
@@ -508,7 +508,7 @@ def interstitial_study(
         epsilon_static = 10.0 if analysis.is_metal else 8.0
         logger.info(f"Auto-estimated epsilon_static = {epsilon_static}")
 
-    all_flows = []
+    all_flows: list[Flow] = []
     for spec in species:
         flows = DefectFlowMaker.from_pristine_structure(
             structure,
@@ -521,7 +521,7 @@ def interstitial_study(
             auto_calculate_chemical_potentials=auto_calculate_chemical_potentials,
             dry_run=dry_run,
         )
-        all_flows.extend(flows)
+        all_flows.extend(cast("list[Flow]", flows))
         logger.info(f"Generated {len(flows)} {spec} interstitial flows")
 
     logger.info(f"Total interstitial flows: {len(all_flows)}")

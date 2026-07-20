@@ -8,7 +8,7 @@ import os
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from ase.units import Ry
 from monty.json import MontyDecoder, MontyEncoder
@@ -309,7 +309,7 @@ class SiestaInputSet(InputSet):
     def __init__(
         self,
         structure: Structure | Molecule,
-        siesta_input: Siesta = Siesta,
+        siesta_input: Siesta = Siesta,  # type: ignore[assignment]  # default is the Siesta class placeholder; real usage passes an instance
     ) -> None:
         """
         Construct the SiestaInputSet.
@@ -326,7 +326,8 @@ class SiestaInputSet(InputSet):
 
         super().__init__(
             inputs={
-                SIESTA_FDF_FILE_NAME: siesta_input,
+                # ASE Siesta calculator stored in an InputFile slot (dynamic external)
+                SIESTA_FDF_FILE_NAME: siesta_input,  # type: ignore[dict-item]
                 SIESTA_PARAMS_JSON_FILE_NAME: json.dumps(
                     self._siesta_input.parameters, cls=MontyEncoder
                 ),
@@ -337,7 +338,7 @@ class SiestaInputSet(InputSet):
     def siesta_input(self) -> Siesta:
         """Get the Siesta object."""
         logger.info("SiestaInputSet.siesta_input()")
-        return self[SIESTA_FDF_FILE_NAME]
+        return cast("Siesta", self[SIESTA_FDF_FILE_NAME])
 
     @property
     def params_json(self) -> str | slice | InputFile:
@@ -378,7 +379,9 @@ class SiestaInputSet(InputSet):
             os.chdir(directory)
 
             # Write the FDF file using write_siesta_fdf()
-            self.write_siesta_fdf(self._structure, directory=directory)
+            self.write_siesta_fdf(
+                cast("Structure", self._structure), directory=directory
+            )
 
         finally:
             os.chdir(old_cwd)
@@ -396,7 +399,8 @@ class SiestaInputSet(InputSet):
 
         ase_atoms = pymatgen_to_ase(structure=structure)
         # Ensure the latest calculator settings are used
-        self.siesta_input.write_input(ase_atoms, "energy")  #'density'
+        # ASE calculator: "energy" passed as the `properties` argument (dynamic)
+        self.siesta_input.write_input(ase_atoms, "energy")  # type: ignore[arg-type]  #'density'
         siesta_fdf_to_json(
             "siesta.fdf", json_output_path=SIESTA_PARAMS_JSON_FILE_NAME
         )  # "siesta_parameters.json"
@@ -755,7 +759,7 @@ class SiestaInputGenerator(InputGenerator):
         self,
         structure: Structure | Molecule,
         prev_parameters: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> Siesta:
         """
         Generate SIESTA input parameters.
 
@@ -991,7 +995,7 @@ class SiestaInputGenerator(InputGenerator):
                 pseudo_path=pseudos_settings.pseudo_path,
                 xc_functional=xc_functional,
                 xc_authors=xc_authors,
-                structure=structure,
+                structure=cast("Structure", structure),
             )
 
         # For lua
@@ -1572,7 +1576,7 @@ class SiestaInputGenerator(InputGenerator):
         # Group known FDF parameters by which dataclass handles them
         from atomate2.siesta.dataclass.base import FDFDataclass
 
-        params_by_dataclass = {}
+        params_by_dataclass: dict[Any, dict[str, Any]] = {}
         for key, value in known_params.items():
             handler = FDFDataclass.get_handler(key)
             if handler not in params_by_dataclass:

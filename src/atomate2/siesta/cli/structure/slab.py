@@ -533,7 +533,7 @@ def _display_slab_info(
 
     # Count layers (group atoms by z-coordinate with tolerance 0.5 Å)
     z_coords = coords[:, 2]
-    unique_z = []
+    unique_z: list[float] = []
     for z in sorted(z_coords):
         if not unique_z or abs(z - unique_z[-1]) > 0.5:
             unique_z.append(z)
@@ -560,7 +560,7 @@ def _display_slab_info(
     # Surface composition
     surface_sites = _get_surface_sites(slab)
     if surface_sites:
-        species_count = {}
+        species_count: dict[str, int] = {}
         for site in surface_sites[:5]:  # Top 5 surface atoms
             species = str(site.specie)
             species_count[species] = species_count.get(species, 0) + 1
@@ -592,7 +592,7 @@ def _display_layer_info(slab: Structure) -> None:
     z_coords = coords[:, 2]
 
     # Find unique layers (tolerance 0.5 Å)
-    unique_z = []
+    unique_z: list[float] = []
     for z in sorted(z_coords):
         if not unique_z or abs(z - unique_z[-1]) > 0.5:
             unique_z.append(z)

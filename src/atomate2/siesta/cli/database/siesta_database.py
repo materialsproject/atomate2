@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import click
 from rich import box
 from rich.console import Console
@@ -39,7 +41,9 @@ def test_mongodb_connection(
         from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
         # Create connection with timeout
-        client = MongoClient(host=host, port=port, serverSelectionTimeoutMS=5000)
+        client: MongoClient = MongoClient(
+            host=host, port=port, serverSelectionTimeoutMS=5000
+        )
 
         # Test connection
         client.admin.command("ping")
@@ -406,7 +410,7 @@ def query(
 
     try:
         # Build query dictionary based on provided options
-        query_dict = {}
+        query_dict: dict[str, Any] = {}
         query_parts = []
 
         if formula:
@@ -2057,7 +2061,7 @@ tail -n 5 {log_dir}/mongod.log 2>/dev/null || echo "No log file found"
             # Start service if requested
             if start_service:
                 console.print("\n[yellow]Starting MongoDB service...[/yellow]")
-                result = subprocess.run(
+                result = subprocess.run(  # type: ignore[assignment]  # bytes vs str CompletedProcess, reused var
                     ["sudo", "systemctl", "start", "mongod"],  # noqa: S607
                     capture_output=True,
                     check=False,

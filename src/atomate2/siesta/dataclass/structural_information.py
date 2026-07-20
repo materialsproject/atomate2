@@ -13,7 +13,7 @@ __all__ = ["StructuralInformationVersion1", "StructuralInformationVersion2"]
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 
@@ -69,6 +69,8 @@ class StructuralInformationVersion1(FDFDataclass):
             "SIESTA keyword": "AtomicCoordinatesFormat",
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
@@ -212,6 +214,8 @@ class StructuralInformationVersion2(FDFDataclass):
             "SIESTA keyword": "%block Geometry.Constraints",
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

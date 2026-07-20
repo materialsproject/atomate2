@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow, job
 
@@ -32,6 +32,7 @@ from atomate2.siesta.jobs.core import StaticMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Maker
     from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
@@ -149,7 +150,10 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
             # Create static maker with updated parameters
             from atomate2.siesta.powerups import update_user_siesta_settings
 
-            maker = update_user_siesta_settings(self.static_maker, user_params)
+            maker = cast(
+                "Maker",
+                update_user_siesta_settings(self.static_maker, user_params),
+            )
 
             # Generate job with counter
             job = maker.make(structure, prev_dir=prev_dir)

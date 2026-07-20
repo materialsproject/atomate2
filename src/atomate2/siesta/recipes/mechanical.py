@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow
 
@@ -14,6 +14,7 @@ from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -84,7 +85,7 @@ def mechanical_properties(
         if preset is None:
             preset = analysis.recommended_preset
 
-        auto_user_params = {
+        auto_user_params: dict[str, Any] = {
             "a2s_kpts": analysis.recommended_kpts,
             "Mesh.Cutoff": analysis.recommended_cutoff,
             "PAO.BasisSize": analysis.recommended_basis,
@@ -103,7 +104,7 @@ def mechanical_properties(
             auto_user_params.update(user_params)
         user_params = auto_user_params
 
-    jobs = []
+    jobs: list[Flow | Job] = []
 
     # Initial relaxation - use class method
     relax_maker = RelaxMaker.fixed_cell_relaxation(
@@ -127,7 +128,8 @@ def mechanical_properties(
         logger.info("Dry-run mode: Creating simple relaxation job only")
         relax_job = relax_maker.make(structure)
         relax_job.name = "mechanical_relax_dry_run"
-        return relax_job
+        # Dry-run returns a single relaxation Job (no multi-step flow is built).
+        return cast("Flow", relax_job)
 
     relax_job = relax_maker.make(structure)
     jobs.append(relax_job)
@@ -142,7 +144,9 @@ def mechanical_properties(
             number_of_frames=7,
             dry_run=dry_run,
         )
-        eos_job = eos_maker.make(relax_job.output.structure)
+        eos_job = eos_maker.make(
+            relax_job.output.structure  # type: ignore[arg-type]  # jobflow OutputReference resolved at runtime
+        )
         jobs.append(eos_job)
 
     # Elastic constants workflow
@@ -155,7 +159,9 @@ def mechanical_properties(
             fit_elastic_tensor_kwargs={"fitting_method": "finite_difference"},
             dry_run=dry_run,
         )
-        elastic_job = elastic_maker.make(relax_job.output.structure)
+        elastic_job = elastic_maker.make(
+            relax_job.output.structure  # type: ignore[arg-type]  # jobflow OutputReference resolved at runtime
+        )
         jobs.append(elastic_job)
 
     # Create flow

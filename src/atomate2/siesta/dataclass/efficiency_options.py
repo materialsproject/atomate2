@@ -19,7 +19,7 @@ __all__ = ["EfficiencyOptions"]
 
 import logging
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
@@ -205,6 +205,8 @@ class EfficiencyOptions(FDFDataclass):
 
     # Dictionary to hold FDF arguments
     efficiency_fdf_arguments: dict[str, Any] = field(default_factory=dict)
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
@@ -419,7 +421,7 @@ class EfficiencyOptions(FDFDataclass):
         logger.info("EfficiencyOptions.generate_efficiency_block()")
 
         # Collect parameters first (only non-default values)
-        params_to_add = {}
+        params_to_add: dict[str, Any] = {}
 
         if self.direct_phi:  # False is default
             params_to_add["DirectPhi"] = self.direct_phi

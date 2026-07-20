@@ -28,9 +28,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
-from jobflow import Flow, job
+from jobflow import Flow, Job, OutputReference, job
 from pymatgen.core import Molecule
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
@@ -121,7 +121,7 @@ def _analyze_bifunctional_pathway(
     }
 
     # ========== ORR Analysis ==========
-    orr_pathway_steps = [
+    orr_pathway_steps: list[dict[str, float | str]] = [
         {
             "label": "O2_ads",
             "energy": o2_best_energy,
@@ -164,14 +164,17 @@ def _analyze_bifunctional_pathway(
         potential=potential_orr,
     )
 
-    orr_overpotential = calculate_orr_overpotential(orr_thermo["delta_G"])
+    orr_delta_g = cast("list[float]", orr_thermo["delta_G"])
+    orr_step_labels = cast("list[str]", orr_thermo["step_labels"])
+    orr_cumulative_g = cast("list[float]", orr_thermo["cumulative_G"])
+    orr_overpotential = calculate_orr_overpotential(orr_delta_g)
     orr_rls = identify_rate_limiting_step(
-        delta_G=orr_thermo["delta_G"],
-        step_labels=orr_thermo["step_labels"],
+        delta_G=orr_delta_g,
+        step_labels=orr_step_labels,
     )
 
     # ========== OER Analysis ==========
-    oer_pathway_steps = [
+    oer_pathway_steps: list[dict[str, float | str]] = [
         {
             "label": "H2O + *",
             "energy": clean_surface_energy,
@@ -202,10 +205,13 @@ def _analyze_bifunctional_pathway(
         potential=potential_oer,
     )
 
-    oer_overpotential = calculate_oer_overpotential(oer_thermo["delta_G"])
+    oer_delta_g = cast("list[float]", oer_thermo["delta_G"])
+    oer_step_labels = cast("list[str]", oer_thermo["step_labels"])
+    oer_cumulative_g = cast("list[float]", oer_thermo["cumulative_G"])
+    oer_overpotential = calculate_oer_overpotential(oer_delta_g)
     oer_rls = identify_rate_limiting_step(
-        delta_G=oer_thermo["delta_G"],
-        step_labels=oer_thermo["step_labels"],
+        delta_G=oer_delta_g,
+        step_labels=oer_step_labels,
     )
 
     # ========== Bifunctional Analysis ==========
@@ -245,9 +251,9 @@ def _analyze_bifunctional_pathway(
 
         # ORR diagram
         orr_plot = plot_free_energy_diagram(
-            step_labels=orr_thermo["step_labels"],
-            cumulative_G=orr_thermo["cumulative_G"],
-            delta_G=orr_thermo["delta_G"],
+            step_labels=orr_step_labels,
+            cumulative_G=orr_cumulative_g,
+            delta_G=orr_delta_g,
             pathway_type="ORR",
             filename="bifunctional_orr_diagram.png",
         )
@@ -255,9 +261,9 @@ def _analyze_bifunctional_pathway(
 
         # OER diagram
         oer_plot = plot_free_energy_diagram(
-            step_labels=oer_thermo["step_labels"],
-            cumulative_G=oer_thermo["cumulative_G"],
-            delta_G=oer_thermo["delta_G"],
+            step_labels=oer_step_labels,
+            cumulative_G=oer_cumulative_g,
+            delta_G=oer_delta_g,
             pathway_type="OER",
             filename="bifunctional_oer_diagram.png",
         )
@@ -528,7 +534,7 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         Flow
             Jobflow Flow with complete bifunctional workflow.
         """
-        jobs = []
+        jobs: list[Flow | Job] = []
         n_slab_atoms = len(surface)
 
         # Create geometry constraints to fix slab atoms
@@ -544,12 +550,16 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         # ========== Step 1: Gas-phase references ==========
         logger.info("Setting up gas-phase references (O₂, H₂O, H₂)")
 
-        o2_molecule = Molecule(["O", "O"], [[0, 0, 0], [0, 0, 1.21]])
+        o2_molecule = Molecule(
+            ["O", "O"], cast("list[list[float]]", [[0, 0, 0], [0, 0, 1.21]])
+        )
         h2o_molecule = Molecule(
             ["O", "H", "H"],
-            [[0, 0, 0], [0.96, 0, 0], [-0.24, 0.93, 0]],
+            cast("list[list[float]]", [[0, 0, 0], [0.96, 0, 0], [-0.24, 0.93, 0]]),
         )
-        h2_molecule = Molecule(["H", "H"], [[0, 0, 0], [0, 0, 0.74]])
+        h2_molecule = Molecule(
+            ["H", "H"], cast("list[list[float]]", [[0, 0, 0], [0, 0, 0.74]])
+        )
 
         o2_job = self.gas_phase_maker.make(o2_molecule)
         o2_job.name = f"{self.name}_O2_gas"
@@ -564,6 +574,7 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         jobs.append(h2_job)
 
         # ========== Step 2: Clean surface (if energy not provided) ==========
+        clean_energy_ref: float | OutputReference
         if self.clean_surface_energy is None:
             logger.info("Setting up clean surface static calculation")
             clean_surface_job = self.surface_static_maker.make(surface)
@@ -589,13 +600,16 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         # (makers keep their FDF parameters on input_set_generator)
         generator = constrained_relax_maker.input_set_generator
         if generator.user_params is None:
-            generator.user_params = {}
+            # A plain dict is accepted at runtime for the OrderedDict-typed attribute.
+            generator.user_params = {}  # type: ignore[assignment]
         generator.user_params["%block Geometry.Constraints"] = constraints_block
 
         ads_maker = AdsorptionScanFlowMaker(
             grid_size=self.grid_size,
             height=self.height,
-            slab_static_maker=constrained_relax_maker,
+            # A constrained RelaxMaker is intentionally used in the slab_static_maker
+            # slot so slab atoms stay fixed during adsorbate relaxation.
+            slab_static_maker=constrained_relax_maker,  # type: ignore[arg-type]
             adsorbate_static_maker=self.adsorbate_static_maker,
         )
 
@@ -607,7 +621,7 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         # OOH adsorption
         ooh_molecule = Molecule(
             ["O", "O", "H"],
-            [[0, 0, 0], [1.33, 0, 0], [1.70, 0.90, 0]],
+            cast("list[list[float]]", [[0, 0, 0], [1.33, 0, 0], [1.70, 0.90, 0]]),
         )
         ooh_ads_job = ads_maker.make(surface, ooh_molecule)
         ooh_ads_job.name = f"{self.name}_OOH_adsorption"
@@ -620,7 +634,9 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
         jobs.append(o_ads_job)
 
         # OH adsorption
-        oh_molecule = Molecule(["O", "H"], [[0, 0, 0], [0.96, 0, 0]])
+        oh_molecule = Molecule(
+            ["O", "H"], cast("list[list[float]]", [[0, 0, 0], [0.96, 0, 0]])
+        )
         oh_ads_job = ads_maker.make(surface, oh_molecule)
         oh_ads_job.name = f"{self.name}_OH_adsorption"
         jobs.append(oh_ads_job)

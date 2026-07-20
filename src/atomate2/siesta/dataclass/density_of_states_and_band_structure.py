@@ -27,7 +27,7 @@ __all__ = ["DensityOfStatesAndBandStructure"]
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field, fields
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar, cast
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.sets.bands import band_paymatgen_to_siesta
@@ -622,6 +622,8 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         },
     )
 
+    _registered: ClassVar[bool]
+
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
@@ -978,7 +980,7 @@ class DensityOfStatesAndBandStructure(FDFDataclass):
         self.write_bands = True
 
         # Start with base parameters from generate_fdf() (includes default markers)
-        self.bands_fdf_arguments = self.generate_fdf()
+        self.bands_fdf_arguments = cast("OrderedDict[str, Any]", self.generate_fdf())
 
         # Add band-specific header and parameters
         temp = OrderedDict()

@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow, Response, job
 from pymatgen.core import Molecule
@@ -60,12 +60,12 @@ def _molecular_spin_setup(
     if not cfg.get("spin_polarized") or cfg.get("init_magnetic_moments") is None:
         return structure, {}
 
-    moments = cfg["init_magnetic_moments"]
+    moments = cast("dict", cfg["init_magnetic_moments"])
     structure = structure.copy()
     structure.add_site_property(
         "magmom", [moments.get(site.specie.symbol, 0.0) for site in structure]
     )
-    params = {"Spin": "polarized", "a2s_magnetic_ordering": "custom"}
+    params: dict[str, Any] = {"Spin": "polarized", "a2s_magnetic_ordering": "custom"}
     if cfg.get("fix_spin", False):
         params["Spin.Total"] = cfg["total_spin_moment"]
     return structure, params
@@ -188,7 +188,7 @@ def _consolidated_analysis(
     )
 
     # Run the analysis
-    scan_doc = analyze_adsorption_scan.original(
+    scan_doc = analyze_adsorption_scan.original(  # type: ignore[attr-defined]  # jobflow @job exposes undecorated fn via .original
         slab=slab,
         adsorbate=adsorbate,
         site_energies=site_energies,
@@ -218,12 +218,12 @@ def _consolidated_analysis(
 
     # Create plot directly (not a separate job)
     if plot_results:
-        plot_adsorption_sites.original(scan_doc=scan_doc, output_dir=".")
+        plot_adsorption_sites.original(scan_doc=scan_doc, output_dir=".")  # type: ignore[attr-defined]  # jobflow @job .original
         logger.info("✓ Created adsorption site plots")
 
     # Write summary directly (not a separate job)
     if write_summary:
-        write_adsorption_summary.original(scan_doc=scan_doc, output_dir=".")
+        write_adsorption_summary.original(scan_doc=scan_doc, output_dir=".")  # type: ignore[attr-defined]  # jobflow @job .original
         logger.info("✓ Wrote adsorption summary")
 
     return scan_doc
@@ -541,7 +541,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
 
         logger.info("AdsorptionScanFlowMaker.make()")
 
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # Resolve heights to scan
         heights_to_scan = self._resolve_heights()
@@ -610,7 +610,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             logger.info("Reusing precalculated slab energy - skipping slab calculation")
 
         # 2. Calculate isolated adsorbate energy (skipped when precalculated)
-        ads_job = None
+        ads_job: Job | None = None
         if self.precalc_adsorbate_energy is None:
             job_counter["current"] += 1
             logger.info(
@@ -630,7 +630,10 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
                 if spin_params:
                     from atomate2.siesta.powerups import update_user_siesta_settings
 
-                    ads_job = update_user_siesta_settings(ads_job, spin_params)
+                    # powerup returns a Job when given a Job (runtime-narrowed)
+                    ads_job = cast(
+                        "Job", update_user_siesta_settings(ads_job, spin_params)
+                    )
             else:
                 ads_job = self.adsorbate_static_maker.make(adsorbate)
             ads_job.name = (
@@ -1016,7 +1019,7 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
 
         logger.info("AdsorptionOptimizationFlowMaker.make()")
 
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # 1. Create initial structure with adsorbate
         @job(name=f"{self.name}_create_structure")
@@ -1031,7 +1034,8 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
         @job(name=f"{self.name}_add_constraints")
         def add_constraints() -> Structure:
             """Add selective dynamics if needed."""
-            struct = initial_struct_job.output
+            # jobflow resolves .output to the real Structure at run time
+            struct = cast("Structure", initial_struct_job.output)
 
             if self.relax_adsorbate_only:
                 # Mark slab atoms as fixed
@@ -1066,7 +1070,8 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
             from atomate2.siesta.schemas.adsorption import AdsorptionOptimizationResult
             from atomate2.siesta.schemas.calculation import TaskState
 
-            final_energy = static_job.output.output.energy
+            # jobflow resolves the lazy output reference to a float at run time
+            final_energy = cast("float", static_job.output.output.energy)
             final_adsorption_energy = final_energy - slab_energy - adsorbate_energy
 
             # Get initial total energy
@@ -1085,7 +1090,9 @@ class AdsorptionOptimizationFlowMaker(BaseSiestaFlowMaker):
                 initial_total_energy=initial_total_energy,
                 final_total_energy=final_energy,
                 converged=converged,
-                n_ionic_steps=relax_job.output.output.get("n_ionic_steps"),
+                n_ionic_steps=cast("dict", relax_job.output.output).get(
+                    "n_ionic_steps"
+                ),
             )
 
         analysis_job = analyze_optimization()

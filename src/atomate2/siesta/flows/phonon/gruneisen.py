@@ -90,7 +90,7 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
 
     name: str = "siesta gruneisen"
     structure_optimizer: RelaxMaker | None = field(default_factory=RelaxMaker)
-    phonon_maker: PhonopyMaker = field(default_factory=PhonopyMaker)
+    phonon_maker: PhonopyMaker = field(default_factory=PhonopyMaker)  # type: ignore[assignment]  # SIESTA PhonopyMaker replaces BasePhononMaker
     perc_vol: float = 0.01
     use_symmetry: bool = True
     symprec: float = 1e-4
@@ -115,7 +115,7 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
         """
         return "prev_dir"
 
-    def make(self, structure: Structure, prev_dir: str | None = None) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | None = None) -> Flow:  # type: ignore[override]  # SIESTA narrows prev_dir to str | None
         """
         Create the Grüneisen parameter calculation workflow.
 
@@ -156,9 +156,9 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
         logger.info(f"Volume change percentage: {self.perc_vol * 100:.1f}%")
 
         # Map SIESTA-specific attributes to base class attributes
-        self.bulk_relax_maker = self.structure_optimizer
+        self.bulk_relax_maker = self.structure_optimizer  # type: ignore[assignment]  # SIESTA RelaxMaker replaces VASP/FF/aims maker
         # For constant volume relaxation, use StaticMaker (no relaxation)
-        self.const_vol_relax_maker = self._get_static_maker()
+        self.const_vol_relax_maker = self._get_static_maker()  # type: ignore[assignment]  # SIESTA StaticMaker replaces VASP/FF/aims maker
         self.code = "siesta"
 
         # Call parent implementation
@@ -184,7 +184,7 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
         ):
             # Copy the input_set_generator to preserve k-points and other settings
             return StaticMaker(
-                input_set_generator=self.phonon_maker.static_maker.input_set_generator
+                input_set_generator=self.phonon_maker.static_maker.input_set_generator  # type: ignore[attr-defined]  # SIESTA static_maker exposes input_set_generator
             )
         return StaticMaker()
 

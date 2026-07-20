@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow, Job, Maker
 
 from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 if TYPE_CHECKING:
+    from ase import Atoms
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.cluster_profiles import ClusterProfile
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def update_maker_kwargs(
-    class_filter: Maker | None,
+    class_filter: type[Maker] | None,
     dict_mod_updates: dict,
     flow: Job | Flow | Maker,
     name_filter: str | None,
@@ -146,7 +147,7 @@ def update_fdf_siesta_settings(job: Job, user_settings: dict) -> Job:
     logger.info("update_fdf_siesta_settings.__init__()")
     # Assuming job has a BasisSetsAndProjectors instance or similar accessible
     basis_and_projectors = (
-        job.basis_sets_and_projectors
+        job.basis_sets_and_projectors  # type: ignore[attr-defined]  # dynamic SIESTA maker attribute
     )  # Get the instance of BasisSetsAndProjectors
 
     # Get the reverse mapping of FDF input names to class attributes
@@ -240,7 +241,7 @@ def _read_xsf_to_pymatgen(
 
     try:
         # Read XSF file with ASE
-        atoms = ase_read(file_path, format="xsf")
+        atoms = cast("Atoms", ase_read(file_path, format="xsf"))
     except Exception as e:
         error_msg = f"Error reading XSF file {file_path}: {e!s}"
         logger.error(error_msg)  # noqa: TRY400 keep plain error log without traceback
@@ -254,7 +255,7 @@ def _read_xsf_to_pymatgen(
         logger.info(f"Converted XSF to Molecule: {molecule.composition.formula}")
         return molecule
     # Convert to Structure (periodic)
-    structure = AseAtomsAdaptor.get_structure(atoms)
+    structure: Structure = AseAtomsAdaptor.get_structure(atoms)
     logger.info(f"Converted XSF to Structure: {structure.composition.reduced_formula}")
     return structure
 
@@ -525,7 +526,7 @@ def siesta_to_pymatgen(
     else:
         # Return as Structure (periodic)
         try:
-            structure_pymatgen = AseAtomsAdaptor.get_structure(structure_ase)
+            structure_pymatgen: Structure = AseAtomsAdaptor.get_structure(structure_ase)
         except Exception as e:
             error_msg = f"Error converting to pymatgen Structure: {e!s}"
             logger.error(error_msg)  # noqa: TRY400 keep plain error log, no traceback
@@ -1164,7 +1165,7 @@ def write_output_json_local(results: dict[str, Any]) -> None:
             return super().default(obj)
 
     # Loop through the results to extract the serializable part
-    serializable_data = {}
+    serializable_data: dict[Any, dict[Any, Any]] = {}
     # Loop through the results to extract the serializable part
     for job_id, job_data in results.items():
         for step, response in job_data.items():

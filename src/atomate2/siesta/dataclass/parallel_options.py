@@ -17,7 +17,7 @@ __all__ = ["ParallelOptions"]
 
 import logging
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
@@ -138,6 +138,8 @@ class ParallelOptions(FDFDataclass):
 
     # Dictionary to hold FDF arguments
     parallel_fdf_arguments: dict[str, Any] = field(default_factory=dict)
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
@@ -275,7 +277,7 @@ class ParallelOptions(FDFDataclass):
         logger.info("ParallelOptions.generate_parallel_block()")
 
         # Collect parameters first (only non-default values)
-        params_to_add = {}
+        params_to_add: dict[str, Any] = {}
 
         if self.block_size is not None:
             params_to_add["BlockSize"] = self.block_size

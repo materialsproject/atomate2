@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Maker
 
@@ -162,8 +162,8 @@ class NebDirectFlowMaker(BaseSiestaFlowMaker):
             )
 
         # Step 1: Relax endpoints as requested
-        relaxed_initial = initial_structure
-        relaxed_final = final_structure
+        relaxed_initial: Any = initial_structure
+        relaxed_final: Any = final_structure
 
         if relax_initial:
             # Use relax_initial_maker if specified, otherwise fall back to relax_maker

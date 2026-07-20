@@ -302,6 +302,7 @@ class KumagaiCorrection(CorrectionScheme):
             scheme_name=self.name,
             metadata=metadata,
             charge_model=self.charge_model,
+            alignment_energy=None,
             converged=True,
             warnings=warnings,
         )
@@ -407,12 +408,12 @@ class KumagaiCorrection(CorrectionScheme):
             )
             potential_samples.append(pot_value)
 
-        potential_samples = np.array(potential_samples)
-        sampling_coords = np.array(sampling_coords)
+        potential_samples_arr = np.array(potential_samples)
+        sampling_coords = np.array(sampling_coords)  # type: ignore[assignment]  # list -> ndarray (unused downstream)
 
         # Remove outliers using robust statistics
         pot_clean, outlier_mask = self._remove_outliers(
-            potential_samples, self.outlier_threshold
+            potential_samples_arr, self.outlier_threshold
         )
 
         n_outliers = np.sum(outlier_mask)

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from jobflow.core.flow import Flow
 
@@ -20,6 +20,7 @@ from atomate2.siesta.utils.verbosity import VerbosityLevel
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow.core.job import Job
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -167,7 +168,7 @@ class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
 
-        jobs = []
+        jobs: list[Job | Flow] = []
         job_metadata = []
 
         # ====================================================================
@@ -179,12 +180,15 @@ class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
             static_job = self.static_maker.make(structure, prev_dir=prev_dir)
 
             # Set mesh cutoff and coarse k-points
-            static_job = update_user_siesta_settings(
-                static_job,
-                {
-                    "Mesh.Cutoff": f"{mesh_cutoff} Ry",
-                    "a2s_kpts": self.stage1_kpoints,
-                },
+            static_job = cast(
+                "Job",
+                update_user_siesta_settings(
+                    static_job,
+                    {
+                        "Mesh.Cutoff": f"{mesh_cutoff} Ry",
+                        "a2s_kpts": self.stage1_kpoints,
+                    },
+                ),
             )
 
             static_job.name = f"{self.name}_Stage_1_Mesh_{mesh_cutoff}Ry"
@@ -228,19 +232,22 @@ class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
         # Use the most converged (last) mesh cutoff from Stage 1
         converged_mesh = self.mesh_cutoffs[-1]
 
-        kpoint_jobs = []
+        kpoint_jobs: list[Job | Flow] = []
         kpoint_metadata = []
 
         for kpoints in self.kpoints_list:
             static_job = self.static_maker.make(structure, prev_dir=prev_dir)
 
             # Set converged mesh cutoff and varying k-points
-            static_job = update_user_siesta_settings(
-                static_job,
-                {
-                    "Mesh.Cutoff": f"{converged_mesh} Ry",
-                    "a2s_kpts": kpoints,
-                },
+            static_job = cast(
+                "Job",
+                update_user_siesta_settings(
+                    static_job,
+                    {
+                        "Mesh.Cutoff": f"{converged_mesh} Ry",
+                        "a2s_kpts": kpoints,
+                    },
+                ),
             )
 
             kpts_str = "x".join(map(str, kpoints))

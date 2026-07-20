@@ -10,7 +10,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Union
+from typing import Union, cast
 
 from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
@@ -141,7 +141,7 @@ class CalculationOutput(BaseModel):
         except Exception as e:  # noqa: BLE001  partial-output fallback for the DB
             logger.error(f"Cannot read final structure: {e}")  # noqa: TRY400
             # Return partial output with None structure for database compatibility
-            return cls(
+            return cls(  # type: ignore[call-arg]  # omitted fields default to None
                 structure=None,
                 efermi=None,
                 total_energy=None,
@@ -308,11 +308,14 @@ class Calculation(BaseModel):
         has_siesta_completed = check_siesta_messages(siesta_MESSAGES_file)
 
         # Reading Siesta Version:
-        siesta_version = read_directly_from_siesta_out(
-            siesta_output_file, what="Version"
-        )["Version"]
+        siesta_version = cast(
+            "str",
+            read_directly_from_siesta_out(siesta_output_file, what="Version")[
+                "Version"
+            ],
+        )
 
-        return cls(
+        return cls(  # type: ignore[call-arg]  # output_file_paths defaults to None
             dir_name=str(dir_name),
             siesta_version=siesta_version,
             has_siesta_completed=has_siesta_completed,
@@ -348,7 +351,7 @@ def check_siesta_messages(messages_file: Path | str) -> TaskState:
             dict: Dictionary with keyword as key and list of matching lines as value.
         """
         logger.info("check_siesta_messages.read_messages_from_siesta()")
-        extracted_messages = {key: [] for key in keywords}
+        extracted_messages: dict[str, list[str]] = {key: [] for key in keywords}
 
         with open(file_path) as file:
             for line in file:

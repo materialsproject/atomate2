@@ -24,9 +24,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
-from jobflow import Flow, job
+from jobflow import Flow, Job, job
 from pymatgen.core import Molecule
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
@@ -118,7 +118,7 @@ def _analyze_oer_pathway(
     # Step 4: OOH* → O₂* + (H⁺ + e⁻)
     # Step 5: O₂* → O₂(g)
 
-    pathway_steps = [
+    pathway_steps: list[dict[str, float | str]] = [
         {
             "label": "H2O + *",
             "energy": clean_surface_energy,  # Starting point (clean surface + H₂O)
@@ -174,37 +174,49 @@ def _analyze_oer_pathway(
         potential=potential,
     )
 
+    # Typed views over the thermodynamics result (no runtime change)
+    delta_g = cast("list[float]", thermo_result["delta_G"])
+    delta_e = cast("list[float]", thermo_result["delta_E"])
+    step_labels = cast("list[str]", thermo_result["step_labels"])
+    cumulative_g = cast("list[float]", thermo_result["cumulative_G"])
+    absolute_energies = cast("list[float]", thermo_result["absolute_energies"])
+
     # Calculate overpotential
-    overpotential_result = calculate_oer_overpotential(thermo_result["delta_G"])
+    overpotential_result = calculate_oer_overpotential(delta_g)
 
     # Identify rate-limiting step
     rls = identify_rate_limiting_step(
-        delta_G=thermo_result["delta_G"],
-        step_labels=thermo_result["step_labels"],
+        delta_G=delta_g,
+        step_labels=step_labels,
     )
+    rls_label = cast("str", rls["rls_label"])
+    rls_delta_g = cast("float", rls["rls_delta_G"])
 
     # Create pathway document
     pathway_doc = ReactionPathwayDocument(
         surface_name="OER_catalyst",
         pathway_type="oer",
-        steps=[
-            {
-                "label": step["label"],
-                "species": step.get("species"),
-                "site_coords": None,
-                "height": None,
-                "energy": step["energy"],
-                "structure": None,
-            }
-            for step in pathway_steps
-        ],
-        energies=thermo_result["absolute_energies"],
-        delta_E=thermo_result["delta_E"],
-        delta_G=thermo_result["delta_G"],
+        steps=cast(
+            "list[Any]",
+            [
+                {
+                    "label": step["label"],
+                    "species": step.get("species"),
+                    "site_coords": None,
+                    "height": None,
+                    "energy": step["energy"],
+                    "structure": None,
+                }
+                for step in pathway_steps
+            ],
+        ),
+        energies=absolute_energies,
+        delta_E=delta_e,
+        delta_G=delta_g,
         overpotential_orr=0.0,  # Not calculated for OER-only workflow
         overpotential_oer=overpotential_result["eta_OER"],
         overpotential_gap=overpotential_result["eta_OER"],
-        rate_limiting_step=rls["rls_label"],
+        rate_limiting_step=rls_label,
         temperature=temperature,
         pressure=pressure,
     )
@@ -224,9 +236,9 @@ def _analyze_oer_pathway(
 
         # Free energy diagram
         plot_file = plot_free_energy_diagram(
-            step_labels=thermo_result["step_labels"],
-            cumulative_G=thermo_result["cumulative_G"],
-            delta_G=thermo_result["delta_G"],
+            step_labels=step_labels,
+            cumulative_G=cumulative_g,
+            delta_G=delta_g,
             pathway_type="OER",
             filename="oer_free_energy_diagram.png",
         )
@@ -237,8 +249,8 @@ def _analyze_oer_pathway(
         summary_plot = plot_overpotential_summary(
             pathway_type="OER",
             overpotential=overpotential_result["eta_OER"],
-            rls_label=rls["rls_label"],
-            rls_delta_G=rls["rls_delta_G"],
+            rls_label=rls_label,
+            rls_delta_G=rls_delta_g,
             U_onset=overpotential_result["U_onset"],
             filename="oer_overpotential_summary.png",
         )
@@ -266,10 +278,10 @@ def _analyze_oer_pathway(
             pathway_type="OER",
             surface_name=surface_name,
             overpotential=overpotential_result["eta_OER"],
-            rls_label=rls["rls_label"],
-            rls_delta_G=rls["rls_delta_G"],
-            step_labels=thermo_result["step_labels"],
-            delta_G=thermo_result["delta_G"],
+            rls_label=rls_label,
+            rls_delta_G=rls_delta_g,
+            step_labels=step_labels,
+            delta_G=delta_g,
             filename="oer_analysis_summary.txt",
             dry_run=is_dry_run,
         )
@@ -426,17 +438,21 @@ class OERFlowMaker(BaseSiestaFlowMaker):
         Flow
             Jobflow Flow with complete OER workflow.
         """
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # Step 1: Gas-phase references
         logger.info("Setting up gas-phase references (H₂O, O₂, H₂)")
 
         h2o_molecule = Molecule(
             ["O", "H", "H"],
-            [[0, 0, 0], [0.96, 0, 0], [-0.24, 0.93, 0]],
+            cast("list[list[float]]", [[0, 0, 0], [0.96, 0, 0], [-0.24, 0.93, 0]]),
         )
-        o2_molecule = Molecule(["O", "O"], [[0, 0, 0], [0, 0, 1.21]])
-        h2_molecule = Molecule(["H", "H"], [[0, 0, 0], [0, 0, 0.74]])
+        o2_molecule = Molecule(
+            ["O", "O"], cast("list[list[float]]", [[0, 0, 0], [0, 0, 1.21]])
+        )
+        h2_molecule = Molecule(
+            ["H", "H"], cast("list[list[float]]", [[0, 0, 0], [0, 0, 0.74]])
+        )
 
         h2o_job = self.gas_phase_maker.make(h2o_molecule)
         h2o_job.name = f"{self.name}_H2O_gas"
@@ -467,13 +483,15 @@ class OERFlowMaker(BaseSiestaFlowMaker):
         )
 
         # OH adsorption
-        oh_molecule = Molecule(["O", "H"], [[0, 0, 0], [0.96, 0, 0]])
+        oh_molecule = Molecule(
+            ["O", "H"], cast("list[list[float]]", [[0, 0, 0], [0.96, 0, 0]])
+        )
         oh_ads_job = ads_maker.make(surface, oh_molecule)
         oh_ads_job.name = f"{self.name}_OH_adsorption"
         jobs.append(oh_ads_job)
 
         # O adsorption
-        o_molecule = Molecule(["O"], [[0, 0, 0]])
+        o_molecule = Molecule(["O"], cast("list[list[float]]", [[0, 0, 0]]))
         o_ads_job = ads_maker.make(surface, o_molecule)
         o_ads_job.name = f"{self.name}_O_adsorption"
         jobs.append(o_ads_job)
@@ -481,7 +499,7 @@ class OERFlowMaker(BaseSiestaFlowMaker):
         # OOH adsorption
         ooh_molecule = Molecule(
             ["O", "O", "H"],
-            [[0, 0, 0], [1.33, 0, 0], [1.70, 0.90, 0]],
+            cast("list[list[float]]", [[0, 0, 0], [1.33, 0, 0], [1.70, 0.90, 0]]),
         )
         ooh_ads_job = ads_maker.make(surface, ooh_molecule)
         ooh_ads_job.name = f"{self.name}_OOH_adsorption"

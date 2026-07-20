@@ -55,8 +55,8 @@ class TimeHandler(ErrorHandler):
         bool
             True if time limit error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         return any(error.error_type == ErrorType.TIME_LIMIT for error in errors)
 
     def correct(self, directory: str = "./") -> dict:
@@ -72,7 +72,7 @@ class TimeHandler(ErrorHandler):
         dict
             Custodian format: {"errors": [...], "actions": [...]}
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
         actions = []
 
@@ -84,8 +84,8 @@ class TimeHandler(ErrorHandler):
         )
 
         # Check for saved files to restart from
-        dm_file = directory / "siesta.DM"
-        xv_file = directory / "siesta.XV"
+        dm_file = dir_path / "siesta.DM"
+        xv_file = dir_path / "siesta.XV"
 
         if dm_file.exists():
             corrections["DM.UseSaveDM"] = True
@@ -106,7 +106,7 @@ class TimeHandler(ErrorHandler):
             }
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_fdf_file(fdf_file, corrections)
 
         return {

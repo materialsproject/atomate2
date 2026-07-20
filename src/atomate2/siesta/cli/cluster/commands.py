@@ -8,6 +8,7 @@ from __future__ import annotations
 import getpass
 import subprocess
 import sys
+from typing import cast
 
 import click
 from rich.console import Console
@@ -4819,7 +4820,7 @@ def ssh_status(verbose: bool) -> None:
                 config_table.add_column("IdentityFile", style="dim")
 
             for entry in config_entries:
-                alias = entry["alias"]
+                alias = cast("str", entry["alias"])
                 details = entry["details"]
                 # Type cast for mypy
                 assert isinstance(details, dict)  # noqa: S101

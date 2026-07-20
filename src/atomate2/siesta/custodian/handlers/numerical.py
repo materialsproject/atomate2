@@ -58,8 +58,8 @@ class NumericalHandler(ErrorHandler):
         bool
             True if numerical error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         return any(error.error_type == ErrorType.NUMERICAL for error in errors)
 
     def correct(self, directory: str = "./") -> dict:
@@ -75,7 +75,7 @@ class NumericalHandler(ErrorHandler):
         dict
             Custodian format: {"errors": [...], "actions": [...]}
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
 
         attempt = self.n_applied_corrections + 1
@@ -107,7 +107,7 @@ class NumericalHandler(ErrorHandler):
         logger.info(f"  Strategy: {strategy}")
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_fdf_file(fdf_file, corrections)
 
         return {

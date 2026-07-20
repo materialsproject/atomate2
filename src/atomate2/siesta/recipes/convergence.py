@@ -16,6 +16,7 @@ from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -87,7 +88,7 @@ def convergence_suite(
         logger.info(f"Recommended k-points: {analysis.recommended_kpts}")
         logger.info(f"Recommended cutoff: {analysis.recommended_cutoff}")
 
-    jobs = []
+    jobs: list[Flow | Job] = []
 
     # K-points convergence
     kpts_output = None

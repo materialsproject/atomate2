@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from atomate2.siesta.dataclass.density_of_states_and_band_structure import (
     DensityOfStatesAndBandStructure,
@@ -83,7 +83,7 @@ class RelaxSetGenerator(SiestaInputGenerator):
 
         # Use the relaxation instance from _initialize_modules() which has been
         # updated with user_params via update_from_fdf()
-        relaxation_instance = self._md_relaxation_module
+        relaxation_instance = self._md_relaxation_module  # type: ignore[attr-defined]  # set dynamically in _initialize_modules()
 
         # Enable relaxation for RelaxSetGenerator
         relaxation_instance.perform_relaxation = True
@@ -133,7 +133,7 @@ class BandStructureSetGenerator(SiestaInputGenerator):
         """
         logger.info("BandStructureSetGenerator.get_parameter_updates()")
         bands = DensityOfStatesAndBandStructure()
-        bands.generate_band_structure_block(structure=structure)
+        bands.generate_band_structure_block(structure=cast("Structure", structure))
 
         bands_fdf_arguments = bands.bands_fdf_arguments
         logger.debug(f"bands_fdf_arguments={bands_fdf_arguments}")
@@ -335,13 +335,14 @@ class PhononSetGenerator(SiestaInputGenerator):
         logger.debug(f"phonon_fdf_arguments={self.phonon_fdf_arguments}")
 
         # Combine user-defined FDF arguments with relaxation-specific ones
-        self.fdf_arguments.update(self.phonon_fdf_arguments)
+        # (dataclass field mis-typed as dict[float, Any]; runtime keys are str)
+        self.fdf_arguments.update(cast("dict[str, Any]", self.phonon_fdf_arguments))
 
         # Generate k-path for phonon dispersion using HighSymmKpath
         # (automatically determines correct reciprocal lattice directions from
         # structure symmetry)
         bands = DensityOfStatesAndBandStructure()
-        bands.generate_band_structure_block(structure=structure)
+        bands.generate_band_structure_block(structure=cast("Structure", structure))
 
         bands_fdf_arguments = bands.bands_fdf_arguments
         logger.debug(f"bands_fdf_arguments={bands_fdf_arguments}")
@@ -396,7 +397,9 @@ class OpticalSetGenerator(SiestaInputGenerator):
 
         self.optical_calculation = optical_calculation
         self.optical = OpticalProperties(
-            optical_calculation=self.optical_calculation, **optical_kwargs
+            # field is declared bool; str | None is accepted loosely at runtime
+            optical_calculation=self.optical_calculation,  # type: ignore[arg-type]
+            **optical_kwargs,
         )
 
     def get_parameter_updates(
@@ -428,7 +431,7 @@ class OpticalSetGenerator(SiestaInputGenerator):
         # (automatically determines correct reciprocal lattice directions from
         # structure symmetry)
         bands = DensityOfStatesAndBandStructure()
-        bands.generate_band_structure_block(structure=structure)
+        bands.generate_band_structure_block(structure=cast("Structure", structure))
 
         bands_fdf_arguments = bands.bands_fdf_arguments
 
@@ -526,7 +529,8 @@ class DOSSetGenerator(SiestaInputGenerator):
                 "%block DOS.kgrid.MonkhorstPack"
             ]
         else:
-            dos.dos_kgrid_monkhorst_pack_block = [
+            # dataclass field mis-typed as dict[float, Any]; runtime uses list[str]
+            dos.dos_kgrid_monkhorst_pack_block = [  # type: ignore[assignment]
                 "10 0 0 0.0",
                 "0 10 0 0.0",
                 "0 0 10 0.0",

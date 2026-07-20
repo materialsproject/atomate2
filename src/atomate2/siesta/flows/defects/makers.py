@@ -231,7 +231,7 @@ class DefectRelaxMaker(RelaxMaker):
                 input_gen_kwargs["user_params"][key] = value
 
         return cls(
-            input_set_generator=RelaxSetGenerator(
+            input_set_generator=RelaxSetGenerator(  # type: ignore[misc]  # *args forwarding never positionally fills relax_cell
                 *args,
                 relax_cell=False,
                 **input_gen_kwargs,  # Fixed-cell!

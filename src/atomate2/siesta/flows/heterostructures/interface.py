@@ -28,6 +28,7 @@ from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -250,7 +251,7 @@ class InterfaceFlowMaker(BaseSiestaFlowMaker):
 
             relax_maker = replace(self.relax_maker, **override_kwargs)
 
-        jobs = []
+        jobs: list[Job | Flow] = []
 
         # Job 1: Find optimal supercell match or check compatibility
         if self.matching_mode in ["supercell", "auto"]:
@@ -814,7 +815,7 @@ def build_interface_structure(
         logger.info(f"Rotating top layer by {rotation}° around supercell center")
 
         # Calculate center of top layer supercell in Cartesian coordinates
-        center = top_copy.center_of_mass
+        center = top_copy.center_of_mass  # type: ignore[attr-defined]  # see FLAG: Structure lacks center_of_mass
 
         # Rotate each atom around the center
         theta_rad = np.deg2rad(rotation)

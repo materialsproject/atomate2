@@ -14,7 +14,7 @@ __all__ = ["RealSpaceGridParameters"]
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_energy
@@ -120,6 +120,8 @@ class RealSpaceGridParameters(FDFDataclass):
             "SIESTA keyword": None,
         },
     )
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
@@ -398,7 +400,7 @@ class RealSpaceGridParameters(FDFDataclass):
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]RealSpaceGridParameters.generate_fdf()[/green]")
 
-        fdf = OrderedDict()
+        fdf: OrderedDict[str, Any] = OrderedDict()
         fdf["#RealSpaceGridParameters"] = "RealSpaceGridParameters"
 
         # Mesh.Cutoff - always write with default marker

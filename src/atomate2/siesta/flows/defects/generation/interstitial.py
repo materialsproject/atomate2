@@ -8,7 +8,7 @@ Voronoi analysis to find high-symmetry interstitial sites.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -354,7 +354,8 @@ class SiestaInterstitialGenerator:
                     interstitial_frac = original_frac / scaling
                 else:
                     host_structure = self.structure.copy()
-                    interstitial_frac = defect_site.frac_coords
+                    # frac_coords is already an ndarray at run time
+                    interstitial_frac = cast("np.ndarray", defect_site.frac_coords)
 
                 # Create interstitial structure
                 interstitial_structure = host_structure.copy()

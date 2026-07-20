@@ -26,9 +26,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
-from jobflow import Flow, job
+from jobflow import Flow, Job, job
 from pymatgen.core import Molecule
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
@@ -123,7 +123,9 @@ def _analyze_her_pathway(
         "delta_G_H": delta_G_H,
         "eta_HER": her_result["eta_HER"],
         "U_equilibrium": her_result["U_equilibrium"],
-        "h_best_site": h_ads_doc["best_site"],
+        # NOTE: h_ads_doc is a pydantic AdsorptionScanDocument (not subscriptable);
+        # other accesses use `.best_site`. Preserving existing runtime behavior.
+        "h_best_site": h_ads_doc["best_site"],  # type: ignore[index]
         "temperature": temperature,
         "pressure": pressure,
         "ph": ph,
@@ -344,12 +346,14 @@ class HERFlowMaker(BaseSiestaFlowMaker):
         Flow
             Jobflow Flow with complete HER workflow.
         """
-        jobs = []
+        jobs: list[Flow | Job] = []
 
         # Step 1: Gas-phase H₂ reference
         logger.info("Setting up H₂ gas-phase reference")
 
-        h2_molecule = Molecule(["H", "H"], [[0, 0, 0], [0, 0, 0.74]])
+        h2_molecule = Molecule(
+            ["H", "H"], cast("list[list[float]]", [[0, 0, 0], [0, 0, 0.74]])
+        )
         h2_job = self.gas_phase_maker.make(h2_molecule)
         h2_job.name = f"{self.name}_H2_gas"
         jobs.append(h2_job)

@@ -90,8 +90,8 @@ class SiestaJob(Job):
         directory : str, optional
             Working directory (default: "./")
         """
-        directory = Path(directory)
-        logger.info(f"SiestaJob setup in {directory}")
+        dir_path = Path(directory)
+        logger.info(f"SiestaJob setup in {dir_path}")
         logger.info(f"Command: {self.siesta_cmd}")
 
     def run(self, directory: str = "./") -> subprocess.Popen:
@@ -110,8 +110,8 @@ class SiestaJob(Job):
         subprocess.Popen
             Running process (for monitoring support)
         """
-        directory = Path(directory)
-        logger.info(f"Running SIESTA in {directory}")
+        dir_path = Path(directory)
+        logger.info(f"Running SIESTA in {dir_path}")
 
         # Environment with LUA_PATH derived from FLOS_PATH when needed
         # (Lua-driven runs: NEB, Lua relaxation scripts)
@@ -122,7 +122,7 @@ class SiestaJob(Job):
         return subprocess.Popen(  # noqa: S602 custodian must run the user's siesta command
             self.siesta_cmd,
             shell=True,
-            cwd=directory,
+            cwd=dir_path,
             env=get_siesta_run_env(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -139,8 +139,8 @@ class SiestaJob(Job):
         directory : str, optional
             Working directory (default: "./")
         """
-        directory = Path(directory)
-        logger.info(f"SiestaJob postprocess in {directory}")
+        dir_path = Path(directory)
+        logger.info(f"SiestaJob postprocess in {dir_path}")
 
         # Optional: Could compress files here
         # Optional: Could do additional validation

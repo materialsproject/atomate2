@@ -66,8 +66,8 @@ class SiestaOutputValidator(Validator):
         bool
             True if validation FAILS (errors detected), False if valid
         """
-        directory = Path(directory)
-        errors = self._get_validation_errors(directory)
+        dir_path = Path(directory)
+        errors = self._get_validation_errors(dir_path)
 
         if errors:
             for error in errors:

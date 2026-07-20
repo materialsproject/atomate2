@@ -13,7 +13,7 @@ __all__ = ["Grids"]
 
 import logging
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
@@ -212,6 +212,8 @@ class Grids(FDFDataclass):
     # Dictionary to hold FDF arguments
     grids_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
+    _registered: ClassVar[bool]
+
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
         if not hasattr(self.__class__, "_registered"):
@@ -346,7 +348,7 @@ class Grids(FDFDataclass):
         logger.info("Grids.generate_grid_block()")
 
         # Collect parameters first (only non-default values)
-        params_to_add = {}
+        params_to_add: dict[str, Any] = {}
 
         if self.save_rho:
             params_to_add["SaveRho"] = self.save_rho

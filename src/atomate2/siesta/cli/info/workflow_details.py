@@ -1,11 +1,15 @@
 """Automatic workflow discovery and detailed information display."""
 
 import inspect
+from typing import TYPE_CHECKING
 
 from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 console = Console()
 
@@ -67,7 +71,7 @@ def discover_flowmakers() -> dict:
                 # Get __init__ signature to understand inputs
                 try:
                     sig = inspect.signature(obj.__init__)
-                    params = sig.parameters
+                    params: Mapping[str, inspect.Parameter] = sig.parameters
                 except Exception:  # noqa: BLE001 tolerate any introspection failure
                     params = {}
 
@@ -110,7 +114,7 @@ def discover_makers() -> dict:
             # Get __init__ signature
             try:
                 sig = inspect.signature(obj.__init__)
-                params = sig.parameters
+                params: Mapping[str, inspect.Parameter] = sig.parameters
             except Exception:  # noqa: BLE001 tolerate any introspection failure
                 params = {}
 

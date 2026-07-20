@@ -96,8 +96,8 @@ class SCFRelaxationHandler(ErrorHandler):
         bool
             True if SCF convergence error detected, False otherwise
         """
-        directory = Path(directory)
-        errors = detect_error(directory)
+        dir_path = Path(directory)
+        errors = detect_error(dir_path)
         return any(error.error_type == ErrorType.SCF_CONVERGENCE for error in errors)
 
     def correct(self, directory: str = "./") -> dict:
@@ -122,7 +122,7 @@ class SCFRelaxationHandler(ErrorHandler):
             Custodian format: {"errors": [...], "actions": [...]}
             Returns {"errors": [...], "actions": None} if unfixable
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections: dict[str, int | float | str | bool] = {}
 
         # Use custodian's auto-tracked n_applied_corrections
@@ -134,7 +134,7 @@ class SCFRelaxationHandler(ErrorHandler):
         )
 
         # ALWAYS remove DM file for relaxation (corrupted from geometry change)
-        dm_file = directory / "siesta.DM"
+        dm_file = dir_path / "siesta.DM"
         if dm_file.exists():
             dm_file.unlink()
             logger.info(f"  Removed DM file: {dm_file}")
@@ -249,7 +249,7 @@ class SCFRelaxationHandler(ErrorHandler):
         logger.info(f"  Strategy: {strategy}")
 
         # Apply corrections to FDF file
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         update_fdf_file(fdf_file, corrections)
 
         # Return custodian format

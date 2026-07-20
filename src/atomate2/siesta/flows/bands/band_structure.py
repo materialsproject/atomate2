@@ -16,6 +16,8 @@ if TYPE_CHECKING:
     from typing import Any
 
     import numpy as np
+    from jobflow import Job
+    from jobflow.core.reference import OutputReference
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -989,9 +991,9 @@ class BandStructureFlowMaker(BaseSiestaFlowMaker):
 
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
 
-        jobs = []
-        current_structure = structure
-        scf_prev_dir = prev_dir
+        jobs: list[Job | Flow] = []
+        current_structure: Structure | OutputReference = structure
+        scf_prev_dir: str | Path | OutputReference | None = prev_dir
 
         # Step 1: Optional relaxation
         if self.relax_maker is not None:

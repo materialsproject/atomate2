@@ -120,7 +120,7 @@ def _ensure_dataclasses_registered() -> None:
         ]
 
         # Mark as done
-        _ensure_dataclasses_registered._done = True  # noqa: SLF001 function-attr cache
+        _ensure_dataclasses_registered._done = True  # type: ignore[attr-defined]  # noqa: SLF001 function-attr cache
 
     except Exception as e:  # noqa: BLE001 friendly warning on partial registration
         console.print(

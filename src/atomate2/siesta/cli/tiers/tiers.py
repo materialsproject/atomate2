@@ -11,11 +11,16 @@ This tool provides:
 - Tier-level defaults (basic/intermediate/advanced/expert)
 """
 
+from typing import TYPE_CHECKING
+
 import click
 from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+
+if TYPE_CHECKING:
+    import builtins
 
 console = Console()
 
@@ -33,7 +38,7 @@ except ImportError:
 # Automatically build category mapping from preset names
 def build_category_map() -> dict:
     """Automatically categorize presets based on their names."""
-    categories = {}
+    categories: dict[str, builtins.list[str]] = {}
 
     for preset_name in TIER_PRESETS:
         # Determine category from preset name prefix

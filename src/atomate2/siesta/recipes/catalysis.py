@@ -89,7 +89,7 @@ def surface_energy_workflow(
                 "surface_semiconductor" if not analysis.is_metal else "surface_metal"
             )
 
-        auto_user_params = {
+        auto_user_params: dict[str, Any] = {
             "a2s_kpts": analysis.recommended_kpts,
             "Mesh.Cutoff": analysis.recommended_cutoff,
             "PAO.BasisSize": analysis.recommended_basis,
@@ -270,7 +270,7 @@ def adsorption_scanning_workflow(
                 "surface_semiconductor" if not analysis.is_metal else "surface_metal"
             )
 
-        auto_user_params = {
+        auto_user_params: dict[str, Any] = {
             "a2s_kpts": [
                 analysis.recommended_kpts[0],
                 analysis.recommended_kpts[1],

@@ -600,7 +600,7 @@ def status() -> None:
 
         # Try to connect with suppressed output
         try:
-            client = MongoClient(
+            client: MongoClient = MongoClient(
                 host=db_host,
                 port=db_port,
                 serverSelectionTimeoutMS=2000,  # Reduced timeout for faster feedback

@@ -71,23 +71,23 @@ class GnuBands_Old:  # noqa: N801  public legacy class name referenced by tests
 
     def __init__(self) -> None:
         """Initialize GnuBands_Old with default band structure parameters."""
-        self.ef = None
-        self.kmin = None
-        self.kmax = None
+        self.ef: float | None = None
+        self.kmin: float | None = None
+        self.kmax: float | None = None
         self.emin = -1e30
         self.emax = 1e30
-        self.nband = None
-        self.nspin = None
-        self.nk = None
+        self.nband: int | None = None
+        self.nspin: int | None = None
+        self.nk: int | None = None
         self.min_band = 1
         self.max_band = sys.maxsize
         self.spin_idx = 0
         self.fermi_shift = False
         self.gnu_ticks = False
-        self.outfile = None
+        self.outfile: str | None = None
         self.bands_u = None
-        self.k = None
-        self.e = None
+        self.k: np.ndarray | None = None
+        self.e: np.ndarray | None = None
         self.listk = None
         self.labels = None
         logger.info("GnuBands_Old.__init__()")
@@ -291,23 +291,23 @@ class GnuBands:
     def __init__(self) -> None:
         """Initialize GnuBands with default band structure parameters."""
         logger.info("GnuBands.run()")
-        self.ef = None
-        self.kmin = None
-        self.kmax = None
+        self.ef: float | None = None
+        self.kmin: float | None = None
+        self.kmax: float | None = None
         self.emin = -1e30
         self.emax = 1e30
-        self.nband = None
-        self.nspin = None
-        self.nk = None
+        self.nband: int | None = None
+        self.nspin: int | None = None
+        self.nk: int | None = None
         self.min_band = 1
         self.max_band = sys.maxsize
         self.spin_idx = 0
         self.fermi_shift = False
         self.gnu_ticks = False
-        self.outfile = None
+        self.outfile: str | None = None
         self.bands_u = None
-        self.k = None
-        self.e = None
+        self.k: np.ndarray | None = None
+        self.e: np.ndarray | None = None
         self.listk = None
         self.labels = None
 

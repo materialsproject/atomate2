@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from jobflow import Flow
 
@@ -18,6 +18,7 @@ from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
 
 if TYPE_CHECKING:
+    from jobflow import Job
     from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
@@ -140,7 +141,7 @@ def thermal_properties(
             else:
                 supercell_matrix = (1, 1, 1)
 
-    jobs = []
+    jobs: list[Flow | Job] = []
 
     # Create relax maker for each workflow - use class method
     relax_maker = RelaxMaker.fixed_cell_relaxation(
@@ -162,7 +163,8 @@ def thermal_properties(
         logger.info("Dry-run mode: Creating simple relaxation job only")
         relax_job = relax_maker.make(structure)
         relax_job.name = "thermal_relax_dry_run"
-        return relax_job
+        # Dry-run returns a single relaxation Job (no multi-step flow is built).
+        return cast("Flow", relax_job)
 
     # Create static maker for phonon calculations
     # If phonon_user_params provided, use it directly (no automatic scaling)
@@ -287,7 +289,7 @@ def thermal_properties(
             name="qha",
             structure_optimizer=relax_maker,
             phonon_maker=qha_phonon_maker,
-            temperature=temperature_list,
+            temperature=cast("list[float]", temperature_list),
             ignore_imaginary_modes=ignore_imaginary_modes,
             dry_run=dry_run,
         )

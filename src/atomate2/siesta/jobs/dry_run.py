@@ -99,7 +99,7 @@ def dry_run_save_structure(
 
             write_cif_with_ghost(structure, filename)
         else:
-            structure.to(filename=str(filename), fmt=output_format)
+            structure.to(filename=str(filename), fmt=output_format)  # type: ignore[arg-type]  # output_format is a runtime format string
         logger.info(f"[DRY RUN] Saved {label}: {filename}")
     except Exception as e:
         logger.exception(f"[DRY RUN] Failed to save {label}: {e}")  # noqa: TRY401
@@ -205,7 +205,7 @@ def dry_run_save_multiple_structures(
 
                 write_cif_with_ghost(structure, filename)
             else:
-                structure.to(filename=str(filename), fmt=output_format)
+                structure.to(filename=str(filename), fmt=output_format)  # type: ignore[arg-type]  # output_format is a runtime format string
             logger.info(f"[DRY RUN] Saved {label}: {filename}")
 
             structure_files.append(

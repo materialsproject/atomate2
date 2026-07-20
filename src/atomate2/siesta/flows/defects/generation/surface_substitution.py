@@ -212,7 +212,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
             f"{slab_structure.composition.reduced_formula}"
         )
 
-    def generate_defects(
+    def generate_defects(  # type: ignore[override]  # extends base signature with required dopants
         self,
         species: str | list[str],
         dopants: str | list[str] | list[Element],

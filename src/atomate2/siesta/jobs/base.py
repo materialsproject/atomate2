@@ -300,7 +300,7 @@ class BaseSiestaMaker(Maker):
 
         # Save structure to file in output directory
         filename = output_dir / f"{label}.{self.dry_run_format}"
-        structure.to(filename=str(filename), fmt=self.dry_run_format)
+        structure.to(filename=str(filename), fmt=self.dry_run_format)  # type: ignore[arg-type]  # dry_run_format is a runtime-validated format string
 
         logger.info(f"Dry-run: Saved structure to {filename}")
 
@@ -340,7 +340,7 @@ class BaseSiestaMaker(Maker):
             input_files_generated = False
 
         # Extract lattice parameters
-        lattice = structure.lattice
+        lattice = structure.lattice  # type: ignore[union-attr]  # dry-run path handles periodic Structure
         lattice_info = {
             "a": lattice.a,
             "b": lattice.b,
@@ -492,12 +492,12 @@ class BaseSiestaMaker(Maker):
 
             # Create validators (use appropriate validator for calc_type)
             validator = get_validator(
-                self.calc_type,
+                self.calc_type,  # type: ignore[attr-defined]  # calc_type defined on concrete subclasses
                 strict_convergence=self.strict_convergence,
             )
             validators = [validator]
             logger.info(
-                f"Using {type(validator).__name__} for {self.calc_type} calculation "
+                f"Using {type(validator).__name__} for {self.calc_type} calculation "  # type: ignore[attr-defined]  # calc_type defined on concrete subclasses
                 f"(strict_convergence={self.strict_convergence})"
             )
 
@@ -535,7 +535,7 @@ class BaseSiestaMaker(Maker):
             from atomate2.siesta.custodian.validators import get_validator
 
             validator = get_validator(
-                self.calc_type,
+                self.calc_type,  # type: ignore[attr-defined]  # calc_type defined on concrete subclasses
                 strict_convergence=self.strict_convergence,
             )
             logger.info(
@@ -546,7 +546,7 @@ class BaseSiestaMaker(Maker):
             # Validate the calculation (check() returns True if validation FAILS)
             validation_failed = validator.check(str(Path.cwd()))
             if validation_failed:
-                errors = validator._get_validation_errors(Path.cwd())  # noqa: SLF001
+                errors = validator._get_validation_errors(Path.cwd())  # type: ignore[attr-defined]  # noqa: SLF001  # concrete validators expose this helper
                 error_msg = "\n".join(errors)
                 raise ValueError(
                     f"Validation failed in strict convergence mode:\n{error_msg}"

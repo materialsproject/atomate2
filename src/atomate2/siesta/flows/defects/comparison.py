@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 from jobflow import Flow, Maker, job
@@ -37,8 +37,11 @@ from atomate2.siesta.flows.defects.utils import (
 )
 
 if TYPE_CHECKING:
+    from collections import OrderedDict
+
     from pymatgen.core import Structure
 
+    from atomate2.siesta.flows.defects.corrections.base import CorrectionScheme
     from atomate2.siesta.schemas.task import SiestaTaskDoc
 
 logger = logging.getLogger(__name__)
@@ -229,7 +232,7 @@ class CorrectionComparisonFlowMaker(Maker):
         )
         if needs_vt_files:
             # Add to defect maker
-            current_defect_params = (
+            current_defect_params: dict[str, Any] = (
                 self.defect_relax_maker.input_set_generator.user_params or {}
             )
             current_defect_params.pop("enabled_modules", None)
@@ -237,14 +240,17 @@ class CorrectionComparisonFlowMaker(Maker):
                 self.defect_relax_maker.input_set_generator, ["grids_advanced"]
             )
 
-            self.defect_relax_maker.input_set_generator.user_params = {
-                **current_defect_params,
-                "SaveTotalPotential": True,
-                "SaveElectrostaticPotential": True,  # Also save VH (Hartree potential)
-            }
+            self.defect_relax_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]",
+                {
+                    **current_defect_params,
+                    "SaveTotalPotential": True,
+                    "SaveElectrostaticPotential": True,  # Also save VH (Hartree pot.)
+                },
+            )
 
             # Add to host maker
-            current_host_params = (
+            current_host_params: dict[str, Any] = (
                 self.host_static_maker.input_set_generator.user_params or {}
             )
             current_host_params.pop("enabled_modules", None)
@@ -252,11 +258,14 @@ class CorrectionComparisonFlowMaker(Maker):
                 self.host_static_maker.input_set_generator, ["grids_advanced"]
             )
 
-            self.host_static_maker.input_set_generator.user_params = {
-                **current_host_params,
-                "SaveTotalPotential": True,
-                "SaveElectrostaticPotential": True,  # Also save VH (Hartree potential)
-            }
+            self.host_static_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]",
+                {
+                    **current_host_params,
+                    "SaveTotalPotential": True,
+                    "SaveElectrostaticPotential": True,  # Also save VH (Hartree pot.)
+                },
+            )
 
             logger.info(
                 "Auto-enabled .VT and .VH file writing for "
@@ -270,7 +279,9 @@ class CorrectionComparisonFlowMaker(Maker):
                 self.host_static_maker if self.skip_relax else self.defect_relax_maker
             )
 
-            current_params = defect_maker.input_set_generator.user_params or {}
+            current_params: dict[str, Any] = (
+                defect_maker.input_set_generator.user_params or {}
+            )
             updated_params = current_params.copy()
             updated_params.pop("enabled_modules", None)
             updated_params["NetCharge"] = self.charge_state
@@ -282,7 +293,9 @@ class CorrectionComparisonFlowMaker(Maker):
             if self.skip_relax:
                 saved_host_params = current_params
 
-            defect_maker.input_set_generator.user_params = updated_params
+            defect_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]", updated_params
+            )
 
             logger.info(
                 f"Setting NetCharge = {self.charge_state} "
@@ -298,8 +311,8 @@ class CorrectionComparisonFlowMaker(Maker):
 
             # Restore host_static_maker params (remove NetCharge before host calc)
             if saved_host_params is not None:
-                self.host_static_maker.input_set_generator.user_params = (
-                    saved_host_params
+                self.host_static_maker.input_set_generator.user_params = cast(
+                    "OrderedDict[str, Any]", saved_host_params
                 )
         else:
             # Normal relaxation
@@ -329,7 +342,9 @@ class CorrectionComparisonFlowMaker(Maker):
             mu_extract_job.name = f"{safe_name}_mu_{defect_species}"
 
             # Use extracted μ value
-            chemical_potentials = {defect_species: mu_extract_job.output}
+            chemical_potentials: dict[str, Any] = {
+                defect_species: mu_extract_job.output
+            }
             ref_jobs = [ref_static_job, mu_extract_job]
         elif self.auto_calculate_chemical_potentials and not defect_species:
             logger.warning(
@@ -536,12 +551,14 @@ def compare_all_corrections(
     if isinstance(defect_task_doc, dict):
         # Dry-run mode
         defect_energy = defect_task_doc.get("output", {}).get("energy", -100.0)
-        host_energy = host_task_doc.get("output", {}).get("energy", -50.0)
+        # host_task_doc is a dict in dry-run mode (same branch as defect_task_doc)
+        host_energy = cast("dict", host_task_doc).get("output", {}).get("energy", -50.0)
         defect_structure = host_structure.copy()  # Placeholder
     else:
         # Real calculation
         defect_energy = defect_task_doc.output.energy
-        host_energy = host_task_doc.output.energy
+        # host_task_doc is a real TaskDoc here (same branch as defect_task_doc)
+        host_energy = cast("SiestaTaskDoc", host_task_doc).output.energy
         defect_structure = defect_task_doc.output.structure
 
         # Try to extract calculation directories from task documents if not provided
@@ -670,6 +687,7 @@ def compare_all_corrections(
         logger.info(f"Applying {scheme_name} correction...")
 
         try:
+            correction_scheme: CorrectionScheme
             if scheme_name.lower() in ["lany-zunger", "lz"]:
                 correction_scheme = LanyZungerCorrection(epsilon_static=epsilon_static)
             elif scheme_name.lower() in [

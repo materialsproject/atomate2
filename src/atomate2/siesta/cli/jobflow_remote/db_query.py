@@ -8,13 +8,16 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 import yaml
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.table import Table
+
+if TYPE_CHECKING:
+    from collections import OrderedDict
 
 console = Console()
 
@@ -149,6 +152,7 @@ def get_job_details_from_db(project_name: str, job_id: str) -> dict[str, Any] | 
         password = queue_store.get("password")
 
         # Connect to MongoDB (with authentication if provided)
+        client: MongoClient
         if username and password:
             client = MongoClient(
                 host, port, username=username, password=password, authSource=database
@@ -321,7 +325,9 @@ def get_tier_defaults(tier: str) -> dict[str, Any]:
             dummy_structure = Structure(Lattice.cubic(5.0), ["Si"], [[0, 0, 0]])
 
             # Create generator with specified tier (no user params)
-            generator = SiestaInputGenerator(tier=tier, user_params={})
+            generator = SiestaInputGenerator(
+                tier=tier, user_params=cast("OrderedDict[str, Any]", {})
+            )
 
             # Generate parameters (this activates all modules)
             input_set = generator.get_input_set(dummy_structure)
@@ -331,7 +337,7 @@ def get_tier_defaults(tier: str) -> dict[str, Any]:
 
             if siesta_calc:
                 # The Siesta calculator object has parameters attribute
-                return dict(siesta_calc.parameters)
+                return dict(siesta_calc.parameters)  # type: ignore[union-attr]  # dynamic InputFile payload
             return {}
 
         finally:

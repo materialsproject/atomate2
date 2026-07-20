@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 from jobflow import Flow, Maker, job
@@ -20,10 +20,13 @@ from atomate2.siesta.flows.defects.makers import DefectRelaxMaker, DefectStaticM
 from atomate2.siesta.flows.defects.schemas import DefectDocument
 
 if TYPE_CHECKING:
+    from collections import OrderedDict
     from pathlib import Path
 
+    from jobflow import Job
     from pymatgen.core import Structure
 
+    from atomate2.siesta.flows.defects.corrections.base import CorrectionScheme
     from atomate2.siesta.sets.base import SiestaInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -167,7 +170,7 @@ class DefectFlowMaker(Maker):
     bands_fdf_params: dict[str, Any] | None = None
     pdos_fdf_params: dict[str, Any] | None = None
 
-    def make(
+    def make(  # type: ignore[override]  # narrower signature than base Maker.make
         self,
         defect_structure: Structure,
         host_structure: Structure,
@@ -258,7 +261,7 @@ class DefectFlowMaker(Maker):
                     removed_species=removed_species,
                 )
                 flows.append(flow)
-            return flows
+            return cast("list[Flow]", flows)
 
         # Single charge state - continue with normal flow creation
 
@@ -341,7 +344,7 @@ class DefectFlowMaker(Maker):
             "slab-2d",
         ]:
             # Add to defect maker
-            current_defect_params = (
+            current_defect_params: dict[str, Any] = (
                 self.defect_relax_maker.input_set_generator.user_params or {}
             )
             current_defect_params.pop("enabled_modules", None)
@@ -349,14 +352,17 @@ class DefectFlowMaker(Maker):
                 self.defect_relax_maker.input_set_generator, ["grids_advanced"]
             )
 
-            self.defect_relax_maker.input_set_generator.user_params = {
-                **current_defect_params,
-                "SaveTotalPotential": True,
-                "SaveElectrostaticPotential": True,
-            }
+            self.defect_relax_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]",
+                {
+                    **current_defect_params,
+                    "SaveTotalPotential": True,
+                    "SaveElectrostaticPotential": True,
+                },
+            )
 
             # Add to host maker
-            current_host_params = (
+            current_host_params: dict[str, Any] = (
                 self.host_static_maker.input_set_generator.user_params or {}
             )
             current_host_params.pop("enabled_modules", None)
@@ -364,11 +370,14 @@ class DefectFlowMaker(Maker):
                 self.host_static_maker.input_set_generator, ["grids_advanced"]
             )
 
-            self.host_static_maker.input_set_generator.user_params = {
-                **current_host_params,
-                "SaveTotalPotential": True,
-                "SaveElectrostaticPotential": True,
-            }
+            self.host_static_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]",
+                {
+                    **current_host_params,
+                    "SaveTotalPotential": True,
+                    "SaveElectrostaticPotential": True,
+                },
+            )
 
             logger.info(
                 f"Auto-enabled .VT file writing for {self.correction_scheme} correction"
@@ -379,32 +388,40 @@ class DefectFlowMaker(Maker):
         # Note: basic "makov-payne" does NOT need .RHO (uses Q=0)
         if scheme_lower in ["makov-payne-quadrupole", "mp-quad", "makov-payne-full"]:
             # Add to defect maker
-            current_defect_params = (
-                self.defect_relax_maker.input_set_generator.user_params or {}
+            current_defect_params = cast(
+                "dict[str, Any]",
+                self.defect_relax_maker.input_set_generator.user_params or {},
             )
             current_defect_params.pop("enabled_modules", None)
             _enable_modules(
                 self.defect_relax_maker.input_set_generator, ["grids_advanced"]
             )
 
-            self.defect_relax_maker.input_set_generator.user_params = {
-                **current_defect_params,
-                "SaveRho": True,
-            }
+            self.defect_relax_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]",
+                {
+                    **current_defect_params,
+                    "SaveRho": True,
+                },
+            )
 
             # Add to host maker
-            current_host_params = (
-                self.host_static_maker.input_set_generator.user_params or {}
+            current_host_params = cast(
+                "dict[str, Any]",
+                self.host_static_maker.input_set_generator.user_params or {},
             )
             current_host_params.pop("enabled_modules", None)
             _enable_modules(
                 self.host_static_maker.input_set_generator, ["grids_advanced"]
             )
 
-            self.host_static_maker.input_set_generator.user_params = {
-                **current_host_params,
-                "SaveRho": True,
-            }
+            self.host_static_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]",
+                {
+                    **current_host_params,
+                    "SaveRho": True,
+                },
+            )
 
             logger.info(
                 f"Auto-enabled .RHO file writing for {self.correction_scheme} "
@@ -419,7 +436,10 @@ class DefectFlowMaker(Maker):
             defect_maker = (
                 self.host_static_maker if self.skip_relax else self.defect_relax_maker
             )
-            current_params = defect_maker.input_set_generator.user_params or {}
+            current_params = cast(
+                "dict[str, Any]",
+                defect_maker.input_set_generator.user_params or {},
+            )
             current_params.pop("enabled_modules", None)
             _enable_modules(defect_maker.input_set_generator, ["dos_bands"])
 
@@ -427,7 +447,7 @@ class DefectFlowMaker(Maker):
             if not self.skip_relax:
                 # In skip_relax mode, defect_maker IS host_static_maker, so
                 # we only need a separate host config when skip_relax=False.
-                host_params = (
+                host_params: dict[str, Any] | None = (
                     self.host_static_maker.input_set_generator.user_params or {}
                 )
                 host_params.pop("enabled_modules", None)
@@ -517,9 +537,13 @@ class DefectFlowMaker(Maker):
                         host_params["%block PDOS.kgrid.MonkhorstPack"] = pdos_kgrid
                     logger.info("Auto-enabled PDOS output for host calculation")
 
-            defect_maker.input_set_generator.user_params = current_params
+            defect_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]", current_params
+            )
             if host_params is not None:
-                self.host_static_maker.input_set_generator.user_params = host_params
+                self.host_static_maker.input_set_generator.user_params = cast(
+                    "OrderedDict[str, Any]", host_params
+                )
 
         # Enable spin polarization for ALL defect calculations.
         # Defects (charged or neutral) commonly introduce unpaired electrons,
@@ -527,24 +551,26 @@ class DefectFlowMaker(Maker):
         # The host calculation is also run spin-polarized for consistency
         # (host and defect energies must use the same Hamiltonian).
         for maker in (self.defect_relax_maker, self.host_static_maker):
-            mp = maker.input_set_generator.user_params or {}
+            mp: dict[str, Any] = maker.input_set_generator.user_params or {}
             if "Spin" not in mp:
                 mp = {**mp, "Spin": "polarized"}
                 mp.pop("enabled_modules", None)
                 _enable_modules(maker.input_set_generator, ["spin"])
-                maker.input_set_generator.user_params = mp
+                maker.input_set_generator.user_params = cast(
+                    "OrderedDict[str, Any]", mp
+                )
         logger.info("Auto-enabled Spin = polarized for defect and host calculations")
 
         # Job 1: Defect calculation (relax or static depending on skip_relax)
         # CRITICAL: Set NetCharge for charged defects on the right maker
-        saved_host_params = None
+        saved_host_params: dict[str, Any] | None = None
         if self.charge_state != 0:
             defect_maker = (
                 self.host_static_maker if self.skip_relax else self.defect_relax_maker
             )
 
             current_params = defect_maker.input_set_generator.user_params or {}
-            updated_params = current_params.copy()
+            updated_params: dict[str, Any] = current_params.copy()
             updated_params.pop("enabled_modules", None)
             updated_params["NetCharge"] = self.charge_state
 
@@ -555,7 +581,9 @@ class DefectFlowMaker(Maker):
             if self.skip_relax:
                 saved_host_params = current_params
 
-            defect_maker.input_set_generator.user_params = updated_params
+            defect_maker.input_set_generator.user_params = cast(
+                "OrderedDict[str, Any]", updated_params
+            )
 
             logger.info(
                 f"Setting NetCharge = {self.charge_state} "
@@ -570,8 +598,8 @@ class DefectFlowMaker(Maker):
 
             # Restore host_static_maker params (remove NetCharge before host calc)
             if saved_host_params is not None:
-                self.host_static_maker.input_set_generator.user_params = (
-                    saved_host_params
+                self.host_static_maker.input_set_generator.user_params = cast(
+                    "OrderedDict[str, Any]", saved_host_params
                 )
         else:
             # Normal relaxation
@@ -590,7 +618,7 @@ class DefectFlowMaker(Maker):
         # Job 2.5: Calculate chemical potential if requested
         if self.auto_calculate_chemical_potentials:
             ref_jobs = []
-            chemical_potentials = {}
+            chemical_potentials: dict[str, Any] = {}
 
             # For substitution: calculate both removed and added species
             if (
@@ -752,7 +780,7 @@ class DefectFlowMaker(Maker):
         jobs = base_jobs + ref_jobs + [finalize_job] + plot_jobs
 
         return Flow(
-            jobs,
+            cast("list[Flow | Job]", jobs),
             output=finalize_job.output,
             name=self.name,
         )
@@ -943,6 +971,11 @@ class DefectFlowMaker(Maker):
                     )
 
         # Generate defects based on type
+        generator: (
+            SiestaVacancyGenerator
+            | SiestaSubstitutionGenerator
+            | SiestaInterstitialGenerator
+        )
         if defect_type == "vacancy":
             generator = SiestaVacancyGenerator(structure, use_symmetry=use_symmetry)
             defects = generator.generate_defects(
@@ -1227,7 +1260,7 @@ class DefectFlowMaker(Maker):
             pre_jobs.extend(shared_ref_jobs)
             return Flow(pre_jobs + flows, output=flows[0].output)  # type: ignore[union-attr]
 
-        return flows
+        return cast("list[Flow]", flows)
 
 
 def get_reference_structure(species: str) -> tuple[Structure, int]:
@@ -1305,12 +1338,14 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
         "Te": ("hexagonal", 4.4572, 5.9290),  # CRC: trigonal Te
     }
 
+    # Holds a pymatgen Molecule or (boxed/bulk) Structure depending on the branch.
+    reference_structure: Any
     if species in diatomic_molecules:
         # Create diatomic molecule
         molecule_name, bond_length = diatomic_molecules[species]
         reference_structure = Molecule(
             [species, species],
-            [[0, 0, 0], [0, 0, bond_length]],
+            [[0, 0, 0], [0, 0, bond_length]],  # type: ignore[arg-type]  # pymatgen coords
         )
         # Place in large box to avoid periodic interactions
         reference_structure = reference_structure.get_boxed_structure(20, 21, 22)
@@ -1326,7 +1361,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
             reference_structure = Structure(
                 lattice,
                 [species] * 4,
-                [[0, 0, 0], [0.5, 0.5, 0], [0.5, 0, 0.5], [0, 0.5, 0.5]],
+                [[0, 0, 0], [0.5, 0.5, 0], [0.5, 0, 0.5], [0, 0.5, 0.5]],  # type: ignore[arg-type]  # pymatgen coords
             )
             n_atoms = 4
         elif structure_type == "bcc":
@@ -1334,7 +1369,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
             reference_structure = Structure(
                 lattice,
                 [species] * 2,
-                [[0, 0, 0], [0.5, 0.5, 0.5]],
+                [[0, 0, 0], [0.5, 0.5, 0.5]],  # type: ignore[arg-type]  # pymatgen coords
             )
             n_atoms = 2
         elif structure_type == "hcp":
@@ -1352,7 +1387,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
             reference_structure = Structure(
                 lattice,
                 [species] * 8,
-                [
+                [  # type: ignore[arg-type]  # pymatgen coords
                     [0, 0, 0],
                     [0.25, 0.25, 0.25],
                     [0.5, 0.5, 0],
@@ -1379,7 +1414,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
             _, bond_length = special_elements["S"]  # type: ignore[assignment]
             reference_structure = Molecule(
                 ["S", "S"],
-                [[0, 0, 0], [0, 0, bond_length]],
+                [[0, 0, 0], [0, 0, bond_length]],  # type: ignore[arg-type]  # pymatgen coords
             )
             reference_structure = reference_structure.get_boxed_structure(20, 21, 22)
             n_atoms = 2
@@ -1391,7 +1426,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
             reference_structure = Structure(
                 lattice,
                 [species] * 3,
-                [[0, 0, 0], [1 / 3, 2 / 3, 1 / 3], [2 / 3, 1 / 3, 2 / 3]],
+                [[0, 0, 0], [1 / 3, 2 / 3, 1 / 3], [2 / 3, 1 / 3, 2 / 3]],  # type: ignore[arg-type]  # pymatgen coords
             )
             n_atoms = 3
             logger.info(f"Using trigonal {species} (a={a}, c={c} Å)")
@@ -1625,6 +1660,7 @@ def finalize_defect_calculation(
     if charge_state != 0:
         # Select correction scheme
         scheme_name_lower = correction_scheme_name.lower()
+        correction_scheme: CorrectionScheme
         if scheme_name_lower in ["lany-zunger", "lz"]:
             correction_scheme = LanyZungerCorrection(epsilon_static=epsilon_static)
         elif scheme_name_lower in ["makov-payne", "mp"]:
@@ -1744,7 +1780,7 @@ def finalize_defect_calculation(
         raw_formation_energy = defect_energy - host_energy + mu_defect
         corrected_formation_energy = raw_formation_energy + correction_energy
 
-        defect_doc = DefectDocument(
+        defect_doc = DefectDocument(  # type: ignore[call-arg]  # base StructureMetadata fields default via pydantic
             defect_type=defect_type,
             defect_species=defect_species,
             removed_species=removed_species,

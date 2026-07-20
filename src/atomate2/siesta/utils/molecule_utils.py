@@ -157,7 +157,7 @@ def prepare_molecule_with_orientation(
 
         adaptor = AseAtomsAdaptor()
         ase_mol = read(custom_file)
-        mol = adaptor.get_molecule(ase_mol)
+        mol: Molecule = adaptor.get_molecule(ase_mol)  # type: ignore[arg-type]  # ase.io.read single-Atoms path
     elif isinstance(molecule, str):
         # Try to create from ASE molecule database
         from ase.build import molecule as ase_molecule

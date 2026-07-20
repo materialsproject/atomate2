@@ -15,7 +15,7 @@ __all__ = ["GeneralSystemDescriptors"]
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
@@ -106,6 +106,8 @@ class GeneralSystemDescriptors(FDFDataclass):
     # synthetic_atoms: Dict[int, List[float]] = field(default_factory=dict)
     # Custom atomic masses for different species:
     # atomic_mass: Dict[int, float] = field(default_factory=dict)
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

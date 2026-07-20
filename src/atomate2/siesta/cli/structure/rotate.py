@@ -223,7 +223,7 @@ def rotate(
             direction_cart /= np.linalg.norm(direction_cart)
 
             # Calculate rotation to align direction with target axis
-            target_axis = np.array(target_axis)
+            target_axis = np.array(target_axis)  # type: ignore[assignment]  # list -> ndarray reuse
             v = np.cross(direction_cart, target_axis)
             s = np.linalg.norm(v)
             c = np.dot(direction_cart, target_axis)
@@ -235,7 +235,7 @@ def rotate(
                         perp = np.cross(target_axis, [0, 0, 1])
                     else:
                         perp = np.cross(target_axis, [1, 0, 0])
-                    perp /= np.linalg.norm(perp)
+                    perp /= np.linalg.norm(perp)  # type: ignore[misc]  # numpy in-place divide
                     rot = R.from_rotvec(np.pi * perp)
                     rotation_matrix = rot.as_matrix()
                 else:  # Already aligned
@@ -375,7 +375,7 @@ def rotate(
             from pymatgen.io.xcrysden import XSF
 
             xsf = XSF(rotated_structure)
-            xsf.to_file(output)
+            xsf.to_file(output)  # type: ignore[attr-defined]  # pymatgen XSF API (see flagged note)
         elif format == "json":
             rotated_structure.to(filename=output, fmt="json")
 

@@ -15,7 +15,7 @@ __all__ = ["ChemicalAnalysis"]
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 
@@ -49,7 +49,7 @@ class ChemicalAnalysis(FDFDataclass):
     # 6.19 Options for chemical analysis
     # -----------------------------------
 
-    charge_mulliken: str = field(
+    charge_mulliken: str | bool = field(
         default="none",
         metadata={
             "description": "Enable modern Mulliken charge analysis",
@@ -65,7 +65,7 @@ class ChemicalAnalysis(FDFDataclass):
         },
     )
 
-    charge_hirshfeld: str = field(
+    charge_hirshfeld: str | bool = field(
         default="none",
         metadata={
             "description": "Enable Hirshfeld population analysis",
@@ -73,7 +73,7 @@ class ChemicalAnalysis(FDFDataclass):
         },
     )
 
-    charge_voronoi: str = field(
+    charge_voronoi: str | bool = field(
         default="none",
         metadata={
             "description": "Enable Voronoi population analysis",
@@ -99,6 +99,8 @@ class ChemicalAnalysis(FDFDataclass):
     )
     # TODO: WFS.EnergyMin
     # TODO: WFS.EnergyMax
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""

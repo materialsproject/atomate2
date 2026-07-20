@@ -16,7 +16,7 @@ __all__ = ["NetcdfOptions"]
 
 import logging
 from dataclasses import dataclass, field, fields
-from typing import Any
+from typing import Any, ClassVar
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
@@ -111,6 +111,8 @@ class NetcdfOptions(FDFDataclass):
 
     # Dictionary to hold FDF arguments
     netcdf_fdf_arguments: dict[str, Any] = field(default_factory=dict)
+
+    _registered: ClassVar[bool]
 
     def __post_init__(self) -> None:
         """Register FDF parameters handled by this dataclass."""
@@ -241,7 +243,7 @@ class NetcdfOptions(FDFDataclass):
         logger.info("NetcdfOptions.generate_netcdf_block()")
 
         # Collect parameters first (only non-default values)
-        params_to_add = {}
+        params_to_add: dict[str, Any] = {}
 
         if self.cdf_save:  # False is default
             params_to_add["CDF.Save"] = self.cdf_save

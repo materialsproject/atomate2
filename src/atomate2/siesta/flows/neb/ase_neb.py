@@ -21,6 +21,8 @@ from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Response
+
 logger = logging.getLogger(__name__)
 
 
@@ -697,8 +699,8 @@ class AseNebFlowMaker(BaseSiestaFlowMaker):
             )
 
         # Optional: Relax endpoints as requested
-        initial_for_neb = initial_structure
-        final_for_neb = final_structure
+        initial_for_neb: Any = initial_structure
+        final_for_neb: Any = final_structure
 
         if relax_initial:
             # Use relax_initial_maker if specified, otherwise fall back to relax_maker
@@ -891,7 +893,9 @@ def ase_neb_optimization_all_iterations(
         example_dir.mkdir(parents=True, exist_ok=True)
         os.chdir(example_dir)
         write_siesta_input_set(
-            structures[1], static_maker.input_set_generator, directory="."
+            structures[1],
+            static_maker.input_set_generator,  # type: ignore[attr-defined]  # subclass attr
+            directory=".",
         )
         os.chdir(base_dir)
         logger.info(f"  Wrote example SIESTA inputs to: {example_dir}")
@@ -900,8 +904,7 @@ def ase_neb_optimization_all_iterations(
             "converged": False,
             "dry_run": True,
             "message": (
-                f"Dry run complete. {len(structures)} structures saved "
-                f"to {output_dir}"
+                f"Dry run complete. {len(structures)} structures saved to {output_dir}"
             ),
             "n_images": len(structures),
             "output_dir": str(output_dir),
@@ -1033,7 +1036,9 @@ def ase_neb_optimization_all_iterations(
 
             # Write SIESTA input files
             write_siesta_input_set(
-                structure, static_maker.input_set_generator, directory="."
+                structure,
+                static_maker.input_set_generator,  # type: ignore[attr-defined]  # subclass attr
+                directory=".",
             )
 
             # Run SIESTA
@@ -1135,9 +1140,7 @@ def ase_neb_optimization_all_iterations(
                 # DFT forces (from SIESTA, before any negation)
                 dft_force = forces_list[i]
                 max_dft = np.max(np.linalg.norm(dft_force, axis=1))
-                f.write(
-                    f"  Max DFT force (as read from SIESTA): {max_dft:.4f} eV/Å\n"
-                )
+                f.write(f"  Max DFT force (as read from SIESTA): {max_dft:.4f} eV/Å\n")
 
                 # Forces attached to calculator (after potential negation)
                 calc_forces = neb.images[i].get_forces()
@@ -1363,13 +1366,13 @@ def ase_neb_optimization_all_iterations(
                     f"✓ Created FIRE optimizer (maxstep={effective_maxstep:.3f})"
                 )
             elif optimizer.upper() == "LBFGS":
-                opt = LBFGS(neb, logfile=None, maxstep=effective_maxstep, alpha=alpha)
+                opt = LBFGS(neb, logfile=None, maxstep=effective_maxstep, alpha=alpha)  # type: ignore[arg-type]  # ASE NEB optimizer target
                 logger.info(
                     f"✓ Created LBFGS optimizer "
                     f"(alpha={alpha}, maxstep={effective_maxstep:.3f})"
                 )
             else:  # BFGS
-                opt = BFGS(neb, logfile=None, maxstep=effective_maxstep, alpha=alpha)
+                opt = BFGS(neb, logfile=None, maxstep=effective_maxstep, alpha=alpha)  # type: ignore[arg-type]  # ASE NEB optimizer target
                 logger.info(
                     f"✓ Created BFGS optimizer "
                     f"(alpha={alpha}, maxstep={effective_maxstep:.3f})"
@@ -1545,7 +1548,7 @@ def generate_neb_images_ase(
     neb.interpolate(method="idpp")
 
     # Convert back to pymatgen Structures
-    structures = [AseAtomsAdaptor.get_structure(img) for img in images]
+    structures: list[Any] = [AseAtomsAdaptor.get_structure(img) for img in images]
 
     # Save images to disk for inspection
     logger.info(f"Saving {len(structures)} NEB images to disk")
@@ -1573,7 +1576,7 @@ def ase_neb_iteration_persistent(
     max_iterations: int,
     endpoint_energies: list = None,  # Store endpoint energies from first iteration
     endpoint_forces: list = None,  # Store endpoint forces from first iteration
-) -> dict:
+) -> dict | Response:
     """
     Perform one NEB iteration using persistent image folders.
 
@@ -1658,7 +1661,7 @@ def ase_neb_iteration_persistent(
 
         write_siesta_input_set(
             structure,
-            static_maker.input_set_generator,
+            static_maker.input_set_generator,  # type: ignore[attr-defined]  # subclass attr
             directory=".",
         )
 
@@ -1719,7 +1722,7 @@ def _compute_neb_step_persistent(
     static_maker: Maker,
     endpoint_energies: list = None,
     endpoint_forces: list = None,
-) -> dict:
+) -> dict | Response:
     """
     Compute NEB forces, update positions, check convergence (for persistent approach).
 
@@ -1875,7 +1878,7 @@ def _compute_neb_step_persistent(
     if optimizer.upper() == "FIRE":
         opt = FIRE(neb, logfile=None, maxmove=0.5)
     else:
-        opt = BFGS(neb, logfile=None, maxstep=0.5, alpha=1.0 / 75.0)
+        opt = BFGS(neb, logfile=None, maxstep=0.5, alpha=1.0 / 75.0)  # type: ignore[arg-type]  # ASE NEB optimizer target
 
     # Restore optimizer state if exists (critical for BFGS Hessian!)
     # This now works correctly because NEB object identity is preserved
@@ -1910,7 +1913,9 @@ def _compute_neb_step_persistent(
         logger.warning(f"Could not save NEB object: {e}")
 
     # Extract updated structures from NEB images
-    updated_structures = [AseAtomsAdaptor.get_structure(img) for img in neb.images]
+    updated_structures: list[Any] = [
+        AseAtomsAdaptor.get_structure(img) for img in neb.images
+    ]
 
     # Spawn next iteration (pass endpoint data for reuse)
     next_iteration_job = ase_neb_iteration_persistent(
@@ -1943,7 +1948,7 @@ def ase_neb_iteration(
     spring_constant: float,
     max_iterations: int,
     previous_forces: list = None,  # noqa: ARG001
-) -> dict:
+) -> dict | Response:
     """
     Perform one iteration of ASE NEB optimization.
 
@@ -2024,7 +2029,7 @@ def compute_neb_step(
     spring_constant: float,
     max_iterations: int,
     static_maker: Maker,
-) -> dict:
+) -> dict | Response:
     """
     Compute NEB forces, update positions, check convergence.
 
@@ -2143,13 +2148,15 @@ def compute_neb_step(
     )
 
     # Create optimizer
-    opt = FIRE(neb) if optimizer.upper() == "FIRE" else BFGS(neb)
+    opt = FIRE(neb) if optimizer.upper() == "FIRE" else BFGS(neb)  # type: ignore[arg-type]  # ASE NEB optimizer target  # type: ignore[arg-type]  # ASE NEB optimizer target
 
     # Take one optimization step
     opt.step()  # Optimizer internally calls neb.get_forces()
 
     # Extract updated structures
-    updated_structures = [AseAtomsAdaptor.get_structure(img) for img in images]
+    updated_structures: list[Any] = [
+        AseAtomsAdaptor.get_structure(img) for img in images
+    ]
 
     # Spawn next iteration
     next_iteration_job = ase_neb_iteration(
@@ -2171,7 +2178,7 @@ def compute_neb_step(
 @job
 def run_static_on_images(
     structures: list[Structure], static_maker: Maker
-) -> list[dict]:
+) -> list[dict] | Response:
     """
     Run static calculations on all NEB images.
 
@@ -2271,7 +2278,9 @@ def run_ase_neb_optimization(
         logger.info(f"NEB iteration {iteration + 1}/{max_iterations}")
 
         # Step 1: Get current structures
-        current_structures = [AseAtomsAdaptor.get_structure(img) for img in images]
+        current_structures: list[Any] = [
+            AseAtomsAdaptor.get_structure(img) for img in images
+        ]
 
         # Step 2: Run static calculations in parallel on all images
         # This will be done by returning a Response with jobs

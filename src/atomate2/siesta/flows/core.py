@@ -14,7 +14,9 @@ from atomate2.siesta.sets.core import SiestaInputGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Any
 
+    from jobflow import Job
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -160,18 +162,20 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
 
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
 
-        jobs = []
+        jobs: list[Job | Flow] = []
         allowed_basis_size = self._get_basis_sizes()
 
         for basis in allowed_basis_size:
             if self.strategy == "legacy":
                 # Use legacy interface
-                scf_maker_basis_job = self.static_maker.scf(
-                    basis_set_size=f"{basis}"
-                ).make(structure, prev_dir=None)
+                scf_maker_basis_job = (
+                    cast("StaticMaker", self.static_maker)
+                    .scf(basis_set_size=f"{basis}")
+                    .make(structure, prev_dir=None)
+                )
             else:
                 # Use modern interface with parameter updates
-                maker = self.static_maker.scf()
+                maker: Any = cast("StaticMaker", self.static_maker).scf()
                 self.propagate_custodian_to_maker(maker)
                 basis_params = self._get_basis_params(basis)
                 siesta_updates = {

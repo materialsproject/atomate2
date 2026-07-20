@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from jobflow.core.flow import Flow
 
@@ -20,6 +20,7 @@ from atomate2.siesta.utils.verbosity import VerbosityLevel
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow.core.job import Job
     from pymatgen.core import Molecule, Structure
 
     from atomate2.siesta.jobs.base import BaseSiestaMaker
@@ -89,7 +90,7 @@ class MeshCutoffConvergenceFlowMaker(BaseSiestaFlowMaker):
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
 
-        jobs = []
+        jobs: list[Job | Flow] = []
         job_metadata = []
 
         for mesh_cutoff in self.mesh_cutoffs:
@@ -97,8 +98,11 @@ class MeshCutoffConvergenceFlowMaker(BaseSiestaFlowMaker):
             static_job = self.static_maker.make(structure, prev_dir=prev_dir)
 
             # Update mesh cutoff parameter (value in Ry)
-            static_job = update_user_siesta_settings(
-                static_job, {"Mesh.Cutoff": f"{mesh_cutoff} Ry"}
+            static_job = cast(
+                "Job",
+                update_user_siesta_settings(
+                    static_job, {"Mesh.Cutoff": f"{mesh_cutoff} Ry"}
+                ),
             )
 
             # Set job name

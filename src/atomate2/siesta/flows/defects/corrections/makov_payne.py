@@ -261,6 +261,7 @@ class MakovPayneCorrection(CorrectionScheme):
             scheme_name=self.name,
             metadata=metadata,
             charge_model=self.charge_model,
+            alignment_energy=None,
             converged=True,
             warnings=warnings,
         )

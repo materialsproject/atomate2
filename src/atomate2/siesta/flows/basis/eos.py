@@ -22,7 +22,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,6 +36,9 @@ from atomate2.siesta.utils.common import console, print_docstring_in_box
 from atomate2.siesta.utils.verbosity import VerbosityLevel
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from jobflow import Job
     from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
@@ -266,7 +269,7 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
 
         from atomate2.siesta.flows.eos import SiestaEosFlowMaker
 
-        jobs = []
+        jobs: list[Flow | Job] = []
         job_metadata = []
 
         # Define basis parameters
@@ -292,7 +295,7 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             )
 
             # Create the EOS flow for this basis
-            eos_flow = eos_maker.make(structure, prev_dir=prev_dir)
+            eos_flow = eos_maker.make(cast("Structure", structure), prev_dir=prev_dir)
 
             # Update all jobs in the EOS flow with the specific basis settings
             siesta_updates = {
@@ -304,7 +307,9 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             }
 
             # Update the flow with basis-specific parameters
-            eos_flow = update_user_siesta_settings(eos_flow, siesta_updates)
+            eos_flow = cast(
+                "Flow", update_user_siesta_settings(eos_flow, siesta_updates)
+            )
 
             jobs.append(eos_flow)
             job_metadata.append(
@@ -354,6 +359,7 @@ def _extract_siesta_timing(siesta_out_path: str | Path) -> float:
 
     try:
         # Check if file is gzipped
+        opener: Callable[..., Any]
         if str(siesta_out_path).endswith(".gz"):
             opener = gzip.open
             mode = "rt"  # text mode for gzip
@@ -373,7 +379,7 @@ def _extract_siesta_timing(siesta_out_path: str | Path) -> float:
                     or "Elapsed wall time (sec)" in line
                     or "Total elapsed wall-clock time (sec)" in line
                 ):
-                    parts = line.split("=")
+                    parts = line.split("=")  # type: ignore[arg-type]  # text-mode: str
                     if len(parts) == 2:
                         time_val = float(parts[1].strip())
                         logger.debug(
@@ -1298,9 +1304,7 @@ def plot_basis_functions(
     ax1 = plt.subplot(2, 2, 1)
 
     # Get unique EnergyShift values
-    unique_shifts = sorted(
-        {d["energy_shift"] for d in basis_functions_data.values()}
-    )
+    unique_shifts = sorted({d["energy_shift"] for d in basis_functions_data.values()})
 
     # Create schematic orbitals
     r = np.linspace(0, 10, 200)  # radial coordinate in bohr
@@ -1387,7 +1391,7 @@ def plot_basis_functions(
         # Overlap
         overlap = phi_a * phi_b
         # np.trapz was renamed to np.trapezoid in numpy 2.0
-        trapezoid = getattr(np, "trapezoid", None) or np.trapz  # noqa: NPY201
+        trapezoid = getattr(np, "trapezoid", None) or np.trapz  # type: ignore[attr-defined]  # noqa: NPY201
         overlap_integral = trapezoid(overlap, r)
 
         ax3.fill_between(
@@ -1481,9 +1485,7 @@ def plot_basis_functions(
 
     # Individual Plot 1: Orbital Extent vs EnergyShift
     _fig1, ax1 = plt.subplots(figsize=(10, 7))
-    unique_shifts = sorted(
-        {d["energy_shift"] for d in basis_functions_data.values()}
-    )
+    unique_shifts = sorted({d["energy_shift"] for d in basis_functions_data.values()})
     radial = np.linspace(0, 10, 200)
     colors = plt.cm.viridis(np.linspace(0, 1, len(unique_shifts)))
     for i, es in enumerate(unique_shifts):
@@ -1517,9 +1519,7 @@ def plot_basis_functions(
     _fig2, ax2 = plt.subplots(figsize=(10, 7))
     r = np.linspace(0, 8, 200)
     es_demo = 0.010
-    unique_norms = sorted(
-        {d["split_norm"] for d in basis_functions_data.values()}
-    )[:3]
+    unique_norms = sorted({d["split_norm"] for d in basis_functions_data.values()})[:3]
     colors2 = plt.cm.plasma(np.linspace(0, 1, len(unique_norms)))
     for i, sn in enumerate(unique_norms):
         r_c1 = 4.0 / np.sqrt(es_demo * 10)
@@ -1971,7 +1971,7 @@ def plot_real_basis_functions(
     plt.suptitle(title, fontsize=14, fontweight="bold")
 
     # Standard tight layout - legends are now inside plots
-    plt.tight_layout(rect=[0, 0, 1, 0.96])  # Leave room for suptitle
+    plt.tight_layout(rect=[0, 0, 1, 0.96])  # type: ignore[arg-type]  # room for suptitle
     plt.savefig(output_file, dpi=150, bbox_inches="tight")
     plt.close()
 
@@ -2028,14 +2028,14 @@ def plot_real_basis_functions(
                             f"(ES={es:.3f}, SN={sn:.2f}, r_c={cutoff:.2f})"
                         )
 
-                        (line,) = ax_ind.plot(
+                        (line_artist,) = ax_ind.plot(
                             r,
                             phi,
                             linewidth=2.5,
                             color=colors[color_idx],
                             label=orb_label,
                         )
-                        legend_entries.append(line)
+                        legend_entries.append(line_artist)
 
                         # Mark cutoff
                         ax_ind.axvline(
@@ -3015,7 +3015,7 @@ def plot_eos_overlay(flow_results: dict[str, Any], job_metadata: list[dict]) -> 
                         from pymatgen.analysis.eos import EOS
 
                         eos = EOS(eos_name="murnaghan")
-                        eos_obj = eos.fit(volumes, energies)
+                        eos_obj = eos.fit(volumes, energies)  # type: ignore[arg-type]  # ndarray ok
                         v_fit = np.linspace(volumes.min(), volumes.max(), 100)
                         e_fit = eos_obj.func(v_fit)
 
@@ -3185,7 +3185,7 @@ def generate_eos_basis_outputs(
                             volumes.min() * 0.95, volumes.max() * 1.05, 100
                         )
                         try:
-                            eos_obj = EOS(eos_name="murnaghan").fit(volumes, energies)
+                            eos_obj = EOS(eos_name="murnaghan").fit(volumes, energies)  # type: ignore[arg-type]  # ndarray ok
                             energy_fit = eos_obj.func(vol_fit)
                             ax.plot(
                                 vol_fit,
@@ -3363,7 +3363,7 @@ def generate_eos_basis_outputs(
                             volumes.min() * 0.95, volumes.max() * 1.05, 100
                         )
                         try:
-                            eos_obj = EOS(eos_name="murnaghan").fit(volumes, energies)
+                            eos_obj = EOS(eos_name="murnaghan").fit(volumes, energies)  # type: ignore[arg-type]  # ndarray ok
                             energy_fit = eos_obj.func(vol_fit)
                             ax.plot(
                                 vol_fit,

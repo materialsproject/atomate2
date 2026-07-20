@@ -90,8 +90,8 @@ class GeometryConvergenceHandler(ErrorHandler):
         bool
             True if geometry did not converge, False otherwise
         """
-        directory = Path(directory)
-        output_file = directory / "siesta.out"
+        dir_path = Path(directory)
+        output_file = dir_path / "siesta.out"
 
         if not output_file.exists():
             return False
@@ -142,19 +142,19 @@ class GeometryConvergenceHandler(ErrorHandler):
             Custodian format: {"errors": [...], "actions": [...]}
             Returns {"errors": [...], "actions": None} if unfixable
         """
-        directory = Path(directory)
+        dir_path = Path(directory)
         corrections = {}
 
         # Use custodian's auto-tracked n_applied_corrections
         attempt = self.n_applied_corrections + 1
 
         # Read current MD.NumCGsteps from FDF
-        fdf_file = directory / "siesta.fdf"
+        fdf_file = dir_path / "siesta.fdf"
         current_params = read_fdf_file(fdf_file)
         current_steps = int(current_params.get("MD.NumCGsteps", 200))  # Default 200
 
         # Get current max force
-        output_file = directory / "siesta.out"
+        output_file = dir_path / "siesta.out"
         content = output_file.read_text()
         max_force = self._get_max_force(content)
         force_str = f"{max_force:.4f}" if max_force else "unknown"

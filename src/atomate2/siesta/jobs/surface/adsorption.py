@@ -314,6 +314,7 @@ def analyze_adsorption_scan(
         std_adsorption_energy=float(std_energy),
         energy_range=float(energy_range),
         site_results=site_results,
+        input_parameters=None,
     )
 
 
