@@ -10,17 +10,18 @@ These tests validate:
 - Tier system integration
 """
 
-import pytest
 from collections import OrderedDict
 
-from atomate2.siesta.sets.core import (
-    StaticSetGenerator,
-    RelaxSetGenerator,
-    BandStructureSetGenerator,
-    PhononSetGenerator,
-    OpticalSetGenerator,
-)
+import pytest
+
 from atomate2.siesta.sets.base import SiestaInputSet
+from atomate2.siesta.sets.core import (
+    BandStructureSetGenerator,
+    OpticalSetGenerator,
+    PhononSetGenerator,
+    RelaxSetGenerator,
+    StaticSetGenerator,
+)
 
 
 class TestStaticSetGenerator:

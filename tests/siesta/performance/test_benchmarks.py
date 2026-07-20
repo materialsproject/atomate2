@@ -5,14 +5,15 @@ Measures timing overhead of tier-based initialization compared to baseline,
 and identifies any performance bottlenecks in the system.
 """
 
-import pytest
 import time
-from pymatgen.core import Structure, Lattice
 
+import pytest
+from pymatgen.core import Lattice, Structure
+
+from atomate2.siesta.dataclass.registry import get_modules_for_tier
 from atomate2.siesta.jobs.core import RelaxMaker
 from atomate2.siesta.sets.core import StaticSetGenerator
 from atomate2.siesta.sets.tiers import apply_tier_preset
-from atomate2.siesta.dataclass.registry import get_modules_for_tier
 
 # The benchmark fixture comes from the optional pytest-benchmark plugin;
 # skip this module cleanly when it is not installed.

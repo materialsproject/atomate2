@@ -4,10 +4,10 @@ import pytest
 from click.testing import CliRunner
 
 from atomate2.siesta.cli.inputs import (
+    DATA_CLASSES,
     cli,
     format_default_value,
     get_class_docstring,
-    DATA_CLASSES,
 )
 
 
@@ -48,7 +48,7 @@ class TestFormatDefaultValue:
 
     def test_format_callable_returns_empty_list(self):
         """Test formatting callable that returns empty list."""
-        result = format_default_value(lambda: [])
+        result = format_default_value(list)
         assert result == "[]"
 
     def test_format_callable_raises_exception(self):

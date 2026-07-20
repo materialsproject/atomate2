@@ -7,11 +7,10 @@ This module provides the `supercell` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-
 from pymatgen.core import Structure
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 console = Console()
 
@@ -73,8 +72,8 @@ def supercell(
     or minimum atom count. Automatically propagates site properties like
     magnetic moments.
 
-    Examples:
-
+    Examples
+    --------
         # 2×2×2 supercell
         atomate2siesta-structure supercell Si.cif --matrix 2 2 2
 
@@ -237,14 +236,14 @@ def supercell(
 
 [cyan]Phonon Calculation (Finite Differences):[/cyan]
   • Displacements: {n_displacements} (3 directions × 2 per atom)
-  • Estimated time: ~{phonon_time_estimate:.0f} minutes ({phonon_time_estimate/60:.1f} hours)
+  • Estimated time: ~{phonon_time_estimate:.0f} minutes ({phonon_time_estimate / 60:.1f} hours)
     (assuming ~5 min per force calculation)
   • Memory: ~{memory_estimate:.1f} GB (rough estimate)
 
 [cyan]NEB Calculation:[/cyan]
   • Typical images: 5-7 intermediate structures
   • Time per image: ~10-30 min
-  • Total for 5 images: ~{5*15:.0f} min ({5*15/60:.1f} hours)
+  • Total for 5 images: ~{5 * 15:.0f} min ({5 * 15 / 60:.1f} hours)
 
 [yellow]Note:[/yellow] These are rough estimates. Actual time depends on:
   • k-point sampling

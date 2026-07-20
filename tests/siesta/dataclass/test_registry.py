@@ -9,11 +9,12 @@ Tests the registry-based auto-initialization system including:
 """
 
 import pytest
+
 from atomate2.siesta.dataclass.registry import (
-    DataclassModule,
     MODULE_REGISTRY,
-    get_modules_for_tier,
+    DataclassModule,
     get_modules_by_category,
+    get_modules_for_tier,
     get_sorted_modules,
 )
 

@@ -41,7 +41,7 @@ def read_fdf_file(filepath: Path | str) -> dict[str, Any]:
 
     params = {}
 
-    with open(filepath, "r") as f:
+    with open(filepath) as f:
         for line in f:
             # Skip comments and empty lines
             line = line.split("#")[0].strip()
@@ -102,7 +102,7 @@ def update_fdf_file(
 
     try:
         # Read current content
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             lines = f.readlines()
 
         # Apply updates
@@ -204,12 +204,11 @@ def format_fdf_value(value: Any) -> str:
     """
     if isinstance(value, bool):
         return "T" if value else "F"
-    elif isinstance(value, (list, tuple)):
+    if isinstance(value, (list, tuple)):
         return " ".join(str(v) for v in value)
-    elif isinstance(value, (int, float)):
+    if isinstance(value, (int, float)):
         return str(value)
-    else:
-        return str(value)
+    return str(value)
 
 
 def apply_corrections(

@@ -8,9 +8,7 @@ from atomate2.siesta.flows.surface.adsorption import (
     AdsorptionOptimizationFlowMaker,
     AdsorptionScanFlowMaker,
 )
-from atomate2.siesta.flows.surface.convergence import (
-    SurfaceEnergyConvergenceFlowMaker,
-)
+from atomate2.siesta.flows.surface.convergence import SurfaceEnergyConvergenceFlowMaker
 from atomate2.siesta.flows.surface.core import SurfaceEnergyFlowMaker
 from atomate2.siesta.flows.surface.multi_surface import (
     MultiSurfaceEnergyFlowMaker,

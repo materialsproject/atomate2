@@ -4,10 +4,10 @@ import pytest
 from jobflow import run_locally
 from pymatgen.core import Lattice, Structure
 
-from atomate2.siesta.flows.phonon.qha import SiestaQhaFlowMaker
-from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker as PhononMaker
 from atomate2.siesta.flows.eos import SiestaEosFlowMaker
+from atomate2.siesta.flows.phonon.qha import SiestaQhaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker
+from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker as PhononMaker
 
 
 def get_si_structure():

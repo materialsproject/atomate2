@@ -11,14 +11,13 @@ Section: 6.24 Output of charge densities and potentials on the grid
 
 __all__ = ["Grids"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -177,7 +176,7 @@ class Grids(FDFDataclass):
     )
 
     # Dictionary to hold FDF arguments
-    grids_fdf_arguments: Dict[str, Any] = field(default_factory=dict)
+    grids_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Register FDF parameters handled by this dataclass."""
@@ -212,9 +211,8 @@ class Grids(FDFDataclass):
             If grid output parameters are invalid or file format is unsupported
         """
         logger.info("Grids.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -246,14 +244,15 @@ class Grids(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
         fdf["#Grids"] = "Grid Output Settings"
 
         if self.save_rho:
@@ -290,11 +289,12 @@ class Grids(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have grid output parameters
@@ -320,9 +320,9 @@ class Grids(FDFDataclass):
         if self.save_rho_xc:
             params_to_add["SaveRhoXC"] = self.save_rho_xc
         if self.save_electrostatic_potential:
-            params_to_add[
-                "SaveElectrostaticPotential"
-            ] = self.save_electrostatic_potential
+            params_to_add["SaveElectrostaticPotential"] = (
+                self.save_electrostatic_potential
+            )
         if self.save_neutral_atom_potential:
             params_to_add["SaveNeutralAtomPotential"] = self.save_neutral_atom_potential
         if self.save_total_potential:
@@ -348,7 +348,7 @@ class Grids(FDFDataclass):
 
     @classmethod
     def setup_advanced_grids(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "Grids":
         """
         Create and configure a Grids instance with full parameter parsing.
@@ -362,22 +362,25 @@ class Grids(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             Grids: Configured instance with all fields set.
 
-        Examples:
+        Examples
+        --------
             >>> # Using SIESTA FDF parameter names
-            >>> grids = Grids.setup_advanced_grids({
-            ...     "SaveRho": True,
-            ...     "SaveDeltaRho": True,
-            ...     "SaveGridFunc.Format": "netcdf"
-            ... })
+            >>> grids = Grids.setup_advanced_grids(
+            ...     {
+            ...         "SaveRho": True,
+            ...         "SaveDeltaRho": True,
+            ...         "SaveGridFunc.Format": "netcdf",
+            ...     }
+            ... )
 
             >>> # Using Python attribute names
-            >>> grids = Grids.setup_advanced_grids({
-            ...     "save_rho": True,
-            ...     "save_bader_charge": True
-            ... })
+            >>> grids = Grids.setup_advanced_grids(
+            ...     {"save_rho": True, "save_bader_charge": True}
+            ... )
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]Grids.setup_advanced_grids()[/green]")
@@ -447,23 +450,21 @@ class Grids(FDFDataclass):
                             )
                     else:
                         setattr(instance, matched_attr, str(value))
-                else:
-                    # Boolean parameters
-                    if isinstance(value, bool):
-                        setattr(instance, matched_attr, value)
-                    elif isinstance(value, str):
-                        setattr(
-                            instance,
-                            matched_attr,
-                            value.lower() in ["true", "t", "yes", "1"],
-                        )
-                    else:
-                        setattr(instance, matched_attr, bool(value))
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
-                    console.print(
-                        f"[yellow]Warning: No match found for parameter '{key}' in Grids[/yellow]"
+                # Boolean parameters
+                elif isinstance(value, bool):
+                    setattr(instance, matched_attr, value)
+                elif isinstance(value, str):
+                    setattr(
+                        instance,
+                        matched_attr,
+                        value.lower() in ["true", "t", "yes", "1"],
                     )
+                else:
+                    setattr(instance, matched_attr, bool(value))
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
+                console.print(
+                    f"[yellow]Warning: No match found for parameter '{key}' in Grids[/yellow]"
+                )
 
         # Generate FDF block with comment header
         instance.generate_grid_block()

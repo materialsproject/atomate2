@@ -71,7 +71,9 @@ def plot_gruneisen_band_structure(
 
     Examples
     --------
-    >>> from atomate2.siesta.jobs.gruneisen_plotting import plot_gruneisen_band_structure
+    >>> from atomate2.siesta.jobs.gruneisen_plotting import (
+    ...     plot_gruneisen_band_structure,
+    ... )
     >>> from jobflow import run_locally
     >>> plot_job = plot_gruneisen_band_structure(gruneisen_doc, output_dir="plots")
     >>> run_locally(plot_job)

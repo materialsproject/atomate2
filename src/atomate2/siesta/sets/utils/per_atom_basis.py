@@ -14,10 +14,10 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 __all__ = [
+    "apply_diffuse_basis_to_surface",
     "apply_per_atom_basis",
     "create_per_atom_basis_dict",
     "detect_surface_atoms",
-    "apply_diffuse_basis_to_surface",
 ]
 
 
@@ -60,14 +60,14 @@ def apply_per_atom_basis(
     >>> structure = Structure(
     ...     lattice,
     ...     ["Si", "O", "O", "O"],
-    ...     [[0, 0, 0], [0.5, 0, 0], [0, 0.5, 0], [0, 0, 0.5]]
+    ...     [[0, 0, 0], [0.5, 0, 0], [0, 0.5, 0], [0, 0, 0.5]],
     ... )
     >>>
     >>> # Specify per-atom basis (1-indexed)
     >>> per_atom_basis = {
-    ...     1: "TZP",   # Si: highest accuracy
-    ...     2: "TZP",   # O atom 1: high accuracy
-    ...     3: "DZP",   # O atom 2: medium accuracy
+    ...     1: "TZP",  # Si: highest accuracy
+    ...     2: "TZP",  # O atom 1: high accuracy
+    ...     3: "DZP",  # O atom 2: medium accuracy
     ...     # Atom 4 uses fallback (DZ)
     ... }
     >>>
@@ -98,7 +98,7 @@ def apply_per_atom_basis(
     """
     # Validate indices
     n_atoms = len(structure)
-    for atom_idx in per_atom_basis.keys():
+    for atom_idx in per_atom_basis:
         if atom_idx < 1 or atom_idx > n_atoms:
             raise ValueError(
                 f"Invalid atom index {atom_idx}. "
@@ -180,9 +180,9 @@ def create_per_atom_basis_dict(
     --------
     >>> # Define atom groups by layer
     >>> atom_groups = {
-    ...     "surface": ([1, 2, 3, 4], "TZP"),    # Atoms 1-4: surface
-    ...     "subsurface": ([5, 6, 7, 8], "DZP"), # Atoms 5-8: subsurface
-    ...     "bulk": ([9, 10, 11, 12], "DZ"),     # Atoms 9-12: bulk
+    ...     "surface": ([1, 2, 3, 4], "TZP"),  # Atoms 1-4: surface
+    ...     "subsurface": ([5, 6, 7, 8], "DZP"),  # Atoms 5-8: subsurface
+    ...     "bulk": ([9, 10, 11, 12], "DZ"),  # Atoms 9-12: bulk
     ... }
     >>>
     >>> species_labels, pao_basissizes = create_per_atom_basis_dict(
@@ -269,7 +269,7 @@ def detect_surface_atoms(
     >>> result = detect_surface_atoms(slab, surface_layers=2)
     >>>
     >>> # Specify vacuum direction explicitly
-    >>> result = detect_surface_atoms(slab, vacuum_direction='c')
+    >>> result = detect_surface_atoms(slab, vacuum_direction="c")
 
     Notes
     -----
@@ -440,9 +440,9 @@ def apply_diffuse_basis_to_surface(
     >>> # Apply diffuse basis to surface atoms (1 outermost layer)
     >>> species_labels, pao_basissizes, info = apply_diffuse_basis_to_surface(
     ...     slab,
-    ...     surface_basis="TZP",   # Diffuse for surface
-    ...     bulk_basis="DZP",      # Standard for bulk
-    ...     surface_layers=1,      # Only outermost layer
+    ...     surface_basis="TZP",  # Diffuse for surface
+    ...     bulk_basis="DZP",  # Standard for bulk
+    ...     surface_layers=1,  # Only outermost layer
     ... )
     >>>
     >>> print(f"Surface atoms ({len(info['surface'])}): {info['surface']}")

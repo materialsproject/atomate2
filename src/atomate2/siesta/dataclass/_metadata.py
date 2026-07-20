@@ -45,7 +45,8 @@ def get_header_comment() -> str:
     """
     Generate standardized header comment for dataclass modules.
 
-    Returns:
+    Returns
+    -------
         str: Multi-line header comment with author and copyright info
     """
     return f"""
@@ -61,11 +62,12 @@ def get_module_docstring_header() -> str:
     """
     Generate standardized docstring header for dataclass modules.
 
-    Returns:
+    Returns
+    -------
         str: Formatted docstring header with metadata
     """
     return f"""
-.. moduleauthor:: {__author__ } <{__email__}>
+.. moduleauthor:: {__author__} <{__email__}>
 .. copyright:: {__copyright__}
 .. license:: {__license__}
 """.strip()

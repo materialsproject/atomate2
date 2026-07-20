@@ -3,12 +3,8 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 
 from jobflow import job
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +60,7 @@ def _write_ase_neb_info(
         if max_neb_force is not None:
             f.write(f"Final max NEB force: {max_neb_force:.4f} eV/Å\n")
         f.write(
-            f"Activation energy: {max(energies_rel):.2f} meV ({max(energies_rel)/1000:.4f} eV)\n"
+            f"Activation energy: {max(energies_rel):.2f} meV ({max(energies_rel) / 1000:.4f} eV)\n"
         )
         f.write(f"Transition state at image: {energies_rel.index(max(energies_rel))}\n")
         if any(mf is not None for mf in max_forces):
@@ -212,6 +208,7 @@ def _write_neb_summary(
         Force convergence tolerance (eV/Å).
     """
     import numpy as np
+
     from atomate2.siesta.utils.text_output import get_standard_footer
 
     summary_file = "neb_summary.txt"
@@ -239,12 +236,12 @@ def _write_neb_summary(
         f.write("ENERGY BARRIER:\n")
         f.write("-" * 80 + "\n")
         f.write(
-            f"Activation energy:          {barrier:.2f} meV ({barrier/1000:.6f} eV)\n"
+            f"Activation energy:          {barrier:.2f} meV ({barrier / 1000:.6f} eV)\n"
         )
         f.write(f"Transition state image:     {ts_index}\n")
         f.write(f"TS reaction coordinate:     {ts_coord:.6f}\n")
         f.write(
-            f"TS energy:                  {ts_energy:.2f} meV ({ts_energy/1000:.6f} eV)\n"
+            f"TS energy:                  {ts_energy:.2f} meV ({ts_energy / 1000:.6f} eV)\n"
         )
 
         # Get TS curvature if available
@@ -272,7 +269,7 @@ def _write_neb_summary(
             status = "Converged" if iter_max_force < force_tol else "Running"
 
             f.write(
-                f"{i+1:<6} {iter_barrier:<15.2f} {iter_max_force:<20.4f} {status:<15}\n"
+                f"{i + 1:<6} {iter_barrier:<15.2f} {iter_max_force:<20.4f} {status:<15}\n"
             )
         f.write("\n")
 
@@ -322,7 +319,7 @@ def _write_neb_summary(
         f.write(f"Initial energy:             {energies[0]:.6f} eV\n")
         f.write(f"Final energy:               {energies[-1]:.6f} eV\n")
         f.write(
-            f"Reaction energy:            {(energies[-1] - energies[0])*1000:.2f} meV\n"
+            f"Reaction energy:            {(energies[-1] - energies[0]) * 1000:.2f} meV\n"
         )
         f.write(
             f"Average spacing (RC):       {np.mean(np.diff(reaction_coords)):.6f}\n"
@@ -343,11 +340,11 @@ def _write_neb_summary(
         # Find images with highest forces
         high_force_indices = np.argsort(max_forces)[-3:][::-1]
         f.write("\nImages with highest forces:\n")
-        for idx in high_force_indices:
-            f.write(
-                f"  Image {idx}: F-max = {max_forces[idx]:.4f} eV/Å, "
-                f"RC = {reaction_coords[idx]:.6f}\n"
-            )
+        f.writelines(
+            f"  Image {idx}: F-max = {max_forces[idx]:.4f} eV/Å, "
+            f"RC = {reaction_coords[idx]:.6f}\n"
+            for idx in high_force_indices
+        )
 
         f.write("\n")
 
@@ -368,7 +365,7 @@ def _write_neb_summary(
 
             f.write(
                 f"Last barrier change:        {barrier_change:.2f} meV "
-                f"({barrier_change/barriers[-1]*100:.2f}%)\n"
+                f"({barrier_change / barriers[-1] * 100:.2f}%)\n"
             )
             f.write(f"Max barrier change:         {max_barrier_change:.2f} meV\n")
             f.write(f"Avg barrier change:         {avg_barrier_change:.2f} meV\n")
@@ -442,12 +439,13 @@ def plot_neb_results(
     dict
         Dictionary with activation energy, plot filenames, and convergence info.
     """
-    import matplotlib.pyplot as plt
-    import numpy as np
     import gzip
     from pathlib import Path
-    from scipy.interpolate import CubicSpline
+
+    import matplotlib.pyplot as plt
+    import numpy as np
     import pandas as pd
+    from scipy.interpolate import CubicSpline
 
     logger.info("plot_neb_results()")
     prev_path = Path(prev_dir)
@@ -487,7 +485,7 @@ def plot_neb_results(
         with gzip.open(file_to_read, "rt") as f:
             lines = f.readlines()
     else:
-        with open(file_to_read, "r") as f:
+        with open(file_to_read) as f:
             lines = f.readlines()
 
     # Parse data blocks

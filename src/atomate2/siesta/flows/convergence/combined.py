@@ -107,16 +107,16 @@ class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
         >>>
         >>> # Define convergence criteria
         >>> criteria = ConvergenceCriteria(
-        ...     energy_tol=1.0,      # 1 meV energy difference
-        ...     fermi_tol=0.01,      # 0.01 eV Fermi energy difference
-        ...     force_tol=0.01,      # 0.01 eV/Å maximum force
-        ...     stress_tol=0.05,     # 0.05 eV/Å³ maximum stress
+        ...     energy_tol=1.0,  # 1 meV energy difference
+        ...     fermi_tol=0.01,  # 0.01 eV Fermi energy difference
+        ...     force_tol=0.01,  # 0.01 eV/Å maximum force
+        ...     stress_tol=0.05,  # 0.05 eV/Å³ maximum stress
         ... )
         >>>
         >>> structure = Structure.from_file("structure.cif")
         >>> maker = MeshKpointConvergenceFlowMaker(
         ...     mesh_cutoffs=[200, 250, 300, 350, 400, 450, 500],
-        ...     kpoints_list=[[2,2,2], [4,4,4], [6,6,6], [8,8,8], [10,10,10]],
+        ...     kpoints_list=[[2, 2, 2], [4, 4, 4], [6, 6, 6], [8, 8, 8], [10, 10, 10]],
         ...     stage1_kpoints=[4, 4, 4],
         ...     convergence_criteria=criteria,
         ... )
@@ -159,7 +159,8 @@ class MeshKpointConvergenceFlowMaker(BaseSiestaFlowMaker):
             structure: Structure to calculate
             prev_dir: Previous directory (optional)
 
-        Returns:
+        Returns
+        -------
             Flow with two-stage adaptive convergence
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)

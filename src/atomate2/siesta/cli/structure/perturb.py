@@ -8,12 +8,11 @@ from __future__ import annotations
 
 import random
 
-import numpy as np
 import click
+import numpy as np
+from pymatgen.core import Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Structure
 
 console = Console()
 
@@ -83,8 +82,8 @@ def perturb(
     or ensemble generation. Supports uniform random displacements or thermal
     displacements based on Maxwell-Boltzmann distribution.
 
-    Examples:
-
+    Examples
+    --------
         # Random displacements with 0.1 Å amplitude
         atomate2siesta-structure perturb structure.cif --amplitude 0.1
 
@@ -257,12 +256,11 @@ def perturb(
 
             for i, config in enumerate(configs):
                 if output:
-                    output_file = f"{output}_{i+1}.{format}"
+                    output_file = f"{output}_{i + 1}.{format}"
+                elif mode == "uniform":
+                    output_file = f"perturbed_amp{amplitude:.2f}_{input_path.stem}_config{i + 1}.{format}"
                 else:
-                    if mode == "uniform":
-                        output_file = f"perturbed_amp{amplitude:.2f}_{input_path.stem}_config{i+1}.{format}"
-                    else:
-                        output_file = f"perturbed_T{temperature:.0f}K_{input_path.stem}_config{i+1}.{format}"
+                    output_file = f"perturbed_T{temperature:.0f}K_{input_path.stem}_config{i + 1}.{format}"
 
                 _save_structure(config, output_file, format)
                 saved_files.append(output_file)
@@ -332,7 +330,7 @@ def _display_perturbation_info(original, perturbed, displacements, mode):
     )
     table.add_row(
         "RMS displacement",
-        f"{np.sqrt(np.mean(np.array(displacements)**2)):.4f} Å",
+        f"{np.sqrt(np.mean(np.array(displacements) ** 2)):.4f} Å",
     )
 
     console.print(table)

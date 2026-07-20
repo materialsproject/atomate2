@@ -225,7 +225,8 @@ def _build_auto_resources(
         job_doc: Job document from MongoDB
         profile_name: Optional cluster profile name
 
-    Returns:
+    Returns
+    -------
         Resource dict or None on failure
     """
     try:
@@ -291,7 +292,8 @@ def _extract_atom_count_from_doc(job_doc: dict[str, Any]) -> int | None:
     Args:
         job_doc: Job document from MongoDB
 
-    Returns:
+    Returns
+    -------
         Number of atoms or None if not found
     """
     try:
@@ -411,7 +413,8 @@ def _update_resources_in_db(
         new_resources: New resources dict to set
         create_backup: Whether to create backup
 
-    Returns:
+    Returns
+    -------
         True if successful
     """
     try:
@@ -481,16 +484,15 @@ def _update_resources_in_db(
                 f"[green]>[/green] Modified {result.modified_count} document(s)"
             )
             return True
+        console.print("[yellow]Warning:[/yellow] No documents modified")
+        found = collection.find_one(query)
+        if not found:
+            console.print(f"[red]Job not found with query: {query}[/red]")
         else:
-            console.print("[yellow]Warning:[/yellow] No documents modified")
-            found = collection.find_one(query)
-            if not found:
-                console.print(f"[red]Job not found with query: {query}[/red]")
-            else:
-                console.print(
-                    "[yellow]Note:[/yellow] Resources may already match the target values"
-                )
-            return False
+            console.print(
+                "[yellow]Note:[/yellow] Resources may already match the target values"
+            )
+        return False
 
     except Exception as e:
         console.print(f"[red]Database error:[/red] {e}")

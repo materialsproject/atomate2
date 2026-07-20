@@ -6,8 +6,8 @@ configurations, YAML files, and other common operations.
 
 from __future__ import annotations
 
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 import yaml
 from rich.console import Console
@@ -21,7 +21,8 @@ def _backup_config(config_path: Path) -> Path:
     Args:
         config_path: Path to the configuration file to backup
 
-    Returns:
+    Returns
+    -------
         Path to the backup file
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -40,7 +41,8 @@ def _update_nested_dict(base_dict: dict, update_dict: dict) -> dict:
         base_dict: The base dictionary to update
         update_dict: The dictionary with updates
 
-    Returns:
+    Returns
+    -------
         Updated dictionary
     """
     for key, value in update_dict.items():
@@ -61,7 +63,8 @@ def _load_yaml_config(config_path: Path) -> dict:
     Args:
         config_path: Path to the YAML configuration file
 
-    Returns:
+    Returns
+    -------
         Dictionary with configuration data
     """
     with open(config_path) as f:
@@ -184,11 +187,10 @@ def _write_yaml_with_comments(file_handle, config_data: dict):
                     file_handle.write(f"{'  ' * indent}{key}:\n")
                 for item in value:
                     file_handle.write(f"{'  ' * (indent + 1)}- {item}\n")
+            elif comment:
+                file_handle.write(f"{'  ' * indent}{key}: {value}  # {comment}\n")
             else:
-                if comment:
-                    file_handle.write(f"{'  ' * indent}{key}: {value}  # {comment}\n")
-                else:
-                    file_handle.write(f"{'  ' * indent}{key}: {value}\n")
+                file_handle.write(f"{'  ' * indent}{key}: {value}\n")
 
     # Write header comment
     file_handle.write("# Jobflow Remote Configuration File\n")

@@ -45,7 +45,7 @@ from atomate2.siesta.flows.eos import SiestaEosFlowMaker
 # ============================================================================
 maker = SiestaEosFlowMaker(
     number_of_frames={number_of_frames},  # Volume sampling points
-    linear_strain=(-{strain_range}, {strain_range}),  # ±{int(strain_range*100)}% volume variation
+    linear_strain=(-{strain_range}, {strain_range}),  # ±{int(strain_range * 100)}% volume variation
 )
 """
 

@@ -11,17 +11,11 @@ Section: 6.3 Structural Information
 
 __all__ = ["StructuralInformationVersion1", "StructuralInformationVersion2"]
 
-from typing import Dict
+import logging
+from dataclasses import dataclass, field
 from typing import Any
-from typing import List
-from typing import Tuple
-from typing import Optional
-from dataclasses import field
-from dataclasses import dataclass
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +31,7 @@ class StructuralInformationVersion1(FDFDataclass):
     # atomic_species: List[int] = field(default_factory=list)  # List of atomic species corresponding to the coordinates
     # z_matrix_format: bool = False  # Whether to use Z-matrix format for coordinates
 
-    lattice_vectors: List[Tuple[float, float, float]] = field(
+    lattice_vectors: list[tuple[float, float, float]] = field(
         default_factory=lambda: [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)],
         metadata={
             "description": "The three lattice vectors (in Angstroms) that define the simulation cell.",
@@ -45,7 +39,7 @@ class StructuralInformationVersion1(FDFDataclass):
         },
     )
 
-    atomic_coordinates: List[Tuple[float, float, float]] = field(
+    atomic_coordinates: list[tuple[float, float, float]] = field(
         default_factory=list,
         metadata={
             "description": "A list of coordinates for each atom. These are part of the 'AtomicCoordinatesAndAtomicSpecies' block.",
@@ -53,7 +47,7 @@ class StructuralInformationVersion1(FDFDataclass):
         },
     )
 
-    atomic_species: List[int] = field(
+    atomic_species: list[int] = field(
         default_factory=list,
         metadata={
             "description": "A list of integer indices mapping each atom to its chemical species. This is the fourth column in the 'AtomicCoordinatesAndAtomicSpecies' block.",
@@ -111,17 +105,17 @@ class StructuralInformationVersion1(FDFDataclass):
 
         return "\n".join(block_lines)
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """Update from FDF parameters. Structure is typically handled by ASE."""
-        pass  # Structure handling is done by ASE Atoms object
+        # Structure handling is done by ASE Atoms object
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """Generate FDF parameters. Structure blocks are handled elsewhere."""
         return {}  # Structure written by ASE writer
 
     @classmethod
     def setup_structural_information(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "StructuralInformationVersion1":
         """
         Create and configure a StructuralInformationVersion1 instance with full parameter parsing.
@@ -130,7 +124,8 @@ class StructuralInformationVersion1(FDFDataclass):
             user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             StructuralInformationVersion1: Configured instance with all fields set.
         """
         # Initialize instance with defaults
@@ -148,7 +143,7 @@ class StructuralInformationVersion1(FDFDataclass):
 
         return instance
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """ASE handles structure directly via Atoms object."""
         return {}  # Structure already in ASE Atoms format
 
@@ -164,7 +159,7 @@ class StructuralInformationVersion2(FDFDataclass):
     # atomic_species: List[int] = field(default_factory=list)  # List of atomic species corresponding to coordinates
     # constraints: Dict[str, Any] = field(default_factory=dict)  # Constraints on the atomic structure (optional)
 
-    lattice_vectors: List[Tuple[float, float, float]] = field(
+    lattice_vectors: list[tuple[float, float, float]] = field(
         default_factory=lambda: [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)],
         metadata={
             "description": "The three lattice vectors (in Angstroms) that define the simulation cell.",
@@ -172,7 +167,7 @@ class StructuralInformationVersion2(FDFDataclass):
         },
     )
 
-    atomic_coordinates: List[Tuple[float, float, float]] = field(
+    atomic_coordinates: list[tuple[float, float, float]] = field(
         default_factory=list,
         metadata={
             "description": "A list of coordinates for each atom, either in fractional or Cartesian units (specified by 'AtomicCoordinatesFormat').",
@@ -180,7 +175,7 @@ class StructuralInformationVersion2(FDFDataclass):
         },
     )
 
-    atomic_species: List[int] = field(
+    atomic_species: list[int] = field(
         default_factory=list,
         metadata={
             "description": "A list of integer indices mapping each atom to its chemical species. This corresponds to the fourth column in the 'AtomicCoordinatesAndAtomicSpecies' block.",
@@ -188,7 +183,7 @@ class StructuralInformationVersion2(FDFDataclass):
         },
     )
 
-    constraints: Dict[str, Any] = field(
+    constraints: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block for defining constraints on atomic positions or lattice vectors during relaxation or dynamics.",
@@ -241,17 +236,17 @@ class StructuralInformationVersion2(FDFDataclass):
         block_lines.append("%endblock AtomicCoordinatesAndAtomicSpecies")
         return "\n".join(block_lines)
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """Update from FDF parameters. Structure is typically handled by ASE."""
-        pass  # Structure handling is done by ASE Atoms object
+        # Structure handling is done by ASE Atoms object
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """Generate FDF parameters. Structure blocks are handled elsewhere."""
         return {}  # Structure written by ASE writer
 
     @classmethod
     def setup_structural_information(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "StructuralInformationVersion2":
         """
         Create and configure a StructuralInformationVersion2 instance with full parameter parsing.
@@ -260,7 +255,8 @@ class StructuralInformationVersion2(FDFDataclass):
             user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             StructuralInformationVersion2: Configured instance with all fields set.
         """
         # Initialize instance with defaults
@@ -278,6 +274,6 @@ class StructuralInformationVersion2(FDFDataclass):
 
         return instance
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """ASE handles structure directly via Atoms object."""
         return {}  # Structure already in ASE Atoms format

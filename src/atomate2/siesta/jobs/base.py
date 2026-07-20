@@ -7,30 +7,28 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 
-from atomate2.siesta.sets.base import SiestaInputGenerator
-from atomate2.siesta.sets.core import PhononSetGenerator
-from atomate2.siesta.sets.core import OpticalSetGenerator
 from atomate2.siesta import SETTINGS
-from atomate2.siesta.files import cleanup_siesta_outputs
-from atomate2.siesta.files import copy_siesta_outputs
-from atomate2.siesta.files import write_siesta_input_set
+from atomate2.siesta.files import (
+    cleanup_siesta_outputs,
+    copy_siesta_outputs,
+    gzip_output_folder,
+    write_siesta_input_set,
+)
 from atomate2.siesta.run import (
-    run_siesta,
-    should_stop_children,
-    run_vibra,
     run_optical,
     run_optical_input,
+    run_siesta,
+    run_vibra,
+    should_stop_children,
 )
 from atomate2.siesta.schemas.task import SiestaTaskDoc
-from atomate2.siesta.files import gzip_output_folder
-
-
-from atomate2.siesta.utils.logo import print_fancy_logo
+from atomate2.siesta.sets.base import SiestaInputGenerator
+from atomate2.siesta.sets.core import OpticalSetGenerator, PhononSetGenerator
 from atomate2.siesta.utils.common import print_in_box_rich
+from atomate2.siesta.utils.logo import print_fancy_logo
 
 
 def display_welcome_banner():
@@ -57,7 +55,7 @@ def display_welcome_banner():
         try:
             import yaml
 
-            with open(jobflow_config_path, "r") as f:
+            with open(jobflow_config_path) as f:
                 config = yaml.safe_load(f)
 
             # Extract database information from JOB_STORE.docs_store
@@ -264,8 +262,7 @@ class BaseSiestaMaker(Maker):
 
         if self.dry_run:
             return self._make_dry_run(structure, prev_dir)
-        else:
-            return self._make_calculation(structure, prev_dir, extra_dir)
+        return self._make_calculation(structure, prev_dir, extra_dir)
 
     def _make_dry_run(
         self,

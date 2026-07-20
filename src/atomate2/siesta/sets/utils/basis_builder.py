@@ -34,9 +34,9 @@ Usage:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
-__all__ = ["PAOShell", "PAOBasisSpecies", "create_pao_basis"]
+__all__ = ["PAOBasisSpecies", "PAOShell", "create_pao_basis"]
 
 
 @dataclass
@@ -93,29 +93,34 @@ class PAOShell:
 
     Shell with soft confinement:
     >>> shell = PAOShell(
-    ...     n=2, l=0, nzeta=2, rc=[6.0, 0.0],
-    ...     soft_conf_flag=True, v0_soft=40.0, ri_soft=0.9
+    ...     n=2,
+    ...     l=0,
+    ...     nzeta=2,
+    ...     rc=[6.0, 0.0],
+    ...     soft_conf_flag=True,
+    ...     v0_soft=40.0,
+    ...     ri_soft=0.9,
     ... )
     """
 
     l: int  # noqa: E741  # Standard physics notation for angular momentum quantum number
     nzeta: int
     rc: list[float]
-    n: Optional[int] = None
+    n: int | None = None
     polarization: bool = False
-    nzeta_pol: Optional[int] = None
+    nzeta_pol: int | None = None
     split_norm_flag: bool = False
-    split_norm: Optional[float] = None
+    split_norm: float | None = None
     soft_conf_flag: bool = False
-    v0_soft: Optional[float] = None
-    ri_soft: Optional[float] = None
+    v0_soft: float | None = None
+    ri_soft: float | None = None
     filteret_flag: bool = False
-    filteret_cutoff: Optional[float] = None
+    filteret_cutoff: float | None = None
     charge_conf_flag: bool = False
-    z_charge: Optional[float] = None
-    screen: Optional[float] = None
-    delta: Optional[float] = None
-    contraction: Optional[str] = None
+    z_charge: float | None = None
+    screen: float | None = None
+    delta: float | None = None
+    contraction: str | None = None
 
     def __post_init__(self):
         """Validate shell parameters."""
@@ -250,8 +255,8 @@ class PAOBasisSpecies:
 
     label: str
     shells: list[PAOShell] = field(default_factory=list)
-    basis_type: Optional[str] = None
-    ionic_charge: Optional[float] = None
+    basis_type: str | None = None
+    ionic_charge: float | None = None
 
     def to_fdf_lines(self) -> list[str]:
         """
@@ -323,7 +328,13 @@ def create_pao_basis(basis_spec: dict[str, dict[str, Any]]) -> list[str]:
     ...     "O_surface": {
     ...         "shells": [
     ...             {"n": 2, "l": 0, "nzeta": 2, "rc": [6.0, 0.0]},
-    ...             {"n": 2, "l": 1, "nzeta": 2, "rc": [7.0, 0.0], "polarization": True},
+    ...             {
+    ...                 "n": 2,
+    ...                 "l": 1,
+    ...                 "nzeta": 2,
+    ...                 "rc": [7.0, 0.0],
+    ...                 "polarization": True,
+    ...             },
     ...         ]
     ...     },
     ...     "O_bulk": {
@@ -331,7 +342,7 @@ def create_pao_basis(basis_spec: dict[str, dict[str, Any]]) -> list[str]:
     ...             {"n": 2, "l": 0, "nzeta": 2, "rc": [4.5, 0.0]},
     ...             {"n": 2, "l": 1, "nzeta": 2, "rc": [5.5, 0.0]},
     ...         ]
-    ...     }
+    ...     },
     ... }
     >>> pao_basis = create_pao_basis(basis_spec)
     >>> # Use in RelaxMaker:
@@ -343,8 +354,13 @@ def create_pao_basis(basis_spec: dict[str, dict[str, Any]]) -> list[str]:
     ...     "Fe": {
     ...         "shells": [
     ...             {
-    ...                 "n": 3, "l": 2, "nzeta": 2, "rc": [5.0, 0.0],
-    ...                 "polarization": True, "split_norm_flag": True, "split_norm": 0.15
+    ...                 "n": 3,
+    ...                 "l": 2,
+    ...                 "nzeta": 2,
+    ...                 "rc": [5.0, 0.0],
+    ...                 "polarization": True,
+    ...                 "split_norm_flag": True,
+    ...                 "split_norm": 0.15,
     ...             },
     ...             {"n": 4, "l": 0, "nzeta": 2, "rc": [6.0, 0.0]},
     ...         ]
@@ -352,12 +368,17 @@ def create_pao_basis(basis_spec: dict[str, dict[str, Any]]) -> list[str]:
     ...     "O_surface": {
     ...         "shells": [
     ...             {
-    ...                 "n": 2, "l": 0, "nzeta": 2, "rc": [6.0, 0.0],
-    ...                 "soft_conf_flag": True, "v0_soft": 40.0, "ri_soft": 0.9
+    ...                 "n": 2,
+    ...                 "l": 0,
+    ...                 "nzeta": 2,
+    ...                 "rc": [6.0, 0.0],
+    ...                 "soft_conf_flag": True,
+    ...                 "v0_soft": 40.0,
+    ...                 "ri_soft": 0.9,
     ...             },
     ...         ],
-    ...         "basis_type": "split"
-    ...     }
+    ...         "basis_type": "split",
+    ...     },
     ... }
     >>> pao_basis = create_pao_basis(basis_spec)
     """

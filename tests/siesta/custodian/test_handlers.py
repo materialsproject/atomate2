@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-
 from atomate2.siesta.custodian.errors import ErrorType, SiestaError
 from atomate2.siesta.custodian.handlers import (
     MemoryHandler,

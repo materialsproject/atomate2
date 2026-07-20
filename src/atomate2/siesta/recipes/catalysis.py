@@ -8,8 +8,10 @@ from typing import Any
 from jobflow import Flow
 from pymatgen.core import Molecule, Structure
 
-from atomate2.siesta.flows.surface import AdsorptionScanFlowMaker
-from atomate2.siesta.flows.surface import MultiSurfaceEnergyFlowMaker
+from atomate2.siesta.flows.surface import (
+    AdsorptionScanFlowMaker,
+    MultiSurfaceEnergyFlowMaker,
+)
 from atomate2.siesta.recipes.base import MaterialAnalyzer
 from atomate2.siesta.sets.tiers import apply_tier_preset
 
@@ -70,8 +72,7 @@ def surface_energy_workflow(
     -------
     >>> from atomate2.siesta.recipes import surface_energy_workflow
     >>> flow = surface_energy_workflow(
-    ...     bulk_structure,
-    ...     miller_indices=[(1,0,0), (1,1,0), (1,1,1)]
+    ...     bulk_structure, miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)]
     ... )
     """
     logger.info(f"Creating surface_energy workflow for {bulk_structure.composition}")
@@ -250,11 +251,9 @@ def adsorption_scanning_workflow(
     Example
     -------
     >>> from pymatgen.core import Molecule
-    >>> co_molecule = Molecule(["C", "O"], [[0,0,0], [0,0,1.15]])
+    >>> co_molecule = Molecule(["C", "O"], [[0, 0, 0], [0, 0, 1.15]])
     >>> flow = adsorption_scanning_workflow(
-    ...     slab_structure,
-    ...     adsorbate=co_molecule,
-    ...     grid_density=(7, 7)
+    ...     slab_structure, adsorbate=co_molecule, grid_density=(7, 7)
     ... )
     """
     logger.info(f"Creating adsorption_scan workflow for {slab_structure.composition}")
@@ -358,12 +357,10 @@ def catalysis_study(
     Example
     -------
     >>> from pymatgen.core import Molecule
-    >>> h2 = Molecule(["H", "H"], [[0,0,0], [0,0,0.74]])
-    >>> o2 = Molecule(["O", "O"], [[0,0,0], [0,0,1.21]])
+    >>> h2 = Molecule(["H", "H"], [[0, 0, 0], [0, 0, 0.74]])
+    >>> o2 = Molecule(["O", "O"], [[0, 0, 0], [0, 0, 1.21]])
     >>> flow = catalysis_study(
-    ...     pt_structure,
-    ...     adsorbates=[h2, o2],
-    ...     miller_indices=[(1,1,1)]
+    ...     pt_structure, adsorbates=[h2, o2], miller_indices=[(1, 1, 1)]
     ... )
     """
     # First calculate surface energies
@@ -412,9 +409,7 @@ def reaction_pathway_workflow(
     Example
     -------
     >>> flow = reaction_pathway_workflow(
-    ...     slab,
-    ...     initial_state=reactant_config,
-    ...     final_state=product_config
+    ...     slab, initial_state=reactant_config, final_state=product_config
     ... )
     """
     # Note: This would use NEBMaker when available
@@ -459,9 +454,7 @@ def coverage_dependent_adsorption(
     Example
     -------
     >>> flow = coverage_dependent_adsorption(
-    ...     slab,
-    ...     co_molecule,
-    ...     coverages=[0.11, 0.25, 0.50]
+    ...     slab, co_molecule, coverages=[0.11, 0.25, 0.50]
     ... )
     """
     logger.info(f"Creating coverage-dependent study for {len(coverages)} coverages")

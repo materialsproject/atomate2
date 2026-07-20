@@ -4,11 +4,11 @@ from jobflow import Flow
 from pymatgen.core import Molecule
 
 from atomate2.siesta.recipes.catalysis import (
-    surface_energy_workflow,
     adsorption_scanning_workflow,
     catalysis_study,
-    reaction_pathway_workflow,
     coverage_dependent_adsorption,
+    reaction_pathway_workflow,
+    surface_energy_workflow,
 )
 
 

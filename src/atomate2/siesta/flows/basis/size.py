@@ -30,6 +30,7 @@ from atomate2.siesta.jobs.core import StaticMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
+
     from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class BasisSizeConvergenceFlowMaker(BaseSiestaFlowMaker):
     ...     basis_sizes=["SZ", "DZ", "DZP", "DZDP", "TZP"],
     ...     energy_shift=0.01,
     ...     split_norm=0.15,
-    ...     kpts=[4, 4, 4]
+    ...     kpts=[4, 4, 4],
     ... )
     >>> flow = maker.make(structure)
     """

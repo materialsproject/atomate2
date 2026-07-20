@@ -7,9 +7,9 @@ These tests validate:
 """
 
 import pytest
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
-from atomate2.siesta.sets.base import SiestaInputSet, SiestaInputGenerator
+from atomate2.siesta.sets.base import SiestaInputGenerator, SiestaInputSet
 
 
 @pytest.fixture
@@ -316,8 +316,9 @@ class TestInternalParameterNaming:
 
     def test_normalize_internal_params_new_names(self):
         """Test normalization with already-prefixed names."""
-        from atomate2.siesta.sets.base import normalize_internal_params
         import warnings
+
+        from atomate2.siesta.sets.base import normalize_internal_params
 
         params = {
             "a2s_magnetic_ordering": "AFM",
@@ -379,8 +380,8 @@ class TestInternalParameterNaming:
     def test_prefix_constants(self):
         """Test internal parameter prefix constants."""
         from atomate2.siesta.sets.base import (
-            INTERNAL_PARAM_PREFIX_FULL,
             INTERNAL_PARAM_PREFIX_ALIAS,
+            INTERNAL_PARAM_PREFIX_FULL,
         )
 
         assert INTERNAL_PARAM_PREFIX_FULL == "atomate2siesta_"
@@ -388,7 +389,7 @@ class TestInternalParameterNaming:
 
     def test_workflow_with_prefixed_params(self):
         """Test complete workflow with prefixed internal parameters."""
-        from pymatgen.core import Structure, Lattice
+        from pymatgen.core import Lattice, Structure
 
         lattice = Lattice.cubic(2.87)
         fe_structure = Structure(lattice, ["Fe", "Fe"], [[0, 0, 0], [0.5, 0.5, 0.5]])

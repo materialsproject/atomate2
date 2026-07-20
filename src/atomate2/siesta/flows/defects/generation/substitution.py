@@ -54,7 +54,7 @@ class SiestaSubstitutionGenerator:
     >>> defects = generator.generate_defects(
     ...     species="Mg",  # Replace Mg atoms
     ...     dopants=["Li"],  # With Li
-    ...     charge_states=[-1, 0]
+    ...     charge_states=[-1, 0],
     ... )
 
     Generate antisites (Mg on O site, O on Mg site):
@@ -139,7 +139,9 @@ class SiestaSubstitutionGenerator:
         >>> generator = SiestaSubstitutionGenerator(mgo_structure)
         >>> mg_sites = generator.get_unique_sites(species="Mg")
         >>> for site in mg_sites:
-        ...     print(f"Mg site: Wyckoff {site.wyckoff}, multiplicity {site.multiplicity}")
+        ...     print(
+        ...         f"Mg site: Wyckoff {site.wyckoff}, multiplicity {site.multiplicity}"
+        ...     )
         """
         # Convert species to list
         if isinstance(species, str):
@@ -282,9 +284,7 @@ class SiestaSubstitutionGenerator:
 
         >>> generator = SiestaSubstitutionGenerator(mgo)
         >>> defects = generator.generate_defects(
-        ...     species="Mg",
-        ...     dopants="Li",
-        ...     charge_states=[-1, 0]
+        ...     species="Mg", dopants="Li", charge_states=[-1, 0]
         ... )
 
         Multiple dopants on multiple sites:
@@ -292,7 +292,7 @@ class SiestaSubstitutionGenerator:
         >>> defects = generator.generate_defects(
         ...     species=["Mg", "O"],
         ...     dopants=["Li", "Na"],
-        ...     supercell_matrix=[[2,0,0], [0,2,0], [0,0,2]]
+        ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
         ... )
         """
         # Convert to lists
@@ -445,8 +445,8 @@ class SiestaSubstitutionGenerator:
         With supercell and charge states:
 
         >>> antisites = generator.generate_antisites(
-        ...     supercell_matrix=[[2,0,0], [0,2,0], [0,0,2]],
-        ...     charge_states=[0, +1, -1]
+        ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
+        ...     charge_states=[0, +1, -1],
         ... )
         """
         # Get all unique species in structure

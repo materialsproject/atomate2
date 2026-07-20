@@ -16,12 +16,11 @@ Section: 6.12 Calculation of the electronic structure
 
 __all__ = ["ElectronicStructureCalculationOptions"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Any
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -507,7 +506,7 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
         },
     )
 
-    electronic_structure_fdf_arguments: Dict[str, Any] = field(
+    electronic_structure_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to electronic structure. This allows for using keywords not explicitly defined elsewhere.",
@@ -588,7 +587,7 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
 
     @classmethod
     def setup_electronic_structure_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "ElectronicStructureCalculationOptions":
         """
         Create and configure ElectronicStructureCalculationOptions instance based on user parameters.
@@ -596,7 +595,8 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
         Args:
             user_params (dict, optional): Dictionary of user-defined parameters.
 
-        Returns:
+        Returns
+        -------
             ElectronicStructureCalculationOptions: Configured instance with FDF arguments.
         """
         from dataclasses import fields
@@ -674,7 +674,7 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
                 f"Invalid occupation method '{self.occupation_function}'. Allowed values are: {allowed_occupation_function}"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -716,11 +716,12 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
 
         Note:
@@ -748,26 +749,26 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
 
         # Occupation function - always write with default marker
         if self.occupation_function == "FD":
-            fdf[
-                "OccupationFunction"
-            ] = f"{self.occupation_function}  # SIESTA DEFAULT VALUE"
+            fdf["OccupationFunction"] = (
+                f"{self.occupation_function}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["OccupationFunction"] = self.occupation_function
 
         # OccupationMPOrder - write when using MP with default marker
         if self.occupation_function == "MP":
             if self.occupation_mp_order == 1:
-                fdf[
-                    "OccupationMPOrder"
-                ] = f"{self.occupation_mp_order}  # SIESTA DEFAULT VALUE"
+                fdf["OccupationMPOrder"] = (
+                    f"{self.occupation_mp_order}  # SIESTA DEFAULT VALUE"
+                )
             else:
                 fdf["OccupationMPOrder"] = str(self.occupation_mp_order)
 
         # Electronic temperature - always write with default marker
         if self.electronic_temperature == 300.0:
-            fdf[
-                "ElectronicTemperature"
-            ] = f"{self.electronic_temperature} K  # SIESTA DEFAULT VALUE"
+            fdf["ElectronicTemperature"] = (
+                f"{self.electronic_temperature} K  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["ElectronicTemperature"] = f"{self.electronic_temperature} K"
 
@@ -777,11 +778,12 @@ class ElectronicStructureCalculationOptions(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have detailed electronic structure options

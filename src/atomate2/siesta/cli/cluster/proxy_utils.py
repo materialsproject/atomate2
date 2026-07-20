@@ -9,7 +9,6 @@ from __future__ import annotations
 import os
 import subprocess
 import time
-from typing import Optional
 
 from rich.console import Console
 
@@ -192,7 +191,7 @@ http_access deny all
         # Check if existing config has the same port
         existing_port = None
         try:
-            with open(config_file, "r") as f:
+            with open(config_file) as f:
                 for line in f:
                     if line.strip().startswith("http_port"):
                         # Extract port from line like "http_port 127.0.0.1:3129"
@@ -220,13 +219,12 @@ http_access deny all
                 f"  2. Recreate with new port: [cyan]atomate2siesta-cluster squid start --port {port} --remove[/cyan]"
             )
             return False
-        else:
-            # Use existing config (port matches or couldn't detect)
-            console.print("[dim]Using existing squid configuration[/dim]")
-            console.print(f"[dim]  Location: {config_file}[/dim]")
-            if existing_port:
-                console.print(f"[dim]  Port: {existing_port}[/dim]")
-            console.print("[dim]  Tip: Use --remove to recreate config[/dim]")
+        # Use existing config (port matches or couldn't detect)
+        console.print("[dim]Using existing squid configuration[/dim]")
+        console.print(f"[dim]  Location: {config_file}[/dim]")
+        if existing_port:
+            console.print(f"[dim]  Port: {existing_port}[/dim]")
+        console.print("[dim]  Tip: Use --remove to recreate config[/dim]")
 
     # Start squid
     try:
@@ -258,9 +256,8 @@ http_access deny all
             )
             console.print(f"[dim]Config file: {config_file}[/dim]")
             return True
-        else:
-            console.print("[red]✗ Squid started but not responding[/red]")
-            return False
+        console.print("[red]✗ Squid started but not responding[/red]")
+        return False
 
     except Exception as e:
         console.print(f"[red]✗ Error starting squid: {e}[/red]")
@@ -300,16 +297,15 @@ def stop_squid() -> bool:
         if result.returncode == 0:
             console.print("[green]✓ Squid killed[/green]")
             return True
-        else:
-            console.print("[yellow]Squid may not be running[/yellow]")
-            return False
+        console.print("[yellow]Squid may not be running[/yellow]")
+        return False
 
     except Exception as e:
         console.print(f"[red]✗ Error stopping squid: {e}[/red]")
         return False
 
 
-def detect_running_squid_port() -> Optional[int]:
+def detect_running_squid_port() -> int | None:
     """Detect which port squid is actually running on.
 
     Returns
@@ -338,9 +334,9 @@ def detect_running_squid_port() -> Optional[int]:
                             if port_str.isdigit():
                                 return int(port_str)
                             # Try to resolve port name
-                            elif port_str == "distinct":
+                            if port_str == "distinct":
                                 return 9999
-                            elif port_str == "squid-http":
+                            if port_str == "squid-http":
                                 return 3129
         return None
     except Exception:
@@ -381,11 +377,11 @@ def get_squid_status(port: int = 9999) -> dict:
 
 def detect_proxy_on_remote(
     host: str,
-    user: Optional[str],
-    password: Optional[str],
-    identity_file: Optional[str],
+    user: str | None,
+    password: str | None,
+    identity_file: str | None,
     use_ssh_config: bool,
-) -> Optional[str]:
+) -> str | None:
     """Try to auto-detect proxy settings on remote cluster.
 
     Parameters
@@ -424,10 +420,10 @@ def detect_proxy_on_remote(
 
 def configure_proxy_on_remote(
     host: str,
-    user: Optional[str],
+    user: str | None,
     proxy_url: str,
-    password: Optional[str],
-    identity_file: Optional[str],
+    password: str | None,
+    identity_file: str | None,
     use_ssh_config: bool,
     verbose: bool,
 ) -> bool:
@@ -516,10 +512,10 @@ trusted-host = pypi.org
 
 def add_proxy_to_remote_bashrc(
     host: str,
-    user: Optional[str],
+    user: str | None,
     proxy_url: str,
-    password: Optional[str],
-    identity_file: Optional[str],
+    password: str | None,
+    identity_file: str | None,
     use_ssh_config: bool,
     verbose: bool,
 ) -> bool:
@@ -623,7 +619,7 @@ def is_proxy_error(error_output: str) -> bool:
     return any(pattern in error_output for pattern in proxy_error_patterns)
 
 
-def show_proxy_error_help(proxy_url: Optional[str]) -> None:
+def show_proxy_error_help(proxy_url: str | None) -> None:
     """Show helpful error message for proxy issues.
 
     Parameters

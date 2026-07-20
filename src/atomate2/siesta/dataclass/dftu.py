@@ -11,15 +11,14 @@ Section: 8 DFTU
 
 __all__ = ["DFTU"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional, Union, List
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_energy
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +68,7 @@ class DFTU(FDFDataclass):
         },
     )
 
-    dftu_proj_block: Union[Dict[str, Any], List[str]] = field(
+    dftu_proj_block: dict[str, Any] | list[str] = field(
         default_factory=dict,
         metadata={
             "description": "A block to manually define the projectors for the DFT+U calculation. Can be dict or list.",
@@ -117,7 +116,7 @@ class DFTU(FDFDataclass):
         },
     )
 
-    dftu_fdf_arguments: Dict[str, Any] = field(
+    dftu_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to DFT+U.",
@@ -154,7 +153,7 @@ class DFTU(FDFDataclass):
         """
         logger.info("DFTU.validate()")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -198,14 +197,15 @@ class DFTU(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
         fdf["#DFTU"] = "DFTU Settings"
 
         # DFTU.ProjectorGenerationMethod - always write with default marker
@@ -258,11 +258,12 @@ class DFTU(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have DFT+U parameter equivalents
@@ -295,7 +296,7 @@ class DFTU(FDFDataclass):
 
     @classmethod
     def setup_dftu_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "DFTU":
         """
         Create and configure a DFTU instance with full parameter parsing.
@@ -308,7 +309,8 @@ class DFTU(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             DFTU: Configured instance with all fields set.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -381,11 +383,10 @@ class DFTU(FDFDataclass):
                 if original_key == "dftu_proj_block":
                     if isinstance(value, dict):
                         setattr(instance, original_key, value)
-                    else:
-                        if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                            console.print(
-                                f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
-                            )
+                    elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                        console.print(
+                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                        )
 
                 # Boolean fields
                 elif original_key in ["dftu_first_iteration", "dftu_potential_shift"]:
@@ -422,11 +423,10 @@ class DFTU(FDFDataclass):
                 else:
                     setattr(instance, original_key, value)
 
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print("[green]DFTU instance configured successfully.[/green]")

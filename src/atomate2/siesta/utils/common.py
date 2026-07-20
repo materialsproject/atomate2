@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import logging
+
+from rich.align import Align
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
-from rich.align import Align
-
 
 logger = logging.getLogger(__name__)
 console = Console()

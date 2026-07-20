@@ -188,9 +188,7 @@ def format_as_cli_params(params: dict[str, Any]) -> list[str]:
             # Block parameters - convert to dict format for fdf_arguments
             formatted_value = "{" + f'"{key}": {value}' + "}"
             cli_params.append(f"--param 'fdf_arguments={formatted_value}'")
-        elif isinstance(value, str):
-            cli_params.append(f'--param "{key}={value}"')
-        elif isinstance(value, bool):
+        elif isinstance(value, str) or isinstance(value, bool):
             cli_params.append(f'--param "{key}={value}"')
         else:
             cli_params.append(f'--param "{key}={value}"')
@@ -332,8 +330,8 @@ def extract(
     - json: JSON format
     - table: Rich table display
 
-    Examples:
-
+    Examples
+    --------
     \b
         # Extract as Python dict
         atomate2siesta-inputs extract siesta.fdf

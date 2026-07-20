@@ -7,7 +7,6 @@ including dynamic port forwarding (SOCKS proxy) and reverse port forwarding.
 from __future__ import annotations
 
 import subprocess
-from typing import Optional
 
 from rich.console import Console
 
@@ -42,10 +41,10 @@ def show_verbose_output(stdout: str, stderr: str, verbose: bool) -> None:
 
 def run_ssh_command(
     host: str,
-    user: Optional[str],
+    user: str | None,
     command: str,
-    password: Optional[str] = None,
-    identity_file: Optional[str] = None,
+    password: str | None = None,
+    identity_file: str | None = None,
     use_ssh_config: bool = False,
     timeout: int = 300,
 ) -> tuple[int, str, str]:
@@ -124,11 +123,11 @@ def run_ssh_command(
 
 def run_ssh_command_with_tunnel(
     host: str,
-    user: Optional[str],
+    user: str | None,
     command: str,
     proxy_port: int,
-    password: Optional[str] = None,
-    identity_file: Optional[str] = None,
+    password: str | None = None,
+    identity_file: str | None = None,
     use_ssh_config: bool = False,
     timeout: int = 600,
 ) -> tuple[int, str, str]:
@@ -214,11 +213,11 @@ def run_ssh_command_with_tunnel(
 
 def create_ssh_tunnel(
     host: str,
-    user: Optional[str],
+    user: str | None,
     port: int,
-    identity_file: Optional[str] = None,
+    identity_file: str | None = None,
     use_ssh_config: bool = False,
-) -> Optional[bool]:
+) -> bool | None:
     """Create SSH tunnel with dynamic port forwarding (SOCKS proxy).
 
     This creates a local SOCKS proxy that tunnels through the SSH connection,
@@ -267,11 +266,10 @@ def create_ssh_tunnel(
     # Construct the SSH destination
     if use_ssh_config:
         ssh_cmd.append(host)
+    elif user:
+        ssh_cmd.append(f"{user}@{host}")
     else:
-        if user:
-            ssh_cmd.append(f"{user}@{host}")
-        else:
-            ssh_cmd.append(host)
+        ssh_cmd.append(host)
 
     # Start the tunnel
     try:
@@ -316,11 +314,11 @@ def cleanup_ssh_tunnel(port: int) -> None:
 
 def create_ssh_reverse_tunnel(
     host: str,
-    user: Optional[str],
+    user: str | None,
     port: int,
-    identity_file: Optional[str],
+    identity_file: str | None,
     use_ssh_config: bool,
-) -> Optional[bool]:
+) -> bool | None:
     """Create SSH reverse port forwarding tunnel.
 
     This creates a tunnel so that the remote host's localhost:port
@@ -373,11 +371,10 @@ def create_ssh_reverse_tunnel(
     # Construct the SSH destination
     if use_ssh_config:
         ssh_cmd.append(host)
+    elif user:
+        ssh_cmd.append(f"{user}@{host}")
     else:
-        if user:
-            ssh_cmd.append(f"{user}@{host}")
-        else:
-            ssh_cmd.append(host)
+        ssh_cmd.append(host)
 
     # Start the reverse tunnel
     try:

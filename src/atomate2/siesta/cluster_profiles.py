@@ -8,7 +8,7 @@ spread across nodes, and inject SLURM metadata automatically.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -63,11 +63,13 @@ class ClusterProfile:
 
     Use a plain dict (no import needed):
 
-    >>> profile = ClusterProfile.from_dict({
-    ...     "cores_per_node": 48,
-    ...     "memory_per_node_gb": 192,
-    ...     "partition": "RES",
-    ... })
+    >>> profile = ClusterProfile.from_dict(
+    ...     {
+    ...         "cores_per_node": 48,
+    ...         "memory_per_node_gb": 192,
+    ...         "partition": "RES",
+    ...     }
+    ... )
     """
 
     name: str = "generic"

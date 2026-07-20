@@ -112,10 +112,9 @@ def inspect(
     # Display information
     if fdf_only:
         if fdf_params:
+            import yaml
             from rich.panel import Panel
             from rich.syntax import Syntax
-
-            import yaml
 
             fdf_text = yaml.dump(fdf_params, default_flow_style=False, sort_keys=False)
             syntax = Syntax(fdf_text, "yaml", theme="monokai", line_numbers=True)
@@ -186,9 +185,9 @@ def _display_tier_defaults(tier_level: str) -> None:
     Args:
         tier_level: Tier level (basic_dirty, basic, intermediate, advanced, expert)
     """
+    import yaml
     from rich.panel import Panel
     from rich.syntax import Syntax
-    import yaml
 
     console.print(
         f"[bold cyan]Fetching tier '{tier_level}' default parameters...[/bold cyan]"

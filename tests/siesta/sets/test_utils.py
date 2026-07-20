@@ -7,16 +7,17 @@ These tests validate:
 - FDF to JSON conversion
 """
 
-import pytest
 import json
-import yaml
-from pymatgen.core import Structure, Lattice
+
 import numpy as np
+import pytest
+import yaml
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.sets.utils import (
+    ase_v2_to_pymatgen,
     pymatgen_to_ase,
     pymatgen_to_ase_v2,
-    ase_v2_to_pymatgen,
     pymatgen_to_sisl,
     read_outvars,
     siesta_fdf_to_json,
@@ -316,7 +317,7 @@ class TestSiestaFdfToJson:
         assert json_output.exists()
 
         # Read and verify JSON content
-        with open(json_output, "r") as f:
+        with open(json_output) as f:
             data = json.load(f)
 
         assert data["SCFMustConverge"] is True
@@ -334,7 +335,7 @@ class TestSiestaFdfToJson:
         siesta_fdf_to_json(str(fdf_file), str(json_output), fdf_data=fdf_data)
 
         # Check file is valid JSON
-        with open(json_output, "r") as f:
+        with open(json_output) as f:
             data = json.load(f)
 
         assert isinstance(data, dict)
@@ -354,7 +355,7 @@ class TestSiestaFdfToJson:
 
         siesta_fdf_to_json(str(fdf_file), str(json_output), fdf_data=fdf_data)
 
-        with open(json_output, "r") as f:
+        with open(json_output) as f:
             data = json.load(f)
 
         assert data["simple"] == "value"

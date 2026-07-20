@@ -9,13 +9,13 @@ from glob import glob
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from monty.serialization import loadfn
 from rich.console import Console
 
 from atomate2.common.files import get_zfile, gunzip_files
 from atomate2.siesta import SETTINGS
 from atomate2.siesta.utils.file_client import FileClient, auto_fileclient
 from atomate2.siesta.utils.path import strip_hostname
-from monty.serialization import loadfn
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -282,7 +282,7 @@ def copy_file_from_flos(file_name: str, destination_dir: Path | str) -> None:
             "[bold red]EnvironmentError:[/bold red] FLOS_PATH is not set in the SETTINGS.",
             style="red",
         )
-        raise EnvironmentError("FLOS_PATH is not configured")
+        raise OSError("FLOS_PATH is not configured")
 
     # Check for 'examples' subfolder
     examples_path = os.path.join(flos_path, "examples")

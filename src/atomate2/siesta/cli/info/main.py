@@ -12,12 +12,12 @@ This tool provides an overview of:
 
 import click
 
+from atomate2.siesta.cli.info.examples import show_examples
+from atomate2.siesta.cli.info.features import show_features
 from atomate2.siesta.cli.info.overview import show_overview
 from atomate2.siesta.cli.info.tools import show_cli_tools
-from atomate2.siesta.cli.info.workflows import show_workflows
-from atomate2.siesta.cli.info.features import show_features
-from atomate2.siesta.cli.info.examples import show_examples
 from atomate2.siesta.cli.info.version import show_version
+from atomate2.siesta.cli.info.workflows import show_workflows
 
 
 @click.group(invoke_without_command=True)

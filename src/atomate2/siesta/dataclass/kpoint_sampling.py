@@ -11,21 +11,18 @@ Section: 6.5 k-point sampling
 
 __all__ = ["KPointSampling"]
 
-from dataclasses import dataclass, field, fields
-from typing import Dict, List, Any
-from typing import Tuple, Optional
+import logging
 from collections import OrderedDict
+from dataclasses import dataclass, field, fields
+from typing import Any
 
+from pymatgen.core import Structure
+from pymatgen.io.vasp.inputs import Kpoints
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_length
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-from pymatgen.core import Structure
-from pymatgen.io.vasp.inputs import Kpoints
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +38,7 @@ class KPointSampling(FDFDataclass):
         VerbosityLevel.ERROR
     )  # Default to show info & errors messages
 
-    _user_params: Optional[Dict[str, Any]] = field(
+    _user_params: dict[str, Any] | None = field(
         default=None,
         init=False,  # Prevent user from setting via constructor
         metadata={
@@ -65,21 +62,21 @@ class KPointSampling(FDFDataclass):
             "SIESTA keyword": None,
         },
     )
-    k_points: List[Tuple[int, int, int]] = field(
+    k_points: list[tuple[int, int, int]] = field(
         default_factory=lambda: [(1, 1, 1)],
         metadata={
             "description": "Defines the dimensions of the Monkhorst-Pack k-point grid for sampling the Brillouin zone.",
             "SIESTA keyword": "%block kgrid_Monkhorst_Pack",
         },
     )
-    k_shift: Tuple[float, float, float] = field(
+    k_shift: tuple[float, float, float] = field(
         default=(0.0, 0.0, 0.0),
         metadata={
             "description": "A displacement vector applied to the entire k-point grid. This is specified within the kgrid_Monkhorst_Pack block.",
             "SIESTA keyword": "%block kgrid_Monkhorst_Pack",
         },
     )
-    kgrid_cutoff: Optional[float] = field(
+    kgrid_cutoff: float | None = field(
         default=10.0,
         metadata={
             "description": "A real-space cutoff (in Angstroms) used to automatically generate a k-point grid of commensurate density. This is an alternative to specifying k_points manually.",
@@ -315,7 +312,8 @@ class KPointSampling(FDFDataclass):
         """
         Validates the k-point sampling settings.
 
-        Raises:
+        Raises
+        ------
             ValueError: If k_points, k_shift, or kgrid_cutoff are invalid.
         """
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -355,7 +353,7 @@ class KPointSampling(FDFDataclass):
                 "[green]Validation: [yellow]KPointSampling[/yellow] Successful![/green]"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -417,11 +415,12 @@ class KPointSampling(FDFDataclass):
                 if isinstance(value, (list, tuple)) and len(value) == 3:
                     self.k_shift = tuple(float(v) for v in value)
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
 
         Note:
@@ -481,11 +480,12 @@ class KPointSampling(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters (ASE uses 'kpts' instead of kgrid.Monkhorst.Pack)
         """
         # ASE uses 'kpts' parameter name
@@ -495,7 +495,7 @@ class KPointSampling(FDFDataclass):
 
     @classmethod
     def setup_kpoint_settings(
-        cls, structure: Structure, user_params: Optional[Dict[str, Any]] = None
+        cls, structure: Structure, user_params: dict[str, Any] | None = None
     ) -> "KPointSampling":
         """
         Create and configure a KPointSampling instance based on user parameters and structure, retaining all default values for unspecified fields.
@@ -504,7 +504,9 @@ class KPointSampling(FDFDataclass):
             structure (pymatgen.core.Structure): The structure for which k-points are generated.
             user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
                                         Supported keys: kpts or k_points, k_shift, kgrid.cutoff, k_density (default 1000).
-        Returns:
+
+        Returns
+        -------
             KPointSampling: Configured instance with all fields (default and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -512,7 +514,7 @@ class KPointSampling(FDFDataclass):
 
         # Initialize instance with defaults
         kpoint_settings_instance = cls()
-        kpoint_settings_instance._user_params = user_params if user_params else {}
+        kpoint_settings_instance._user_params = user_params or {}
 
         # Check for kgrid.cutoff first
         kgrid_cutoff = None
@@ -624,11 +626,10 @@ class KPointSampling(FDFDataclass):
                         console.print(
                             f"[yellow]Invalid {kpts_key} format '{kpts_value}', using default k_points [(1, 1, 1)][/yellow]"
                         )
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Invalid {kpts_key} format '{kpts_value}', using default k_points [(1, 1, 1)][/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Invalid {kpts_key} format '{kpts_value}', using default k_points [(1, 1, 1)][/yellow]"
+                )
         elif not kgrid_cutoff:  # Only generate k-points if kgrid.cutoff is not set
             if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
                 console.print(
@@ -708,11 +709,10 @@ class KPointSampling(FDFDataclass):
                             )
                 else:
                     setattr(kpoint_settings_instance, original_key, value)
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Key '{key}' does not match any KPointSampling field, skipping.[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Key '{key}' does not match any KPointSampling field, skipping.[/yellow]"
+                )
 
         # Validate settings
         try:

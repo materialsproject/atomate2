@@ -25,7 +25,8 @@ def collect_convergence_data(
         job_metadata: List of dictionaries containing job names and UUIDs
         parameter_name: Name of the parameter being converged ('mesh_cutoff' or 'kpoints')
 
-    Returns:
+    Returns
+    -------
         Dictionary with parameter values and corresponding energies
     """
     logger.info(f"Collecting {parameter_name} convergence data")
@@ -60,37 +61,36 @@ def collect_convergence_data(
                     f"Skipping {job_name} - dry_run mode (no energy available)"
                 )
                 continue
-            else:
-                # Normal mode: result is a Response object
-                output = result.output
-                energy = output.energy
-                # Get Fermi energy if available (stored as 'efermi' in schema)
-                fermi_energy = getattr(output, "efermi", None)
-                bandgap = getattr(output, "bandgap", None)
-                forces = getattr(output, "forces", None)
-                stress = getattr(output, "stress", None)
+            # Normal mode: result is a Response object
+            output = result.output
+            energy = output.energy
+            # Get Fermi energy if available (stored as 'efermi' in schema)
+            fermi_energy = getattr(output, "efermi", None)
+            bandgap = getattr(output, "bandgap", None)
+            forces = getattr(output, "forces", None)
+            stress = getattr(output, "stress", None)
 
-                # Calculate force statistics
-                max_force = None
-                mean_force = None
-                if forces is not None and len(forces) > 0:
-                    import numpy as np
+            # Calculate force statistics
+            max_force = None
+            mean_force = None
+            if forces is not None and len(forces) > 0:
+                import numpy as np
 
-                    # forces is list of (x, y, z) tuples
-                    force_magnitudes = [
-                        np.sqrt(f[0] ** 2 + f[1] ** 2 + f[2] ** 2) for f in forces
-                    ]
-                    max_force = max(force_magnitudes)
-                    mean_force = np.mean(force_magnitudes)
+                # forces is list of (x, y, z) tuples
+                force_magnitudes = [
+                    np.sqrt(f[0] ** 2 + f[1] ** 2 + f[2] ** 2) for f in forces
+                ]
+                max_force = max(force_magnitudes)
+                mean_force = np.mean(force_magnitudes)
 
-                # Calculate max stress component
-                max_stress = None
-                if stress is not None:
-                    import numpy as np
+            # Calculate max stress component
+            max_stress = None
+            if stress is not None:
+                import numpy as np
 
-                    # stress is 3x3 matrix
-                    stress_array = np.array(stress)
-                    max_stress = np.abs(stress_array).max()
+                # stress is 3x3 matrix
+                stress_array = np.array(stress)
+                max_stress = np.abs(stress_array).max()
 
             # Extract parameter value from job name
             # Handle both formats:
@@ -156,7 +156,8 @@ def plot_convergence(
         output_file: Output filename base (default: auto-generated)
         verbosity: Verbosity level for console output
 
-    Returns:
+    Returns
+    -------
         Dictionary with paths to all saved plot files
     """
     import matplotlib.pyplot as plt
@@ -464,7 +465,7 @@ def plot_convergence(
             energy = energies[i]
             delta_e = energy_diff[i]
 
-            row = f"{str(param):<15} {energy:<12.6f} {delta_e:<10.3f}"
+            row = f"{param!s:<15} {energy:<12.6f} {delta_e:<10.3f}"
 
             if has_fermi_data:
                 ef = fermi_energies[i] if i < len(fermi_energies) else None

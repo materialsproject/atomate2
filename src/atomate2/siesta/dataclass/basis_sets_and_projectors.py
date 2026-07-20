@@ -14,7 +14,7 @@ __all__ = ["BasisSetsAndProjectors"]
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field, fields
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_energy, parse_length
@@ -90,14 +90,14 @@ class BasisSetsAndProjectors(FDFDataclass):
             "SIESTA keyword": "PAO.BasisSize",
         },
     )
-    pao_basissizes_block: List[str] = field(
+    pao_basissizes_block: list[str] = field(
         default_factory=list,
         metadata={
             "description": "Allows per-species basis size specification. Accepts TWO formats: (1) List: ['Si DZP', 'O TZP'], (2) Dict: {'Si': 'DZP', 'O_surface': 'TZP', 'O_bulk': 'DZ'} (enables species variants). Dict format is auto-converted to list internally. Mutually exclusive with PAO.BasisSize scalar and %block PAO.Basis.",
             "SIESTA keyword": "%block PAO.BasisSizes",
         },
     )
-    pao_basis_block: List[str] = field(
+    pao_basis_block: list[str] = field(
         default_factory=list,
         metadata={
             "description": "Full custom basis specification with complete orbital details. This is the highest priority and overrides both PAO.BasisSize and %block PAO.BasisSizes.",
@@ -184,7 +184,7 @@ class BasisSetsAndProjectors(FDFDataclass):
             "SIESTA keyword": "PAO.Polarization.NonPerturbative",
         },
     )
-    pao_polarization_scheme_block: Optional[Dict[str, Any]] = field(
+    pao_polarization_scheme_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
             "description": "Allows for the detailed customization of the polarization shell scheme on a per-species basis.",
@@ -221,14 +221,14 @@ class BasisSetsAndProjectors(FDFDataclass):
             "unit": "Ry",
         },
     )
-    ps_lmax_block: Optional[Dict[str, Any]] = field(
+    ps_lmax_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
             "description": "Specifies the maximum angular momentum (l) of the pseudopotential to use for each species.",
             "SIESTA keyword": "%block PS.lmax",
         },
     )
-    kb_projectors_block: Optional[Dict[str, Any]] = field(
+    kb_projectors_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
             "description": "Defines the number of Kleinman-Bylander (KB) projectors for each angular momentum channel.",
@@ -372,7 +372,7 @@ class BasisSetsAndProjectors(FDFDataclass):
 
     @classmethod
     def setup_basis_sets_and_projectors(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "BasisSetsAndProjectors":
         """
         Create and configure a BasisSetsAndProjectors instance based on user parameters, retaining all default values for unspecified fields.
@@ -382,7 +382,8 @@ class BasisSetsAndProjectors(FDFDataclass):
                                          If None or empty, all default BasisSetsAndProjectors values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             BasisSetsAndProjectors: Configured instance with all fields (default and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -475,25 +476,22 @@ class BasisSetsAndProjectors(FDFDataclass):
                                 )
                             elif isinstance(value, list):
                                 setattr(basis_instance, original_key, value)
-                            else:
-                                if (
-                                    cls.CONSOLE_VERBOSITY.value
-                                    >= VerbosityLevel.WARNING.value
-                                ):
-                                    console.print(
-                                        f"[yellow]Invalid value type for {original_key}: expected dict or list, got {type(value)}[/yellow]"
-                                    )
-                        # Other block fields: list only
-                        elif isinstance(value, list):
-                            setattr(basis_instance, original_key, value)
-                        else:
-                            if (
+                            elif (
                                 cls.CONSOLE_VERBOSITY.value
                                 >= VerbosityLevel.WARNING.value
                             ):
                                 console.print(
-                                    f"[yellow]Invalid value type for {original_key}: expected list, got {type(value)}[/yellow]"
+                                    f"[yellow]Invalid value type for {original_key}: expected dict or list, got {type(value)}[/yellow]"
                                 )
+                        # Other block fields: list only
+                        elif isinstance(value, list):
+                            setattr(basis_instance, original_key, value)
+                        elif (
+                            cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value
+                        ):
+                            console.print(
+                                f"[yellow]Invalid value type for {original_key}: expected list, got {type(value)}[/yellow]"
+                            )
                     elif original_key in [
                         "perform_siesta_default_basis",
                         "pao_split_tail_norm",
@@ -606,11 +604,10 @@ class BasisSetsAndProjectors(FDFDataclass):
                         setattr(basis_instance, original_key, value.upper())
                     else:
                         setattr(basis_instance, original_key, value)
-                else:
-                    if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                        console.print(
-                            f"[yellow]Key '{key}' does not match any BasisSetsAndProjectors field, skipping.[/yellow]"
-                        )
+                elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                    console.print(
+                        f"[yellow]Key '{key}' does not match any BasisSetsAndProjectors field, skipping.[/yellow]"
+                    )
 
         # Update with kwargs (kwargs take precedence over user_params)
         for key, value in kwargs.items():
@@ -837,7 +834,7 @@ class BasisSetsAndProjectors(FDFDataclass):
                 "[green]Validation: [yellow]BasisSetsAndProjectors[/yellow] Successful![/green]"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -961,17 +958,18 @@ class BasisSetsAndProjectors(FDFDataclass):
             elif key_lower == "pao.rc.unbound.state":
                 self.pao_rc_unbound_state = parse_length(value, target_unit="Bohr")
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters with proper units
         """
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]BasisSetsAndProjectors.generate_fdf()[/green]")
 
-        fdf: Dict[str, Any] = OrderedDict()
+        fdf: dict[str, Any] = OrderedDict()
         fdf["#BasisSetsAndProjectors"] = "BasisSetsAndProjectors"
 
         # Basis parameters with default markers
@@ -1006,9 +1004,9 @@ class BasisSetsAndProjectors(FDFDataclass):
 
         # PAO.EnergyShift
         if self.pao_energy_shift == 0.01:
-            fdf[
-                "PAO.EnergyShift"
-            ] = f"{self.pao_energy_shift} Ry  # SIESTA DEFAULT VALUE"
+            fdf["PAO.EnergyShift"] = (
+                f"{self.pao_energy_shift} Ry  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.EnergyShift"] = f"{self.pao_energy_shift} Ry"
 
@@ -1026,67 +1024,67 @@ class BasisSetsAndProjectors(FDFDataclass):
 
         # PAO.SplitTailNorm
         if self.pao_split_tail_norm:
-            fdf[
-                "PAO.SplitTailNorm"
-            ] = f"{str(self.pao_split_tail_norm).lower()}  # SIESTA DEFAULT VALUE"
+            fdf["PAO.SplitTailNorm"] = (
+                f"{str(self.pao_split_tail_norm).lower()}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.SplitTailNorm"] = str(self.pao_split_tail_norm).lower()
 
         # PAO.SplitValenceLegacy
         if self.pao_split_valence_legacy:
-            fdf[
-                "PAO.SplitValenceLegacy"
-            ] = f"{str(self.pao_split_valence_legacy).lower()}  # SIESTA DEFAULT VALUE"
+            fdf["PAO.SplitValenceLegacy"] = (
+                f"{str(self.pao_split_valence_legacy).lower()}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.SplitValenceLegacy"] = str(self.pao_split_valence_legacy).lower()
 
         # PAO.FixSplitTable
         if not self.pao_fix_split_table:
-            fdf[
-                "PAO.FixSplitTable"
-            ] = f"{str(self.pao_fix_split_table).lower()}  # SIESTA DEFAULT VALUE"
+            fdf["PAO.FixSplitTable"] = (
+                f"{str(self.pao_fix_split_table).lower()}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.FixSplitTable"] = str(self.pao_fix_split_table).lower()
 
         # Filter parameters with default markers
         # PAO.Filter.Cutoff
         if self.pao_energy_cutoff == 20.0:
-            fdf[
-                "PAO.Filter.Cutoff"
-            ] = f"{self.pao_energy_cutoff} Ry  # SIESTA DEFAULT VALUE"
+            fdf["PAO.Filter.Cutoff"] = (
+                f"{self.pao_energy_cutoff} Ry  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.Filter.Cutoff"] = f"{self.pao_energy_cutoff} Ry"
 
         # PAO.Filter.PolarizationCutoff
         if self.pao_energy_pol_cutoff == 20.0:
-            fdf[
-                "PAO.Filter.PolarizationCutoff"
-            ] = f"{self.pao_energy_pol_cutoff} Ry  # SIESTA DEFAULT VALUE"
+            fdf["PAO.Filter.PolarizationCutoff"] = (
+                f"{self.pao_energy_pol_cutoff} Ry  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.Filter.PolarizationCutoff"] = f"{self.pao_energy_pol_cutoff} Ry"
 
         # PAO.Filter.Tolerance
         if self.filter_tol == 0.0:
-            fdf[
-                "PAO.Filter.Tolerance"
-            ] = f"{self.filter_tol} eV  # SIESTA DEFAULT VALUE"
+            fdf["PAO.Filter.Tolerance"] = (
+                f"{self.filter_tol} eV  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.Filter.Tolerance"] = f"{self.filter_tol} eV"
 
         # PAO.ContractionCutoff
         if self.pao_contraction_cutoff == 0.0:
-            fdf[
-                "PAO.ContractionCutoff"
-            ] = f"{self.pao_contraction_cutoff}  # SIESTA DEFAULT VALUE"
+            fdf["PAO.ContractionCutoff"] = (
+                f"{self.pao_contraction_cutoff}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.ContractionCutoff"] = self.pao_contraction_cutoff
 
         # Polarization parameters with default markers
         # PAO.Polarization.NonPerturbative
         if self.pao_polarization_non_perturbative:
-            fdf[
-                "PAO.Polarization.NonPerturbative"
-            ] = f"{str(self.pao_polarization_non_perturbative).lower()}  # SIESTA DEFAULT VALUE"
+            fdf["PAO.Polarization.NonPerturbative"] = (
+                f"{str(self.pao_polarization_non_perturbative).lower()}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["PAO.Polarization.NonPerturbative"] = str(
                 self.pao_polarization_non_perturbative
@@ -1096,13 +1094,13 @@ class BasisSetsAndProjectors(FDFDataclass):
 
         # PAO.Polarization.RcExpansionFactor
         if self.pao_polarization_rc_expansion_factor == 1.0:
-            fdf[
-                "PAO.Polarization.RcExpansionFactor"
-            ] = f"{self.pao_polarization_rc_expansion_factor}  # SIESTA DEFAULT VALUE"
+            fdf["PAO.Polarization.RcExpansionFactor"] = (
+                f"{self.pao_polarization_rc_expansion_factor}  # SIESTA DEFAULT VALUE"
+            )
         else:
-            fdf[
-                "PAO.Polarization.RcExpansionFactor"
-            ] = self.pao_polarization_rc_expansion_factor
+            fdf["PAO.Polarization.RcExpansionFactor"] = (
+                self.pao_polarization_rc_expansion_factor
+            )
 
         # Soft confinement parameters
         if self.pao_soft_default:
@@ -1110,9 +1108,9 @@ class BasisSetsAndProjectors(FDFDataclass):
             if self.pao_soft_inner_radius == 0.9:
                 fdf["PAO.SoftDefault.InnerRadius"] = "0.9 Bohr  # SIESTA DEFAULT VALUE"
             else:
-                fdf[
-                    "PAO.SoftDefault.InnerRadius"
-                ] = f"{self.pao_soft_inner_radius} Bohr"
+                fdf["PAO.SoftDefault.InnerRadius"] = (
+                    f"{self.pao_soft_inner_radius} Bohr"
+                )
 
             # PAO.SoftDefault.Potential - always write with default marker
             if self.pao_soft_potential == 40.0:
@@ -1144,11 +1142,12 @@ class BasisSetsAndProjectors(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters (optional).
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE uses different parameter names for basis settings

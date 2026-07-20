@@ -25,7 +25,8 @@ Key equations:
     - E_T: defect energy level (from CTL)
     - E_i: intrinsic Fermi level
 
-References:
+References
+----------
     - Shockley & Read, Phys. Rev. 87, 835 (1952)
     - Hall, Phys. Rev. 87, 387 (1952)
     - Schroder, "Semiconductor Material and Device Characterization", 3rd ed.
@@ -45,12 +46,10 @@ from jobflow import job
 from monty.json import MSONable
 
 if TYPE_CHECKING:
+    from atomate2.siesta.flows.defects.analysis.concentration import ConcentrationResult
     from atomate2.siesta.flows.defects.analysis.formation_energy import (
         ChargeTransitionLevel,
         FormationEnergyDiagram,
-    )
-    from atomate2.siesta.flows.defects.analysis.concentration import (
-        ConcentrationResult,
     )
 
 logger = logging.getLogger(__name__)
@@ -993,28 +992,28 @@ def write_srh_summary(
             # Show ns if in range 1e-12 to 1.0 seconds (1 ps to 1 s)
             if 1e-12 <= tau_n_s <= 1.0:
                 f.write(
-                    f"    τ_n (electron):          {tau_n_s:>10.3e} s  ({tau_n_s*1e9:>10.3f} ns)\n"
+                    f"    τ_n (electron):          {tau_n_s:>10.3e} s  ({tau_n_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_n (electron):          {tau_n_s:>10.3e} s\n")
 
             if 1e-12 <= tau_p_s <= 1.0:
                 f.write(
-                    f"    τ_p (hole):              {tau_p_s:>10.3e} s  ({tau_p_s*1e9:>10.3f} ns)\n"
+                    f"    τ_p (hole):              {tau_p_s:>10.3e} s  ({tau_p_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_p (hole):              {tau_p_s:>10.3e} s\n")
 
             if 1e-12 <= tau_eff_s <= 1.0:
                 f.write(
-                    f"    τ_eff (effective):       {tau_eff_s:>10.3e} s  ({tau_eff_s*1e9:>10.3f} ns)\n"
+                    f"    τ_eff (effective):       {tau_eff_s:>10.3e} s  ({tau_eff_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_eff (effective):       {tau_eff_s:>10.3e} s\n")
 
             if 1e-12 <= tau_min_s <= 1.0:
                 f.write(
-                    f"    τ_min (minority):        {tau_min_s:>10.3e} s  ({tau_min_s*1e9:>10.3f} ns)\n"
+                    f"    τ_min (minority):        {tau_min_s:>10.3e} s  ({tau_min_s * 1e9:>10.3f} ns)\n"
                 )
             else:
                 f.write(f"    τ_min (minority):        {tau_min_s:>10.3e} s\n")

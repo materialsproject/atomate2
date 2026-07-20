@@ -12,8 +12,8 @@ These tests validate:
 
 from jobflow import Flow
 
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
 
 
 class TestPhonopyMaker:
@@ -390,7 +390,7 @@ class TestPhonopyEdgeCases:
 
     def test_phonopy_with_very_small_structure(self):
         """Test phonopy with minimal structure."""
-        from pymatgen.core import Structure, Lattice
+        from pymatgen.core import Lattice, Structure
 
         # Create minimal structure (single atom cubic)
         lattice = Lattice.cubic(3.0)
@@ -747,7 +747,8 @@ class TestGeneratePhononDisplacements:
 
     def test_generate_displacements_minimal_structure(self):
         """Test with minimal single-atom structure."""
-        from pymatgen.core import Structure, Lattice
+        from pymatgen.core import Lattice, Structure
+
         from atomate2.siesta.jobs.phonon.phonopy import generate_phonon_displacements
 
         # Create minimal structure (single atom cubic)
@@ -802,8 +803,9 @@ class TestGeneratePhononDisplacements:
 
     def test_generate_displacements_return_value_types(self, si_structure):
         """Test that return values have correct types."""
-        from atomate2.siesta.jobs.phonon.phonopy import generate_phonon_displacements
         from pymatgen.core import Structure
+
+        from atomate2.siesta.jobs.phonon.phonopy import generate_phonon_displacements
 
         result = generate_phonon_displacements.original(
             structure=si_structure,

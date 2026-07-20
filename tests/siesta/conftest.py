@@ -4,10 +4,10 @@ import os
 import shutil
 import tarfile
 import tempfile
+from pathlib import Path
 
 import pytest
-from pathlib import Path
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
 
 @pytest.fixture(scope="session", autouse=True)

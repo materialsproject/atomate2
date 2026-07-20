@@ -15,15 +15,14 @@ They do not execute actual SIESTA calculations.
 
 import pytest
 from jobflow import Flow
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
+from atomate2.siesta.flows.core import DifferentBasisSCFFlowMaker
+from atomate2.siesta.flows.elastic import ElasticFlowMaker
+from atomate2.siesta.flows.eos import SiestaEosFlowMaker
+from atomate2.siesta.flows.phonon import SiestaGruneisenFlowMaker, SiestaPhononFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 from atomate2.siesta.sets.core import StaticSetGenerator
-from atomate2.siesta.flows.eos import SiestaEosFlowMaker
-from atomate2.siesta.flows.elastic import ElasticFlowMaker
-from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
-from atomate2.siesta.flows.phonon import SiestaGruneisenFlowMaker
-from atomate2.siesta.flows.core import DifferentBasisSCFFlowMaker
 
 
 @pytest.fixture

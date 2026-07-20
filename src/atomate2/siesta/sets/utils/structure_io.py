@@ -217,7 +217,8 @@ def write_cif_with_ghost(structure: Structure, filename: str | Path) -> None:
     - The chemical formula will reflect the ghost atom occupancy
       (e.g., "Mg4 O3.001" for a structure with one O ghost atom)
     """
-    from pymatgen.core import PeriodicSite, Structure as PMGStructure
+    from pymatgen.core import PeriodicSite
+    from pymatgen.core import Structure as PMGStructure
 
     filename = Path(filename)
 

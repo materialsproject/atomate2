@@ -7,10 +7,9 @@ This module provides the `translate` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
+from pymatgen.core import Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Structure
 
 console = Console()
 
@@ -85,8 +84,8 @@ def translate(
     and automatic centering. Useful for preparing surfaces, interfaces, and
     heterostructures.
 
-    Examples:
-
+    Examples
+    --------
         # Translate all atoms by 2.5 Å in z
         atomate2siesta-structure translate Si.cif --vector 0 0 2.5
 

@@ -4,7 +4,8 @@
 Implementation of finite-size corrections for charged defects in 2D slabs
 with vacuum regions, following methodologies from:
 
-References:
+References
+----------
 1. Komsa et al., Phys. Rev. X 4, 031044 (2014)
    "Charged Point Defects in the Flatland"
 2. Noh et al., Phys. Rev. B 89, 205417 (2014)

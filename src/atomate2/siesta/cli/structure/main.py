@@ -6,24 +6,25 @@ This module provides the main command group for all structure-related operations
 """
 
 import click
+
+from atomate2.siesta.cli.structure.add import add as add_command
+from atomate2.siesta.cli.structure.compare import compare as compare_command
 from atomate2.siesta.cli.structure.convert import main as convert_command
 from atomate2.siesta.cli.structure.info import main as info_command
-from atomate2.siesta.cli.structure.scale import scale as scale_command
-from atomate2.siesta.cli.structure.supercell import supercell as supercell_command
-from atomate2.siesta.cli.structure.rotate import rotate as rotate_command
-from atomate2.siesta.cli.structure.translate import translate as translate_command
-from atomate2.siesta.cli.structure.slab import slab as slab_command
-from atomate2.siesta.cli.structure.vacuum import vacuum as vacuum_command
-from atomate2.siesta.cli.structure.stack import stack as stack_command
-from atomate2.siesta.cli.structure.substitute import substitute as substitute_command
-from atomate2.siesta.cli.structure.remove import remove as remove_command
-from atomate2.siesta.cli.structure.add import add as add_command
-from atomate2.siesta.cli.structure.perturb import perturb as perturb_command
-from atomate2.siesta.cli.structure.compare import compare as compare_command
-from atomate2.siesta.cli.structure.standardize import standardize as standardize_command
 from atomate2.siesta.cli.structure.optimize_cell import (
     optimize_cell as optimize_cell_command,
 )
+from atomate2.siesta.cli.structure.perturb import perturb as perturb_command
+from atomate2.siesta.cli.structure.remove import remove as remove_command
+from atomate2.siesta.cli.structure.rotate import rotate as rotate_command
+from atomate2.siesta.cli.structure.scale import scale as scale_command
+from atomate2.siesta.cli.structure.slab import slab as slab_command
+from atomate2.siesta.cli.structure.stack import stack as stack_command
+from atomate2.siesta.cli.structure.standardize import standardize as standardize_command
+from atomate2.siesta.cli.structure.substitute import substitute as substitute_command
+from atomate2.siesta.cli.structure.supercell import supercell as supercell_command
+from atomate2.siesta.cli.structure.translate import translate as translate_command
+from atomate2.siesta.cli.structure.vacuum import vacuum as vacuum_command
 
 
 @click.group()
@@ -59,7 +60,8 @@ def cli():
         standardize  - Convert to conventional/primitive cells
         optimize-cell - Cell optimization (Niggli, orthogonalization)
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-structure convert siesta.fdf --write-xsf --write-cif
         atomate2siesta-structure info structure.cif
         atomate2siesta-structure scale structure.cif --factor 1.05
@@ -67,7 +69,6 @@ def cli():
         atomate2siesta-structure rotate structure.cif --axis z --angle 45
         atomate2siesta-structure translate structure.cif --center
     """
-    pass
 
 
 # Add subcommands

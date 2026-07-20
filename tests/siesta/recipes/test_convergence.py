@@ -3,11 +3,11 @@
 from jobflow import Flow
 
 from atomate2.siesta.recipes.convergence import (
+    basis_convergence,
+    complete_convergence,
     convergence_suite,
     kpoints_convergence,
     mesh_cutoff_convergence,
-    basis_convergence,
-    complete_convergence,
     quick_convergence_check,
 )
 

@@ -10,6 +10,7 @@ These tests validate:
 """
 
 from pathlib import Path
+
 from jobflow import Flow
 
 from atomate2.siesta.flows.surface import SurfaceEnergyFlowMaker
@@ -17,7 +18,7 @@ from atomate2.siesta.flows.surface.multi_surface import (
     MultiSurfaceEnergyFlowMaker,
     calculate_multi_surface_energies,
 )
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 
 class TestSurfaceEnergyMaker:
@@ -622,10 +623,12 @@ class TestAnalyzeMultiSurfaceResults:
     def test_analyze_multi_surface_results_basic(self):
         """Test analyze_multi_surface_results with mock data."""
         from unittest.mock import MagicMock
+
+        from pymatgen.core import Composition
+
         from atomate2.siesta.flows.surface.multi_surface import (
             analyze_multi_surface_results,
         )
-        from pymatgen.core import Composition
 
         # Create mock bulk output
         mock_bulk_output = MagicMock()
@@ -673,6 +676,7 @@ class TestAnalyzeMultiSurfaceResults:
     def test_analyze_multi_surface_results_with_dict_composition(self):
         """Test analyze_multi_surface_results with serialized Composition (dict)."""
         from unittest.mock import MagicMock
+
         from atomate2.siesta.flows.surface.multi_surface import (
             analyze_multi_surface_results,
         )

@@ -11,19 +11,15 @@ Section:  6.2 Pseudopotentials + atomate2siesta
 
 __all__ = ["Pseudopotentials"]
 
+import logging
 import os
-from typing import Optional
-from typing import OrderedDict
-from typing import Dict
+from collections import OrderedDict
+from dataclasses import dataclass, field, fields
 from typing import Any
-from dataclasses import field, fields
-from dataclasses import dataclass
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +52,7 @@ class Pseudopotentials(FDFDataclass):
     # 6.2 Pseudopotentials + atomate2siesta
     # --------------------------------------
     # Direct path (takes precedence if set)
-    pseudo_path: Optional[str] = field(
+    pseudo_path: str | None = field(
         default=None,
         metadata={
             "description": "Direct path to pseudopotential directory. If set, overrides automatic path construction.",
@@ -65,7 +61,7 @@ class Pseudopotentials(FDFDataclass):
     )
 
     # Base path for automatic construction
-    pseudo_base_path: Optional[str] = field(
+    pseudo_base_path: str | None = field(
         default=None,
         metadata={
             "description": "Base directory containing pseudopotential subdirectories (e.g., /Users/user/.siesta/pseudos).",
@@ -104,7 +100,7 @@ class Pseudopotentials(FDFDataclass):
     )
 
     # XC functional information (used for automatic path construction) from 6.2 Pseudopotentials
-    xc_functional: Optional[str] = field(
+    xc_functional: str | None = field(
         default=None,
         metadata={
             "description": "XC functional family (LDA, GGA, VDW). Extracted from ExchangeCorrelationFunctionals.",
@@ -112,7 +108,7 @@ class Pseudopotentials(FDFDataclass):
         },
     )
     # from 6.2 Pseudopotentials
-    xc_authors: Optional[str] = field(
+    xc_authors: str | None = field(
         default=None,
         metadata={
             "description": "XC authors/parametrization (PBE, PBEsol, etc.). Extracted from ExchangeCorrelationFunctionals.",
@@ -121,7 +117,7 @@ class Pseudopotentials(FDFDataclass):
     )
 
     # Internal fields
-    _user_params: Optional[Dict[str, Any]] = field(
+    _user_params: dict[str, Any] | None = field(
         default=None,
         init=False,
         metadata={
@@ -148,7 +144,7 @@ class Pseudopotentials(FDFDataclass):
             )
             self.__class__._registered = True
 
-    def construct_pseudo_path(self) -> Optional[str]:
+    def construct_pseudo_path(self) -> str | None:
         """
         Automatically construct the pseudopotential path from base_path and XC information.
 
@@ -157,7 +153,8 @@ class Pseudopotentials(FDFDataclass):
         2. If `pseudo_base_path` and XC info are available, construct the path
         3. Otherwise, return None
 
-        Returns:
+        Returns
+        -------
             str or None: Constructed pseudopotential path, or None if cannot be constructed
 
         Example:
@@ -214,7 +211,8 @@ class Pseudopotentials(FDFDataclass):
         Args:
             xc_authors: XC authors string (e.g., "pbesol", "PBEsol", "PBE")
 
-        Returns:
+        Returns
+        -------
             str: Normalized XC name (e.g., "PBEsol", "PBE")
         """
         # Common XC functional name mappings
@@ -236,14 +234,15 @@ class Pseudopotentials(FDFDataclass):
         return xc_mapping.get(xc_lower, xc_authors)  # Return original if not in mapping
 
     @staticmethod
-    def extract_xc_from_psml(psml_file: str) -> Optional[Dict[str, str]]:
+    def extract_xc_from_psml(psml_file: str) -> dict[str, str] | None:
         """
         Extract XC functional information from a PSML pseudopotential file.
 
         Args:
             psml_file: Path to .psml file
 
-        Returns:
+        Returns
+        -------
             dict or None: Dictionary with XC information:
                 - xc_type: Full XC description (e.g., "GGA -- Perdew-Burke-Ernzerhof")
                 - xc_family: Functional family (e.g., "GGA", "LDA")
@@ -252,7 +251,7 @@ class Pseudopotentials(FDFDataclass):
 
         Example:
             >>> xc_info = Pseudopotentials.extract_xc_from_psml("/path/to/Si.psml")
-            >>> print(xc_info['xc_name'])
+            >>> print(xc_info["xc_name"])
             'PBE'
         """
         try:
@@ -328,7 +327,8 @@ class Pseudopotentials(FDFDataclass):
             xc_authors: XC authors from FDF (e.g., "PBE", "PW91")
             structure: Pymatgen Structure object
 
-        Warnings:
+        Warnings
+        --------
             Prints colored warning if XC mismatch detected
         """
         if not pseudo_path or not os.path.isdir(pseudo_path):
@@ -350,7 +350,7 @@ class Pseudopotentials(FDFDataclass):
 
             # Check XC family (GGA vs LDA)
             # Strip default marker comments before comparing
-            xc_functional_clean = xc_functional.split("#")[0].strip()
+            xc_functional_clean = xc_functional.split("#", maxsplit=1)[0].strip()
             if xc_info["xc_family"].upper() != xc_functional_clean.upper():
                 mismatches.append(
                     f"{element}: FDF has {xc_functional}, "
@@ -360,7 +360,7 @@ class Pseudopotentials(FDFDataclass):
             # Check XC authors (PBE, PW91, etc.)
             # Normalize for comparison
             # Strip default marker comments before comparing
-            xc_authors_clean = xc_authors.split("#")[0].strip()
+            xc_authors_clean = xc_authors.split("#", maxsplit=1)[0].strip()
             fdf_xc_norm = xc_authors_clean.upper().replace("-", "")
             pseudo_xc_norm = xc_info["xc_name"].upper().replace("-", "")
 
@@ -393,7 +393,7 @@ class Pseudopotentials(FDFDataclass):
                 )
 
     @staticmethod
-    def parse_pseudo_path(pseudo_path: str) -> Optional[Dict[str, str]]:
+    def parse_pseudo_path(pseudo_path: str) -> dict[str, str] | None:
         """
         Parse pseudopotential path to extract XC and other metadata from directory name.
 
@@ -403,7 +403,8 @@ class Pseudopotentials(FDFDataclass):
         Args:
             pseudo_path: Full path to pseudopotential directory
 
-        Returns:
+        Returns
+        -------
             dict or None: Dictionary with extracted metadata:
                 - xc_authors: XC functional (e.g., "PBEsol", "PBE")
                 - xc_functional: XC family (e.g., "GGA", "LDA")
@@ -416,7 +417,7 @@ class Pseudopotentials(FDFDataclass):
         Example:
             >>> path = "/Users/user/.siesta/pseudos/ONCVPSP-PBEsol-FR-PDv0.4-Standard"
             >>> metadata = Pseudopotentials.parse_pseudo_path(path)
-            >>> print(metadata['xc_authors'])
+            >>> print(metadata["xc_authors"])
             'PBEsol'
         """
         import re
@@ -465,8 +466,8 @@ class Pseudopotentials(FDFDataclass):
     @classmethod
     def setup_pseudos(
         cls,
-        user_params: Optional[Dict[str, Any]] = None,
-        default_pseudo_path: Optional[str] = None,
+        user_params: dict[str, Any] | None = None,
+        default_pseudo_path: str | None = None,
     ) -> "Pseudopotentials":
         """
         Set up pseudopotential settings using user parameters and a default pseudo path.
@@ -476,7 +477,8 @@ class Pseudopotentials(FDFDataclass):
                                          Supported key: pseudo_path.
             default_pseudo_path (str, optional): Default path to pseudopotential files if not specified in user_params.
 
-        Returns:
+        Returns
+        -------
             Pseudopotentials: Configured instance with pseudo_path and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -560,11 +562,10 @@ class Pseudopotentials(FDFDataclass):
                             console.print(
                                 f"[yellow]Failed to set '{original_key}': {e}[/yellow]"
                             )
-                else:
-                    if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                        console.print(
-                            f"[yellow]Key '{key}' does not match any Pseudopotentials field, skipping.[/yellow]"
-                        )
+                elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                    console.print(
+                        f"[yellow]Key '{key}' does not match any Pseudopotentials field, skipping.[/yellow]"
+                    )
 
         # Automatically construct pseudo_path if not explicitly set
         if not pseudo_settings.pseudo_path:
@@ -605,7 +606,8 @@ class Pseudopotentials(FDFDataclass):
         """
         Validates the pseudopotential settings.
 
-        Raises:
+        Raises
+        ------
             ValueError: If pseudo_path is invalid.
         """
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -624,7 +626,7 @@ class Pseudopotentials(FDFDataclass):
                 "[green]Validation: [yellow]Pseudopotentials[/yellow] Successful![/green]"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -637,18 +639,19 @@ class Pseudopotentials(FDFDataclass):
             if key_lower in ["siesta_pp_path", "pseudo_path"]:
                 self.pseudo_path = str(value)
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
 
         Note:
             SIESTA_PP_PATH can be specified in FDF file (though it's also an env var).
             Users can pass pseudo_path to override automatic path construction.
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # Construct or use explicit path
         pseudo_path = self.construct_pseudo_path()
@@ -657,11 +660,12 @@ class Pseudopotentials(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE handles pseudopotentials through species parameter

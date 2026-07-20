@@ -53,9 +53,9 @@ def get_validator(
 
 
 __all__ = [
-    "OutputValidator",
-    "SiestaOutputValidator",
-    "RelaxationValidator",
     "BandStructureValidator",
+    "OutputValidator",
+    "RelaxationValidator",
+    "SiestaOutputValidator",
     "get_validator",
 ]

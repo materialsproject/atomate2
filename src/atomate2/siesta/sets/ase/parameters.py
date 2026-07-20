@@ -1,7 +1,9 @@
 # fmt: off
 import logging
+
 from ase.calculators.calculator import Parameters
 from ase.units import Ry, eV
+
 logger = logging.getLogger(__name__)
 """
 2017.04 - Pedro Brandimarte: changes for python 2-3 compatible
@@ -16,7 +18,8 @@ class PAOBasisBlock(Parameters):
 
     def __init__(self, block):
         """
-        Parameters:
+        Parameters
+        ----------
             -block : String. A block defining the basis set of a single
                      species using the format of a PAO.Basis block.
                      The initial label should be left out since it is
@@ -39,10 +42,11 @@ class PAOBasisBlock(Parameters):
         """
         Write the fdf script for the block.
 
-        Parameters:
+        Parameters
+        ----------
             -label : The label to insert in front of the block.
         """
-        return label + ' ' + self['block']
+        return label + " " + self["block"]
 
 
 class Species(Parameters):
@@ -58,13 +62,13 @@ class Species(Parameters):
 
     def __init__(self,
                  symbol,
-                 basis_set='DZP',
+                 basis_set="DZP",
                  pseudopotential=None,
                  tag=None,
                  ghost=False,
                  excess_charge=None):
         kwargs = locals()
-        kwargs.pop('self')
+        kwargs.pop("self")
         Parameters.__init__(self, **kwargs)
 
 
@@ -73,7 +77,8 @@ class SiestaParameters(Parameters):
     """
     Parameter class for SIESTA calculator, extending ASE Parameters.
 
-    Attributes:
+    Attributes
+    ----------
         label (str): Base name for input/output files.
         mesh_cutoff (float): Mesh cutoff energy in eV for grid points.
         energy_shift (float): Confining energy for basis set generation in eV.
@@ -94,15 +99,16 @@ class SiestaParameters(Parameters):
                             The main FDF will use %include to reference this file.
                             Set to None to inline structure in main FDF file.
     """
+
     def __init__(
             self,
-            label='siesta',
+            label="siesta",
             mesh_cutoff=200 * Ry,
             energy_shift=100 * meV,
             kpts=None,
-            xc='LDA',
-            basis_set='DZP',
-            spin='non-polarized',
+            xc="LDA",
+            basis_set="DZP",
+            spin="non-polarized",
             species=(),
             pseudo_qualifier=None,
             pseudo_path=None,
@@ -110,11 +116,11 @@ class SiestaParameters(Parameters):
             atoms=None,
             restart=None,
             fdf_arguments=None,
-            atomic_coord_format='xyz',
+            atomic_coord_format="xyz",
             bandpath=None,
             structure_fdf="structure.fdf",
             ):
         logger.info("SiestaParameters.__init__()")
         kwargs = locals()
-        kwargs.pop('self')
+        kwargs.pop("self")
         Parameters.__init__(self, **kwargs)

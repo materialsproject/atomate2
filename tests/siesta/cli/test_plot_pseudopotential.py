@@ -1,6 +1,6 @@
 """Tests for plot_pseudopotential CLI module."""
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
@@ -8,12 +8,12 @@ from click.testing import CliRunner
 
 from atomate2.siesta.cli.pseudo.plot_pseudopotential import (
     parse_psml,
-    plot_wavefunctions,
-    plot_potentials,
     plot_3d_potential,
-    plot_occupation_map,
     plot_density,
+    plot_occupation_map,
+    plot_potentials,
     plot_pseudopotential,
+    plot_wavefunctions,
 )
 
 

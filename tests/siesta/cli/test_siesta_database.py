@@ -1,15 +1,17 @@
 """Tests for siesta_database CLI module."""
 
 from pathlib import Path
-from unittest.mock import patch, MagicMock, mock_open
+from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 from click.testing import CliRunner
 
+from atomate2.siesta.cli.database.siesta_database import cli
 from atomate2.siesta.cli.database.siesta_database import (
-    cli,
-    test_mongodb_connection as mongodb_connection_helper,
     test_maggma_store as maggma_store_helper,
+)
+from atomate2.siesta.cli.database.siesta_database import (
+    test_mongodb_connection as mongodb_connection_helper,
 )
 
 

@@ -9,10 +9,11 @@ These tests validate:
 - copy_file_from_flos function
 """
 
-import pytest
 import json
 from unittest.mock import MagicMock, patch
-from pymatgen.core import Structure, Lattice
+
+import pytest
+from pymatgen.core import Lattice, Structure
 
 
 @pytest.fixture
@@ -68,8 +69,9 @@ class TestCopySiestaOutputs:
 
     def test_copy_siesta_outputs_signature(self):
         """Test copy_siesta_outputs has correct signature."""
-        from atomate2.siesta.files import copy_siesta_outputs
         import inspect
+
+        from atomate2.siesta.files import copy_siesta_outputs
 
         sig = inspect.signature(copy_siesta_outputs)
         params = sig.parameters
@@ -93,8 +95,9 @@ class TestWriteSiestaInputSet:
 
     def test_write_siesta_input_set_signature(self):
         """Test write_siesta_input_set has correct signature."""
-        from atomate2.siesta.files import write_siesta_input_set
         import inspect
+
+        from atomate2.siesta.files import write_siesta_input_set
 
         sig = inspect.signature(write_siesta_input_set)
         params = sig.parameters
@@ -160,8 +163,9 @@ class TestCleanupSiestaOutputs:
 
     def test_cleanup_siesta_outputs_signature(self):
         """Test cleanup_siesta_outputs has correct signature."""
-        from atomate2.siesta.files import cleanup_siesta_outputs
         import inspect
+
+        from atomate2.siesta.files import cleanup_siesta_outputs
 
         sig = inspect.signature(cleanup_siesta_outputs)
         params = sig.parameters
@@ -201,8 +205,9 @@ class TestLoadSiestaInput:
 
     def test_load_siesta_input_signature(self):
         """Test load_siesta_input has correct signature."""
-        from atomate2.siesta.files import load_siesta_input
         import inspect
+
+        from atomate2.siesta.files import load_siesta_input
 
         sig = inspect.signature(load_siesta_input)
         params = sig.parameters
@@ -260,8 +265,9 @@ class TestReadDirectlyFromSiestaOut:
 
     def test_read_directly_from_siesta_out_signature(self):
         """Test read_directly_from_siesta_out has correct signature."""
-        from atomate2.siesta.files import read_directly_from_siesta_out
         import inspect
+
+        from atomate2.siesta.files import read_directly_from_siesta_out
 
         sig = inspect.signature(read_directly_from_siesta_out)
         params = sig.parameters
@@ -371,8 +377,9 @@ class TestCopyFileFromFlos:
 
     def test_copy_file_from_flos_signature(self):
         """Test copy_file_from_flos has correct signature."""
-        from atomate2.siesta.files import copy_file_from_flos
         import inspect
+
+        from atomate2.siesta.files import copy_file_from_flos
 
         sig = inspect.signature(copy_file_from_flos)
         params = sig.parameters

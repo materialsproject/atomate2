@@ -9,18 +9,19 @@ These tests validate:
 - _find_siesta_files utility
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-from pymatgen.core import Structure, Lattice
 
+import pytest
+from pymatgen.core import Lattice, Structure
+
+from atomate2.siesta.schemas.calculation import TaskState
 from atomate2.siesta.schemas.task import (
     InputDoc,
     OutputDoc,
     SiestaTaskDoc,
     _find_siesta_files,
 )
-from atomate2.siesta.schemas.calculation import TaskState
 
 
 class TestInputDoc:
@@ -344,7 +345,6 @@ class TestSiestaTaskDoc:
         # This test documents that from_directory expects valid structures
         # When structure is None, the from_structure method will fail
         # This is expected behavior and callers should ensure structure exists
-        pass
 
 
 class TestFindSiestaFiles:

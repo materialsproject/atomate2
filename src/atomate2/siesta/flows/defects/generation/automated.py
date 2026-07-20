@@ -99,8 +99,10 @@ class SiestaVacancyGenerator:
 
     >>> generator = SiestaVacancyGenerator(mgo)
     >>> supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]  # 2×2×2
-    >>> for defect_info in generator.generate_defects(supercell_matrix=supercell_matrix):
-    ...     structure = defect_info['structure']
+    >>> for defect_info in generator.generate_defects(
+    ...     supercell_matrix=supercell_matrix
+    ... ):
+    ...     structure = defect_info["structure"]
     ...     # structure is 2×2×2 supercell with ghost atom
 
     Generate vacancies for multiple charge states:
@@ -108,7 +110,7 @@ class SiestaVacancyGenerator:
     >>> generator = SiestaVacancyGenerator(mgo)
     >>> charge_states = [0, +1, +2]
     >>> for defect_info in generator.generate_defects(charge_states=charge_states):
-    ...     q = defect_info['charge_state']
+    ...     q = defect_info["charge_state"]
     ...     print(f"V_{defect_info['species']} with charge {q:+d}")
 
     Generate vacancies at ALL sites (no symmetry reduction):
@@ -202,7 +204,9 @@ class SiestaVacancyGenerator:
         >>> # Get only oxygen sites
         >>> o_sites = generator.get_unique_sites(species="O")
         >>> for site in o_sites:
-        ...     print(f"O site: Wyckoff {site.wyckoff}, multiplicity {site.multiplicity}")
+        ...     print(
+        ...         f"O site: Wyckoff {site.wyckoff}, multiplicity {site.multiplicity}"
+        ...     )
         >>>
         >>> # Get ALL sites (no symmetry)
         >>> generator = SiestaVacancyGenerator(mos2, use_symmetry=False)
@@ -273,8 +277,7 @@ class SiestaVacancyGenerator:
                 )
 
             logger.info(
-                f"Found {len(sites)} symmetry-unique site(s) "
-                f"for species {species_list}"
+                f"Found {len(sites)} symmetry-unique site(s) for species {species_list}"
             )
         else:
             # No symmetry reduction: return ALL sites
@@ -360,16 +363,12 @@ class SiestaVacancyGenerator:
         Generate O vacancies only, with 2×2×2 supercell:
 
         >>> defects = generator.generate_defects(
-        ...     species="O",
-        ...     supercell_matrix=[[2,0,0], [0,2,0], [0,0,2]]
+        ...     species="O", supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]]
         ... )
 
         Generate O vacancies with multiple charge states:
 
-        >>> defects = generator.generate_defects(
-        ...     species="O",
-        ...     charge_states=[0, +1, +2]
-        ... )
+        >>> defects = generator.generate_defects(species="O", charge_states=[0, +1, +2])
         >>> # Returns 3× defects (one for each charge state)
         """
         # Get charge states

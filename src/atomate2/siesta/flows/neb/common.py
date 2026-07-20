@@ -124,7 +124,7 @@ def _create_neb_lua_script(n_intermediate_images: int):
         )
 
     # Read the template
-    with open(neb_template, "r") as f:
+    with open(neb_template) as f:
         lua_content = f.read()
 
     # Replace n_images with the correct value
@@ -185,7 +185,7 @@ def _create_neb_lua_script(n_intermediate_images: int):
         f.write(lua_content)
 
     # Verify what was written
-    with open("neb.lua", "r") as f:
+    with open("neb.lua") as f:
         verify_content = f.read()
         verify_match = re.search(r"local n_images\s*=\s*\d+", verify_content)
         if verify_match:

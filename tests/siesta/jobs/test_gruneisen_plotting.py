@@ -1,7 +1,7 @@
 """Tests for Grüneisen parameter plotting utilities."""
 
-import pytest
 import numpy as np
+import pytest
 from pymatgen.core import Lattice, Structure
 
 

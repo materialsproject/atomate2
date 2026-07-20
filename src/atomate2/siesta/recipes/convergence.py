@@ -540,8 +540,7 @@ def extract_optimal_parameters(
     Example
     -------
     >>> optimal_params = extract_optimal_parameters(
-    ...     convergence_results,
-    ...     tolerance=0.0005
+    ...     convergence_results, tolerance=0.0005
     ... )
     >>> # Returns: {"a2s_kpts": [6, 6, 6], "Mesh.Cutoff": "350 Ry"}
     """
@@ -587,7 +586,7 @@ def extract_optimal_parameters(
                         }
                         logger.info(
                             f"Converged k-points: {optimal['a2s_kpts']} "
-                            f"(ΔE = {energy_diffs[converged_idx-1]:.6f} eV)"
+                            f"(ΔE = {energy_diffs[converged_idx - 1]:.6f} eV)"
                         )
         except Exception as e:
             logger.warning(f"Could not extract k-points convergence: {e}")
@@ -626,7 +625,7 @@ def extract_optimal_parameters(
                         }
                         logger.info(
                             f"Converged mesh cutoff: {optimal['Mesh.Cutoff']} "
-                            f"(ΔE = {energy_diffs[converged_idx-1]:.6f} eV)"
+                            f"(ΔE = {energy_diffs[converged_idx - 1]:.6f} eV)"
                         )
         except Exception as e:
             logger.warning(f"Could not extract mesh cutoff convergence: {e}")

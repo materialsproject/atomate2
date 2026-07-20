@@ -449,8 +449,7 @@ class FreysoldtCorrection(CorrectionScheme):
         if min_nn_dist == float("inf"):
             # Fallback: use 1.5 Å (typical for localized defects)
             logger.warning(
-                "Could not determine nearest-neighbor distance. "
-                "Using default σ = 1.5 Å"
+                "Could not determine nearest-neighbor distance. Using default σ = 1.5 Å"
             )
             return 1.5
 

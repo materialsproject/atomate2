@@ -1,8 +1,7 @@
 import logging
 import re
-import tempfile
 import shutil
-
+import tempfile
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +13,12 @@ def parse_siesta_version(output: bytes) -> str:
     Args:
         output (bytes): Raw output from running the SIESTA executable.
 
-    Returns:
+    Returns
+    -------
         str: The parsed SIESTA version string.
 
-    Raises:
+    Raises
+    ------
         RuntimeError: If version information cannot be extracted from output.
     """
     logger.info("parse_siesta_version()")
@@ -37,10 +38,12 @@ def get_siesta_version(executable: str) -> str:
     Args:
         executable (str): Path to the SIESTA executable.
 
-    Returns:
+    Returns
+    -------
         str: The SIESTA version string.
 
-    Notes:
+    Notes
+    -----
         Creates a temporary directory to run the executable safely, capturing
         output to parse the version. Cleans up the directory afterward.
     """

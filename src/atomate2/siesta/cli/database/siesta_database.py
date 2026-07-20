@@ -2,11 +2,11 @@
 """CLI for testing and managing atomate2siesta database connections."""
 
 import click
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.text import Text
 from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 # Initialize rich console
 console = Console()
@@ -104,7 +104,6 @@ def test_maggma_store(host, port, database, collection_name):
 @click.version_option("0.1.0")
 def cli():
     """Command-line interface for atomate2siesta database testing."""
-    pass
 
 
 @cli.command()
@@ -449,7 +448,7 @@ def query(
 
         # Limit display to reasonable number (but export all)
         # If --latest is used, show all requested documents
-        DISPLAY_LIMIT = latest if latest else 50
+        DISPLAY_LIMIT = latest or 50
         display_docs = documents[:DISPLAY_LIMIT]
 
         if len(documents) > DISPLAY_LIMIT and not latest:
@@ -766,7 +765,6 @@ def stats(host, port, database):
 )
 def clear(host, port, database, collection, force, drop_collection, drop_database):
     """Clear documents, drop collection, or drop database (USE WITH CAUTION)."""
-
     # Check for conflicting options
     if drop_database and drop_collection:
         console.print(
@@ -1101,7 +1099,6 @@ def create(host, port, database, collection, create_indexes):
 @click.option("--force", is_flag=True, help="Overwrite existing ~/.jobflow.yaml file")
 def config(generate, host, port, database, force):
     """Show example database configuration files or generate ~/.jobflow.yaml."""
-
     # If --generate flag is used, create the file
     if generate:
         from pathlib import Path
@@ -1345,7 +1342,8 @@ def setup(check_only, start_service, stop_service, local, install_dir):
         • RedHat/CentOS/Fedora (via yum/dnf or local user install)
         • Any Linux (local user install without root)
 
-    Examples:
+    Examples
+    --------
         # Check if MongoDB is installed
         atomate2siesta-database setup --check-only
 
@@ -1517,10 +1515,10 @@ def setup(check_only, start_service, stop_service, local, install_dir):
 
     # Local installation (user mode, no root required)
     if local:
-        from pathlib import Path
+        import shutil
         import tarfile
         import urllib.request
-        import shutil
+        from pathlib import Path
 
         console.print(
             "\n[bold cyan]Installing MongoDB in User Mode (No Root Required)[/bold cyan]\n"
@@ -2037,7 +2035,8 @@ def status(port):
         • Port availability (lsof)
         • Connection test
 
-    Examples:
+    Examples
+    --------
         # Check default MongoDB instance
         atomate2siesta-database status
 
@@ -2048,7 +2047,7 @@ def status(port):
 
     console.print(
         Panel(
-            f"[bold cyan]MongoDB Status Check[/bold cyan]\n" f"Port: {port}",
+            f"[bold cyan]MongoDB Status Check[/bold cyan]\nPort: {port}",
             style="blue",
         )
     )

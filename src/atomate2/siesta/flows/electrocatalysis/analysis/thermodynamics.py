@@ -10,7 +10,8 @@ Key assumptions:
 2. Entropy and zero-point energy corrections from gas-phase calculations
 3. Constant pH (typically pH = 0 for acidic, pH = 14 for alkaline)
 
-References:
+References
+----------
 - Nørskov et al., J. Phys. Chem. B 108, 17886 (2004)
 - Peterson et al., Energy Environ. Sci. 3, 1311 (2010)
 - Viswanathan et al., ACS Catal. 2, 1654 (2012)
@@ -96,15 +97,14 @@ def calculate_free_energy_corrections(
     Examples
     --------
     >>> corrections = calculate_free_energy_corrections()
-    >>> corrections['H2O']
+    >>> corrections["H2O"]
     0.67  # eV (includes ZPE - TS)
 
     >>> # Custom corrections
-    >>> custom_zpe = {'O2': 0.10, 'H2O': 0.56}
-    >>> custom_entropy = {'O2': -0.05, 'H2O': -0.11}
+    >>> custom_zpe = {"O2": 0.10, "H2O": 0.56}
+    >>> custom_entropy = {"O2": -0.05, "H2O": -0.11}
     >>> corrections = calculate_free_energy_corrections(
-    ...     zpe_corrections=custom_zpe,
-    ...     entropy_corrections=custom_entropy
+    ...     zpe_corrections=custom_zpe, entropy_corrections=custom_entropy
     ... )
     """
     # Standard corrections at 298.15 K, 1 atm
@@ -265,23 +265,23 @@ def calculate_reaction_free_energies(
     --------
     >>> # ORR pathway: O₂ → OOH* → O* + OH* → 2OH* → H₂O
     >>> pathway = [
-    ...     {'label': 'O2_ads', 'energy': -500.0, 'species': 'O2', 'n_H': 0, 'n_e': 0},
-    ...     {'label': 'OOH*', 'energy': -498.5, 'species': 'H', 'n_H': 1, 'n_e': 1},
-    ...     {'label': 'O*', 'energy': -497.0, 'species': 'H2O', 'n_H': 1, 'n_e': 1},
-    ...     {'label': 'OH*', 'energy': -496.0, 'species': 'H', 'n_H': 1, 'n_e': 1},
-    ...     {'label': 'H2O', 'energy': -495.0, 'species': 'H', 'n_H': 1, 'n_e': 1},
+    ...     {"label": "O2_ads", "energy": -500.0, "species": "O2", "n_H": 0, "n_e": 0},
+    ...     {"label": "OOH*", "energy": -498.5, "species": "H", "n_H": 1, "n_e": 1},
+    ...     {"label": "O*", "energy": -497.0, "species": "H2O", "n_H": 1, "n_e": 1},
+    ...     {"label": "OH*", "energy": -496.0, "species": "H", "n_H": 1, "n_e": 1},
+    ...     {"label": "H2O", "energy": -495.0, "species": "H", "n_H": 1, "n_e": 1},
     ... ]
-    >>> gas_energies = {'H2': -6.77, 'H2O': -14.22, 'O2': -9.86}
+    >>> gas_energies = {"H2": -6.77, "H2O": -14.22, "O2": -9.86}
     >>> clean_surf = -494.0
     >>>
     >>> results = calculate_reaction_free_energies(
-    ...     surface_name='Pt(111)',
+    ...     surface_name="Pt(111)",
     ...     pathway_steps=pathway,
     ...     gas_phase_energies=gas_energies,
     ...     clean_surface_energy=clean_surf,
     ...     potential=0.0,
     ... )
-    >>> results['delta_G']
+    >>> results["delta_G"]
     [0.45, 1.20, 0.80, 0.60]  # Free energy changes for each step (eV)
     """
     # Get thermodynamic corrections
@@ -444,7 +444,7 @@ def identify_rate_limiting_step(
     Examples
     --------
     >>> delta_G = [0.45, 1.20, 0.80, 0.60]
-    >>> labels = ['O2_ads', 'OOH*', 'O*', 'OH*']
+    >>> labels = ["O2_ads", "OOH*", "O*", "OH*"]
     >>> rls = identify_rate_limiting_step(delta_G, labels)
     >>> rls
     {'rls_index': 1, 'rls_label': 'OOH*', 'rls_delta_G': 1.20}
@@ -461,7 +461,7 @@ def identify_rate_limiting_step(
         rls_label = step_labels[rls_index]
 
     logger.info(
-        f"Rate-limiting step: {rls_label or rls_index} " f"(ΔG = {rls_delta_G:.3f} eV)"
+        f"Rate-limiting step: {rls_label or rls_index} (ΔG = {rls_delta_G:.3f} eV)"
     )
 
     return {

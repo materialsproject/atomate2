@@ -180,7 +180,7 @@ class SiestaOutputValidator(Validator):
                 with gzip.open(filepath, "rt", encoding="utf-8") as f:
                     return f.read()
             else:
-                with open(filepath, "r", encoding="utf-8") as f:
+                with open(filepath, encoding="utf-8") as f:
                     return f.read()
         except Exception as e:
             logger.error(f"Error reading {filepath}: {e}")

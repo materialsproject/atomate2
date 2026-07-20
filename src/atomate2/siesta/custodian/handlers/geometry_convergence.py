@@ -196,9 +196,9 @@ class GeometryConvergenceHandler(ErrorHandler):
                 # Level 4: Set to 600 + relax convergence slightly
                 new_steps = 600
                 corrections["MD.NumCGsteps"] = new_steps
-                corrections[
-                    "MD.MaxForceTol"
-                ] = f"{self.force_tolerance * 1.5:.6f} eV/Ang"  # type: ignore[assignment]
+                corrections["MD.MaxForceTol"] = (
+                    f"{self.force_tolerance * 1.5:.6f} eV/Ang"  # type: ignore[assignment]
+                )
                 strategy = (
                     f"Increase MD.NumCGsteps to {new_steps}, "
                     f"relax force tolerance to {self.force_tolerance * 1.5:.4f} eV/Ang"
@@ -214,54 +214,52 @@ class GeometryConvergenceHandler(ErrorHandler):
                     "switch to Broyden method (last resort)"
                 )
 
+        # For larger step counts (>= 100), use percentage increases
+        elif attempt == 1:
+            # Level 1: Increase by 50%
+            new_steps = int(current_steps * 1.5)
+            corrections["MD.NumCGsteps"] = new_steps
+            strategy = (
+                f"Increase MD.NumCGsteps from {current_steps} to {new_steps} (+50%)"
+            )
+
+        elif attempt == 2:
+            # Level 2: Increase by 100%
+            new_steps = int(current_steps * 2.0)
+            corrections["MD.NumCGsteps"] = new_steps
+            strategy = (
+                f"Increase MD.NumCGsteps from {current_steps} to {new_steps} (+100%)"
+            )
+
+        elif attempt == 3:
+            # Level 3: Increase by 150% + try FIRE method
+            new_steps = int(current_steps * 2.5)
+            corrections["MD.NumCGsteps"] = new_steps
+            corrections["MD.TypeOfRun"] = "CG"  # type: ignore[assignment]
+            corrections["MD.FireQuench"] = True
+            strategy = (
+                f"Increase MD.NumCGsteps to {new_steps} (+150%), "
+                "enable FIRE quenching (faster for some systems)"
+            )
+
+        elif attempt == 4:
+            # Level 4: Increase by 200% + relax convergence slightly
+            new_steps = int(current_steps * 3.0)
+            corrections["MD.NumCGsteps"] = new_steps
+            corrections["MD.MaxForceTol"] = f"{self.force_tolerance * 1.5:.6f} eV/Ang"  # type: ignore[assignment]
+            strategy = (
+                f"Increase MD.NumCGsteps to {new_steps} (+200%), "
+                f"relax force tolerance to {self.force_tolerance * 1.5:.4f} eV/Ang"
+            )
+
         else:
-            # For larger step counts (>= 100), use percentage increases
-            if attempt == 1:
-                # Level 1: Increase by 50%
-                new_steps = int(current_steps * 1.5)
-                corrections["MD.NumCGsteps"] = new_steps
-                strategy = (
-                    f"Increase MD.NumCGsteps from {current_steps} to {new_steps} (+50%)"
-                )
-
-            elif attempt == 2:
-                # Level 2: Increase by 100%
-                new_steps = int(current_steps * 2.0)
-                corrections["MD.NumCGsteps"] = new_steps
-                strategy = f"Increase MD.NumCGsteps from {current_steps} to {new_steps} (+100%)"
-
-            elif attempt == 3:
-                # Level 3: Increase by 150% + try FIRE method
-                new_steps = int(current_steps * 2.5)
-                corrections["MD.NumCGsteps"] = new_steps
-                corrections["MD.TypeOfRun"] = "CG"  # type: ignore[assignment]
-                corrections["MD.FireQuench"] = True
-                strategy = (
-                    f"Increase MD.NumCGsteps to {new_steps} (+150%), "
-                    "enable FIRE quenching (faster for some systems)"
-                )
-
-            elif attempt == 4:
-                # Level 4: Increase by 200% + relax convergence slightly
-                new_steps = int(current_steps * 3.0)
-                corrections["MD.NumCGsteps"] = new_steps
-                corrections[
-                    "MD.MaxForceTol"
-                ] = f"{self.force_tolerance * 1.5:.6f} eV/Ang"  # type: ignore[assignment]
-                strategy = (
-                    f"Increase MD.NumCGsteps to {new_steps} (+200%), "
-                    f"relax force tolerance to {self.force_tolerance * 1.5:.4f} eV/Ang"
-                )
-
-            else:
-                # Level 5: Maximum steps + Broyden method (last resort)
-                corrections["MD.NumCGsteps"] = 1000
-                corrections["MD.TypeOfRun"] = "Broyden"  # type: ignore[assignment]
-                corrections["MD.Broyden.History.Steps"] = 10
-                strategy = (
-                    "Use maximum MD.NumCGsteps=1000, "
-                    "switch to Broyden method (last resort)"
-                )
+            # Level 5: Maximum steps + Broyden method (last resort)
+            corrections["MD.NumCGsteps"] = 1000
+            corrections["MD.TypeOfRun"] = "Broyden"  # type: ignore[assignment]
+            corrections["MD.Broyden.History.Steps"] = 10
+            strategy = (
+                "Use maximum MD.NumCGsteps=1000, switch to Broyden method (last resort)"
+            )
 
         logger.info(f"  Strategy: {strategy}")
 

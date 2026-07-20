@@ -103,7 +103,7 @@ class GasPhaseMoleculeMaker(BaseSiestaFlowMaker):
     >>> maker = GasPhaseMoleculeMaker(
     ...     spin_polarized=False,
     ...     box_size=20.0,  # Larger box
-    ...     user_params={"PAO.BasisSize": "TZP", "Mesh.Cutoff": "400 Ry"}
+    ...     user_params={"PAO.BasisSize": "TZP", "Mesh.Cutoff": "400 Ry"},
     ... )
     >>> flow = maker.make(co2)
     >>>

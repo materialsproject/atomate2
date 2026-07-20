@@ -8,7 +8,6 @@ from atomate2.siesta.flows.convergence import (
     MeshCutoffConvergenceFlowMaker,
 )
 
-
 # Note: We don't test collect_convergence_data and plot_convergence directly
 # because they are @job decorated functions that cause serialization issues
 # when tested with mock objects. The workflow structure tests below verify
@@ -470,8 +469,9 @@ class TestPlotConvergence:
 
     def test_plot_with_default_filename(self, tmp_path):
         """Test plot with auto-generated filename."""
-        from atomate2.siesta.flows.convergence.utils import plot_convergence
         import os
+
+        from atomate2.siesta.flows.convergence.utils import plot_convergence
 
         # Change to tmp_path to avoid cluttering
         os.chdir(tmp_path)

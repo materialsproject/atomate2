@@ -10,16 +10,16 @@ Tests the material-specific tier preset system including:
 """
 
 import pytest
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.jobs.core import RelaxMaker
 from atomate2.siesta.sets.tiers import (
-    TIER_PRESETS,
     TIER_CATEGORIES,
-    get_tier_preset,
+    TIER_PRESETS,
     apply_tier_preset,
-    list_tier_presets,
     get_presets_by_category,
+    get_tier_preset,
+    list_tier_presets,
 )
 
 
@@ -46,30 +46,30 @@ class TestPresetDefinitions:
         valid_tiers = {"basic", "intermediate", "advanced", "expert", "dirty", "ultra"}
 
         for name, preset in TIER_PRESETS.items():
-            assert (
-                preset["tier"] in valid_tiers
-            ), f"{name} has invalid tier: {preset['tier']}"
+            assert preset["tier"] in valid_tiers, (
+                f"{name} has invalid tier: {preset['tier']}"
+            )
 
     def test_enabled_modules_are_lists(self):
         """Test that enabled_modules are lists."""
         for name, preset in TIER_PRESETS.items():
-            assert isinstance(
-                preset["enabled_modules"], list
-            ), f"{name} enabled_modules not a list"
+            assert isinstance(preset["enabled_modules"], list), (
+                f"{name} enabled_modules not a list"
+            )
 
     def test_disabled_modules_are_lists(self):
         """Test that disabled_modules are lists."""
         for name, preset in TIER_PRESETS.items():
-            assert isinstance(
-                preset["disabled_modules"], list
-            ), f"{name} disabled_modules not a list"
+            assert isinstance(preset["disabled_modules"], list), (
+                f"{name} disabled_modules not a list"
+            )
 
     def test_recommended_params_are_dicts(self):
         """Test that recommended_params are dicts."""
         for name, preset in TIER_PRESETS.items():
-            assert isinstance(
-                preset["recommended_params"], dict
-            ), f"{name} recommended_params not a dict"
+            assert isinstance(preset["recommended_params"], dict), (
+                f"{name} recommended_params not a dict"
+            )
 
     def test_descriptions_are_non_empty(self):
         """Test that all presets have non-empty descriptions."""

@@ -73,9 +73,9 @@ class InputDoc(BaseModel):
             siesta_input = load_siesta_input(calc_doc.dir_name)
         except (FileNotFoundError, NotImplementedError):
             # Check for compressed version
-            from pathlib import Path
             import gzip
             import json
+            from pathlib import Path
 
             compressed_file = (
                 Path(calc_doc.dir_name)
@@ -151,8 +151,8 @@ class InputDoc(BaseModel):
 
         # If still no basis size, try parsing from FDF file
         if basis_size is None:
-            from pathlib import Path
             import gzip
+            from pathlib import Path
 
             # Try uncompressed FDF first
             fdf_file = Path(calc_doc.dir_name) / "siesta.fdf"
@@ -493,7 +493,7 @@ class SiestaTaskDoc(StructureMetadata):
             logger.debug(f"Processing task files: {files_name=} {files=}")
             try:
                 calc_doc = Calculation.from_siesta_files(dir_name)
-            except (IOError, OSError, RuntimeError, ValueError) as e:
+            except (OSError, RuntimeError, ValueError) as e:
                 logger.error(f"Cannot read calculation document from {files_name}: {e}")
                 raise RuntimeError(
                     f"Cannot read calculation document from {files_name}"

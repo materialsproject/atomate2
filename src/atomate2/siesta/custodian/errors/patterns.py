@@ -4,12 +4,7 @@ from __future__ import annotations
 
 import re
 
-from atomate2.siesta.custodian.errors.base import (
-    ErrorPattern,
-    ErrorSeverity,
-    ErrorType,
-)
-
+from atomate2.siesta.custodian.errors.base import ErrorPattern, ErrorSeverity, ErrorType
 
 # SCF Convergence Errors
 SCF_CONVERGENCE_PATTERNS = ErrorPattern(

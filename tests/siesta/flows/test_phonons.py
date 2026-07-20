@@ -13,8 +13,8 @@ from jobflow import Flow
 from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.flows.phonon import (
-    SiestaPhononFlowMaker,
     PhononConvergenceFlowMaker,
+    SiestaPhononFlowMaker,
 )
 from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker

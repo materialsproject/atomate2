@@ -6,12 +6,11 @@ This module provides the `add` subcommand for atomate2siesta-structure.
 
 from __future__ import annotations
 
-import numpy as np
 import click
+import numpy as np
+from pymatgen.core import Element, Molecule, Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Element, Molecule, Structure
 
 console = Console()
 
@@ -151,8 +150,8 @@ def add(
     common molecules or loading from XYZ files. Can orient molecules and place
     them automatically on top/bottom of surfaces.
 
-    Examples:
-
+    Examples
+    --------
         # Add oxygen atom at Cartesian position
         atomate2siesta-structure add surface.cif --element O --position 0,0,5.0
 

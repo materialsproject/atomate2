@@ -69,7 +69,7 @@ class FDFDataclass:
         ...     mesh_cutoff: float = 200.0
         ...
         ...     def __post_init__(self):
-        ...         if not hasattr(self.__class__, '_registered'):
+        ...         if not hasattr(self.__class__, "_registered"):
         ...             self.register_fdf_params("Mesh.Cutoff")
         ...             self.__class__._registered = True
         ...
@@ -92,9 +92,7 @@ class FDFDataclass:
         Example:
             >>> MeshSettings.register_fdf_params("Mesh.Cutoff")
             >>> BasisSettings.register_fdf_params(
-            ...     "PAO.BasisSize",
-            ...     "PAO.EnergyShift",
-            ...     "PAO.SplitNorm"
+            ...     "PAO.BasisSize", "PAO.EnergyShift", "PAO.SplitNorm"
             ... )
         """
         for name in fdf_names:
@@ -117,7 +115,8 @@ class FDFDataclass:
         Args:
             fdf_name: SIESTA FDF parameter name (any case)
 
-        Returns:
+        Returns
+        -------
             True if parameter is registered
 
         Example:
@@ -138,7 +137,8 @@ class FDFDataclass:
         Args:
             fdf_name: SIESTA FDF parameter name (any case)
 
-        Returns:
+        Returns
+        -------
             Dataclass name or None if not registered
 
         Example:
@@ -156,7 +156,8 @@ class FDFDataclass:
         """
         Get all registered FDF parameter names.
 
-        Returns:
+        Returns
+        -------
             List of registered FDF parameter names (lowercase)
 
         Example:
@@ -173,7 +174,8 @@ class FDFDataclass:
         Args:
             field_name: Name of the dataclass field
 
-        Returns:
+        Returns
+        -------
             Unit string (e.g., "Ry", "Ang", "fs") or None if not specified
 
         Example:
@@ -182,7 +184,6 @@ class FDFDataclass:
             >>> BasisSettings.get_field_unit("pao_energy_shift")
             "Ry"
         """
-
         if not hasattr(cls, "__dataclass_fields__"):
             return None
 
@@ -200,7 +201,8 @@ class FDFDataclass:
         Args:
             fdf_name: SIESTA FDF parameter name (e.g., "Mesh.Cutoff", "PAO.EnergyShift")
 
-        Returns:
+        Returns
+        -------
             Unit string (e.g., "Ry", "Ang", "fs") or None if not found
 
         Example:
@@ -211,7 +213,6 @@ class FDFDataclass:
             >>> FDFDataclass.get_fdf_parameter_unit("PAO.BasisSize")
             None  # No unit (string parameter)
         """
-
         if not hasattr(cls, "__dataclass_fields__"):
             return None
 
@@ -230,7 +231,8 @@ class FDFDataclass:
         """
         Get all dataclass fields that have units, with their metadata.
 
-        Returns:
+        Returns
+        -------
             Dictionary mapping field names to their metadata (description, keyword, unit)
 
         Example:
@@ -243,7 +245,6 @@ class FDFDataclass:
                 }
             }
         """
-
         if not hasattr(cls, "__dataclass_fields__"):
             return {}
 
@@ -269,7 +270,8 @@ class FDFDataclass:
         Args:
             fdf_dict: Dictionary of FDF parameters
 
-        Raises:
+        Raises
+        ------
             NotImplementedError: If not implemented by subclass
 
         Example:
@@ -289,7 +291,8 @@ class FDFDataclass:
         This method must be implemented by subclasses to check
         if parameter values are valid.
 
-        Raises:
+        Raises
+        ------
             NotImplementedError: If not implemented by subclass
             ValueError: If validation fails
 
@@ -309,10 +312,12 @@ class FDFDataclass:
         This method must be implemented by subclasses to convert
         internal attributes to SIESTA FDF format.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
 
-        Raises:
+        Raises
+        ------
             NotImplementedError: If not implemented by subclass
 
         Example:
@@ -330,7 +335,8 @@ class FDFDataclass:
         Override this method if the dataclass generates ASE parameters.
         Default implementation returns empty dict.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
 
         Example:
@@ -355,19 +361,21 @@ def merge_fdf_parameters(
         user_params: User-provided FDF parameters (case-insensitive)
         force_unknown: If True, allow unknown parameters to pass through
 
-    Returns:
+    Returns
+    -------
         Tuple of (known_params, unknown_params):
             - known_params: Parameters registered by dataclasses
             - unknown_params: Parameters not in registry
 
-    Raises:
+    Raises
+    ------
         ValueError: If unknown parameters found and force_unknown=False
 
     Example:
         >>> user_params = {
-        ...     "Mesh.Cutoff": "300 Ry",      # Known (registered)
-        ...     "PAO.BasisSize": "DZP",        # Known (registered)
-        ...     "CustomParam": "value",        # Unknown
+        ...     "Mesh.Cutoff": "300 Ry",  # Known (registered)
+        ...     "PAO.BasisSize": "DZP",  # Known (registered)
+        ...     "CustomParam": "value",  # Unknown
         ... }
         >>> known, unknown = merge_fdf_parameters(user_params)
         ValueError: Unknown FDF parameters: CustomParam

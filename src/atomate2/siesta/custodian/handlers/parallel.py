@@ -255,7 +255,9 @@ class ParallelDistributionHandler(ErrorHandler):
             with open(out_file) as f:
                 for line in f:
                     # Look for "Total number of orbitals:"
-                    match = re.search(r"Total number of.*orbitals:\s*(\d+)", line, re.I)
+                    match = re.search(
+                        r"Total number of.*orbitals:\s*(\d+)", line, re.IGNORECASE
+                    )
                     if match:
                         return int(match.group(1))
 

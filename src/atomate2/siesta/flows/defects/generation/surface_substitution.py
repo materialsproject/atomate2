@@ -14,9 +14,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from pymatgen.core import Element
 
-from atomate2.siesta.flows.defects.generation.surface import (
-    SurfaceVacancyGenerator,
-)
+from atomate2.siesta.flows.defects.generation.surface import SurfaceVacancyGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -63,7 +61,9 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
     **Example 1: Single Mo→W substitution on MoS₂ surface**
 
     >>> from pymatgen.core import Structure
-    >>> from atomate2.siesta.flows.defects.generation import SurfaceSubstitutionGenerator
+    >>> from atomate2.siesta.flows.defects.generation import (
+    ...     SurfaceSubstitutionGenerator,
+    ... )
     >>> mos2_slab = Structure.from_file("MoS2_slab.cif")
     >>>
     >>> # Replace surface Mo with W (for catalysis studies)
@@ -90,7 +90,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
     >>> defects = generator.generate_defects(
     ...     species="Mo",
     ...     dopants=["W", "Nb", "Ta", "Re"],  # Multiple dopants
-    ...     charge_states=[0]  # Neutral substitutions
+    ...     charge_states=[0],  # Neutral substitutions
     ... )
     >>> # Returns 4 defects (one per dopant)
 
@@ -121,7 +121,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
     >>> defects = generator.generate_defects(
     ...     species="Ti",
     ...     dopants=["Nb"],  # Nb doping
-    ...     charge_states=[-1, 0]
+    ...     charge_states=[-1, 0],
     ... )
 
     **Example 5: Antisite defects on surface**
@@ -157,7 +157,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
     >>> defects = generator.generate_defects(
     ...     species="O",
     ...     dopants=["N"],
-    ...     charge_states=[-1, 0, +1]  # N oxidation states
+    ...     charge_states=[-1, 0, +1],  # N oxidation states
     ... )
 
     Notes
@@ -267,9 +267,7 @@ class SurfaceSubstitutionGenerator(SurfaceVacancyGenerator):
         >>>
         >>> # Multiple dopants (screening)
         >>> defects = generator.generate_defects(
-        ...     species="Mo",
-        ...     dopants=["W", "Nb", "Ta"],
-        ...     charge_states=[0]
+        ...     species="Mo", dopants=["W", "Nb", "Ta"], charge_states=[0]
         ... )
         >>> # Returns 3 defects (one per dopant)
         """

@@ -274,7 +274,8 @@ def _modify_job_in_database(
         remove_keys: List of parameter keys to remove
         create_backup: Whether to create backup collection
 
-    Returns:
+    Returns
+    -------
         True if successful, False otherwise
     """
     try:
@@ -398,32 +399,31 @@ def _modify_job_in_database(
                 f"[green]✓[/green] Modified {result.modified_count} document(s)"
             )
             return True
+        console.print("[yellow]Warning:[/yellow] No documents modified")
+        console.print(f"[yellow]Query:[/yellow] {query}")
+        console.print(f"[yellow]Update path:[/yellow] {update_path}")
+
+        # Try to find the job to debug
+        found_job = collection.find_one(query)
+        if not found_job:
+            console.print("[red]Job not found with query![/red]")
         else:
-            console.print("[yellow]Warning:[/yellow] No documents modified")
-            console.print(f"[yellow]Query:[/yellow] {query}")
-            console.print(f"[yellow]Update path:[/yellow] {update_path}")
-
-            # Try to find the job to debug
-            found_job = collection.find_one(query)
-            if not found_job:
-                console.print("[red]Job not found with query![/red]")
-            else:
-                console.print(
-                    "[yellow]Job found but update failed - checking structure...[/yellow]"
-                )
-                # Check if the path exists
-                job_data = found_job.get("job", {})
-                function_data = job_data.get("function", {})
-                if "@bound" in function_data:
-                    bound_data = function_data["@bound"]
-                    if "input_set_generator" in bound_data:
-                        console.print("[green]✓[/green] Path exists in job document")
-                    else:
-                        console.print("[red]✗[/red] input_set_generator not in @bound")
+            console.print(
+                "[yellow]Job found but update failed - checking structure...[/yellow]"
+            )
+            # Check if the path exists
+            job_data = found_job.get("job", {})
+            function_data = job_data.get("function", {})
+            if "@bound" in function_data:
+                bound_data = function_data["@bound"]
+                if "input_set_generator" in bound_data:
+                    console.print("[green]✓[/green] Path exists in job document")
                 else:
-                    console.print("[red]✗[/red] @bound not in function")
+                    console.print("[red]✗[/red] input_set_generator not in @bound")
+            else:
+                console.print("[red]✗[/red] @bound not in function")
 
-            return False
+        return False
 
     except Exception as e:
         console.print(f"[red]Database error:[/red] {e}")

@@ -2,16 +2,16 @@
 
 from dataclasses import fields, is_dataclass
 
-from atomate2.siesta.dataclass.spin_settings import SpinSettings
-from atomate2.siesta.dataclass.scf_loop_parameters import SCFLoopParameters
-from atomate2.siesta.dataclass.pseudopotentials import Pseudopotentials
 from atomate2.siesta.dataclass.kpoint_sampling import KPointSampling
-from atomate2.siesta.dataclass.real_space_grid_parameters import RealSpaceGridParameters
 from atomate2.siesta.dataclass.molecular_dynamics_and_relaxation import (
     MolecularDynamicsAndRelaxation,
 )
 from atomate2.siesta.dataclass.optical_properties import OpticalProperties
 from atomate2.siesta.dataclass.phonon_calculations import PhononCalculations
+from atomate2.siesta.dataclass.pseudopotentials import Pseudopotentials
+from atomate2.siesta.dataclass.real_space_grid_parameters import RealSpaceGridParameters
+from atomate2.siesta.dataclass.scf_loop_parameters import SCFLoopParameters
+from atomate2.siesta.dataclass.spin_settings import SpinSettings
 
 
 class TestDataclassStructure:
@@ -54,9 +54,9 @@ class TestDataclassStructure:
         for module in modules:
             instance = module()
             assert instance is not None, f"{module.__name__} should be instantiatable"
-            assert is_dataclass(
-                instance
-            ), f"Instance of {module.__name__} should be a dataclass"
+            assert is_dataclass(instance), (
+                f"Instance of {module.__name__} should be a dataclass"
+            )
 
     def test_dataclasses_have_fdf_arguments(self):
         """Test that dataclasses have fdf_arguments field."""

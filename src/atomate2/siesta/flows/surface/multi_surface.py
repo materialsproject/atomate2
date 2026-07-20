@@ -4,16 +4,13 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from jobflow import Flow, job
 from pymatgen.core import Structure
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +66,10 @@ def calculate_multi_surface_energies(
     Flow
         Multi-surface energy calculation workflow.
     """
-    from pymatgen.core.surface import SlabGenerator
-    import numpy as np
     from collections import Counter
+
+    import numpy as np
+    from pymatgen.core.surface import SlabGenerator
 
     logger.info("calculate_multi_surface_energies: Creating workflow")
 
@@ -155,8 +153,9 @@ def calculate_multi_surface_energies(
 
             # Apply diffuse basis to surface atoms if requested
             if apply_diffuse_basis:
-                from atomate2.siesta.sets.utils import apply_diffuse_basis_to_surface
                 from copy import deepcopy
+
+                from atomate2.siesta.sets.utils import apply_diffuse_basis_to_surface
 
                 species_labels, pao_basissizes, _ = apply_diffuse_basis_to_surface(
                     slab,
@@ -278,6 +277,7 @@ def analyze_multi_surface_results(
         Complete multi-surface analysis results.
     """
     from datetime import datetime
+
     from pymatgen.core import Composition
 
     logger.info("analyze_multi_surface_results: Starting analysis")

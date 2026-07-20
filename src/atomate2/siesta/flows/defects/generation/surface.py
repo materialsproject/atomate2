@@ -122,7 +122,7 @@ class SurfaceVacancyGenerator:
     ...     slab_structure=mos2_slab,
     ...     surface_layers=1,  # Top layer only
     ...     surface_side="top",
-    ...     use_ghost_atoms=True
+    ...     use_ghost_atoms=True,
     ... )
     >>>
     >>> # Get S vacancies
@@ -135,7 +135,7 @@ class SurfaceVacancyGenerator:
     >>> generator = SurfaceVacancyGenerator(
     ...     slab_structure=tio2_slab,
     ...     surface_layers=2,  # Top two layers
-    ...     surface_side="top"
+    ...     surface_side="top",
     ... )
     >>>
     >>> # Generate O vacancies in surface + subsurface
@@ -151,7 +151,7 @@ class SurfaceVacancyGenerator:
     >>> generator = SurfaceVacancyGenerator(
     ...     slab_structure=symmetric_slab,
     ...     surface_layers=1,
-    ...     surface_side="both"  # Top AND bottom
+    ...     surface_side="both",  # Top AND bottom
     ... )
     >>>
     >>> defects = generator.generate_defects()
@@ -160,16 +160,14 @@ class SurfaceVacancyGenerator:
     **Example 4: Multiple charge states with supercell**
 
     >>> generator = SurfaceVacancyGenerator(
-    ...     slab_structure=mos2_slab,
-    ...     surface_layers=1,
-    ...     surface_side="top"
+    ...     slab_structure=mos2_slab, surface_layers=1, surface_side="top"
     ... )
     >>>
     >>> # Generate with 3×3×1 supercell (expand in-plane, not vertical)
     >>> defects = generator.generate_defects(
     ...     species="S",
     ...     supercell_matrix=[[3, 0, 0], [0, 3, 0], [0, 0, 1]],  # 3×3×1
-    ...     charge_states=[0, +1, +2]
+    ...     charge_states=[0, +1, +2],
     ... )
 
     **Example 5: Disable in-plane symmetry (get ALL surface sites)**
@@ -179,7 +177,7 @@ class SurfaceVacancyGenerator:
     ...     slab_structure=stepped_surface,
     ...     surface_layers=1,
     ...     surface_side="top",
-    ...     use_in_plane_symmetry=False  # All sites, no reduction
+    ...     use_in_plane_symmetry=False,  # All sites, no reduction
     ... )
     >>>
     >>> defects = generator.generate_defects(species="O")

@@ -90,7 +90,7 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
         if self.strategy == "standard":
             return {"PAO.EnergyShift": "0.01 Ry", "PAO.SplitNorm": 0.15}
 
-        elif self.strategy == "advanced":
+        if self.strategy == "advanced":
             basis_params = {
                 # Single-Zeta
                 "SZ": {"PAO.EnergyShift": "0.02 Ry", "PAO.SplitNorm": 0.15},
@@ -123,7 +123,7 @@ class DifferentBasisSCFFlowMaker(BaseSiestaFlowMaker):
                 "TZ3P": {"PAO.EnergyShift": "0.005 Ry", "PAO.SplitNorm": 0.25},
             }
             return cast(
-                dict[str, str | float],
+                "dict[str, str | float]",
                 basis_params.get(
                     basis, {"PAO.EnergyShift": "0.01 Ry", "PAO.SplitNorm": 0.15}
                 ),

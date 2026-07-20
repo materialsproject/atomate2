@@ -209,26 +209,25 @@ def run_interactive_mode():
                 if preset in available_presets:
                     console.print(f"[green]✓[/green] Valid preset: {preset}")
                     break
-                else:
-                    console.print(f"\n[red]Error:[/red] Preset '{preset}' not found")
-                    console.print("\n[cyan]Available presets:[/cyan]")
-                    for name in sorted(available_presets.keys())[:10]:
-                        console.print(f"  • {name}")
-                    if len(available_presets) > 10:
-                        console.print(f"  ... and {len(available_presets) - 10} more")
-                    console.print(
-                        "\nTip: Run [cyan]atomate2siesta-presets list[/cyan] to see all"
-                    )
+                console.print(f"\n[red]Error:[/red] Preset '{preset}' not found")
+                console.print("\n[cyan]Available presets:[/cyan]")
+                for name in sorted(available_presets.keys())[:10]:
+                    console.print(f"  • {name}")
+                if len(available_presets) > 10:
+                    console.print(f"  ... and {len(available_presets) - 10} more")
+                console.print(
+                    "\nTip: Run [cyan]atomate2siesta-presets list[/cyan] to see all"
+                )
 
-                    retry = questionary.confirm(
-                        "Try another preset name?",
-                        default=True,
-                        style=custom_style,
-                    ).ask()
+                retry = questionary.confirm(
+                    "Try another preset name?",
+                    default=True,
+                    style=custom_style,
+                ).ask()
 
-                    if not retry:
-                        preset = None
-                        break
+                if not retry:
+                    preset = None
+                    break
         else:
             preset = preset_choice
 
@@ -391,24 +390,7 @@ def run_interactive_mode():
         ).ask()
         workflow_options["kpath_density"] = int(kpath_density) if kpath_density else 20
 
-    elif workflow_type == "gruneisen":
-        min_length = questionary.text(
-            "Minimum supercell length (Å):",
-            default="10.0",
-            validate=lambda x: x.replace(".", "").replace("-", "").isdigit(),
-            style=custom_style,
-        ).ask()
-        workflow_options["min_length"] = float(min_length) if min_length else 10.0
-
-        displacement = questionary.text(
-            "Atomic displacement (Å):",
-            default="0.01",
-            validate=lambda x: x.replace(".", "").replace("-", "").isdigit(),
-            style=custom_style,
-        ).ask()
-        workflow_options["displacement"] = float(displacement) if displacement else 0.01
-
-    elif workflow_type == "qha":
+    elif workflow_type == "gruneisen" or workflow_type == "qha":
         min_length = questionary.text(
             "Minimum supercell length (Å):",
             default="10.0",

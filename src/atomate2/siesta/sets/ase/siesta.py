@@ -14,13 +14,13 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+
 from ase import Atoms
 from ase.calculators.calculator import FileIOCalculator, ReadError
 from ase.calculators.siesta.import_ion_xml import get_ion
 from ase.data import atomic_numbers
 from ase.io.siesta import read_siesta_xv
 from ase.utils import deprecated
-
 from atomate2.siesta.sets.ase.parameters import PAOBasisBlock, SiestaParameters
 from atomate2.siesta.sets.ase.siesta_input import SiestaInput
 from atomate2.siesta.sets.ase.utils import (

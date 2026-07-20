@@ -1,21 +1,20 @@
 """SIESTA output parser, taken from ASE with modifications."""
 
 from __future__ import annotations
-import logging
+
 import gzip
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+
+# from pymatgen.util.typing import Tuple3Floats  # from pymatgen 2025 its removed
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
-
 from pymatgen.core import Lattice, Molecule, Structure
 from pymatgen.core.tensors import Tensor
 
-# from pymatgen.util.typing import Tuple3Floats  # from pymatgen 2025 its removed
-from typing import Tuple
-
-Tuple3Floats = Tuple[float, float, float]
+Tuple3Floats = tuple[float, float, float]
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence
@@ -83,7 +82,8 @@ class SiestaOutChunk:
     """
     Base class for SiestaOutChunks.
 
-    Attributes:
+    Attributes
+    ----------
         lines (list[str]): The list of all lines in the chunk
     """
 
@@ -97,7 +97,8 @@ class SiestaOutChunk:
             keys (list[str]): The key strings to search for in self.lines
             line_start (int): The lowest index to search for in self.lines
 
-        Returns:
+        Returns
+        -------
             The last time one of the keys appears in self.lines
         """
         logger.info("SiestaOutChunk.reverse_search_for()")
@@ -118,7 +119,8 @@ class SiestaOutChunk:
             line_start (int): The first line to start the search from
             line_end (int): The last line to end the search at
 
-        Returns:
+        Returns
+        -------
             All times the key appears in the lines
         """
         logger.info("SiestaOutChunk.search_for_all()")
@@ -135,7 +137,8 @@ class SiestaOutChunk:
         Args:
             property (str): The property key to parse
 
-        Returns:
+        Returns
+        -------
             The scalar value of the property or None if not found
         """
         logger.info("SiestaOutChunk.parse_scalar()")
@@ -614,7 +617,8 @@ class SiestaOutCalcChunk(SiestaOutChunk):
         For the given section of the siesta output file generate the
         calculated structure.
 
-        Returns:
+        Returns
+        -------
             The structure or molecule for the calculation
         """
         logger.info("SiestaOutCalcChunk._parse_structure()")
@@ -661,7 +665,8 @@ class SiestaOutCalcChunk(SiestaOutChunk):
         """
         Parse the lattice and atomic positions of the structure.
 
-        Returns:
+        Returns
+        -------
             list[str]: The species symbols for the atoms in the structure
             list[Vector3D]: The Cartesian coordinates of the atoms
             list[Vector3D]: The velocities of the atoms
@@ -705,11 +710,11 @@ class SiestaOutCalcChunk(SiestaOutChunk):
                 line_split = line.split()
                 species.append(line_split[4])
                 coords.append(
-                    cast(Tuple3Floats, tuple(float(inp) for inp in line_split[1:4]))
+                    cast("Tuple3Floats", tuple(float(inp) for inp in line_split[1:4]))
                 )
             elif "velocity   " in line:
                 velocities.append(
-                    cast(Tuple3Floats, tuple(float(inp) for inp in line.split()[1:4]))
+                    cast("Tuple3Floats", tuple(float(inp) for inp in line.split()[1:4]))
                 )
 
         lattice = Lattice(lattice_vectors) if len(lattice_vectors) == 3 else None
@@ -1230,7 +1235,8 @@ def get_lines(content: str | TextIOWrapper) -> list[str]:
     Args:
         content: the content of the file to parse
 
-    Returns:
+    Returns
+    -------
         The list of lines
     """
     logger.info("get_lines()")
@@ -1246,7 +1252,8 @@ def get_header_chunk(content: str | TextIOWrapper) -> SiestaOutHeaderChunk:
     Args:
         content (str or TextIOWrapper): the content to parse
 
-    Returns:
+    Returns
+    -------
         The SiestaHeaderChunk of the file
     """
     logger.info("get_header_chunk()")
@@ -1279,7 +1286,8 @@ def get_siesta_out_chunks(
         content (str or TextIOWrapper): the content to parse
         header_chunk (SiestaOutHeaderChunk): The SiestaOutHeader for the calculation
 
-    Yields:
+    Yields
+    ------
         The next SiestaOutChunk
     """
     logger.info("get_siesta_out_chunks()")
@@ -1345,7 +1353,8 @@ def check_convergence(
         chunks: list[SiestaOutCalcChunk]:
         non_convergence_ok: bool:  (Default value = False)
 
-    Returns:
+    Returns
+    -------
         True if the calculation is converged
     """
     logger.info("check_convergence()")
@@ -1363,7 +1372,8 @@ def read_siesta_header_info_from_content(
     Args:
       content (str): The content of the output file to check
 
-    Returns:
+    Returns
+    -------
         The metadata for the header of the siesta calculation
     """
     logger.info("read_siesta_header_info_from_content()")
@@ -1380,7 +1390,8 @@ def read_siesta_header_info(
     Args:
       filename(str or Path): The file to read
 
-    Returns:
+    Returns
+    -------
         The metadata for the header of the siesta calculation
     """
     logger.info("read_siesta_header_info()")
@@ -1412,7 +1423,8 @@ def read_siesta_output_from_content(
       index: int | slice:  (Default value = -1)
       non_convergence_ok: bool:  (Default value = False)
 
-    Returns:
+    Returns
+    -------
         The list of images to get
     """
     logger.info("read_siesta_output_from_content()")
@@ -1444,7 +1456,8 @@ def read_siesta_output(
         index(int or slice): The index of the images to read
         non_convergence_ok(bool): True if the calculations do not have to be converged
 
-    Returns:
+    Returns
+    -------
         The list of images to get
     """
     logger.info("read_siesta_output()")

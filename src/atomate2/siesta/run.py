@@ -9,19 +9,20 @@ import subprocess
 from os.path import expandvars
 from typing import TYPE_CHECKING
 
-# from ase.calculators.siesta import Siesta
-# Had to bring the ASE siesta stuff for vibra
-# from atomate2.siesta.sets.siesta import Siesta
-from atomate2.siesta.sets.ase import Siesta
-
 from ase.calculators.socketio import SocketIOCalculator
 from monty.json import MontyDecoder
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.siesta import SETTINGS
 
+# from ase.calculators.siesta import Siesta
+# Had to bring the ASE siesta stuff for vibra
+# from atomate2.siesta.sets.siesta import Siesta
+from atomate2.siesta.sets.ase import Siesta
+
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
+
     from atomate2.siesta.schemas.task import SiestaTaskDoc
 
 logger = logging.getLogger(__name__)

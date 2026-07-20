@@ -99,15 +99,11 @@ def complete_material_study(
     >>>
     >>> # Or be specific about properties
     >>> flow = RecipeBook.complete_material_study(
-    ...     structure,
-    ...     properties=["electronic", "mechanical"]
+    ...     structure, properties=["electronic", "mechanical"]
     ... )
     >>>
     >>> # With convergence testing
-    >>> flow = RecipeBook.complete_material_study(
-    ...     structure,
-    ...     test_convergence=True
-    ... )
+    >>> flow = RecipeBook.complete_material_study(structure, test_convergence=True)
     """
     logger.info(f"Creating complete_material_study for {structure.composition}")
 
@@ -457,7 +453,9 @@ def high_temperature_ceramic(
 
     Example
     -------
-    >>> flow = high_temperature_ceramic(alumina_structure, max_temperature=2500, supercell_matrix=(2, 2, 2))
+    >>> flow = high_temperature_ceramic(
+    ...     alumina_structure, max_temperature=2500, supercell_matrix=(2, 2, 2)
+    ... )
     """
     logger.info("Creating high_temperature_ceramic workflow")
 

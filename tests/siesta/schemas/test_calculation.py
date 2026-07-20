@@ -9,16 +9,17 @@ These tests validate:
 - check_siesta_messages function
 """
 
-import pytest
 from datetime import datetime
 from unittest.mock import MagicMock, patch
-from pymatgen.core import Structure, Lattice
+
+import pytest
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.schemas.calculation import (
-    TaskState,
-    SiestaObject,
-    CalculationOutput,
     Calculation,
+    CalculationOutput,
+    SiestaObject,
+    TaskState,
     check_siesta_messages,
 )
 

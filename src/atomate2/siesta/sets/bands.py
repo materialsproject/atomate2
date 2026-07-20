@@ -1,17 +1,18 @@
+import argparse
+import logging
+import sys
+
+import click
+import numpy as np
 from pymatgen.core import Structure
 from pymatgen.symmetry.bandstructure import HighSymmKpath
-import argparse
-import click
-import logging
-import numpy as np
-import sys
 
 logger = logging.getLogger(__name__)
 
 
 def band_paymatgen_to_siesta(structure: Structure, interpolations=None):
     """
-    reading pyamtgen structure returning siesta band
+    Reading pyamtgen structure returning siesta band
     """
     logger.info("band_paymatgen_to_siesta()")
 
@@ -94,7 +95,7 @@ class GnuBands_Old:
             Path to the SIESTA .bands output file
         """
         logger.info("GnuBands_Old.read_bands_file()")
-        with open(bandfile, "r") as f:
+        with open(bandfile) as f:
             self.ef = float(f.readline())
             self.kmin, self.kmax = map(float, f.readline().split())
             f.readline()  # skip dummy line
@@ -137,7 +138,7 @@ class GnuBands_Old:
         opts = parser.parse_args(args)
 
         self.gnu_ticks = opts.G
-        self.spin_idx = opts.s if opts.s else 0
+        self.spin_idx = opts.s or 0
         self.fermi_shift = opts.F
         if opts.e:
             self.emin = opts.e
@@ -308,7 +309,7 @@ class GnuBands:
             Path to the SIESTA .bands output file
         """
         logger.info("GnuBands.read_bands_file()")
-        with open(bandfile, "r") as f:
+        with open(bandfile) as f:
             self.ef = float(f.readline())
             self.kmin, self.kmax = map(float, f.readline().split())
             f.readline()  # skip dummy line
@@ -454,10 +455,10 @@ class GnuBands:
         logger.info("GnuBands.run()")
         self.spin_idx = spin_idx
         self.fermi_shift = fermi_shift
-        self.emin = emin if emin else self.emin
-        self.emax = emax if emax else self.emax
-        self.min_band = min_band if min_band else self.min_band
-        self.max_band = max_band if max_band else self.max_band
+        self.emin = emin or self.emin
+        self.emax = emax or self.emax
+        self.min_band = min_band or self.min_band
+        self.max_band = max_band or self.max_band
         self.gnu_ticks = gnu_ticks
         self.outfile = outfile
 

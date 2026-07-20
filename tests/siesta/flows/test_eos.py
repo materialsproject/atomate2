@@ -12,15 +12,15 @@ These tests validate:
 from jobflow import Flow
 
 from atomate2.siesta.flows.eos import (
-    SiestaEosFlowMaker,
-    EOSMaker,
     EOSFullBasisConvergenceFlowMaker,
+    EOSMaker,
+    SiestaEosFlowMaker,
     collect_eos_parameter_data,
     plot_eos_parameter_fits_from_data,
     plot_eos_parameter_timing,
     write_eos_parameter_summary,
 )
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 
 class TestSiestaEosMaker:

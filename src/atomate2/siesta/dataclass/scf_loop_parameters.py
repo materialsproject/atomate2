@@ -11,13 +11,12 @@ Section: 6.9 The self-consistent field loop
 
 __all__ = ["SCFLoopParameters"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Any
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_energy
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -202,7 +201,7 @@ class SCFLoopParameters(FDFDataclass):
         },
     )
 
-    scf_mixers_block: Dict[str, float] = field(
+    scf_mixers_block: dict[str, float] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define a sequence of different mixers to be used at different stages of the SCF cycle.",
@@ -600,7 +599,7 @@ class SCFLoopParameters(FDFDataclass):
         },
     )
 
-    scf_fdf_arguments: Dict[str, Any] = field(
+    scf_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to SCF loop. This allows for using keywords not explicitly defined elsewhere.",
@@ -689,7 +688,7 @@ class SCFLoopParameters(FDFDataclass):
 
     @classmethod
     def setup_scf_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "SCFLoopParameters":
         """
         Create and configure SCFLoopParameters instance based on user parameters.
@@ -697,7 +696,8 @@ class SCFLoopParameters(FDFDataclass):
         Args:
             user_params (dict, optional): Dictionary of user-defined parameters.
 
-        Returns:
+        Returns
+        -------
             SCFLoopParameters: Configured instance with FDF arguments.
         """
         from dataclasses import fields
@@ -754,7 +754,7 @@ class SCFLoopParameters(FDFDataclass):
         if not (0 <= self.scf_mixer_weight <= 1):
             raise ValueError("Mixing parameter must be between 0 and 1.")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -792,14 +792,15 @@ class SCFLoopParameters(FDFDataclass):
                 self.scf_dm_tolerance = parse_energy(value, target_unit="eV")
             # Additional parameters can be added following the same pattern
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
         Note: Outputs only non-default values for commonly used SCF parameters.
         Full implementation would output all 60 parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
         from collections import OrderedDict
@@ -809,9 +810,9 @@ class SCFLoopParameters(FDFDataclass):
 
         # MaxSCFIterations - always write with default marker
         if self.max_scf_iterations == 200:
-            fdf[
-                "MaxSCFIterations"
-            ] = f"{self.max_scf_iterations}  # SIESTA DEFAULT VALUE"
+            fdf["MaxSCFIterations"] = (
+                f"{self.max_scf_iterations}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["MaxSCFIterations"] = str(self.max_scf_iterations)
 
@@ -837,9 +838,9 @@ class SCFLoopParameters(FDFDataclass):
 
         # SCF.Mixer.History - always write with default marker
         if self.scf_mixer_history == 2:
-            fdf[
-                "SCF.Mixer.History"
-            ] = f"{self.scf_mixer_history}  # SIESTA DEFAULT VALUE"
+            fdf["SCF.Mixer.History"] = (
+                f"{self.scf_mixer_history}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["SCF.Mixer.History"] = str(self.scf_mixer_history)
 
@@ -849,9 +850,9 @@ class SCFLoopParameters(FDFDataclass):
 
         # SCF.DM.Tolerance - always write with default marker
         if self.scf_dm_tolerance == 1.0e-5:
-            fdf[
-                "SCF.DM.Tolerance"
-            ] = f"{self.scf_dm_tolerance} eV  # SIESTA DEFAULT VALUE"
+            fdf["SCF.DM.Tolerance"] = (
+                f"{self.scf_dm_tolerance} eV  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["SCF.DM.Tolerance"] = f"{self.scf_dm_tolerance} eV"
 
@@ -863,11 +864,12 @@ class SCFLoopParameters(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have direct SCF parameter equivalents
@@ -875,7 +877,7 @@ class SCFLoopParameters(FDFDataclass):
         return {}
 
     @staticmethod
-    def should_use_save_dm(system_changes: Optional[list] = None) -> bool:
+    def should_use_save_dm(system_changes: list | None = None) -> bool:
         """
         Determine if saved DM should be reused based on system changes.
 
@@ -887,7 +889,8 @@ class SCFLoopParameters(FDFDataclass):
             system_changes: List of system properties that have changed
                           (from ASE calculator context)
 
-        Returns:
+        Returns
+        -------
             bool: True if saved DM should be used, False otherwise
         """
         if system_changes is None:

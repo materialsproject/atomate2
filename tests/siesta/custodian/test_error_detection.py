@@ -4,22 +4,23 @@ This script demonstrates how the error detection system works
 with simple test cases.
 """
 
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
 import pytest
 
 from atomate2.siesta.custodian.errors import (
+    MEMORY_PATTERNS,
+    SCF_CONVERGENCE_PATTERNS,
+    TIME_LIMIT_PATTERNS,
     ErrorType,
+    check_for_errors,
     detect_error,
     get_error_type,
-    check_for_errors,
-    SCF_CONVERGENCE_PATTERNS,
-    MEMORY_PATTERNS,
-    TIME_LIMIT_PATTERNS,
 )
 from atomate2.siesta.custodian.handlers import (
-    SCFConvergenceHandler,
     MemoryHandler,
+    SCFConvergenceHandler,
     TimeHandler,
 )
 

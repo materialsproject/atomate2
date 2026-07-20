@@ -145,8 +145,8 @@ def optimize_cell(
     - Niggli reduction: Find the most reduced lattice representation
     - Orthogonalization: Find most orthogonal supercell (better for DFT)
 
-    Examples:
-
+    Examples
+    --------
         # Niggli reduction
         atomate2siesta-structure optimize-cell structure.cif --niggli
 

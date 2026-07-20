@@ -29,9 +29,8 @@ def _get_site_atomic_number(site) -> int:
     if hasattr(site.species, "Z"):
         # Regular Element/Species with direct Z attribute
         return site.species.Z
-    else:
-        # Composition (fractional occupancy) - get first element's Z
-        return list(site.species.keys())[0].Z
+    # Composition (fractional occupancy) - get first element's Z
+    return list(site.species.keys())[0].Z
 
 
 # Define magnetic elements and their default moments as module-level constants
@@ -364,9 +363,9 @@ def get_magnetic_structure_info(structure):
     Examples
     --------
     >>> info = get_magnetic_structure_info(nio_structure)
-    >>> print(info['magnetic_elements'])
+    >>> print(info["magnetic_elements"])
     ['Ni']
-    >>> print(info['suggested_ordering'])
+    >>> print(info["suggested_ordering"])
     'antiferromagnetic'
     """
     logger.info("get_magnetic_structure_info()")
@@ -529,18 +528,17 @@ def pymatgen_to_ase(
             logger.info(
                 "Using user-provided magnetic moments from structure.site_properties"
             )
+        # Apply magnetic ordering if specified
+        elif magnetic_ordering is not None:
+            magmoms = set_magnetic_ordering(structure, ordering=magnetic_ordering)
         else:
-            # Apply magnetic ordering if specified
-            if magnetic_ordering is not None:
-                magmoms = set_magnetic_ordering(structure, ordering=magnetic_ordering)
-            else:
-                # Auto-detect magnetic elements and assign ferromagnetic moments
-                magmoms = get_default_initial_magnetic_moments(structure)
+            # Auto-detect magnetic elements and assign ferromagnetic moments
+            magmoms = get_default_initial_magnetic_moments(structure)
 
         if magmoms is not None:
             ase_atoms.set_initial_magnetic_moments(magmoms)
             n_mag = len([m for m in magmoms if m != 0])
-            ordering_type = magnetic_ordering if magnetic_ordering else "FM"
+            ordering_type = magnetic_ordering or "FM"
             logger.info(
                 f"Set {ordering_type} magnetic moments for {n_mag} magnetic atoms"
             )
@@ -632,10 +630,12 @@ def pymatgen_to_sisl(structure, ghost_tags=None):
     """
     Converts a Pymatgen Structure object to a sisl Geometry object.
 
-    Parameters:
+    Parameters
+    ----------
     structure (pymatgen.core.Structure): A Pymatgen Structure object.
 
-    Returns:
+    Returns
+    -------
     sisl.Geometry: A sisl Geometry object with adjusted atomic numbers for ghost atoms.
     """
     logger.info("pymatgen_to_sisl()")
@@ -692,7 +692,7 @@ def read_outvars(file_path):
     """
     logger.info("read_outvars()")
     try:
-        with open(file_path, "r") as file:
+        with open(file_path) as file:
             data = yaml.safe_load(file)
         return data
     except FileNotFoundError:
@@ -816,8 +816,10 @@ def write_parameter_evolution_log(
         f.write("-" * 80 + "\n")
         if explicit_user_params:
             f.write("Explicit User Parameters:\n")
-            for key, value in explicit_user_params.items():
-                f.write(f"  {key.upper():30s} = {value}\n")
+            f.writelines(
+                f"  {key.upper():30s} = {value}\n"
+                for key, value in explicit_user_params.items()
+            )
             f.write("\n")
 
         # Maker defaults
@@ -826,8 +828,10 @@ def write_parameter_evolution_log(
         }
         if maker_defaults:
             f.write("Maker Default Parameters:\n")
-            for key, value in maker_defaults.items():
-                f.write(f"  {key.upper():30s} = {value}\n")
+            f.writelines(
+                f"  {key.upper():30s} = {value}\n"
+                for key, value in maker_defaults.items()
+            )
             f.write("\n")
 
         if not explicit_user_params and not maker_defaults:
@@ -841,12 +845,12 @@ def write_parameter_evolution_log(
             added = {
                 k: v
                 for k, v in after_dataclass_params.items()
-                if k.upper() not in {p.upper() for p in initial_params.keys()}
+                if k.upper() not in {p.upper() for p in initial_params}
             }
             modified = {
                 k: v
                 for k, v in after_dataclass_params.items()
-                if k.upper() in {p.upper() for p in initial_params.keys()}
+                if k.upper() in {p.upper() for p in initial_params}
                 and str(v)
                 != str(
                     initial_params.get(
@@ -857,8 +861,10 @@ def write_parameter_evolution_log(
 
             if added:
                 f.write("Parameters Added by Dataclasses:\n")
-                for key, value in added.items():
-                    f.write(f"  [+] {key.upper():30s} = {value}\n")
+                f.writelines(
+                    f"  [+] {key.upper():30s} = {value}\n"
+                    for key, value in added.items()
+                )
                 f.write("\n")
 
             if modified:

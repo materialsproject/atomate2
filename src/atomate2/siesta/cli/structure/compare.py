@@ -68,8 +68,8 @@ def compare(
     - Site positions and RMSD
     - Symmetry properties
 
-    Examples:
-
+    Examples
+    --------
         # Basic comparison
         atomate2siesta-structure compare struct1.cif struct2.cif
 
@@ -315,7 +315,7 @@ def _compare_sites(
 
     table.add_row("Total Sites", str(s1.num_sites))
     table.add_row(
-        "Matched Sites", f"{matched_sites} ({matched_sites/s1.num_sites*100:.1f}%)"
+        "Matched Sites", f"{matched_sites} ({matched_sites / s1.num_sites * 100:.1f}%)"
     )
     table.add_row("Unmatched Sites", str(len(unmatched_sites)))
     table.add_row("Tolerance", f"{tolerance} Å")

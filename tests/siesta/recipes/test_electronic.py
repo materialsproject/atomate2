@@ -3,11 +3,11 @@
 from jobflow import Flow
 
 from atomate2.siesta.recipes.electronic import (
-    electronic_properties,
     band_structure_workflow,
     dos_workflow,
-    optical_properties,
+    electronic_properties,
     metal_properties,
+    optical_properties,
     semiconductor_properties,
 )
 

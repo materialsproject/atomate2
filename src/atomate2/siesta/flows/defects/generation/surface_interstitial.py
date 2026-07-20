@@ -14,9 +14,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from pymatgen.core import Element
 
-from atomate2.siesta.flows.defects.generation.surface import (
-    SurfaceVacancyGenerator,
-)
+from atomate2.siesta.flows.defects.generation.surface import SurfaceVacancyGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -71,7 +69,9 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
     **Example 1: H adsorption on MoS₂ surface (ontop site)**
 
     >>> from pymatgen.core import Structure
-    >>> from atomate2.siesta.flows.defects.generation import SurfaceInterstitialGenerator
+    >>> from atomate2.siesta.flows.defects.generation import (
+    ...     SurfaceInterstitialGenerator,
+    ... )
     >>> mos2_slab = Structure.from_file("MoS2_slab.cif")
     >>>
     >>> # Generate H atoms on top of surface S atoms
@@ -102,7 +102,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
     >>> defects = generator.generate_defects(
     ...     species="C",  # Reference C atoms
     ...     interstitial_species="Li",
-    ...     charge_states=[0, +1]
+    ...     charge_states=[0, +1],
     ... )
 
     **Example 3: O adsorption on metal surface (multiple sites)**
@@ -119,7 +119,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
     >>> defects = generator.generate_defects(
     ...     species="Pt",  # Reference surface Pt atoms
     ...     interstitial_species="O",
-    ...     charge_states=[-2, 0]
+    ...     charge_states=[-2, 0],
     ... )
 
     Notes
@@ -229,8 +229,8 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
                 # Found an interlayer gap
                 gap_center = (layer_z_positions[i] + layer_z_positions[i - 1]) / 2.0
                 logger.debug(
-                    f"Found interlayer gap between layers {i-1} and {i}: "
-                    f"{layer_z_positions[i-1]:.2f} - {layer_z_positions[i]:.2f} Å, "
+                    f"Found interlayer gap between layers {i - 1} and {i}: "
+                    f"{layer_z_positions[i - 1]:.2f} - {layer_z_positions[i]:.2f} Å, "
                     f"center at {gap_center:.2f} Å"
                 )
                 return gap_center
@@ -295,7 +295,7 @@ class SurfaceInterstitialGenerator(SurfaceVacancyGenerator):
         >>> defects = generator.generate_defects(
         ...     species="S",  # Reference S atoms
         ...     interstitial_species="H",  # Add H
-        ...     charge_states=[0, -1]
+        ...     charge_states=[0, -1],
         ... )
         """
         if interstitial_species is None:

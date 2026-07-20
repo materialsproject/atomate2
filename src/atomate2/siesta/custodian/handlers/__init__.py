@@ -40,15 +40,15 @@ DEFAULT_RELAXATION_HANDLERS = [
 ]
 
 __all__ = [
-    "ErrorHandler",
-    "SCFConvergenceHandler",
-    "SCFRelaxationHandler",
-    "GeometryConvergenceHandler",
-    "BasisSetHandler",
-    "MemoryHandler",
-    "ParallelDistributionHandler",
-    "TimeHandler",
-    "NumericalHandler",
     "DEFAULT_HANDLERS",
     "DEFAULT_RELAXATION_HANDLERS",
+    "BasisSetHandler",
+    "ErrorHandler",
+    "GeometryConvergenceHandler",
+    "MemoryHandler",
+    "NumericalHandler",
+    "ParallelDistributionHandler",
+    "SCFConvergenceHandler",
+    "SCFRelaxationHandler",
+    "TimeHandler",
 ]

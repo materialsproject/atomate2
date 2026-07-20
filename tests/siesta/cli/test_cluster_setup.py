@@ -262,36 +262,40 @@ class TestSquidFunctions:
 
     def test_get_squid_status_not_installed(self):
         """Test getting squid status when not installed."""
-        with patch(
-            "atomate2.siesta.cli.cluster.proxy_utils.is_squid_installed",
-            return_value=False,
-        ):
-            with patch(
+        with (
+            patch(
+                "atomate2.siesta.cli.cluster.proxy_utils.is_squid_installed",
+                return_value=False,
+            ),
+            patch(
                 "atomate2.siesta.cli.cluster.proxy_utils.is_squid_running",
                 return_value=False,
-            ):
-                status = get_squid_status(3129)
+            ),
+        ):
+            status = get_squid_status(3129)
 
-                assert status["installed"] is False
-                assert status["running"] is False
-                assert status["port"] == 3129
-                assert status["proxy_url"] is None
+            assert status["installed"] is False
+            assert status["running"] is False
+            assert status["port"] == 3129
+            assert status["proxy_url"] is None
 
     def test_get_squid_status_running(self):
         """Test getting squid status when running."""
-        with patch(
-            "atomate2.siesta.cli.cluster.proxy_utils.is_squid_installed",
-            return_value=True,
-        ):
-            with patch(
+        with (
+            patch(
+                "atomate2.siesta.cli.cluster.proxy_utils.is_squid_installed",
+                return_value=True,
+            ),
+            patch(
                 "atomate2.siesta.cli.cluster.proxy_utils.is_squid_running",
                 return_value=True,
-            ):
-                status = get_squid_status(3129)
+            ),
+        ):
+            status = get_squid_status(3129)
 
-                assert status["installed"] is True
-                assert status["running"] is True
-                assert status["proxy_url"] == "http://127.0.0.1:3129"
+            assert status["installed"] is True
+            assert status["running"] is True
+            assert status["proxy_url"] == "http://127.0.0.1:3129"
 
 
 class TestProxyFunctions:

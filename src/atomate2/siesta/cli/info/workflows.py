@@ -1,8 +1,8 @@
 """Display available workflow types."""
 
+from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich import box
 
 console = Console()
 
@@ -13,9 +13,7 @@ def show_workflows():
 
     Automatically discovers FlowMakers and Makers from the codebase.
     """
-    from atomate2.siesta.cli.info.workflow_details import (
-        discover_flowmakers,
-    )
+    from atomate2.siesta.cli.info.workflow_details import discover_flowmakers
 
     console.print("\n[bold cyan]Available Workflows[/bold cyan]\n")
 

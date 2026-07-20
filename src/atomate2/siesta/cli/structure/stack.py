@@ -7,10 +7,9 @@ This module provides the `stack` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
+from pymatgen.core import Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Structure
 
 console = Console()
 
@@ -75,8 +74,8 @@ def stack(
     spacing. Supports both heterostructures (two different materials) and
     multilayers (repeated structure).
 
-    Examples:
-
+    Examples
+    --------
         # Simple bilayer (same material)
         atomate2siesta-structure stack graphene.cif --spacing 3.35
 
@@ -132,12 +131,11 @@ def stack(
                     "[red]Error: Heterostructure requires 1 or 2 repetition values[/red]"
                 )
                 raise click.Abort()
+        # Default repetitions
+        elif mode == "multilayer":
+            reps = [2]  # Default bilayer
         else:
-            # Default repetitions
-            if mode == "multilayer":
-                reps = [2]  # Default bilayer
-            else:
-                reps = [1, 1]  # One layer of each
+            reps = [1, 1]  # One layer of each
 
         # Get direction index
         dir_map = {"a": 0, "b": 1, "c": 2}

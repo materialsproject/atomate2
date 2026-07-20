@@ -9,15 +9,16 @@ These tests validate:
 - Summary writing
 """
 
-import pytest
-import numpy as np
 from pathlib import Path
-from pymatgen.core import Structure, Molecule, Lattice
+
+import numpy as np
+import pytest
+from pymatgen.core import Lattice, Molecule, Structure
 
 from atomate2.siesta.jobs.surface.adsorption import (
     add_adsorbate_to_slab,
-    generate_adsorption_sites,
     analyze_adsorption_scan,
+    generate_adsorption_sites,
     plot_adsorption_sites,
     write_adsorption_summary,
 )

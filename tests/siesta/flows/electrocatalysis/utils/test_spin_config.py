@@ -8,7 +8,6 @@ These tests validate:
 - Database coverage
 """
 
-
 from atomate2.siesta.flows.electrocatalysis.utils.spin_config import (
     get_siesta_spin_config,
 )
@@ -159,9 +158,9 @@ class TestSpinConfigDetection:
 
         for formula in paramagnetic:
             config = get_siesta_spin_config(formula)
-            assert (
-                config["fix_spin"] is True
-            ), f"{formula} should recommend FixSpin=True"
+            assert config["fix_spin"] is True, (
+                f"{formula} should recommend FixSpin=True"
+            )
 
     def test_diamagnetic_molecules_no_fix_spin(self):
         """Test that diamagnetic molecules don't need FixSpin."""

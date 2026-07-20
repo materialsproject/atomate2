@@ -1,9 +1,9 @@
 """Display complete overview of atomate2siesta."""
 
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
 
 console = Console()
 
@@ -52,7 +52,9 @@ def show_overview():
 
     # Links
     console.print("[bold]Resources:[/bold]")
-    console.print("  📖 Docs:   [link]https://materialsproject.github.io/atomate2/[/link]")
+    console.print(
+        "  📖 Docs:   [link]https://materialsproject.github.io/atomate2/[/link]"
+    )
     console.print(
         "  🐙 GitHub: [link]https://github.com/materialsproject/atomate2[/link]"
     )

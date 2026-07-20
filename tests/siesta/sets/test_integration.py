@@ -11,12 +11,12 @@ verifying that:
 """
 
 import pytest
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
+from atomate2.siesta.dataclass.registry import get_modules_for_tier
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 from atomate2.siesta.sets.core import StaticSetGenerator
 from atomate2.siesta.sets.tiers import apply_tier_preset
-from atomate2.siesta.dataclass.registry import get_modules_for_tier
 
 
 class TestTierBasedInitialization:

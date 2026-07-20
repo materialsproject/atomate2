@@ -12,6 +12,7 @@ import pytest
 import yaml
 from click.testing import CliRunner
 
+from atomate2.siesta.cli.jobflow_remote import cli
 from atomate2.siesta.cli.jobflow_remote.utils import (
     _backup_config,
     _get_comment,
@@ -20,7 +21,6 @@ from atomate2.siesta.cli.jobflow_remote.utils import (
     _save_yaml_config,
     _update_nested_dict,
 )
-from atomate2.siesta.cli.jobflow_remote import cli
 
 
 class TestHelperFunctions:
@@ -218,20 +218,23 @@ class TestSetupCommand:
         config_dir = tmp_path / ".jfremote"
         config_dir.mkdir()
 
-        with patch(
-            "atomate2.siesta.cli.jobflow_remote.setup.Path.home", return_value=tmp_path
-        ):
-            with patch(
+        with (
+            patch(
+                "atomate2.siesta.cli.jobflow_remote.setup.Path.home",
+                return_value=tmp_path,
+            ),
+            patch(
                 "atomate2.siesta.cli.jobflow_remote.setup.subprocess.run"
-            ) as mock_run:
-                mock_run.return_value = Mock(
-                    returncode=0, stdout="Project generated", stderr=""
-                )
+            ) as mock_run,
+        ):
+            mock_run.return_value = Mock(
+                returncode=0, stdout="Project generated", stderr=""
+            )
 
-                result = self.runner.invoke(cli, ["setup"])
+            result = self.runner.invoke(cli, ["setup"])
 
-                assert result.exit_code == 0
-                # Config should have been generated
+            assert result.exit_code == 0
+            # Config should have been generated
 
     def test_setup_update_nonexistent_config(self, tmp_path):
         """Test updating non-existent configuration file."""
@@ -356,21 +359,22 @@ class TestSetupCommand:
         config_dir = tmp_path / ".jfremote"
         config_dir.mkdir()
 
-        with patch(
-            "atomate2.siesta.cli.jobflow_remote.setup.Path.home", return_value=tmp_path
-        ):
-            with patch(
+        with (
+            patch(
+                "atomate2.siesta.cli.jobflow_remote.setup.Path.home",
+                return_value=tmp_path,
+            ),
+            patch(
                 "atomate2.siesta.cli.jobflow_remote.setup.subprocess.run"
-            ) as mock_run:
-                mock_run.return_value = Mock(
-                    returncode=0, stdout="Project generated", stderr=""
-                )
+            ) as mock_run,
+        ):
+            mock_run.return_value = Mock(
+                returncode=0, stdout="Project generated", stderr=""
+            )
 
-                result = self.runner.invoke(
-                    cli, ["setup", "--project-name", "my_project"]
-                )
+            result = self.runner.invoke(cli, ["setup", "--project-name", "my_project"])
 
-                assert result.exit_code == 0
+            assert result.exit_code == 0
 
     def test_setup_update_additional_stores(self, tmp_path):
         """Test that additional stores are also updated."""
@@ -476,22 +480,25 @@ class TestTestCommand:
         }
         _save_yaml_config(config_file, config_data)
 
-        with patch(
-            "atomate2.siesta.cli.jobflow_remote.setup.Path.home", return_value=tmp_path
-        ):
-            with patch(
+        with (
+            patch(
+                "atomate2.siesta.cli.jobflow_remote.setup.Path.home",
+                return_value=tmp_path,
+            ),
+            patch(
                 "atomate2.siesta.cli.jobflow_remote.setup.subprocess.run"
-            ) as mock_run:
-                # Mock successful job submission
-                mock_run.return_value = Mock(
-                    returncode=0, stdout="Job submitted: test-job-uuid", stderr=""
-                )
+            ) as mock_run,
+        ):
+            # Mock successful job submission
+            mock_run.return_value = Mock(
+                returncode=0, stdout="Job submitted: test-job-uuid", stderr=""
+            )
 
-                result = self.runner.invoke(cli, ["test"])
+            result = self.runner.invoke(cli, ["test"])
 
-                # Either the command works or it's not fully implemented
-                # We just check it doesn't crash
-                assert result.exit_code in [0, 1, 2]
+            # Either the command works or it's not fully implemented
+            # We just check it doesn't crash
+            assert result.exit_code in [0, 1, 2]
 
 
 class TestRunnerCommand:

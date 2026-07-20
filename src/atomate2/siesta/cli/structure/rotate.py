@@ -7,10 +7,9 @@ This module provides the `rotate` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
+from pymatgen.core import Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Structure
 
 console = Console()
 
@@ -95,8 +94,8 @@ def rotate(
     Supports axis-angle rotation, Euler angles, and alignment of crystallographic
     directions to Cartesian axes. Can rotate entire cell or just atoms.
 
-    Examples:
-
+    Examples
+    --------
         # Rotate 45° about z-axis
         atomate2siesta-structure rotate Si.cif --axis z --angle 45
 
@@ -156,8 +155,8 @@ def rotate(
         if axis is not None and angle is not None:
             # Axis-angle rotation
             import numpy as np
-            from scipy.spatial.transform import Rotation as R
             from pymatgen.core.operations import SymmOp
+            from scipy.spatial.transform import Rotation as R
 
             axis_map = {"x": [1, 0, 0], "y": [0, 1, 0], "z": [0, 0, 1]}
             rotation_axis = axis_map[axis]
@@ -253,8 +252,8 @@ def rotate(
         elif euler is not None:
             # Euler angle rotation (ZXZ convention)
             import numpy as np
-            from scipy.spatial.transform import Rotation as R
             from pymatgen.core.operations import SymmOp
+            from scipy.spatial.transform import Rotation as R
 
             alpha, beta, gamma = euler
             rot = R.from_euler("ZXZ", [alpha, beta, gamma], degrees=True)

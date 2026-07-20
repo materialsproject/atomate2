@@ -12,7 +12,8 @@ The workflow calculates:
 3. Overpotential and rate-limiting step identification
 4. Thermodynamic volcano plots (optional)
 
-References:
+References
+----------
 - Nørskov et al., J. Phys. Chem. B 108, 17886 (2004): CHE model
 - Viswanathan et al., ACS Catal. 2, 1654 (2012): ORR volcano plot
 - Kulkarni et al., Chem. Rev. 118, 2302 (2018): ORR mechanisms review
@@ -361,7 +362,7 @@ class ORRFlowMaker(BaseSiestaFlowMaker):
     >>> ads_maker = AdsorptionScanFlowMaker(
     ...     grid_size=(6, 6),
     ...     height=2.5,
-    ...     slab_static_maker=StaticMaker(user_params={"kpts": [8, 8, 1]})
+    ...     slab_static_maker=StaticMaker(user_params={"kpts": [8, 8, 1]}),
     ... )
     >>>
     >>> # ORR workflow with custom makers

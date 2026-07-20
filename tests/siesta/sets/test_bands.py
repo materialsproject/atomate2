@@ -1,8 +1,8 @@
 """Tests for bands.py functionality."""
 
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
-from atomate2.siesta.sets.bands import band_paymatgen_to_siesta, GnuBands
+from atomate2.siesta.sets.bands import GnuBands, band_paymatgen_to_siesta
 
 
 class TestBandPymatgenToSiesta:

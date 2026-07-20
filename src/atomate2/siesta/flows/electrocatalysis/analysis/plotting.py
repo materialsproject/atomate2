@@ -63,10 +63,10 @@ def plot_free_energy_diagram(
 
     Examples
     --------
-    >>> step_labels = ['*', 'O2*', 'OOH*', 'O*', 'OH*', 'H2O']
+    >>> step_labels = ["*", "O2*", "OOH*", "O*", "OH*", "H2O"]
     >>> cumulative_G = [0.0, 0.45, 1.65, 2.45, 3.05, 4.92]
     >>> delta_G = [0.45, 1.20, 0.80, 0.60, 1.87]
-    >>> plot_free_energy_diagram(step_labels, cumulative_G, delta_G, 'ORR')
+    >>> plot_free_energy_diagram(step_labels, cumulative_G, delta_G, "ORR")
     """
     fig, ax = plt.subplots(figsize=figsize)
 
@@ -238,16 +238,15 @@ def plot_overpotential_summary(
             color, rating = "orange", "Moderate"
         else:
             color, rating = "red", "Poor"
-    else:  # HER
-        # HER: excellent < 0.1, good < 0.2, moderate < 0.4, poor > 0.4
-        if overpotential < 0.1:
-            color, rating = "darkgreen", "Excellent"
-        elif overpotential < 0.2:
-            color, rating = "green", "Good"
-        elif overpotential < 0.4:
-            color, rating = "orange", "Moderate"
-        else:
-            color, rating = "red", "Poor"
+    # HER: excellent < 0.1, good < 0.2, moderate < 0.4, poor > 0.4
+    elif overpotential < 0.1:
+        color, rating = "darkgreen", "Excellent"
+    elif overpotential < 0.2:
+        color, rating = "green", "Good"
+    elif overpotential < 0.4:
+        color, rating = "orange", "Moderate"
+    else:
+        color, rating = "red", "Poor"
 
     # Bar plot
     ax.bar(
@@ -616,15 +615,14 @@ def write_analysis_summary(
                 rating = "MODERATE (η < 0.8 V)"
             else:
                 rating = "POOR (η > 0.8 V)"
-        else:  # HER
-            if overpotential < 0.1:
-                rating = "EXCELLENT (η < 0.1 V)"
-            elif overpotential < 0.2:
-                rating = "GOOD (η < 0.2 V)"
-            elif overpotential < 0.4:
-                rating = "MODERATE (η < 0.4 V)"
-            else:
-                rating = "POOR (η > 0.4 V)"
+        elif overpotential < 0.1:
+            rating = "EXCELLENT (η < 0.1 V)"
+        elif overpotential < 0.2:
+            rating = "GOOD (η < 0.2 V)"
+        elif overpotential < 0.4:
+            rating = "MODERATE (η < 0.4 V)"
+        else:
+            rating = "POOR (η > 0.4 V)"
 
         f.write(f"Performance Rating: {rating}\n\n")
 
@@ -634,7 +632,7 @@ def write_analysis_summary(
 
         for i, (label, dG) in enumerate(zip(step_labels, delta_G)):
             arrow = "↑" if dG > 0 else "↓"
-            f.write(f"Step {i+1}: {label:20s} ΔG = {dG:+.3f} eV {arrow}\n")
+            f.write(f"Step {i + 1}: {label:20s} ΔG = {dG:+.3f} eV {arrow}\n")
 
         f.write("\n" + "-" * 70 + "\n")
         f.write("INTERPRETATION\n")

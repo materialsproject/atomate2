@@ -142,16 +142,12 @@ def prepare_molecule_with_orientation(
     --------
     >>> # Load benzene and orient it flat on surface
     >>> mol = prepare_molecule_with_orientation(
-    ...     "C6H6",
-    ...     plane_atoms=[0, 1, 2],
-    ...     target_vector=[0, 0, 1]
+    ...     "C6H6", plane_atoms=[0, 1, 2], target_vector=[0, 0, 1]
     ... )
 
     >>> # Load custom molecule and rotate 45 degrees
     >>> mol = prepare_molecule_with_orientation(
-    ...     custom_file="my_molecule.xyz",
-    ...     target_vector=[0, 0, 1],
-    ...     extra_rotation=45.0
+    ...     custom_file="my_molecule.xyz", target_vector=[0, 0, 1], extra_rotation=45.0
     ... )
     """
     # Load molecule

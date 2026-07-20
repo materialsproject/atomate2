@@ -11,15 +11,15 @@ These tests validate:
 """
 
 import pytest
-from pymatgen.core import Structure, Molecule, Lattice
+from jobflow import Flow
+from pymatgen.core import Lattice, Molecule, Structure
 
 from atomate2.siesta.flows.surface.adsorption import (
-    AdsorptionScanFlowMaker,
     AdsorptionOptimizationFlowMaker,
+    AdsorptionScanFlowMaker,
 )
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 from atomate2.siesta.sets.core import StaticSetGenerator
-from jobflow import Flow
 
 
 @pytest.fixture

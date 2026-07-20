@@ -13,7 +13,7 @@ __all__ = ["AuxiliaryForceField"]
 
 import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 
@@ -33,7 +33,7 @@ class AuxiliaryForceField(FDFDataclass):
     # mm_units_distance: float = None # MM.UnitsDistance Ang
     # mm_grimme_d: float = 20.0 # MM.Grimme.D 20.0
     # mm_grimme_s6: float = 1.66 # MM.Grimme.S6 1.66
-    mm_potentials_block: Dict[float, Any] = field(
+    mm_potentials_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "Defines molecular mechanics potentials for the auxiliary force field (SIESTA keyword: %block MM.Potentials)."
@@ -246,9 +246,8 @@ class AuxiliaryForceField(FDFDataclass):
             If force field parameters are invalid
         """
         logger.info("AuxiliaryForceField.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -321,14 +320,15 @@ class AuxiliaryForceField(FDFDataclass):
                 # Parse length with units (default Bohr)
                 self.dft3_coordination_cutoff = parse_length(value, target_unit="Bohr")
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # MM potentials
         if self.mm_potentials_block:
@@ -371,15 +371,15 @@ class AuxiliaryForceField(FDFDataclass):
             if self.dft3_3_body_cutoff != 40.0:
                 fdf["DFTD3.3BodyCutOff"] = f"{self.dft3_3_body_cutoff} Bohr"
             if self.dft3_coordination_cutoff != 10.0:
-                fdf[
-                    "DFTD3.CoordinationCutoff"
-                ] = f"{self.dft3_coordination_cutoff} Bohr"
+                fdf["DFTD3.CoordinationCutoff"] = (
+                    f"{self.dft3_coordination_cutoff} Bohr"
+                )
 
         return fdf
 
     @classmethod
     def setup_auxiliary_force_field(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "AuxiliaryForceField":
         """
         Create and configure an AuxiliaryForceField instance with full parameter parsing.
@@ -388,7 +388,8 @@ class AuxiliaryForceField(FDFDataclass):
             user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             AuxiliaryForceField: Configured instance with all fields set.
         """
         # Initialize instance with defaults
@@ -406,11 +407,12 @@ class AuxiliaryForceField(FDFDataclass):
 
         return instance
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have auxiliary force field parameters

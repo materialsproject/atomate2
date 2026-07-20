@@ -6,12 +6,11 @@ This module provides the `remove` subcommand for atomate2siesta-structure.
 
 from __future__ import annotations
 
-import numpy as np
 import click
+import numpy as np
+from pymatgen.core import Element, Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Element, Structure
 
 console = Console()
 
@@ -76,8 +75,8 @@ def remove(
     Remove atoms by element, site index, or proximity to a point. Useful for
     creating vacancies, removing adsorbates, or cleaning up structures.
 
-    Examples:
-
+    Examples
+    --------
         # Remove all hydrogen atoms
         atomate2siesta-structure remove structure.cif --element H
 
@@ -141,7 +140,7 @@ def remove(
                 for idx in site_indices:
                     if idx < 0 or idx >= structure.num_sites:
                         console.print(
-                            f"[red]Error: Site index {idx} out of range (0-{structure.num_sites-1})[/red]"
+                            f"[red]Error: Site index {idx} out of range (0-{structure.num_sites - 1})[/red]"
                         )
                         raise click.Abort()
                 sites_to_remove.update(site_indices)
@@ -282,7 +281,7 @@ def _display_removal_info(original, new_structure, n_removed):
     table.add_row(
         "Remaining",
         "—",
-        f"{new_structure.num_sites} ({100*new_structure.num_sites/original.num_sites:.1f}%)",
+        f"{new_structure.num_sites} ({100 * new_structure.num_sites / original.num_sites:.1f}%)",
     )
 
     console.print(table)

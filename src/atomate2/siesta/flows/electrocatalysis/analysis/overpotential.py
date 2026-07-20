@@ -7,7 +7,8 @@ The overpotential (η) quantifies the additional voltage needed beyond the therm
 equilibrium potential to drive a reaction at a given rate. Lower |η| indicates better
 catalyst performance.
 
-References:
+References
+----------
 - Nørskov et al., J. Phys. Chem. B 108, 17886 (2004)
 - Man et al., ChemCatChem 3, 1159 (2011)
 - Koper, Chem. Sci. 4, 2710 (2013)
@@ -102,15 +103,15 @@ def calculate_orr_overpotential(
     >>> # ORR pathway with 4 steps
     >>> delta_G = [0.45, 1.20, 0.80, 0.60]  # eV at U = 0 V
     >>> result = calculate_orr_overpotential(delta_G)
-    >>> result['eta_ORR']
+    >>> result["eta_ORR"]
     1.20  # V (dominated by largest uphill step: 1.20 eV)
-    >>> result['U_onset']
+    >>> result["U_onset"]
     0.03  # V (1.23 - 1.20)
 
     >>> # Ideal catalyst (all steps thermoneutral)
     >>> delta_G_ideal = [0.3075, 0.3075, 0.3075, 0.3075]  # 1.23/4 each
     >>> result = calculate_orr_overpotential(delta_G_ideal)
-    >>> result['eta_ORR']
+    >>> result["eta_ORR"]
     0.3075  # V (each step is 0.3075 eV)
     """
     if not delta_G:
@@ -208,10 +209,10 @@ def calculate_oer_overpotential(
     >>> # OER pathway (reverse of ORR)
     >>> delta_G = [0.60, 0.80, 1.20, 0.45]  # eV
     >>> result = calculate_oer_overpotential(delta_G)
-    >>> result['eta_OER']
+    >>> result["eta_OER"]
     1.20  # V
 
-    >>> result['U_onset']
+    >>> result["U_onset"]
     2.43  # V (1.23 + 1.20)
     """
     if not delta_G:
@@ -300,9 +301,9 @@ def calculate_bifunctional_gap(
     >>> delta_G_ORR = [0.45, 1.20, 0.80, 0.60]
     >>> delta_G_OER = [0.60, 0.80, 1.20, 0.45]  # Reverse pathway
     >>> result = calculate_bifunctional_gap(delta_G_ORR, delta_G_OER)
-    >>> result['overpotential_gap']
+    >>> result["overpotential_gap"]
     2.40  # V (1.20 + 1.20)
-    >>> result['voltage_window']
+    >>> result["voltage_window"]
     2.40  # V (2.43 - 0.03)
     """
     orr_result = calculate_orr_overpotential(delta_G_ORR)
@@ -385,17 +386,17 @@ def calculate_her_overpotential(
     --------
     >>> # Pt-like catalyst (nearly ideal)
     >>> result = calculate_her_overpotential(delta_G_H=0.05)
-    >>> result['eta_HER']
+    >>> result["eta_HER"]
     0.05  # V (very small overpotential)
 
     >>> # Weak binding (Au-like)
     >>> result = calculate_her_overpotential(delta_G_H=0.50)
-    >>> result['eta_HER']
+    >>> result["eta_HER"]
     0.50  # V
 
     >>> # Strong binding (W-like)
     >>> result = calculate_her_overpotential(delta_G_H=-0.60)
-    >>> result['eta_HER']
+    >>> result["eta_HER"]
     0.60  # V
     """
     # HER overpotential is |ΔG_H|

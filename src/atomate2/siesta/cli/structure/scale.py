@@ -7,10 +7,9 @@ This module provides the `scale` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
+from pymatgen.core import Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Structure
 
 console = Console()
 
@@ -91,8 +90,8 @@ def scale(
     Supports uniform scaling, anisotropic scaling, volume-based scaling,
     and strain-based scaling. Can generate series of structures for EOS studies.
 
-    Examples:
-
+    Examples
+    --------
         # Uniform 5% expansion
         atomate2siesta-structure scale Si.cif --factor 1.05
 
@@ -181,7 +180,7 @@ def scale(
 
                 if i == 0 or i == steps - 1 or (i + 1) % 5 == 0:
                     console.print(
-                        f"  [{i+1:2d}/{steps}] {output_file}: V = {scaled_structure.volume:.3f} Å³"
+                        f"  [{i + 1:2d}/{steps}] {output_file}: V = {scaled_structure.volume:.3f} Å³"
                     )
 
             console.print(f"\n[green]✓ Generated {steps} scaled structures[/green]")

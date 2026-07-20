@@ -13,17 +13,17 @@ This tool provides:
 """
 
 import click
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
 from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 console = Console()
 
 # Import actual tier presets and defaults from the codebase
 try:
-    from atomate2.siesta.sets.tiers.presets import TIER_PRESETS
     from atomate2.siesta.sets.tiers.defaults import TIER_DEFAULTS
+    from atomate2.siesta.sets.tiers.presets import TIER_PRESETS
 except ImportError:
     # Fallback if import fails
     TIER_PRESETS = {}

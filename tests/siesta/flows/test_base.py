@@ -92,9 +92,10 @@ class TestDryRunPropagation:
 
     def test_dry_run_propagates_to_single_maker(self):
         """Test that dry_run propagates to a single child maker."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -110,9 +111,10 @@ class TestDryRunPropagation:
 
     def test_dry_run_propagates_with_custom_settings(self):
         """Test that dry_run propagates with custom output directory and format."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -132,10 +134,11 @@ class TestDryRunPropagation:
 
     def test_dry_run_propagates_to_multiple_makers(self):
         """Test that dry_run propagates to multiple child makers."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
         from atomate2.siesta.sets.core import StaticSetGenerator
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -155,9 +158,10 @@ class TestDryRunPropagation:
 
     def test_dry_run_propagates_to_list_of_makers(self):
         """Test that dry_run propagates to a list of child makers."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -175,9 +179,10 @@ class TestDryRunPropagation:
 
     def test_dry_run_doesnt_propagate_when_false(self):
         """Test that dry_run doesn't propagate when False."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -195,9 +200,10 @@ class TestCustodianPropagation:
 
     def test_custodian_propagates_to_single_maker(self):
         """Test that use_custodian propagates to a single child maker."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -212,10 +218,11 @@ class TestCustodianPropagation:
 
     def test_custodian_propagates_with_custom_handlers(self):
         """Test that custodian propagates with custom handlers."""
+        from dataclasses import dataclass, field
+
+        from atomate2.siesta.custodian import SCFConvergenceHandler
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from atomate2.siesta.custodian import SCFConvergenceHandler
-        from dataclasses import dataclass, field
 
         custom_handlers = [SCFConvergenceHandler(max_attempts=5)]
 
@@ -232,10 +239,11 @@ class TestCustodianPropagation:
 
     def test_custodian_propagates_to_multiple_makers(self):
         """Test that use_custodian propagates to multiple child makers."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
         from atomate2.siesta.sets.core import StaticSetGenerator
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -257,9 +265,10 @@ class TestCustodianPropagation:
 
     def test_custodian_doesnt_propagate_when_false(self):
         """Test that use_custodian doesn't propagate when False."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -277,9 +286,10 @@ class TestTierPropagation:
 
     def test_tier_propagates_to_single_maker(self):
         """Test that tier propagates to a single child maker."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -293,9 +303,10 @@ class TestTierPropagation:
 
     def test_tier_propagates_different_values(self):
         """Test that different tier values propagate correctly."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -308,10 +319,11 @@ class TestTierPropagation:
 
     def test_tier_propagates_to_multiple_makers(self):
         """Test that tier propagates to multiple child makers."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
         from atomate2.siesta.sets.core import StaticSetGenerator
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -331,9 +343,10 @@ class TestTierPropagation:
 
     def test_tier_doesnt_propagate_when_none(self):
         """Test that tier doesn't propagate when None."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -353,9 +366,10 @@ class TestRecursivePropagation:
 
     def test_dry_run_propagates_recursively(self):
         """Test that dry_run propagates recursively to nested flows."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class InnerFlow(BaseSiestaFlowMaker):
@@ -374,9 +388,10 @@ class TestRecursivePropagation:
 
     def test_custodian_propagates_recursively(self):
         """Test that custodian propagates recursively to nested flows."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class InnerFlow(BaseSiestaFlowMaker):
@@ -396,9 +411,10 @@ class TestRecursivePropagation:
 
     def test_tier_propagates_recursively(self):
         """Test that tier propagates recursively to nested flows."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class InnerFlow(BaseSiestaFlowMaker):
@@ -430,9 +446,10 @@ class TestCombinedPropagation:
 
     def test_all_features_propagate_together(self):
         """Test that dry_run, custodian, and tier all propagate together."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -456,10 +473,11 @@ class TestCombinedPropagation:
 
     def test_all_features_propagate_to_multiple_makers(self):
         """Test that all features propagate to multiple child makers."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
         from atomate2.siesta.sets.core import StaticSetGenerator
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -491,9 +509,10 @@ class TestFlowMakerEdgeCases:
 
     def test_propagation_with_non_maker_attributes(self):
         """Test that propagation ignores non-maker attributes."""
+        from dataclasses import dataclass, field
+
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from atomate2.siesta.jobs.core import RelaxMaker
-        from dataclasses import dataclass, field
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -513,8 +532,9 @@ class TestFlowMakerEdgeCases:
 
     def test_propagation_with_none_maker(self):
         """Test that propagation handles None maker gracefully."""
-        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from dataclasses import dataclass
+
+        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -528,8 +548,9 @@ class TestFlowMakerEdgeCases:
 
     def test_propagation_with_empty_maker_list(self):
         """Test that propagation handles empty maker list."""
-        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from dataclasses import dataclass, field
+
+        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 
         @dataclass
         class TestFlow(BaseSiestaFlowMaker):
@@ -547,15 +568,17 @@ class TestFlowMakerInheritance:
 
     def test_flowmaker_is_maker(self):
         """Test that BaseSiestaFlowMaker inherits from jobflow.Maker."""
-        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from jobflow import Maker
+
+        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 
         assert issubclass(BaseSiestaFlowMaker, Maker)
 
     def test_flowmaker_is_dataclass(self):
         """Test that BaseSiestaFlowMaker is a dataclass."""
-        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
         from dataclasses import is_dataclass
+
+        from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 
         assert is_dataclass(BaseSiestaFlowMaker)
 
@@ -583,9 +606,7 @@ class TestRealWorldFlowUsage:
 
     def test_convergence_flow_tier_propagation(self):
         """Test tier propagation in Convergence flow."""
-        from atomate2.siesta.flows.convergence import (
-            MeshCutoffConvergenceFlowMaker,
-        )
+        from atomate2.siesta.flows.convergence import MeshCutoffConvergenceFlowMaker
 
         # Create Convergence flow with tier="intermediate"
         conv_flow = MeshCutoffConvergenceFlowMaker(tier="intermediate")

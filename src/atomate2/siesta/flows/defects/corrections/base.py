@@ -215,4 +215,4 @@ class CorrectionScheme(ABC):
 
     def __repr__(self) -> str:
         """String representation."""
-        return f"{self.__class__.__name__}(" f"epsilon_static={self.epsilon_static})"
+        return f"{self.__class__.__name__}(epsilon_static={self.epsilon_static})"

@@ -14,11 +14,11 @@ import pytest
 from jobflow import Flow
 
 from atomate2.siesta.flows.core import (
-    DifferentBasisSCFFlowMaker,
     DifferentBasisFlowMaker,
     DifferentBasisRelaxFlowMaker,
+    DifferentBasisSCFFlowMaker,
 )
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 
 class TestDifferentBasisSCF:

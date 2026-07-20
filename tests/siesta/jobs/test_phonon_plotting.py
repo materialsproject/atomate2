@@ -8,10 +8,11 @@ These tests validate:
 - write_phonon_summary
 """
 
-import pytest
-import numpy as np
 from pathlib import Path
-from pymatgen.core import Structure, Lattice
+
+import numpy as np
+import pytest
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.jobs.phonon.plotting import (
     plot_phonon_band_structure,

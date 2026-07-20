@@ -20,7 +20,8 @@ def get_all_registered_fdf_parameters() -> dict[str, str]:
     Uses the FDFDataclass registry to get all known SIESTA parameters.
     This is automatically updated when dataclasses are modified.
 
-    Returns:
+    Returns
+    -------
         Dictionary mapping lowercase parameter names to dataclass handler names
     """
     from atomate2.siesta.dataclass.base import FDFDataclass
@@ -51,38 +52,38 @@ def _ensure_dataclasses_registered():
     # will handle registration
     try:
         from atomate2.siesta.dataclass import (
+            DFTU,
+            RTTDDFT,
+            AuxiliaryForceField,
+            BasisSetsAndProjectors,
+            ChargeDipoleElectricField,
+            ChemicalAnalysis,
+            Denchar,
+            DensityOfStatesAndBandStructure,
+            EfficiencyOptions,
+            ElectronicStructureCalculationOptions,
+            ExchangeCorrelationFunctionals,
+            ExternalControlAndScripting,
+            GeneralConstraints,
             # Basic tier
             GeneralSystemDescriptors,
-            Pseudopotentials,
-            BasisSetsAndProjectors,
+            Grids,
+            HamiltonianAndOverlapParameters,
             KPointSampling,
-            ExchangeCorrelationFunctionals,
-            SpinSettings,
+            MolecularDynamicsAndRelaxation,
+            NetcdfOptions,
+            OpticalProperties,
+            # Expert tier
+            ParallelOptions,
+            # Advanced tier
+            PhononCalculations,
+            Pseudopotentials,
             RealSpaceGridParameters,
             # Intermediate tier
             SCFLoopParameters,
-            ElectronicStructureCalculationOptions,
-            MolecularDynamicsAndRelaxation,
-            GeneralConstraints,
-            ExternalControlAndScripting,
-            ChemicalAnalysis,
-            # Advanced tier
-            PhononCalculations,
-            OpticalProperties,
-            DensityOfStatesAndBandStructure,
-            DFTU,
-            ChargeDipoleElectricField,
-            Grids,
-            Wannier90,
-            AuxiliaryForceField,
-            Denchar,
-            # Expert tier
-            ParallelOptions,
             SolversAndPerformanceOptions,
-            EfficiencyOptions,
-            HamiltonianAndOverlapParameters,
-            NetcdfOptions,
-            RTTDDFT,
+            SpinSettings,
+            Wannier90,
         )
 
         # Create one instance of each to trigger registration
@@ -134,7 +135,8 @@ def find_parameter_case_variants(param: str) -> list[str]:
     Args:
         param: Parameter name in any case
 
-    Returns:
+    Returns
+    -------
         List of all registered parameters that match (case-insensitive)
     """
     param_lower = param.lower()
@@ -174,7 +176,8 @@ def parse_parameter_string(param_str: str) -> tuple[str, Any] | None:
     Args:
         param_str: Parameter string like "kpts=[4,4,4]"
 
-    Returns:
+    Returns
+    -------
         Tuple of (key, value) or None if parsing fails
     """
     if "=" not in param_str:
@@ -219,7 +222,8 @@ def parse_multiple_parameters(param_strings: list[str]) -> dict[str, Any]:
     Args:
         param_strings: List of parameter strings
 
-    Returns:
+    Returns
+    -------
         Dictionary of parsed parameters
     """
     params = {}
@@ -243,7 +247,8 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
         key: Parameter key
         value: Parameter value
 
-    Returns:
+    Returns
+    -------
         Tuple of (is_valid, error_message)
     """
     from atomate2.siesta.dataclass.base import FDFDataclass
@@ -285,13 +290,12 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
                 False,
                 f"Parameter '{key}' not registered. Did you mean one of: {', '.join(similar)}?",
             )
-        else:
-            # Not registered but don't block - SIESTA will validate
-            console.print(
-                f"[yellow]Warning:[/yellow] Parameter '{key}' is not in the dataclass registry.\n"
-                f"It will be passed to SIESTA, which will validate it."
-            )
-            return (True, "")
+        # Not registered but don't block - SIESTA will validate
+        console.print(
+            f"[yellow]Warning:[/yellow] Parameter '{key}' is not in the dataclass registry.\n"
+            f"It will be passed to SIESTA, which will validate it."
+        )
+        return (True, "")
 
     # Check for case mismatches (e.g., spin vs Spin)
     # Get the registered parameter name from FDFDataclass
@@ -348,7 +352,8 @@ def validate_all_parameters(params: dict[str, Any]) -> bool:
     Args:
         params: Dictionary of parameters to validate
 
-    Returns:
+    Returns
+    -------
         True if all valid, False otherwise
     """
     all_valid = True
@@ -374,7 +379,8 @@ def merge_parameters(
         override_params: New parameters to apply
         remove_keys: List of parameter keys to remove
 
-    Returns:
+    Returns
+    -------
         Merged parameter dictionary
     """
     # Create deep copy to avoid modifying original

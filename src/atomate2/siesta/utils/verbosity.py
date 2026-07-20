@@ -15,7 +15,7 @@ class VerbosityLevel(Enum):
     ERROR = 2  # Red
     WARNING = 3  # Yellow
     DEBUG = 4  # Blue
-    VERBOSE = 5  #
+    VERBOSE = 5
 
     # SILENT = 0    # None Color
     # ERROR = 1     # Red
@@ -33,7 +33,8 @@ def get_verbosity_value(verbosity) -> int:
     Args:
         verbosity: The verbosity value (VerbosityLevel enum, int, or dict)
 
-    Returns:
+    Returns
+    -------
         int: The verbosity level value
     """
     # If it's already a VerbosityLevel enum, get its value

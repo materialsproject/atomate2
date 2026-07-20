@@ -4,10 +4,11 @@ CLI of siesta-pseudos inspired by abips.py Script to download and install pseudo
 """
 
 import os
+import shutil
+import tarfile
+
 import click
 import requests
-import tarfile
-import shutil
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
@@ -15,11 +16,11 @@ from rich.text import Text
 # Import plotting functions from same package
 from atomate2.siesta.cli.pseudo.plot_pseudopotential import (
     parse_psml,
-    plot_wavefunctions,
-    plot_potentials,
     plot_3d_potential,
-    plot_occupation_map,
     plot_density,
+    plot_occupation_map,
+    plot_potentials,
+    plot_wavefunctions,
 )
 
 # Initialize rich console
@@ -961,7 +962,6 @@ def download_and_extract_pseudo(pseudo_file_name, pseudo_name, local_only=False)
 @click.version_option("0.1.0")
 def cli():
     """Command-line interface for Siesta pseudopotential management."""
-    pass
 
 
 @cli.command()
@@ -1055,7 +1055,8 @@ def list():
 def install(pseudo_name, local_only, install_all):
     """Install pseudopotential repositories by name(s).
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-pseudos install ONCVPSP-PBEsol-FR-PDv0.4-Standard
         atomate2siesta-pseudos install --all
     """
@@ -1215,7 +1216,8 @@ def show(pseudo_name, element):
 
     If ELEMENT is provided, show detailed shell information from PSML file.
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-pseudos show ONCVPSP-PBE-SR-PDv0.4-Standard
         atomate2siesta-pseudos show ONCVPSP-PBE-SR-PDv0.4-Standard Zr
     """
@@ -1362,7 +1364,8 @@ def basis(
 ):
     """Generate PAO.Basis block from PSML pseudopotential file.
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-pseudos basis ONCVPSP-PBEsol-FR-PDv0.4-Standard Si
         atomate2siesta-pseudos basis ONCVPSP-PBE-SR-PDv0.4-Standard Fe --basis-size TZP
         atomate2siesta-pseudos basis ONCVPSP-PBE-SR-PDv0.4-Standard O --output-file O.basis
@@ -1435,7 +1438,8 @@ def extract_rc_from_psml(radial_grid, wavefunctions, n, ang_mom, threshold=0.05)
         ang_mom: Angular momentum (l)
         threshold: Threshold for wavefunction decay (default: 0.05 = 5%)
 
-    Returns:
+    Returns
+    -------
         Cutoff radius in bohr where |psi| drops below threshold*max(|psi|)
     """
     import numpy as np
@@ -1465,7 +1469,8 @@ def get_rc_scaled_by_element(element, ang_mom):
         element: Element symbol
         ang_mom: Angular momentum (l)
 
-    Returns:
+    Returns
+    -------
         Scaled cutoff radius in bohr
     """
     from pymatgen.core import Element
@@ -1476,7 +1481,7 @@ def get_rc_scaled_by_element(element, ang_mom):
         # Reference: Si (Z=14) with atomic radius 1.10 Angstrom
         # has rc_s=5.0, rc_p=6.0, rc_d=5.5 bohr
         ref_radius = 1.10  # Angstrom
-        el_radius = el.atomic_radius if el.atomic_radius else ref_radius
+        el_radius = el.atomic_radius or ref_radius
 
         # Scale factor based on atomic size
         scale = el_radius / ref_radius
@@ -1504,7 +1509,8 @@ def get_rc_hydrogenic(element, n, ang_mom):
         n: Principal quantum number
         ang_mom: Angular momentum (l)
 
-    Returns:
+    Returns
+    -------
         Cutoff radius in bohr based on quantum numbers
     """
     from pymatgen.core import Element
@@ -1563,7 +1569,8 @@ def generate_pao_basis_block(
         radial_grid: Radial grid from PSML (for psml method)
         wavefunctions: Wavefunctions from PSML (for psml method)
 
-    Returns:
+    Returns
+    -------
         String containing the PAO.Basis block in SIESTA format
     """
     # Determine number of zeta functions per orbital based on basis_size

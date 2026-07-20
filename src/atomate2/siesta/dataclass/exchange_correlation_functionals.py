@@ -11,17 +11,14 @@ Section: 6.6 Exchange-correlation functionals
 
 __all__ = ["ExchangeCorrelationFunctionals"]
 
-from dataclasses import dataclass, field, fields
-from typing import Dict, Any
-from typing import Optional
+import logging
 from collections import OrderedDict
-
+from dataclasses import dataclass, field, fields
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +41,7 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
             "SIESTA keyword": None,
         },
     )
-    _user_params: Dict[str, Any] = field(
+    _user_params: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "Store original user parameters for validation",
@@ -72,7 +69,7 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
             "SIESTA keyword": "XC.Use.BSC.CellXC",
         },
     )
-    xc_block: Optional[Dict[str, Any]] = field(
+    xc_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
             "description": "A block for detailed specification of the XC functional, particularly for hybrid or complex vdW functionals.",
@@ -100,7 +97,7 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
 
     @classmethod
     def setup_xc_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "ExchangeCorrelationFunctionals":
         """
         Create and configure an ExchangeCorrelationFunctionals instance based on user parameters, retaining all default values for unspecified fields.
@@ -110,7 +107,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
             user_params (dict, optional): Dictionary of user-defined parameters (case-insensitive, may include dots).
                                          If None or empty, all default ExchangeCorrelationFunctionals values are used.
 
-        Returns:
+        Returns
+        -------
             ExchangeCorrelationFunctionals: Configured instance with all fields (default and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -122,7 +120,7 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         xc_settings_instance = cls()
 
         # Store user_params for validate method
-        xc_settings_instance._user_params = user_params if user_params else {}
+        xc_settings_instance._user_params = user_params or {}
 
         # Handle case where user_params is None or empty
         if not xc_settings_instance._user_params:
@@ -195,11 +193,10 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                         )
                     else:
                         setattr(xc_settings_instance, original_key, value)
-                else:
-                    if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                        console.print(
-                            f"[yellow]Key '{key}' does not match any ExchangeCorrelationFunctionals field, skipping.[/yellow]"
-                        )
+                elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                    console.print(
+                        f"[yellow]Key '{key}' does not match any ExchangeCorrelationFunctionals field, skipping.[/yellow]"
+                    )
 
         # Validate settings
         try:
@@ -226,7 +223,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         """
         Validates the exchange-correlation functional settings, including checks for xc, xc.functional, and xc.authors.
 
-        Raises:
+        Raises
+        ------
             ValueError: If xc_functional or xc_authors are invalid.
         """
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -258,11 +256,10 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                     console.print(
                         "[yellow]Warning: Both xc.functional and xc.authors must be specified together[/yellow]"
                     )
-            else:
-                if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        "[yellow]Warning: Default values are taken for XC.Functional and XC.Authors[/yellow]"
-                    )
+            elif self.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    "[yellow]Warning: Default values are taken for XC.Functional and XC.Authors[/yellow]"
+                )
 
         # Validate xc_functional and xc_authors
         allowed_xc_functionals = ["LDA", "LSD", "GGA", "VDW"]
@@ -303,7 +300,7 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                 "[green]Validation: [yellow]ExchangeCorrelationFunctionals[/yellow] Successful![/green]"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -342,7 +339,8 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         Args:
             xc_authors: XC authors string
 
-        Returns:
+        Returns
+        -------
             Properly formatted XC.Authors for SIESTA
         """
         xc_upper = xc_authors.upper()
@@ -350,17 +348,18 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
         # Special cases that need mixed case
         if xc_upper == "PBESOL":
             return "PBEsol"
-        elif xc_upper == "REVPBE":
+        if xc_upper == "REVPBE":
             return "revPBE"
 
         # All others use uppercase
         return xc_upper
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -368,14 +367,14 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
                 "[green]ExchangeCorrelationFunctionals.generate_fdf()[/green]"
             )
 
-        fdf: Dict[str, Any] = OrderedDict()
+        fdf: dict[str, Any] = OrderedDict()
         fdf["#ExchangeCorrelationFunctionals"] = "ExchangeCorrelationFunctionals"
 
         # XC.Functional - always write with default marker
         if self.xc_functional.upper() == "GGA":
-            fdf[
-                "XC.Functional"
-            ] = f"{self.xc_functional.upper()}  # SIESTA DEFAULT VALUE"
+            fdf["XC.Functional"] = (
+                f"{self.xc_functional.upper()}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["XC.Functional"] = self.xc_functional.upper()
 
@@ -397,11 +396,12 @@ class ExchangeCorrelationFunctionals(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE uses 'xc' parameter (combines functional + authors)

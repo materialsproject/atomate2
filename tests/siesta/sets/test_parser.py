@@ -9,20 +9,21 @@ These tests validate:
 - Utility functions
 """
 
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 from pymatgen.core import Lattice
 
 from atomate2.siesta.sets.parser import (
+    LINE_NOT_FOUND,
     ParseError,
-    SiestaParseError,
+    SiestaOutCalcChunk,
     SiestaOutChunk,
     SiestaOutHeaderChunk,
-    SiestaOutCalcChunk,
-    LINE_NOT_FOUND,
-    get_lines,
-    get_header_chunk,
+    SiestaParseError,
     check_convergence,
+    get_header_chunk,
+    get_lines,
     get_siesta_out_chunks,
 )
 

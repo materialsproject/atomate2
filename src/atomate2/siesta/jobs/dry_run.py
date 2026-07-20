@@ -77,7 +77,7 @@ def dry_run_save_structure(
         >>> job = dry_run_save_structure(
         ...     structure,
         ...     label="eos_volume_0.95",
-        ...     metadata={"volume_scale": 0.95, "maker": "EOSMaker"}
+        ...     metadata={"volume_scale": 0.95, "maker": "EOSMaker"},
         ... )
 
     Save in XYZ format:
@@ -169,16 +169,13 @@ def dry_run_save_multiple_structures(
         >>> structures = [scale_structure(struct, s) for s in [0.95, 1.0, 1.05]]
         >>> metadata = [{"scale": s} for s in [0.95, 1.0, 1.05]]
         >>> job = dry_run_save_multiple_structures(
-        ...     structures,
-        ...     label_prefix="eos_volume",
-        ...     metadata_list=metadata
+        ...     structures, label_prefix="eos_volume", metadata_list=metadata
         ... )
 
     Save phonon displacements:
         >>> displaced = generate_displacements(structure, supercell)
         >>> job = dry_run_save_multiple_structures(
-        ...     displaced,
-        ...     label_prefix="phonon_displacement"
+        ...     displaced, label_prefix="phonon_displacement"
         ... )
     """
     from pathlib import Path
@@ -275,10 +272,7 @@ def dry_run_workflow_summary(
     Create summary for EOS workflow:
         >>> eos_jobs = [job1.output, job2.output, ...]
         >>> summary = dry_run_workflow_summary(
-        ...     eos_jobs,
-        ...     workflow_type="eos",
-        ...     num_volumes=10,
-        ...     volume_range="0.90-1.10"
+        ...     eos_jobs, workflow_type="eos", num_volumes=10, volume_range="0.90-1.10"
         ... )
 
     Create summary for adsorption scan:
@@ -288,7 +282,7 @@ def dry_run_workflow_summary(
         ...     workflow_type="adsorption_scan",
         ...     grid_size=(5, 5),
         ...     height=2.0,
-        ...     placement="top"
+        ...     placement="top",
         ... )
     """
     from datetime import datetime
@@ -313,8 +307,9 @@ def dry_run_workflow_summary(
         if workflow_metadata:
             f.write("Workflow Parameters:\n")
             f.write("-" * 80 + "\n")
-            for key, val in sorted(workflow_metadata.items()):
-                f.write(f"  {key}: {val}\n")
+            f.writelines(
+                f"  {key}: {val}\n" for key, val in sorted(workflow_metadata.items())
+            )
             f.write("\n")
 
         # Job outputs

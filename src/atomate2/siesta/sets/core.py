@@ -1,24 +1,20 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
-from dataclasses import field
-
-from atomate2.siesta.sets.base import SiestaInputGenerator
-from typing import TYPE_CHECKING
-from typing import Any
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any
 
 from pymatgen.core import Structure
 
-
-from atomate2.siesta.dataclass.molecular_dynamics_and_relaxation import (
-    MolecularDynamicsAndRelaxation,
-)
 from atomate2.siesta.dataclass.density_of_states_and_band_structure import (
     DensityOfStatesAndBandStructure,
 )
-from atomate2.siesta.dataclass.phonon_calculations import PhononCalculations
+from atomate2.siesta.dataclass.molecular_dynamics_and_relaxation import (
+    MolecularDynamicsAndRelaxation,
+)
 from atomate2.siesta.dataclass.optical_properties import OpticalProperties
+from atomate2.siesta.dataclass.phonon_calculations import PhononCalculations
+from atomate2.siesta.sets.base import SiestaInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule
@@ -362,7 +358,8 @@ class OpticalSetGenerator(SiestaInputGenerator):
     using the SIESTA package. It extends the `SiestaInputGenerator` to include settings
     for optical calculations.
 
-    Attributes:
+    Attributes
+    ----------
         optical_calculation (str | None): Specifies the type of optical calculation to be performed.
         optical (OpticalProperties): Instance of `OpticalProperties` containing validated
                                      optical calculation parameters.
@@ -406,7 +403,8 @@ class OpticalSetGenerator(SiestaInputGenerator):
             structure (Structure | Molecule): The structure for which the optical properties are calculated.
             prev_parameters (dict): Previous calculation parameters.
 
-        Returns:
+        Returns
+        -------
             dict: Updated FDF parameters including optical properties and band structure information.
         """
         logger.info("OpticalSetGenerator.get_parameter_updates()")
@@ -451,8 +449,6 @@ class SocketIOSetGenerator(SiestaInputGenerator):
     --------
     i-PI : Universal force engine interface (https://ipi-code.org/)
     """
-
-    pass
 
 
 @dataclass
@@ -672,5 +668,3 @@ class StaticSetGenerator(SiestaInputGenerator):
     For geometry optimization, use RelaxSetGenerator instead.
     For electronic band structure calculations, use BandStructureSetGenerator.
     """
-
-    pass

@@ -9,10 +9,9 @@ from __future__ import annotations
 import random
 
 import click
+from pymatgen.core import Element, Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Element, Structure
 
 console = Console()
 
@@ -79,8 +78,8 @@ def substitute(
     Replace specific elements or sites with different elements. Supports complete
     substitution, random partial substitution, and site-specific replacement.
 
-    Examples:
-
+    Examples
+    --------
         # Replace all Fe with Co
         atomate2siesta-structure substitute structure.cif --replace Fe:Co
 
@@ -156,7 +155,7 @@ def substitute(
                 for idx in site_indices:
                     if idx < 0 or idx >= structure.num_sites:
                         console.print(
-                            f"[red]Error: Site index {idx} out of range (0-{structure.num_sites-1})[/red]"
+                            f"[red]Error: Site index {idx} out of range (0-{structure.num_sites - 1})[/red]"
                         )
                         raise click.Abort()
                     if structure[idx].specie.symbol != old_element.symbol:
@@ -238,9 +237,9 @@ def substitute(
 
             for i, (config_struct, _) in enumerate(configs):
                 if output:
-                    output_file = f"{output}_{i+1}.{format}"
+                    output_file = f"{output}_{i + 1}.{format}"
                 else:
-                    output_file = f"substituted_{old_element.symbol}_to_{new_element.symbol}_{input_path.stem}_config{i+1}.{format}"
+                    output_file = f"substituted_{old_element.symbol}_to_{new_element.symbol}_{input_path.stem}_config{i + 1}.{format}"
 
                 _save_structure(config_struct, output_file, format)
                 saved_files.append(output_file)

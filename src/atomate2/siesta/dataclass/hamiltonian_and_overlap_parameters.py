@@ -16,14 +16,13 @@ Section: 6.11 Matrix elements of the Hamiltonian and overlap
 
 __all__ = ["HamiltonianAndOverlapParameters"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +104,7 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
     )
 
     # Dictionary to hold FDF arguments
-    hamiltonian_fdf_arguments: Dict[str, Any] = field(default_factory=dict)
+    hamiltonian_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
     # Track which parameters were explicitly provided by user
     _user_provided_params: set = field(default_factory=set, init=False, repr=False)
@@ -134,9 +133,8 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
             If parameters are inconsistent (currently no validation rules defined)
         """
         logger.info("HamiltonianAndOverlapParameters.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -171,11 +169,12 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
         fdf = {}
@@ -207,11 +206,12 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have direct equivalents for these Hamiltonian/overlap parameters
@@ -252,14 +252,14 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
         # Only add comment header if there are parameters to add
         if params_to_add:
             if self.comments:
-                self.hamiltonian_fdf_arguments[
-                    "#HamiltonianAndOverlapParameters"
-                ] = self.comments
+                self.hamiltonian_fdf_arguments["#HamiltonianAndOverlapParameters"] = (
+                    self.comments
+                )
             self.hamiltonian_fdf_arguments.update(params_to_add)
 
     @classmethod
     def setup_hamiltonian_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "HamiltonianAndOverlapParameters":
         """
         Create and configure a HamiltonianAndOverlapParameters instance with full parameter parsing.
@@ -273,23 +273,33 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             HamiltonianAndOverlapParameters: Configured instance with all fields set.
 
-        Examples:
+        Examples
+        --------
             >>> # Using SIESTA FDF parameter names
-            >>> hamiltonian = HamiltonianAndOverlapParameters.setup_hamiltonian_settings({
-            ...     "SaveHS": True,
-            ...     "Negl.NonOverlap.Int": False,
-            ...     "ForceAuxCell": True
-            ... })
+            >>> hamiltonian = (
+            ...     HamiltonianAndOverlapParameters.setup_hamiltonian_settings(
+            ...         {
+            ...             "SaveHS": True,
+            ...             "Negl.NonOverlap.Int": False,
+            ...             "ForceAuxCell": True,
+            ...         }
+            ...     )
+            ... )
 
             >>> # Using Python attribute names
-            >>> hamiltonian = HamiltonianAndOverlapParameters.setup_hamiltonian_settings({
-            ...     "save_hs": True,
-            ...     "negl_non_overlap_int": False,
-            ...     "force_aux_cell": True
-            ... })
+            >>> hamiltonian = (
+            ...     HamiltonianAndOverlapParameters.setup_hamiltonian_settings(
+            ...         {
+            ...             "save_hs": True,
+            ...             "negl_non_overlap_int": False,
+            ...             "force_aux_cell": True,
+            ...         }
+            ...     )
+            ... )
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
@@ -364,11 +374,10 @@ class HamiltonianAndOverlapParameters(FDFDataclass):
                     )
                 else:
                     setattr(instance, matched_attr, bool(value))
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
-                    console.print(
-                        f"[yellow]Warning: No match found for parameter '{key}' in HamiltonianAndOverlapParameters[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
+                console.print(
+                    f"[yellow]Warning: No match found for parameter '{key}' in HamiltonianAndOverlapParameters[/yellow]"
+                )
 
         # Generate FDF block with comment header
         instance.generate_hamiltonian_block()

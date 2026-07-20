@@ -44,7 +44,7 @@ def detect_error(directory: Path | str) -> list[ErrorPattern]:
 
         try:
             # Read file content
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 content = f.read()
 
             # Check for pattern matches

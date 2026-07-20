@@ -14,7 +14,8 @@ The workflow calculates:
 2. HER overpotential based on |ΔG_H*|
 3. Position on HER volcano plot
 
-References:
+References
+----------
 - Nørskov et al., J. Electrochem. Soc. 152, J23 (2005): HER volcano plot
 - Greeley et al., Nat. Mater. 5, 909 (2006): Computational screening
 - Zheng et al., Science 338, 1321 (2012): MoS₂ edge sites

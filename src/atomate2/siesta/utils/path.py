@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import contextlib
+import logging
 import os
 import socket
 from pathlib import Path
-import logging
 
 logger = logging.getLogger(__name__)
 

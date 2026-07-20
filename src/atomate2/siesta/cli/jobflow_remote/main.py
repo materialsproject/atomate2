@@ -89,7 +89,6 @@ def job(ctx):
             --auto --cluster-profile mn5
     """
     # Context is already set by parent, just pass through
-    pass
 
 
 job.add_command(inspect)

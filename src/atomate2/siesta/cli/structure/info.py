@@ -31,7 +31,8 @@ def load_structure(file_path: str) -> Structure:
     Args:
         file_path: Path to structure file
 
-    Returns:
+    Returns
+    -------
         pymatgen Structure object
     """
     import sisl
@@ -59,7 +60,8 @@ def analyze_magnetic_properties(structure: Structure) -> dict[str, Any]:
     Args:
         structure: pymatgen Structure object
 
-    Returns:
+    Returns
+    -------
         Dictionary with magnetic analysis
     """
     from atomate2.siesta.sets.utils import get_default_initial_magnetic_moments
@@ -83,9 +85,9 @@ def analyze_magnetic_properties(structure: Structure) -> dict[str, Any]:
     # Determine magnetic ordering
     if n_magnetic == 0:
         ordering = "Non-magnetic"
-    elif all(m > 0 for m in magmoms if abs(m) > 1e-6):
-        ordering = "Ferromagnetic (FM)"
-    elif all(m < 0 for m in magmoms if abs(m) > 1e-6):
+    elif all(m > 0 for m in magmoms if abs(m) > 1e-6) or all(
+        m < 0 for m in magmoms if abs(m) > 1e-6
+    ):
         ordering = "Ferromagnetic (FM)"
     elif len(unique_moments) > 1 or any(m < 0 for m in magmoms):
         ordering = "Antiferromagnetic (AFM) / Complex"

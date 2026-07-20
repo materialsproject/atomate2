@@ -10,7 +10,7 @@ These tests validate:
 
 import pytest
 from jobflow import Flow
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.flows.basis import (
     BasisSizeConvergenceFlowMaker,

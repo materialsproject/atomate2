@@ -6,7 +6,6 @@ validating SIESTA calculation results.
 
 from __future__ import annotations
 
-
 from atomate2.siesta.custodian.validators import (
     BandStructureValidator,
     RelaxationValidator,
@@ -71,7 +70,7 @@ class TestSiestaOutputValidator:
         """Test validation fails with NaN energy."""
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n" "siesta: Final energy (eV):  NaN\n" "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  NaN\nsiesta: End of run\n"
         )
 
         validator = SiestaOutputValidator(check_energy=True)
@@ -85,7 +84,7 @@ class TestSiestaOutputValidator:
         """Test validation with Inf energy."""
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n" "siesta: Final energy (eV):  Inf\n" "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  Inf\nsiesta: End of run\n"
         )
 
         validator = SiestaOutputValidator(check_energy=True)
@@ -111,9 +110,7 @@ class TestSiestaOutputValidator:
         """Test validation passes when required files present."""
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n"
-            "siesta: Final energy (eV):  -100.0\n"
-            "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  -100.0\nsiesta: End of run\n"
         )
         bands_file = tmp_path / "bands.dat"
         bands_file.write_text("# Band structure data\n")
@@ -129,9 +126,7 @@ class TestSiestaOutputValidator:
         """Test validation fails when forces are missing but required."""
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n"
-            "siesta: Final energy (eV):  -100.0\n"
-            "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  -100.0\nsiesta: End of run\n"
         )
 
         validator = SiestaOutputValidator(check_forces=True)
@@ -272,9 +267,7 @@ class TestRelaxationValidator:
         """Test validation fails when forces are missing."""
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n"
-            "siesta: Final energy (eV):  -100.0\n"
-            "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  -100.0\nsiesta: End of run\n"
         )
 
         validator = RelaxationValidator(force_tolerance=0.05)
@@ -338,9 +331,7 @@ class TestBandStructureValidator:
         # Need output file for base validator
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n"
-            "siesta: Final energy (eV):  -100.0\n"
-            "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  -100.0\nsiesta: End of run\n"
         )
 
         validator = BandStructureValidator()
@@ -354,9 +345,7 @@ class TestBandStructureValidator:
         """Test validation passes when bands file present."""
         output_file = tmp_path / "siesta.out"
         output_file.write_text(
-            "Job completed\n"
-            "siesta: Final energy (eV):  -100.0\n"
-            "siesta: End of run\n"
+            "Job completed\nsiesta: Final energy (eV):  -100.0\nsiesta: End of run\n"
         )
         bands_file = tmp_path / "siesta.bands"
         bands_file.write_text("# Band structure\n0.0  0.0  -10.0  -5.0  0.5  2.0\n")

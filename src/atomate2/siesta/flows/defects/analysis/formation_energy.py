@@ -9,13 +9,14 @@ from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+from jobflow import Flow, job
 from matplotlib.patches import Rectangle
-from jobflow import job, Flow
 from monty.json import MSONable
 
 if TYPE_CHECKING:
-    from atomate2.siesta.flows.defects.schemas import DefectDocument
     from pymatgen.core import Structure
+
+    from atomate2.siesta.flows.defects.schemas import DefectDocument
 
 logger = logging.getLogger(__name__)
 
@@ -397,9 +398,7 @@ def plot_formation_energy_diagram(
     Example
     -------
     >>> from atomate2.siesta.flows.defects.analysis import FormationEnergyDiagram
-    >>> diagram = FormationEnergyDiagram.from_defect_documents(
-    ...     defect_docs, bandgap=3.8
-    ... )
+    >>> diagram = FormationEnergyDiagram.from_defect_documents(defect_docs, bandgap=3.8)
     >>> fig, ax = diagram.plot(show_ctls=True, save_path="formation_energy.png")
     """
     # Set Fermi range
@@ -998,6 +997,7 @@ def write_defect_summary(
         Chemical potential contribution (in eV)
     """
     from pathlib import Path
+
     from atomate2.siesta.utils.text_output import get_standard_footer
 
     # Create unique filename per charge state
@@ -1071,12 +1071,8 @@ def write_defect_summary(
         if defect_type == "substitution":
             # For substitution: show both μ_removed and μ_added
             if abs(defect_doc.mu_removed) > 0.001 or abs(defect_doc.mu_added) > 0.001:
-                removed_sp = (
-                    defect_doc.removed_species
-                    if defect_doc.removed_species
-                    else "removed"
-                )
-                added_sp = defect_species if defect_species else "added"
+                removed_sp = defect_doc.removed_species or "removed"
+                added_sp = defect_species or "added"
                 f.write(
                     f"Chemical potential (μ_{removed_sp}): {defect_doc.mu_removed:+.4f} eV  (removed)\n"
                 )
@@ -1084,11 +1080,10 @@ def write_defect_summary(
                     f"Chemical potential (μ_{added_sp}):   {defect_doc.mu_added:+.4f} eV  (added)\n"
                 )
                 f.write(f"Net Δμ (μ_removed - μ_added): {mu_defect:+.4f} eV\n")
-        else:
-            # For vacancy/interstitial: show single μ
-            if abs(mu_defect) > 0.001:
-                mu_label = f"μ_{defect_species}" if defect_species else "μ"
-                f.write(f"Chemical potential ({mu_label}): {mu_defect:+.4f} eV\n")
+        # For vacancy/interstitial: show single μ
+        elif abs(mu_defect) > 0.001:
+            mu_label = f"μ_{defect_species}" if defect_species else "μ"
+            f.write(f"Chemical potential ({mu_label}): {mu_defect:+.4f} eV\n")
 
         f.write(
             f"Raw E_formation (incl. μ):           {defect_doc.raw_formation_energy:.4f} eV\n"
@@ -1111,7 +1106,7 @@ def write_defect_summary(
             if "madelung_constant" in metadata:
                 alpha_M = metadata["madelung_constant"]
                 f.write(f"Madelung constant:   {alpha_M:.4f}")
-                if "madelung_citation" in metadata and metadata["madelung_citation"]:
+                if metadata.get("madelung_citation"):
                     f.write(f" ({metadata['madelung_citation']})")
                 f.write("\n")
             if "characteristic_length_angstrom" in metadata:
@@ -1132,7 +1127,7 @@ def write_defect_summary(
                 f.write(
                     f"Quadrupole term:     {metadata['quadrupole_term_eV']:.4f} eV\n"
                 )
-            if "alignment_plot" in metadata and metadata["alignment_plot"]:
+            if metadata.get("alignment_plot"):
                 f.write(f"Alignment plot:      {metadata['alignment_plot']}\n")
             f.write(f"Total correction:    {defect_doc.correction_energy:.4f} eV\n")
             f.write("\n")
@@ -1236,6 +1231,7 @@ def write_combined_defect_summary(
         Path to the saved summary file
     """
     from pathlib import Path
+
     from atomate2.siesta.utils.text_output import get_standard_footer
 
     summary_file = Path(filename)
@@ -1280,7 +1276,9 @@ def write_combined_defect_summary(
                 f"{'Charge':>8}  {'Position (frac)':>26}  "
                 f"{'Uncorrected':>12}  {'Correction':>12}  {'Corrected':>12}  {'Scheme':>15}\n"
             )
-            f.write(f"{'-'*8}  {'-'*26}  {'-'*12}  {'-'*12}  {'-'*12}  {'-'*15}\n")
+            f.write(
+                f"{'-' * 8}  {'-' * 26}  {'-' * 12}  {'-' * 12}  {'-' * 12}  {'-' * 15}\n"
+            )
 
             for doc in docs:
                 # Format position
@@ -1342,12 +1340,12 @@ def write_combined_defect_summary(
                         f.write(
                             f"{'Transition':>12}  {'ε (eV)':>10}  {'Position':>25}  {'E_formation (eV)':>16}\n"
                         )
-                        f.write(f"{'-'*12}  {'-'*10}  {'-'*25}  {'-'*16}\n")
+                        f.write(f"{'-' * 12}  {'-' * 10}  {'-' * 25}  {'-' * 16}\n")
                     else:
                         f.write(
                             f"{'Transition':>12}  {'ε (eV)':>10}  {'E_formation (eV)':>16}\n"
                         )
-                        f.write(f"{'-'*12}  {'-'*10}  {'-'*16}\n")
+                        f.write(f"{'-' * 12}  {'-' * 10}  {'-' * 16}\n")
 
                     for ctl in ctls:
                         # Format transition label
@@ -1447,10 +1445,7 @@ def write_combined_defect_summary(
                         if "madelung_constant" in metadata:
                             alpha_M = metadata["madelung_constant"]
                             f.write(f"  Madelung constant: {alpha_M:.4f}")
-                            if (
-                                "madelung_citation" in metadata
-                                and metadata["madelung_citation"]
-                            ):
+                            if metadata.get("madelung_citation"):
                                 f.write(f" ({metadata['madelung_citation']})")
                             f.write("\n")
                         if "supercell_length" in metadata:
@@ -1679,7 +1674,7 @@ def _extract_bandgap_from_defect_docs(defect_docs: list) -> float:
             bg = first_doc.host_bandgap
             logger.info(f"Extracted bandgap from calculations: {bg:.3f} eV")
             return bg
-        elif hasattr(first_doc, "bandgap") and first_doc.bandgap is not None:
+        if hasattr(first_doc, "bandgap") and first_doc.bandgap is not None:
             bg = first_doc.bandgap
             logger.info(f"Extracted bandgap from calculations: {bg:.3f} eV")
             return bg

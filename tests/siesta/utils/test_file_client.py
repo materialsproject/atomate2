@@ -11,14 +11,15 @@ These tests validate:
 - Utility functions and decorators
 """
 
-import pytest
 import warnings
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from atomate2.siesta.utils.file_client import (
     FileClient,
-    get_ssh_connection,
     auto_fileclient,
+    get_ssh_connection,
 )
 
 
@@ -664,8 +665,7 @@ class TestGetSSHConnection:
         def path_side_effect(arg):
             if "id_rsa" in str(arg):
                 return mock_key_path
-            else:
-                return mock_config_path
+            return mock_config_path
 
         mock_path_class.side_effect = path_side_effect
 

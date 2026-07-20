@@ -199,6 +199,7 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
     import json
     from datetime import datetime
     from pathlib import Path
+
     import numpy as np
 
     # Use output folder (current directory by default)
@@ -320,10 +321,10 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
         if ieee_tensor:
             tensor_array = np.array(ieee_tensor)
             f.write("      [1]       [2]       [3]       [4]       [5]       [6]\n")
-            for i, row in enumerate(tensor_array):
-                f.write(
-                    f"  [{i + 1}] " + "  ".join(f"{val:9.4f}" for val in row) + "\n"
-                )
+            f.writelines(
+                f"  [{i + 1}] " + "  ".join(f"{val:9.4f}" for val in row) + "\n"
+                for i, row in enumerate(tensor_array)
+            )
         else:
             f.write("  No tensor data available\n")
         f.write("\n")
@@ -333,10 +334,10 @@ def save_elastic_results_job(elastic_doc, output_folder: str = "."):
             f.write("EQUILIBRIUM STRESS (GPa)\n")
             f.write("-" * 80 + "\n")
             stress_array = np.array(eq_stress)
-            for i, row in enumerate(stress_array):
-                f.write(
-                    f"  [{i + 1}] " + "  ".join(f"{val:10.6f}" for val in row) + "\n"
-                )
+            f.writelines(
+                f"  [{i + 1}] " + "  ".join(f"{val:10.6f}" for val in row) + "\n"
+                for i, row in enumerate(stress_array)
+            )
             f.write("\n")
 
         # Check for negative elastic constants (indicates problems)
@@ -870,7 +871,7 @@ def plot_mechanical_properties_bar(
 
             # Current material + references
             materials = [formula] + list(references.keys())
-            values = [value] + [references[mat][key] for mat in references.keys()]
+            values = [value] + [references[mat][key] for mat in references]
 
             # Create bars
             x = np.arange(len(materials))
@@ -1108,8 +1109,8 @@ def plot_youngs_modulus_3d(
     """
     try:
         import matplotlib.pyplot as plt
-        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
         import numpy as np
+        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
         tensor = np.array(ieee_tensor)
 
@@ -1264,8 +1265,8 @@ def plot_linear_compressibility_3d(
     """
     try:
         import matplotlib.pyplot as plt
-        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
         import numpy as np
+        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
         tensor = np.array(ieee_tensor)
 

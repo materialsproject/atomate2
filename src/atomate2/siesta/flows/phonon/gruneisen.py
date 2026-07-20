@@ -74,7 +74,7 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
     >>> si = Structure(
     ...     lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
     ...     species=["Si", "Si"],
-    ...     coords=[[0, 0, 0], [0.25, 0.25, 0.25]]
+    ...     coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     ... )
     >>>
     >>> maker = SiestaGruneisenFlowMaker()
@@ -85,10 +85,7 @@ class SiestaGruneisenFlowMaker(BaseSiestaFlowMaker, BaseGruneisenMaker):
 
     >>> maker = SiestaGruneisenFlowMaker(
     ...     perc_vol=0.02,  # 2% volume change
-    ...     phonon_maker=PhononMaker(
-    ...         supercell_matrix=[2, 2, 2],
-    ...         mesh_density=100.0
-    ...     )
+    ...     phonon_maker=PhononMaker(supercell_matrix=[2, 2, 2], mesh_density=100.0),
     ... )
     """
 

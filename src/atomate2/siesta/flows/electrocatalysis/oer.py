@@ -12,7 +12,8 @@ The workflow calculates:
 3. Overpotential and rate-limiting step identification
 4. Bifunctional activity (combined ORR/OER performance)
 
-References:
+References
+----------
 - Man et al., ChemCatChem 3, 1159 (2011): OER scaling relations
 - Montoya et al., Nat. Mater. 16, 70 (2017): OER volcano plot
 - Suntivich et al., Science 334, 1383 (2011): Descriptor-based analysis

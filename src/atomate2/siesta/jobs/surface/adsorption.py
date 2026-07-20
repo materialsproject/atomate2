@@ -341,8 +341,9 @@ def plot_adsorption_sites(
     dict
         Dictionary with plot file path.
     """
-    import matplotlib.pyplot as plt
     from pathlib import Path
+
+    import matplotlib.pyplot as plt
     from matplotlib.colors import LinearSegmentedColormap
 
     logger.info("Creating adsorption site heatmap")

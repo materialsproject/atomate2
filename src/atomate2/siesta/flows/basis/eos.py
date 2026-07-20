@@ -22,7 +22,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,16 +36,13 @@ from atomate2.siesta.powerups import update_user_siesta_settings
 from atomate2.siesta.utils.common import console, print_docstring_in_box
 from atomate2.siesta.utils.verbosity import VerbosityLevel
 
-if TYPE_CHECKING:
-    pass
-
 logger = logging.getLogger(__name__)
 
 
 @job
 def print_energies(
-    flow_results: Dict[str, Any], job_metadata: list[dict]
-) -> Dict[str, float]:
+    flow_results: dict[str, Any], job_metadata: list[dict]
+) -> dict[str, float]:
     """
     Retrieve and print the total energies from each job in the Flow's results using job.output.
 
@@ -54,7 +51,8 @@ def print_energies(
         job_metadata (list[dict]): List of dictionaries containing job names and UUIDs.
         verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
 
-    Returns:
+    Returns
+    -------
         Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
@@ -92,17 +90,16 @@ def print_energies(
     if not energies:
         if verbosity.value >= VerbosityLevel.WARNING.value:
             console.print("[red]No energies retrieved from Flow results[/red]")
-    else:
-        if verbosity.value >= VerbosityLevel.WARNING.value:
-            console.print(
-                f"[green]Energies retrieved from Flow results {energies=}[/green]"
-            )
+    elif verbosity.value >= VerbosityLevel.WARNING.value:
+        console.print(
+            f"[green]Energies retrieved from Flow results {energies=}[/green]"
+        )
 
     return energies
 
 
 @job
-def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, float]:
+def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, float]:
     """
     Retrieve and print the total energies from each job in the Flow's results using job.output.
 
@@ -111,7 +108,8 @@ def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, fl
         flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
         verbosity (VerbosityLevel): Verbosity level for console output. Defaults to DEBUG.
 
-    Returns:
+    Returns
+    -------
         Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
@@ -162,18 +160,17 @@ def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, fl
     if not energies:
         if verbosity.value >= VerbosityLevel.WARNING.value:
             console.print("[red]No energies retrieved from Flow results[/red]")
-    else:
-        if verbosity.value >= VerbosityLevel.WARNING.value:
-            console.print(
-                f"[green]Energies retrieved from Flow results {energies=}[/green]"
-            )
+    elif verbosity.value >= VerbosityLevel.WARNING.value:
+        console.print(
+            f"[green]Energies retrieved from Flow results {energies=}[/green]"
+        )
 
     return energies
 
 
 @job
 def plot_energies(
-    energies: Dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
+    energies: dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
 ):
     """
     Plot total energies vs. basis size.
@@ -186,7 +183,7 @@ def plot_energies(
 
     if verbosity.value >= VerbosityLevel.INFO.value:
         console.print("[green]Plotting energies vs. basis size[/green]")
-    basis_sizes = [name.split("-")[-1] for name in energies.keys()]
+    basis_sizes = [name.split("-")[-1] for name in energies]
     energy_values = list(energies.values())
     plt.figure(figsize=(10, 6))
     plt.plot(basis_sizes, energy_values, "o-")
@@ -216,9 +213,7 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         >>> from atomate2.siesta.flows.basis import EOSBasisConvergenceFlowMaker
         >>> from pymatgen.core import Structure
         >>> structure = Structure.from_file("structure.cif")
-        >>> maker = EOSBasisConvergenceFlowMaker(
-        ...     basis_sets=["SZ", "DZ", "DZP", "TZP"]
-        ... )
+        >>> maker = EOSBasisConvergenceFlowMaker(basis_sets=["SZ", "DZ", "DZP", "TZP"])
         >>> flow = maker.make(structure)
     """
 
@@ -245,7 +240,8 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
             structure: Structure to calculate
             prev_dir: Previous directory (optional)
 
-        Returns:
+        Returns
+        -------
             Flow with EOS jobs for each basis set
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
@@ -334,8 +330,8 @@ class EOSBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
 
 def _extract_siesta_timing(siesta_out_path):
     """Extract wall time from siesta.out file (handles both plain and gzipped)."""
-    from pathlib import Path
     import gzip
+    from pathlib import Path
 
     try:
         # Check if file is gzipped
@@ -371,8 +367,8 @@ def _extract_siesta_timing(siesta_out_path):
 
 @job
 def collect_basis_params_data(
-    flow_results: Dict[str, Any], job_metadata: list[dict]
-) -> Dict[str, Any]:
+    flow_results: dict[str, Any], job_metadata: list[dict]
+) -> dict[str, Any]:
     """
     Collect energy, forces, stress, and timing from basis parameter convergence tests.
 
@@ -380,7 +376,8 @@ def collect_basis_params_data(
         flow_results: Results dictionary from jobflow's run_locally
         job_metadata: List of dictionaries with job info (uuid, name, energy_shift, split_norm)
 
-    Returns:
+    Returns
+    -------
         Dictionary with energy_shifts, split_norms, energies, forces, stresses, and timings
     """
     logger.info("Collecting basis parameter convergence data")
@@ -480,7 +477,7 @@ def collect_basis_params_data(
 
     logger.info(f"Successfully mapped {len(timing_by_params)} jobs by parameters")
 
-    data: Dict[str, Any] = {
+    data: dict[str, Any] = {
         "energy_shifts": [],
         "split_norms": [],
         "energies": [],
@@ -638,8 +635,8 @@ def collect_basis_params_data(
 
 @job
 def plot_basis_params_convergence(
-    basis_params_data: Dict[str, Any], output_file: str = "basis_params_convergence.png"
-) -> Dict[str, str]:
+    basis_params_data: dict[str, Any], output_file: str = "basis_params_convergence.png"
+) -> dict[str, str]:
     """
     Plot energy, forces, and timing convergence vs PAO.EnergyShift and PAO.SplitNorm.
 
@@ -657,7 +654,8 @@ def plot_basis_params_convergence(
         basis_params_data: Dictionary with energies, parameters, and timing
         output_file: Output filename for combined plot
 
-    Returns:
+    Returns
+    -------
         Dictionary with paths to all saved plot files
     """
     import matplotlib.pyplot as plt
@@ -1207,10 +1205,10 @@ def plot_basis_params_convergence(
 
 @job
 def plot_basis_functions(
-    flow_results: Dict[str, Any],
+    flow_results: dict[str, Any],
     job_metadata: list[dict],
     output_file: str = "basis_functions_visualization.png",
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     Plot actual PAO basis functions from ion.xml files (inspired by plot_siesta_basis.py).
 
@@ -1222,12 +1220,14 @@ def plot_basis_functions(
         job_metadata: List of dictionaries with job info
         output_file: Output filename for combined plot
 
-    Returns:
+    Returns
+    -------
         Dictionary with paths to all saved plot files
     """
+    from pathlib import Path
+
     import matplotlib.pyplot as plt
     import numpy as np
-    from pathlib import Path
 
     console.print("[green]Creating basis function visualization[/green]")
 
@@ -1423,7 +1423,7 @@ def plot_basis_functions(
 
     plt.suptitle(
         "SIESTA Numerical Atomic Orbitals (PAO) Basis Functions\n"
-        + "Schematic Visualization of Parameter Effects",
+        "Schematic Visualization of Parameter Effects",
         fontsize=15,
         fontweight="bold",
     )
@@ -1567,10 +1567,10 @@ def plot_basis_functions(
 
 @job
 def plot_real_basis_functions(
-    flow_results: Dict[str, Any],
+    flow_results: dict[str, Any],
     job_metadata: list[dict],
     output_file: str = "basis_functions_real.png",
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     Plot actual PAO basis functions from SIESTA ion.xml files.
 
@@ -1588,20 +1588,22 @@ def plot_real_basis_functions(
         job_metadata: List of dictionaries with job info
         output_file: Output filename for combined plot
 
-    Returns:
+    Returns
+    -------
         Dictionary with paths to all saved plot files
     """
+    import glob
+    import xml.etree.ElementTree as ET
+    from pathlib import Path
+
     import matplotlib.pyplot as plt
     import numpy as np
-    from pathlib import Path
-    import xml.etree.ElementTree as ET
-    import glob
 
     console.print("[green]Plotting real PAO basis functions from ion.xml files[/green]")
 
     # Structure to store basis function data per element
     # basis_data[element][label] = {'energy_shift': ..., 'split_norm': ..., 'orbitals': [...]}
-    basis_data: Dict[str, Any] = {}
+    basis_data: dict[str, Any] = {}
 
     # Try to find and read ion.xml files from job directories
     logger.info("Searching for ion.xml files in job directories...")
@@ -2000,7 +2002,7 @@ def plot_real_basis_functions(
             ax_ind.set_ylabel("φ(r)", fontsize=13, fontweight="bold")
             ax_ind.set_title(
                 f"{element} - {l_labels.get(l, f'l={l}')}-type Orbitals\n"
-                + "PAO Basis Functions from ion.xml",
+                "PAO Basis Functions from ion.xml",
                 fontsize=14,
                 fontweight="bold",
             )
@@ -2038,7 +2040,7 @@ def plot_real_basis_functions(
 
 @job
 def write_basis_params_summary(
-    basis_params_data: Dict[str, Any], output_file: str = "basis_params_summary.txt"
+    basis_params_data: dict[str, Any], output_file: str = "basis_params_summary.txt"
 ) -> str:
     """
     Write summary of basis parameter convergence results.
@@ -2047,7 +2049,8 @@ def write_basis_params_summary(
         basis_params_data: Dictionary with energies and parameters
         output_file: Output filename for summary
 
-    Returns:
+    Returns
+    -------
         Path to saved summary file
     """
     import numpy as np
@@ -2464,7 +2467,8 @@ def collect_eos_basis_data(
         flow_results: Results dictionary from jobflow's run_locally
         job_metadata: List of dictionaries containing job names, UUIDs, and basis info
 
-    Returns:
+    Returns
+    -------
         Dictionary with basis sets and their EOS parameters (V0, E0, B0)
     """
     logger.info("Collecting EOS basis convergence data")
@@ -2474,7 +2478,7 @@ def collect_eos_basis_data(
         f"Flow results keys: {list(flow_results.keys()) if isinstance(flow_results, dict) else 'Not a dict'}"
     )
 
-    basis_data: Dict[str, Any] = {
+    basis_data: dict[str, Any] = {
         "basis_sets": [],
         "V0": [],  # Equilibrium volume
         "E0": [],  # Equilibrium energy
@@ -2655,7 +2659,8 @@ def write_eos_basis_summary(basis_data: dict[str, Any]) -> str:
     Args:
         basis_data: Dictionary with basis_sets, V0, E0, B0 lists
 
-    Returns:
+    Returns
+    -------
         Path to the summary file
     """
     output_file = "eos_basis_summary.txt"
@@ -2717,10 +2722,10 @@ def write_eos_basis_summary(basis_data: dict[str, Any]) -> str:
 
             f.write("Convergence Analysis:\n")
             f.write(
-                f"  V0 variation: {v0_range:.4f} Ų ({v0_range/max(basis_data['V0'])*100:.2f}%)\n"
+                f"  V0 variation: {v0_range:.4f} Ų ({v0_range / max(basis_data['V0']) * 100:.2f}%)\n"
             )
             f.write(
-                f"  B0 variation: {b0_range:.2f} GPa ({b0_range/max(basis_data['B0'])*100:.2f}%)\n"
+                f"  B0 variation: {b0_range:.2f} GPa ({b0_range / max(basis_data['B0']) * 100:.2f}%)\n"
             )
             f.write("\n")
 
@@ -2769,7 +2774,8 @@ def plot_eos_basis_comparison(basis_data: dict[str, Any]) -> str:
     Args:
         basis_data: Dictionary with basis_sets, V0, E0, B0 lists
 
-    Returns:
+    Returns
+    -------
         Path to the plot file
     """
     import matplotlib.pyplot as plt
@@ -2881,7 +2887,8 @@ def plot_eos_overlay(flow_results: dict[str, Any], job_metadata: list[dict]) -> 
         flow_results: Results dictionary from jobflow
         job_metadata: List with job info and basis sets
 
-    Returns:
+    Returns
+    -------
         Path to overlay plot file
     """
     import matplotlib.pyplot as plt
@@ -3038,7 +3045,8 @@ def generate_eos_basis_outputs(
         basis_data: Collected basis convergence data
         output_dir: Directory to save all outputs (default: current directory)
 
-    Returns:
+    Returns
+    -------
         Dictionary with paths to all generated files
     """
     output_path = Path(output_dir)

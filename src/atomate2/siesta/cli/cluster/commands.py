@@ -8,7 +8,6 @@ from __future__ import annotations
 import getpass
 import subprocess
 import sys
-from typing import Optional
 
 import click
 from rich.console import Console
@@ -43,7 +42,6 @@ console = Console()
 @click.group()
 def cli():
     """Command-line interface for remote cluster setup."""
-    pass
 
 
 @cli.command()
@@ -128,15 +126,15 @@ def cli():
 )
 def setup(
     host: str,
-    user: Optional[str],
-    identity_file: Optional[str],
+    user: str | None,
+    identity_file: str | None,
     password: bool,
     ssh_config: bool,
     env_name: str,
     python_version: str,
     verbose: bool,
     install_siesta: bool,
-    proxy: Optional[str],
+    proxy: str | None,
     auto_proxy: bool,
     ssh_tunnel: bool,
     tunnel_port: int,
@@ -149,7 +147,8 @@ def setup(
     This command SSHs to a remote cluster, creates a conda environment in $HOME,
     and installs both jobflow-remote and atomate2siesta (from GitHub repository).
 
-    Examples:
+    Examples
+    --------
         # Using an SSH config alias
         atomate2siesta-cluster setup --host mycluster --ssh-config
 
@@ -187,11 +186,10 @@ def setup(
                 "[yellow]Note: --user is ignored when using --ssh-config[/yellow]"
             )
         user = None  # SSH config will provide the user
-    else:
-        # Get username if not provided
-        if not user:
-            user = getpass.getuser()
-            console.print(f"[dim]Using current user: {user}[/dim]")
+    # Get username if not provided
+    elif not user:
+        user = getpass.getuser()
+        console.print(f"[dim]Using current user: {user}[/dim]")
 
     # Get password if requested
     ssh_password = None
@@ -737,9 +735,7 @@ def setup(
                 "  • [bold]Option 4 (Build Offline)[/bold] - Most reliable, includes everything pre-built"
             )
             console.print(
-                "\n[dim]Run [cyan]atomate2siesta-cluster status --host {} --ssh-config[/cyan] to verify installation[/dim]".format(
-                    host
-                )
+                f"\n[dim]Run [cyan]atomate2siesta-cluster status --host {host} --ssh-config[/cyan] to verify installation[/dim]"
             )
             sys.exit(1)
 
@@ -1070,9 +1066,7 @@ def setup(
             sys.exit(1)
 
         progress.update(task, completed=True)
-        console.print(
-            "[green]✓ Installed atomate2[siesta][/green]"
-        )
+        console.print("[green]✓ Installed atomate2[siesta][/green]")
         show_verbose_output(stdout, stderr, verbose)
 
         # Step 6.5: Install SIESTA (optional)
@@ -1257,9 +1251,7 @@ ELASTIC_FITTING_METHOD: finite_difference
 """
 
         # Create the config file on remote cluster
-        create_config_cmd = (
-            f"cat > $HOME/.atomate2.yaml << 'EOF'\n{config_content}EOF"
-        )
+        create_config_cmd = f"cat > $HOME/.atomate2.yaml << 'EOF'\n{config_content}EOF"
 
         returncode, stdout, stderr = run_ssh_command(
             host, user, create_config_cmd, ssh_password, identity_file, ssh_config
@@ -1399,8 +1391,8 @@ ELASTIC_FITTING_METHOD: finite_difference
 )
 def status(
     host: str,
-    user: Optional[str],
-    identity_file: Optional[str],
+    user: str | None,
+    identity_file: str | None,
     password: bool,
     ssh_config: bool,
     env_name: str,
@@ -1416,7 +1408,8 @@ def status(
       - Installed packages (jobflow-remote, atomate2siesta)
       - Internet connectivity (direct access, proxy configuration)
 
-    Examples:
+    Examples
+    --------
         # Using SSH config alias
         atomate2siesta-cluster status --host mycluster --ssh-config
 
@@ -1442,10 +1435,9 @@ def status(
                 "[yellow]Note: --user is ignored when using --ssh-config[/yellow]"
             )
         user = None
-    else:
-        # Get username if not provided
-        if not user:
-            user = getpass.getuser()
+    # Get username if not provided
+    elif not user:
+        user = getpass.getuser()
 
     # Get password if requested
     ssh_password = None
@@ -1837,16 +1829,13 @@ def status(
             connectivity_table.add_row(
                 "Proxy (Environment)", f"[yellow]Configured[/yellow]: {proxy_url}"
             )
+    elif use_squid:
+        connectivity_table.add_row(
+            "Proxy (Environment)",
+            "[red]✗ Not configured[/red] [dim](needed for squid!)[/dim]",
+        )
     else:
-        if use_squid:
-            connectivity_table.add_row(
-                "Proxy (Environment)",
-                "[red]✗ Not configured[/red] [dim](needed for squid!)[/dim]",
-            )
-        else:
-            connectivity_table.add_row(
-                "Proxy (Environment)", "[dim]Not configured[/dim]"
-            )
+        connectivity_table.add_row("Proxy (Environment)", "[dim]Not configured[/dim]")
 
     # Check .condarc
     if "proxy_servers" in stdout_condarc:
@@ -2256,8 +2245,8 @@ def _build_offline_docker(
     install_siesta: bool,
 ):
     """Build offline environment using Docker for Linux compatibility."""
-    import subprocess
     import os
+    import subprocess
     import tempfile
 
     # Check if Docker is installed
@@ -2519,7 +2508,8 @@ def build_offline(
     automatically installed to your conda base environment if not found.
     This is normal and required for packing environments.
 
-    Examples:
+    Examples
+    --------
         # Docker build (works on macOS/Windows/Linux)
         atomate2siesta-cluster build-offline --use-docker --output mn5-env.tar.gz
 
@@ -2697,9 +2687,7 @@ def build_offline(
         console.print("[green]✓ Installed jobflow-remote[/green]")
 
         # Step 5: Install atomate2 with the SIESTA extra
-        task = progress.add_task(
-            "[cyan]Installing atomate2[siesta]...", total=None
-        )
+        task = progress.add_task("[cyan]Installing atomate2[siesta]...", total=None)
         console.print("  [dim]Package: atomate2[siesta] (PyPI)[/dim]")
 
         result = subprocess.run(
@@ -2886,11 +2874,11 @@ def squid(
 
         # Local user-mode installation
         if local:
-            from pathlib import Path
+            import os
+            import shutil
             import tarfile
             import urllib.request
-            import shutil
-            import os
+            from pathlib import Path
 
             console.print(
                 "[bold cyan]User Mode Installation (No Sudo Required)[/bold cyan]\n"
@@ -3984,7 +3972,7 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
         if os.path.exists(config_file):
             # Read and show current port
             try:
-                with open(config_file, "r") as f:
+                with open(config_file) as f:
                     for line in f:
                         if line.strip().startswith("http_port"):
                             parts = line.strip().split(":")
@@ -4011,9 +3999,9 @@ tail -n 10 {squid_log_dir}/cache.log 2>/dev/null || echo "No log file found"
     elif action == "uninstall":
         console.print("[bold]Uninstalling Locally Compiled Squid[/bold]\n")
 
-        from pathlib import Path
-        import shutil
         import os
+        import shutil
+        from pathlib import Path
 
         # Check for locally compiled squid
         local_squid_dir = Path.home() / ".local" / "squid"
@@ -4122,7 +4110,6 @@ def ssh_setup():
       status  - Show SSH keys and config entries
       test    - Test SSH connections
     """
-    pass
 
 
 @ssh_setup.command()
@@ -4168,7 +4155,7 @@ def ssh_setup():
 def add(
     alias: str,
     hostname: str,
-    user: Optional[str],
+    user: str | None,
     port: int,
     key_file: str,
     generate_key: bool,
@@ -4334,7 +4321,7 @@ Host {alias}
                 if line.strip().startswith(f"Host {alias}"):
                     skip = True
                     continue
-                elif skip and line.strip().startswith("Host "):
+                if skip and line.strip().startswith("Host "):
                     skip = False
 
                 if not skip:
@@ -4642,7 +4629,7 @@ def ssh_status(verbose: bool):
     is_flag=True,
     help="Test all configured hosts",
 )
-def test(alias: Optional[str], all: bool):
+def test(alias: str | None, all: bool):
     """Test SSH connection to configured hosts.
 
     \b
@@ -4781,7 +4768,6 @@ def profile():
       show     Show detailed profile information
       create   Interactive profile builder
     """
-    pass
 
 
 @profile.command("list")

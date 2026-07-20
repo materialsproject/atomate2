@@ -20,11 +20,11 @@ from atomate2.siesta.flows.electrocatalysis.analysis.thermodynamics import (
 )
 
 __all__ = [
+    "calculate_bifunctional_gap",
     "calculate_free_energy_corrections",
+    "calculate_her_overpotential",
+    "calculate_oer_overpotential",
+    "calculate_orr_overpotential",
     "calculate_reaction_free_energies",
     "identify_rate_limiting_step",
-    "calculate_orr_overpotential",
-    "calculate_oer_overpotential",
-    "calculate_bifunctional_gap",
-    "calculate_her_overpotential",
 ]

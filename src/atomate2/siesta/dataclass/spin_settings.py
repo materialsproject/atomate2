@@ -12,17 +12,14 @@ Section: 6.7 Spin polarization
 
 __all__ = ["SpinSettings"]
 
-from dataclasses import dataclass, field, fields
-from typing import Dict, Any, List
-from typing import Optional
+import logging
 from collections import OrderedDict
-
+from dataclasses import dataclass, field, fields
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +76,7 @@ class SpinSettings(FDFDataclass):
         },
     )
 
-    dm_init_spin_block: Optional[list[str]] = field(
+    dm_init_spin_block: list[str] | None = field(
         default=None,
         metadata={
             "description": "A block to explicitly specify the initial spin moment (a 3D vector for non-collinear cases) for each atom. Each element is a string like '1  +0.5'.",
@@ -103,7 +100,7 @@ class SpinSettings(FDFDataclass):
         },
     )
 
-    spin_spiral_block: Optional[Dict[str, Any]] = field(
+    spin_spiral_block: dict[str, Any] | None = field(
         default_factory=dict,
         metadata={
             "description": "A block to define the q-vector of a spin spiral for non-collinear calculations.",
@@ -111,7 +108,7 @@ class SpinSettings(FDFDataclass):
         },
     )
 
-    spin_spiral_scale: Optional[List[str]] = field(
+    spin_spiral_scale: list[str] | None = field(
         default_factory=list,
         metadata={
             "description": "A block to scale the q-vector of the spin spiral, which can be used to define a path in q-space.",
@@ -151,7 +148,7 @@ class SpinSettings(FDFDataclass):
         },
     )
 
-    spin_fdf_arguments: Dict[str, Any] = field(
+    spin_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF (Flexible Data Format) flags related to spin. This allows for using keywords not explicitly defined elsewhere.",
@@ -189,8 +186,8 @@ class SpinSettings(FDFDataclass):
     @classmethod
     def setup_spin_settings(
         cls,
-        user_params: Optional[Dict[str, Any]] = None,
-        structure: Optional[Any] = None,
+        user_params: dict[str, Any] | None = None,
+        structure: Any | None = None,
         magnetic_ordering: str = "antiferromagnetic",
     ) -> "SpinSettings":
         """
@@ -208,7 +205,8 @@ class SpinSettings(FDFDataclass):
                                     - "custom": Use exact values from structure.magmom (with signs)
                                     Default: "antiferromagnetic"
 
-        Returns:
+        Returns
+        -------
             SpinSettings: Configured SpinSettings instance with all fields (default and user-specified) and FDF arguments.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -312,11 +310,10 @@ class SpinSettings(FDFDataclass):
                         setattr(spin_settings_instance, original_key, value)
                     else:
                         setattr(spin_settings_instance, original_key, value)
-                else:
-                    if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                        console.print(
-                            f"[yellow]Key '{key}' does not match any SpinSettings field, skipping.[/yellow]"
-                        )
+                elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                    console.print(
+                        f"[yellow]Key '{key}' does not match any SpinSettings field, skipping.[/yellow]"
+                    )
 
         # Derive _performe_spin_polarized from spin
         spin_settings_instance._performe_spin_polarized = (
@@ -373,49 +370,44 @@ class SpinSettings(FDFDataclass):
                             site = structure[i]
                             species = site.specie.symbol
                             coords = site.coords
-                            comment = f"# {species} atom {i+1} at ({coords[0]:.4f}, {coords[1]:.4f}, {coords[2]:.4f})"
+                            comment = f"# {species} atom {i + 1} at ({coords[0]:.4f}, {coords[1]:.4f}, {coords[2]:.4f})"
 
                             if abs_moment < 1e-6:
                                 # Zero moment - skip it (cleaner DM.InitSpin)
                                 continue
+                            # Apply magnetic ordering
+                            if magnetic_ordering.lower() in ["ferromagnetic", "fm"]:
+                                # All moments same sign (positive)
+                                final_moment = abs_moment
+                            elif magnetic_ordering.lower() in [
+                                "antiferromagnetic",
+                                "afm",
+                            ]:
+                                # Alternate signs
+                                final_moment = abs_moment if i % 2 == 0 else -abs_moment
+                            elif magnetic_ordering.lower() == "custom":
+                                # Use exact value from structure (preserve sign)
+                                final_moment = moment
                             else:
-                                # Apply magnetic ordering
-                                if magnetic_ordering.lower() in ["ferromagnetic", "fm"]:
-                                    # All moments same sign (positive)
-                                    final_moment = abs_moment
-                                elif magnetic_ordering.lower() in [
-                                    "antiferromagnetic",
-                                    "afm",
-                                ]:
-                                    # Alternate signs
-                                    final_moment = (
-                                        abs_moment if i % 2 == 0 else -abs_moment
+                                if (
+                                    cls.CONSOLE_VERBOSITY.value
+                                    >= VerbosityLevel.WARNING.value
+                                ):
+                                    console.print(
+                                        f"[yellow]Unknown magnetic_ordering '{magnetic_ordering}', using ferromagnetic[/yellow]"
                                     )
-                                elif magnetic_ordering.lower() == "custom":
-                                    # Use exact value from structure (preserve sign)
-                                    final_moment = moment
-                                else:
-                                    if (
-                                        cls.CONSOLE_VERBOSITY.value
-                                        >= VerbosityLevel.WARNING.value
-                                    ):
-                                        console.print(
-                                            f"[yellow]Unknown magnetic_ordering '{magnetic_ordering}', using ferromagnetic[/yellow]"
-                                        )
-                                    final_moment = abs_moment
+                                final_moment = abs_moment
 
-                                # Format output: numeric vs sign-only (NEW v1.0.0!)
-                                if dm_init_spin_format == "sign_only":
-                                    # Sign-only: just "+" or "-" (SIESTA determines magnitude)
-                                    sign = "+" if final_moment > 0 else "-"
-                                    dm_init_spin_lines.append(
-                                        f"{i+1}  {sign}  {comment}"
-                                    )
-                                else:
-                                    # Numeric (default): full moment value
-                                    dm_init_spin_lines.append(
-                                        f"{i+1}  {final_moment:+.1f}  {comment}"
-                                    )
+                            # Format output: numeric vs sign-only (NEW v1.0.0!)
+                            if dm_init_spin_format == "sign_only":
+                                # Sign-only: just "+" or "-" (SIESTA determines magnitude)
+                                sign = "+" if final_moment > 0 else "-"
+                                dm_init_spin_lines.append(f"{i + 1}  {sign}  {comment}")
+                            else:
+                                # Numeric (default): full moment value
+                                dm_init_spin_lines.append(
+                                    f"{i + 1}  {final_moment:+.1f}  {comment}"
+                                )
 
                         # Store as list of strings (FDF block format)
                         spin_settings_instance.dm_init_spin_block = dm_init_spin_lines
@@ -468,7 +460,7 @@ class SpinSettings(FDFDataclass):
                 "[green]Validation: [yellow]SpinSettings[/yellow] Successful![/green]"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -531,17 +523,18 @@ class SpinSettings(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
         if self.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]SpinSettings.generate_fdf()[/green]")
 
-        fdf: Dict[str, Any] = OrderedDict()
+        fdf: dict[str, Any] = OrderedDict()
         fdf["#SpinSettings"] = "SpinSettings"
 
         # Spin - always write with default marker
@@ -593,9 +586,9 @@ class SpinSettings(FDFDataclass):
 
         # Spin.OrbitStrength - always write with default marker
         if self.spin_orbit_strength == 1.0:
-            fdf[
-                "Spin.OrbitStrength"
-            ] = f"{self.spin_orbit_strength}  # SIESTA DEFAULT VALUE"
+            fdf["Spin.OrbitStrength"] = (
+                f"{self.spin_orbit_strength}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["Spin.OrbitStrength"] = str(self.spin_orbit_strength)
 
@@ -613,11 +606,12 @@ class SpinSettings(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have direct spin parameter equivalents

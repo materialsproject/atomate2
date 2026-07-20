@@ -1,6 +1,12 @@
 """Utility modules for SIESTA input set generation."""
 
 # Import ALL functions from core (main utilities from old utils.py)
+# Import from basis_builder
+from atomate2.siesta.sets.utils.basis_builder import (
+    PAOBasisSpecies,
+    PAOShell,
+    create_pao_basis,
+)
 from atomate2.siesta.sets.utils.core import (
     ase_v2_to_pymatgen,
     get_default_initial_magnetic_moments,
@@ -12,13 +18,6 @@ from atomate2.siesta.sets.utils.core import (
     set_magnetic_ordering,
     siesta_fdf_to_json,
     write_parameter_evolution_log,
-)
-
-# Import from basis_builder
-from atomate2.siesta.sets.utils.basis_builder import (
-    PAOBasisSpecies,
-    PAOShell,
-    create_pao_basis,
 )
 
 # Import from per_atom_basis

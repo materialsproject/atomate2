@@ -160,8 +160,8 @@ def standardize(
     - Primitive cell (smallest repeating unit)
     - International standard setting
 
-    Examples:
-
+    Examples
+    --------
         # Convert to conventional cell
         atomate2siesta-structure standardize structure.cif --conventional
 

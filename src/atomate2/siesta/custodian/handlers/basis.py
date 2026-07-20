@@ -7,9 +7,7 @@ import re
 from pathlib import Path
 
 from atomate2.siesta.custodian.errors import ErrorType, detect_error
-from atomate2.siesta.custodian.fdf_utils import (
-    update_fdf_file,
-)
+from atomate2.siesta.custodian.fdf_utils import update_fdf_file
 from atomate2.siesta.custodian.handlers.base import ErrorHandler
 
 logger = logging.getLogger(__name__)

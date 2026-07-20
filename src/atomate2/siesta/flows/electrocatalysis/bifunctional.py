@@ -453,8 +453,9 @@ class BifunctionalFlowMaker(BaseSiestaFlowMaker):
     >>> # Create makers with diffuse basis
     >>> ads_maker = RelaxMaker.fixed_cell_relaxation()
     >>> ads_maker = apply_tier_preset(
-    ...     ads_maker, "electrocatalysis_dirty",
-    ...     override_params={"%block PAO.BasisSizes": basis_sizes}
+    ...     ads_maker,
+    ...     "electrocatalysis_dirty",
+    ...     override_params={"%block PAO.BasisSizes": basis_sizes},
     ... )
     >>>
     >>> # Create workflow

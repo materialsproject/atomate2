@@ -3,7 +3,7 @@
 import pytest
 from pymatgen.core import Lattice, Structure
 
-from atomate2.siesta.recipes.base import MaterialAnalyzer, MaterialAnalysis, RecipeBook
+from atomate2.siesta.recipes.base import MaterialAnalysis, MaterialAnalyzer, RecipeBook
 
 
 @pytest.fixture

@@ -1,17 +1,18 @@
 #!/usr/bin/env python
-import sisl
 import json
-import numpy as np
-from ase import Atoms
-from ase.io import read as ase_read
-from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.core import Structure
-import click
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
 import pickle
 from pathlib import Path
+
+import click
+import numpy as np
+import sisl
+from ase import Atoms
+from ase.io import read as ase_read
+from pymatgen.core import Structure
+from pymatgen.io.ase import AseAtomsAdaptor
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 # Initialize rich console for enhanced output formatting
 console = Console()
@@ -23,7 +24,8 @@ class NumpyEncoder(json.JSONEncoder):
     This class extends json.JSONEncoder to convert NumPy integers, floats, and arrays
     into standard Python types that can be serialized to JSON.
 
-    Methods:
+    Methods
+    -------
         default: Converts NumPy types to Python types.
     """
 
@@ -33,10 +35,12 @@ class NumpyEncoder(json.JSONEncoder):
         Args:
             obj: Object to be serialized.
 
-        Returns:
+        Returns
+        -------
             int, float, or list: Converted Python type for JSON serialization.
 
-        Raises:
+        Raises
+        ------
             TypeError: If the object cannot be serialized.
         """
         if isinstance(obj, np.integer):
@@ -293,11 +297,13 @@ def main(
 
             loaded_data = pickle.load(file)
 
-    Raises:
+    Raises
+    ------
         ValueError: If reading geometry, unsupported format, or converting structures fails.
         IOError: If writing to any output file fails.
 
-    Examples:
+    Examples
+    --------
         Convert SIESTA FDF to all formats (automatic detection):
         $ atomate2siesta-structure convert siesta.fdf --write-xsf --write-cif --write-json
 
@@ -368,10 +374,10 @@ def main(
 
     except Exception as e:
         console.print(
-            f"[red]Error reading geometry from {file_type} ({input_file}): {str(e)}[/red]"
+            f"[red]Error reading geometry from {file_type} ({input_file}): {e!s}[/red]"
         )
         raise ValueError(
-            f"Error reading geometry from {file_type} ({input_file}): {str(e)}"
+            f"Error reading geometry from {file_type} ({input_file}): {e!s}"
         )
 
     # Write sisl structure to pickle if requested
@@ -383,10 +389,8 @@ def main(
                 f"[green]Wrote sisl structure to {output_prefix}_sisl.pkl[/green]"
             )
         except Exception as e:
-            console.print(
-                f"[red]Error writing sisl structure to pickle: {str(e)}[/red]"
-            )
-            raise IOError(f"Error writing sisl structure to pickle: {str(e)}")
+            console.print(f"[red]Error writing sisl structure to pickle: {e!s}[/red]")
+            raise OSError(f"Error writing sisl structure to pickle: {e!s}")
 
     # Write sisl structure to FDF if requested
     if write_fdf:
@@ -396,8 +400,8 @@ def main(
                 f"[green]Wrote sisl structure (with ghost) to {output_prefix}.fdf[/green]"
             )
         except Exception as e:
-            console.print(f"[red]Error writing sisl structure to FDF: {str(e)}[/red]")
-            raise IOError(f"Error writing sisl structure to FDF: {str(e)}")
+            console.print(f"[red]Error writing sisl structure to FDF: {e!s}[/red]")
+            raise OSError(f"Error writing sisl structure to FDF: {e!s}")
 
     # Get species labels from the ChemicalSpeciesLabel block
     # Note: ChemicalSpeciesLabel is only in SIESTA FDF files
@@ -449,10 +453,10 @@ def main(
                 f"[green]Successfully read ChemicalSpeciesLabel from {fdf_file}[/green]"
             )
 
-        except (FileNotFoundError, IOError) as e:
+        except (OSError, FileNotFoundError) as e:
             # FDF file not found, fall back to extracting species from geometry
             console.print(
-                f"[yellow]Warning: Could not read FDF file '{fdf_file}': {str(e)}[/yellow]"
+                f"[yellow]Warning: Could not read FDF file '{fdf_file}': {e!s}[/yellow]"
             )
             console.print(
                 "[yellow]Falling back to extracting species information from geometry[/yellow]"
@@ -526,17 +530,17 @@ def main(
                 f"[green]Wrote ASE structure to {output_prefix}_ase.pkl[/green]"
             )
         except Exception as e:
-            console.print(f"[red]Error writing ASE structure to pickle: {str(e)}[/red]")
-            raise IOError(f"Error writing ASE structure to pickle: {str(e)}")
+            console.print(f"[red]Error writing ASE structure to pickle: {e!s}[/red]")
+            raise OSError(f"Error writing ASE structure to pickle: {e!s}")
 
     # Convert to pymatgen Structure for Atomate2
     try:
         structure_pymatgen = AseAtomsAdaptor.get_structure(structure_ase)
     except Exception as e:
         console.print(
-            f"[red]Error converting ASE Atoms to pymatgen Structure: {str(e)}[/red]"
+            f"[red]Error converting ASE Atoms to pymatgen Structure: {e!s}[/red]"
         )
-        raise ValueError(f"Error converting ASE Atoms to pymatgen Structure: {str(e)}")
+        raise ValueError(f"Error converting ASE Atoms to pymatgen Structure: {e!s}")
     # Add tags, species labels, and Z as site properties for pymatgen
     structure_pymatgen.add_site_property("tags", tags)
     structure_pymatgen.add_site_property("species_label", species_labels)
@@ -552,9 +556,9 @@ def main(
             )
         except Exception as e:
             console.print(
-                f"[red]Error writing pymatgen structure to pickle: {str(e)}[/red]"
+                f"[red]Error writing pymatgen structure to pickle: {e!s}[/red]"
             )
-            raise IOError(f"Error writing pymatgen structure to pickle: {str(e)}")
+            raise OSError(f"Error writing pymatgen structure to pickle: {e!s}")
 
     # Create new ASE Atoms object without ghost species
     non_ghost_indices = [
@@ -616,9 +620,9 @@ def main(
             )
         except Exception as e:
             console.print(
-                f"[red]Error writing sisl structure (no ghost) to FDF: {str(e)}[/red]"
+                f"[red]Error writing sisl structure (no ghost) to FDF: {e!s}[/red]"
             )
-            raise IOError(f"Error writing sisl structure (no ghost) to FDF: {str(e)}")
+            raise OSError(f"Error writing sisl structure (no ghost) to FDF: {e!s}")
 
     # Write ASE (no ghost) structure to pickle if requested
     if write_ase_pickle:
@@ -630,9 +634,9 @@ def main(
             )
         except Exception as e:
             console.print(
-                f"[red]Error writing ASE structure (no ghost) to pickle: {str(e)}[/red]"
+                f"[red]Error writing ASE structure (no ghost) to pickle: {e!s}[/red]"
             )
-            raise IOError(f"Error writing ASE structure (no ghost) to pickle: {str(e)}")
+            raise OSError(f"Error writing ASE structure (no ghost) to pickle: {e!s}")
 
     # Convert ASE Atoms (no ghost) to pymatgen Structure
     try:
@@ -641,10 +645,10 @@ def main(
         )
     except Exception as e:
         console.print(
-            f"[red]Error converting ASE Atoms (no ghost) to pymatgen Structure: {str(e)}[/red]"
+            f"[red]Error converting ASE Atoms (no ghost) to pymatgen Structure: {e!s}[/red]"
         )
         raise ValueError(
-            f"Error converting ASE Atoms (no ghost) to pymatgen Structure: {str(e)}"
+            f"Error converting ASE Atoms (no ghost) to pymatgen Structure: {e!s}"
         )
     # Add site properties for pymatgen
     structure_pymatgen_no_ghost.add_site_property("tags", tags_no_ghost)
@@ -663,10 +667,10 @@ def main(
             )
         except Exception as e:
             console.print(
-                f"[red]Error writing pymatgen structure (no ghost) to pickle: {str(e)}[/red]"
+                f"[red]Error writing pymatgen structure (no ghost) to pickle: {e!s}[/red]"
             )
-            raise IOError(
-                f"Error writing pymatgen structure (no ghost) to pickle: {str(e)}"
+            raise OSError(
+                f"Error writing pymatgen structure (no ghost) to pickle: {e!s}"
             )
 
     # Write to XSF file using ASE if requested
@@ -677,8 +681,8 @@ def main(
                 f"[green]Wrote ASE structure (no ghost) to {output_prefix}_no_ghost.xsf[/green]"
             )
         except Exception as e:
-            console.print(f"[red]Error writing XSF file: {str(e)}[/red]")
-            raise IOError(f"Error writing XSF file: {str(e)}")
+            console.print(f"[red]Error writing XSF file: {e!s}[/red]")
+            raise OSError(f"Error writing XSF file: {e!s}")
 
     # Write to CIF file using pymatgen if requested
     if write_cif:
@@ -688,8 +692,8 @@ def main(
                 f"[green]Wrote pymatgen structure (no ghost) to {output_prefix}_no_ghost.cif[/green]"
             )
         except Exception as e:
-            console.print(f"[red]Error writing CIF file: {str(e)}[/red]")
-            raise IOError(f"Error writing CIF file: {str(e)}")
+            console.print(f"[red]Error writing CIF file: {e!s}[/red]")
+            raise OSError(f"Error writing CIF file: {e!s}")
 
     # Prepare data for JSON
     json_data = {
@@ -809,8 +813,8 @@ def main(
                 json.dump(json_data, f, indent=4, cls=NumpyEncoder)
             console.print(f"[green]Data saved to {json_file}[/green]")
         except Exception as e:
-            console.print(f"[red]Error writing to {json_file}: {str(e)}[/red]")
-            raise IOError(f"Error writing to {json_file}: {str(e)}")
+            console.print(f"[red]Error writing to {json_file}: {e!s}[/red]")
+            raise OSError(f"Error writing to {json_file}: {e!s}")
 
     # Display structure information
     print_structure_info(

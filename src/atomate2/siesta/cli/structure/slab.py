@@ -7,14 +7,13 @@ This module provides the `slab` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
-from rich.console import Console
-from rich.table import Table
-
 from pymatgen.core import Structure
 from pymatgen.core.surface import (
     SlabGenerator,
     get_symmetrically_distinct_miller_indices,
 )
+from rich.console import Console
+from rich.table import Table
 
 console = Console()
 
@@ -144,8 +143,8 @@ def slab(
     Supports Miller index specification, termination discovery, vacuum control,
     and automatic generation of all symmetry-unique surfaces.
 
-    Examples:
-
+    Examples
+    --------
         # Basic (111) surface with 5 layers and 15 Å vacuum
         atomate2siesta-structure slab bulk.cif --miller 1,1,1
 
@@ -276,7 +275,7 @@ def slab(
                 slabgen = SlabGenerator(
                     structure,
                     hkl,
-                    min_slab_size=min_slab_size if min_slab_size else layers,
+                    min_slab_size=min_slab_size or layers,
                     min_vacuum_size=effective_vacuum,
                     in_unit_planes=in_unit_planes,
                     center_slab=center_slab,
@@ -360,7 +359,7 @@ def slab(
         slabgen = SlabGenerator(
             structure,
             hkl,
-            min_slab_size=min_slab_size if min_slab_size else layers,
+            min_slab_size=min_slab_size or layers,
             min_vacuum_size=effective_vacuum,
             in_unit_planes=in_unit_planes,
             center_slab=center_slab,
@@ -385,7 +384,7 @@ def slab(
             if termination >= len(slabs):
                 console.print(
                     f"[red]Error: Termination {termination} not found. "
-                    f"Available: 0-{len(slabs)-1}[/red]"
+                    f"Available: 0-{len(slabs) - 1}[/red]"
                 )
                 raise click.Abort()
             slabs_to_generate = [(termination, slabs[termination])]
@@ -563,7 +562,6 @@ def _get_surface_sites(slab):
 
 def _display_layer_info(slab):
     """Display layer-by-layer information."""
-
     console.print("\n[cyan]Layer Information:[/cyan]")
 
     # Group atoms by z-coordinate (layers)
@@ -621,7 +619,8 @@ def _generate_vdw_slab(bulk, n_layers, vacuum):
         n_layers: Number of vdW layers (e.g., MoS2 trilayers)
         vacuum: Vacuum thickness in Angstroms
 
-    Returns:
+    Returns
+    -------
         Structure object for the slab, or None if vdW layers cannot be detected
     """
     import numpy as np

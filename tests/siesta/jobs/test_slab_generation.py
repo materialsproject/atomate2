@@ -10,11 +10,11 @@ These tests validate:
 """
 
 import pytest
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.jobs.surface.slab_generation import (
-    generate_slabs_for_miller_index,
     generate_slabs_for_all_miller_indices,
+    generate_slabs_for_miller_index,
 )
 
 

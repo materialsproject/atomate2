@@ -5,15 +5,12 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
+
+from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.siesta.sets.siesta_structure_fdf import generate_structure_fdf
 from atomate2.siesta.sets.utils.core import _get_site_atomic_number
 from atomate2.siesta.sets.utils.structure_io import write_cif_with_ghost
-from pymatgen.io.ase import AseAtomsAdaptor
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +61,13 @@ def write_defects_to_folders(
     Generate and export vacancy defects:
 
     >>> from atomate2.siesta.flows.defects.generation import SiestaVacancyGenerator
-    >>> from atomate2.siesta.flows.defects.generation.export import write_defects_to_folders
+    >>> from atomate2.siesta.flows.defects.generation.export import (
+    ...     write_defects_to_folders,
+    ... )
     >>> generator = SiestaVacancyGenerator(structure)
-    >>> defects = list(generator.generate_defects(species="O", charge_states=[0, +1, +2]))
+    >>> defects = list(
+    ...     generator.generate_defects(species="O", charge_states=[0, +1, +2])
+    ... )
     >>> folders = write_defects_to_folders(defects, output_dir="O_vacancies")
     >>> # Creates: O_vacancies/V_O_q0/, O_vacancies/V_O_q+1/, etc.
 
@@ -80,9 +81,7 @@ def write_defects_to_folders(
     Export with POSCAR files (for VASP compatibility):
 
     >>> folders = write_defects_to_folders(
-    ...     defects,
-    ...     output_dir="defects",
-    ...     write_poscar=True
+    ...     defects, output_dir="defects", write_poscar=True
     ... )
     """
     output_dir = Path(output_dir)
@@ -111,7 +110,7 @@ def write_defects_to_folders(
         defect_folder = output_dir / defect_name
         defect_folder.mkdir(parents=True, exist_ok=True)
 
-        logger.info(f"  [{i+1}/{len(defects)}] Writing {defect_name}")
+        logger.info(f"  [{i + 1}/{len(defects)}] Writing {defect_name}")
 
         # Write defect structure
         if write_cif:
@@ -155,7 +154,7 @@ def write_defects_to_folders(
         folder_map[defect_name] = defect_folder
 
         # Add to summary
-        summary_lines.append(f"{i+1:3d}. {defect_name}")
+        summary_lines.append(f"{i + 1:3d}. {defect_name}")
         summary_lines.append(f"     Folder: {defect_folder.name}")
         summary_lines.append(
             f"     Wyckoff: {defect.get('wyckoff', 'N/A')}, "
@@ -211,7 +210,7 @@ def _generate_defect_name(defect: dict) -> str:
         # Format: V_O_4a_q0 (vacancy of O at Wyckoff 4a, charge 0)
         return f"V_{species}_{wyckoff}_q{charge:+d}".replace("+", "p").replace("-", "m")
 
-    elif defect_type == "substitution":
+    if defect_type == "substitution":
         original = defect.get("original_species", "X")
         dopant = defect.get("dopant_species", "Y")
         wyckoff = defect.get("wyckoff", "")
@@ -220,14 +219,13 @@ def _generate_defect_name(defect: dict) -> str:
             "+", "p"
         ).replace("-", "m")
 
-    elif defect_type == "interstitial":
+    if defect_type == "interstitial":
         species = defect.get("species", "X")
         wyckoff = defect.get("wyckoff", "")
         # Format: Li_i_4a_q0 (Li interstitial at Wyckoff 4a, charge 0)
         return f"{species}_i_{wyckoff}_q{charge:+d}".replace("+", "p").replace("-", "m")
 
-    else:
-        return f"defect_{charge:+d}".replace("+", "p").replace("-", "m")
+    return f"defect_{charge:+d}".replace("+", "p").replace("-", "m")
 
 
 def _extract_metadata(defect: dict) -> dict:

@@ -23,7 +23,6 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
@@ -84,7 +83,7 @@ def get_madelung_constant(
     >>> from pymatgen.core import Structure, Lattice
     >>> # NaCl structure
     >>> lattice = Lattice.cubic(5.64)
-    >>> nacl = Structure(lattice, ["Na", "Cl"], [[0,0,0], [0.5,0.5,0.5]])
+    >>> nacl = Structure(lattice, ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]])
     >>> alpha_M, citation = get_madelung_constant(nacl)
     >>> print(f"α_M = {alpha_M:.4f}")
     α_M = 1.7476
@@ -110,7 +109,7 @@ def get_madelung_constant(
         crystal_system = sga.get_crystal_system()
 
         logger.info(
-            f"Detected space group: {spacegroup}, " f"crystal system: {crystal_system}"
+            f"Detected space group: {spacegroup}, crystal system: {crystal_system}"
         )
 
         # Try to identify structure type
@@ -136,11 +135,10 @@ def get_madelung_constant(
             f"Consider providing madelung_constant manually for better accuracy."
         )
         return alpha_M, citation
-    else:
-        raise ValueError(
-            "Could not determine structure type for Madelung constant. "
-            "Please provide madelung_constant parameter explicitly."
-        )
+    raise ValueError(
+        "Could not determine structure type for Madelung constant. "
+        "Please provide madelung_constant parameter explicitly."
+    )
 
 
 def _identify_structure_type(
@@ -220,9 +218,9 @@ def _identify_structure_type(
             # This is approximate - may need lattice analysis
             if len(structure) == 4:  # FCC primitive cell
                 return "fcc"
-            elif len(structure) == 2:  # BCC primitive cell
+            if len(structure) == 2:  # BCC primitive cell
                 return "bcc"
-            elif len(structure) == 1:  # Simple cubic
+            if len(structure) == 1:  # Simple cubic
                 return "simple_cubic"
 
     return None

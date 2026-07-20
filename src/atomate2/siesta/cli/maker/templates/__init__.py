@@ -28,24 +28,24 @@ from atomate2.siesta.cli.maker.templates.vibrational import (
 )
 
 __all__ = [
-    "WorkflowTemplate",
-    "RelaxTemplate",
-    "StaticTemplate",
+    "AdsorptionOptimizationTemplate",
+    "AdsorptionTemplate",
     "BandsTemplate",
+    "BulkModulusTemplate",
     "DOSTemplate",
-    "PDOSTemplate",
-    "OpticalTemplate",
-    "PhononTemplate",
-    "GruneisenTemplate",
-    "QHATemplate",
     "EOSTemplate",
     "ElasticTemplate",
-    "BulkModulusTemplate",
-    "NebTemplate",
-    "SurfaceTemplate",
-    "AdsorptionTemplate",
+    "GruneisenTemplate",
     "MultiSurfaceTemplate",
-    "AdsorptionOptimizationTemplate",
+    "NebTemplate",
+    "OpticalTemplate",
+    "PDOSTemplate",
+    "PhononTemplate",
+    "QHATemplate",
+    "RelaxTemplate",
+    "StaticTemplate",
+    "SurfaceTemplate",
+    "WorkflowTemplate",
 ]
 
 # Template registry

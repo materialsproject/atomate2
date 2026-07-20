@@ -17,20 +17,15 @@ Section:  7 STRUCTURAL RELAXATION, AND MOLECULAR DYNAMICS
 
 __all__ = ["MolecularDynamicsAndRelaxation"]
 
-from dataclasses import dataclass, field
-from typing import Dict
-from typing import Any
-from typing import List
-from typing import Optional
+import logging
 from collections import OrderedDict
-
+from dataclasses import dataclass, field
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.dataclass.units import parse_force
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -235,7 +230,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         },
     )
 
-    block_targ_stress_voigt: Optional[List[int]] = field(
+    block_targ_stress_voigt: list[int] | None = field(
         default_factory=list,
         metadata={
             "description": "A block to specify the target stress tensor in Voigt notation. A value of -1 for a component means it is determined by the Target.Pressure.",
@@ -243,7 +238,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         },
     )
 
-    block_md_target_stress: Optional[List[int]] = field(
+    block_md_target_stress: list[int] | None = field(
         default_factory=list,
         metadata={
             "description": "A block to specify the target stress tensor for a molecular dynamics run under constant pressure.",
@@ -280,7 +275,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         },
     )
 
-    md_final_time_step: Optional[int] = field(
+    md_final_time_step: int | None = field(
         default=None,
         metadata={
             "description": "The step number at which the MD simulation will end. Defaults to running for a total of MD.NumCGsteps.",
@@ -483,7 +478,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         },
     )
 
-    md_fdf_arguments: Dict[str, Any] = field(
+    md_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to molecular dynamics.",
@@ -491,7 +486,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
         },
     )
 
-    relaxation_fdf_arguments: Dict[str, Any] = field(
+    relaxation_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to geometry optimization (relaxation).",
@@ -598,7 +593,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
             )
             # console.print(f"[green]Validation: [yellow]MolecularDynamicsAndRelaxation[/yellow] Successful![/green]")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """Update this dataclass from FDF parameters."""
         logger.info(
             f"MolecularDynamicsAndRelaxation.update_from_fdf() called with {len(fdf_dict)} parameters"
@@ -632,14 +627,14 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
                     else str(value).lower() in ["true", "t", "yes", "1"]
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """Generate SIESTA FDF format parameters.
 
         This generates the same parameters as generate_relaxation_block() to ensure
         consistency whether called from _initialize_modules() or core.py.
         Uses dataclass attributes which have been updated from user_params/powerups/tiers.
         """
-        fdf: Dict[str, Any] = OrderedDict()
+        fdf: dict[str, Any] = OrderedDict()
 
         # Generate if relaxation is enabled OR if user explicitly set MD.TypeOfRun
         # This handles force constants (FC), MD runs, etc. that aren't "relaxation"
@@ -649,9 +644,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
 
         # Add section header
         fdf["#MolecularDynamicsAndRelaxation"] = (
-            self.comments
-            if self.comments
-            else "MolecularDynamicsAndRelaxation SETTINGS"
+            self.comments or "MolecularDynamicsAndRelaxation SETTINGS"
         )
 
         # Write all relaxation parameters with default markers
@@ -669,17 +662,17 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
 
         # MD.MaxForceTol
         if self.md_max_force_tol == 0.01:
-            fdf[
-                "MD.MaxForceTol"
-            ] = f"{self.md_max_force_tol} eV/Ang  # SIESTA DEFAULT VALUE"
+            fdf["MD.MaxForceTol"] = (
+                f"{self.md_max_force_tol} eV/Ang  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["MD.MaxForceTol"] = f"{self.md_max_force_tol} eV/Ang"
 
         # MD.MaxStressTol
         if self.md_max_stress_tol == 0.01:
-            fdf[
-                "MD.MaxStressTol"
-            ] = f"{self.md_max_stress_tol} GPa  # SIESTA DEFAULT VALUE"
+            fdf["MD.MaxStressTol"] = (
+                f"{self.md_max_stress_tol} GPa  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["MD.MaxStressTol"] = f"{self.md_max_stress_tol} GPa"
 
@@ -697,15 +690,15 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
 
         # WriteForces - always write (atomate2 default is True, SIESTA default is False)
         if self.write_forces:
-            fdf[
-                "WriteForces"
-            ] = f"{self.write_forces}  # ATOMATE2 DEFAULT (SIESTA default: False)"
+            fdf["WriteForces"] = (
+                f"{self.write_forces}  # ATOMATE2 DEFAULT (SIESTA default: False)"
+            )
         else:
             fdf["WriteForces"] = f"{self.write_forces}"
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """Generate ASE-format parameters."""
         return {}
 
@@ -747,7 +740,7 @@ class MolecularDynamicsAndRelaxation(FDFDataclass):
 
     @classmethod
     def setup_md_relax_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "MolecularDynamicsAndRelaxation":
         """
         Create and configure a MolecularDynamicsAndRelaxation instance from user parameters.

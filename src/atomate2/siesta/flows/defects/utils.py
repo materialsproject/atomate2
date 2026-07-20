@@ -62,8 +62,7 @@ def read_siesta_grid_file(
         import sisl
     except ImportError:
         raise ImportError(
-            "sisl is required to read SIESTA grid files. "
-            "Install with: pip install sisl"
+            "sisl is required to read SIESTA grid files. Install with: pip install sisl"
         )
 
     file_path = Path(file_path)
@@ -162,8 +161,7 @@ def prepare_freysoldt_potential_data(
     --------
     >>> # Prepare potential data
     >>> pot_data = prepare_freysoldt_potential_data(
-    ...     "defect_run/siesta.VT",
-    ...     "host_run/siesta.VT"
+    ...     "defect_run/siesta.VT", "host_run/siesta.VT"
     ... )
     >>>
     >>> # Use in Freysoldt correction
@@ -229,7 +227,9 @@ def read_siesta_density(
     --------
     >>> density = read_siesta_density("siesta.RHO")
     >>> print(f"Density grid: {density['grid_shape']}")
-    >>> print(f"Total electrons: {density['data'].sum() * volume / np.prod(density['grid_shape'])}")
+    >>> print(
+    ...     f"Total electrons: {density['data'].sum() * volume / np.prod(density['grid_shape'])}"
+    ... )
 
     Notes
     -----
@@ -266,8 +266,7 @@ def prepare_density_data(
     --------
     >>> # Prepare density data
     >>> density_data = prepare_density_data(
-    ...     "defect_run/siesta.RHO",
-    ...     "host_run/siesta.RHO"
+    ...     "defect_run/siesta.RHO", "host_run/siesta.RHO"
     ... )
     >>>
     >>> # Use in Makov-Payne correction with automatic quadrupole calculation
@@ -401,7 +400,7 @@ def plot_potential_alignment(
     >>> plot_data = plot_potential_alignment(
     ...     "defect_run/siesta.VT",
     ...     "host_run/siesta.VT",
-    ...     output_path="potential_alignment.png"
+    ...     output_path="potential_alignment.png",
     ... )
     """
     try:
@@ -438,7 +437,7 @@ def plot_potential_alignment(
     # Plot 2: Difference
     ax2.plot(pos_defect, pot_diff, "g-", linewidth=2)
     ax2.axhline(y=0, color="k", linestyle="--", alpha=0.3)
-    ax2.set_xlabel(f'Fractional Coordinate ({"xyz"[axis]}-axis)', fontsize=12)
+    ax2.set_xlabel(f"Fractional Coordinate ({'xyz'[axis]}-axis)", fontsize=12)
     ax2.set_ylabel("Potential Difference (eV)", fontsize=12)
     ax2.set_title("ΔV = V_defect - V_host", fontsize=13, fontweight="bold")
     ax2.grid(True, alpha=0.3)

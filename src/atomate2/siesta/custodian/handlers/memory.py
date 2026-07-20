@@ -147,7 +147,7 @@ class MemoryHandler(ErrorHandler):
         if not fdf_file.exists():
             return 300.0
 
-        with open(fdf_file, "r") as f:
+        with open(fdf_file) as f:
             for line in f:
                 match = re.search(r"MeshCutoff\s+([0-9.]+)\s*Ry", line, re.IGNORECASE)
                 if match:
@@ -172,7 +172,7 @@ class MemoryHandler(ErrorHandler):
         if not fdf_file.exists():
             return "DZP"
 
-        with open(fdf_file, "r") as f:
+        with open(fdf_file) as f:
             for line in f:
                 match = re.search(r"PAO\.BasisSize\s+(\w+)", line, re.IGNORECASE)
                 if match:

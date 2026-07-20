@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-import click
 import os
 from pathlib import Path
+
+import click
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -388,8 +389,9 @@ def status():
     # Show current settings by loading them
     console.print("\n[bold]Current Settings:[/bold]")
     try:
-        from atomate2.siesta import SETTINGS
         import shutil
+
+        from atomate2.siesta import SETTINGS
 
         def check_command_exists(cmd_string):
             """Check if the main executable in a command string exists."""
@@ -440,8 +442,7 @@ def status():
                 # Check if it's executable
                 if os.access(exec_path, os.X_OK):
                     return "[green]✓ Found[/green]"
-                else:
-                    return "[red]✗ Not Executable[/red]"
+                return "[red]✗ Not Executable[/red]"
 
             # Then check in PATH
             if shutil.which(executable):
@@ -559,9 +560,10 @@ def status():
 
     # Try to import pymongo and test connection
     try:
+        import warnings
+
         from pymongo import MongoClient
         from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
-        import warnings
 
         # Suppress pymongo warnings during connection test
         warnings.filterwarnings("ignore", category=UserWarning, module="pymongo")
@@ -868,7 +870,8 @@ def persist(config_path, shell, dry_run):
     This command helps you persist the configuration across shell sessions by adding
     the export statement to your shell's configuration file.
 
-    Examples:
+    Examples
+    --------
         # Auto-detect shell and add current/default config
         atomate2siesta-config persist
 
@@ -992,7 +995,7 @@ def persist(config_path, shell, dry_run):
 
     # Check if already exists
     if shell_file.exists():
-        with open(shell_file, "r") as f:
+        with open(shell_file) as f:
             content = f.read()
 
         if (

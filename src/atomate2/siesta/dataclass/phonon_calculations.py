@@ -11,14 +11,13 @@ Section:  7.8 Phonon calculations
 
 __all__ = ["PhononCalculations"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -129,7 +128,7 @@ class PhononCalculations(FDFDataclass):
         },
     )
 
-    phonon_fdf_arguments: Dict[float, Any] = field(
+    phonon_fdf_arguments: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to phonon calculations.",
@@ -172,7 +171,7 @@ class PhononCalculations(FDFDataclass):
             )
         print("Validation: PhononCalculations DONE!")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -200,14 +199,15 @@ class PhononCalculations(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         if self.md_type_of_run == "FC":
             fdf["MD.TypeOfRun"] = self.md_type_of_run
@@ -220,11 +220,12 @@ class PhononCalculations(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have phonon calculation parameters
@@ -253,7 +254,7 @@ class PhononCalculations(FDFDataclass):
 
     @classmethod
     def setup_phonon_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "PhononCalculations":
         """
         Create and configure a PhononCalculations instance with full parameter parsing.
@@ -266,7 +267,8 @@ class PhononCalculations(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             PhononCalculations: Configured instance with all fields set.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -341,11 +343,10 @@ class PhononCalculations(FDFDataclass):
                 if original_key == "phonon_fdf_arguments":
                     if isinstance(value, dict):
                         setattr(instance, original_key, value)
-                    else:
-                        if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                            console.print(
-                                f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
-                            )
+                    elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                        console.print(
+                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                        )
 
                 # Boolean fields
                 elif original_key == "eigenvectors":
@@ -384,11 +385,10 @@ class PhononCalculations(FDFDataclass):
                 else:
                     setattr(instance, original_key, value)
 
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(

@@ -9,24 +9,24 @@ These tests validate:
 - Serialization/deserialization
 """
 
+from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
 from atomate2.siesta.jobs.core import (
-    RelaxMaker,
-    StaticMaker,
     BandStructureMaker,
     LuaMaker,
-    PhononMaker,
     OpticalMaker,
+    PhononMaker,
+    RelaxMaker,
     SocketIOStaticMaker,
+    StaticMaker,
 )
-from atomate2.siesta.flows.phonon import SiestaPhononFlowMaker
 from atomate2.siesta.sets.core import (
-    RelaxSetGenerator,
-    StaticSetGenerator,
     BandStructureSetGenerator,
     LuaSetGenerator,
-    PhononSetGenerator,
     OpticalSetGenerator,
+    PhononSetGenerator,
+    RelaxSetGenerator,
     SocketIOSetGenerator,
+    StaticSetGenerator,
 )
 
 

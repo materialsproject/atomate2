@@ -8,8 +8,8 @@ from atomate2.siesta.flows.phonon.phonopy_maker import (
 from atomate2.siesta.flows.phonon.qha import SiestaQhaFlowMaker
 
 __all__ = [
-    "SiestaPhononFlowMaker",
     "PhononConvergenceFlowMaker",
     "SiestaGruneisenFlowMaker",
+    "SiestaPhononFlowMaker",
     "SiestaQhaFlowMaker",
 ]

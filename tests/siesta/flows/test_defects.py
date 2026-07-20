@@ -11,10 +11,7 @@ These tests validate:
 import pytest
 from pymatgen.core import Lattice, Structure
 
-from atomate2.siesta.flows.defects import (
-    DefectFlowMaker,
-    create_vacancy_with_ghost,
-)
+from atomate2.siesta.flows.defects import DefectFlowMaker, create_vacancy_with_ghost
 from atomate2.siesta.flows.defects.generation.vacancy import (
     create_vacancy_with_ghost_from_site,
 )
@@ -598,11 +595,12 @@ class TestCorrectionComparisonFlowMaker:
 
     def test_correction_comparison_neutral_defect(self, mgo_supercell):
         """Test comparison flow for neutral defect (q=0)."""
+        from jobflow import run_locally
+
         from atomate2.siesta.flows.defects import (
             CorrectionComparisonFlowMaker,
             create_vacancy_with_ghost,
         )
-        from jobflow import run_locally
 
         # Create neutral vacancy
         o_indices = [
@@ -649,11 +647,12 @@ class TestCorrectionComparisonFlowMaker:
 
     def test_correction_comparison_charged_defect(self, mgo_supercell):
         """Test comparison flow for charged defect (q=+2)."""
+        from jobflow import run_locally
+
         from atomate2.siesta.flows.defects import (
             CorrectionComparisonFlowMaker,
             create_vacancy_with_ghost,
         )
-        from jobflow import run_locally
 
         # Create charged vacancy
         o_indices = [
@@ -715,11 +714,12 @@ class TestCorrectionComparisonFlowMaker:
 
     def test_correction_comparison_multiple_schemes(self, mgo_supercell):
         """Test comparison flow with multiple correction schemes."""
+        from jobflow import run_locally
+
         from atomate2.siesta.flows.defects import (
             CorrectionComparisonFlowMaker,
             create_vacancy_with_ghost,
         )
-        from jobflow import run_locally
 
         # Create charged vacancy
         o_indices = [
@@ -772,11 +772,12 @@ class TestCorrectionComparisonFlowMaker:
 
     def test_correction_comparison_with_metadata(self, mgo_supercell):
         """Test that comparison flow includes detailed metadata."""
+        from jobflow import run_locally
+
         from atomate2.siesta.flows.defects import (
             CorrectionComparisonFlowMaker,
             create_vacancy_with_ghost,
         )
-        from jobflow import run_locally
 
         # Create charged vacancy
         o_indices = [
@@ -1002,9 +1003,10 @@ class TestNetChargeInjection:
 
     def test_netcharge_in_fdf_for_charged_defect(self, mgo_supercell):
         """Test that NetCharge parameter appears in FDF file for charged defects."""
-        from jobflow import run_locally
         import glob
         import os
+
+        from jobflow import run_locally
 
         # Create vacancy with ghost atom
         o_indices = [
@@ -1055,13 +1057,13 @@ class TestNetChargeInjection:
         fdf_file = max(fdf_files, key=os.path.getmtime)
 
         # Read FDF file content
-        with open(fdf_file, "r") as f:
+        with open(fdf_file) as f:
             fdf_content = f.read()
 
         # Verify NetCharge parameter is present
-        assert (
-            "NetCharge" in fdf_content
-        ), "NetCharge parameter not found in FDF file for charged defect!"
+        assert "NetCharge" in fdf_content, (
+            "NetCharge parameter not found in FDF file for charged defect!"
+        )
 
         # Verify the value is correct
         netcharge_lines = [
@@ -1075,9 +1077,10 @@ class TestNetChargeInjection:
 
     def test_no_netcharge_for_neutral_defect(self, mgo_supercell):
         """Test that NetCharge is NOT set for neutral defects (q=0)."""
-        from jobflow import run_locally
         import glob
         import os
+
+        from jobflow import run_locally
 
         # Create vacancy with ghost atom
         o_indices = [
@@ -1124,7 +1127,7 @@ class TestNetChargeInjection:
             fdf_file = max(fdf_files, key=os.path.getmtime)
 
             # Read FDF file content
-            with open(fdf_file, "r") as f:
+            with open(fdf_file) as f:
                 fdf_content = f.read()
 
             # Verify NetCharge is NOT present (or is 0 if present)
@@ -1134,9 +1137,9 @@ class TestNetChargeInjection:
                 ]
                 # If NetCharge appears, it should be 0 or 0.0
                 for line in netcharge_lines:
-                    assert (
-                        "0" in line
-                    ), f"NetCharge should be 0 for neutral defect: {line}"
+                    assert "0" in line, (
+                        f"NetCharge should be 0 for neutral defect: {line}"
+                    )
 
 
 class TestMakovPayneCorrection:
@@ -1251,11 +1254,12 @@ class TestMakovPayneCorrection:
 
     def test_makov_payne_in_comparison_flow(self, mgo_supercell):
         """Test Makov-Payne correction in CorrectionComparisonFlowMaker."""
+        from jobflow import run_locally
+
         from atomate2.siesta.flows.defects import (
             CorrectionComparisonFlowMaker,
             create_vacancy_with_ghost,
         )
-        from jobflow import run_locally
 
         # Create charged vacancy
         o_indices = [
@@ -1308,9 +1312,7 @@ class TestSiestaSubstitutionGenerator:
 
     def test_substitution_generator_init(self, mgo_unitcell):
         """Test initialization of SiestaSubstitutionGenerator."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaSubstitutionGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaSubstitutionGenerator
 
         generator = SiestaSubstitutionGenerator(mgo_unitcell)
         assert generator.structure == mgo_unitcell
@@ -1319,9 +1321,7 @@ class TestSiestaSubstitutionGenerator:
 
     def test_get_unique_sites_substitution(self, mgo_unitcell):
         """Test getting unique substitution sites."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaSubstitutionGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaSubstitutionGenerator
 
         generator = SiestaSubstitutionGenerator(mgo_unitcell)
 
@@ -1341,9 +1341,7 @@ class TestSiestaSubstitutionGenerator:
 
     def test_generate_substitution_defects(self, mgo_unitcell):
         """Test generating substitution defects."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaSubstitutionGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaSubstitutionGenerator
 
         generator = SiestaSubstitutionGenerator(mgo_unitcell)
 
@@ -1365,9 +1363,7 @@ class TestSiestaSubstitutionGenerator:
 
     def test_generate_antisites(self, mgo_unitcell):
         """Test generating antisite defects."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaSubstitutionGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaSubstitutionGenerator
 
         generator = SiestaSubstitutionGenerator(mgo_unitcell)
 
@@ -1387,9 +1383,7 @@ class TestSiestaInterstitialGenerator:
 
     def test_interstitial_generator_init(self, mgo_unitcell):
         """Test initialization of SiestaInterstitialGenerator."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaInterstitialGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaInterstitialGenerator
 
         generator = SiestaInterstitialGenerator(mgo_unitcell, min_dist=1.5)
         assert generator.structure == mgo_unitcell
@@ -1398,9 +1392,7 @@ class TestSiestaInterstitialGenerator:
 
     def test_get_interstitial_sites(self, mgo_unitcell):
         """Test finding interstitial sites."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaInterstitialGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaInterstitialGenerator
 
         generator = SiestaInterstitialGenerator(mgo_unitcell, min_dist=1.5)
         sites = generator.get_interstitial_sites()
@@ -1412,9 +1404,7 @@ class TestSiestaInterstitialGenerator:
 
     def test_generate_interstitial_defects(self, mgo_unitcell):
         """Test generating interstitial defects."""
-        from atomate2.siesta.flows.defects.generation import (
-            SiestaInterstitialGenerator,
-        )
+        from atomate2.siesta.flows.defects.generation import SiestaInterstitialGenerator
 
         generator = SiestaInterstitialGenerator(mgo_unitcell, min_dist=1.0)
 
@@ -1556,8 +1546,9 @@ class TestDefectFlowMakerFromPristineStructure:
 
     def test_from_pristine_invalid_type(self, mgo_unitcell):
         """Test from_pristine_structure with invalid defect type."""
-        from atomate2.siesta.flows.defects import DefectFlowMaker
         import pytest
+
+        from atomate2.siesta.flows.defects import DefectFlowMaker
 
         with pytest.raises(ValueError, match="Unknown defect_type"):
             DefectFlowMaker.from_pristine_structure(
@@ -1567,8 +1558,9 @@ class TestDefectFlowMakerFromPristineStructure:
 
     def test_from_pristine_missing_species_for_interstitial(self, mgo_unitcell):
         """Test from_pristine_structure errors when species not provided for interstitials."""
-        from atomate2.siesta.flows.defects import DefectFlowMaker
         import pytest
+
+        from atomate2.siesta.flows.defects import DefectFlowMaker
 
         with pytest.raises(
             ValueError, match="For interstitial defects, 'species' .* must be specified"
@@ -1734,9 +1726,7 @@ class TestSRHAnalyzer:
     @pytest.fixture
     def simple_formation_diagram(self):
         """Create a simple formation energy diagram for testing."""
-        from atomate2.siesta.flows.defects.analysis import (
-            FormationEnergyDiagram,
-        )
+        from atomate2.siesta.flows.defects.analysis import FormationEnergyDiagram
         from atomate2.siesta.flows.defects.analysis.formation_energy import (
             DefectFormationEnergyData,
         )
@@ -1904,13 +1894,13 @@ class TestSRHAnalyzer:
 def full_defect_data():
     """Create full defect analysis data (shared across SRH test classes)."""
     from atomate2.siesta.flows.defects.analysis import (
-        FormationEnergyDiagram,
         ConcentrationResult,
         DefectConcentration,
+        FormationEnergyDiagram,
     )
     from atomate2.siesta.flows.defects.analysis.formation_energy import (
-        DefectFormationEnergyData,
         ChargeTransitionLevel,
+        DefectFormationEnergyData,
     )
 
     # Formation energy diagram
@@ -2002,8 +1992,8 @@ class TestSRHAnalysisIntegration:
     def test_srh_with_custom_capture_params(self, full_defect_data):
         """Test SRH analysis with custom capture parameters."""
         from atomate2.siesta.flows.defects.analysis import (
-            SRHAnalyzer,
             CaptureParameters,
+            SRHAnalyzer,
         )
 
         diagram, ctls, concentration_result = full_defect_data
@@ -2528,11 +2518,12 @@ class TestSurfaceVacancyGeneratorIntegration:
 
     def test_integration_with_defect_flow_maker(self, mos2_slab):
         """Test integration of SurfaceVacancyGenerator with DefectFlowMaker."""
+        from jobflow import run_locally
+
         from atomate2.siesta.flows.defects import (
             DefectFlowMaker,
             SurfaceVacancyGenerator,
         )
-        from jobflow import run_locally
 
         # Generate surface defect
         generator = SurfaceVacancyGenerator(

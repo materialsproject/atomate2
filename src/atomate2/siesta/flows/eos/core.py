@@ -6,15 +6,18 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from jobflow import Flow, Maker, job
+
+from atomate2.common.flows.eos import CommonEosMaker
+
 # from atomate2.aims.flows.core import DoubleRelaxMaker
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import RelaxMaker
-from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.siesta.powerups import update_user_siesta_settings
-from jobflow import Flow, Maker, job
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+
     from atomate2.common.jobs.eos import EOSPostProcessor  # noqa: F401
 
 import logging
@@ -117,10 +120,7 @@ class SiestaEosFlowMaker(BaseSiestaFlowMaker, CommonEosMaker):
     >>> from atomate2.siesta.flows.eos import SiestaEosFlowMaker
     >>> from pymatgen.core import Structure
     >>> structure = Structure.from_file("Si.cif")
-    >>> maker = SiestaEosFlowMaker(
-    ...     linear_strain=(-0.05, 0.05),
-    ...     number_of_frames=7
-    ... )
+    >>> maker = SiestaEosFlowMaker(linear_strain=(-0.05, 0.05), number_of_frames=7)
     >>> flow = maker.make(structure)
     """
 
@@ -257,7 +257,7 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     ...     split_norms=[0.15, 0.20, 0.25],
     ...     a2s_kpts=[4, 4, 4],
     ...     linear_strain=(-0.05, 0.05),
-    ...     number_of_frames=7
+    ...     number_of_frames=7,
     ... )
     >>> flow = maker.make(structure)
     """
@@ -402,14 +402,14 @@ class EOSFullBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
                     for eos_job in eos_flow.jobs:
                         if "plot" in eos_job.name.lower():
                             # Update the output_file parameter for plot
-                            eos_job.function_kwargs[
-                                "output_file"
-                            ] = f"eos_fit_{label}.png"
+                            eos_job.function_kwargs["output_file"] = (
+                                f"eos_fit_{label}.png"
+                            )
                         elif "summary" in eos_job.name.lower():
                             # Update the output_file parameter for summary
-                            eos_job.function_kwargs[
-                                "output_file"
-                            ] = f"eos_summary_{label}.txt"
+                            eos_job.function_kwargs["output_file"] = (
+                                f"eos_summary_{label}.txt"
+                            )
 
                     eos_jobs.append(eos_flow)
                     job_metadata.append(
@@ -717,8 +717,8 @@ def plot_eos_parameter_fits_from_data(
     dict
         Dictionary with plot file path
     """
-    import numpy as np
     import matplotlib.pyplot as plt
+    import numpy as np
 
     logger.info("Creating combined EOS plot")
 
@@ -757,9 +757,11 @@ def plot_eos_parameter_fits_from_data(
     # Organize data by basis size
     unique_basis = sorted(
         set(basis_sizes_array),
-        key=lambda x: ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
-        if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
-        else 999,
+        key=lambda x: (
+            ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
+            if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
+            else 999
+        ),
     )
 
     # Create colors and markers for different basis/parameter combinations
@@ -1021,9 +1023,11 @@ def plot_eos_parameter_timing(
 
     unique_basis = sorted(
         set(basis_sizes_valid),
-        key=lambda x: ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
-        if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
-        else 999,
+        key=lambda x: (
+            ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
+            if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
+            else 999
+        ),
     )
 
     # Create figure with 2 subplots
@@ -1139,9 +1143,11 @@ def write_eos_parameter_summary(
 
     unique_basis = sorted(
         set(basis_sizes),
-        key=lambda x: ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
-        if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
-        else 999,
+        key=lambda x: (
+            ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
+            if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
+            else 999
+        ),
     )
 
     with open(output_file, "w") as f:
@@ -1356,12 +1362,11 @@ def write_eos_parameter_summary(
         def assess_convergence(pct):
             if pct < 0.5:
                 return "Excellent ✓"
-            elif pct < 1.0:
+            if pct < 1.0:
                 return "Good ✓"
-            elif pct < 2.0:
+            if pct < 2.0:
                 return "Fair ⚠"
-            else:
-                return "Poor ✗"
+            return "Poor ✗"
 
         f.write("Convergence Status:\n")
         f.write(f"  V₀: {assess_convergence(v0_pct)}\n")

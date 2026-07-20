@@ -13,15 +13,12 @@ TODO: Need to check what we need it from here
 
 __all__ = ["GeneralSystemDescriptors"]
 
-from dataclasses import dataclass
-from dataclasses import field
-from typing import Dict, List, Optional, Any
+import logging
+from dataclasses import dataclass, field
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
-
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +65,7 @@ class GeneralSystemDescriptors(FDFDataclass):
         },
     )  # Number of atoms in the simulation
 
-    chemical_species_label: Dict[int, str] = field(
+    chemical_species_label: dict[int, str] = field(
         default_factory=dict,
         metadata={
             "description": "Mapping of species number to chemical label",
@@ -76,7 +73,7 @@ class GeneralSystemDescriptors(FDFDataclass):
         },
     )  # Mapping of species number to chemical label
 
-    synthetic_atoms: Dict[int, List[float]] = field(
+    synthetic_atoms: dict[int, list[float]] = field(
         default_factory=dict,
         metadata={
             "description": "Information for synthetic atoms, such as pseudopotential parameters",
@@ -84,7 +81,7 @@ class GeneralSystemDescriptors(FDFDataclass):
         },
     )  # Information for synthetic atoms
 
-    atomic_mass: Dict[int, float] = field(
+    atomic_mass: dict[int, float] = field(
         default_factory=dict,
         metadata={
             "description": "Custom atomic masses for different species",
@@ -132,7 +129,7 @@ class GeneralSystemDescriptors(FDFDataclass):
             console.print(
                 "[red] system label & name should be siesta ... (Maybe i'll change later this... [/red]"
             )
-            raise ValueError()  # ("system label & name should be siesta ... (Maybe i'll change later this...)")
+            raise ValueError  # ("system label & name should be siesta ... (Maybe i'll change later this...)")
 
     def validate(self):
         """
@@ -147,7 +144,7 @@ class GeneralSystemDescriptors(FDFDataclass):
             raise ValueError("Number of atoms must be greater than 0.")
         # print(f"Validated: {self.number_of_species=} {self.number_of_atoms=}")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -169,14 +166,15 @@ class GeneralSystemDescriptors(FDFDataclass):
                 if isinstance(value, dict):
                     self.chemical_species_label = value
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
         fdf["#GeneralSystem"] = "General System Descriptors"
 
         fdf["SystemLabel"] = self.system_label
@@ -195,11 +193,12 @@ class GeneralSystemDescriptors(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't use system labels/descriptors
@@ -208,7 +207,7 @@ class GeneralSystemDescriptors(FDFDataclass):
 
     @classmethod
     def setup_system_descriptors(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "GeneralSystemDescriptors":
         """
         Create and configure a GeneralSystemDescriptors instance.
@@ -219,7 +218,8 @@ class GeneralSystemDescriptors(FDFDataclass):
         Args:
             user_params: Dictionary of user-defined parameters (optional)
 
-        Returns:
+        Returns
+        -------
             GeneralSystemDescriptors: Configured instance
         """
         logger.info("GeneralSystemDescriptors.setup_system_descriptors()")

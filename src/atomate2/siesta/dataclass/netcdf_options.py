@@ -14,14 +14,13 @@ Section:  6.32 NetCDF (CDF4) output file
 
 __all__ = ["NetcdfOptions"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +98,7 @@ class NetcdfOptions(FDFDataclass):
     )
 
     # Dictionary to hold FDF arguments
-    netcdf_fdf_arguments: Dict[str, Any] = field(default_factory=dict)
+    netcdf_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Register FDF parameters handled by this dataclass."""
@@ -140,7 +139,7 @@ class NetcdfOptions(FDFDataclass):
                 f"Invalid CDF.Grid.Precision: {self.cdf_grid_precision}. Must be 'single' or 'double'."
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -167,14 +166,15 @@ class NetcdfOptions(FDFDataclass):
             elif key_lower in ["cdf.grid.precision", "cdf_grid_precision"]:
                 self.cdf_grid_precision = str(value)
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # CDF.Save - always write with default marker
         if not self.cdf_save:
@@ -196,19 +196,20 @@ class NetcdfOptions(FDFDataclass):
 
         # CDF.Grid.Precision - always write with default marker
         if self.cdf_grid_precision.lower() == "single":
-            fdf[
-                "CDF.Grid.Precision"
-            ] = f"{self.cdf_grid_precision}  # SIESTA DEFAULT VALUE"
+            fdf["CDF.Grid.Precision"] = (
+                f"{self.cdf_grid_precision}  # SIESTA DEFAULT VALUE"
+            )
         else:
             fdf["CDF.Grid.Precision"] = self.cdf_grid_precision
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have NetCDF output parameters
@@ -244,7 +245,7 @@ class NetcdfOptions(FDFDataclass):
 
     @classmethod
     def setup_netcdf_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "NetcdfOptions":
         """
         Create and configure a NetcdfOptions instance with full parameter parsing.
@@ -258,23 +259,29 @@ class NetcdfOptions(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             NetcdfOptions: Configured instance with all fields set.
 
-        Examples:
+        Examples
+        --------
             >>> # Using SIESTA FDF parameter names
-            >>> netcdf = NetcdfOptions.setup_netcdf_settings({
-            ...     "CDF.Save": True,
-            ...     "CDF.Compress": 6,
-            ...     "CDF.Grid.Precision": "double"
-            ... })
+            >>> netcdf = NetcdfOptions.setup_netcdf_settings(
+            ...     {
+            ...         "CDF.Save": True,
+            ...         "CDF.Compress": 6,
+            ...         "CDF.Grid.Precision": "double",
+            ...     }
+            ... )
 
             >>> # Using Python attribute names
-            >>> netcdf = NetcdfOptions.setup_netcdf_settings({
-            ...     "cdf_save": True,
-            ...     "cdf_compress": 6,
-            ...     "cdf_grid_precision": "double"
-            ... })
+            >>> netcdf = NetcdfOptions.setup_netcdf_settings(
+            ...     {
+            ...         "cdf_save": True,
+            ...         "cdf_compress": 6,
+            ...         "cdf_grid_precision": "double",
+            ...     }
+            ... )
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]NetcdfOptions.setup_netcdf_settings()[/green]")
@@ -375,11 +382,10 @@ class NetcdfOptions(FDFDataclass):
                 else:
                     # Direct assignment for other types
                     setattr(instance, matched_attr, value)
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
-                    console.print(
-                        f"[yellow]Warning: No match found for parameter '{key}' in NetcdfOptions[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
+                console.print(
+                    f"[yellow]Warning: No match found for parameter '{key}' in NetcdfOptions[/yellow]"
+                )
 
         # Generate FDF block with comment header
         instance.generate_netcdf_block()

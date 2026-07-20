@@ -271,22 +271,21 @@ class MaterialAnalyzer:
         """Recommend mesh cutoff based on elements."""
         if max_z > 50:  # Very heavy elements
             return "500 Ry"
-        elif has_heavy_elements:
+        if has_heavy_elements:
             return "400 Ry"
-        elif max_z > 18:  # 3rd row and beyond
+        if max_z > 18:  # 3rd row and beyond
             return "350 Ry"
-        else:  # Light elements (H-Ar)
-            return "300 Ry"
+        # Light elements (H-Ar)
+        return "300 Ry"
 
     @staticmethod
     def _recommend_basis(num_atoms: int, is_metal: bool) -> str:
         """Recommend basis size based on system size and type."""
         if num_atoms > 100:
             return "SZ" if not is_metal else "SZP"
-        elif num_atoms > 50:
+        if num_atoms > 50:
             return "DZ" if not is_metal else "DZP"
-        else:
-            return "DZP"
+        return "DZP"
 
     @staticmethod
     def _recommend_tier_preset(
@@ -301,14 +300,13 @@ class MaterialAnalyzer:
                 "intermediate",
                 "surface_metal" if is_metal else "surface_semiconductor",
             )
-        elif is_metal and has_magnetic:
+        if is_metal and has_magnetic:
             return "intermediate", "magnetic_correlated"
-        elif is_metal:
+        if is_metal:
             return "intermediate", "relax_bulk_metal"
-        elif has_magnetic:
+        if has_magnetic:
             return "intermediate", None
-        else:
-            return "basic", "relax_standard"
+        return "basic", "relax_standard"
 
     @staticmethod
     def _estimate_cost(

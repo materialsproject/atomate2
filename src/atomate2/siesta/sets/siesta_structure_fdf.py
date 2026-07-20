@@ -29,18 +29,20 @@ def generate_structure_fdf(
         output_file: Path to output structure.fdf file (default: 'structure.fdf').
         xv: If True and input_file is provided, read geometry from XV file instead of FDF.
 
-    Returns:
+    Returns
+    -------
         None
 
-    Raises:
+    Raises
+    ------
         ValueError: If neither atoms nor input_file is provided, or if input validation fails.
         FileNotFoundError: If input_file is specified but does not exist.
         IOError: If writing to output_file fails or directory cannot be created.
 
     Example:
         >>> from ase.build import bulk
-        >>> atoms = bulk('Si', 'diamond', a=5.43)
-        >>> generate_structure_fdf(atoms, output_file='Si.fdf')
+        >>> atoms = bulk("Si", "diamond", a=5.43)
+        >>> generate_structure_fdf(atoms, output_file="Si.fdf")
     """
     logger.info("generate_structure_fdf()")
 
@@ -55,7 +57,7 @@ def generate_structure_fdf(
             output_path.parent.mkdir(parents=True, exist_ok=True)
             logger.debug(f"Created output directory: {output_path.parent}")
         except OSError as e:
-            raise IOError(f"Cannot create output directory {output_path.parent}: {e}")
+            raise OSError(f"Cannot create output directory {output_path.parent}: {e}")
 
     if input_file:
         # Read from existing FDF/XV file
@@ -76,7 +78,7 @@ def generate_structure_fdf(
             )
             logger.info(f"Structure file generated: {output_file}")
         except Exception as e:
-            raise IOError(f"Failed to convert {input_file} to FDF: {e}") from e
+            raise OSError(f"Failed to convert {input_file} to FDF: {e}") from e
     else:
         # Convert ASE Atoms to sisl Geometry and write FDF
         logger.info(f"Converting ASE Atoms to structure.fdf: {output_file}")
@@ -131,7 +133,7 @@ def generate_structure_fdf(
 
             # Verify file was written
             if not output_path.exists():
-                raise IOError(f"Structure file was not created: {output_file}")
+                raise OSError(f"Structure file was not created: {output_file}")
 
             logger.info(f"Successfully wrote structure to {output_file}")
 
@@ -140,4 +142,4 @@ def generate_structure_fdf(
                 f"Invalid atoms structure or species information: {e}"
             ) from e
         except Exception as e:
-            raise IOError(f"Error writing structure to {output_file}: {e}") from e
+            raise OSError(f"Error writing structure to {output_file}: {e}") from e

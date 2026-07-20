@@ -5,8 +5,8 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 import click
 import yaml
@@ -15,11 +15,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from .utils import (
-    _backup_config,
-    _load_yaml_config,
-    _save_yaml_config,
-)
+from .utils import _backup_config, _load_yaml_config, _save_yaml_config
 
 console = Console()
 
@@ -37,7 +33,8 @@ def install(dev):
     the stable version from PyPI. Use --dev to install the latest development
     version from GitHub.
 
-    Examples:
+    Examples
+    --------
         # Install stable version
         atomate2siesta-jobflow-remote install
 
@@ -151,7 +148,8 @@ def setup(project_name, worker_name, database, host, port, update, backup):
     Note: You can also use the original jobflow-remote command directly:
         jf project generate atomate2siesta
 
-    Examples:
+    Examples
+    --------
         # Generate default configuration
         atomate2siesta-jobflow-remote setup
 
@@ -371,7 +369,8 @@ def test():
     The test job performs a simple addition operation and stores the result
     in the database.
 
-    Examples:
+    Examples
+    --------
         # Submit test job
         atomate2siesta-jobflow-remote test
     """
@@ -379,9 +378,9 @@ def test():
 
     try:
         # Import required modules
+        from jobflow import Flow
         from jobflow_remote import submit_flow
         from jobflow_remote.utils.examples import add
-        from jobflow import Flow
 
         # Create test jobs
         job1 = add(1, 2)
@@ -440,7 +439,8 @@ def info(project_name):
     This command displays information about the current jobflow-remote
     installation, configuration, and provides helpful documentation links.
 
-    Examples:
+    Examples
+    --------
         # Show general information and all projects
         atomate2siesta-jobflow-remote info
 
@@ -524,7 +524,7 @@ def info(project_name):
                         config = _load_yaml_config(config_path)
 
                         # Workers info
-                        if "workers" in config and config["workers"]:
+                        if config.get("workers"):
                             console.print("[cyan]Workers:[/cyan]")
                             for worker_name, worker_config in config["workers"].items():
                                 console.print(f"  • {worker_name}")
@@ -661,7 +661,8 @@ def runner():
     This command displays common runner management commands for controlling
     the jobflow-remote runner daemon that executes jobs.
 
-    Examples:
+    Examples
+    --------
         # Show runner commands
         atomate2siesta-jobflow-remote runner
     """
@@ -795,7 +796,8 @@ def update(project_name, database, host, port, add_comments, backup):
     connection settings and optionally add descriptive comments to all
     configuration entries.
 
-    Examples:
+    Examples
+    --------
         # Update MongoDB settings
         atomate2siesta-jobflow-remote update --database mydb --host localhost --port 27017
 
@@ -992,7 +994,8 @@ def download(ctx, flow_id, job_id, output_dir, files, resume):
 
     Note: Project name is taken from the top-level -p flag.
 
-    Examples:
+    Examples
+    --------
         # Download ALL jobs from flow 1
         atomate2siesta-jobflow-remote -p alberto download -f 1
 

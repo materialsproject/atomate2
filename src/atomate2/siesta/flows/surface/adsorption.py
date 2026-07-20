@@ -11,12 +11,12 @@ from jobflow import Flow, Response, job
 from pymatgen.core import Molecule
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 from atomate2.siesta.jobs.surface.adsorption import (
     add_adsorbate_to_slab,
     analyze_adsorption_scan,
     generate_adsorption_sites,
 )
-from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -405,11 +405,19 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
     >>> from atomate2.siesta.sets.core import StaticSetGenerator
     >>>
     >>> # Setup SIESTA parameters
-    >>> slab_params = {"PAO.BasisSize": "DZP", "Mesh.Cutoff": "300 Ry", "kpts": [6,6,1]}
+    >>> slab_params = {
+    ...     "PAO.BasisSize": "DZP",
+    ...     "Mesh.Cutoff": "300 Ry",
+    ...     "kpts": [6, 6, 1],
+    ... }
     >>> ads_params = {"PAO.BasisSize": "DZP", "Mesh.Cutoff": "300 Ry"}
     >>>
-    >>> slab_maker = StaticMaker(input_set_generator=StaticSetGenerator(user_params=slab_params))
-    >>> ads_maker = StaticMaker(input_set_generator=StaticSetGenerator(user_params=ads_params))
+    >>> slab_maker = StaticMaker(
+    ...     input_set_generator=StaticSetGenerator(user_params=slab_params)
+    ... )
+    >>> ads_maker = StaticMaker(
+    ...     input_set_generator=StaticSetGenerator(user_params=ads_params)
+    ... )
     >>>
     >>> # Create workflow
     >>> slab = Structure.from_file("slab.cif")
@@ -471,7 +479,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         if self.heights is not None:
             # Explicit list provided
             return list(self.heights)
-        elif (
+        if (
             self.height_min is not None
             and self.height_max is not None
             and self.height_step is not None
@@ -483,9 +491,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
                 self.height_step,
             )
             return heights.tolist()
-        else:
-            # Single height (backward compatible)
-            return [self.height]
+        # Single height (backward compatible)
+        return [self.height]
 
     def make(
         self,
@@ -547,8 +554,8 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
 
         # Prepare adsorbate with orientation if specified
         from atomate2.siesta.utils.molecule_utils import (
-            prepare_molecule_with_orientation,
             molecule_to_structure_in_box,
+            prepare_molecule_with_orientation,
         )
 
         # Apply orientation if this is a Molecule and orientation parameters are provided
@@ -579,9 +586,7 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
             )
             jobs.append(slab_job)
         else:
-            logger.info(
-                "Reusing precalculated slab energy - skipping slab calculation"
-            )
+            logger.info("Reusing precalculated slab energy - skipping slab calculation")
 
         # 2. Calculate isolated adsorbate energy (skipped when precalculated)
         ads_job = None
@@ -779,7 +784,6 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
         Job
             Analysis job.
         """
-
         # Collect site energies as a list
         site_energies = []
         for site_job in site_calc_jobs:

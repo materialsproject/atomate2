@@ -8,14 +8,15 @@ Usage:
     python benchmark_tiers.py
 """
 
-import time
 import statistics
-from pymatgen.core import Structure, Lattice
+import time
 
+from pymatgen.core import Lattice, Structure
+
+from atomate2.siesta.dataclass.registry import get_modules_for_tier
 from atomate2.siesta.jobs.core import RelaxMaker
 from atomate2.siesta.sets.core import StaticSetGenerator
 from atomate2.siesta.sets.tiers import apply_tier_preset
-from atomate2.siesta.dataclass.registry import get_modules_for_tier
 
 
 def create_simple_structure():

@@ -42,6 +42,7 @@ def _read_bands_file(bands_output) -> dict | None:
     """
     import gzip
     from pathlib import Path
+
     import numpy as np
 
     calc_dir = _get_attr(bands_output, "dir_name", default=".")
@@ -137,7 +138,7 @@ def _calculate_effective_mass(k, energies, band_idx, k_idx, efermi, is_cbm=True)
         Effective mass in units of electron mass (m*/m_e)
     """
     import numpy as np
-    from scipy.constants import hbar, electron_mass, eV
+    from scipy.constants import electron_mass, eV, hbar
 
     # Get band energies around the extremum
     spin_idx = 0  # Use first spin channel
@@ -306,7 +307,7 @@ def _calculate_band_velocities(k, energies):
         Velocities in m/s, shape (nband, nspin, nk)
     """
     import numpy as np
-    from scipy.constants import hbar, eV
+    from scipy.constants import eV, hbar
 
     nband, nspin, nk = energies.shape
     velocities = np.zeros_like(energies)
@@ -415,6 +416,7 @@ def analyze_band_structure(
         - Generated plot files
     """
     from pathlib import Path
+
     import numpy as np
 
     # Extract basic information
@@ -602,8 +604,8 @@ def _get_kpath_labels(structure) -> tuple[list[str], list[float]]:
         (labels, positions) where positions are normalized to [0, 1]
     """
     try:
-        from pymatgen.symmetry.bandstructure import HighSymmKpath
         import numpy as np
+        from pymatgen.symmetry.bandstructure import HighSymmKpath
 
         # Get high-symmetry k-path
         kpath = HighSymmKpath(structure)

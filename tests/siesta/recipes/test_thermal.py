@@ -3,12 +3,12 @@
 from jobflow import Flow, Job
 
 from atomate2.siesta.recipes.thermal import (
-    thermal_properties,
-    phonon_workflow,
     gruneisen_workflow,
+    high_temperature_properties,
+    phonon_workflow,
     qha_workflow,
     thermal_expansion_workflow,
-    high_temperature_properties,
+    thermal_properties,
     vibrational_stability_check,
 )
 

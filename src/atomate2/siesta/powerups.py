@@ -1,10 +1,13 @@
 """Powerups for performing common modifications on SIESTA jobs and flows."""
 
 from __future__ import annotations
+
 import logging
 from copy import deepcopy
 from typing import Any
+
 from jobflow import Flow, Job, Maker
+
 from atomate2.siesta.jobs.base import BaseSiestaMaker
 
 logger = logging.getLogger(__name__)
@@ -129,7 +132,8 @@ def update_fdf_siesta_settings(job, user_settings: dict):
         job: The SIESTA job to be updated.
         user_settings (dict): A dictionary containing the FDF input settings.
 
-    Returns:
+    Returns
+    -------
         job: The updated job with the new settings.
     """
     logger.info("update_fdf_siesta_settings.__init__()")
@@ -219,8 +223,8 @@ def _read_xsf_to_pymatgen(file_path: str, as_molecule: bool = False):
     pymatgen.core.Structure or pymatgen.core.Molecule
     """
     from ase.io import read as ase_read
-    from pymatgen.io.ase import AseAtomsAdaptor
     from pymatgen.core import Molecule
+    from pymatgen.io.ase import AseAtomsAdaptor
 
     logger.info(f"Reading XSF file: {file_path}")
 
@@ -228,7 +232,7 @@ def _read_xsf_to_pymatgen(file_path: str, as_molecule: bool = False):
         # Read XSF file with ASE
         atoms = ase_read(file_path, format="xsf")
     except Exception as e:
-        error_msg = f"Error reading XSF file {file_path}: {str(e)}"
+        error_msg = f"Error reading XSF file {file_path}: {e!s}"
         logger.error(error_msg)
         raise ValueError(error_msg)
 
@@ -239,13 +243,10 @@ def _read_xsf_to_pymatgen(file_path: str, as_molecule: bool = False):
         molecule = Molecule(species=species, coords=coords)
         logger.info(f"Converted XSF to Molecule: {molecule.composition.formula}")
         return molecule
-    else:
-        # Convert to Structure (periodic)
-        structure = AseAtomsAdaptor.get_structure(atoms)
-        logger.info(
-            f"Converted XSF to Structure: {structure.composition.reduced_formula}"
-        )
-        return structure
+    # Convert to Structure (periodic)
+    structure = AseAtomsAdaptor.get_structure(atoms)
+    logger.info(f"Converted XSF to Structure: {structure.composition.reduced_formula}")
+    return structure
 
 
 def _read_cif_to_pymatgen(file_path: str, as_molecule: bool = False):
@@ -263,7 +264,7 @@ def _read_cif_to_pymatgen(file_path: str, as_molecule: bool = False):
     -------
     pymatgen.core.Structure or pymatgen.core.Molecule
     """
-    from pymatgen.core import Structure, Molecule
+    from pymatgen.core import Molecule, Structure
 
     logger.info(f"Reading CIF file: {file_path}")
 
@@ -271,7 +272,7 @@ def _read_cif_to_pymatgen(file_path: str, as_molecule: bool = False):
         # Read CIF file directly with pymatgen
         structure = Structure.from_file(file_path)
     except Exception as e:
-        error_msg = f"Error reading CIF file {file_path}: {str(e)}"
+        error_msg = f"Error reading CIF file {file_path}: {e!s}"
         logger.error(error_msg)
         raise ValueError(error_msg)
 
@@ -282,9 +283,8 @@ def _read_cif_to_pymatgen(file_path: str, as_molecule: bool = False):
         molecule = Molecule(species=species, coords=coords)
         logger.info(f"Converted CIF to Molecule: {molecule.composition.formula}")
         return molecule
-    else:
-        logger.info(f"Read CIF as Structure: {structure.composition.reduced_formula}")
-        return structure
+    logger.info(f"Read CIF as Structure: {structure.composition.reduced_formula}")
+    return structure
 
 
 def siesta_to_pymatgen(
@@ -364,6 +364,7 @@ def siesta_to_pymatgen(
     are not added (Molecule doesn't support site properties).
     """
     from pathlib import Path
+
     from ase import Atoms
     from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -375,9 +376,9 @@ def siesta_to_pymatgen(
     # Route to appropriate reader based on file type
     if file_ext in [".xsf"]:
         return _read_xsf_to_pymatgen(file_path, as_molecule)
-    elif file_ext in [".cif"]:
+    if file_ext in [".cif"]:
         return _read_cif_to_pymatgen(file_path, as_molecule)
-    elif file_ext in [".fdf", ".xv", ".XV"]:
+    if file_ext in [".fdf", ".xv", ".XV"]:
         # SIESTA format - use original implementation
         pass
     else:
@@ -394,7 +395,7 @@ def siesta_to_pymatgen(
     try:
         structure_sisl = sisl.get_sile(file_path).read_geometry(output=use_xv)
     except Exception as e:
-        error_msg = f"Error reading geometry from {file_path}: {str(e)}"
+        error_msg = f"Error reading geometry from {file_path}: {e!s}"
         logger.error(error_msg)
         raise ValueError(error_msg)
 
@@ -501,7 +502,7 @@ def siesta_to_pymatgen(
             logger.info(f"Converted molecule: {molecule.composition.formula}")
             return molecule
         except Exception as e:
-            error_msg = f"Error converting to pymatgen Molecule: {str(e)}"
+            error_msg = f"Error converting to pymatgen Molecule: {e!s}"
             logger.error(error_msg)
             raise ValueError(error_msg)
     else:
@@ -509,7 +510,7 @@ def siesta_to_pymatgen(
         try:
             structure_pymatgen = AseAtomsAdaptor.get_structure(structure_ase)
         except Exception as e:
-            error_msg = f"Error converting to pymatgen Structure: {str(e)}"
+            error_msg = f"Error converting to pymatgen Structure: {e!s}"
             logger.error(error_msg)
             raise ValueError(error_msg)
 
@@ -606,7 +607,7 @@ def update_jobflow_resources(
     ...     flow,
     ...     resource_configs=resource_configs,
     ...     default_resources=default_resources,
-    ...     verbose=True
+    ...     verbose=True,
     ... )
 
     Multiple patterns with priority (first match wins):
@@ -614,7 +615,7 @@ def update_jobflow_resources(
     >>> resource_configs = {
     ...     "phonon": {"ntasks_per_node": 8, "time": "48:00:00"},  # Phonon jobs
     ...     "relax": {"ntasks_per_node": 16, "time": "24:00:00"},  # Relaxation jobs
-    ...     "static": {"ntasks_per_node": 12, "time": "12:00:00"}, # Static jobs
+    ...     "static": {"ntasks_per_node": 12, "time": "12:00:00"},  # Static jobs
     ... }
 
     With HPC-specific parameters:
@@ -624,8 +625,8 @@ def update_jobflow_resources(
     ...         "mem_per_cpu": "4G",
     ...         "ntasks_per_node": 4,
     ...         "time": "24:00:00",
-    ...         "partition": "RES",      # Slurm partition
-    ...         "account": "icn2100",    # Account for billing
+    ...         "partition": "RES",  # Slurm partition
+    ...         "account": "icn2100",  # Account for billing
     ...     }
     ... }
 
@@ -780,25 +781,24 @@ def _estimate_resources_heuristic(num_atoms: int) -> dict[str, Any]:
     if num_atoms <= 0:
         # Post-processing / analysis jobs
         return {"ntasks_per_node": 1, "time": "00:30:00", "cpus_per_task": 1}
-    elif num_atoms <= 8:
+    if num_atoms <= 8:
         # Small molecules, small bulk cells
         cores = max(2, (num_atoms // 2) * 2)  # 2 or 4
         return {"ntasks_per_node": cores, "time": "02:00:00", "cpus_per_task": 1}
-    elif num_atoms <= 32:
+    if num_atoms <= 32:
         # Small cells, unit cells
         cores = max(4, (num_atoms // 4) * 4)  # 4-32, multiples of 4
         cores = min(cores, 8)
         return {"ntasks_per_node": cores, "time": "04:00:00", "cpus_per_task": 1}
-    elif num_atoms <= 100:
+    if num_atoms <= 100:
         # Supercells, slabs
         cores = (num_atoms // 4) * 4  # ~1 core/atom, multiples of 4
         cores = max(cores, 8)
         return {"ntasks_per_node": cores, "time": "12:00:00", "cpus_per_task": 1}
-    else:
-        # Large supercells
-        cores = min((num_atoms // 4) * 4, 128)  # ~1 core/atom, cap at 128
-        cores = max(cores, 16)
-        return {"ntasks_per_node": cores, "time": "24:00:00", "cpus_per_task": 1}
+    # Large supercells
+    cores = min((num_atoms // 4) * 4, 128)  # ~1 core/atom, cap at 128
+    cores = max(cores, 16)
+    return {"ntasks_per_node": cores, "time": "24:00:00", "cpus_per_task": 1}
 
 
 def _estimate_resources(num_atoms: int, profile=None) -> dict[str, Any]:
@@ -1008,10 +1008,15 @@ def auto_allocate_resources(
 
     With a dict profile (no extra import needed):
 
-    >>> flow = auto_allocate_resources(flow, cluster_profile={
-    ...     "cores_per_node": 48, "memory_per_node_gb": 192,
-    ...     "partition": "RES", "account": "icn2100",
-    ... })
+    >>> flow = auto_allocate_resources(
+    ...     flow,
+    ...     cluster_profile={
+    ...         "cores_per_node": 48,
+    ...         "memory_per_node_gb": 192,
+    ...         "partition": "RES",
+    ...         "account": "icn2100",
+    ...     },
+    ... )
 
     Combine profile with base_resources (base_resources values override profile
     for keys like ``mem_per_cpu``):
@@ -1111,12 +1116,12 @@ def auto_allocate_resources(
 
 def write_output_json_local(results):
     """
-    writing json local database
+    Writing json local database
     """
+    import json
+    from datetime import datetime
 
     from pymatgen.core import Element
-    from datetime import datetime
-    import json
 
     logger.info("write_output_json_local.__init__()")
 
@@ -1125,9 +1130,9 @@ def write_output_json_local(results):
         def default(self, obj):
             if isinstance(obj, datetime):
                 return obj.isoformat()  # Convert datetime to ISO 8601 string
-            elif isinstance(obj, Element):
+            if isinstance(obj, Element):
                 return obj.symbol  # Convert Element to its symbol (e.g., "Na", "Cl")
-            elif hasattr(obj, "as_dict"):
+            if hasattr(obj, "as_dict"):
                 return (
                     obj.as_dict()
                 )  # Convert objects with as_dict method (like Structure) to dict

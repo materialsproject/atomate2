@@ -7,28 +7,31 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any  # noqa: F401 - Needed for Sphinx autodoc
-from jobflow import Response, job, Maker
-from monty.serialization import dumpfn
-from atomate2.siesta.sets.parser import read_siesta_output
-from atomate2.siesta.sets.core import RelaxSetGenerator  # , RelaxSetGeneratorTest
-from atomate2.siesta.sets.core import LuaSetGenerator  #
-from atomate2.siesta.sets.core import SocketIOSetGenerator
-from atomate2.siesta.sets.core import StaticSetGenerator
-from atomate2.siesta.sets.core import BandStructureSetGenerator
-from atomate2.siesta.sets.core import DOSSetGenerator
-from atomate2.siesta.sets.core import PDOSSetGenerator
-from atomate2.siesta.sets.core import PhononSetGenerator
-from atomate2.siesta.sets.core import OpticalSetGenerator
-from atomate2.siesta import SETTINGS
-from atomate2.siesta.files import cleanup_siesta_outputs, write_siesta_input_set
-from atomate2.siesta.jobs.base import _FILES_TO_ZIP, _FILES_TO_EXCLUDE, BaseSiestaMaker
-from atomate2.siesta.run import run_siesta_socket
-from atomate2.siesta.run import should_stop_children
-from atomate2.siesta.schemas.task import SiestaTaskDoc
 
+from jobflow import Maker, Response, job
+from monty.serialization import dumpfn
+
+from atomate2.siesta import SETTINGS
 from atomate2.siesta.files import (
+    cleanup_siesta_outputs,
     gzip_output_folder,  # SIESTA-specific variant (exclude_files + subfolder)
+    write_siesta_input_set,
 )
+from atomate2.siesta.jobs.base import _FILES_TO_EXCLUDE, _FILES_TO_ZIP, BaseSiestaMaker
+from atomate2.siesta.run import run_siesta_socket, should_stop_children
+from atomate2.siesta.schemas.task import SiestaTaskDoc
+from atomate2.siesta.sets.core import (
+    BandStructureSetGenerator,
+    DOSSetGenerator,
+    LuaSetGenerator,
+    OpticalSetGenerator,
+    PDOSSetGenerator,
+    PhononSetGenerator,
+    RelaxSetGenerator,  # , RelaxSetGeneratorTest
+    SocketIOSetGenerator,
+    StaticSetGenerator,
+)
+from atomate2.siesta.sets.parser import read_siesta_output
 
 if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
@@ -413,11 +416,7 @@ class LuaMaker(BaseSiestaMaker):
     >>>
     >>> # NEB transition state search
     >>> maker = LuaMaker.neb(
-    ...     user_params={
-    ...         "Lua.Script": "neb.lua",
-    ...         "neb.nimages": 7,
-    ...         "neb.spring": 0.02
-    ...     }
+    ...     user_params={"Lua.Script": "neb.lua", "neb.nimages": 7, "neb.spring": 0.02}
     ... )
     >>> job = maker.make(structure)
 
@@ -678,7 +677,7 @@ class SocketIOStaticMaker(BaseSiestaMaker):
     >>> maker = SocketIOStaticMaker(
     ...     host="localhost",
     ...     port=12345,
-    ...     user_params={"PAO.BasisSize": "DZP", "kpts": [4,4,4]}
+    ...     user_params={"PAO.BasisSize": "DZP", "kpts": [4, 4, 4]},
     ... )
     >>> job = maker.make(structures)
     >>>
@@ -963,10 +962,10 @@ class DOSMaker(BaseSiestaMaker):
     >>> structure = Structure.from_file("Fe.cif")
     >>> dos_maker = DOSMaker.dos_calculation(
     ...     user_params={
-    ...         "kpts": [12, 12, 12],      # Dense k-mesh for accurate DOS
+    ...         "kpts": [12, 12, 12],  # Dense k-mesh for accurate DOS
     ...         "%block ProjectedDensityOfStates": [
     ...             "-10.0 5.0 0.1 500 eV"  # Energy range and resolution
-    ...         ]
+    ...         ],
     ...     }
     ... )
     >>> job = dos_maker.make(structure, prev_dir="scf_calculation/")
@@ -1017,7 +1016,9 @@ class DOSMaker(BaseSiestaMaker):
 
         Examples
         --------
-        >>> dos_maker = DOSMaker.dos_calculation(dry_run=True, user_params={"Mesh.Cutoff": "400 Ry"})
+        >>> dos_maker = DOSMaker.dos_calculation(
+        ...     dry_run=True, user_params={"Mesh.Cutoff": "400 Ry"}
+        ... )
         """
         logger.info("DOSMaker.dos_calculation()")
 
@@ -1110,9 +1111,7 @@ class PDOSMaker(BaseSiestaMaker):
     >>> pdos_maker = PDOSMaker.pdos_calculation(
     ...     user_params={
     ...         "kpts": [12, 12, 8],
-    ...         "%block ProjectedDensityOfStates": [
-    ...             "-10.0 5.0 0.1 500 eV"
-    ...         ]
+    ...         "%block ProjectedDensityOfStates": ["-10.0 5.0 0.1 500 eV"],
     ...     }
     ... )
     >>> job = pdos_maker.make(structure, prev_dir="scf_calculation/")
@@ -1122,9 +1121,7 @@ class PDOSMaker(BaseSiestaMaker):
     ...     user_params={
     ...         "Spin": "polarized",
     ...         "kpts": [16, 16, 16],
-    ...         "%block ProjectedDensityOfStates": [
-    ...             "-5.0 2.0 0.05 300 eV"
-    ...         ]
+    ...         "%block ProjectedDensityOfStates": ["-5.0 2.0 0.05 300 eV"],
     ...     }
     ... )
     >>> job = pdos_maker.make(structure)
@@ -1272,7 +1269,7 @@ class PhononMaker(BaseSiestaMaker):
     >>> structure = Structure.from_file("Si.cif")
     >>> phonon_flow = PhononFlowMaker(
     ...     min_length=12.0,  # Supercell size
-    ...     displacement=0.01  # Displacement magnitude (Angstroms)
+    ...     displacement=0.01,  # Displacement magnitude (Angstroms)
     ... )
     >>> flow = phonon_flow.make(structure)
     >>>
@@ -1281,7 +1278,7 @@ class PhononMaker(BaseSiestaMaker):
     ...     user_params={
     ...         "PAO.BasisSize": "DZP",
     ...         "kpts": [8, 8, 8],
-    ...         "MeshCutoff": "400 Ry"
+    ...         "MeshCutoff": "400 Ry",
     ...     }
     ... )
     >>> # Note: Requires pre-generated displaced structures from phonopy
@@ -1410,7 +1407,7 @@ class OpticalMaker(BaseSiestaMaker):
     ...         "Optical.Mesh.Cutoff": "300 Ry",
     ...         "Optical.Broaden": "0.1 eV",
     ...         "Optical.EnergyMinimum": "0.0 eV",
-    ...         "Optical.EnergyMaximum": "10.0 eV"
+    ...         "Optical.EnergyMaximum": "10.0 eV",
     ...     }
     ... )
     >>> job = optical_maker.make(structure, prev_dir="scf_calculation/")
@@ -1420,7 +1417,7 @@ class OpticalMaker(BaseSiestaMaker):
     ...     user_params={
     ...         "kpts": [16, 16, 16],  # Dense k-mesh for accurate transitions
     ...         "Optical.NumberOfBands": 200,  # Include many conduction bands
-    ...         "Optical.Broaden": "0.05 eV"   # Sharp features
+    ...         "Optical.Broaden": "0.05 eV",  # Sharp features
     ...     }
     ... )
     >>> job = optical_maker.make(structure)
@@ -1600,8 +1597,16 @@ class SiestaPhononMaker(Maker):
     >>>
     >>> # Separate parameters for relaxation and forces
     >>> structure = Structure.from_file("Si.cif")
-    >>> relax_params = {"PAO.BasisSize": "DZP", "kpts": [6,6,6], "MeshCutoff": "300 Ry"}
-    >>> force_params = {"PAO.BasisSize": "DZP", "kpts": [8,8,8], "MeshCutoff": "400 Ry"}
+    >>> relax_params = {
+    ...     "PAO.BasisSize": "DZP",
+    ...     "kpts": [6, 6, 6],
+    ...     "MeshCutoff": "300 Ry",
+    ... }
+    >>> force_params = {
+    ...     "PAO.BasisSize": "DZP",
+    ...     "kpts": [8, 8, 8],
+    ...     "MeshCutoff": "400 Ry",
+    ... }
     >>>
     >>> relax_maker = update_user_siesta_settings(
     ...     RelaxMaker.variable_cell_relaxation(), relax_params
@@ -1614,7 +1619,7 @@ class SiestaPhononMaker(Maker):
     ...     static_maker=static_maker,
     ...     min_length=12.0,
     ...     displacement=0.01,
-    ...     t_max=500  # Thermal properties up to 500 K
+    ...     t_max=500,  # Thermal properties up to 500 K
     ... )
     >>> flow = phonon_maker.make(structure)
     >>>
@@ -1622,7 +1627,7 @@ class SiestaPhononMaker(Maker):
     >>> phonon_maker = SiestaPhononMaker(
     ...     relax_maker=None,  # No relaxation
     ...     static_maker=static_maker,
-    ...     min_length=15.0  # Larger supercell for higher accuracy
+    ...     min_length=15.0,  # Larger supercell for higher accuracy
     ... )
     >>> flow = phonon_maker.make(structure)
 
@@ -1684,9 +1689,11 @@ class SiestaPhononMaker(Maker):
         from atomate2.siesta.utils.common import print_docstring_in_box
 
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)
-        from jobflow import Flow
-        from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
         from dataclasses import replace
+
+        from jobflow import Flow
+
+        from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
 
         jobs = []
 

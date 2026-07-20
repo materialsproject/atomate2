@@ -7,10 +7,9 @@ This module provides the `vacuum` subcommand for atomate2siesta-structure.
 from __future__ import annotations
 
 import click
+from pymatgen.core import Structure
 from rich.console import Console
 from rich.table import Table
-
-from pymatgen.core import Structure
 
 console = Console()
 
@@ -65,8 +64,8 @@ def vacuum(
     Useful for preparing surface slabs, 2D materials, and isolated molecules
     by adding vacuum space in the specified direction.
 
-    Examples:
-
+    Examples
+    --------
         # Add 15 Å vacuum in c direction
         atomate2siesta-structure vacuum slab.cif --thickness 15
 
@@ -237,7 +236,7 @@ def _display_vacuum_info(
         orig = orig_abc[i]
         vac = vac_abc[i]
         if i == dir_idx:
-            table.add_row(label, f"{orig:.4f}", f"{vac:.4f} (+{vac-orig:.3f})")
+            table.add_row(label, f"{orig:.4f}", f"{vac:.4f} (+{vac - orig:.3f})")
         else:
             table.add_row(label, f"{orig:.4f}", f"{vac:.4f}")
 
@@ -266,7 +265,7 @@ def _display_vacuum_info(
     table.add_row(
         "Vacuum space",
         f"{orig_vacuum:.3f} Å",
-        f"{vac_vacuum:.3f} Å (+{vac_vacuum-orig_vacuum:.3f})",
+        f"{vac_vacuum:.3f} Å (+{vac_vacuum - orig_vacuum:.3f})",
     )
 
     console.print(table)
@@ -277,7 +276,6 @@ def _display_vacuum_info(
 
 def _display_layer_positions(structure, dir_idx, label):
     """Display atomic layer positions."""
-
     console.print(f"\n[cyan]Layer Positions ({label}):[/cyan]")
 
     coords = structure.cart_coords

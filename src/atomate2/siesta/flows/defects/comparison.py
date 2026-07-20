@@ -657,9 +657,10 @@ def compare_all_corrections(
         try:
             if scheme_name.lower() in ["lany-zunger", "lz"]:
                 correction_scheme = LanyZungerCorrection(epsilon_static=epsilon_static)
-            elif scheme_name.lower() in ["makov-payne", "mp"]:
-                correction_scheme = MakovPayneCorrection(epsilon_static=epsilon_static)
             elif scheme_name.lower() in [
+                "makov-payne",
+                "mp",
+            ] or scheme_name.lower() in [
                 "makov-payne-quadrupole",
                 "mp-quad",
                 "makov-payne-full",
@@ -835,7 +836,7 @@ def generate_comparison_summary(
             lines.append(line)
 
         # Add correction metadata details
-        if "metadata" in comparison_results and comparison_results["metadata"]:
+        if comparison_results.get("metadata"):
             lines.append("")
             lines.append("CORRECTION DETAILS:")
             lines.append("  " + "-" * 66)
@@ -845,10 +846,7 @@ def generate_comparison_summary(
                     if "madelung_constant" in metadata:
                         alpha_M = metadata["madelung_constant"]
                         lines.append(f"    Madelung constant:   {alpha_M:.4f}")
-                        if (
-                            "madelung_citation" in metadata
-                            and metadata["madelung_citation"]
-                        ):
+                        if metadata.get("madelung_citation"):
                             lines.append(f"      ({metadata['madelung_citation']})")
                     if "characteristic_length_angstrom" in metadata:
                         lines.append(
@@ -890,23 +888,22 @@ def generate_comparison_summary(
             lines.append(f"  Use {schemes[0]} correction")
             lines.append(f"  E_formation = {form_energies[0]:.4f} eV")
             recommendation = schemes[0]
+        # Recommend based on spread
+        elif stats["std_correction"] < 0.1:
+            lines.append("  ✓ Good agreement between schemes")
+            lines.append(
+                f"  Recommended: {stats['mean_formation_energy']:.4f} ± "
+                f"{stats['std_formation_energy']:.4f} eV"
+            )
+            recommendation = "average"
         else:
-            # Recommend based on spread
-            if stats["std_correction"] < 0.1:
-                lines.append("  ✓ Good agreement between schemes")
-                lines.append(
-                    f"  Recommended: {stats['mean_formation_energy']:.4f} ± "
-                    f"{stats['std_formation_energy']:.4f} eV"
-                )
-                recommendation = "average"
-            else:
-                lines.append("  ⚠ Large spread between schemes")
-                lines.append("  Consider larger supercell for better convergence")
-                # Recommend the most conservative (largest correction)
-                max_idx = corr_energies.index(max(corr_energies))
-                recommendation = schemes[max_idx]
-                lines.append(f"  Conservative choice: {recommendation}")
-                lines.append(f"  E_formation = {form_energies[max_idx]:.4f} eV")
+            lines.append("  ⚠ Large spread between schemes")
+            lines.append("  Consider larger supercell for better convergence")
+            # Recommend the most conservative (largest correction)
+            max_idx = corr_energies.index(max(corr_energies))
+            recommendation = schemes[max_idx]
+            lines.append(f"  Conservative choice: {recommendation}")
+            lines.append(f"  E_formation = {form_energies[max_idx]:.4f} eV")
 
     lines.append("")
     lines.append("=" * 70)
@@ -919,6 +916,7 @@ def generate_comparison_summary(
 
     # Write to file
     from pathlib import Path
+
     from atomate2.siesta.utils.text_output import get_standard_footer
 
     summary_file = Path("correction_comparison.txt")

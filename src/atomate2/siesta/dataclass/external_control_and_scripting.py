@@ -11,16 +11,14 @@ Section: 10 External Control of Siesta
 
 __all__ = ["ExternalControlAndScripting"]
 
-from dataclasses import dataclass, field, fields
-from typing import Dict, Any
-from typing import Optional
+import logging
 from collections import OrderedDict
+from dataclasses import dataclass, field, fields
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +32,8 @@ class ExternalControlAndScripting(FDFDataclass):
     `pymatgen` for structure handling, and `ase` for atomic structure manipulations. It provides methods to validate and
     generate FDF blocks for SIESTA's Lua scripting capabilities, ensuring compatibility with Atomate2 workflows.
 
-    Attributes:
+    Attributes
+    ----------
         use_lua_scripting (bool): Flag to enable Lua scripting for advanced simulation workflow control.
         lua_script (str): Filename of the main Lua script to be executed by SIESTA.
         lua_fdf_arguments (OrderedDict[str, Any]): Dictionary of FDF flags related to Lua scripting.
@@ -50,7 +49,7 @@ class ExternalControlAndScripting(FDFDataclass):
         VerbosityLevel.ERROR
     )  # Default to show info & errors messages
 
-    _user_params: Optional[Dict[str, Any]] = field(
+    _user_params: dict[str, Any] | None = field(
         default=None,
         init=False,  # Prevent user from setting via constructor
         metadata={
@@ -90,7 +89,7 @@ class ExternalControlAndScripting(FDFDataclass):
             )
             self.__class__._registered = True
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -104,11 +103,12 @@ class ExternalControlAndScripting(FDFDataclass):
                 self.lua_script = str(value)
                 self.use_lua_scripting = True  # Auto-enable if script provided
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
 
         Note:
@@ -116,7 +116,7 @@ class ExternalControlAndScripting(FDFDataclass):
             MolecularDynamicsAndRelaxation section, where it's set to "LUA"
             when Lua scripting is enabled. This method only writes Lua.Script.
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         if self.use_lua_scripting and self.lua_script:
             # Only write Lua.Script here
@@ -125,11 +125,12 @@ class ExternalControlAndScripting(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have Lua scripting parameters
@@ -138,7 +139,7 @@ class ExternalControlAndScripting(FDFDataclass):
 
     @classmethod
     def setup_lua_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "ExternalControlAndScripting":
         """
         Create and configure an ExternalControlAndScripting instance based on user parameters, retaining all default values for unspecified fields.
@@ -152,11 +153,14 @@ class ExternalControlAndScripting(FDFDataclass):
             user_params (Optional[Dict[str, Any]]): Dictionary of user-defined parameters (case-insensitive, may include dots).
                 Expected key: "lua.script" for the Lua script filename. If None or empty, all default values are used.
 
-        Returns:
+        Returns
+        -------
             ExternalControlAndScripting: Configured instance with all fields (default and user-specified) and FDF arguments.
 
         Example:
-            >>> lua_settings = ExternalControlAndScripting.setup_lua_settings({"lua.script": "run.lua"})
+            >>> lua_settings = ExternalControlAndScripting.setup_lua_settings(
+            ...     {"lua.script": "run.lua"}
+            ... )
             >>> print(lua_settings.lua_fdf_arguments)
             OrderedDict([('#ExternalControlAndScripting', 'ExternalControlAndScripting'), ('Lua.Script', 'run.lua')])
             >>> lua_settings = ExternalControlAndScripting.setup_lua_settings()
@@ -172,7 +176,7 @@ class ExternalControlAndScripting(FDFDataclass):
         lua_settings_instance = cls()
 
         # Store user_params for validate method
-        lua_settings_instance._user_params = user_params if user_params else {}
+        lua_settings_instance._user_params = user_params or {}
 
         # Handle case where user_params is None or empty
         if not lua_settings_instance._user_params:
@@ -183,11 +187,10 @@ class ExternalControlAndScripting(FDFDataclass):
                 console.print(
                     f"[blue]user_params: {lua_settings_instance._user_params}[/blue]"
                 )
-        else:
-            if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
-                console.print(
-                    f"[blue]user_params: {lua_settings_instance._user_params}[/blue]"
-                )
+        elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.DEBUG.value:
+            console.print(
+                f"[blue]user_params: {lua_settings_instance._user_params}[/blue]"
+            )
 
         # Check for lua.script in user_params (case-insensitive) and set use_lua_scripting accordingly
         lua_script_value = None
@@ -256,11 +259,10 @@ class ExternalControlAndScripting(FDFDataclass):
                     setattr(lua_settings_instance, original_key, bool(value))
                 else:
                     setattr(lua_settings_instance, original_key, value)
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Key '{key}' does not match any ExternalControlAndScripting field, skipping.[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Key '{key}' does not match any ExternalControlAndScripting field, skipping.[/yellow]"
+                )
 
         # Validate settings
         try:
@@ -290,11 +292,14 @@ class ExternalControlAndScripting(FDFDataclass):
         Ensures that if Lua scripting is enabled, a valid Lua script filename is provided. Raises an error if
         the configuration is invalid, ensuring compatibility with SIESTA's input requirements.
 
-        Raises:
+        Raises
+        ------
             ValueError: If `use_lua_scripting` is True but no `lua_script` is specified.
 
         Example:
-            >>> scripting = ExternalControlAndScripting(use_lua_scripting=True, lua_script="")
+            >>> scripting = ExternalControlAndScripting(
+            ...     use_lua_scripting=True, lua_script=""
+            ... )
             >>> scripting.validate()
             ValueError: At least one Lua script must be specified if Lua scripting is enabled.
         """
@@ -322,7 +327,9 @@ class ExternalControlAndScripting(FDFDataclass):
             section, where it's set to "LUA" when Lua scripting is enabled.
 
         Example:
-            >>> scripting = ExternalControlAndScripting(use_lua_scripting=True, lua_script="run.lua")
+            >>> scripting = ExternalControlAndScripting(
+            ...     use_lua_scripting=True, lua_script="run.lua"
+            ... )
             >>> scripting.generate_scripting_block()
             >>> print(scripting.lua_fdf_arguments)
             OrderedDict([('#ExternalControlAndScripting', 'ExternalControlAndScripting'), ('Lua.Script', 'run.lua')])
@@ -336,9 +343,9 @@ class ExternalControlAndScripting(FDFDataclass):
         # Collect parameters (only if scripting is enabled)
         if self.use_lua_scripting:
             # Add section header first (ensures proper ordering in FDF file)
-            self.lua_fdf_arguments[
-                "#ExternalControlAndScripting"
-            ] = "ExternalControlAndScripting"
+            self.lua_fdf_arguments["#ExternalControlAndScripting"] = (
+                "ExternalControlAndScripting"
+            )
             # Only write Lua.Script
             # MD.TypeOfRun stays in MolecularDynamicsAndRelaxation section
             self.lua_fdf_arguments["Lua.Script"] = f"{self.lua_script}"

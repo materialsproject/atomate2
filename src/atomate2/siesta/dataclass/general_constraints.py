@@ -12,12 +12,11 @@ Section: 7.7 Use of General constraints
 
 __all__ = ["GeneralConstraints"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional, Union, List
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +30,7 @@ class GeneralConstraints(FDFDataclass):
     # ------------------------------
 
     # geometry_constraints_block: Dict[float,Any]= field(default_factory=dict) # %block Geometry.Constraints 〈None〉
-    geometry_constraints_block: Union[List[str], Dict[str, Any]] = field(
+    geometry_constraints_block: list[str] | dict[str, Any] = field(
         default_factory=list,
         metadata={
             "description": "A block to define constraints on atomic positions or lattice vectors during a geometry optimization or molecular dynamics run (e.g., fixing atoms). Can be list or dict.",
@@ -39,7 +38,7 @@ class GeneralConstraints(FDFDataclass):
         },
     )
 
-    constraints_fdf_arguments: Dict[str, Any] = field(
+    constraints_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to geometric constraints.",
@@ -69,7 +68,7 @@ class GeneralConstraints(FDFDataclass):
         """
         logger.info("GeneralConstraints.validate()")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -86,14 +85,15 @@ class GeneralConstraints(FDFDataclass):
                 # Accept both list and dict formats for block parameters
                 self.geometry_constraints_block = value
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         if self.geometry_constraints_block:
             fdf["#GeneralConstraints"] = "Geometry Constraints"
@@ -101,11 +101,12 @@ class GeneralConstraints(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE has its own constraint system (FixAtoms, FixBondLengths, etc.)
@@ -137,7 +138,7 @@ class GeneralConstraints(FDFDataclass):
 
     @classmethod
     def setup_constraints(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "GeneralConstraints":
         """
         Create and configure a GeneralConstraints instance from user parameters.
@@ -158,12 +159,14 @@ class GeneralConstraints(FDFDataclass):
 
         Examples
         --------
-        >>> constraints = GeneralConstraints.setup_constraints({
-        ...     "geometry_constraints_block": {
-        ...         "position from 1 to 5": None,  # Fix atoms 1-5
-        ...         "routine constr": None,  # Fixed cell
+        >>> constraints = GeneralConstraints.setup_constraints(
+        ...     {
+        ...         "geometry_constraints_block": {
+        ...             "position from 1 to 5": None,  # Fix atoms 1-5
+        ...             "routine constr": None,  # Fixed cell
+        ...         }
         ...     }
-        ... })
+        ... )
         """
         logger.info("GeneralConstraints.setup_constraints()")
 

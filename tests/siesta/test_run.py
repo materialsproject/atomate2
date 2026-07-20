@@ -10,17 +10,18 @@ These tests validate:
 - run_optical
 """
 
-import pytest
 import json
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, mock_open, patch
+
+import pytest
 
 from atomate2.siesta.run import (
+    run_optical,
+    run_optical_input,
     run_siesta,
-    should_stop_children,
     run_siesta_socket,
     run_vibra,
-    run_optical_input,
-    run_optical,
+    should_stop_children,
 )
 
 

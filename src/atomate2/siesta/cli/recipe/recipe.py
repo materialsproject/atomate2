@@ -10,11 +10,11 @@ This tool provides:
 """
 
 import click
+from rich import box
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
 from rich.syntax import Syntax
-from rich import box
+from rich.table import Table
 
 from atomate2.siesta.cli.recipe.code_reduction import (
     get_code_reduction_percentage,
@@ -358,7 +358,8 @@ def list():
 
     Each recipe shows name, description, and estimated runtime.
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe list
     """
     list_all()
@@ -377,7 +378,8 @@ def category(category):
       - catalysis: Surface energy, adsorption, NEB
       - convergence: K-points, mesh cutoff, basis set
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe category electronic
         atomate2siesta-recipe category thermal
     """
@@ -396,7 +398,8 @@ def show(recipe_name):
       - Complete usage example with Python code
       - Properties calculated
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe show band_structure_workflow
         atomate2siesta-recipe show phonon_workflow
         atomate2siesta-recipe show complete_material_study
@@ -412,7 +415,8 @@ def search(keyword):
     Search across recipe names, descriptions, and property types.
     Case-insensitive matching.
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe search phonon
         atomate2siesta-recipe search elastic
         atomate2siesta-recipe search band
@@ -431,7 +435,8 @@ def examples():
       - Surface energy
       - Customization examples
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe examples
     """
     show_examples()
@@ -447,7 +452,8 @@ def stats():
       - Average code reduction
       - Documentation coverage
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe stats
     """
     show_stats()
@@ -466,7 +472,8 @@ def demo(recipe_name):
 
     Demonstrates the code simplification achieved by Recipe Book.
 
-    Examples:
+    Examples
+    --------
         atomate2siesta-recipe demo band_structure_workflow
         atomate2siesta-recipe demo phonon_workflow
         atomate2siesta-recipe demo complete_material_study
@@ -491,7 +498,8 @@ def analyze(structure_file, detailed):
     By default, computational estimates are hidden because they are
     rough heuristics. Use --detailed to show them with warnings.
 
-    Examples:
+    Examples
+    --------
         # Basic analysis (no estimates)
         atomate2siesta-recipe analyze Si.cif
 
@@ -601,7 +609,7 @@ from jobflow import run_locally
 structure = Structure.from_file('structure.cif')
 
 # One-line workflow!
-flow = RecipeBook.{recipe['name']}(structure)
+flow = RecipeBook.{recipe["name"]}(structure)
 
 # Run it
 results = run_locally(flow, create_folders=True)"""
@@ -805,6 +813,7 @@ def analyze_structure(structure_file, detailed):
     """Analyze structure and recommend parameters."""
     try:
         from pymatgen.core import Structure
+
         from atomate2.siesta.recipes import RecipeBook
 
         # Load structure

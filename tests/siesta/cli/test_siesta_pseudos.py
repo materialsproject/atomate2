@@ -1,15 +1,15 @@
 """Tests for siesta_pseudos CLI module."""
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from click.testing import CliRunner
 
 from atomate2.siesta.cli.pseudo.siesta_pseudos import (
-    cli,
-    get_local_pseudo_path,
-    download_and_extract_pseudo,
     PSEUDOS,
+    cli,
+    download_and_extract_pseudo,
+    get_local_pseudo_path,
 )
 
 
@@ -515,9 +515,9 @@ class TestPSEUDOSData:
     def test_pseudos_elements_are_sets(self):
         """Test that elements are stored as sets."""
         for name, data in PSEUDOS.items():
-            assert isinstance(
-                data["elements"], set
-            ), f"Pseudo '{name}' elements should be a set"
+            assert isinstance(data["elements"], set), (
+                f"Pseudo '{name}' elements should be a set"
+            )
 
     def test_pseudos_have_valid_elements(self):
         """Test that element symbols are valid."""

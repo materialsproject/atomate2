@@ -13,12 +13,11 @@ Section: 6.19 Options for chemical analysis
 
 __all__ = ["ChemicalAnalysis"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -114,12 +113,11 @@ class ChemicalAnalysis(FDFDataclass):
 
     def validate(self):
         """
-        validate the chemical analysis options block for the FDF file.
+        Validate the chemical analysis options block for the FDF file.
         """
         logger.info("ChemicalAnalysis.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -154,14 +152,15 @@ class ChemicalAnalysis(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # Charge.Mulliken - always write with default marker
         if not self.charge_mulliken:
@@ -191,7 +190,7 @@ class ChemicalAnalysis(FDFDataclass):
 
     @classmethod
     def setup_chemical_analysis(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "ChemicalAnalysis":
         """
         Create and configure a ChemicalAnalysis instance with full parameter parsing.
@@ -200,7 +199,8 @@ class ChemicalAnalysis(FDFDataclass):
             user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             ChemicalAnalysis: Configured instance with all fields set.
         """
         # Initialize instance with defaults
@@ -218,11 +218,12 @@ class ChemicalAnalysis(FDFDataclass):
 
         return instance
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have chemical analysis parameters
@@ -234,4 +235,3 @@ class ChemicalAnalysis(FDFDataclass):
         Generates the chemical analysis options block for the FDF file.
         """
         logger.info("ChemicalAnalysis.generate_chemical_analysis_block()")
-        pass

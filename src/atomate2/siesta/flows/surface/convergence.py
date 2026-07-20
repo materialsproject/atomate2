@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from jobflow import Flow, job
 from pymatgen.core import Structure
@@ -12,9 +12,6 @@ from pymatgen.core import Structure
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.utils.common import print_docstring_in_box
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +73,7 @@ class SurfaceEnergyConvergenceFlowMaker(BaseSiestaFlowMaker):
     --------
     >>> from pymatgen.core import Structure
     >>> from atomate2.siesta.flows.surface.convergence import (
-    ...     SurfaceEnergyConvergenceFlowMaker
+    ...     SurfaceEnergyConvergenceFlowMaker,
     ... )
     >>> from atomate2.siesta.jobs.core import StaticMaker
     >>>
@@ -295,8 +292,8 @@ class SurfaceEnergyConvergenceFlowMaker(BaseSiestaFlowMaker):
         tuple
             (job, metadata_dict)
         """
-        from pymatgen.core.surface import SlabGenerator
         import numpy as np
+        from pymatgen.core.surface import SlabGenerator
 
         hkl = self.miller_index
         miller_str = f"{hkl[0]}{hkl[1]}{hkl[2]}"
@@ -403,8 +400,8 @@ def analyze_surface_convergence(
     dict
         Convergence analysis results.
     """
-    from pymatgen.core import Composition
     import numpy as np
+    from pymatgen.core import Composition
 
     logger.info("Analyzing surface energy convergence...")
 
@@ -867,7 +864,7 @@ def _write_convergence_summary(
             )
 
     else:  # both
-        lines.append(f"{'Layers':<8} {'Vacuum':<10} {'Atoms':<8} " f"{'γ (J/m²)':<12}")
+        lines.append(f"{'Layers':<8} {'Vacuum':<10} {'Atoms':<8} {'γ (J/m²)':<12}")
         lines.append("-" * 80)
         for r in results:
             lines.append(

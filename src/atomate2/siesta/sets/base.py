@@ -2,61 +2,42 @@
 
 from __future__ import annotations
 
+import json
+import logging
+import os
+from collections import OrderedDict
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+from ase.units import Ry
+from monty.json import MontyDecoder, MontyEncoder
+from pymatgen.core import Molecule, Structure
+from pymatgen.io.core import InputFile, InputGenerator, InputSet
 from rich.console import Console
 from rich.table import Table
 
-import os
-import json
-import logging
-from pathlib import Path
-
-from dataclasses import dataclass
-from dataclasses import field
-
-from typing import TYPE_CHECKING
-from typing import List
-from typing import Any
-from typing import Optional
-
-from collections import OrderedDict
-
-from monty.json import MontyDecoder
-from monty.json import MontyEncoder
-
-from pymatgen.core import Molecule
-from pymatgen.core import Structure
-from pymatgen.io.core import InputFile
-from pymatgen.io.core import InputGenerator
-from pymatgen.io.core import InputSet
-
-from atomate2.siesta.sets.parser import SiestaParseError
-from atomate2.siesta.sets.parser import read_siesta_output_structure
-from atomate2.siesta.utils.verbosity import VerbosityLevel, get_verbosity_value
-
+from atomate2.siesta import SETTINGS
 from atomate2.siesta.dataclass.base import merge_fdf_parameters
+from atomate2.siesta.dataclass.external_control_and_scripting import (
+    ExternalControlAndScripting,
+)
 from atomate2.siesta.dataclass.general_system_descriptors import (
     GeneralSystemDescriptors,
 )
 from atomate2.siesta.dataclass.pseudopotentials import Pseudopotentials
-from atomate2.siesta.dataclass.external_control_and_scripting import (
-    ExternalControlAndScripting,
-)
-from atomate2.siesta.dataclass.registry import (
-    get_modules_for_tier,
-    get_sorted_modules,
-)
+from atomate2.siesta.dataclass.registry import get_modules_for_tier, get_sorted_modules
 
 # ASE-based SIESTA interface imports (required for phonon/VIBRA calculations)
 # Future: migrate phonon workflows from ASE to sisl for better integration
-from atomate2.siesta.sets.ase import Species, PAOBasisBlock, Siesta
-from atomate2.siesta.sets.utils import pymatgen_to_ase
-from atomate2.siesta.sets.utils import siesta_fdf_to_json
-from ase.units import Ry
-
-from atomate2.siesta import SETTINGS
+from atomate2.siesta.sets.ase import PAOBasisBlock, Siesta, Species
+from atomate2.siesta.sets.parser import SiestaParseError, read_siesta_output_structure
+from atomate2.siesta.sets.utils import pymatgen_to_ase, siesta_fdf_to_json
+from atomate2.siesta.utils.verbosity import VerbosityLevel, get_verbosity_value
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
     from pymatgen.util.typing import PathLike
 
 
@@ -101,15 +82,16 @@ def filter_internal_params(user_params: dict) -> tuple[dict, dict]:
     Args:
         user_params: User-provided parameters
 
-    Returns:
+    Returns
+    -------
         Tuple of (fdf_params, internal_params) where internal_params
         have their prefixes stripped
 
     Example:
         >>> params = {
-        ...     "Mesh.Cutoff": "300 Ry",                    # SIESTA parameter
+        ...     "Mesh.Cutoff": "300 Ry",  # SIESTA parameter
         ...     "atomate2siesta_magnetic_ordering": "AFM",  # Internal (full)
-        ...     "a2s_auto_kpoints": True,                   # Internal (alias)
+        ...     "a2s_auto_kpoints": True,  # Internal (alias)
         ... }
         >>> fdf, internal = filter_internal_params(params)
         >>> fdf
@@ -157,16 +139,18 @@ def normalize_internal_params(user_params: dict) -> dict:
     Args:
         user_params: User-provided parameters
 
-    Returns:
+    Returns
+    -------
         Dictionary (unchanged - validation only)
 
-    Raises:
+    Raises
+    ------
         ValueError: If legacy unprefixed parameter names are used
 
     Example:
         >>> params = {
-        ...     "Mesh.Cutoff": "300 Ry",       # ✅ SIESTA parameter (no prefix needed)
-        ...     "a2s_kpts": [4, 4, 4],         # ✅ atomate2siesta parameter (prefixed)
+        ...     "Mesh.Cutoff": "300 Ry",  # ✅ SIESTA parameter (no prefix needed)
+        ...     "a2s_kpts": [4, 4, 4],  # ✅ atomate2siesta parameter (prefixed)
         ... }
         >>> normalize_internal_params(params)
         {'Mesh.Cutoff': '300 Ry', 'a2s_kpts': [4, 4, 4]}
@@ -178,7 +162,7 @@ def normalize_internal_params(user_params: dict) -> dict:
     # Check for legacy unprefixed parameters
     legacy_params_found = []
 
-    for key in user_params.keys():
+    for key in user_params:
         if key in LEGACY_INTERNAL_PARAMS:
             legacy_params_found.append(key)
 
@@ -219,53 +203,53 @@ def _initialize_fdf_registry():
     populated before setup_fdf_arguments() is called.
     """
     # Import all dataclass modules
+    from atomate2.siesta.dataclass.auxiliary_force_field import AuxiliaryForceField
     from atomate2.siesta.dataclass.basis_sets_and_projectors import (
         BasisSetsAndProjectors,
     )
-    from atomate2.siesta.dataclass.kpoint_sampling import KPointSampling
-    from atomate2.siesta.dataclass.exchange_correlation_functionals import (
-        ExchangeCorrelationFunctionals,
-    )
-    from atomate2.siesta.dataclass.spin_settings import SpinSettings
-    from atomate2.siesta.dataclass.scf_loop_parameters import SCFLoopParameters
-    from atomate2.siesta.dataclass.real_space_grid_parameters import (
-        RealSpaceGridParameters,
-    )
-    from atomate2.siesta.dataclass.hamiltonian_and_overlap_parameters import (
-        HamiltonianAndOverlapParameters,
-    )
-    from atomate2.siesta.dataclass.electronic_structure_calculation_options import (
-        ElectronicStructureCalculationOptions,
-    )
-    from atomate2.siesta.dataclass.density_of_states_and_band_structure import (
-        DensityOfStatesAndBandStructure,
-    )
-    from atomate2.siesta.dataclass.chemical_analysis import ChemicalAnalysis
-    from atomate2.siesta.dataclass.optical_properties import OpticalProperties
-    from atomate2.siesta.dataclass.wannier90 import Wannier90
     from atomate2.siesta.dataclass.charge_dipole_electric_field import (
         ChargeDipoleElectricField,
     )
-    from atomate2.siesta.dataclass.grids import Grids
-    from atomate2.siesta.dataclass.auxiliary_force_field import AuxiliaryForceField
-    from atomate2.siesta.dataclass.parallel_options import ParallelOptions
-    from atomate2.siesta.dataclass.efficiency_options import EfficiencyOptions
+    from atomate2.siesta.dataclass.chemical_analysis import ChemicalAnalysis
     from atomate2.siesta.dataclass.denchar import Denchar
-    from atomate2.siesta.dataclass.netcdf_options import NetcdfOptions
-    from atomate2.siesta.dataclass.general_constraints import GeneralConstraints
-    from atomate2.siesta.dataclass.phonon_calculations import PhononCalculations
+    from atomate2.siesta.dataclass.density_of_states_and_band_structure import (
+        DensityOfStatesAndBandStructure,
+    )
     from atomate2.siesta.dataclass.dftu import DFTU
+    from atomate2.siesta.dataclass.efficiency_options import EfficiencyOptions
+    from atomate2.siesta.dataclass.electronic_structure_calculation_options import (
+        ElectronicStructureCalculationOptions,
+    )
+    from atomate2.siesta.dataclass.exchange_correlation_functionals import (
+        ExchangeCorrelationFunctionals,
+    )
+    from atomate2.siesta.dataclass.general_constraints import GeneralConstraints
+    from atomate2.siesta.dataclass.grids import Grids
+    from atomate2.siesta.dataclass.hamiltonian_and_overlap_parameters import (
+        HamiltonianAndOverlapParameters,
+    )
+    from atomate2.siesta.dataclass.kpoint_sampling import KPointSampling
+    from atomate2.siesta.dataclass.molecular_dynamics_and_relaxation import (
+        MolecularDynamicsAndRelaxation,
+    )
+    from atomate2.siesta.dataclass.netcdf_options import NetcdfOptions
+    from atomate2.siesta.dataclass.optical_properties import OpticalProperties
+    from atomate2.siesta.dataclass.parallel_options import ParallelOptions
+    from atomate2.siesta.dataclass.phonon_calculations import PhononCalculations
+    from atomate2.siesta.dataclass.real_space_grid_parameters import (
+        RealSpaceGridParameters,
+    )
     from atomate2.siesta.dataclass.rttddft import RTTDDFT
+    from atomate2.siesta.dataclass.scf_loop_parameters import SCFLoopParameters
+    from atomate2.siesta.dataclass.solvers_and_performance_options import (
+        SolversAndPerformanceOptions,
+    )
+    from atomate2.siesta.dataclass.spin_settings import SpinSettings
     from atomate2.siesta.dataclass.structural_information import (
         StructuralInformationVersion1,
         StructuralInformationVersion2,
     )
-    from atomate2.siesta.dataclass.molecular_dynamics_and_relaxation import (
-        MolecularDynamicsAndRelaxation,
-    )
-    from atomate2.siesta.dataclass.solvers_and_performance_options import (
-        SolversAndPerformanceOptions,
-    )
+    from atomate2.siesta.dataclass.wannier90 import Wannier90
 
     # Instantiate all dataclasses to trigger registration
     _ = GeneralSystemDescriptors()
@@ -442,7 +426,8 @@ class SiestaInputGenerator(InputGenerator):
     """
        A class to generate SIESTA input sets.
 
-    Attributes:
+    Attributes
+    ----------
         user_params (OrderedDict[str, Any]): Updates the default parameters for the SIESTA calculator.
         user_kpoints_settings (OrderedDict[str, Any]): Settings used to create the k-grid parameters for SIESTA.
         fdf_arguments (OrderedDict[str, Any]): Explicitly given fdf arguments using SIESTA keywords as in the manual.
@@ -478,7 +463,8 @@ class SiestaInputGenerator(InputGenerator):
         species (List[Species]): List of species for the calculation, defaults to empty list.
         pseudo_path (Optional[str]): Path to pseudopotential files, defaults to SIESTA_PP_PATH or SETTINGS.SIESTA_PP_PATH.
 
-    Methods:
+    Methods
+    -------
         get_input_set(structure: Structure | Molecule | None = None, prev_dir: PathLike | None = None) -> SiestaInputSet:
             Generates a SiestaInputSet object for the given structure or from a previous calculation directory.
             Raises ValueError if no structure can be determined.
@@ -502,31 +488,32 @@ class SiestaInputGenerator(InputGenerator):
     tier: str = (
         "intermediate"  # Calculation tier: basic, intermediate, advanced, expert
     )
-    enabled_modules: Optional[List[str]] = None  # Override: explicitly enable modules
-    disabled_modules: Optional[List[str]] = None  # Override: explicitly disable modules
+    enabled_modules: list[str] | None = None  # Override: explicitly enable modules
+    disabled_modules: list[str] | None = None  # Override: explicitly disable modules
 
     enable_lua: bool = True  # Flag to control Lua settings
     force_unknown: bool = (
         False  # Allow unknown FDF parameters not registered by dataclasses
     )
-    user_params: Optional[OrderedDict[str, Any]] = field(default_factory=OrderedDict)
+    user_params: OrderedDict[str, Any] | None = field(default_factory=OrderedDict)
     user_kpoints_settings: OrderedDict[str, Any] = field(default_factory=OrderedDict)
     # Parameters for Basis
     perform_siesta_default_basis: bool = True
     energy_shift: float = field(default=0.01)  # in eV
     basis_set_size: str = field(default="SZ")  # For Default Siesta Basis
-    basis_set_block: Optional[List[PAOBasisBlock]] = field(
+    basis_set_block: list[PAOBasisBlock] | None = field(
         default=None
     )  # For Siesta Basis Block and Made optional
     xc: str = field(default="PBE")
     mesh_cutoff: float = field(default=100.0)  # in eV
-    kpts: List[int] = field(default_factory=lambda: [1, 1, 1])
+    kpts: list[int] = field(default_factory=lambda: [1, 1, 1])
     # fdf_arguments: Dict[str, Any] = field(default_factory=dict)
     fdf_arguments: OrderedDict[str, Any] = field(default_factory=OrderedDict)
-    species: List[Species] = field(default_factory=list)
-    pseudo_path: Optional[str] = field(
-        default_factory=lambda: os.getenv("SIESTA_PP_PATH")
-        or getattr(SETTINGS, "SIESTA_PP_PATH", None),
+    species: list[Species] = field(default_factory=list)
+    pseudo_path: str | None = field(
+        default_factory=lambda: (
+            os.getenv("SIESTA_PP_PATH") or getattr(SETTINGS, "SIESTA_PP_PATH", None)
+        ),
         metadata={
             "description": "Path to pseudopotential files, defaults to SIESTA_PP_PATH or SETTINGS.SIESTA_PP_PATH."
         },
@@ -594,10 +581,12 @@ class SiestaInputGenerator(InputGenerator):
             structure (Structure or Molecule, optional): Structure or Molecule to generate the input set for.
             prev_dir (str or Path, optional): Path to the previous working directory.
 
-        Returns:
+        Returns
+        -------
             SiestaInputSet: The input set for the calculation of the structure.
 
-        Raises:
+        Raises
+        ------
             ValueError: If no structure can be determined to generate the input set.
         """
         logger.info("SiestaInputGenerator.get_input_set()")
@@ -625,7 +614,8 @@ class SiestaInputGenerator(InputGenerator):
         Args:
             prev_dir (str or Path, optional): The previous directory for the calculation.
 
-        Returns:
+        Returns
+        -------
             tuple: A tuple containing the previous structure (Structure or Molecule or None),
                    previous parameters (dict), and previous results (dict).
         """
@@ -693,11 +683,10 @@ class SiestaInputGenerator(InputGenerator):
                             f"Skipping prev_dir reading - appears to be dry-run directory: {split_prev_dir}"
                         )
                         return prev_structure, prev_params, prev_results
-                    else:
-                        raise FileNotFoundError(
-                            f"Could not find siesta_parameters.json in {split_prev_dir} "
-                            f"(checked main directory, dry_run_output/, and siesta_compressed/ subfolder)"
-                        )
+                    raise FileNotFoundError(
+                        f"Could not find siesta_parameters.json in {split_prev_dir} "
+                        f"(checked main directory, dry_run_output/, and siesta_compressed/ subfolder)"
+                    )
 
             # Read with appropriate method
             if str(param_file_path).endswith(".gz"):
@@ -711,10 +700,10 @@ class SiestaInputGenerator(InputGenerator):
                 # siesta_output: Sequence[Structure | Molecule] = read_siesta_output(
                 #    f"{split_prev_dir}/siesta.out", index=slice(-1, None))
                 # prev_structure = siesta_output[0]
-                siesta_output: Sequence[
-                    Structure | Molecule
-                ] = read_siesta_output_structure(
-                    f"{split_prev_dir}/siesta.XV", index=slice(-1, None)
+                siesta_output: Sequence[Structure | Molecule] = (
+                    read_siesta_output_structure(
+                        f"{split_prev_dir}/siesta.XV", index=slice(-1, None)
+                    )
                 )
                 prev_structure = siesta_output[0] if siesta_output else None
 
@@ -738,7 +727,6 @@ class SiestaInputGenerator(InputGenerator):
                         )
                 except Exception as e:
                     logger.warning(f"Could not read structure from prev_dir: {e}")
-                    pass
 
         return prev_structure, prev_params, prev_results
 
@@ -754,7 +742,8 @@ class SiestaInputGenerator(InputGenerator):
             structure (Structure or Molecule): The system to generate input parameters for.
             prev_parameters (dict[str, Any], optional): Previous calculation parameters.
 
-        Returns:
+        Returns
+        -------
             dict: A dictionary of SIESTA input parameters.
         """
         logger.info("SiestaInputGenerator._get_input_parameters()")
@@ -986,14 +975,12 @@ class SiestaInputGenerator(InputGenerator):
                 user_params_
             )
             self.fdf_arguments.update(self.lua_settings.lua_fdf_arguments)
-        else:
-            if (
-                get_verbosity_value(self.CONSOLE_VERBOSITY)
-                >= VerbosityLevel.VERBOSE.value
-            ):
-                console.print(
-                    "[yellow]Skipping Lua settings due to used [bold]Maker[/bold]...[/yellow]"
-                )
+        elif (
+            get_verbosity_value(self.CONSOLE_VERBOSITY) >= VerbosityLevel.VERBOSE.value
+        ):
+            console.print(
+                "[yellow]Skipping Lua settings due to used [bold]Maker[/bold]...[/yellow]"
+            )
 
         # To check
         self.setup_fdf_arguments(user_params=user_params_)
@@ -1105,8 +1092,8 @@ class SiestaInputGenerator(InputGenerator):
 
             # Display changes (for 'diff', 'summary', and 'full' levels)
             if added_params or modified_params:
-                from rich.panel import Panel
                 from rich import box
+                from rich.panel import Panel
 
                 console.print(
                     Panel.fit(
@@ -1188,8 +1175,8 @@ class SiestaInputGenerator(InputGenerator):
 
         elif stage == "final" and final_fdf_params:
             # Stage 4: Display final FDF parameters before writing to file
-            from rich.panel import Panel
             from rich import box
+            from rich.panel import Panel
 
             # Store previous state for comparison
             prev_fdf = getattr(
@@ -1224,7 +1211,7 @@ class SiestaInputGenerator(InputGenerator):
 
             # Check for removed parameters
             for key in prev_fdf.keys():
-                if key.upper() not in {k.upper() for k in final_fdf_params.keys()}:
+                if key.upper() not in {k.upper() for k in final_fdf_params}:
                     powerup_removed[key] = prev_fdf[key]
 
             console.print(
@@ -1330,12 +1317,12 @@ class SiestaInputGenerator(InputGenerator):
                         status = "U"  # User
                         status_style = "bold green"
                     elif key in powerup_added or key_upper in {
-                        k.upper() for k in powerup_added.keys()
+                        k.upper() for k in powerup_added
                     }:
                         status = "P"  # Powerup
                         status_style = "bold yellow"
                     elif key in powerup_modified or key_upper in {
-                        k.upper() for k in powerup_modified.keys()
+                        k.upper() for k in powerup_modified
                     }:
                         status = "M"  # Modified
                         status_style = "bold yellow"
@@ -1348,7 +1335,9 @@ class SiestaInputGenerator(InputGenerator):
 
                     # Remove SIESTA DEFAULT VALUE comments for cleaner display
                     if "# SIESTA DEFAULT VALUE" in value_str:
-                        value_str = value_str.split("# SIESTA DEFAULT VALUE")[0].strip()
+                        value_str = value_str.split(
+                            "# SIESTA DEFAULT VALUE", maxsplit=1
+                        )[0].strip()
 
                     # Truncate if still too long
                     if len(value_str) > 40:
@@ -1425,7 +1414,8 @@ class SiestaInputGenerator(InputGenerator):
             structure (Structure or Molecule): The system to run.
             prev_parameters (dict[str, Any]): Previous calculation parameters.
 
-        Returns:
+        Returns
+        -------
             dict: A dictionary of updates to apply to the parameters.
         """
         logger.info("SiestaInputGenerator.get_parameter_updates()")
@@ -1565,7 +1555,8 @@ class SiestaInputGenerator(InputGenerator):
         Args:
             user_params: Dictionary of user-provided SIESTA parameters
 
-        Returns:
+        Returns
+        -------
             set: Set of module names that should be activated based on parameters
         """
         needed_modules = set()
@@ -1586,7 +1577,7 @@ class SiestaInputGenerator(InputGenerator):
         # Convert all param keys to lowercase with no separators for matching
         # Also strip %block prefix for better matching
         param_keys_lower = set()
-        for k in user_params.keys():
+        for k in user_params:
             k_normalized = (
                 k.lower()
                 .replace("_", "")
@@ -1595,8 +1586,7 @@ class SiestaInputGenerator(InputGenerator):
                 .replace(" ", "")
             )
             # Strip %block prefix if present
-            if k_normalized.startswith("%block"):
-                k_normalized = k_normalized[6:]  # Remove "%block"
+            k_normalized = k_normalized.removeprefix("%block")  # Remove "%block"
             param_keys_lower.add(k_normalized)
 
         # COMPREHENSIVE MODULE PARAMETER MAPPINGS
@@ -1752,11 +1742,13 @@ class SiestaInputGenerator(InputGenerator):
         Args:
             user_params: User-provided parameters to check for module-specific parameters
 
-        Returns:
+        Returns
+        -------
             dict: Dictionary of module names to DataclassModule metadata objects
                  that should be initialized for this input generator.
 
-        Notes:
+        Notes
+        -----
             - Gets all modules for the specified tier (hierarchical: basic < intermediate < advanced < expert)
             - Auto-detects needed modules from user_params (smart activation)
             - Applies enabled_modules override to force-enable specific modules
@@ -1804,7 +1796,8 @@ class SiestaInputGenerator(InputGenerator):
             user_params_: User parameters (original case)
             user_params_lower: User parameters (lowercased for matching)
 
-        Notes:
+        Notes
+        -----
             - Modules are initialized in priority order (lower priority = initialized first)
             - Each module's setup_*() method is called to process user_params
             - FDF arguments from each module are collected and merged

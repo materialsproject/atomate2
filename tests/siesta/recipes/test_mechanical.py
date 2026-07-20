@@ -3,12 +3,12 @@
 from jobflow import Flow, Job
 
 from atomate2.siesta.recipes.mechanical import (
-    mechanical_properties,
+    anisotropy_analysis,
     elastic_constants_workflow,
     eos_workflow,
-    pressure_eos_workflow,
     hardness_estimation,
-    anisotropy_analysis,
+    mechanical_properties,
+    pressure_eos_workflow,
 )
 
 

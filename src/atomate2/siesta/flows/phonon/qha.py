@@ -25,8 +25,8 @@ from jobflow import Flow
 from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.eos import SiestaEosFlowMaker
-from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
 from atomate2.siesta.jobs.core import RelaxMaker
+from atomate2.siesta.jobs.phonon.phonopy import PhonopyMaker
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
@@ -95,7 +95,7 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
     >>> si = Structure(
     ...     lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
     ...     species=["Si", "Si"],
-    ...     coords=[[0, 0, 0], [0.25, 0.25, 0.25]]
+    ...     coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     ... )
     >>>
     >>> maker = SiestaQhaFlowMaker()
@@ -107,17 +107,13 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
     >>> maker = SiestaQhaFlowMaker(
     ...     number_of_frames=7,  # More volume points
     ...     temperature=[300, 600, 900, 1200],  # Specific temperatures
-    ...     phonon_maker=PhonopyMaker(
-    ...         supercell_matrix=[3, 3, 3],
-    ...         mesh_density=100.0
-    ...     )
+    ...     phonon_maker=PhonopyMaker(supercell_matrix=[3, 3, 3], mesh_density=100.0),
     ... )
 
     For metals with soft modes:
 
     >>> maker = SiestaQhaFlowMaker(
-    ...     ignore_imaginary_modes=True,
-    ...     eos_type="birch_murnaghan"
+    ...     ignore_imaginary_modes=True, eos_type="birch_murnaghan"
     ... )
     """
 
@@ -298,16 +294,15 @@ class SiestaQhaFlowMaker(BaseSiestaFlowMaker, CommonQhaMaker):
         ):
             supercell_matrix = self.phonon_maker.supercell_matrix
             logger.info(f"Using user-specified supercell matrix: {supercell_matrix}")
+        # If not specified, CommonQhaMaker will auto-generate based on min_length
+        elif hasattr(self, "min_length") and self.min_length is not None:
+            logger.info(
+                f"Auto-generating supercell based on min_length={self.min_length} Å"
+            )
         else:
-            # If not specified, CommonQhaMaker will auto-generate based on min_length
-            if hasattr(self, "min_length") and self.min_length is not None:
-                logger.info(
-                    f"Auto-generating supercell based on min_length={self.min_length} Å"
-                )
-            else:
-                logger.warning(
-                    "No supercell_matrix or min_length specified, using CommonQhaMaker defaults"
-                )
+            logger.warning(
+                "No supercell_matrix or min_length specified, using CommonQhaMaker defaults"
+            )
 
         # Call parent implementation with supercell_matrix if available
         return super().make(structure=structure, supercell_matrix=supercell_matrix)

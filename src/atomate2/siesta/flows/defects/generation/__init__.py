@@ -29,15 +29,15 @@ from atomate2.siesta.flows.defects.generation.vacancy import (
 )
 
 __all__ = [
-    "create_vacancy_with_ghost",
-    "create_vacancy_with_ghost_from_site",
-    "SiestaVacancyGenerator",
-    "SurfaceVacancyGenerator",
-    "SurfaceInterstitialGenerator",
-    "SurfaceSubstitutionGenerator",
-    "SiestaSubstitutionGenerator",
-    "SiestaInterstitialGenerator",
     "DefectSite",
     "LayerInfo",
+    "SiestaInterstitialGenerator",
+    "SiestaSubstitutionGenerator",
+    "SiestaVacancyGenerator",
+    "SurfaceInterstitialGenerator",
+    "SurfaceSubstitutionGenerator",
+    "SurfaceVacancyGenerator",
+    "create_vacancy_with_ghost",
+    "create_vacancy_with_ghost_from_site",
     "write_defects_to_folders",
 ]

@@ -81,7 +81,8 @@ class MeshCutoffConvergenceFlowMaker(BaseSiestaFlowMaker):
             structure: Structure to calculate
             prev_dir: Previous directory (optional)
 
-        Returns:
+        Returns
+        -------
             Flow with mesh cutoff convergence jobs
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)

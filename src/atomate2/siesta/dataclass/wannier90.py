@@ -13,12 +13,11 @@ Section:    6.22 Maximally Localized Wannier Functions. Interface with the wanni
 
 __all__ = ["Wannier90"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -141,7 +140,7 @@ class Wannier90(FDFDataclass):
     # wannier_manifolds_threshold: float = 1e-6 # Wannier.Manifolds.Threshold 10−6
     # wannier_manifolds_unk: float = False # Wannier.Manifolds.Unk false
     # wannier_k_block: Dict[float,Any]= field(default_factory=dict) # %block Wannier.k Γ-point
-    wannier_manifolds_block: Dict[float, Any] = field(
+    wannier_manifolds_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define one or more distinct groups (manifolds) of Wannier functions.",
@@ -149,7 +148,7 @@ class Wannier90(FDFDataclass):
         },
     )
 
-    wannier_manifold_block: Dict[float, Any] = field(
+    wannier_manifold_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A generic block for defining a specific Wannier function manifold's properties, such as its energy window. The block name is user-defined (e.g., '%block Wannier.Manifold.conduction').",
@@ -157,7 +156,7 @@ class Wannier90(FDFDataclass):
         },
     )
 
-    wannier_projectors_block: Dict[float, Any] = field(
+    wannier_projectors_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define the trial orbitals (projection functions) used as an initial guess for the Wannierization procedure, similar to Wannier90's 'projections' block.",
@@ -181,7 +180,7 @@ class Wannier90(FDFDataclass):
         },
     )
 
-    wannier_k_block: Dict[float, Any] = field(
+    wannier_k_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define the k-point grid to be used for the Wannierization process.",
@@ -228,9 +227,8 @@ class Wannier90(FDFDataclass):
             If Wannier90 interface parameters are invalid
         """
         logger.info("Wannier90.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -302,14 +300,15 @@ class Wannier90(FDFDataclass):
             elif key_lower in ["%block wannier.k", "wannier.k"]:
                 self.wannier_k_block = value
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # Siesta2Wannier90 parameters (postprocessing)
         if self.siesta_2_wannier90_write_mmn:
@@ -359,7 +358,7 @@ class Wannier90(FDFDataclass):
 
     @classmethod
     def setup_wannier90(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "Wannier90":
         """
         Create and configure a Wannier90 instance with full parameter parsing.
@@ -368,7 +367,8 @@ class Wannier90(FDFDataclass):
             user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             Wannier90: Configured instance with all fields set.
         """
         # Initialize instance with defaults
@@ -386,11 +386,12 @@ class Wannier90(FDFDataclass):
 
         return instance
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have Wannier90 interface parameters

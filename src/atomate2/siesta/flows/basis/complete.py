@@ -26,15 +26,16 @@ from typing import TYPE_CHECKING, Any
 from jobflow import Flow, job
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
-from atomate2.siesta.jobs.base import BaseSiestaMaker
-from atomate2.siesta.jobs.core import StaticMaker
 from atomate2.siesta.flows.basis.eos import (
     plot_basis_functions,
     plot_real_basis_functions,
 )
+from atomate2.siesta.jobs.base import BaseSiestaMaker
+from atomate2.siesta.jobs.core import StaticMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
+
     from pymatgen.core import Molecule, Structure
 
 logger = logging.getLogger(__name__)
@@ -90,7 +91,7 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
     ...     basis_sizes=["DZ", "DZP", "TZP"],
     ...     energy_shifts=[0.005, 0.010, 0.015],
     ...     split_norms=[0.15, 0.20, 0.25],
-    ...     kpts=[4, 4, 4]
+    ...     kpts=[4, 4, 4],
     ... )
     >>> flow = maker.make(structure)
     >>> # This runs 3 basis × 3 shifts × 3 norms = 27 calculations
@@ -246,11 +247,11 @@ class CompleteBasisConvergenceFlowMaker(BaseSiestaFlowMaker):
         real_basis_jobs = []
         unique_basis = sorted(
             set([m["basis_size"] for m in all_metadata]),
-            key=lambda x: ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(
-                x
-            )
-            if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
-            else 999,
+            key=lambda x: (
+                ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
+                if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
+                else 999
+            ),
         )
 
         for basis_size in unique_basis:
@@ -458,9 +459,11 @@ def plot_complete_basis_convergence(
 
     unique_basis = sorted(
         set(basis_sizes),
-        key=lambda x: ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
-        if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
-        else 999,
+        key=lambda x: (
+            ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
+            if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
+            else 999
+        ),
     )
     unique_shifts = np.unique(energy_shifts)
     unique_norms = np.unique(split_norms)
@@ -986,9 +989,11 @@ def write_complete_basis_summary(
 
     unique_basis = sorted(
         set(basis_sizes),
-        key=lambda x: ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
-        if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
-        else 999,
+        key=lambda x: (
+            ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"].index(x)
+            if x in ["SZ", "DZ", "DZP", "SZP", "DZDP", "TZ", "TZP", "TZDP"]
+            else 999
+        ),
     )
 
     with open(output_file, "w") as f:

@@ -22,7 +22,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from jobflow.core.flow import Flow
 from jobflow.core.job import job
@@ -42,8 +42,8 @@ logger = logging.getLogger(__name__)
 
 @job
 def print_energies(
-    flow_results: Dict[str, Any], job_metadata: list[dict]
-) -> Dict[str, float]:
+    flow_results: dict[str, Any], job_metadata: list[dict]
+) -> dict[str, float]:
     """
     Retrieve and print the total energies from each job in the Flow's results using job.output.
 
@@ -52,7 +52,8 @@ def print_energies(
         job_metadata (list[dict]): List of dictionaries containing job names and UUIDs.
         verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
 
-    Returns:
+    Returns
+    -------
         Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
     """
     verbosity = DifferentBasisSCFAdvanceFlowMaker.CONSOLE_VERBOSITY
@@ -88,17 +89,16 @@ def print_energies(
     if not energies:
         if verbosity.value >= VerbosityLevel.WARNING.value:
             console.print("[red]No energies retrieved from Flow results[/red]")
-    else:
-        if verbosity.value >= VerbosityLevel.WARNING.value:
-            console.print(
-                f"[green]Energies retrieved from Flow results {energies=}[/green]"
-            )
+    elif verbosity.value >= VerbosityLevel.WARNING.value:
+        console.print(
+            f"[green]Energies retrieved from Flow results {energies=}[/green]"
+        )
 
     return energies
 
 
 @job
-def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, float]:
+def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, float]:
     """
     Retrieve and print the total energies from each job in the Flow's results using job.output.
 
@@ -107,7 +107,8 @@ def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, fl
         flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
         verbosity (VerbosityLevel): Verbosity level for console output. Defaults to DEBUG.
 
-    Returns:
+    Returns
+    -------
         Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
     """
     verbosity = DifferentBasisSCFAdvanceFlowMaker.CONSOLE_VERBOSITY
@@ -156,18 +157,17 @@ def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, fl
     if not energies:
         if verbosity.value >= VerbosityLevel.WARNING.value:
             console.print("[red]No energies retrieved from Flow results[/red]")
-    else:
-        if verbosity.value >= VerbosityLevel.WARNING.value:
-            console.print(
-                f"[green]Energies retrieved from Flow results {energies=}[/green]"
-            )
+    elif verbosity.value >= VerbosityLevel.WARNING.value:
+        console.print(
+            f"[green]Energies retrieved from Flow results {energies=}[/green]"
+        )
 
     return energies
 
 
 @job
 def plot_energies(
-    energies: Dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
+    energies: dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
 ):
     """
     Plot total energies vs. basis size.
@@ -180,7 +180,7 @@ def plot_energies(
 
     if verbosity.value >= VerbosityLevel.INFO.value:
         console.print("[green]Plotting energies vs. basis size[/green]")
-    basis_sizes = [name.split("-")[-1] for name in energies.keys()]
+    basis_sizes = [name.split("-")[-1] for name in energies]
     energy_values = list(energies.values())
     plt.figure(figsize=(10, 6))
     plt.plot(basis_sizes, energy_values, "o-")
@@ -374,8 +374,8 @@ class DifferentBasisSCFAdvanceFlowMaker(BaseSiestaFlowMaker):
 
 @job
 def collect_eos_basis_data(
-    flow_results: Dict[str, Any], job_metadata: list[dict]
-) -> Dict[str, Any]:
+    flow_results: dict[str, Any], job_metadata: list[dict]
+) -> dict[str, Any]:
     """
     Collect EOS results from different basis set calculations.
 
@@ -383,7 +383,8 @@ def collect_eos_basis_data(
         flow_results: Results dictionary from jobflow's run_locally
         job_metadata: List of dictionaries containing job names and UUIDs
 
-    Returns:
+    Returns
+    -------
         Dictionary with basis sets and their EOS parameters
     """
     logger.info("Collecting EOS data for different basis sets")
@@ -547,7 +548,7 @@ def collect_eos_basis_data(
 
 @job
 def plot_eos_basis_comparison(
-    basis_data: Dict[str, Any], output_file: str = "eos_basis_comparison.png"
+    basis_data: dict[str, Any], output_file: str = "eos_basis_comparison.png"
 ) -> str:
     """
     Plot EOS parameters vs basis set quality.
@@ -556,7 +557,8 @@ def plot_eos_basis_comparison(
         basis_data: Dictionary with basis sets and EOS parameters
         output_file: Output filename for plot
 
-    Returns:
+    Returns
+    -------
         Path to saved plot file
     """
     import matplotlib.pyplot as plt
@@ -619,7 +621,7 @@ def plot_eos_basis_comparison(
 
 @job
 def plot_eos_overlay(
-    flow_results: Dict[str, Any],
+    flow_results: dict[str, Any],
     job_metadata: list[dict],
     output_file: str = "eos_overlay_all_basis.png",
 ) -> str:
@@ -631,7 +633,8 @@ def plot_eos_overlay(
         job_metadata: List of dictionaries containing job names and UUIDs
         output_file: Output filename for plot
 
-    Returns:
+    Returns
+    -------
         Path to saved plot file
     """
     import matplotlib.pyplot as plt
@@ -792,7 +795,7 @@ def plot_eos_overlay(
 
 @job
 def write_eos_basis_summary(
-    basis_data: Dict[str, Any], output_file: str = "eos_basis_summary.txt"
+    basis_data: dict[str, Any], output_file: str = "eos_basis_summary.txt"
 ) -> str:
     """
     Write summary of EOS results for different basis sets.
@@ -801,7 +804,8 @@ def write_eos_basis_summary(
         basis_data: Dictionary with basis sets and EOS parameters
         output_file: Output filename for summary
 
-    Returns:
+    Returns
+    -------
         Path to saved summary file
     """
     # Check if we have data

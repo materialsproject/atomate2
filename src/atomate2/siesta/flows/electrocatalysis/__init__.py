@@ -22,4 +22,4 @@ from atomate2.siesta.flows.electrocatalysis.her import HERFlowMaker
 from atomate2.siesta.flows.electrocatalysis.oer import OERFlowMaker
 from atomate2.siesta.flows.electrocatalysis.orr import ORRFlowMaker
 
-__all__ = ["ORRFlowMaker", "OERFlowMaker", "HERFlowMaker", "BifunctionalFlowMaker"]
+__all__ = ["BifunctionalFlowMaker", "HERFlowMaker", "OERFlowMaker", "ORRFlowMaker"]

@@ -10,7 +10,8 @@ Key concepts:
 - Charge neutrality: Σ q[D^q] + n - p = 0
 - Self-consistent Fermi level solver
 
-References:
+References
+----------
     - Freysoldt et al., Rev. Mod. Phys. 86, 253 (2014)
     - Van de Walle & Neugebauer, J. Appl. Phys. 95, 3851 (2004)
 """
@@ -224,7 +225,7 @@ class BrouwerDiagramData(MSONable):
         }
 
     @classmethod
-    def from_dict(cls, d: dict) -> "BrouwerDiagramData":
+    def from_dict(cls, d: dict) -> BrouwerDiagramData:
         """Deserialize from dict."""
         return cls(
             variable_name=d["variable_name"],
@@ -869,9 +870,8 @@ def plot_brouwer_diagram(
         logger.info(f"Brouwer diagram saved to {filepath}")
         plt.close()
         return filepath
-    else:
-        plt.show()
-        return None
+    plt.show()
+    return None
 
 
 # Job functions
@@ -1038,7 +1038,7 @@ def write_concentration_summary(
             f.write(
                 f"{'Charge':>8}  {'[D^q] (cm^-3)':>15}  {'E_formation (eV)':>16}  {'Fraction':>10}\n"
             )
-            f.write(f"{'-'*8}  {'-'*15}  {'-'*16}  {'-'*10}\n")
+            f.write(f"{'-' * 8}  {'-' * 15}  {'-' * 16}  {'-' * 10}\n")
 
             # Sort by concentration (highest first)
             concentrations = sorted(

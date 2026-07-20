@@ -25,7 +25,8 @@ def get_project_config(project_name: str) -> dict[str, Any] | None:
     Args:
         project_name: Name of the jobflow-remote project
 
-    Returns:
+    Returns
+    -------
         Configuration dictionary or None if not found
     """
     config_dir = Path.home() / ".jfremote"
@@ -56,7 +57,8 @@ def get_job_info_from_jf(project_name: str, job_id: str) -> dict[str, Any] | Non
         project_name: Name of the jobflow-remote project
         job_id: Job ID (UUID or index)
 
-    Returns:
+    Returns
+    -------
         Job information dictionary or None if not found
     """
     try:
@@ -116,7 +118,8 @@ def get_job_details_from_db(project_name: str, job_id: str) -> dict[str, Any] | 
         project_name: Name of the jobflow-remote project
         job_id: Job ID (UUID or index)
 
-    Returns:
+    Returns
+    -------
         Complete job document or None if not found
     """
     try:
@@ -217,7 +220,8 @@ def extract_fdf_parameters(job_doc: dict[str, Any]) -> dict[str, Any] | None:
     Args:
         job_doc: Complete job document from MongoDB
 
-    Returns:
+    Returns
+    -------
         Dictionary of FDF parameters or None if not found
     """
     try:
@@ -259,13 +263,13 @@ def extract_fdf_parameters(job_doc: dict[str, Any]) -> dict[str, Any] | None:
 
                 # Get other important parameters
                 for key in ["kpts", "mesh_cutoff", "xc", "tier"]:
-                    if key in input_gen and input_gen[key]:
+                    if input_gen.get(key):
                         # Skip if already in user_params with a2s_ prefix
                         if f"a2s_{key}" not in fdf_params and key not in fdf_params:
                             fdf_params[key] = input_gen[key]
 
         # Method 3: Check stored_data (if parameters were stored separately)
-        if "stored_data" in job_doc and job_doc["stored_data"]:
+        if job_doc.get("stored_data"):
             stored = job_doc["stored_data"]
             if isinstance(stored, dict):
                 if "user_params" in stored:
@@ -273,7 +277,7 @@ def extract_fdf_parameters(job_doc: dict[str, Any]) -> dict[str, Any] | None:
                 if "fdf_arguments" in stored:
                     fdf_params.update(stored["fdf_arguments"])
 
-        return fdf_params if fdf_params else None
+        return fdf_params or None
 
     except Exception as e:
         console.print(
@@ -291,14 +295,17 @@ def get_tier_defaults(tier: str) -> dict[str, Any]:
     Args:
         tier: Tier level (basic_dirty, basic, intermediate, advanced, expert)
 
-    Returns:
+    Returns
+    -------
         Dictionary of default parameters from dataclass modules
     """
     try:
-        from atomate2.siesta.sets.base import SiestaInputGenerator
-        from pymatgen.core import Structure, Lattice
         import io
         import sys
+
+        from pymatgen.core import Lattice, Structure
+
+        from atomate2.siesta.sets.base import SiestaInputGenerator
 
         # Suppress validation output
         old_stdout = sys.stdout
@@ -320,8 +327,7 @@ def get_tier_defaults(tier: str) -> dict[str, Any]:
             if siesta_calc:
                 # The Siesta calculator object has parameters attribute
                 return dict(siesta_calc.parameters)
-            else:
-                return {}
+            return {}
 
         finally:
             sys.stdout = old_stdout
@@ -346,7 +352,8 @@ def get_actual_fdf_file(project_name: str, job_doc: dict[str, Any]) -> str | Non
         project_name: Jobflow-remote project name
         job_doc: Job document from MongoDB
 
-    Returns:
+    Returns
+    -------
         Content of siesta.fdf file or None if not found
     """
     try:
@@ -413,7 +420,8 @@ def _fetch_via_ssh(host: str, user: str, remote_path: str) -> str | None:
         user: Username
         remote_path: Path to file on remote system
 
-    Returns:
+    Returns
+    -------
         File content or None if failed
     """
     try:
@@ -429,9 +437,8 @@ def _fetch_via_ssh(host: str, user: str, remote_path: str) -> str | None:
         if result.returncode == 0:
             console.print("[green]✓[/green] Retrieved via SSH")
             return result.stdout
-        else:
-            console.print(f"[dim]SSH access failed: {result.stderr[:100]}[/dim]")
-            return None
+        console.print(f"[dim]SSH access failed: {result.stderr[:100]}[/dim]")
+        return None
 
     except Exception as e:
         console.print(f"[dim]SSH method failed: {e}[/dim]")
@@ -445,7 +452,8 @@ def _fetch_via_jf_download(project_name: str, job_doc: dict[str, Any]) -> str | 
         project_name: Project name
         job_doc: Job document
 
-    Returns:
+    Returns
+    -------
         File content or None if failed
     """
     try:
@@ -501,7 +509,8 @@ def extract_job_resources(job_doc: dict[str, Any]) -> dict[str, Any] | None:
     Args:
         job_doc: Complete job document from MongoDB
 
-    Returns:
+    Returns
+    -------
         Dictionary of resources or None if not found
     """
     try:
@@ -529,7 +538,8 @@ def extract_job_state(job_doc: dict[str, Any]) -> str | None:
     Args:
         job_doc: Complete job document from MongoDB
 
-    Returns:
+    Returns
+    -------
         Job state string (e.g., READY, WAITING, RUNNING) or None
     """
     return job_doc.get("state")

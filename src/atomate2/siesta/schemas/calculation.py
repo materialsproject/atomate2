@@ -5,28 +5,21 @@ and the main calculation schema that handles SIESTA outputs.
 
 from __future__ import annotations
 
-
 import logging
 import os
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 from typing import Union
 
-from sisl.io.siesta import stdoutSileSiesta
-from sisl.io.siesta import xvSileSiesta
-
-from emmet.core.math import Matrix3D
-from emmet.core.math import Vector3D
+from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from rich.console import Console
+from sisl.io.siesta import stdoutSileSiesta, xvSileSiesta
 from typing_extensions import Self
 
 from atomate2.siesta.files import extract_siesta_timing, read_directly_from_siesta_out
-from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +72,7 @@ class CalculationOutput(BaseModel):
         Wall time for the calculation in seconds
     """
 
-    total_energy: Optional[float] = Field(
+    total_energy: float | None = Field(
         None, description="The final total DFT energy for the calculation"
     )
 
@@ -87,32 +80,32 @@ class CalculationOutput(BaseModel):
         None, description="The final structure from the calculation"
     )
 
-    efermi: Optional[float] = Field(
+    efermi: float | None = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
-    forces: Optional[list[Vector3D]] = Field(
+    forces: list[Vector3D] | None = Field(
         None, description="Forces acting on each atom"
     )
-    stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
+    stress: Matrix3D | None = Field(None, description="The stress on the cell")
 
-    bandgap: Optional[float] = Field(
+    bandgap: float | None = Field(
         None, description="The band gap from the calculation in eV"
     )
-    direct_bandgap: Optional[float] = Field(
+    direct_bandgap: float | None = Field(
         None, description="The direct band gap from the calculation in eV"
     )
-    cbm: Optional[float] = Field(
+    cbm: float | None = Field(
         None,
         description="The conduction band minimum, or LUMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    vbm: Optional[float] = Field(
+    vbm: float | None = Field(
         None,
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    run_time: Optional[float] = Field(
+    run_time: float | None = Field(
         None, description="Wall time for the calculation in seconds"
     )
 
@@ -256,7 +249,7 @@ class Calculation(BaseModel):
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
-    output_file_paths: Optional[dict[str, str]] = Field(
+    output_file_paths: dict[str, str] | None = Field(
         None,
         description="Paths (relative to dir_name) of the Siesta output files "
         "associated with this calculation",
@@ -334,7 +327,8 @@ def check_siesta_messages(messages_file):
     Args:
         messages_file (str): Path to the `MESSAGES` file.
 
-    Returns:
+    Returns
+    -------
         TaskState: The overall status of the SIESTA run.
     """
 
@@ -346,13 +340,14 @@ def check_siesta_messages(messages_file):
             file_path (str): Path to the SIESTA messages file.
             keywords (list): List of keywords to extract from the file.
 
-        Returns:
+        Returns
+        -------
             dict: Dictionary with keyword as key and list of matching lines as value.
         """
         logger.info("check_siesta_messages.read_messages_from_siesta()")
         extracted_messages = {key: [] for key in keywords}
 
-        with open(file_path, "r") as file:
+        with open(file_path) as file:
             for line in file:
                 for keyword in keywords:
                     if keyword in line:

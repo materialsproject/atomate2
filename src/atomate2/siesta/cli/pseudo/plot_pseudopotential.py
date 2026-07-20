@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-import click
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from xml.etree import ElementTree as ET
-from scipy.interpolate import interp1d
 import os
+from xml.etree import ElementTree as ET
+
+import click
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+from scipy.interpolate import interp1d
 
 
 def parse_psml(file_path):

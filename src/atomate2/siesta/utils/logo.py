@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-import sys
 import os
+import sys
+
+import pyfiglet
+from rich.align import Align
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
-from rich.align import Align
-import pyfiglet
 
 
 def print_fancy_logo():

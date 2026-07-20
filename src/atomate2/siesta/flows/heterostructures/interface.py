@@ -112,7 +112,7 @@ class InterfaceFlowMaker(BaseSiestaFlowMaker):
     >>> from pymatgen.core import Structure
     >>>
     >>> graphene = Structure.from_file("graphene.cif")  # a = 2.46 Å
-    >>> hbn = Structure.from_file("h-BN.cif")          # a = 2.50 Å
+    >>> hbn = Structure.from_file("h-BN.cif")  # a = 2.50 Å
     >>> # Mismatch = 1.6% → Good for strain mode
     >>>
     >>> maker = InterfaceFlowMaker(
@@ -124,7 +124,7 @@ class InterfaceFlowMaker(BaseSiestaFlowMaker):
 
     **Example 2: Supercell matching (large mismatch)**
 
-    >>> mos2 = Structure.from_file("MoS2_unit.cif")       # a = 3.16 Å
+    >>> mos2 = Structure.from_file("MoS2_unit.cif")  # a = 3.16 Å
     >>> graphene = Structure.from_file("graphene_unit.cif")  # a = 2.46 Å
     >>> # Mismatch = 28% → Too large for simple strain!
     >>>
@@ -456,7 +456,7 @@ def find_supercell_match(
         N = max(2, int(np.round(N_ideal)))  # At least 2×2 supercell
 
         # Ensure within max_size
-        if N > max_size:
+        if max_size < N:
             logger.warning(
                 f"Moiré supercell size {N}×{N} exceeds max_size={max_size}. "
                 f"Using {max_size}×{max_size} instead. Increase max_supercell_size for accuracy."

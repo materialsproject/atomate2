@@ -59,7 +59,7 @@ class KpointsConvergenceFlowMaker(BaseSiestaFlowMaker):
         >>> from pymatgen.core import Structure
         >>> structure = Structure.from_file("structure.cif")
         >>> maker = KpointsConvergenceFlowMaker(
-        ...     kpoints_list=[[2,2,2], [4,4,4], [6,6,6], [8,8,8], [10,10,10]]
+        ...     kpoints_list=[[2, 2, 2], [4, 4, 4], [6, 6, 6], [8, 8, 8], [10, 10, 10]]
         ... )
         >>> flow = maker.make(structure)
     """
@@ -89,7 +89,8 @@ class KpointsConvergenceFlowMaker(BaseSiestaFlowMaker):
             structure: Structure to calculate
             prev_dir: Previous directory (optional)
 
-        Returns:
+        Returns
+        -------
             Flow with k-points convergence jobs
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)

@@ -9,13 +9,14 @@ These tests validate:
 - Return value structures
 """
 
-import pytest
 from pathlib import Path
-from pymatgen.core import Structure, Lattice
+
+import pytest
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.jobs.dry_run import (
-    dry_run_save_structure,
     dry_run_save_multiple_structures,
+    dry_run_save_structure,
     dry_run_workflow_summary,
 )
 

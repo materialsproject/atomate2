@@ -6,7 +6,7 @@ import logging
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import numpy as np
 from ase.calculators.singlepoint import SinglePointCalculator
@@ -18,9 +18,6 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.neb.plotting import plot_ase_neb_results
 from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +62,7 @@ class PerImageLBFGS:
 
     Example
     -------
-    >>> opt = PerImageLBFGS(n_images=7, alpha=1/75, maxstep=0.2)
+    >>> opt = PerImageLBFGS(n_images=7, alpha=1 / 75, maxstep=0.2)
     >>> # Each iteration:
     >>> new_positions = opt.step(neb_forces, current_positions)
     >>> # Update NEB images with new positions
@@ -321,7 +318,7 @@ class PerImageBFGS:
 
     Example
     -------
-    >>> opt = PerImageBFGS(n_images=7, alpha=1/75, maxstep=0.2)
+    >>> opt = PerImageBFGS(n_images=7, alpha=1 / 75, maxstep=0.2)
     >>> # Each iteration:
     >>> new_positions = opt.step(neb_forces, current_positions)
     >>> # Update NEB images with new positions
@@ -615,7 +612,7 @@ class AseNebFlowMaker(BaseSiestaFlowMaker):
     ...     number_of_images=7,
     ...     relax_endpoints=True,
     ...     relax_initial_maker=initial_relax,
-    ...     relax_final_maker=final_relax
+    ...     relax_final_maker=final_relax,
     ... )
     >>> flow = maker.make(initial_structure=initial, final_structure=final)
     """
@@ -773,7 +770,6 @@ def setup_neb_image_folders_in_job(
     dict
         Dictionary with image_folders list (absolute paths).
     """
-
     logger.info(
         f"Setting up {len(structures)} persistent image folders in {base_directory}"
     )
@@ -857,15 +853,17 @@ def ase_neb_optimization_all_iterations(
     dict
         Final NEB results with energies, forces, and convergence info.
     """
+    import os
+    from pathlib import Path
+
     import numpy as np
+    from ase.calculators.singlepoint import SinglePointCalculator
     from ase.mep import NEB
     from ase.optimize import BFGS, FIRE
-    from ase.calculators.singlepoint import SinglePointCalculator
     from pymatgen.io.ase import AseAtomsAdaptor
-    from pathlib import Path
-    import os
-    from atomate2.siesta.run import run_siesta
+
     from atomate2.siesta.files import write_siesta_input_set
+    from atomate2.siesta.run import run_siesta
     from atomate2.siesta.schemas.task import SiestaTaskDoc
 
     # Handle dry_run mode
@@ -923,7 +921,7 @@ def ase_neb_optimization_all_iterations(
             logger.info(f"Resuming from checkpoint: {checkpoint}")
             import json
 
-            with open(checkpoint, "r") as f:
+            with open(checkpoint) as f:
                 checkpoint_data = json.load(f)
             start_iteration = checkpoint_data["last_iteration"] + 1
             logger.info(f"Resuming from iteration {start_iteration}")
@@ -968,9 +966,9 @@ def ase_neb_optimization_all_iterations(
         logger.info(f"Created NEB progress log: {neb_log_file}")
     else:
         with open(neb_log_file, "a") as f:
-            f.write(f"\n{'='*80}\n")
+            f.write(f"\n{'=' * 80}\n")
             f.write(f"RESUMING from iteration {start_iteration}\n")
-            f.write(f"{'='*80}\n\n")
+            f.write(f"{'=' * 80}\n\n")
         logger.info(f"Resuming NEB optimization from iteration {start_iteration}")
 
     for iteration in range(start_iteration, max_iterations):
@@ -979,9 +977,9 @@ def ase_neb_optimization_all_iterations(
 
         # Log iteration start
         with open(neb_log_file, "a") as f:
-            f.write(f"\n{'='*80}\n")
+            f.write(f"\n{'=' * 80}\n")
             f.write(f"ITERATION {iteration + 1}/{max_iterations}\n")
-            f.write(f"{'='*80}\n")
+            f.write(f"{'=' * 80}\n")
             f.write(f"Time: {Path.cwd()}\n\n")
 
         energies = []
@@ -1109,9 +1107,9 @@ def ase_neb_optimization_all_iterations(
 
         forces_log_file = base_dir / "neb_forces_detailed.log"
         with open(forces_log_file, "a") as f:
-            f.write(f"\n{'='*80}\n")
+            f.write(f"\n{'=' * 80}\n")
             f.write(f"ITERATION {iteration + 1}/{max_iterations}\n")
-            f.write(f"{'='*80}\n")
+            f.write(f"{'=' * 80}\n")
             f.write(f"negate_forces flag: {negate_forces}\n\n")
 
             for i in range(n_images):
@@ -1176,11 +1174,13 @@ def ase_neb_optimization_all_iterations(
 
                 # Show all atoms forces in a nice table
                 f.write("\n  NEB Force Decomposition (per atom):\n")
-                f.write(f"  {'='*160}\n")
+                f.write(f"  {'=' * 160}\n")
                 f.write(
                     f"  {'Atom':>5} │ {'DFT Force (SIESTA)':^35} │ {'Calc Force (after negation)':^35} │ {'Spring Force':^35} │ {'NEB Force':^35}\n"
                 )
-                f.write(f"  {'-'*5}-+-{'-'*35}-+-{'-'*35}-+-{'-'*35}-+-{'-'*35}\n")
+                f.write(
+                    f"  {'-' * 5}-+-{'-' * 35}-+-{'-' * 35}-+-{'-' * 35}-+-{'-' * 35}\n"
+                )
                 for atom_idx in range(len(dft_force)):
                     dft_mag = np.linalg.norm(dft_force[atom_idx])
                     calc_mag = np.linalg.norm(calc_forces[atom_idx])
@@ -1195,7 +1195,7 @@ def ase_neb_optimization_all_iterations(
                     f.write(
                         f"  {atom_idx:5d} │ {dft_str:35s} │ {calc_str:35s} │ {spring_str:35s} │ {neb_str:35s}\n"
                     )
-                f.write(f"  {'='*160}\n")
+                f.write(f"  {'=' * 160}\n")
                 f.write("\n  Note: NEB Force = Calc Force + Spring Force\n")
                 f.write(
                     "        Spring Force includes both spring forces and perpendicular DFT projection\n"
@@ -1223,7 +1223,7 @@ def ase_neb_optimization_all_iterations(
             energies_array = np.array(energies)
             energies_rel = (energies_array - energies_array[0]) * 1000  # meV
             f.write(
-                f"  Current barrier: {energies_rel.max():.2f} meV ({energies_rel.max()/1000:.4f} eV)\n"
+                f"  Current barrier: {energies_rel.max():.2f} meV ({energies_rel.max() / 1000:.4f} eV)\n"
             )
             f.write(f"  TS at image: {np.argmax(energies_rel)}\n")
             f.write(f"  Converged: {'✓ YES' if max_neb_force < fmax else '✗ NO'}\n")
@@ -1234,19 +1234,19 @@ def ase_neb_optimization_all_iterations(
         if converged:
             logger.info(f"✓ NEB converged after {iteration + 1} iterations!")
             with open(neb_log_file, "a") as f:
-                f.write(f"\n{'='*80}\n")
+                f.write(f"\n{'=' * 80}\n")
                 f.write(f"✓ NEB CONVERGED after {iteration + 1} iterations!\n")
-                f.write(f"{'='*80}\n\n")
+                f.write(f"{'=' * 80}\n\n")
             break
 
         if iteration >= max_iterations - 1:
             logger.info(f"✗ Reached max iterations ({max_iterations})")
             with open(neb_log_file, "a") as f:
-                f.write(f"\n{'='*80}\n")
+                f.write(f"\n{'=' * 80}\n")
                 f.write(
                     f"✗ Reached max iterations ({max_iterations}) without convergence\n"
                 )
-                f.write(f"{'='*80}\n\n")
+                f.write(f"{'=' * 80}\n\n")
             break
 
         # Perform optimization step with configurable parameters
@@ -1458,8 +1458,8 @@ def generate_neb_images_ase(
     list[Structure]
         List of structures: [initial, img1, img2, ..., imgN, final]
     """
-    from ase.mep import NEB
     from ase.io import write
+    from ase.mep import NEB
 
     logger.info(f"generate_neb_images_ase() with {number_of_images} images")
 
@@ -1541,8 +1541,9 @@ def ase_neb_iteration_persistent(
     dict
         NEB results or spawns next iteration.
     """
-    from pathlib import Path
     import os
+    from pathlib import Path
+
     import numpy as np
 
     logger.info(f"NEB Iteration {iteration + 1}/{max_iterations} (persistent folders)")
@@ -1686,12 +1687,12 @@ def _compute_neb_step_persistent(
     dict
         NEB results or reference to next iteration.
     """
-    from jobflow import Response
+    import numpy as np
+    from ase.calculators.singlepoint import SinglePointCalculator
     from ase.mep import NEB
     from ase.optimize import BFGS, FIRE
-    from ase.calculators.singlepoint import SinglePointCalculator
+    from jobflow import Response
     from pymatgen.io.ase import AseAtomsAdaptor
-    import numpy as np
 
     logger.info(f"Computing NEB step {iteration + 1} (persistent)")
 
@@ -1789,75 +1790,74 @@ def _compute_neb_step_persistent(
             "converged": bool(converged),
             "image_folders": image_folders,
         }
+    # Not converged - perform optimization step
+    logger.info(
+        f"Not converged (max_force={max_neb_force:.4f} > fmax={fmax}), continuing..."
+    )
+
+    # Create or restore optimizer
+    # Critical parameters for noisy DFT forces:
+    #   - maxstep: larger (0.5 Å) to allow sufficient movement
+    #   - alpha: MUCH smaller (1/75 ≈ 0.013) for conservative first step
+    #     (ASE default 70.0 is 5000x too aggressive for noisy forces!)
+    if optimizer.upper() == "FIRE":
+        opt = FIRE(neb, logfile=None, maxmove=0.5)
     else:
-        # Not converged - perform optimization step
-        logger.info(
-            f"Not converged (max_force={max_neb_force:.4f} > fmax={fmax}), continuing..."
-        )
+        opt = BFGS(neb, logfile=None, maxstep=0.5, alpha=1.0 / 75.0)
 
-        # Create or restore optimizer
-        # Critical parameters for noisy DFT forces:
-        #   - maxstep: larger (0.5 Å) to allow sufficient movement
-        #   - alpha: MUCH smaller (1/75 ≈ 0.013) for conservative first step
-        #     (ASE default 70.0 is 5000x too aggressive for noisy forces!)
-        if optimizer.upper() == "FIRE":
-            opt = FIRE(neb, logfile=None, maxmove=0.5)
-        else:
-            opt = BFGS(neb, logfile=None, maxstep=0.5, alpha=1.0 / 75.0)
-
-        # Restore optimizer state if exists (critical for BFGS Hessian!)
-        # This now works correctly because NEB object identity is preserved
-        if iteration > 0 and opt_state_file.exists():
-            try:
-                opt.load(opt_state_file)
-                logger.info(
-                    f"✓ Restored optimizer state from iteration {iteration} "
-                    "(Hessian references correct NEB object)"
-                )
-            except Exception as e:
-                logger.warning(f"Could not restore optimizer state: {e}")
-
-        # Take one optimization step
-        opt.step()  # Optimizer internally calls neb.get_forces()
-
-        # Save optimizer state for next iteration (preserve Hessian/velocity)
+    # Restore optimizer state if exists (critical for BFGS Hessian!)
+    # This now works correctly because NEB object identity is preserved
+    if iteration > 0 and opt_state_file.exists():
         try:
-            opt.dump(opt_state_file)
-            logger.info("✓ Saved optimizer state for next iteration")
+            opt.load(opt_state_file)
+            logger.info(
+                f"✓ Restored optimizer state from iteration {iteration} "
+                "(Hessian references correct NEB object)"
+            )
         except Exception as e:
-            logger.warning(f"Could not save optimizer state: {e}")
+            logger.warning(f"Could not restore optimizer state: {e}")
 
-        # Save NEB object for next iteration (preserves Atoms object identity)
-        import pickle
+    # Take one optimization step
+    opt.step()  # Optimizer internally calls neb.get_forces()
 
-        try:
-            with open(neb_state_file, "wb") as neb_out:
-                pickle.dump(neb, neb_out)
-            logger.info("✓ Saved NEB object (Atoms identity preserved)")
-        except Exception as e:
-            logger.warning(f"Could not save NEB object: {e}")
+    # Save optimizer state for next iteration (preserve Hessian/velocity)
+    try:
+        opt.dump(opt_state_file)
+        logger.info("✓ Saved optimizer state for next iteration")
+    except Exception as e:
+        logger.warning(f"Could not save optimizer state: {e}")
 
-        # Extract updated structures from NEB images
-        updated_structures = [AseAtomsAdaptor.get_structure(img) for img in neb.images]
+    # Save NEB object for next iteration (preserves Atoms object identity)
+    import pickle
 
-        # Spawn next iteration (pass endpoint data for reuse)
-        next_iteration_job = ase_neb_iteration_persistent(
-            image_folders=image_folders,  # Reuse same folders!
-            structures=updated_structures,
-            iteration=iteration + 1,
-            static_maker=static_maker,
-            optimizer=optimizer,
-            fmax=fmax,
-            climbing_image=climbing_image,
-            spring_constant=spring_constant,
-            max_iterations=max_iterations,
-            endpoint_energies=endpoint_energies,  # Pass cached endpoint data
-            endpoint_forces=endpoint_forces,
-        )
-        next_iteration_job.name = f"NEB_Iteration_{iteration + 2}"
+    try:
+        with open(neb_state_file, "wb") as neb_out:
+            pickle.dump(neb, neb_out)
+        logger.info("✓ Saved NEB object (Atoms identity preserved)")
+    except Exception as e:
+        logger.warning(f"Could not save NEB object: {e}")
 
-        # Return Response that spawns next iteration
-        return Response(detour=next_iteration_job, output=next_iteration_job.output)
+    # Extract updated structures from NEB images
+    updated_structures = [AseAtomsAdaptor.get_structure(img) for img in neb.images]
+
+    # Spawn next iteration (pass endpoint data for reuse)
+    next_iteration_job = ase_neb_iteration_persistent(
+        image_folders=image_folders,  # Reuse same folders!
+        structures=updated_structures,
+        iteration=iteration + 1,
+        static_maker=static_maker,
+        optimizer=optimizer,
+        fmax=fmax,
+        climbing_image=climbing_image,
+        spring_constant=spring_constant,
+        max_iterations=max_iterations,
+        endpoint_energies=endpoint_energies,  # Pass cached endpoint data
+        endpoint_forces=endpoint_forces,
+    )
+    next_iteration_job.name = f"NEB_Iteration_{iteration + 2}"
+
+    # Return Response that spawns next iteration
+    return Response(detour=next_iteration_job, output=next_iteration_job.output)
 
 
 @job
@@ -1982,11 +1982,11 @@ def compute_neb_step(
     dict
         NEB results or reference to next iteration.
     """
-    from jobflow import Response
+    import numpy as np
     from ase.mep import NEB
     from ase.optimize import BFGS, FIRE
+    from jobflow import Response
     from pymatgen.io.ase import AseAtomsAdaptor
-    import numpy as np
 
     logger.info(f"Computing NEB step {iteration + 1}")
 
@@ -2064,39 +2064,38 @@ def compute_neb_step(
             "iterations": iteration + 1,
             "converged": bool(converged),
         }
+    # Not converged - perform optimization step
+    logger.info(
+        f"Not converged (max_force={max_neb_force:.4f} > fmax={fmax}), continuing..."
+    )
+
+    # Create optimizer
+    if optimizer.upper() == "FIRE":
+        opt = FIRE(neb)
     else:
-        # Not converged - perform optimization step
-        logger.info(
-            f"Not converged (max_force={max_neb_force:.4f} > fmax={fmax}), continuing..."
-        )
+        opt = BFGS(neb)
 
-        # Create optimizer
-        if optimizer.upper() == "FIRE":
-            opt = FIRE(neb)
-        else:
-            opt = BFGS(neb)
+    # Take one optimization step
+    opt.step()  # Optimizer internally calls neb.get_forces()
 
-        # Take one optimization step
-        opt.step()  # Optimizer internally calls neb.get_forces()
+    # Extract updated structures
+    updated_structures = [AseAtomsAdaptor.get_structure(img) for img in images]
 
-        # Extract updated structures
-        updated_structures = [AseAtomsAdaptor.get_structure(img) for img in images]
+    # Spawn next iteration
+    next_iteration_job = ase_neb_iteration(
+        structures=updated_structures,
+        iteration=iteration + 1,
+        static_maker=static_maker,
+        optimizer=optimizer,
+        fmax=fmax,
+        climbing_image=climbing_image,
+        spring_constant=spring_constant,
+        max_iterations=max_iterations,
+    )
+    next_iteration_job.name = f"NEB_Iteration_{iteration + 2}"
 
-        # Spawn next iteration
-        next_iteration_job = ase_neb_iteration(
-            structures=updated_structures,
-            iteration=iteration + 1,
-            static_maker=static_maker,
-            optimizer=optimizer,
-            fmax=fmax,
-            climbing_image=climbing_image,
-            spring_constant=spring_constant,
-            max_iterations=max_iterations,
-        )
-        next_iteration_job.name = f"NEB_Iteration_{iteration + 2}"
-
-        # Return Response that replaces this job with the next iteration
-        return Response(detour=next_iteration_job, output=next_iteration_job.output)
+    # Return Response that replaces this job with the next iteration
+    return Response(detour=next_iteration_job, output=next_iteration_job.output)
 
 
 @job
@@ -2209,7 +2208,7 @@ def run_ase_neb_optimization(
         static_jobs = []
         for i, struct in enumerate(current_structures):
             job = static_maker.make(struct)
-            job.name = f"NEB_Iter_{iteration+1}_Image_{i}"
+            job.name = f"NEB_Iter_{iteration + 1}_Image_{i}"
             static_jobs.append(job)
 
         # Return jobs to run in parallel, then continue with next iteration

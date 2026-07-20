@@ -9,8 +9,9 @@ These tests validate:
 """
 
 from pathlib import Path
+
 import pytest
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.jobs.surface import (
     calculate_surface_energies,

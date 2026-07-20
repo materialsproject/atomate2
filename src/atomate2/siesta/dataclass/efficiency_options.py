@@ -17,14 +17,13 @@ Section: 6.30 The catch-all option UseSaveData
 
 __all__ = ["EfficiencyOptions"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -168,7 +167,7 @@ class EfficiencyOptions(FDFDataclass):
     )
 
     # Dictionary to hold FDF arguments
-    efficiency_fdf_arguments: Dict[str, Any] = field(default_factory=dict)
+    efficiency_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Register FDF parameters handled by this dataclass."""
@@ -224,7 +223,7 @@ class EfficiencyOptions(FDFDataclass):
                 f"MaxWalltime.Slack must be non-negative, got {self.max_walltime_slack}"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -287,11 +286,12 @@ class EfficiencyOptions(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
         fdf = {}
@@ -357,11 +357,12 @@ class EfficiencyOptions(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have efficiency/timing parameters
@@ -387,9 +388,9 @@ class EfficiencyOptions(FDFDataclass):
         if self.alloc_report_level != 0:
             params_to_add["AllocReportLevel"] = self.alloc_report_level
         if self.alloc_report_threshold != 0.0:
-            params_to_add[
-                "AllocReportThreshold"
-            ] = f"{self.alloc_report_threshold} Mbytes"
+            params_to_add["AllocReportThreshold"] = (
+                f"{self.alloc_report_threshold} Mbytes"
+            )
         if self.timer_report_threshold != 0.0:
             params_to_add["TimerReportThreshold"] = f"{self.timer_report_threshold} s"
 
@@ -419,7 +420,7 @@ class EfficiencyOptions(FDFDataclass):
 
     @classmethod
     def setup_efficiency_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "EfficiencyOptions":
         """
         Create and configure a EfficiencyOptions instance with full parameter parsing.
@@ -433,23 +434,29 @@ class EfficiencyOptions(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             EfficiencyOptions: Configured instance with all fields set.
 
-        Examples:
+        Examples
+        --------
             >>> # Using SIESTA FDF parameter names
-            >>> efficiency = EfficiencyOptions.setup_efficiency_settings({
-            ...     "AllocReportLevel": 2,
-            ...     "MaxWalltime": 86400,  # 24 hours
-            ...     "UseSaveData": True
-            ... })
+            >>> efficiency = EfficiencyOptions.setup_efficiency_settings(
+            ...     {
+            ...         "AllocReportLevel": 2,
+            ...         "MaxWalltime": 86400,  # 24 hours
+            ...         "UseSaveData": True,
+            ...     }
+            ... )
 
             >>> # Using Python attribute names
-            >>> efficiency = EfficiencyOptions.setup_efficiency_settings({
-            ...     "alloc_report_level": 2,
-            ...     "max_walltime": 86400,
-            ...     "use_save_data": True
-            ... })
+            >>> efficiency = EfficiencyOptions.setup_efficiency_settings(
+            ...     {
+            ...         "alloc_report_level": 2,
+            ...         "max_walltime": 86400,
+            ...         "use_save_data": True,
+            ...     }
+            ... )
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print(
@@ -556,11 +563,10 @@ class EfficiencyOptions(FDFDataclass):
                 else:
                     # Direct assignment for other types
                     setattr(instance, matched_attr, value)
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
-                    console.print(
-                        f"[yellow]Warning: No match found for parameter '{key}' in EfficiencyOptions[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
+                console.print(
+                    f"[yellow]Warning: No match found for parameter '{key}' in EfficiencyOptions[/yellow]"
+                )
 
         # Generate FDF block with comment header
         instance.generate_efficiency_block()

@@ -11,7 +11,7 @@ These tests validate:
 """
 
 import pytest
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Lattice, Structure
 
 
 class TestPhononSchemas:

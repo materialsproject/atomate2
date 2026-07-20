@@ -136,9 +136,7 @@ class DefectFlowMaker(Maker):
     >>> host = Structure.from_file("host_supercell.cif")
     >>> defect = Structure.from_file("defect_supercell.cif")
     >>> flow_maker = DefectFlowMaker(
-    ...     epsilon_static=10.0,
-    ...     defect_type="vacancy",
-    ...     charge_state=2
+    ...     epsilon_static=10.0, defect_type="vacancy", charge_state=2
     ... )
     >>> flow = flow_maker.make(defect, host)
     """
@@ -211,7 +209,9 @@ class DefectFlowMaker(Maker):
         For vacancy defects with SIESTA, it is strongly recommended to use
         ghost atoms instead of complete atom removal. Use the helper function:
 
-        >>> from atomate2.siesta.flows.defects.generation import create_vacancy_with_ghost
+        >>> from atomate2.siesta.flows.defects.generation import (
+        ...     create_vacancy_with_ghost,
+        ... )
         >>> defect_structure = create_vacancy_with_ghost(host_structure, site_index=10)
 
         Ghost atoms maintain proper basis set coverage and grid sampling at
@@ -824,7 +824,7 @@ class DefectFlowMaker(Maker):
         >>> flows = DefectFlowMaker.from_pristine_structure(
         ...     mgo,
         ...     defect_type="vacancy",
-        ...     supercell_matrix=[[2,0,0], [0,2,0], [0,0,2]],
+        ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
         ...     charge_states=[0, +2],
         ...     epsilon_static=9.8,
         ... )
@@ -1018,7 +1018,7 @@ class DefectFlowMaker(Maker):
                 if include_bandstructure:
                     from atomate2.siesta.sets.bands import band_paymatgen_to_siesta
 
-                    bands_fdf = dict(kwargs.get("bands_fdf_params", None) or {})
+                    bands_fdf = dict(kwargs.get("bands_fdf_params") or {})
                     band_lines_scale = bands_fdf.pop(
                         "BandLinesScale", "ReciprocalLatticeVectors"
                     )
@@ -1044,7 +1044,7 @@ class DefectFlowMaker(Maker):
                         host_params[k] = v
 
                 if include_pdos:
-                    pdos_fdf = dict(kwargs.get("pdos_fdf_params", None) or {})
+                    pdos_fdf = dict(kwargs.get("pdos_fdf_params") or {})
                     if "%block ProjectedDensityOfStates" not in pdos_fdf:
                         pdos_block = ["EF -15.0 15.0 0.05 1000 eV"]
                     else:
@@ -1075,7 +1075,7 @@ class DefectFlowMaker(Maker):
             shared_host_job.name = "shared_host_static"
             logger.info(
                 f"Created shared host calculation for {len(defects)} defects "
-                f"(saves {len(defects)-1} redundant host calculations)"
+                f"(saves {len(defects) - 1} redundant host calculations)"
             )
 
         # Create shared chemical potential calculations (instead of per-defect)
@@ -1091,9 +1091,8 @@ class DefectFlowMaker(Maker):
                         unique_species.add(defect_info["dopant_species"])
                     if defect_info.get("original_species"):
                         unique_species.add(defect_info["original_species"])
-                else:
-                    if defect_info.get("species"):
-                        unique_species.add(defect_info["species"])
+                elif defect_info.get("species"):
+                    unique_species.add(defect_info["species"])
 
             if unique_species:
                 logger.info(
@@ -1201,7 +1200,7 @@ class DefectFlowMaker(Maker):
             logger.info("Added combined summary job: all_defects_summary.txt")
             if shared_host_job is not None:
                 logger.info(
-                    f"Shared host calculation saves {len(flows)-1} redundant calculations"
+                    f"Shared host calculation saves {len(flows) - 1} redundant calculations"
                 )
 
             return parent_flow
@@ -1234,7 +1233,7 @@ def get_reference_structure(species: str) -> tuple[Structure, int]:
     tuple
         (reference_structure, n_atoms_per_formula_unit)
     """
-    from pymatgen.core import Molecule, Structure, Lattice
+    from pymatgen.core import Lattice, Molecule, Structure
 
     # Define reference structures
     # Sources:
@@ -2015,7 +2014,7 @@ def generate_density_plot(
         plt.figure(figsize=(10, 6))
         plt.plot(positions, avg_rho, "b-", linewidth=2)
         plt.axhline(y=0, color="k", linestyle="--", alpha=0.3)
-        plt.xlabel(f'Fractional Coordinate ({"xyz"[axis]}-axis)', fontsize=12)
+        plt.xlabel(f"Fractional Coordinate ({'xyz'[axis]}-axis)", fontsize=12)
         plt.ylabel("Δρ (electrons/Ų)", fontsize=12)
         plt.title(title, fontsize=13, fontweight="bold")
         plt.grid(True, alpha=0.3)

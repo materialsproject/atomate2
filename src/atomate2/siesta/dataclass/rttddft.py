@@ -11,12 +11,11 @@ Section:  9.3 Input options for RT-TDDFT
 
 __all__ = ["RTTDDFT"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -170,7 +169,7 @@ class RTTDDFT(FDFDataclass):
         """
         logger.info("RTTDDFT.validate()")
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -261,14 +260,15 @@ class RTTDDFT(FDFDataclass):
                 else:
                     self.tded_time_step = float(value)
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # Only write if non-default
         if self.tded_wf_initialize:
@@ -300,7 +300,7 @@ class RTTDDFT(FDFDataclass):
 
     @classmethod
     def setup_rttddft(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "RTTDDFT":
         """
         Create and configure a RTTDDFT instance with full parameter parsing.
@@ -309,7 +309,8 @@ class RTTDDFT(FDFDataclass):
             user_params: Dictionary of user-defined parameters (case-insensitive, may include dots).
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             RTTDDFT: Configured instance with all fields set.
         """
         # Initialize instance with defaults
@@ -327,11 +328,12 @@ class RTTDDFT(FDFDataclass):
 
         return instance
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have RT-TDDFT parameters

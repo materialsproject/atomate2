@@ -11,14 +11,13 @@ TODO: Not sure to keep this because sisl can handle it ...
 __all__ = ["Denchar"]
 
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +77,7 @@ class Denchar(FDFDataclass):
     )
 
     # Grid range parameters (optional - denchar can auto-determine)
-    denchar_x_min: Optional[float] = field(
+    denchar_x_min: float | None = field(
         default=None,
         metadata={
             "description": "Minimum X coordinate for denchar visualization grid (Bohr or Ang).",
@@ -86,7 +85,7 @@ class Denchar(FDFDataclass):
         },
     )
 
-    denchar_x_max: Optional[float] = field(
+    denchar_x_max: float | None = field(
         default=None,
         metadata={
             "description": "Maximum X coordinate for denchar visualization grid (Bohr or Ang).",
@@ -94,7 +93,7 @@ class Denchar(FDFDataclass):
         },
     )
 
-    denchar_y_min: Optional[float] = field(
+    denchar_y_min: float | None = field(
         default=None,
         metadata={
             "description": "Minimum Y coordinate for denchar visualization grid (Bohr or Ang).",
@@ -102,7 +101,7 @@ class Denchar(FDFDataclass):
         },
     )
 
-    denchar_y_max: Optional[float] = field(
+    denchar_y_max: float | None = field(
         default=None,
         metadata={
             "description": "Maximum Y coordinate for denchar visualization grid (Bohr or Ang).",
@@ -110,7 +109,7 @@ class Denchar(FDFDataclass):
         },
     )
 
-    denchar_z_min: Optional[float] = field(
+    denchar_z_min: float | None = field(
         default=None,
         metadata={
             "description": "Minimum Z coordinate for denchar visualization grid (Bohr or Ang).",
@@ -118,7 +117,7 @@ class Denchar(FDFDataclass):
         },
     )
 
-    denchar_z_max: Optional[float] = field(
+    denchar_z_max: float | None = field(
         default=None,
         metadata={
             "description": "Maximum Z coordinate for denchar visualization grid (Bohr or Ang).",
@@ -158,7 +157,7 @@ class Denchar(FDFDataclass):
     )
 
     # Dictionary to hold FDF arguments
-    denchar_fdf_arguments: Dict[str, Any] = field(default_factory=dict)
+    denchar_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Register FDF parameters handled by this dataclass."""
@@ -190,9 +189,8 @@ class Denchar(FDFDataclass):
             If Denchar settings are invalid
         """
         logger.info("Denchar.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -253,14 +251,15 @@ class Denchar(FDFDataclass):
             elif key_lower in ["denchar.numberpointsz", "denchar_z_points"]:
                 self.denchar_z_points = int(value)
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # Add comment header
         fdf["#Denchar"] = "Denchar Settings"
@@ -292,11 +291,12 @@ class Denchar(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have denchar visualization parameters
@@ -348,7 +348,7 @@ class Denchar(FDFDataclass):
 
     @classmethod
     def setup_denchar(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "Denchar":
         """
         Create and configure a Denchar instance with full parameter parsing.
@@ -362,32 +362,40 @@ class Denchar(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             Denchar: Configured instance with all fields set.
 
-        Examples:
+        Examples
+        --------
             >>> # Using SIESTA FDF parameter names
-            >>> denchar = Denchar.setup_denchar({
-            ...     "Write.Denchar": True,
-            ...     "Denchar.NumberPointsX": 100,
-            ...     "Denchar.NumberPointsY": 100,
-            ...     "Denchar.NumberPointsZ": 100
-            ... })
+            >>> denchar = Denchar.setup_denchar(
+            ...     {
+            ...         "Write.Denchar": True,
+            ...         "Denchar.NumberPointsX": 100,
+            ...         "Denchar.NumberPointsY": 100,
+            ...         "Denchar.NumberPointsZ": 100,
+            ...     }
+            ... )
 
             >>> # Using Python attribute names
-            >>> denchar = Denchar.setup_denchar({
-            ...     "write_denchar": True,
-            ...     "denchar_x_points": 100,
-            ...     "denchar_y_points": 100
-            ... })
+            >>> denchar = Denchar.setup_denchar(
+            ...     {
+            ...         "write_denchar": True,
+            ...         "denchar_x_points": 100,
+            ...         "denchar_y_points": 100,
+            ...     }
+            ... )
 
             >>> # With custom grid range
-            >>> denchar = Denchar.setup_denchar({
-            ...     "Write.Denchar": True,
-            ...     "Denchar.XMin": -5.0,
-            ...     "Denchar.XMax": 5.0,
-            ...     "Denchar.NumberPointsX": 200
-            ... })
+            >>> denchar = Denchar.setup_denchar(
+            ...     {
+            ...         "Write.Denchar": True,
+            ...         "Denchar.XMin": -5.0,
+            ...         "Denchar.XMax": 5.0,
+            ...         "Denchar.NumberPointsX": 200,
+            ...     }
+            ... )
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]Denchar.setup_denchar()[/green]")
@@ -509,11 +517,10 @@ class Denchar(FDFDataclass):
                         console.print(
                             f"[yellow]Warning: Could not convert '{value}' to float for '{matched_attr}'. Using default.[/yellow]"
                         )
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
-                    console.print(
-                        f"[yellow]Warning: No match found for parameter '{key}' in Denchar[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
+                console.print(
+                    f"[yellow]Warning: No match found for parameter '{key}' in Denchar[/yellow]"
+                )
 
         # Generate FDF block with comment header
         instance.generate_denchar_block()

@@ -88,7 +88,7 @@ def apply_tier_preset(
         >>> maker = apply_tier_preset(
         ...     maker,
         ...     "phonon_high_accuracy",
-        ...     override_params={"a2s_kpts": [10, 10, 10]}
+        ...     override_params={"a2s_kpts": [10, 10, 10]},
         ... )
     """
     preset = get_tier_preset(preset_name)

@@ -21,13 +21,11 @@ Section: 6.13 The ELSI solver family
 
 __all__ = ["SolversAndPerformanceOptions"]
 
+import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
-from typing import List
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +69,7 @@ class SolversAndPerformanceOptions(FDFDataclass):
     # elsi_sips_elpa_steps: int = 2 # ELSI.SIPS.ELPA.Steps 2
     # elsi_eigen_exa_method: int =2 # ELSI.EigenExa.Method 2
     # elsi_magma_solver_method: int =1 # ELSI.MAGMA.Solver-Method 1
-    elsi_solver: List[str] = field(
+    elsi_solver: list[str] = field(
         default_factory=lambda: [
             "ELPA",
             "OMM",
@@ -844,7 +842,7 @@ class SolversAndPerformanceOptions(FDFDataclass):
                 f"Invalid solver type '{self.elsi_solver}'. Allowed values are: {allowed_elsi_solver}"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -858,13 +856,13 @@ class SolversAndPerformanceOptions(FDFDataclass):
         """
         # This is a simplified implementation for the 73 solver parameters.
         # Parameters are typically set programmatically rather than from user FDF.
-        pass
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
 
         Note:
@@ -876,11 +874,12 @@ class SolversAndPerformanceOptions(FDFDataclass):
         # rather than direct FDF output. Return empty dict for base implementation.
         return {}
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have advanced solver parameters
@@ -892,11 +891,10 @@ class SolversAndPerformanceOptions(FDFDataclass):
         Generates the solver and performance options block for the FDF file.
         """
         logger.info("SolversAndPerformanceOptions.generate_solver_block()")
-        pass
 
     @classmethod
     def setup_solver_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None
+        cls, user_params: dict[str, Any] | None = None
     ) -> "SolversAndPerformanceOptions":
         """
         Create and configure a SolversAndPerformanceOptions instance.
@@ -908,7 +906,8 @@ class SolversAndPerformanceOptions(FDFDataclass):
         Args:
             user_params: Dictionary of user-defined parameters (optional)
 
-        Returns:
+        Returns
+        -------
             SolversAndPerformanceOptions: Configured instance
         """
         logger.info("SolversAndPerformanceOptions.setup_solver_settings()")

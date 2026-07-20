@@ -618,8 +618,8 @@ class TestAdsorptionScanMakerMigration:
 
     def test_adsorption_inherits_from_base_flow(self):
         """Test that AdsorptionScanFlowMaker inherits from BaseSiestaFlowMaker."""
-        from atomate2.siesta.flows.surface.adsorption import AdsorptionScanFlowMaker
         from atomate2.siesta.flows.base import BaseSiestaFlowMaker
+        from atomate2.siesta.flows.surface.adsorption import AdsorptionScanFlowMaker
 
         assert issubclass(AdsorptionScanFlowMaker, BaseSiestaFlowMaker)
 

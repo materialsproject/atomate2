@@ -9,13 +9,12 @@ from __future__ import annotations
 
 # Metadata
 
-__all__ = ["parse_energy", "parse_length", "parse_force"]
+__all__ = ["parse_energy", "parse_force", "parse_length"]
 
 import re
-from typing import Union
 
 
-def parse_energy(value: Union[str, float], target_unit: str = "Ry") -> float:
+def parse_energy(value: str | float, target_unit: str = "Ry") -> float:
     """
     Parse energy value with units and convert to target unit.
 
@@ -98,7 +97,7 @@ def parse_energy(value: Union[str, float], target_unit: str = "Ry") -> float:
     return value_in_ry / ry_per_unit[target_lower]
 
 
-def parse_length(value: Union[str, float], target_unit: str = "Ang") -> float:
+def parse_length(value: str | float, target_unit: str = "Ang") -> float:
     """
     Parse length value with units and convert to target unit.
 
@@ -177,7 +176,7 @@ def parse_length(value: Union[str, float], target_unit: str = "Ang") -> float:
     return value_in_ang / ang_per_unit[target_lower]
 
 
-def parse_force(value: Union[str, float], target_unit: str = "eV/Ang") -> float:
+def parse_force(value: str | float, target_unit: str = "eV/Ang") -> float:
     """
     Parse force value with units and convert to target unit.
 
@@ -232,19 +231,18 @@ def parse_force(value: Union[str, float], target_unit: str = "eV/Ang") -> float:
     # More complex conversions would require energy and length conversion
     if unit_normalized == target_normalized:
         return number
-    else:
-        # Could add conversion factors here if needed
-        # For now, just return the value if units match commonly used variants
-        unit_variants = {
-            "ev/ang": ["ev/ang", "ev/angstrom"],
-            "ry/bohr": ["ry/bohr"],
-        }
+    # Could add conversion factors here if needed
+    # For now, just return the value if units match commonly used variants
+    unit_variants = {
+        "ev/ang": ["ev/ang", "ev/angstrom"],
+        "ry/bohr": ["ry/bohr"],
+    }
 
-        for canonical, variants in unit_variants.items():
-            if unit_normalized in variants and target_normalized in variants:
-                return number
+    for canonical, variants in unit_variants.items():
+        if unit_normalized in variants and target_normalized in variants:
+            return number
 
-        raise ValueError(
-            f"Force unit conversion from '{unit}' to '{target_unit}' not yet supported. "
-            f"Please use matching units (e.g., both 'eV/Ang' or both 'Ry/Bohr')"
-        )
+    raise ValueError(
+        f"Force unit conversion from '{unit}' to '{target_unit}' not yet supported. "
+        f"Please use matching units (e.g., both 'eV/Ang' or both 'Ry/Bohr')"
+    )

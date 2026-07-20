@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Pattern
+from re import Pattern
 
 
 class ErrorType(Enum):
@@ -97,22 +97,14 @@ class SiestaError(Exception):
 class RecoverableError(SiestaError):
     """Error that can potentially be recovered from."""
 
-    pass
-
 
 class UnrecoverableError(SiestaError):
     """Error that cannot be recovered from automatically."""
-
-    pass
 
 
 class ValidationError(SiestaError):
     """Error during output validation."""
 
-    pass
-
 
 class MaxErrorsError(SiestaError):
     """Maximum number of error correction attempts reached."""
-
-    pass

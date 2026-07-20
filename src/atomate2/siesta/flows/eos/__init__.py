@@ -14,10 +14,10 @@ EOSFlowMaker = SiestaEosFlowMaker
 EOSMaker = SiestaEosFlowMaker
 
 __all__ = [
-    "SiestaEosFlowMaker",
-    "EOSFullBasisConvergenceFlowMaker",
     "EOSFlowMaker",  # Alias for backward compatibility
+    "EOSFullBasisConvergenceFlowMaker",
     "EOSMaker",  # Alias for backward compatibility
+    "SiestaEosFlowMaker",
     "collect_eos_parameter_data",
     "plot_eos_parameter_fits_from_data",
     "plot_eos_parameter_timing",

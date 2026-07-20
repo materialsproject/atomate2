@@ -11,7 +11,7 @@ These tests validate:
 from jobflow import Flow
 
 from atomate2.siesta.flows.elastic import ElasticFlowMaker, save_elastic_results_job
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
 
 
 class TestElasticMaker:

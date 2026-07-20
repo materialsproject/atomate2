@@ -54,16 +54,12 @@ class SiestaInterstitialGenerator:
     >>> from atomate2.siesta.flows.defects.generation import SiestaInterstitialGenerator
     >>> mgo = Structure.from_file("MgO.cif")
     >>> generator = SiestaInterstitialGenerator(mgo, min_dist=2.0)
-    >>> defects = generator.generate_defects(
-    ...     species="Li",
-    ...     charge_states=[0, +1]
-    ... )
+    >>> defects = generator.generate_defects(species="Li", charge_states=[0, +1])
 
     Generate with supercell:
 
     >>> defects = generator.generate_defects(
-    ...     species="Li",
-    ...     supercell_matrix=[[2,0,0], [0,2,0], [0,0,2]]
+    ...     species="Li", supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]]
     ... )
 
     Notes
@@ -268,8 +264,7 @@ class SiestaInterstitialGenerator:
                 sites.append(defect_site)
 
                 logger.debug(
-                    f"Interstitial site {len(sites)}: "
-                    f"{frac_coords} (Wyckoff {wyckoff})"
+                    f"Interstitial site {len(sites)}: {frac_coords} (Wyckoff {wyckoff})"
                 )
 
             logger.info(
@@ -318,16 +313,13 @@ class SiestaInterstitialGenerator:
         Generate Li interstitials:
 
         >>> generator = SiestaInterstitialGenerator(mgo)
-        >>> defects = generator.generate_defects(
-        ...     species="Li",
-        ...     charge_states=[0, +1]
-        ... )
+        >>> defects = generator.generate_defects(species="Li", charge_states=[0, +1])
 
         Multiple interstitial species with supercell:
 
         >>> defects = generator.generate_defects(
         ...     species=["Li", "Na", "H"],
-        ...     supercell_matrix=[[2,0,0], [0,2,0], [0,0,2]]
+        ...     supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
         ... )
         """
         # Convert to list

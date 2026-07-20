@@ -6,7 +6,6 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from jobflow import Flow, job
 from pymatgen.core import Structure
@@ -18,9 +17,6 @@ from atomate2.siesta.jobs.surface.core import (
     plot_surface_energies,
     write_surface_energy_summary,
 )
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -77,11 +73,23 @@ class SurfaceEnergyFlowMaker(BaseSiestaFlowMaker):
     >>> from atomate2.siesta.sets.core import StaticSetGenerator
     >>>
     >>> # Setup SIESTA parameters
-    >>> bulk_params = {"PAO.BasisSize": "DZP", "Mesh.Cutoff": "300 Ry", "kpts": [8,8,8]}
-    >>> slab_params = {"PAO.BasisSize": "DZP", "Mesh.Cutoff": "300 Ry", "kpts": [8,8,1]}
+    >>> bulk_params = {
+    ...     "PAO.BasisSize": "DZP",
+    ...     "Mesh.Cutoff": "300 Ry",
+    ...     "kpts": [8, 8, 8],
+    ... }
+    >>> slab_params = {
+    ...     "PAO.BasisSize": "DZP",
+    ...     "Mesh.Cutoff": "300 Ry",
+    ...     "kpts": [8, 8, 1],
+    ... }
     >>>
-    >>> bulk_maker = StaticMaker(input_set_generator=StaticSetGenerator(user_params=bulk_params))
-    >>> slab_maker = StaticMaker(input_set_generator=StaticSetGenerator(user_params=slab_params))
+    >>> bulk_maker = StaticMaker(
+    ...     input_set_generator=StaticSetGenerator(user_params=bulk_params)
+    ... )
+    >>> slab_maker = StaticMaker(
+    ...     input_set_generator=StaticSetGenerator(user_params=slab_params)
+    ... )
     >>>
     >>> # Create workflow
     >>> bulk = Structure.from_file("MgO.cif")

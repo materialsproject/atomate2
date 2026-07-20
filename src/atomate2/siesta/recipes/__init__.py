@@ -29,49 +29,49 @@ Example Usage:
 """
 
 from atomate2.siesta.recipes.base import RecipeBook
-from atomate2.siesta.recipes.complete import (
-    complete_material_study,
-    quick_characterization,
-    battery_cathode_screening,
-    thermoelectric_analysis,
-    high_temperature_ceramic,
-    magnetic_material_study,
-    semiconductor_device_study,
-    structural_phase_transition,
-)
-from atomate2.siesta.recipes.electronic import (
-    electronic_properties,
-    band_structure_workflow,
-    dos_workflow,
-)
-from atomate2.siesta.recipes.mechanical import (
-    mechanical_properties,
-    elastic_constants_workflow,
-    eos_workflow,
-)
-from atomate2.siesta.recipes.thermal import (
-    thermal_properties,
-    phonon_workflow,
-    qha_workflow,
-    gruneisen_workflow,
-)
 from atomate2.siesta.recipes.catalysis import (
-    surface_energy_workflow,
     adsorption_scanning_workflow,
     catalysis_study,
+    surface_energy_workflow,
+)
+from atomate2.siesta.recipes.complete import (
+    battery_cathode_screening,
+    complete_material_study,
+    high_temperature_ceramic,
+    magnetic_material_study,
+    quick_characterization,
+    semiconductor_device_study,
+    structural_phase_transition,
+    thermoelectric_analysis,
 )
 from atomate2.siesta.recipes.convergence import (
-    convergence_suite,
-    kpoints_convergence,
     basis_convergence,
     complete_convergence,
+    convergence_suite,
+    kpoints_convergence,
 )
 from atomate2.siesta.recipes.defect import (
-    complete_defect_study,
-    vacancy_study,
-    substitution_study,
     antisite_study,
+    complete_defect_study,
     interstitial_study,
+    substitution_study,
+    vacancy_study,
+)
+from atomate2.siesta.recipes.electronic import (
+    band_structure_workflow,
+    dos_workflow,
+    electronic_properties,
+)
+from atomate2.siesta.recipes.mechanical import (
+    elastic_constants_workflow,
+    eos_workflow,
+    mechanical_properties,
+)
+from atomate2.siesta.recipes.thermal import (
+    gruneisen_workflow,
+    phonon_workflow,
+    qha_workflow,
+    thermal_properties,
 )
 
 # Dynamically attach recipe methods to RecipeBook class

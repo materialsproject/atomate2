@@ -12,14 +12,13 @@ Section: 6.23 Systems with net charge or dipole, and electric fields
 
 __all__ = ["ChargeDipoleElectricField"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +61,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    external_electric_field_block: Dict[float, Any] = field(
+    external_electric_field_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define a uniform external electric field applied to the system, specifying its direction and magnitude.",
@@ -78,7 +77,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    slab_dipole_correction_origin_block: Dict[float, Any] = field(
+    slab_dipole_correction_origin_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to specify the origin point for the slab dipole correction potential.",
@@ -86,7 +85,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    slab_dipole_correction_vacuum_block: Dict[float, Any] = field(
+    slab_dipole_correction_vacuum_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to specify the vacuum region of the cell for the slab dipole correction algorithm.",
@@ -94,7 +93,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    geometry_hartree_block: Dict[float, Any] = field(
+    geometry_hartree_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define a custom analytical shape for the Hartree potential, useful for modeling electrostatic gates or environments.",
@@ -102,7 +101,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    geometry_charge_block: Dict[float, Any] = field(
+    geometry_charge_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define a fictitious, continuous charge distribution (e.g., a charged plane) within the simulation cell.",
@@ -126,7 +125,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    bulk_bias_direction_block: Dict[float, Any] = field(
+    bulk_bias_direction_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define the direction vector along which the bulk voltage bias is applied.",
@@ -158,7 +157,7 @@ class ChargeDipoleElectricField(FDFDataclass):
         },
     )
 
-    charge_dipole_fdf_arguments: Dict[str, Any] = field(
+    charge_dipole_fdf_arguments: dict[str, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A dictionary for any additional or arbitrary FDF flags related to charge, dipole, and electric field.",
@@ -200,9 +199,8 @@ class ChargeDipoleElectricField(FDFDataclass):
             mode is not recognized
         """
         logger.info("ChargeDipoleElectricField.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -265,14 +263,15 @@ class ChargeDipoleElectricField(FDFDataclass):
                     else bool(value)
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = {}
+        fdf: dict[str, Any] = {}
 
         # Net charge and doping
         if self.net_charge != 0:
@@ -288,13 +287,13 @@ class ChargeDipoleElectricField(FDFDataclass):
         if self.slab_dipole_correction:
             fdf["Slab.DipoleCorrection"] = self.slab_dipole_correction
         if self.slab_dipole_correction_origin_block:
-            fdf[
-                "%block Slab.DipoleCorrection.Origin"
-            ] = self.slab_dipole_correction_origin_block
+            fdf["%block Slab.DipoleCorrection.Origin"] = (
+                self.slab_dipole_correction_origin_block
+            )
         if self.slab_dipole_correction_vacuum_block:
-            fdf[
-                "%block Slab.DipoleCorrection.Vacuum"
-            ] = self.slab_dipole_correction_vacuum_block
+            fdf["%block Slab.DipoleCorrection.Vacuum"] = (
+                self.slab_dipole_correction_vacuum_block
+            )
 
         # Geometry blocks
         if self.geometry_hartree_block:
@@ -313,11 +312,12 @@ class ChargeDipoleElectricField(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have charge/dipole/field parameters
@@ -332,23 +332,23 @@ class ChargeDipoleElectricField(FDFDataclass):
 
         # Add comment header
         if self.comments:
-            self.charge_dipole_fdf_arguments[
-                "#ChargeDipoleElectricField"
-            ] = self.comments
+            self.charge_dipole_fdf_arguments["#ChargeDipoleElectricField"] = (
+                self.comments
+            )
 
         # Net charge and doping
         if self.net_charge != 0:
             self.charge_dipole_fdf_arguments["NetCharge"] = f"{self.net_charge}"
         if self.simulate_doping:
-            self.charge_dipole_fdf_arguments[
-                "SimulateDoping"
-            ] = f"{self.simulate_doping}"
+            self.charge_dipole_fdf_arguments["SimulateDoping"] = (
+                f"{self.simulate_doping}"
+            )
 
         # Slab dipole correction
         if self.slab_dipole_correction:
-            self.charge_dipole_fdf_arguments[
-                "Slab.DipoleCorrection"
-            ] = f"{self.slab_dipole_correction}"
+            self.charge_dipole_fdf_arguments["Slab.DipoleCorrection"] = (
+                f"{self.slab_dipole_correction}"
+            )
 
         # Bulk bias
         if self.bulk_bias_voltage != 0.0:
@@ -362,7 +362,7 @@ class ChargeDipoleElectricField(FDFDataclass):
 
     @classmethod
     def setup_charge_dipole_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "ChargeDipoleElectricField":
         """
         Create and configure a ChargeDipoleElectricField instance with full parameter parsing.
@@ -375,7 +375,8 @@ class ChargeDipoleElectricField(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             ChargeDipoleElectricField: Configured instance with all fields set.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -459,11 +460,10 @@ class ChargeDipoleElectricField(FDFDataclass):
                 ]:
                     if isinstance(value, dict):
                         setattr(instance, original_key, value)
-                    else:
-                        if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                            console.print(
-                                f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
-                            )
+                    elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                        console.print(
+                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                        )
 
                 # Boolean fields
                 elif original_key in ["simulate_doping", "bulk_bias_current"]:
@@ -499,11 +499,10 @@ class ChargeDipoleElectricField(FDFDataclass):
                 else:
                     setattr(instance, original_key, value)
 
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(

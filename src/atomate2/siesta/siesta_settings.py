@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 import warnings
 from pathlib import Path
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -84,7 +84,7 @@ class ExtendedAtomate2Settings(BaseSettings):
         description="Whether to display FlowMaker docstrings in Rich panels when .make() is called",
     )
 
-    SIESTA_ZIP_FILES: Union[bool, Literal["atomate"]] = Field(
+    SIESTA_ZIP_FILES: bool | Literal["atomate"] = Field(
         "atomate",
         description=(
             "Determine if the files in the folder are being compressed. If True "
@@ -93,11 +93,11 @@ class ExtendedAtomate2Settings(BaseSettings):
         ),
     )
 
-    SIESTA_PP_PATH: Optional[str] = Field(
+    SIESTA_PP_PATH: str | None = Field(
         None, description="The path where files for pseudos are stored."
     )
 
-    FLOS_PATH: Optional[str] = Field(
+    FLOS_PATH: str | None = Field(
         None, description="The path where files for FLOS are stored."
     )
 

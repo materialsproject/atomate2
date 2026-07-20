@@ -7,9 +7,10 @@ These tests validate:
 - Method behaviors
 """
 
-import pytest
 from unittest.mock import patch
-from pymatgen.core import Structure, Lattice
+
+import pytest
+from pymatgen.core import Lattice, Structure
 
 from atomate2.siesta.jobs.base import BaseSiestaMaker, display_welcome_banner
 

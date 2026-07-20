@@ -75,8 +75,8 @@ class TestNebVacancyExchangeMaker:
 
         for a, b in test_cases:
             maker = NebVacancyExchangeFlowMaker(A=a, B=b)
-            assert maker.A == a
-            assert maker.B == b
+            assert a == maker.A
+            assert b == maker.B
 
     def test_neb_lua_maker_make_flow(self, si_structure):
         """Test that NebVacancyExchangeFlowMaker creates a valid flow."""
@@ -489,6 +489,7 @@ class TestGenerateNebBand:
     def test_generate_neb_band_basic(self, si_structure, tmp_path):
         """Test generate_neb_band creates NEB band with correct number of images."""
         import os
+
         from atomate2.siesta.flows.neb.common import generate_neb_band
 
         # Change to tmp directory for file creation
@@ -514,6 +515,7 @@ class TestGenerateNebBand:
     def test_generate_neb_band_different_image_counts(self, si_structure, tmp_path):
         """Test generate_neb_band with different numbers of intermediate images."""
         import os
+
         from atomate2.siesta.flows.neb.common import generate_neb_band
 
         original_dir = os.getcwd()
@@ -541,6 +543,7 @@ class TestGenerateNebBand:
     ):
         """Test generate_neb_band with different initial and final structures."""
         import os
+
         from atomate2.siesta.flows.neb.common import generate_neb_band
 
         original_dir = os.getcwd()
@@ -559,6 +562,7 @@ class TestGenerateNebBand:
     def test_generate_neb_band_file_format(self, si_structure, tmp_path):
         """Test that generate_neb_band creates valid XYZ files."""
         import os
+
         from atomate2.siesta.flows.neb.common import generate_neb_band
 
         original_dir = os.getcwd()
@@ -583,6 +587,7 @@ class TestGenerateNebBand:
     def test_generate_neb_band_zero_intermediate_images(self, si_structure, tmp_path):
         """Test generate_neb_band with zero intermediate images."""
         import os
+
         from atomate2.siesta.flows.neb.common import generate_neb_band
 
         original_dir = os.getcwd()

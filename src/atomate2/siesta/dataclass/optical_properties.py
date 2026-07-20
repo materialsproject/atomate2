@@ -11,16 +11,14 @@ Section:  6.20 Optical properties
 
 __all__ = ["OpticalProperties"]
 
-from dataclasses import dataclass, field, fields
-from typing import Dict, Any, List, Optional
+import logging
 from collections import OrderedDict
+from dataclasses import dataclass, field, fields
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +94,7 @@ class OpticalProperties(FDFDataclass):
         },
     )
 
-    optical_mesh_block: List[str] = field(
+    optical_mesh_block: list[str] = field(
         default_factory=lambda: ["10 10 10"],
         metadata={
             "description": "A block to define the dimensions of a specific Monkhorst-Pack k-point grid for the optical calculation, which is typically denser than the SCF grid.",
@@ -120,7 +118,7 @@ class OpticalProperties(FDFDataclass):
         },
     )
 
-    optical_vector_block: Dict[float, Any] = field(
+    optical_vector_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to specify the electric field polarization vector when 'Optical.PolarizationType' is set to 'polarized'.",
@@ -128,7 +126,7 @@ class OpticalProperties(FDFDataclass):
         },
     )
 
-    optical_number_of_energies: Optional[int] = field(
+    optical_number_of_energies: int | None = field(
         default=None,
         metadata={
             "description": "The number of energy points for the optical spectrum. If not set, SIESTA uses an internally determined value.",
@@ -136,7 +134,7 @@ class OpticalProperties(FDFDataclass):
         },
     )
 
-    optical_calculation_type: Optional[str] = field(
+    optical_calculation_type: str | None = field(
         default=None,
         metadata={
             "description": "The type of optical calculation (e.g., 'absorption', 'optical').",
@@ -156,7 +154,7 @@ class OpticalProperties(FDFDataclass):
     # #optical_k_points: List[List[float]] = field(default_factory=list)  # List of k-points for optical properties calculation
     # polarization_directions: List[List[float]] = field(default_factory=lambda: [[1, 0, 0], [0, 1, 0], [0, 0, 1]])  # Polarization directions
     # optical_fdf_arguments: Dict[float,Any]= field(default_factory=dict)
-    polarization_grids_block: Dict[float, Any] = field(
+    polarization_grids_block: dict[float, Any] = field(
         default_factory=dict,
         metadata={
             "description": "A block to define fine-grained grids for the calculation of electric polarization using the Berry phase method.",
@@ -204,7 +202,7 @@ class OpticalProperties(FDFDataclass):
         },
     )
 
-    optical_energy_range: List[float] = field(
+    optical_energy_range: list[float] = field(
         default_factory=lambda: [0.0, 10.0],
         metadata={
             "description": "The energy range [Emin, Emax] for optical calculations. Corresponds to 'Optical.Energy.Minimum' and 'Optical.Energy.Maximum'.",
@@ -212,7 +210,7 @@ class OpticalProperties(FDFDataclass):
         },
     )
 
-    polarization_directions: List[List[float]] = field(
+    polarization_directions: list[list[float]] = field(
         default_factory=lambda: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
         metadata={
             "description": "Defines the electric field polarization vectors for the optical calculation. This is used to generate the '%block Optical.Vector'.",
@@ -280,7 +278,7 @@ class OpticalProperties(FDFDataclass):
                 "[green]Validation & Generation: [yellow]OpticalProperties[/yellow] Successful![/green]"
             )
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -319,14 +317,15 @@ class OpticalProperties(FDFDataclass):
             elif key_lower in ["optical.calculationtype", "optical_calculation_type"]:
                 self.optical_calculation_type = str(value)
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
-        fdf: Dict[str, Any] = OrderedDict()
+        fdf: dict[str, Any] = OrderedDict()
 
         # Add comment header
         fdf["#OpticalProperties"] = "OpticalProperties Settings"
@@ -387,11 +386,12 @@ class OpticalProperties(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have optical properties parameters
@@ -431,7 +431,7 @@ class OpticalProperties(FDFDataclass):
 
     @classmethod
     def setup_optical_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "OpticalProperties":
         """
         Create and configure a OpticalProperties instance with full parameter parsing.
@@ -444,7 +444,8 @@ class OpticalProperties(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             OpticalProperties: Configured instance with all fields set.
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
@@ -523,11 +524,10 @@ class OpticalProperties(FDFDataclass):
                 ]:
                     if isinstance(value, (dict, OrderedDict)):
                         setattr(instance, original_key, value)
-                    else:
-                        if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                            console.print(
-                                f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
-                            )
+                    elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                        console.print(
+                            f"[yellow]Invalid type for {original_key}: expected dict, got {type(value)}[/yellow]"
+                        )
 
                 # Boolean fields
                 elif original_key in [
@@ -579,11 +579,10 @@ class OpticalProperties(FDFDataclass):
                 ]:
                     if isinstance(value, list):
                         setattr(instance, original_key, value)
-                    else:
-                        if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                            console.print(
-                                f"[yellow]Invalid type for {original_key}: expected list, got {type(value)}[/yellow]"
-                            )
+                    elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                        console.print(
+                            f"[yellow]Invalid type for {original_key}: expected list, got {type(value)}[/yellow]"
+                        )
 
                 # String fields
                 elif original_key == "optical_polarization_type":
@@ -593,11 +592,10 @@ class OpticalProperties(FDFDataclass):
                 else:
                     setattr(instance, original_key, value)
 
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
-                    console.print(
-                        f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.WARNING.value:
+                console.print(
+                    f"[yellow]Unrecognized parameter: {key} (normalized: {key_normalized})[/yellow]"
+                )
 
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.INFO.value:
             console.print(

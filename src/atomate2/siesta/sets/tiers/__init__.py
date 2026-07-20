@@ -48,7 +48,7 @@ Custom tier configuration:
     >>> input_gen = SiestaInputGenerator(
     ...     tier="advanced",
     ...     enabled_modules=["phonons", "optical"],
-    ...     disabled_modules=["dftu"]
+    ...     disabled_modules=["dftu"],
     ... )
 
 List all available presets:
@@ -63,6 +63,9 @@ Display presets in a formatted table:
 """
 
 from __future__ import annotations
+
+# Categories
+from .categories import TIER_CATEGORIES, get_presets_by_category
 
 # Core functions
 from .core import (
@@ -87,9 +90,6 @@ from .presets import (
     TIER_PRESETS,
     TWO_DIMENSION_PRESETS,
 )
-
-# Categories
-from .categories import TIER_CATEGORIES, get_presets_by_category
 
 __all__ = [
     # Core functions

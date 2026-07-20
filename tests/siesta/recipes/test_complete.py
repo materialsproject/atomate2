@@ -3,14 +3,14 @@
 from jobflow import Flow
 
 from atomate2.siesta.recipes.complete import (
-    complete_material_study,
-    quick_characterization,
     battery_cathode_screening,
-    thermoelectric_analysis,
+    complete_material_study,
     high_temperature_ceramic,
     magnetic_material_study,
+    quick_characterization,
     semiconductor_device_study,
     structural_phase_transition,
+    thermoelectric_analysis,
 )
 
 

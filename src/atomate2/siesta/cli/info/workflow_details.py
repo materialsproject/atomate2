@@ -2,10 +2,10 @@
 
 import inspect
 
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
 
 console = Console()
 
@@ -20,28 +20,17 @@ def discover_flowmakers():
         Mapping of workflow_name -> FlowMaker class info
     """
     from atomate2.siesta.flows import (
-        eos,
+        bands,
         convergence,
         core,
         elastic,
-        surface,
-        bands,
+        eos,
         phonon,
+        surface,
     )
-    from atomate2.siesta.flows.neb import (
-        vacancy_exchange,
-        ase_neb,
-        direct,
-    )
-    from atomate2.siesta.flows.phonon import (
-        gruneisen,
-        qha,
-        phonopy_maker,
-    )
-    from atomate2.siesta.flows.surface import (
-        adsorption,
-        multi_surface,
-    )
+    from atomate2.siesta.flows.neb import ase_neb, direct, vacancy_exchange
+    from atomate2.siesta.flows.phonon import gruneisen, phonopy_maker, qha
+    from atomate2.siesta.flows.surface import adsorption, multi_surface
 
     flowmakers = {}
 
@@ -277,11 +266,10 @@ def show_workflow_details(workflow_name: str, full: bool = False):
             print_docstring_in_box(maker_class.__doc__, title=maker_class.__name__)
             console.print()
             return
-        else:
-            console.print(
-                "[yellow]Warning:[/yellow] No docstring available for this workflow\n"
-            )
-            # Fall through to show standard details
+        console.print(
+            "[yellow]Warning:[/yellow] No docstring available for this workflow\n"
+        )
+        # Fall through to show standard details
 
     if is_job:
         # Single job maker

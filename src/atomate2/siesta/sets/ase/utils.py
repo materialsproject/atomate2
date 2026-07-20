@@ -1,14 +1,13 @@
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from ase import Atoms
-
 from atomate2.siesta.sets.ase.siesta_input import SiestaInput
 
 logger = logging.getLogger(__name__)
 
 
-def _nonpolarized_alias(_: List, kwargs: Dict[str, Any]) -> bool:
+def _nonpolarized_alias(_: list, kwargs: dict[str, Any]) -> bool:
     """
     Handle deprecated 'UNPOLARIZED' spin keyword for backward compatibility.
 
@@ -16,11 +15,12 @@ def _nonpolarized_alias(_: List, kwargs: Dict[str, Any]) -> bool:
         _: Unused argument (list).
         kwargs (Dict[str, Any]): Keyword arguments to check and modify.
 
-    Returns:
+    Returns
+    -------
         bool: True if 'UNPOLARIZED' was replaced with 'non-polarized', False otherwise.
     """
     logger.info("_nonpolarized_alias()")
-    if kwargs.get("spin", None) == "UNPOLARIZED":
+    if kwargs.get("spin") == "UNPOLARIZED":
         kwargs["spin"] = "non-polarized"
         return True
     return False
@@ -36,7 +36,8 @@ def format_block(name, block):
         name (str): Name of the block (e.g., 'BandPoints').
         block: Iterable of rows, where each row contains data to be formatted.
 
-    Returns:
+    Returns
+    -------
         str: Formatted block string with %block and %endblock directives.
     """
     logger.info("format_block()")
@@ -55,7 +56,8 @@ def bandpath2bandpoints(path):
     Args:
         path: Band path object containing k-points.
 
-    Returns:
+    Returns
+    -------
         str: Formatted BandPoints block for FDF file.
     """
     logger.info("bandpath2bandpoints()")
@@ -78,7 +80,8 @@ def var(key, value):
         key (str): FDF variable name.
         value: Variable value.
 
-    Returns:
+    Returns
+    -------
         str: Formatted FDF variable line.
     """
     logger.info("var()")
@@ -93,7 +96,8 @@ def block(name, data):
         name (str): Block name.
         data: Block data as an iterable.
 
-    Returns:
+    Returns
+    -------
         str: Formatted block string.
     """
     logger.info("block()")
@@ -103,7 +107,9 @@ def block(name, data):
 def format_fdf(key, value):
     """
     Write an fdf key-word value pair.
-    Parameters:
+
+    Parameters
+    ----------
         - key : The fdf-key
         - value : The fdf value.
     """
@@ -149,7 +155,8 @@ def format_value(value):
     """
     Format python values to fdf-format.
 
-    Parameters:
+    Parameters
+    ----------
         - value : The value to format.
     """
     if isinstance(value, tuple):
@@ -188,10 +195,12 @@ def generate_atomic_coordinates(
         species_numbers: Species numbers for each atom.
         atomic_coord_format (str): Format ('xyz' or 'zmatrix').
 
-    Yields:
+    Yields
+    ------
         str: Lines for the atomic coordinates block.
 
-    Raises:
+    Raises
+    ------
         RuntimeError: If atomic_coord_format is unknown.
     Write atomic coordinates.
 
@@ -205,10 +214,9 @@ def generate_atomic_coordinates(
     logger.info("Siesta.generate_atomic_coordinates()")
     if atomic_coord_format == "xyz":
         return generate_atomic_coordinates_xyz(atoms, species_numbers)
-    elif atomic_coord_format == "zmatrix":
+    if atomic_coord_format == "zmatrix":
         return generate_atomic_coordinates_zmatrix(atoms, species_numbers)
-    else:
-        raise RuntimeError(f"Unknown atomic_coord_format: {atomic_coord_format}")
+    raise RuntimeError(f"Unknown atomic_coord_format: {atomic_coord_format}")
 
 
 def generate_atomic_coordinates_zmatrix(atoms: Atoms, species_numbers):
@@ -219,7 +227,8 @@ def generate_atomic_coordinates_zmatrix(atoms: Atoms, species_numbers):
         atoms (Atoms): ASE Atoms object.
         species_numbers: Species numbers for each atom.
 
-    Yields:
+    Yields
+    ------
         str: Lines for the Zmatrix block.
 
     Write atomic coordinates in Z-matrix format.
@@ -258,7 +267,8 @@ def generate_atomic_coordinates_xyz(atoms: Atoms, species_numbers):
         atoms (Atoms): ASE Atoms object.
         species_numbers: Species numbers for each atom.
 
-    Yields:
+    Yields
+    ------
         str: Lines for the AtomicCoordinatesAndAtomicSpecies block.
 
     Write atomic coordinates.
@@ -298,7 +308,8 @@ def comment_in_box(text_lines):
     Args:
         text_lines (list[str]): List of strings to be included in the comment box.
 
-    Yields:
+    Yields
+    ------
         str: Lines of the boxed comment block, each starting with '#'.
     """
     logger.info("comment_in_box()")

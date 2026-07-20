@@ -206,7 +206,8 @@ def _generate_recreation_script(
         original_params: Original FDF parameters
         modified_params: Modified FDP parameters
 
-    Returns:
+    Returns
+    -------
         Python script content as string
     """
     import pprint

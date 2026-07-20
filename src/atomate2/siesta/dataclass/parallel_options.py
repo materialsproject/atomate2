@@ -15,14 +15,13 @@ Section:  6.27 Parallel options
 
 __all__ = ["ParallelOptions"]
 
+import logging
 from dataclasses import dataclass, field, fields
-from typing import Dict, Any, Optional
+from typing import Any
 
 from atomate2.siesta.dataclass.base import FDFDataclass
 from atomate2.siesta.utils.common import console
 from atomate2.siesta.utils.verbosity import VerbosityLevel
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +122,7 @@ class ParallelOptions(FDFDataclass):
     )
 
     # Dictionary to hold FDF arguments
-    parallel_fdf_arguments: Dict[str, Any] = field(default_factory=dict)
+    parallel_fdf_arguments: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         """Register FDF parameters handled by this dataclass."""
@@ -152,9 +151,8 @@ class ParallelOptions(FDFDataclass):
             If parallel options are invalid or inconsistent with available resources
         """
         logger.info("ParallelOptions.validate()")
-        pass
 
-    def update_from_fdf(self, fdf_dict: Dict[str, Any]) -> None:
+    def update_from_fdf(self, fdf_dict: dict[str, Any]) -> None:
         """
         Update this dataclass from FDF parameters.
 
@@ -196,11 +194,12 @@ class ParallelOptions(FDFDataclass):
                     parse_length(value, target_unit="Bohr") if value else None
                 )
 
-    def generate_fdf(self) -> Dict[str, Any]:
+    def generate_fdf(self) -> dict[str, Any]:
         """
         Generate SIESTA FDF format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of FDF parameters
         """
         fdf = {}
@@ -238,11 +237,12 @@ class ParallelOptions(FDFDataclass):
 
         return fdf
 
-    def to_ase(self) -> Dict[str, Any]:
+    def to_ase(self) -> dict[str, Any]:
         """
         Generate ASE-format parameters.
 
-        Returns:
+        Returns
+        -------
             Dictionary of ASE parameters
         """
         # ASE doesn't have parallel execution parameters
@@ -266,9 +266,9 @@ class ParallelOptions(FDFDataclass):
         if self.processor_y is not None:
             params_to_add["ProcessorY"] = self.processor_y
         if self.fft_processor_y_traditional:  # False is default
-            params_to_add[
-                "FFT.ProcessorY.Traditional"
-            ] = self.fft_processor_y_traditional
+            params_to_add["FFT.ProcessorY.Traditional"] = (
+                self.fft_processor_y_traditional
+            )
         if self.use_domain_decomposition:  # Only add if True (False is default)
             params_to_add["UseDomainDecomposition"] = self.use_domain_decomposition
         if not self.use_spatial_decomposition:  # True is default, add if False
@@ -284,7 +284,7 @@ class ParallelOptions(FDFDataclass):
 
     @classmethod
     def setup_parallel_settings(
-        cls, user_params: Optional[Dict[str, Any]] = None, **kwargs
+        cls, user_params: dict[str, Any] | None = None, **kwargs
     ) -> "ParallelOptions":
         """
         Create and configure a ParallelOptions instance with full parameter parsing.
@@ -298,23 +298,25 @@ class ParallelOptions(FDFDataclass):
                         If None or empty, all default values are used.
             **kwargs: Additional keyword arguments to override or supplement user_params.
 
-        Returns:
+        Returns
+        -------
             ParallelOptions: Configured instance with all fields set.
 
-        Examples:
+        Examples
+        --------
             >>> # Using SIESTA FDF parameter names
-            >>> parallel = ParallelOptions.setup_parallel_settings({
-            ...     "BlockSize": 32,
-            ...     "ProcessorY": 4,
-            ...     "UseSpatialDecomposition": True
-            ... })
+            >>> parallel = ParallelOptions.setup_parallel_settings(
+            ...     {"BlockSize": 32, "ProcessorY": 4, "UseSpatialDecomposition": True}
+            ... )
 
             >>> # Using Python attribute names
-            >>> parallel = ParallelOptions.setup_parallel_settings({
-            ...     "block_size": 32,
-            ...     "processor_y": 4,
-            ...     "use_spatial_decomposition": True
-            ... })
+            >>> parallel = ParallelOptions.setup_parallel_settings(
+            ...     {
+            ...         "block_size": 32,
+            ...         "processor_y": 4,
+            ...         "use_spatial_decomposition": True,
+            ...     }
+            ... )
         """
         if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
             console.print("[green]ParallelOptions.setup_parallel_settings()[/green]")
@@ -415,11 +417,10 @@ class ParallelOptions(FDFDataclass):
                 else:
                     # Direct assignment for other types
                     setattr(instance, matched_attr, value)
-            else:
-                if cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
-                    console.print(
-                        f"[yellow]Warning: No match found for parameter '{key}' in ParallelOptions[/yellow]"
-                    )
+            elif cls.CONSOLE_VERBOSITY.value >= VerbosityLevel.VERBOSE.value:
+                console.print(
+                    f"[yellow]Warning: No match found for parameter '{key}' in ParallelOptions[/yellow]"
+                )
 
         # Generate FDF block with comment header
         instance.generate_parallel_block()

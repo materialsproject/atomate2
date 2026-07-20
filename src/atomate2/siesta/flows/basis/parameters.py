@@ -22,14 +22,11 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from jobflow.core.flow import Flow
 from jobflow.core.job import job
 from pymatgen.core import Molecule, Structure
-
-if TYPE_CHECKING:
-    pass
 
 from atomate2.siesta.flows.base import BaseSiestaFlowMaker
 from atomate2.siesta.flows.basis.eos import (
@@ -52,8 +49,8 @@ logger = logging.getLogger(__name__)
 
 @job
 def print_energies(
-    flow_results: Dict[str, Any], job_metadata: list[dict]
-) -> Dict[str, float]:
+    flow_results: dict[str, Any], job_metadata: list[dict]
+) -> dict[str, float]:
     """
     Retrieve and print the total energies from each job in the Flow's results using job.output.
 
@@ -62,7 +59,8 @@ def print_energies(
         job_metadata (list[dict]): List of dictionaries containing job names and UUIDs.
         verbosity (VerbosityLevel): Verbosity level for console output. Defaults to INFO.
 
-    Returns:
+    Returns
+    -------
         Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
@@ -100,17 +98,16 @@ def print_energies(
     if not energies:
         if verbosity.value >= VerbosityLevel.WARNING.value:
             console.print("[red]No energies retrieved from Flow results[/red]")
-    else:
-        if verbosity.value >= VerbosityLevel.WARNING.value:
-            console.print(
-                f"[green]Energies retrieved from Flow results {energies=}[/green]"
-            )
+    elif verbosity.value >= VerbosityLevel.WARNING.value:
+        console.print(
+            f"[green]Energies retrieved from Flow results {energies=}[/green]"
+        )
 
     return energies
 
 
 @job
-def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, float]:
+def print_energies_old(flow: Flow, flow_results: dict[str, Any]) -> dict[str, float]:
     """
     Retrieve and print the total energies from each job in the Flow's results using job.output.
 
@@ -119,7 +116,8 @@ def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, fl
         flow_results (Dict[str, Any]): The results dictionary returned by jobflow's run_locally.
         verbosity (VerbosityLevel): Verbosity level for console output. Defaults to DEBUG.
 
-    Returns:
+    Returns
+    -------
         Dict[str, float]: A dictionary mapping job names to their total energies (in eV).
     """
     from atomate2.siesta.flows.basis.core import DifferentBasisSCFAdvanceFlowMaker
@@ -170,18 +168,17 @@ def print_energies_old(flow: Flow, flow_results: Dict[str, Any]) -> Dict[str, fl
     if not energies:
         if verbosity.value >= VerbosityLevel.WARNING.value:
             console.print("[red]No energies retrieved from Flow results[/red]")
-    else:
-        if verbosity.value >= VerbosityLevel.WARNING.value:
-            console.print(
-                f"[green]Energies retrieved from Flow results {energies=}[/green]"
-            )
+    elif verbosity.value >= VerbosityLevel.WARNING.value:
+        console.print(
+            f"[green]Energies retrieved from Flow results {energies=}[/green]"
+        )
 
     return energies
 
 
 @job
 def plot_energies(
-    energies: Dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
+    energies: dict[str, float], verbosity: VerbosityLevel = VerbosityLevel.INFO
 ):
     """
     Plot total energies vs. basis size.
@@ -194,7 +191,7 @@ def plot_energies(
 
     if verbosity.value >= VerbosityLevel.INFO.value:
         console.print("[green]Plotting energies vs. basis size[/green]")
-    basis_sizes = [name.split("-")[-1] for name in energies.keys()]
+    basis_sizes = [name.split("-")[-1] for name in energies]
     energy_values = list(energies.values())
     plt.figure(figsize=(10, 6))
     plt.plot(basis_sizes, energy_values, "o-")
@@ -242,7 +239,7 @@ class BasisParametersConvergenceFlowMaker(BaseSiestaFlowMaker):
         >>> maker = BasisParametersConvergenceFlowMaker(
         ...     energy_shifts=[0.005, 0.01, 0.015, 0.02],
         ...     split_norms=[0.15, 0.20, 0.25],
-        ...     basis_size="DZP"
+        ...     basis_size="DZP",
         ... )
         >>> flow = maker.make(structure)
     """
@@ -277,7 +274,8 @@ class BasisParametersConvergenceFlowMaker(BaseSiestaFlowMaker):
             structure: Structure to calculate
             prev_dir: Previous directory (optional)
 
-        Returns:
+        Returns
+        -------
             Flow with SCF jobs for each parameter combination
         """
         print_docstring_in_box(self.__doc__, title=self.__class__.__name__)

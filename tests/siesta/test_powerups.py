@@ -11,11 +11,8 @@ These tests validate:
 import pytest
 from jobflow import Flow, Job, Maker
 
-from atomate2.siesta.powerups import (
-    update_maker_kwargs,
-    update_user_siesta_settings,
-)
-from atomate2.siesta.jobs.core import StaticMaker, RelaxMaker
+from atomate2.siesta.jobs.core import RelaxMaker, StaticMaker
+from atomate2.siesta.powerups import update_maker_kwargs, update_user_siesta_settings
 
 
 class TestUpdateMakerKwargs:

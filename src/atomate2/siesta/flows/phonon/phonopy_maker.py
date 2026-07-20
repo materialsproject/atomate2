@@ -101,9 +101,9 @@ class SiestaPhononFlowMaker(PhonopyMaker):
             if hasattr(self.static_maker, "input_set_generator"):
                 if self.static_maker.input_set_generator.user_params is None:
                     self.static_maker.input_set_generator.user_params = OrderedDict()
-                self.static_maker.input_set_generator.user_params[
-                    "a2s_kpts"
-                ] = self.kpts
+                self.static_maker.input_set_generator.user_params["a2s_kpts"] = (
+                    self.kpts
+                )
 
         # Also apply k-points to relax_maker if provided
         if self.kpts is not None and self.relax_maker is not None:
@@ -169,10 +169,10 @@ class PhononConvergenceFlowMaker(BaseSiestaFlowMaker):
     >>> from atomate2.siesta.flows.phonon import PhononConvergenceFlowMaker
     >>> maker = PhononConvergenceFlowMaker(
     ...     supercell_sizes=[
-    ...         [[2,0,0],[0,2,0],[0,0,2]],
-    ...         [[3,0,0],[0,3,0],[0,0,3]],
+    ...         [[2, 0, 0], [0, 2, 0], [0, 0, 2]],
+    ...         [[3, 0, 0], [0, 3, 0], [0, 0, 3]],
     ...     ],
-    ...     displacement_values=[0.005, 0.01, 0.02]
+    ...     displacement_values=[0.005, 0.01, 0.02],
     ... )
     >>> flow = maker.make(structure)
     """
