@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
+from typing import ClassVar
 
 from atomate2.siesta.custodian.errors import ErrorType, detect_error
 from atomate2.siesta.custodian.fdf_utils import update_fdf_file
@@ -48,9 +49,9 @@ class ParallelDistributionHandler(ErrorHandler):
     raise_on_max = True  # Raise if we can't fix it
 
     # Basis size hierarchy (increasing orbital count)
-    BASIS_HIERARCHY = ["SZ", "SZP", "DZ", "DZP", "TZP", "TZDP"]
+    BASIS_HIERARCHY: ClassVar[list[str]] = ["SZ", "SZP", "DZ", "DZP", "TZP", "TZDP"]
 
-    def __init__(self, max_attempts: int = 4):
+    def __init__(self, max_attempts: int = 4) -> None:
         """Initialize ParallelDistributionHandler.
 
         Parameters
@@ -62,7 +63,7 @@ class ParallelDistributionHandler(ErrorHandler):
         self.max_num_corrections = max_attempts
         self.error_type = ErrorType.PARALLEL
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for parallel distribution errors.
 
         Parameters
@@ -86,7 +87,7 @@ class ParallelDistributionHandler(ErrorHandler):
                 return True
         return False
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply parallel distribution corrections.
 
         Strategy: Increase basis size to add more orbitals.
@@ -119,12 +120,14 @@ class ParallelDistributionHandler(ErrorHandler):
             # Already at maximum basis, cannot increase further
             n_procs = self._estimate_mpi_processes(directory)
             n_orbitals = self._estimate_orbitals(directory)
+            recommended = max(1, n_orbitals // 2)
 
             error_msg = (
                 f"Cannot fix parallel distribution error: "
                 f"Basis already at {current_basis} (max), "
-                f"but system has only ~{n_orbitals} orbitals for ~{n_procs} MPI processes. "
-                f"Please resubmit with fewer MPI processes (recommend: {max(1, n_orbitals // 2)})"
+                f"but system has only ~{n_orbitals} orbitals "
+                f"for ~{n_procs} MPI processes. "
+                f"Please resubmit with fewer MPI processes (recommend: {recommended})"
             )
             logger.error(error_msg)
 
@@ -132,7 +135,7 @@ class ParallelDistributionHandler(ErrorHandler):
                 "errors": ["Parallel distribution error - cannot recover"],
                 "actions": [
                     f"FAILED: {error_msg}",
-                    f"Recommendation: Reduce MPI processes to {max(1, n_orbitals // 2)} or less",
+                    f"Recommendation: Reduce MPI processes to {recommended} or less",
                 ],
             }
 
@@ -229,7 +232,7 @@ class ParallelDistributionHandler(ErrorHandler):
                 match = re.search(r"Running on\s+(\d+)\s+nodes", content)
                 if match:
                     return int(match.group(1))
-        except Exception:
+        except Exception:  # noqa: BLE001, S110 best-effort parse; fall back to default
             pass
 
         return 4  # Default assumption
@@ -266,9 +269,8 @@ class ParallelDistributionHandler(ErrorHandler):
                         r"Orbital distribution balance.*:\s*(\d+)\s+(\d+)", line
                     )
                     if match:
-                        max_orb = int(match.group(1))
-                        return max_orb  # At least this many orbitals
-        except Exception:
+                        return int(match.group(1))  # At least this many orbitals
+        except Exception:  # noqa: BLE001, S110 best-effort parse; fall back to default
             pass
 
         return 2  # Default for tiny systems

@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from atomate2.siesta.custodian.errors.base import ErrorPattern, ErrorType
 from atomate2.siesta.custodian.errors.patterns import SIESTA_ERROR_PATTERNS
+
+if TYPE_CHECKING:
+    from atomate2.siesta.custodian.errors.base import ErrorPattern, ErrorType
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +54,7 @@ def detect_error(directory: Path | str) -> list[ErrorPattern]:
             if error_pattern.matches(content):
                 detected_errors.append(error_pattern)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 best-effort file read during error detection
             # Log but don't fail on file read errors
             logger.warning(f"Could not read {file_path}: {e}")
 

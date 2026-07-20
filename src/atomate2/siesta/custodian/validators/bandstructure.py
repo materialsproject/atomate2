@@ -15,7 +15,7 @@ class BandStructureValidator(SiestaOutputValidator):
     - K-points processed
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize BandStructureValidator."""
         super().__init__(
             required_files=["siesta.bands"],

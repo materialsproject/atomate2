@@ -43,7 +43,7 @@ class SCFConvergenceHandler(ErrorHandler):
     max_num_corrections = 10  # Maximum correction attempts (extended from 5)
     raise_on_max = False  # Don't raise, just stop correcting
 
-    def __init__(self, max_attempts: int = 10):
+    def __init__(self, max_attempts: int = 10) -> None:
         """Initialize SCFConvergenceHandler.
 
         Parameters
@@ -62,7 +62,7 @@ class SCFConvergenceHandler(ErrorHandler):
         self.max_num_corrections = max_attempts
         self.error_type = ErrorType.SCF_CONVERGENCE
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for SCF convergence errors.
 
         Parameters
@@ -77,12 +77,9 @@ class SCFConvergenceHandler(ErrorHandler):
         """
         directory = Path(directory)
         errors = detect_error(directory)
-        for error in errors:
-            if error.error_type == ErrorType.SCF_CONVERGENCE:
-                return True
-        return False
+        return any(error.error_type == ErrorType.SCF_CONVERGENCE for error in errors)
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply SCF convergence corrections.
 
         Corrections are applied progressively based on the number

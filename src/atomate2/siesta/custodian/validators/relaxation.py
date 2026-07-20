@@ -21,7 +21,7 @@ class RelaxationValidator(SiestaOutputValidator):
         force_tolerance: float = 0.04,  # eV/Ang
         strict_convergence: bool = False,
         **kwargs,
-    ):
+    ) -> None:
         """Initialize RelaxationValidator.
 
         Parameters
@@ -30,7 +30,8 @@ class RelaxationValidator(SiestaOutputValidator):
             Maximum force tolerance in eV/Ang (default: 0.04)
         strict_convergence : bool, optional
             If True, fail validation if geometry does not converge.
-            If False (default), allow non-converged geometries (for dirty/fast calculations).
+            If False (default), allow non-converged geometries (for dirty/fast
+            calculations).
         **kwargs
             Additional arguments for SiestaOutputValidator
         """
@@ -80,7 +81,8 @@ class RelaxationValidator(SiestaOutputValidator):
         #
         # WHY: Validators run AFTER error handlers have finished. If a validator
         # detects an error, it raises ValidationError which STOPS the job.
-        # Validators cannot trigger handler corrections - they're a final pass/fail gate.
+        # Validators cannot trigger handler corrections - they're a final
+        # pass/fail gate.
         #
         # SCF convergence is the responsibility of SCFRelaxationHandler, which:
         # - Detects SCF failures during the run
@@ -98,14 +100,17 @@ class RelaxationValidator(SiestaOutputValidator):
                 errors.append(
                     "Geometry optimization not converged (strict_convergence=True). "
                     "Consider: (1) increasing MD.NumCGsteps, (2) loosening force "
-                    "tolerance, or (3) disabling strict_convergence for dirty calculations."
+                    "tolerance, or (3) disabling strict_convergence for dirty "
+                    "calculations."
                 )
 
             if max_force is not None and max_force > self.force_tolerance:
                 errors.append(
                     f"Forces not converged: max_force={max_force:.4f} eV/Ang > "
-                    f"tolerance={self.force_tolerance:.4f} eV/Ang (strict_convergence=True). "
-                    "Consider: (1) increasing MD.NumCGsteps, (2) loosening force tolerance, "
+                    f"tolerance={self.force_tolerance:.4f} eV/Ang "
+                    "(strict_convergence=True). "
+                    "Consider: (1) increasing MD.NumCGsteps, (2) loosening force "
+                    "tolerance, "
                     "or (3) disabling strict_convergence for dirty calculations."
                 )
         else:
@@ -164,7 +169,4 @@ class RelaxationValidator(SiestaOutputValidator):
             re.compile(r"Forces converged", re.IGNORECASE),
         ]
 
-        for pattern in patterns:
-            if pattern.search(content):
-                return True
-        return False
+        return any(pattern.search(content) for pattern in patterns)

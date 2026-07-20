@@ -56,7 +56,7 @@ class GeometryConvergenceHandler(ErrorHandler):
         self,
         max_attempts: int = 5,
         force_tolerance: float = 0.04,  # eV/Ang
-    ):
+    ) -> None:
         """Initialize GeometryConvergenceHandler.
 
         Parameters
@@ -77,7 +77,7 @@ class GeometryConvergenceHandler(ErrorHandler):
         # Set max_num_corrections for custodian
         self.max_num_corrections = max_attempts
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for geometry convergence failures.
 
         Parameters
@@ -98,7 +98,7 @@ class GeometryConvergenceHandler(ErrorHandler):
 
         try:
             content = output_file.read_text()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 best-effort file read; any failure is non-fatal
             logger.warning(f"Could not read output file: {e}")
             return False
 
@@ -125,7 +125,7 @@ class GeometryConvergenceHandler(ErrorHandler):
 
         return False
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply geometry convergence corrections.
 
         Corrections are applied progressively based on the number
@@ -333,7 +333,4 @@ class GeometryConvergenceHandler(ErrorHandler):
             re.compile(r"SCF converged.*geometry converged", re.IGNORECASE | re.DOTALL),
         ]
 
-        for pattern in patterns:
-            if pattern.search(content):
-                return True
-        return False
+        return any(pattern.search(content) for pattern in patterns)

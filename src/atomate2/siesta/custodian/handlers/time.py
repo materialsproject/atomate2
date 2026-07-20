@@ -28,7 +28,7 @@ class TimeHandler(ErrorHandler):
     max_num_corrections = 2
     raise_on_max = False
 
-    def __init__(self, max_attempts: int = 2):
+    def __init__(self, max_attempts: int = 2) -> None:
         """Initialize TimeHandler.
 
         Parameters
@@ -42,7 +42,7 @@ class TimeHandler(ErrorHandler):
         self.max_num_corrections = max_attempts
         self.error_type = ErrorType.TIME_LIMIT
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for time limit errors.
 
         Parameters
@@ -57,12 +57,9 @@ class TimeHandler(ErrorHandler):
         """
         directory = Path(directory)
         errors = detect_error(directory)
-        for error in errors:
-            if error.error_type == ErrorType.TIME_LIMIT:
-                return True
-        return False
+        return any(error.error_type == ErrorType.TIME_LIMIT for error in errors)
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply time limit corrections.
 
         Parameters

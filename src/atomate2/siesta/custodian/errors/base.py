@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from re import Pattern
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from re import Pattern
 
 
 class ErrorType(Enum):
@@ -70,16 +73,13 @@ class ErrorPattern:
         bool
             True if any pattern matches
         """
-        for pattern in self.patterns:
-            if pattern.search(content):
-                return True
-        return False
+        return any(pattern.search(content) for pattern in self.patterns)
 
 
 class SiestaError(Exception):
     """Base exception for SIESTA calculation errors."""
 
-    def __init__(self, error_type: ErrorType, message: str = ""):
+    def __init__(self, error_type: ErrorType, message: str = "") -> None:
         """Initialize SiestaError.
 
         Parameters

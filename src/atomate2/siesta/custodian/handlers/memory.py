@@ -33,7 +33,7 @@ class MemoryHandler(ErrorHandler):
     max_num_corrections = 4
     raise_on_max = False
 
-    def __init__(self, max_attempts: int = 4):
+    def __init__(self, max_attempts: int = 4) -> None:
         """Initialize MemoryHandler.
 
         Parameters
@@ -47,7 +47,7 @@ class MemoryHandler(ErrorHandler):
         self.max_num_corrections = max_attempts
         self.error_type = ErrorType.MEMORY
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for memory errors.
 
         Parameters
@@ -62,12 +62,9 @@ class MemoryHandler(ErrorHandler):
         """
         directory = Path(directory)
         errors = detect_error(directory)
-        for error in errors:
-            if error.error_type == ErrorType.MEMORY:
-                return True
-        return False
+        return any(error.error_type == ErrorType.MEMORY for error in errors)
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply memory reduction corrections.
 
         Parameters

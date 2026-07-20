@@ -31,7 +31,7 @@ class NumericalHandler(ErrorHandler):
     max_num_corrections = 3
     raise_on_max = False
 
-    def __init__(self, max_attempts: int = 3):
+    def __init__(self, max_attempts: int = 3) -> None:
         """Initialize NumericalHandler.
 
         Parameters
@@ -45,7 +45,7 @@ class NumericalHandler(ErrorHandler):
         self.max_num_corrections = max_attempts
         self.error_type = ErrorType.NUMERICAL
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for numerical errors.
 
         Parameters
@@ -60,12 +60,9 @@ class NumericalHandler(ErrorHandler):
         """
         directory = Path(directory)
         errors = detect_error(directory)
-        for error in errors:
-            if error.error_type == ErrorType.NUMERICAL:
-                return True
-        return False
+        return any(error.error_type == ErrorType.NUMERICAL for error in errors)
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply numerical stability corrections.
 
         Parameters

@@ -35,7 +35,7 @@ class BasisSetHandler(ErrorHandler):
     max_num_corrections = 3
     raise_on_max = False
 
-    def __init__(self, max_attempts: int = 3):
+    def __init__(self, max_attempts: int = 3) -> None:
         """Initialize BasisSetHandler.
 
         Parameters
@@ -49,7 +49,7 @@ class BasisSetHandler(ErrorHandler):
         self.max_num_corrections = max_attempts
         self.error_type = ErrorType.BASIS
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check for basis set errors.
 
         Parameters
@@ -64,12 +64,9 @@ class BasisSetHandler(ErrorHandler):
         """
         directory = Path(directory)
         errors = detect_error(directory)
-        for error in errors:
-            if error.error_type == ErrorType.BASIS:
-                return True
-        return False
+        return any(error.error_type == ErrorType.BASIS for error in errors)
 
-    def correct(self, directory="./") -> dict:
+    def correct(self, directory: str = "./") -> dict:
         """Apply basis set corrections.
 
         Parameters

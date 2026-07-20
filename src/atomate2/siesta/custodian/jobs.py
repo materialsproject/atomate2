@@ -59,7 +59,7 @@ class SiestaJob(Job):
         output_file: str = "siesta.out",
         suffix: str = "",
         backup_files: list[str] | None = None,
-    ):
+    ) -> None:
         """Initialize SiestaJob.
 
         Parameters
@@ -78,7 +78,7 @@ class SiestaJob(Job):
         self.suffix = suffix
         self.backup_files = backup_files or ["siesta.fdf"]
 
-    def setup(self, directory="./"):
+    def setup(self, directory: str = "./") -> None:
         """Pre-job setup.
 
         Custodian calls this before running the job.
@@ -94,7 +94,7 @@ class SiestaJob(Job):
         logger.info(f"SiestaJob setup in {directory}")
         logger.info(f"Command: {self.siesta_cmd}")
 
-    def run(self, directory="./"):
+    def run(self, directory: str = "./") -> subprocess.Popen:
         """Execute SIESTA calculation.
 
         Custodian calls this to run the job. We return a Popen
@@ -119,7 +119,7 @@ class SiestaJob(Job):
 
         # Start SIESTA process
         # Return Popen for monitoring support
-        process = subprocess.Popen(
+        return subprocess.Popen(  # noqa: S602 custodian must run the user's siesta command
             self.siesta_cmd,
             shell=True,
             cwd=directory,
@@ -128,9 +128,7 @@ class SiestaJob(Job):
             stderr=subprocess.PIPE,
         )
 
-        return process
-
-    def postprocess(self, directory="./"):
+    def postprocess(self, directory: str = "./") -> None:
         """Post-job processing.
 
         Custodian calls this after successful job completion.
@@ -149,7 +147,7 @@ class SiestaJob(Job):
         # For now, just log completion
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Job name for logging.
 
         Returns
@@ -167,12 +165,12 @@ CustodianJob = SiestaJob
 
 def run_custodian_job(
     siesta_cmd: str,
-    handlers=None,
-    validators=None,
+    handlers: list | None = None,
+    validators: list | None = None,
     max_errors: int = 5,
     directory: str = "./",
-):
-    """Convenience function to run SIESTA with custodian.
+) -> None:
+    """Run SIESTA with custodian (convenience wrapper).
 
     This is a helper function that creates a Custodian orchestrator
     and runs a SIESTA job with error handling.

@@ -32,7 +32,7 @@ class SiestaOutputValidator(Validator):
         check_forces: bool = False,
         check_stress: bool = False,
         required_files: list[str] | None = None,
-    ):
+    ) -> None:
         """Initialize SiestaOutputValidator.
 
         Parameters
@@ -51,7 +51,7 @@ class SiestaOutputValidator(Validator):
         self.check_stress = check_stress
         self.required_files = required_files or []
 
-    def check(self, directory="./") -> bool:
+    def check(self, directory: str = "./") -> bool:
         """Check if validation fails.
 
         This is the custodian Validator interface.
@@ -124,9 +124,11 @@ class SiestaOutputValidator(Validator):
             errors.append("Stress not found in output")
 
         # Check required files
-        for filename in self.required_files:
-            if not (directory / filename).exists():
-                errors.append(f"Required file missing: {filename}")
+        errors.extend(
+            f"Required file missing: {filename}"
+            for filename in self.required_files
+            if not (directory / filename).exists()
+        )
 
         return errors
 
@@ -182,8 +184,8 @@ class SiestaOutputValidator(Validator):
             else:
                 with open(filepath, encoding="utf-8") as f:
                     return f.read()
-        except Exception as e:
-            logger.error(f"Error reading {filepath}: {e}")
+        except Exception as e:  # noqa: BLE001 best-effort file read; report and skip
+            logger.error(f"Error reading {filepath}: {e}")  # noqa: TRY400 preserve concise error log without traceback
             return None
 
     def _check_normal_termination(self, content: str) -> bool:

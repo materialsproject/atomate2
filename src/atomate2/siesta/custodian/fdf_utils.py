@@ -44,16 +44,16 @@ def read_fdf_file(filepath: Path | str) -> dict[str, Any]:
     with open(filepath) as f:
         for line in f:
             # Skip comments and empty lines
-            line = line.split("#")[0].strip()
-            if not line:
+            cleaned = line.split("#")[0].strip()
+            if not cleaned:
                 continue
 
             # Skip block definitions
-            if line.startswith("%block") or line.startswith("%endblock"):
+            if cleaned.startswith(("%block", "%endblock")):
                 continue
 
             # Parse key-value pairs
-            match = re.match(r"^(\S+)\s+(.+)$", line)
+            match = re.match(r"^(\S+)\s+(.+)$", cleaned)
             if match:
                 key = match.group(1)
                 value = match.group(2).strip()
@@ -113,10 +113,10 @@ def update_fdf_file(
             f.writelines(updated_lines)
 
         logger.info(f"Updated {len(updates)} parameters in {filepath}")
-        return True
 
-    except Exception as e:
-        logger.error(f"Error updating FDF file: {e}")
+    except Exception as e:  # noqa: BLE001 recover from any FDF write failure
+        # TRY400: message-only log intentional (no traceback needed)
+        logger.error(f"Error updating FDF file: {e}")  # noqa: TRY400
         # Restore from backup if it exists
         if backup:
             backup_path = filepath.with_suffix(".fdf.bak")
@@ -124,6 +124,8 @@ def update_fdf_file(
                 shutil.copy2(backup_path, filepath)
                 logger.info("Restored from backup")
         return False
+    else:
+        return True
 
 
 def _apply_updates(lines: list[str], updates: dict[str, Any]) -> list[str]:
@@ -323,9 +325,9 @@ def validate_fdf_file(filepath: Path | str) -> tuple[bool, list[str]]:
 
         # Check for k-points
         has_kpoints = False
-        if any(key.startswith("kgrid") for key in params.keys()):
+        if any(key.startswith("kgrid") for key in params):
             has_kpoints = True
-        if any(key.startswith("%block kgrid") for key in params.keys()):
+        if any(key.startswith("%block kgrid") for key in params):
             has_kpoints = True
 
         if not has_kpoints:
@@ -340,10 +342,11 @@ def validate_fdf_file(filepath: Path | str) -> tuple[bool, list[str]]:
             warnings.append("Mesh cutoff not specified")
 
         is_valid = len(warnings) == 0
-        return is_valid, warnings
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 report any FDF read failure as invalid
         return False, [f"Error reading FDF file: {e}"]
+    else:
+        return is_valid, warnings
 
 
 def merge_fdf_updates(
