@@ -84,7 +84,7 @@ openmm = [
 fireworks = ["fireworks==2.1.3"]
 strict-openff = [
     "mdanalysis==2.10.0",
-    "monty==2026.5.18",
+    "monty==2026.7.16",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.5.2",
     "pymatgen==2026.5.4", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
@@ -108,12 +108,12 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 #     "mattersim>=1.2.3", # need to be activated again
-    "wandb==0.28.0", # required for mattersim
+    "wandb==0.28.1", # required for mattersim
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
     "matgl==4.0.3",
-    "nequip==0.18.0", # requires numpy<2 because of matscipy
+    "nequip==0.19.0", # requires numpy<2 because of matscipy
 ]
 
 strict-forcefields-e3nn-limited = [
