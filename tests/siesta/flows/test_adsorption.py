@@ -601,3 +601,50 @@ class TestAdsorptionEdgeCases:
         # Should have: slab(1) + ads(1) + generate(1) + 1 site + analyze(1)
         expected_jobs = 1 + 1 + 1 + 1 + 1
         assert len(flow) == expected_jobs
+
+
+class TestAdsorbateSpinSetup:
+    """Open-shell adsorbates (O2) must get the correct spin state (TASKS #2a)."""
+
+    def _boxed(self, molecule):
+        from atomate2.siesta.utils.molecule_utils import molecule_to_structure_in_box
+
+        return molecule_to_structure_in_box(molecule, 20.0)
+
+    def test_o2_adsorbate_gets_triplet_moments(self):
+        from pymatgen.core import Molecule
+
+        from atomate2.siesta.flows.surface.adsorption import _molecular_spin_setup
+
+        o2 = Molecule(["O", "O"], [[0, 0, 0], [0, 0, 1.21]])
+        struct, params = _molecular_spin_setup(o2, self._boxed(o2))
+        assert struct.site_properties["magmom"] == [1.0, 1.0]  # ferromagnetic
+        assert params["Spin"] == "polarized"
+        assert params["a2s_magnetic_ordering"] == "custom"
+        assert params["Spin.Total"] == 2.0
+
+    def test_closed_shell_adsorbate_unpolarized(self):
+        from pymatgen.core import Molecule
+
+        from atomate2.siesta.flows.surface.adsorption import _molecular_spin_setup
+
+        h2 = Molecule(["H", "H"], [[0, 0, 0], [0, 0, 0.74]])
+        _, params = _molecular_spin_setup(h2, self._boxed(h2))
+        assert params == {}
+
+    def test_scan_wires_spin_into_adsorbate_job(self):
+        from pymatgen.core import Lattice, Molecule, Structure
+
+        from atomate2.siesta.flows.surface.adsorption import AdsorptionScanFlowMaker
+
+        slab = Structure(Lattice.cubic(8.0), ["Pt"], [[0, 0, 0.5]])
+        o2 = Molecule(["O", "O"], [[0, 0, 0], [0, 0, 1.21]])
+        flow = AdsorptionScanFlowMaker(grid_size=(1, 1)).make(slab, o2)
+        orderings = [
+            gen.user_params.get("a2s_magnetic_ordering")
+            for job in flow.jobs
+            if (mk := getattr(job, "maker", None)) is not None
+            and (gen := getattr(mk, "input_set_generator", None)) is not None
+            and gen.user_params
+        ]
+        assert "custom" in orderings

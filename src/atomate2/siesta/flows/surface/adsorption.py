@@ -24,6 +24,45 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def _molecular_spin_setup(molecule, structure):
+    """Apply the correct spin state to an isolated adsorbate molecule.
+
+    Open-shell adsorbates (O2, O, OH, ...) have a non-singlet ground state.
+    Without initial moments the isolated-adsorbate reference converges to the
+    wrong spin (e.g. O2 -> singlet, 0.44 eV too high), biasing every adsorption
+    energy. Detect the molecular spin configuration, apply ferromagnetic magmoms
+    as a site property, and return the FDF params (Spin, Spin.Total, and
+    ``a2s_magnetic_ordering="custom"`` so the applied signs are preserved).
+
+    Returns
+    -------
+    tuple[Structure, dict]
+        The structure with a ``magmom`` site property and the spin params to
+        merge into the adsorbate static maker (empty dict if non-magnetic).
+    """
+    from atomate2.siesta.flows.electrocatalysis.utils.spin_config import (
+        get_siesta_spin_config,
+    )
+
+    try:
+        cfg = get_siesta_spin_config(molecule.composition.reduced_formula)
+    except Exception:  # noqa: BLE001 - unknown molecule -> leave non-polarized
+        return structure, {}
+
+    if not cfg.get("spin_polarized") or cfg.get("init_magnetic_moments") is None:
+        return structure, {}
+
+    moments = cfg["init_magnetic_moments"]
+    structure = structure.copy()
+    structure.add_site_property(
+        "magmom", [moments.get(site.specie.symbol, 0.0) for site in structure]
+    )
+    params = {"Spin": "polarized", "a2s_magnetic_ordering": "custom"}
+    if cfg.get("fix_spin", False):
+        params["Spin.Total"] = cfg["total_spin_moment"]
+    return structure, params
+
+
 # Module-level helper functions for jobflow-remote serialization
 
 
@@ -556,7 +595,15 @@ class AdsorptionScanFlowMaker(BaseSiestaFlowMaker):
                 adsorbate_struct = molecule_to_structure_in_box(
                     adsorbate, box_size=20.0
                 )
+                # Apply the correct spin state for open-shell adsorbates (O2, etc.)
+                adsorbate_struct, spin_params = _molecular_spin_setup(
+                    adsorbate, adsorbate_struct
+                )
                 ads_job = self.adsorbate_static_maker.make(adsorbate_struct)
+                if spin_params:
+                    from atomate2.siesta.powerups import update_user_siesta_settings
+
+                    ads_job = update_user_siesta_settings(ads_job, spin_params)
             else:
                 ads_job = self.adsorbate_static_maker.make(adsorbate)
             ads_job.name = f"[{job_counter['current']}_of_{job_counter['total']}]_{self.name}_adsorbate"
