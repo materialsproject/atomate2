@@ -2148,7 +2148,7 @@ def compute_neb_step(
     )
 
     # Create optimizer
-    opt = FIRE(neb) if optimizer.upper() == "FIRE" else BFGS(neb)  # type: ignore[arg-type]  # ASE NEB optimizer target  # type: ignore[arg-type]  # ASE NEB optimizer target
+    opt = FIRE(neb) if optimizer.upper() == "FIRE" else BFGS(neb)  # type: ignore[arg-type]  # ASE NEB optimizer target
 
     # Take one optimization step
     opt.step()  # Optimizer internally calls neb.get_forces()

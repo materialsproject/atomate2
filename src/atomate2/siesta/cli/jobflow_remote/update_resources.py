@@ -265,7 +265,7 @@ def _build_auto_resources(
             if profile_name in predefined:
                 profile = predefined[profile_name]
                 console.print(
-                    f"[green]>[/green] Using cluster profile: {profile.summary()}"  # type: ignore[attr-defined]  # BUG: profile is a str, see above
+                    f"[green]>[/green] Using cluster profile: {profile.summary()}"
                 )
             else:
                 console.print(
@@ -280,7 +280,7 @@ def _build_auto_resources(
             )
 
     if profile:
-        resources = _estimate_resources(num_atoms, profile=profile)  # type: ignore[arg-type]  # BUG: profile is a str, see above
+        resources = _estimate_resources(num_atoms, profile=profile)
     else:
         resources = _estimate_resources_heuristic(num_atoms)
 
