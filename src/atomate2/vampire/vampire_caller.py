@@ -81,7 +81,7 @@ class VampireCaller:
         mc_timesteps=4000,
         save_inputs=False,
         hm=None,
-        avg=True,
+        avg=False,
         user_input_settings=None,
     ):
         """user_input_settings is a dictionary that can contain:
@@ -184,6 +184,16 @@ class VampireCaller:
 
             mat_file += [f"material[{mat_id}]:material-element={atom}"]
             mat_file += [
+                # Bind this material to its own sublattice in the unit-cell file.
+                # Without it every material keeps Vampire's default
+                # unit-cell-category of 0, so during system generation only
+                # category 0 matches and *all* atoms collapse into material 1 -
+                # the magnetic sublattices vanish and the system never orders.
+                # _create_ucf writes the atom material column 0-indexed
+                # (mat_id - 1); Vampire stores unit-cell-category internally as
+                # (value - 1), so passing the 1-indexed mat_id here reproduces
+                # the matching 0-indexed category.
+                f"material[{mat_id}]:unit-cell-category={mat_id}",
                 f"material[{mat_id}]:damping-constant=1.0",
                 f"material[{mat_id}]:uniaxial-anisotropy-constant=1.0e-24",
                 # Only positive magmoms allowed
