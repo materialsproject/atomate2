@@ -120,6 +120,7 @@ strict = [
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
     "pymatgen==2026.5.4",
+    "pymatgen-core==2026.5.18",
 ]
 
 [project.scripts]
