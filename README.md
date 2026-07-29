@@ -148,6 +148,8 @@ If you use atomate2, please cite the [following article](https://doi.org/10.1039
 }
 ```
 
+Please note: As we have published in Digital Discovery, new additions to atomate2 can be published within a [https://pubs.rsc.org/dd/article/4/2/301/846290/Commit-Mini-article-for-dynamic-reporting-of](Commit) independent of the previous authors. 
+
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
