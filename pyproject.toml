@@ -35,6 +35,7 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
+    "pymatgen-core>=2026.5.18",
     "pymongo<=4.16.0",
 ]
 
@@ -120,6 +121,7 @@ strict = [
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
     "pymatgen==2026.5.4",
+    "pymatgen-core==2026.5.18",
 ]
 
 [project.scripts]

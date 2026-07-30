@@ -42,7 +42,7 @@ def test_molgraph_to_openff_pf6(mol_files):
     """transform a water MoleculeGraph to a OpenFF water molecule"""
     pf6_mol = pymatgen.core.Molecule.from_file(mol_files["PF6_xyz"])
     pf6_mol.set_charge_and_spin(charge=-1)
-    pf6_molgraph = MoleculeGraph.with_edges(
+    pf6_molgraph = MoleculeGraph.from_edges(
         pf6_mol,
         {
             (0, 1): {"weight": 1},
@@ -64,7 +64,7 @@ def test_molgraph_to_openff_cco(mol_files):
     from pymatgen.analysis.local_env import OpenBabelNN
 
     cco_pmg = pymatgen.core.Molecule.from_file(mol_files["CCO_xyz"])
-    cco_molgraph = MoleculeGraph.with_local_env_strategy(cco_pmg, OpenBabelNN())
+    cco_molgraph = MoleculeGraph.from_local_env_strategy(cco_pmg, OpenBabelNN())
 
     cco_openff_1 = mol_graph_to_openff_mol(cco_molgraph)
 
