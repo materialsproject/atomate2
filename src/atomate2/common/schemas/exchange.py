@@ -37,11 +37,11 @@ class ExchangeDocument(BaseModel):
         None,
         description="The {cutoff, tol} settings used by the HeisenbergMapper.",
     )
-    nn_cutoff: float | None = Field(
-        None, description="Nearest-neighbour cutoff radius (Angstrom) used in the fit."
-    )
-    nn_tol: float | None = Field(
-        None, description="Tolerance for grouping near-equal bond distances."
+    vampire_settings: dict | None = Field(
+        None,
+        description="Keyword arguments passed to the Vampire Monte-Carlo run (e.g. "
+        "mc_box_size, equil_timesteps, mc_timesteps, avg), if run. Unset keys fall "
+        "back to the VampireCaller defaults.",
     )
     javg: float | None = Field(
         None, description="Estimated average exchange parameter <J> in meV/atom (atom = magnetic ion) from the energy difference between the lowest energy FM and AFM orderings."
@@ -69,6 +69,7 @@ class ExchangeDocument(BaseModel):
         heisenberg_model: HeisenbergModel,
         parent_structure: Structure | None = None,
         vampire_output: VampireOutput | None = None,
+        vampire_settings: dict | None = None,
     ) -> ExchangeDocument:
         """Construct an ExchangeDocument from a fitted model and optional Vampire run.
 
@@ -78,10 +79,12 @@ class ExchangeDocument(BaseModel):
             The fitted Heisenberg model from pymatgen's HeisenbergMapper.
         parent_structure : Structure or None
             The full ground-state structure (used for the parent_structure/formula
-            fields). If None, falls back to ``heisenberg_model.structures[0]``, which
-            is the magnetic sublattice only (non-magnetic atoms stripped).
+            fields). If None, falls back to ``heisenberg_model.structures[0]``, the
+            full cell of the ground-state ordering (all ions retained).
         vampire_output : VampireOutput or None
             The Vampire Monte-Carlo result, if the critical-temperature step was run.
+        vampire_settings : dict or None
+            The keyword arguments the Vampire Monte-Carlo run was called with, if run.
         """
         if parent_structure is None:
             parent_structure = heisenberg_model.structures[0]
@@ -94,8 +97,7 @@ class ExchangeDocument(BaseModel):
                 "cutoff": heisenberg_model.cutoff,
                 "tol": heisenberg_model.tol,
             },
-            nn_cutoff=heisenberg_model.cutoff,
-            nn_tol=heisenberg_model.tol,
+            vampire_settings=vampire_settings if vampire_output else None,
             javg=heisenberg_model.javg,
             ex_params=heisenberg_model.ex_params,
             ex_mat=heisenberg_model.ex_mat.to_dict(),

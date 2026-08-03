@@ -62,6 +62,7 @@ def build_exchange_doc(
     heisenberg_model: HeisenbergModel,
     parent_structure: Structure | None = None,
     vampire_output: VampireOutput | None = None,
+    vampire_settings: dict | None = None,
 ) -> ExchangeDocument:
     """Assemble the final ExchangeDocument from a fitted model and optional Tc run.
 
@@ -74,6 +75,8 @@ def build_exchange_doc(
         This is used to store the final fitted exchange parameters in the context of the original structure.
     vampire_output : VampireOutput or None
         The Vampire Monte-Carlo result, if the critical-temperature step was run.
+    vampire_settings : dict or None
+        The keyword arguments :func:`run_vampire` was called with, if it was run.
 
     Returns
     -------
@@ -84,4 +87,5 @@ def build_exchange_doc(
         heisenberg_model,
         parent_structure=parent_structure,
         vampire_output=vampire_output,
+        vampire_settings=vampire_settings,
     )

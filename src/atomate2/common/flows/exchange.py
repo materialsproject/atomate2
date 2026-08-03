@@ -112,12 +112,11 @@ class ExchangeMaker(Maker):
             jobs.append(vmc)
             vampire_output = vmc.output
 
-        # structures[0] is the full ground-state structure (Heisenberg strips
-        # non-magnetic atoms internally, so pass the original through for provenance)
         doc = build_exchange_doc(
             hmap.output,
-            parent_structure=parent or structures[0],
+            parent_structure=parent,
             vampire_output=vampire_output,
+            vampire_settings=self.mc_settings if self.run_vampire else None,
         )
         jobs.append(doc)
 

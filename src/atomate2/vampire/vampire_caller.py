@@ -12,9 +12,11 @@ simulations of magnetic materials.
     this started as a copy of the file's final pre-removal state (pymatgen
     commit ``8785afd0d801``, the last commit to touch it, released as
     pymatgen 2025.10.7) and has since been adapted to the reworked
-    ``HeisenbergModel`` API: per-ordering ``site_labels`` and the ``igraph``
+    ``HeisenbergModel`` API: per-ordering ``sublattice_ids`` and the ``igraph``
     interaction graph replace the old ``unique_site_ids`` dict and
-    ``_get_j_exc`` lookup. The original author is Nathan C. Frey (``ncfrey``).
+    ``_get_j_exc`` lookup, and the ground state cell is taken from
+    ``magnetic_structures[0]`` rather than ``structures[0]``, which now retains
+    the non-magnetic ions. The original author is Nathan C. Frey (``ncfrey``).
     It is excluded from ruff (see ``[tool.ruff] extend-exclude`` in
     ``pyproject.toml``).
 
@@ -58,8 +60,11 @@ class VampireCaller:
     information to compute the critical temperature with classical Monte Carlo.
 
     Attributes:
-            structure (Structure): Ground state structure (magnetic ions only).
-            site_labels (list[int]): Parent sublattice id of each site in the
+            structure (Structure): Ground state structure, magnetic ions only.
+                Taken from ``HeisenbergModel.magnetic_structures[0]``;
+                ``structures[0]`` is a different cell that keeps the
+                non-magnetic ions.
+            sublattice_ids (list[int]): Parent sublattice id of each site in the
                 ground state structure.
             igraph (StructureGraph): Ground state graph with the fitted J_ij
                 exchange values (meV) as edge weights.
@@ -117,10 +122,17 @@ class VampireCaller:
         # Attributes from HeisenbergModel
         if hm is None:
             raise ValueError("A fitted HeisenbergModel (hm=...) is required.")
-        self.structure = hm.structures[0]  # ground state (magnetic ions only)
-        self.site_labels = hm.site_labels[0]  # site -> parent sublattice id
+        self.structure = hm.magnetic_structures[0]  # ground state (magnetic ions only)
+        self.sublattice_ids = hm.sublattice_ids[0]  # site -> parent sublattice id
         self.igraph = hm.igraph  # ground state graph, J_ij edge weights in meV
         self.javg = hm.javg
+
+        # The [0] above assumes igraph was built for ordering 0, which the model
+        # does not record (it is get_interaction_graph's default ordering_index).
+        # _create_mat and _create_ucf both pair graph node indices with sites of
+        # self.structure, so a mismatch would silently write a broken .ucf.
+        if not (len(self.structure) == len(self.igraph.structure) == len(self.sublattice_ids)):
+            raise ValueError("HeisenbergModel igraph, magnetic structure and sublattice ids are misaligned.")
 
         # Full structure name before reducing to only magnetic ions
         self.mat_name = hm.formula
@@ -165,7 +177,7 @@ class VampireCaller:
         # per sublattice, two if it hosts both spin-up and spin-down sites.
         mat_ids = {}  # (sublattice id, spin sign) -> material id (1-indexed)
         mat_id_dict = {}  # site -> material id, for vampire inputs
-        for site, (sub_id, magmom) in enumerate(zip(self.site_labels, magmoms, strict=True)):
+        for site, (sub_id, magmom) in enumerate(zip(self.sublattice_ids, magmoms, strict=True)):
             group = (sub_id, magmom > 0)
             mat_ids.setdefault(group, len(mat_ids) + 1)
             mat_id_dict[site] = mat_ids[group]
