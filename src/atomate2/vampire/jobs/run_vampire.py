@@ -20,7 +20,7 @@ def run_vampire(
         The fitted Heisenberg model from :func:`heisenberg_mapping`.
     mc_settings : dict or None
         Keyword arguments for VampireCaller, e.g. ``mc_box_size``,
-        ``equil_timesteps``, ``mc_timesteps``, ``avg``.
+        ``equil_timesteps``, ``mc_timesteps``.
 
     Returns
     -------

@@ -40,14 +40,14 @@ class ExchangeDocument(BaseModel):
     vampire_settings: dict | None = Field(
         None,
         description="Keyword arguments passed to the Vampire Monte-Carlo run (e.g. "
-        "mc_box_size, equil_timesteps, mc_timesteps, avg), if run. Unset keys fall "
+        "mc_box_size, equil_timesteps, mc_timesteps), if run. Unset keys fall "
         "back to the VampireCaller defaults.",
     )
-    javg: float | None = Field(
-        None, description="Estimated average exchange parameter <J> in meV/atom (atom = magnetic ion) from the energy difference between the lowest energy FM and AFM orderings."
+    residual: float | None = Field(
+        None, description="Sum of squared residuals of the least-squares fit that produced ex_params, in (meV per magnetic ion)^2."
     )
     ex_params: dict | None = Field(
-        None, description="Fitted exchange parameters J_ij keyed by interaction label in meV/atom (atom = magnetic ion)."
+        None, description="Fitted exchange parameters keyed by interaction label. The J_ij are in meV/muB^2 (they multiply the raw moments); the included 'E0' offset is in eV per magnetic ion."
     )
     ex_mat: dict | None = Field(
         None, description="Heisenberg Hamiltonian matrix used for the Heisenberg model fit."
@@ -98,7 +98,7 @@ class ExchangeDocument(BaseModel):
                 "tol": heisenberg_model.tol,
             },
             vampire_settings=vampire_settings if vampire_output else None,
-            javg=heisenberg_model.javg,
+            residual=heisenberg_model.residual,
             ex_params=heisenberg_model.ex_params,
             ex_mat=heisenberg_model.ex_mat.to_dict(),
             heisenberg_model=heisenberg_model.as_dict(),

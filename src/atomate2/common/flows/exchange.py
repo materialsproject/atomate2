@@ -33,7 +33,8 @@ class ExchangeMaker(Maker):
 
     Given a set of magnetic structures and their energies (per atom), this fits a
     classical Heisenberg Hamiltonian via pymatgen's ``HeisenbergMapper`` to extract
-    exchange parameters ``J_ij`` and the average exchange ``<J>`` (``javg``).
+    shell-resolved exchange parameters ``J_ij``, fit by least squares over all
+    supplied orderings.
 
     This is a post-processing workflow and runs no DFT. It is code-agnostic: the
     inputs are plain pymatgen structures and energies, typically taken from the
@@ -54,7 +55,7 @@ class ExchangeMaker(Maker):
         raises a clear error if it is missing. Defaults to True (atomate1 parity).
     mc_settings : dict | None
         Keyword arguments for the Vampire Monte-Carlo run (e.g. ``mc_box_size``,
-        ``equil_timesteps``, ``mc_timesteps``, ``avg``). Only used if ``run_vampire``.
+        ``equil_timesteps``, ``mc_timesteps``). Only used if ``run_vampire``.
     """
 
     name: str = "exchange"

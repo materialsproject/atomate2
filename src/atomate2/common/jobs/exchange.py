@@ -32,8 +32,8 @@ def heisenberg_mapping(
 ) -> HeisenbergModel:
     """Fit a classical Heisenberg Hamiltonian to magnetic structures and energies.
 
-    This wraps pymatgen's ``HeisenbergMapper`` to extract exchange parameters
-    ``J_ij`` and the average exchange ``<J>`` (``javg``).
+    This wraps pymatgen's ``HeisenbergMapper`` to extract shell-resolved exchange
+    parameters ``J_ij``, fit by least squares over all supplied orderings.
 
     Parameters
     ----------

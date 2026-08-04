@@ -16,7 +16,11 @@ simulations of magnetic materials.
     interaction graph replace the old ``unique_site_ids`` dict and
     ``_get_j_exc`` lookup, and the ground state cell is taken from
     ``magnetic_structures[0]`` rather than ``structures[0]``, which now retains
-    the non-magnetic ions. The original author is Nathan C. Frey (``ncfrey``).
+    the non-magnetic ions. The original ``avg`` option is gone with the ``<J>``
+    estimate it read (``HeisenbergModel.javg``): the model now fits
+    shell-resolved ``J_ij`` over every ordering, and ``igraph`` already carries
+    them per bond in VAMPIRE's normalized-spin meV convention.
+    The original author is Nathan C. Frey (``ncfrey``).
     It is excluded from ruff (see ``[tool.ruff] extend-exclude`` in
     ``pyproject.toml``).
 
@@ -66,9 +70,10 @@ class VampireCaller:
                 non-magnetic ions.
             sublattice_ids (list[int]): Parent sublattice id of each site in the
                 ground state structure.
-            igraph (StructureGraph): Ground state graph with the fitted J_ij
-                exchange values (meV) as edge weights.
-            javg (float): <J> average exchange parameter estimate (meV).
+            igraph (StructureGraph): Ground state graph whose edge weights are the
+                per-bond J_ij in meV, already in the normalized-spin convention
+                ``E = -sum_<ij> J_ij e_i.e_j`` that VAMPIRE uses (the fit's
+                meV/muB^2 parameters times the two moments).
             mat_name (str): Formula unit label for input files
             mat_id_dict (dict): Maps sites to material id # for vampire
                 indexing.
@@ -86,7 +91,6 @@ class VampireCaller:
         mc_timesteps=4000,
         save_inputs=False,
         hm=None,
-        avg=False,
         user_input_settings=None,
     ):
         """user_input_settings is a dictionary that can contain:
@@ -101,8 +105,6 @@ class VampireCaller:
             save_inputs (bool): if True, save scratch dir of vampire input files
             hm (HeisenbergModel): object already fit to low energy
                 magnetic orderings.
-            avg (bool): If True, simply use <J> exchange parameter estimate.
-                If False, attempt to use NN, NNN, etc. interactions.
             user_input_settings (dict): optional commands for VAMPIRE Monte Carlo
 
         Todo:
@@ -112,7 +114,6 @@ class VampireCaller:
         self.equil_timesteps = equil_timesteps
         self.mc_timesteps = mc_timesteps
         self.save_inputs = save_inputs
-        self.avg = avg
 
         if not user_input_settings:  # set to empty dict
             self.user_input_settings = {}
@@ -125,7 +126,6 @@ class VampireCaller:
         self.structure = hm.magnetic_structures[0]  # ground state (magnetic ions only)
         self.sublattice_ids = hm.sublattice_ids[0]  # site -> parent sublattice id
         self.igraph = hm.igraph  # ground state graph, J_ij edge weights in meV
-        self.javg = hm.javg
 
         # The [0] above assumes igraph was built for ordering 0, which the model
         # does not record (it is get_interaction_graph's default ordering_index).
@@ -321,8 +321,11 @@ class VampireCaller:
             mat_id = self.mat_id_dict[site] - 1
             ucf += [f"{site} {r[0]:.10f} {r[1]:.10f} {r[2]:.10f} {mat_id} 0 0"]
 
-        # J_ij exchange interaction matrix; the interaction graph carries the
-        # fitted J_ij (meV) of every bond as an edge weight.
+        # J_ij exchange interaction matrix; the interaction graph carries every
+        # bond's J_ij (meV) as an edge weight, already in the normalized-spin
+        # convention VAMPIRE expects: get_interaction_graph folds the ground
+        # state's moments into the fitted meV/muB^2 parameters, so the weights go
+        # straight into the ucf.
         igraph = self.igraph
         n_inter = 0
         for idx in range(len(igraph.graph.nodes)):
@@ -337,8 +340,7 @@ class VampireCaller:
                 dx, dy, dz = conn.jimage  # relative integer coordinates of atom j
                 j = conn.index  # index of neighbor
 
-                # Just use the <J> estimate, or the fitted per-bond value
-                j_exc = self.javg if self.avg is True else conn.weight
+                j_exc = conn.weight
 
                 # Convert J_ij from meV to Joules
                 j_exc *= 1.6021766e-22

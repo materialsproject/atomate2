@@ -63,7 +63,6 @@ def heisenberg_model(magnetic_structure, full_structure) -> HeisenbergModel:
         magnetic_structures=[magnetic_structure],
         sublattice_ids=[[0, 0]],
         igraph=igraph,
-        javg=5.0,
     )
 
 
