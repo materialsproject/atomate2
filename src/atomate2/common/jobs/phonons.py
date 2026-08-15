@@ -24,7 +24,6 @@ from packaging.version import parse as parse_version
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
-from phonopy.units import VaspToTHz
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
     get_ph_bs_symm_line,
@@ -39,45 +38,19 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
-from atomate2.aims.utils.units import omegaToTHz
 from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
-from atomate2.common.utils import get_supercell_matrix
+from atomate2.common.schemas.phonons import get_factor
+from atomate2.common.utils import check_class_name, get_supercell_matrix
+from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-
+    from atomate2.ase.jobs import AseRelaxMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 logger = logging.getLogger(__name__)
-
-
-def get_factor(code: str) -> float:
-    """
-    Get the frequency conversion factor to THz for each code.
-
-    Parameters
-    ----------
-    code: str
-        The code to get the conversion factor for
-
-    Returns
-    -------
-    float
-        The correct conversion factor
-
-    Raises
-    ------
-    ValueError
-        If code is not defined
-    """
-    if code in ["ase", "forcefields", "torchsim", "vasp"]:
-        return VaspToTHz
-    if code == "aims":
-        return omegaToTHz  # Based on CODATA 2002
-    raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
 
 
 def _get_kpath(
@@ -634,7 +607,11 @@ def run_phonon_displacements(
     displacements: list[Structure],
     structure: Structure,
     supercell_matrix: Matrix3D,
-    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker | None = None,
+    phonon_maker: BaseVaspMaker
+    | AseRelaxMaker
+    | ForceFieldRelaxMaker
+    | BaseAimsMaker
+    | None = None,
     prev_dir: str | Path | None = None,
     prev_dir_argname: str | None = None,
     socket: bool = False,
@@ -644,24 +621,31 @@ def run_phonon_displacements(
     Run phonon displacements.
 
     Note, this job will replace itself with N displacement calculations,
-    or a single socket calculation for all displacements.
+    or a single batched calculation using the socket interface to run all
+    displacements simultaneously. This results in lower overhead as well as
+    parallel evaluation of the displacements for TorchSim.
 
     Parameters
     ----------
     displacements: Sequence
-        All displacements to calculate
+        All displacements to calculate.
     structure: Structure object
         Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
-        supercell matrix for meta data
-    phonon_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
-        A maker to use to generate dispacement calculations
+        Supercell matrix for metadata.
+    phonon_maker : .BaseVaspMaker, .AseRelaxMaker, .TorchSimStaticMaker,
+        .ForceFieldRelaxMaker, or .BaseAimsMaker
+        A maker to use to generate displacement calculations.
+        NB: this should be a static maker.
     prev_dir: str or Path
-        The previous working directory
+        The previous working directory.
     prev_dir_argname: str
-        argument name for the prev_dir variable
+        Argument name for the prev_dir variable.
     socket: bool
-        If True use the socket-io interface to increase performance
+        If True, uses the socket-io interface to run all displacements in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all static structure evaluations.
+        Note: socket=True is not supported for BaseVaspMaker.
     store_displaced_structures : bool = False
         Whether to also save the displaced structures.
     """
@@ -675,21 +659,37 @@ def run_phonon_displacements(
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
 
+    if socket and isinstance(phonon_maker, BaseVaspMaker):
+        raise ValueError("VASP makers do not currently support socket/batch mode.")
+
+    infos = []
+
+    num_disp = len(displacements)
     if socket:
         phonon_job = phonon_maker.make(displacements, **phonon_job_kwargs)
+
         info = {
             "original_structure": structure,
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
+        infos.append(info)
+
         phonon_jobs.append(phonon_job)
-        outputs["displacement_number"] = list(range(len(displacements)))
-        outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
-        outputs["dirs"] = [phonon_job.output.dir_name] * len(displacements)
-        outputs["forces"] = phonon_job.output.output.all_forces
+        outputs["displacement_number"] = list(range(num_disp))
+        if check_class_name(
+            phonon_maker,
+            ["AseRelaxMaker", "ForceFieldStaticMaker", "ForceFieldRelaxMaker"],
+        ):
+            outputs["uuids"] = [phonon_job.output[0].uuid] * num_disp
+            outputs["dirs"] = [phonon_job.output[0].dir_name] * num_disp
+            outputs["forces"] = [
+                phonon_job.output[idx].output.forces for idx in range(num_disp)
+            ]
+        else:
+            outputs["uuids"] = [phonon_job.output.uuid] * num_disp
+            outputs["dirs"] = [phonon_job.output.dir_name] * num_disp
+            outputs["forces"] = phonon_job.output.output.all_forces
 
         # TODO: ensure order is correct.
         if store_displaced_structures:
@@ -697,7 +697,7 @@ def run_phonon_displacements(
     else:
         for idx, displacement in enumerate(displacements):
             phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
-            phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
+            phonon_job.append_name(f" {idx + 1}/{num_disp}")
 
             # we will add some meta data
             info = {
@@ -706,11 +706,8 @@ def run_phonon_displacements(
                 "supercell_matrix": supercell_matrix,
                 "displaced_structure": displacement,
             }
-            with contextlib.suppress(Exception):
-                phonon_job.update_maker_kwargs(
-                    {"_set": {"write_additional_data->phonon_info:json": info}},
-                    dict_mod=True,
-                )
+            infos.append(info)
+
             phonon_jobs.append(phonon_job)
             outputs["displacement_number"].append(idx)
             outputs["uuids"].append(phonon_job.output.uuid)
@@ -718,6 +715,23 @@ def run_phonon_displacements(
             outputs["forces"].append(phonon_job.output.output.forces)
             if store_displaced_structures:
                 outputs["displaced_structures"].append(displacement)
+
+    for info, phonon_job in zip(infos, phonon_jobs, strict=True):
+        with contextlib.suppress(Exception):
+            if not check_class_name(
+                phonon_maker,
+                [
+                    "AseRelaxMaker",
+                    "ForceFieldRelaxMaker",
+                    "ForceFieldStaticMaker",
+                    "TorchSimStaticMaker",
+                    "TorchSimOptimizeMaker",
+                ],
+            ):
+                phonon_job.update_maker_kwargs(
+                    {"_set": {"write_additional_data->phonon_info:json": info}},
+                    dict_mod=True,
+                )
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)

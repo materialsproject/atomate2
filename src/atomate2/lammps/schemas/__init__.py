@@ -1,0 +1,1 @@
+"""Define LAMMPS schemas."""

@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple
 
 import jobflow
 from jobflow import Maker, Response, job
+from pymatgen.util.due import Doi, due
 
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
@@ -98,6 +99,7 @@ def setup_job(
     )
 
 
+@due.dcite(Doi("10.1063/5.028827"), description="Most recent Abinit paper")
 @dataclass
 class BaseAbinitMaker(Maker):
     """

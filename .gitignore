@@ -29,7 +29,6 @@ develop-eggs
 .installed.cfg
 lib
 lib64
-uv.lock
 
 # Installer logs
 pip-log.txt
@@ -82,3 +81,5 @@ docs/reference/atomate2.*
 
 # deepmd-kit files
 **/*.pb
+
+.mypy_cache

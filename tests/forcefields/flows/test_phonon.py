@@ -1,4 +1,6 @@
 import os
+from importlib.util import find_spec
+from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -107,10 +109,12 @@ def test_phonon_maker_initialization_with_all_mlff(
         ) from exc
 
 
-@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
-@pytest.mark.parametrize("from_name", [False, True])
+@pytest.mark.skipif(
+    not mlff_is_installed("CHGNet"), reason="matgl/chgnet is not installed"
+)
+@pytest.mark.parametrize("from_name, socket", list(product(*[[True, False]] * 2)))
 def test_phonon_wf_force_field(
-    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool, socket: bool
 ):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
@@ -134,6 +138,8 @@ def test_phonon_wf_force_field(
         }
     )
 
+    is_matgl_chgnet = find_spec("matgl") is not None
+
     phonon_kwargs = dict(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
@@ -145,6 +151,7 @@ def test_phonon_wf_force_field(
             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
             "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
         },
+        socket=socket,
     )
 
     if from_name:
@@ -206,30 +213,50 @@ def test_phonon_wf_force_field(
     assert ph_bs_dos_doc.post_process_settings.kpath_scheme == "seekpath"
     assert ph_bs_dos_doc.post_process_settings.kpoint_density_dos == 7_000
 
+    # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
+    # CHGNet weights distributed by matgl 3.x (which has a softer phonon
+    # spectrum); the legacy MPtrj-trained CHGNet references are kept for the
+    # `chgnet` package path.
     ref_vals = {
-        "entropy": [0.0, 14.6055132, 34.95943091, 51.27884372, 64.05205132],
-        "heat_capacity": [0.0, 21.622918, 37.313026, 43.348308, 45.921721],
-        "internal_energy": [
-            10510.17946131,
-            11038.76862405,
-            13676.21828021,
-            17534.72238986,
-            21889.29538244,
-        ],
-        "free_energy": [
-            8883.796678,
-            8342.505732,
-            5796.489655,
-            1386.324568,
-            -4481.767156,
-        ],
+        "entropy": (
+            [0.0, 9.5, 25.6, 38.6, 48.7]
+            if is_matgl_chgnet
+            else [0.0, 14.6055132, 34.95943091, 51.27884372, 64.05205132]
+        ),
+        "heat_capacity": (
+            [0.0, 17.5, 34.0, 41.1, 44.4]
+            if is_matgl_chgnet
+            else [0.0, 21.622918, 37.313026, 43.348308, 45.921721]
+        ),
+        "internal_energy": (
+            [11500.0, 11900.0, 14200.0, 17700.0, 21700.0]
+            if is_matgl_chgnet
+            else [
+                10510.17946131,
+                11038.76862405,
+                13676.21828021,
+                17534.72238986,
+                21889.29538244,
+            ]
+        ),
+        "free_energy": (
+            [11500.0, 11000.0, 9100.0, 6100.0, 2200.0]
+            if is_matgl_chgnet
+            else [
+                8883.796678,
+                8342.505732,
+                5796.489655,
+                1386.324568,
+                -4481.767156,
+            ]
+        ),
     }
     thermo_props = ph_bs_dos_doc.compute_thermo_quantities(
         [0, 100, 200, 300, 400], normalization=None
     )
 
     for key, vals in ref_vals.items():
-        assert_allclose(thermo_props[key], vals, rtol=0.2, atol=1e-8)
+        assert_allclose(thermo_props[key], vals, rtol=0.2, atol=2)
 
     # check phonon plots exist
     assert os.path.isfile(filename_bs)

@@ -18,6 +18,8 @@ from pymatgen.transformations.standard_transformations import (
 from atomate2 import SETTINGS
 from atomate2.common.analysis.elastic import get_default_strain_states
 from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.common.utils import check_class_name
+from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -26,7 +28,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+    from atomate2.torchsim import TorchSimOptimizeMaker
 
 
 logger = logging.getLogger(__name__)
@@ -104,14 +106,19 @@ def run_elastic_deformations(
     structure: Structure,
     deformations: list[Deformation],
     prev_dir: str | Path | None = None,
-    prev_dir_argname: str = None,
-    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = None,
+    prev_dir_argname: str | None = None,
+    elastic_relax_maker: BaseVaspMaker
+    | ForceFieldRelaxMaker
+    | TorchSimOptimizeMaker = None,
+    socket: bool = False,
 ) -> Response:
     """
     Run elastic deformations.
 
-    Note, this job will replace itself with N relaxation calculations, where N is
-    the number of deformations.
+    Note, this job will replace itself with N relaxation calculations,
+    or a single batched calculation using the socket interface to run all
+    deformations simultaneously. This results in lower overhead as well as
+    parallel relaxation of the deformations for TorchSim.
 
     Parameters
     ----------
@@ -121,46 +128,81 @@ def run_elastic_deformations(
         The deformations to apply.
     prev_dir : str or Path or None
         A previous directory to use for copying outputs.
-    prev_dir_argname: str
-        argument name for the prev_dir variable
-    elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
-        A VaspMaker or a ForceFieldMaker to use to generate the elastic relaxation jobs.
+    prev_dir_argname: str or None
+        Argument name for the prev_dir variable.
+    elastic_relax_maker : .BaseVaspMaker, .ForceFieldRelaxMaker, or
+        .TorchSimOptimizeMaker
+        A VaspMaker, ForceFieldMaker, or TorchSimMaker to use to generate the elastic
+        relaxation jobs.
+    socket : bool
+        If True, uses the socket-io interface to run all deformations in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all structure relaxations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
-    relaxations = []
+    num_deformations = len(deformations)
+    elastic_jobs = []
     outputs = []
-    for idx, deformation in enumerate(deformations):
-        # deform the structure
+
+    if socket and isinstance(elastic_relax_maker, BaseVaspMaker):
+        raise ValueError("socket=True is not supported for BaseVaspMaker.")
+
+    deformed_structures = []
+    for deformation in deformations:
         dst = DeformStructureTransformation(deformation=deformation)
         ts = TransformedStructure(structure, transformations=[dst])
-        deformed_structure = ts.final_structure
+        deformed_structures.append(ts.final_structure)
 
         with contextlib.suppress(Exception):
-            # write details of the transformation to the transformations.json file
-            # this file will automatically get added to the task document and allow
-            # the elastic builder to reconstruct the elastic document; note the ":" is
-            # automatically converted to a "." in the filename.
+            # Write details of the transformation to the transformations.json file
             elastic_relax_maker.write_additional_data["transformations:json"] = ts
 
-        elastic_job_kwargs = {}
-        if prev_dir is not None and prev_dir_argname is not None:
-            elastic_job_kwargs[prev_dir_argname] = prev_dir
-        # create the job
-        relax_job = elastic_relax_maker.make(deformed_structure, **elastic_job_kwargs)
-        relax_job.append_name(f" {idx + 1}/{len(deformations)}")
-        relaxations.append(relax_job)
+    elastic_job_kwargs = {}
+    if prev_dir is not None and prev_dir_argname is not None:
+        elastic_job_kwargs[prev_dir_argname] = prev_dir
 
-        # extract the outputs we want
-        output = {
-            "stress": relax_job.output.output.stress,
-            "deformation": deformation,
-            "uuid": relax_job.output.uuid,
-            "job_dir": relax_job.output.dir_name,
-        }
+    if socket:
+        batched_job = elastic_relax_maker.make(
+            deformed_structures, **elastic_job_kwargs
+        )
+        batched_job.append_name(" batched_socket")
+        elastic_jobs.append(batched_job)
 
-        outputs.append(output)
+        for idx, deformation in enumerate(deformations):
+            if check_class_name(elastic_relax_maker, "TorchSimOptimizeMaker"):
+                output = {
+                    "stress": batched_job.output.output.stress[idx],
+                    "deformation": deformation,
+                    "uuid": batched_job.output.uuid,
+                    "job_dir": batched_job.output.dir_name,
+                }
+            else:
+                output = {
+                    "stress": batched_job.output[idx].output.stress,
+                    "deformation": deformation,
+                    "uuid": batched_job.output[idx].uuid,
+                    "job_dir": batched_job.output[idx].dir_name,
+                }
+            outputs.append(output)
 
-    relax_flow = Flow(relaxations, outputs)
-    return Response(replace=relax_flow)
+    else:
+        for idx, deformed_structure in enumerate(deformed_structures):
+            relax_job = elastic_relax_maker.make(
+                deformed_structure, **elastic_job_kwargs
+            )
+            relax_job.append_name(f" {idx + 1}/{num_deformations}")
+            elastic_jobs.append(relax_job)
+
+            output = {
+                "stress": relax_job.output.output.stress,
+                "deformation": deformations[idx],
+                "uuid": relax_job.output.uuid,
+                "job_dir": relax_job.output.dir_name,
+            }
+            outputs.append(output)
+
+    elastic_flow = Flow(elastic_jobs, outputs)
+    return Response(replace=elastic_flow)
 
 
 @job(output_schema=ElasticDocument)
@@ -221,7 +263,7 @@ def fit_elastic_tensor(
             failed_uuids.append(data["uuid"])
             continue
 
-        stresses.append(Stress(stress_sign_factor * np.array(data["stress"])))
+        stresses.append(Stress(stress_sign_factor * np.squeeze(data["stress"])))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])
         job_dirs.append(data["job_dir"])

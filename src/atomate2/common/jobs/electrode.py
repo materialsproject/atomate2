@@ -202,9 +202,7 @@ def get_insertion_electrode_doc(
             ient.data["material_id"] = AlphaID(int(ULID.from_str(ient.entry_id)))
         else:
             ient.data["material_id"] = ient.entry_id
-    return InsertionElectrodeDoc.from_entries(
-        computed_entries, working_ion_entry, battery_id=None
-    )
+    return InsertionElectrodeDoc.from_entries(computed_entries, working_ion_entry)
 
 
 @job

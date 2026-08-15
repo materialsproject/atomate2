@@ -9,7 +9,7 @@ import subprocess
 from os.path import expandvars
 from typing import TYPE_CHECKING
 
-from ase.calculators.aims import Aims
+from ase.calculators.aims import Aims, AimsProfile
 from ase.calculators.socketio import SocketIOCalculator
 from monty.json import MontyDecoder
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -112,9 +112,13 @@ def run_aims_socket(
         parameters.pop(key)
 
     if aims_cmd:
-        parameters["command"] = aims_cmd
-    elif "command" not in parameters:
-        parameters["command"] = SETTINGS.AIMS_CMD
+        command = aims_cmd
+    elif "command" in parameters:
+        command = parameters["command"]
+    else:
+        command = SETTINGS.AIMS_CMD
+
+    parameters["profile"] = AimsProfile(command=command)
 
     calculator = Aims(**parameters)
     port = parameters["use_pimd_wrapper"][1]

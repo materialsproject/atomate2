@@ -164,9 +164,9 @@ def test_phonon_socket_flow(si, clean_dir, mock_aims, species_dir):
     assert not output.has_imaginary_modes
 
     assert output.heat_capacity(0.0) == 0.0
-    assert output.heat_capacity(400.0) == pytest.approx(23.06, abs=1e-2)
+    assert output.heat_capacity(490.0) == pytest.approx(22.9, abs=1e-2)
     assert output.post_process_settings.schema() == phonopy_settings_schema
-    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 14.41
+    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.48
 
 
 def test_phonon_default_flow(si, clean_dir, mock_aims, species_dir):
@@ -196,55 +196,6 @@ def test_phonon_default_flow(si, clean_dir, mock_aims, species_dir):
     maker.name = "phonons"
     supercell_matrix = np.ones((3, 3)) - 2 * np.eye(3)
     flow = maker.make(si, supercell_matrix=supercell_matrix)
-
-    # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
-
-    # validation the outputs of the job
-    output = responses[flow.job_uuids[-1]][1].output
-
-    assert output.code == "aims"
-    assert output.born is None
-    assert not output.has_imaginary_modes
-
-    assert output.heat_capacity(0.0) == 0.0
-    assert output.heat_capacity(490.0) == pytest.approx(22.85, abs=1e-2)
-    assert output.post_process_settings.schema() == phonopy_settings_schema
-    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.02
-
-    if aims_sd is not None:
-        SETTINGS["AIMS_SPECIES_DIR"] = aims_sd
-
-
-@pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
-def test_phonon_default_socket_flow(si, clean_dir, mock_aims, species_dir):
-    import numpy as np
-    from jobflow import run_locally
-    from pymatgen.core import SETTINGS
-
-    from atomate2.aims.flows.phonons import PhononMaker
-
-    aims_sd = SETTINGS.get("AIMS_SPECIES_DIR")
-    SETTINGS["AIMS_SPECIES_DIR"] = str(species_dir / "light")
-
-    # mapping from job name to directory containing test files
-    ref_paths = {
-        "Relaxation calculation": "phonon-relax-default-si",
-        "phonon static aims 1/1": "phonon-disp-default-si",
-        "SCF Calculation": "phonon-energy-default-si",
-    }
-
-    # settings passed to fake_run_aims
-    fake_run_aims_kwargs = {}
-
-    # automatically use fake FHI-aims
-    mock_aims(ref_paths, fake_run_aims_kwargs)
-
-    # generate job
-
-    maker = PhononMaker(socket=True)
-    maker.name = "phonons"
-    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Response, job
 from monty.serialization import dumpfn
-from pyfhiaims.external_interfaces.ase.io import read_aims_output
+from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from pymatgen.io.aims.sets.core import (
     RelaxSetGenerator,
@@ -140,12 +139,8 @@ class SocketIOStaticMaker(BaseAimsMaker):
         from_prev = prev_dir is not None
         if from_prev:
             hostless_prev_dir = str(prev_dir).split(":")[1]
-            images = read_aims_output(f"{hostless_prev_dir}/aims.out")
-            if not isinstance(images, Sequence):
-                images = [images]
-
-            for img in images:
-                img.calc = None
+            output = AimsOutput.from_outfile(f"{hostless_prev_dir}/aims.out")
+            images = [output.get_results_for_image(ii) for ii in range(output.n_images)]
 
             for ii in range(-1 * len(structure), 0, -1):
                 if structure[ii] in images:
