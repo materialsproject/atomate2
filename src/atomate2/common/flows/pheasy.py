@@ -1,4 +1,4 @@
-"""Flow for calculating (an)harmonic FCs and phonon energy renorma. with pheasy."""
+"""Flow for calculating (an)harmonic FCs and phonon renormalisation with pheasy."""
 
 from __future__ import annotations
 

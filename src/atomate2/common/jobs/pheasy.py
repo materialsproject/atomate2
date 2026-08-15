@@ -20,24 +20,22 @@ from jobflow import job
 from packaging.version import parse as parse_version
 from phonopy.file_IO import parse_FORCE_CONSTANTS, write_force_constants_to_hdf5
 from phonopy.interface.vasp import write_vasp
-from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
-from pymatgen.io.phonopy import (
-    get_ph_bs_symm_line,
-    get_ph_dos,
-    get_phonopy_structure,
-    get_pmg_structure,
-)
+from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
-from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.jobs.phonons import _generate_phonon_object, _get_kpath
+from atomate2.common.jobs.phonons import (
+    _generate_phonon_object,
+    _get_kpath,
+    _run_band_structure_and_plot,
+    _run_total_dos_and_plot,
+)
 
 if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
@@ -48,6 +46,9 @@ try:
     from alm import ALM
 except ImportError:
     ALM = None
+
+# CODATA 2018: 1 Angstrom = 1 / 0.529177210903 Bohr
+ANGSTROM_TO_BOHR = 1.8897261246257702
 
 _DEFAULT_FILE_PATHS = {
     "force_displacements": "dataset_forces.npy",
@@ -236,9 +237,9 @@ def generate_phonon_displacements(
     # Here, the ALAMODE code is used to determine the number of
     # third and fourth-order FCs are needed for the supercell
     if cal_anhar_fcs:
-        # Due to the cutoff radius of the force constants use the unit of Borh in ALM,
+        # Due to the cutoff radius of the force constants use the unit of Bohr in ALM,
         # we need to convert the cutoff radius from Angstrom to Bohr.
-        with ALM(lattice * 1.89, positions, numbers) as alm:
+        with ALM(lattice * ANGSTROM_TO_BOHR, positions, numbers) as alm:
             # Define the force constants up to fourth order with a list of
             # cutoff radius
             alm.define(3, fcs_cutoff_radius)
@@ -565,8 +566,8 @@ def generate_frequencies_eigenvectors(
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -s -w 4 --symprec "
             f"{float(symprec)} "
-            f"--nbody 2 3 3 --c3 {float(fcs_cutoff_radius[1] / 1.89)} "
-            f"--c4 {float(fcs_cutoff_radius[2] / 1.89)}"
+            f"--nbody 2 3 3 --c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)} "
+            f"--c4 {float(fcs_cutoff_radius[2] / ANGSTROM_TO_BOHR)}"
         )
 
         pheasy_cmd_6 = (
@@ -656,37 +657,22 @@ def generate_frequencies_eigenvectors(
         symprec=symprec,
     )
 
-    npoints_band = kwargs.get("npoints_band", 101)
-    qpoints, connections = get_band_qpoints_and_path_connections(
-        kpath_concrete, npoints=kwargs.get("npoints_band", 101)
-    )
-
-    phonon.run_band_structure(
-        qpoints,
-        path_connections=connections,
-        with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
-        is_band_connection=kwargs.get("band_structure_eigenvectors", False),
-    )
-    # phonon.write_hdf5_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
-    phonon.write_yaml_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
-    bs_symm_line = get_ph_bs_symm_line(
-        _DEFAULT_FILE_PATHS["band_structure"],
-        labels_dict=kpath_dict,
-        has_nac=born is not None,
-    )
-
     bs_plot_file = kwargs.get("filename_bs", _DEFAULT_FILE_PATHS["band_structure_plot"])
     dos_plot_file = kwargs.get("filename_dos", _DEFAULT_FILE_PATHS["dos_plot"])
+    npoints_band = kwargs.get("npoints_band", 101)
 
-    new_plotter = PhononBSPlotter(bs=bs_symm_line)
-    new_plotter.save_plot(
-        filename=bs_plot_file,
+    bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
+        phonon,
+        kpath_dict,
+        kpath_concrete,
+        _DEFAULT_FILE_PATHS["band_structure"],
+        has_nac=born is not None,
+        npoints_band=npoints_band,
+        with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
+        is_band_connection=kwargs.get("band_structure_eigenvectors", False),
+        filename_bs=bs_plot_file,
         units=kwargs.get("units", "THz"),
-    )
-
-    # will determine if imaginary modes are present in the structure
-    imaginary_modes = bs_symm_line.has_imaginary_freq(
-        tol=kwargs.get("tol_imaginary_modes", 1e-5)
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
     )
 
     # If imaginary modes are present, we first use the hiphive code to enforce
@@ -727,25 +713,17 @@ def generate_frequencies_eigenvectors(
         phonon.force_constants = force_constants
         phonon.symmetrize_force_constants()
 
-        phonon.run_band_structure(
-            qpoints, path_connections=connections, with_eigenvectors=True
-        )
-        phonon.write_yaml_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
-        bs_symm_line = get_ph_bs_symm_line(
+        bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
+            phonon,
+            kpath_dict,
+            kpath_concrete,
             _DEFAULT_FILE_PATHS["band_structure"],
-            labels_dict=kpath_dict,
             has_nac=born is not None,
-        )
-
-        new_plotter = PhononBSPlotter(bs=bs_symm_line)
-
-        new_plotter.save_plot(
-            filename=bs_plot_file,
+            npoints_band=kwargs.get("npoints_band", 101),
+            with_eigenvectors=True,
+            filename_bs=bs_plot_file,
             units=kwargs.get("units", "THz"),
-        )
-
-        imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=kwargs.get("tol_imaginary_modes", 1e-5)
+            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
         )
 
     # Using a shorter cutoff (10 A) to generate the force constants to
@@ -812,30 +790,18 @@ def generate_frequencies_eigenvectors(
             symprec=symprec,
         )
 
-        npoints_band = kwargs.get("npoints_band", 101)
-        qpoints, connections = get_band_qpoints_and_path_connections(
-            kpath_concrete, npoints=kwargs.get("npoints_band", 101)
-        )
-
         # phonon band structures will always be computed
-        phonon.run_band_structure(
-            qpoints, path_connections=connections, with_eigenvectors=True
-        )
-        phonon.write_yaml_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
-        bs_symm_line = get_ph_bs_symm_line(
+        bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
+            phonon,
+            kpath_dict,
+            kpath_concrete,
             _DEFAULT_FILE_PATHS["band_structure"],
-            labels_dict=kpath_dict,
             has_nac=born is not None,
-        )
-        new_plotter = PhononBSPlotter(bs=bs_symm_line)
-
-        new_plotter.save_plot(
-            filename=bs_plot_file,
+            npoints_band=kwargs.get("npoints_band", 101),
+            with_eigenvectors=True,
+            filename_bs=bs_plot_file,
             units=kwargs.get("units", "THz"),
-        )
-
-        imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=kwargs.get("tol_imaginary_modes", 1e-5)
+            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
         )
 
     # gets data for visualization on website - yaml is also enough
@@ -849,14 +815,11 @@ def generate_frequencies_eigenvectors(
         kppa=kpoint_density_dos,
         force_gamma=True,
     )
-    phonon.run_mesh(kpoint.kpts[0])
-    phonon.run_total_dos()
-    phonon.write_total_dos(filename=_DEFAULT_FILE_PATHS["dos"])
-    dos = get_ph_dos(_DEFAULT_FILE_PATHS["dos"])
-    new_plotter_dos = PhononDosPlotter()
-    new_plotter_dos.add_dos(label="total", dos=dos)
-    new_plotter_dos.save_plot(
-        filename=dos_plot_file,
+    dos = _run_total_dos_and_plot(
+        phonon,
+        kpoint,
+        _DEFAULT_FILE_PATHS["dos"],
+        filename_dos=dos_plot_file,
         units=kwargs.get("units", "THz"),
     )
 

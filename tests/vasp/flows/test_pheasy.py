@@ -1,3 +1,5 @@
+import numpy as np
+import pytest
 from emmet.core.phonon import (
     CalcMeta,
     PhononBS,
@@ -128,3 +130,27 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     assert ph_doc.post_process_settings.kpoint_density_dos == 7000
 
     assert ph_doc.chemsys == "Si"
+
+    # --- check the actual phonon results obtained from the pheasy FC fit ---
+    frequencies = np.asarray(ph_doc.phonon_bandstructure.frequencies)
+
+    # acoustic sum rule: the acoustic modes at the Gamma point must vanish
+    # (no imaginary modes were found above, so min(frequencies) is Gamma-acoustic)
+    assert frequencies.min() == pytest.approx(0.0, abs=0.1)
+
+    # the highest optical branch of diamond-Si is ~15.3 THz with PBE;
+    # this guards against unit-conversion or supercell-mapping regressions
+    assert 14.0 < frequencies.max() < 17.0
+
+    thermo_props = ph_doc.compute_thermo_quantities(
+        [0, 300, 1000], normalization="atoms"
+    )
+    # exact limits: entropy and heat capacity vanish at 0 K
+    assert thermo_props["entropy"][0] == pytest.approx(0.0, abs=1e-8)
+    assert thermo_props["heat_capacity"][0] == pytest.approx(0.0, abs=1e-8)
+    # zero-point energy of diamond-Si is ~0.06 eV/atom (~5.8 kJ/mol-atom)
+    assert thermo_props["free_energy"][0] == pytest.approx(5800, rel=0.15)
+    # room-temperature heat capacity of Si in J/(K mol-atom)
+    assert thermo_props["heat_capacity"][1] == pytest.approx(20.0, abs=2.5)
+    # the high-T limit must approach (but not exceed) Dulong-Petit (3R per atom)
+    assert 23.0 < thermo_props["heat_capacity"][2] < 3 * 8.3145

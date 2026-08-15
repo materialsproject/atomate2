@@ -88,6 +88,76 @@ def _get_kpath(
     return kpath["kpoints"], path
 
 
+def _run_band_structure_and_plot(
+    phonon: Phonopy,
+    kpath_dict: dict,
+    kpath_concrete: list,
+    filename_band_yaml: str,
+    has_nac: bool = False,
+    npoints_band: int = 101,
+    with_eigenvectors: bool = False,
+    is_band_connection: bool = False,
+    filename_bs: str = "phonon_band_structure.pdf",
+    units: str = "THz",
+    tol_imaginary_modes: float = 1e-5,
+) -> tuple[PhononBandStructureSymmLine, bool]:
+    """Compute, save, and plot a phonon band structure on a Phonopy object.
+
+    This helper is shared between the phonopy and pheasy workflows so that
+    updates to the band-structure post-processing/plotting only need to be
+    made in one place.
+
+    Returns
+    -------
+    tuple of the band structure as a pymatgen PhononBandStructureSymmLine and
+    a bool indicating whether imaginary modes are present.
+    """
+    qpoints, connections = get_band_qpoints_and_path_connections(
+        kpath_concrete, npoints=npoints_band
+    )
+    phonon.run_band_structure(
+        qpoints,
+        path_connections=connections,
+        with_eigenvectors=with_eigenvectors,
+        is_band_connection=is_band_connection,
+    )
+    phonon.write_yaml_band_structure(filename=filename_band_yaml)
+    bs_symm_line = get_ph_bs_symm_line(
+        filename_band_yaml, labels_dict=kpath_dict, has_nac=has_nac
+    )
+    new_plotter = PhononBSPlotter(bs=bs_symm_line)
+    new_plotter.save_plot(filename=filename_bs, units=units)
+
+    # will determine if imaginary modes are present in the structure
+    imaginary_modes = bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
+    return bs_symm_line, imaginary_modes
+
+
+def _run_total_dos_and_plot(
+    phonon: Phonopy,
+    kpoint: Kpoints,
+    filename_dos_yaml: str,
+    filename_dos: str,
+    units: str = "THz",
+    sigma: float | None = None,
+    use_tetrahedron_method: bool = True,
+) -> PhononDos:
+    """Compute, save, and plot the total phonon DOS on a Phonopy object.
+
+    This helper is shared between the phonopy and pheasy workflows so that
+    updates to the DOS post-processing/plotting only need to be made in one
+    place.
+    """
+    phonon.run_mesh(kpoint.kpts[0])
+    phonon.run_total_dos(sigma=sigma, use_tetrahedron_method=use_tetrahedron_method)
+    phonon.write_total_dos(filename=filename_dos_yaml)
+    dos = get_ph_dos(filename_dos_yaml)
+    new_plotter_dos = PhononDosPlotter()
+    new_plotter_dos.add_dos(label="total", dos=dos)
+    new_plotter_dos.save_plot(filename=filename_dos, units=units)
+    return dos
+
+
 @job
 def get_total_energy_per_cell(
     total_dft_energy_per_formula_unit: float, structure: Structure
@@ -416,35 +486,23 @@ def generate_frequencies_eigenvectors(
         symprec=symprec,
     )
 
-    npoints_band = kwargs.get("npoints_band", 101)
-    qpoints, connections = get_band_qpoints_and_path_connections(
-        kpath_concrete, npoints=npoints_band
-    )
-
     # phonon band structures will always be computed
     filename_band_yaml = kwargs.get("filename_band_yaml", "phonon_band_structure.yaml")
-    # filename_band_yaml = "phonon_band_structure.yaml"
+    npoints_band = kwargs.get("npoints_band", 101)
 
     # TODO: potentially add kwargs to avoid computation of eigenvectors
-    phonon.run_band_structure(
-        qpoints,
-        path_connections=connections,
+    bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
+        phonon,
+        kpath_dict,
+        kpath_concrete,
+        filename_band_yaml,
+        has_nac=born is not None,
+        npoints_band=npoints_band,
         with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
-    )
-    phonon.write_yaml_band_structure(filename=filename_band_yaml)
-    bs_symm_line = get_ph_bs_symm_line(
-        filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
-    )
-    new_plotter = PhononBSPlotter(bs=bs_symm_line)
-    new_plotter.save_plot(
-        filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+        filename_bs=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
         units=kwargs.get("units", "THz"),
-    )
-
-    # will determine if imaginary modes are present in the structure
-    imaginary_modes = bs_symm_line.has_imaginary_freq(
-        tol=kwargs.get("tol_imaginary_modes", 1e-5)
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
     )
 
     # gets data for visualization on website - yaml is also enough
@@ -473,19 +531,14 @@ def generate_frequencies_eigenvectors(
         )
         phonon.write_projected_dos()
 
-    phonon.run_mesh(kpoint.kpts[0])
-    phonon_dos_sigma = kwargs.get("phonon_dos_sigma")
-    dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
-    phonon.run_total_dos(
-        sigma=phonon_dos_sigma, use_tetrahedron_method=dos_use_tetrahedron_method
-    )
-    phonon.write_total_dos(filename=filename_dos_yaml)
-    dos = get_ph_dos(filename_dos_yaml)
-    new_plotter_dos = PhononDosPlotter()
-    new_plotter_dos.add_dos(label="total", dos=dos)
-    new_plotter_dos.save_plot(
-        filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+    dos = _run_total_dos_and_plot(
+        phonon,
+        kpoint,
+        filename_dos_yaml,
+        filename_dos=kwargs.get("filename_dos", "phonon_dos.pdf"),
         units=kwargs.get("units", "THz"),
+        sigma=kwargs.get("phonon_dos_sigma"),
+        use_tetrahedron_method=kwargs.get("dos_use_tetrahedron_method", True),
     )
 
     # will compute thermal displacement matrices
