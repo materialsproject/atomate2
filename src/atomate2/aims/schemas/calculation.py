@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import warnings
 from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
@@ -85,6 +87,11 @@ class CalculationOutput(BaseModel):
         The valence band maximum in eV (if system is not metallic)
     atomic_steps: list[Structure or Molecule]
         Structures for each ionic step"
+    run_stats (dict[str, float | None]):
+        Various useful run stats including "System time (sec)",
+        "Total CPU time used (sec)", "Minimum memory used (kb)",
+        "Maximum memory used (kb)", "Average memory used (kb)",
+        "cores".
     """
 
     energy: float = Field(
@@ -130,6 +137,9 @@ class CalculationOutput(BaseModel):
     )
     atomic_steps: list[Structure | Molecule] = Field(
         None, description="Structures for each ionic step"
+    )
+    run_stats: dict[str, Any] | None = Field(
+        None, description="Summary of runtime statistics for this calculation"
     )
 
     @classmethod
@@ -345,6 +355,7 @@ class Calculation(BaseModel):
             aims_objects[AimsObject.BANDSTRUCTURE] = bandstructure  # type: ignore  # noqa: PGH003
 
         output_doc = CalculationOutput.from_aims_output(aims_output)
+        output_doc.run_stats = _parse_run_stats(aims_output_file)
 
         has_aims_completed = (
             TaskState.SUCCESS if aims_output.completed else TaskState.FAILED
@@ -388,6 +399,41 @@ def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]
             if aims_object.name in str(volumetric_file):
                 output_file_paths[aims_object] = str(volumetric_file)
     return output_file_paths
+
+
+def _parse_run_stats(aims_output_file: Path | str) -> dict[str, Any]:
+    """Parse timing/memory/core stats from an aims.out file.
+
+    Returns
+    -------
+    dict[str, float | None]
+        "cpu_time" (sec), "wall_time" (sec), "cores",
+        "memory_min_kb", "memory_max_kb", "memory_avg_kb"
+    """
+    text = Path(aims_output_file).read_text()
+    time_match = re.search(r"\| Total time\s*:\s*([\d.]+) s\s*([\d.]+) s", text)
+    cores_match = re.search(r"Using\s*(\d+) parallel tasks\.", text)
+    mem_match = re.search(
+        r"Peak values for overall tracked memory usage:\s*"
+        r"\|\s*Minimum:\s*([\d.]+) MB.*?"
+        r"\|\s*Maximum:\s*([\d.]+) MB.*?"
+        r"\|\s*Average:\s*([\d.]+) MB",
+        text,
+        re.DOTALL,
+    )
+
+    return {
+        "CPU time (sec)": float(time_match[1])
+        if time_match
+        else None,  # max(cpu_time) across tasks
+        "Elapsed time (sec)": float(time_match[2])
+        if time_match
+        else None,  # wall_clock(cpu1)
+        "cores": int(cores_match[1]) if cores_match else None,
+        "Minimum memory used (kb)": float(mem_match[1]) * 1000 if mem_match else None,
+        "Maximum memory used (kb)": float(mem_match[2]) * 1000 if mem_match else None,
+        "Average memory used (kb)": float(mem_match[3]) * 1000 if mem_match else None,
+    }
 
 
 def _get_volumetric_data(
@@ -466,16 +512,24 @@ def _parse_bandstructure(
     ----------
     parse_bandstructure: str or bool
         Whether to parse. Does not support the auto/line distinction currently.
-    aims_ouput: .AimsOutput
+    aims_output: .AimsOutput
         The output object to parse
 
     Returns
     -------
-    The bandstructure
+    The bandstructure, or None if band structure parsing is not yet
+    supported for this AimsOutput.
     """
-    if parse_bandstructure:
-        return aims_output.band_structure
-    return None
+    if not parse_bandstructure:
+        return None
+    if not hasattr(aims_output, "band_structure"):
+        warnings.warn(
+            "Band structure parsing was requested but is not yet implemented "
+            "for AimsOutput; skipping.",
+            stacklevel=2,
+        )
+        return None
+    return aims_output.band_structure
 
 
 def _parse_trajectory(aims_output: AimsOutput) -> Trajectory | None:
