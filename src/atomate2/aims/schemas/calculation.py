@@ -404,11 +404,18 @@ def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]
 def _parse_run_stats(aims_output_file: Path | str) -> dict[str, Any]:
     """Parse timing/memory/core stats from an aims.out file.
 
+    Parameters
+    ----------
+    aims_output_file: Path or str
+        Path to the main output of aims job, relative to dir_name.
+
     Returns
     -------
-    dict[str, float | None]
-        "cpu_time" (sec), "wall_time" (sec), "cores",
-        "memory_min_kb", "memory_max_kb", "memory_avg_kb"
+    Dict[str, float | None]
+        Dictionary containing the run stats read from the aims.out file.
+        "CPU time (sec)", "Elapsed time (sec)", "cores",
+        "Minimum memory used (kb)", "Maximum memory used (kb)",
+        "Average memory used (kb)"
     """
     text = Path(aims_output_file).read_text()
     time_match = re.search(r"\| Total time\s*:\s*([\d.]+) s\s*([\d.]+) s", text)
