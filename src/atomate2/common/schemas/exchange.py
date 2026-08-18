@@ -44,7 +44,10 @@ class ExchangeDocument(BaseModel):
         "back to the VampireCaller defaults.",
     )
     residual: float | None = Field(
-        None, description="Sum of squared residuals of the least-squares fit that produced ex_params, in (meV per magnetic ion)^2."
+        None,
+        description="Root-mean-square residual of the least-squares fit that "
+        "produced ex_params, in meV per magnetic ion. Intensive in both the cell "
+        "size and the number of orderings, so it is comparable between materials.",
     )
     ex_params: dict | None = Field(
         None, description="Fitted exchange parameters keyed by interaction label. The J_ij are in meV/muB^2 (they multiply the raw moments); the included 'E0' offset is in eV per magnetic ion."
