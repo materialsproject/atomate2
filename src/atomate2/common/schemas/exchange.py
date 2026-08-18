@@ -50,10 +50,14 @@ class ExchangeDocument(BaseModel):
         "size and the number of orderings, so it is comparable between materials.",
     )
     ex_params: dict | None = Field(
-        None, description="Fitted exchange parameters keyed by interaction label. The J_ij are in meV/muB^2 (they multiply the raw moments); the included 'E0' offset is in eV per magnetic ion."
+        None,
+        description="Fitted exchange parameters keyed by interaction label. The "
+        "J_ij are in meV/muB^2 (they multiply the raw moments); the included 'E0' "
+        "offset is in eV per magnetic ion.",
     )
     ex_mat: dict | None = Field(
-        None, description="Heisenberg Hamiltonian matrix used for the Heisenberg model fit."
+        None,
+        description="Heisenberg Hamiltonian matrix used for the Heisenberg model fit.",
     )
     heisenberg_model: dict | None = Field(
         None, description="Full HeisenbergModel as a serialized dict (as_dict())."

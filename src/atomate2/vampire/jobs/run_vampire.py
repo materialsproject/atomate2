@@ -1,7 +1,18 @@
-from atomate2.vampire.vampire_caller import VampireCaller
-from atomate2.vampire.schemas.vampire_output import VampireOutput
-from pymatgen.analysis.magnetism.heisenberg import HeisenbergModel
+"""Job for running Vampire Monte-Carlo on a fitted Heisenberg model."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from jobflow import job
+
+from atomate2.vampire.vampire_caller import VampireCaller
+
+if TYPE_CHECKING:
+    from pymatgen.analysis.magnetism.heisenberg import HeisenbergModel
+
+    from atomate2.vampire.schemas.vampire_output import VampireOutput
+
 
 @job(name="run vampire")
 def run_vampire(

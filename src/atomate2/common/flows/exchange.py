@@ -1,8 +1,9 @@
 """Flow for fitting magnetic exchange parameters and estimating Tc.
 
-This is a post-processing workflow and runs no DFT itself. Given magnetic structures and their energies (e.g. the
-output of the magnetic-orderings workflow), it fits a classical Heisenberg
-Hamiltonian and optionally runs Vampire Monte-Carlo for the critical temperature.
+This is a post-processing workflow and runs no DFT itself. Given magnetic
+structures and their energies (e.g. the output of the magnetic-orderings
+workflow), it fits a classical Heisenberg Hamiltonian and optionally runs
+Vampire Monte-Carlo for the critical temperature.
 """
 
 from __future__ import annotations
@@ -12,10 +13,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.exchange import (
-    build_exchange_doc,
-    heisenberg_mapping,
-)
+from atomate2.common.jobs.exchange import build_exchange_doc, heisenberg_mapping
 from atomate2.vampire.jobs.run_vampire import run_vampire
 
 if TYPE_CHECKING:
@@ -104,7 +102,9 @@ class ExchangeMaker(Maker):
                     "required to fit a Heisenberg model."
                 )
 
-        hmap = heisenberg_mapping(structures, energies, parent, self.heisenberg_settings)
+        hmap = heisenberg_mapping(
+            structures, energies, parent, self.heisenberg_settings
+        )
         jobs = [hmap]
 
         vampire_output = None
