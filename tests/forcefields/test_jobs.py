@@ -1,4 +1,3 @@
-import importlib
 from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
 from importlib.util import find_spec
@@ -20,11 +19,6 @@ from atomate2.forcefields.schemas import (
 
 from .conftest import mlff_is_installed
 
-try:
-    import dgl
-except Exception:  # noqa: BLE001
-    dgl = None
-
 
 @pytest.mark.parametrize("mlff", [mlff for mlff in MLFF if mlff_is_installed(mlff)])
 def test_maker_initialization(mlff):
@@ -39,11 +33,8 @@ def test_maker_initialization(mlff):
 
 
 @pytest.mark.skipif(
-    # test to see if CHGNet is installed, or that matgl is installed without dgl
-    # Note that this should be the only test for interface with
-    # the legacy `chgnet` package
-    not mlff_is_installed("CHGNet") or (mlff_is_installed("M3GNet") and dgl is None),
-    reason="CHGNet requires DGL which is not installed",
+    not mlff_is_installed("CHGNet"),
+    reason="CHGNet (chgnet or matgl) is not installed",
 )
 def test_chgnet_static_maker(si_structure):
     # generate job
@@ -75,8 +66,8 @@ def test_chgnet_static_maker(si_structure):
 
 
 @pytest.mark.skipif(
-    dgl is None or not mlff_is_installed("CHGNet"),
-    reason="CHGNet requires DGL which is not installed",
+    not mlff_is_installed("CHGNet"),
+    reason="CHGNet (chgnet or matgl) is not installed",
 )
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
@@ -109,8 +100,8 @@ def test_chgnet_relax_maker_fix_symmetry(
 
 
 @pytest.mark.skipif(
-    dgl is None or not mlff_is_installed("CHGNet"),
-    reason="CHGNet requires DGL which is not installed",
+    not mlff_is_installed("CHGNet"),
+    reason="CHGNet (chgnet or matgl) is not installed",
 )
 @pytest.mark.parametrize(
     "relax_cell,relax_shape", [(b1, b2) for b1 in (True, False) for b2 in (True, False)]
@@ -188,7 +179,7 @@ def test_chgnet_relax_maker(
 
 @pytest.mark.skipif(
     not mlff_is_installed("CHGNet"),
-    reason="Required packages (chgnet or matgl/dgl) are not installed",
+    reason="Required packages (chgnet or matgl) are not installed",
 )
 def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -217,72 +208,6 @@ def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
 
     # check the force_field_task_doc attributes
     assert all(Path(calc.dir_name).exists() for calc in output)
-
-
-@pytest.mark.xfail(
-    reason="M3GNet tests not working consistently in CI vs local",
-    strict=False,
-)
-@pytest.mark.skipif(
-    dgl is None or not mlff_is_installed("M3GNet"),
-    reason="M3GNet requires DGL which is not installed",
-)
-def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
-    # generate job
-    import matgl
-
-    monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
-    importlib.reload(matgl)
-    job = ForceFieldStaticMaker(
-        force_field_name="M3GNet",
-        ionic_step_data=("structure", "energy"),
-    ).make(si_structure)
-
-    # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, ensure_success=True)
-
-    # validate job outputs
-    output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.8, abs=0.2)
-    assert output1.output.n_steps == 1
-
-    assert output1.forcefield_version == get_imported_version("matgl")
-
-
-@pytest.mark.xfail(
-    reason="M3GNet tests not working consistently in CI vs local",
-    strict=False,
-)
-@pytest.mark.skipif(
-    dgl is None or not mlff_is_installed("M3GNet"),
-    reason="M3GNet requires DGL which is not installed",
-)
-def test_m3gnet_relax_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
-    # translate one atom to ensure a small number of relaxation steps are taken
-    import matgl
-
-    monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
-    importlib.reload(matgl)
-
-    si_structure.translate_sites(0, [0, 0, 0.1])
-
-    # generate job
-    max_step = 25
-    job = ForceFieldRelaxMaker(
-        force_field_name="M3GNet",
-        steps=max_step,
-    ).make(si_structure)
-
-    # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, ensure_success=True)
-
-    # validate job outputs
-    output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.is_force_converged
-    assert output1.output.energy == approx(-10.8, abs=0.2)
-    assert output1.output.n_steps == 24
 
 
 mace_paths = pytest.mark.parametrize(

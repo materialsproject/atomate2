@@ -191,9 +191,11 @@ def test_phonon_wf_force_field(
     # references are kept for the `chgnet` package path.
     assert_allclose(
         ph_bs_dos_doc.free_energies,
-        [3164.0, 3053.0, 2351.0, 999.0, -868.0]
-        if is_matgl_chgnet
-        else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174],
+        (
+            [3164.0, 3053.0, 2351.0, 999.0, -868.0]
+            if is_matgl_chgnet
+            else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174]
+        ),
         atol=1000,
     )
 
@@ -229,9 +231,11 @@ def test_phonon_wf_force_field(
     # CHGNet weights distributed by matgl 3.x.
     assert_allclose(
         ph_bs_dos_doc.entropies,
-        [0.0, 3.46, 10.50, 16.31, 20.85]
-        if is_matgl_chgnet
-        else [0.0, 3.733666, 12.536534, 20.344558, 26.627292],
+        (
+            [0.0, 3.46, 10.50, 16.31, 20.85]
+            if is_matgl_chgnet
+            else [0.0, 3.733666, 12.536534, 20.344558, 26.627292]
+        ),
         atol=2,
     )
     # heat_capacities and internal_energies depend strongly on the phonon

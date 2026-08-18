@@ -6,13 +6,15 @@ from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.forcefields.flows.elastic import ElasticMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
+from ..conftest import mlff_is_installed  # noqa: TID252
 
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 @pytest.mark.parametrize("convenience_constructor", [True, False])
+@pytest.mark.parametrize("socket", [True, False])
 def test_elastic_wf_with_mace(
-    clean_dir, si_structure, test_dir, convenience_constructor: bool
+    clean_dir, si_structure, test_dir, convenience_constructor: bool, socket: bool
 ):
-    pytest.importorskip("mace")
-
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
     common_kwds = {
@@ -32,6 +34,7 @@ def test_elastic_wf_with_mace(
                 force_field_name="MACE-MP-0",
                 mlff_kwargs=common_kwds,
                 calculator_kwargs=common_kwds,
+                socket=socket,
             )
 
         with pytest.warns(
@@ -40,6 +43,7 @@ def test_elastic_wf_with_mace(
             maker = ElasticMaker.from_force_field_name(
                 force_field_name="MACE-MP-0",
                 mlff_kwargs=common_kwds,
+                socket=socket,
             )
         assert all(
             v == getattr(maker.bulk_relax_maker, k, None)
@@ -50,6 +54,7 @@ def test_elastic_wf_with_mace(
         maker = ElasticMaker(
             bulk_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=True),
             elastic_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=False),
+            socket=socket,
         )
 
     flow = maker.make(si_prim)
@@ -67,8 +72,8 @@ def test_elastic_wf_with_mace(
     assert elastic_output.chemsys == "Si"
 
 
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_ext_load_elastic_initialization():
-    pytest.importorskip("mace")
     calculator_meta = {
         "@module": "mace.calculators",
         "@callable": "mace_mp",

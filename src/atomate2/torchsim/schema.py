@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 class TorchSimModelType(StrEnum):  # type: ignore[attr-defined]
     """Enum for model types."""
 
-    FAIRCHEMV1 = "FairChemV1Model"
     FAIRCHEM = "FairChemModel"
-    GRAPHPESWRAPPER = "GraphPESWrapper"
     MACE = "MaceModel"
     MATTERSIM = "MatterSimModel"
     METATOMIC = "MetatomicModel"
@@ -236,6 +234,17 @@ class TorchSimCalculation(BaseModel):
 
     optimizer_kwargs: dict[str, Any] | None = Field(
         None, description="Keyword arguments for the optimizer configuration."
+    )
+
+    fix_symmetry: bool | None = Field(
+        None,
+        description=(
+            "Whether to fix the symmetry of the atoms during relaxation. "
+            "Refines the symmetry of the initial structure."
+        ),
+    )
+    symprec: float | None = Field(
+        None, description="Tolerance for symmetry finding in case of fix_symmetry."
     )
 
     # MD-specific fields (populated when task_type == MOLECULAR_DYNAMICS)
