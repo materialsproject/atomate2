@@ -1,0 +1,65 @@
+name: test subpackage
+
+on:
+  workflow_call:
+    inputs:
+      test-path:
+        description: Test directory to run
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      local_mongodb:
+        image: mongo:4.0
+        ports:
+          - 27017:27017
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mamba-org/setup-micromamba@main
+        with:
+          environment-name: a2
+          cache-environment: false
+          create-args: python=3.12
+
+      - name: Install uv
+        run: micromamba run -n a2 pip install uv
+
+      - name: Install conda dependencies
+        run: micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel --yes
+
+      - name: Install dependencies
+        run: |
+          micromamba activate a2
+          python -m pip install --upgrade pip
+          mkdir -p ~/.abinit/pseudos
+          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
+          uv pip install '.[strict,abinit,approxneb,aims,jdftx]' --group tests
+          uv pip install 'tblite>=0.4.0'
+
+      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+        run: |
+          micromamba activate a2
+          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+
+      - name: Test ${{ inputs.test-path }}
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+          TEST_PATH: ${{ inputs.test-path }}
+        run: |
+          micromamba activate a2
+          pytest --durations=5 -n auto --cov=atomate2 --cov-report=xml "$TEST_PATH"
+
+      - uses: codecov/codecov-action@v4
+        if: github.repository == 'materialsproject/atomate2'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml

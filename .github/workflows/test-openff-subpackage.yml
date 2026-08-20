@@ -1,0 +1,59 @@
+name: test OpenFF subpackage
+
+on:
+  workflow_call:
+    inputs:
+      test-path:
+        description: Test directory to run
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      local_mongodb:
+        image: mongo:4.0
+        ports:
+          - 27017:27017
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mamba-org/setup-micromamba@main
+        with:
+          environment-name: a2
+          cache-environment: false
+          create-args: python=${{ matrix.python-version }}
+
+      - name: Install uv
+        run: micromamba run -n a2 pip install uv
+
+      - name: Install conda dependencies
+        run: micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+
+      - name: Install dependencies
+        run: |
+          micromamba activate a2
+          python -m pip install --upgrade pip
+          uv pip install '.[strict-openff]' --group tests
+
+      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+        run: |
+          micromamba activate a2
+          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+
+      - name: Test ${{ inputs.test-path }}
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+          TEST_PATH: ${{ inputs.test-path }}
+        run: |
+          micromamba activate a2
+          pytest --durations=5 -n auto "$TEST_PATH"

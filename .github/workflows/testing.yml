@@ -10,6 +10,110 @@ on:
     types: [pymatgen-ci-trigger]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      abinit: ${{ steps.filter.outputs.abinit }}
+      aims: ${{ steps.filter.outputs.aims }}
+      ase: ${{ steps.filter.outputs.ase }}
+      common: ${{ steps.filter.outputs.common }}
+      cp2k: ${{ steps.filter.outputs.cp2k }}
+      forcefields: ${{ steps.filter.outputs.forcefields }}
+      jdftx: ${{ steps.filter.outputs.jdftx }}
+      lammps: ${{ steps.filter.outputs.lammps }}
+      lobster: ${{ steps.filter.outputs.lobster }}
+      notebooks: ${{ steps.filter.outputs.notebooks }}
+      openff: ${{ steps.filter.outputs.openff }}
+      openmm: ${{ steps.filter.outputs.openmm }}
+      qchem: ${{ steps.filter.outputs.qchem }}
+      shared: ${{ steps.filter.outputs.shared }}
+      torchsim: ${{ steps.filter.outputs.torchsim }}
+      vasp: ${{ steps.filter.outputs.vasp }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            abinit:
+              - 'src/atomate2/abinit/**'
+              - 'tests/abinit/**'
+              - 'tests/test_data/abinit/**'
+            aims:
+              - 'src/atomate2/aims/**'
+              - 'tests/aims/**'
+              - 'tests/test_data/aims/**'
+            ase:
+              - 'src/atomate2/ase/**'
+              - 'tests/ase/**'
+            common:
+              - 'tests/common/**'
+              - 'tests/test_data/common/**'
+            cp2k:
+              - 'src/atomate2/cp2k/**'
+              - 'tests/cp2k/**'
+              - 'tests/test_data/cp2k/**'
+            forcefields:
+              - 'src/atomate2/forcefields/**'
+              - 'tests/forcefields/**'
+              - 'tests/test_data/forcefields/**'
+              - 'tutorials/force_fields/**'
+            jdftx:
+              - 'src/atomate2/jdftx/**'
+              - 'tests/jdftx/**'
+              - 'tests/test_data/jdftx/**'
+            lammps:
+              - 'src/atomate2/lammps/**'
+              - 'tests/lammps/**'
+              - 'tests/test_data/lammps/**'
+            lobster:
+              - 'src/atomate2/lobster/**'
+              - 'tests/lobster/**'
+              - 'tests/test_data/lobster/**'
+            notebooks:
+              - 'src/atomate2/**'
+              - 'tests/test_data/**'
+              - 'tutorials/**'
+            openff:
+              - 'src/atomate2/openff/**'
+              - 'tests/openff_md/**'
+              - 'tests/test_data/openff/**'
+            openmm:
+              - 'src/atomate2/openmm/**'
+              - 'tests/openmm_md/**'
+              - 'tests/test_data/openmm/**'
+            qchem:
+              - 'src/atomate2/qchem/**'
+              - 'tests/qchem/**'
+              - 'tests/test_data/qchem/**'
+            torchsim:
+              - 'src/atomate2/torchsim/**'
+              - 'tests/torchsim/**'
+              - 'tutorials/torchsim_tutorial.ipynb'
+            vasp:
+              - 'src/atomate2/vasp/**'
+              - 'tests/vasp/**'
+              - 'tests/test_data/vasp/**'
+            shared:
+              - '.github/workflows/testing.yml'
+              - '.github/workflows/test-openff-subpackage.yml'
+              - '.github/workflows/test-subpackage.yml'
+              - 'pyproject.toml'
+              - 'src/atomate2/__init__.py'
+              - 'src/atomate2/settings.py'
+              - 'src/atomate2/common/**'
+              - 'src/atomate2/utils/**'
+              - 'tests/conftest.py'
+              - 'tests/test_data/molecules/**'
+              - 'tests/test_data/qha/**'
+              - 'tests/test_data/schemas/**'
+              - 'tests/test_data/structures/**'
+              - 'tests/test_data/symmetry_structures/**'
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -24,8 +128,14 @@ jobs:
       - uses: pre-commit/action@v3.0.0
 
   test-forcefields:
+    needs: changes
     # prevent this action from running on forks
-    if: github.repository == 'materialsproject/atomate2'
+    if: >-
+      github.repository == 'materialsproject/atomate2' &&
+      (github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'repository_dispatch' ||
+      needs.changes.outputs.forcefields == 'true' ||
+      needs.changes.outputs.shared == 'true')
 
     services:
       local_mongodb:
@@ -102,187 +212,139 @@ jobs:
           name: coverage${{ matrix.split }}
           file: ./coverage.xml
 
-  test-non-ase:
-    # prevent this action from running on forks
-    if: github.repository == 'materialsproject/atomate2'
+  test-abinit:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.abinit == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/abinit
+    secrets: inherit
 
-    services:
-      local_mongodb:
-        image: mongo:4.0
-        ports:
-          - 27017:27017
+  test-aims:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.aims == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/aims
+    secrets: inherit
 
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12"]
-        split: [1, 2, 3]
+  test-ase:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.ase == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/ase
+    secrets: inherit
 
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
+  test-common:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.common == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/common
+    secrets: inherit
 
-      - name: Set up micromamba
-        uses: mamba-org/setup-micromamba@main
-        with:
-          environment-name: a2
-          cache-environment: false
-          create-args: >-
-            python=${{ matrix.python-version }}
+  test-cp2k:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.cp2k == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/cp2k
+    secrets: inherit
 
-      - name: Install uv
-        run: micromamba run -n a2 pip install uv
+  test-jdftx:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.jdftx == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/jdftx
+    secrets: inherit
 
-      - name: Install conda dependencies
-        run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader --yes
+  test-lammps:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.lammps == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/lammps
+    secrets: inherit
 
-      - name: Install dependencies
-        run: |
-          micromamba activate a2
-          python -m pip install --upgrade pip
-          mkdir -p ~/.abinit/pseudos
-          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,abinit,approxneb,aims] --group tests
-          uv pip install torch-runstats torch_dftd
-          uv pip install --no-deps nequip==0.5.6
+  test-lobster:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.lobster == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/lobster
+    secrets: inherit
 
-      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
-        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
-        run: |
-          micromamba activate a2
-          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+  test-openmm:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.openmm == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-openff-subpackage.yml
+    with:
+      test-path: tests/openmm_md
+    secrets: inherit
 
-      - name: Test split ${{ matrix.split }}
-        env:
-          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+  test-qchem:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.qchem == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/qchem
+    secrets: inherit
 
-        # regenerate durations file with `pytest --store-durations --durations-path tests/.pytest-split-durations`
-        # Note the use of `--splitting-algorithm least_duration`.
-        # This helps prevent a test split having no tests to run, and then the GH action failing, see:
-        # https://github.com/jerry-git/pytest-split/issues/95
-        # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
-        run: |
-          micromamba activate a2
-          pytest --durations=5 -n auto --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --ignore=tests/forcefields --ignore=tests/torchsim --cov=atomate2 --cov-report=xml
-
-
-      - uses: codecov/codecov-action@v1
-        if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          name: coverage${{ matrix.split }}
-          file: ./coverage.xml
+  test-vasp:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.vasp == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-subpackage.yml
+    with:
+      test-path: tests/vasp
+    secrets: inherit
 
   test-openff:
-    # prevent this action from running on forks
-    if: github.repository == 'materialsproject/atomate2'
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.openff == 'true' || needs.changes.outputs.shared == 'true')
+    uses: ./.github/workflows/test-openff-subpackage.yml
+    with:
+      test-path: tests/openff_md
+    secrets: inherit
 
+  test-notebooks:
+    needs: changes
+    if: github.repository == 'materialsproject/atomate2' && (github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || needs.changes.outputs.notebooks == 'true' || needs.changes.outputs.shared == 'true')
+    runs-on: ubuntu-latest
     services:
       local_mongodb:
         image: mongo:4.0
         ports:
           - 27017:27017
-
-    runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Set up micromamba
-        uses: mamba-org/setup-micromamba@main
-        with:
-          environment-name: a2
-          cache-environment: false
-          create-args: >-
-            python=${{ matrix.python-version }}
-
-      - name: Install uv
-        run: micromamba run -n a2 pip install uv
-
-      - name: Install conda dependencies
-        run: |  # TODO: migrate openff tests to use non smirnoff99frosst forcefields as recommended by devs
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.19.0 openff-interchange==0.5.4 --yes
-
-      - name: Install dependencies
-        run: |
-          micromamba activate a2
-          python -m pip install --upgrade pip
-          uv pip install .[strict-openff] --group tests
-
-      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
-        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
-        run: |
-          micromamba activate a2
-          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
-
-      - name: Test split ${{ matrix.split }}
-        env:
-          MP_API_KEY: ${{ secrets.MP_API_KEY }}
-
-        run: |
-          micromamba activate a2
-          pytest --durations=5 -n auto tests/{openff_md,openmm_md}
-
-  test-notebooks-and-ase:
-    # prevent this action from running on forks
-    if: github.repository == 'materialsproject/atomate2'
-
-    # It seems like anything torch-dependent and tblite can't be installed in the same environment
-    # without the tblite tests failing in CI, see, e.g.:
-    # https://github.com/tblite/tblite/issues/116
-    # Outside of CI, having torch installed but not loaded seems not to affect tblite
-    # Set off ASE tests here, where tblite-dependent tests live
-    services:
-      local_mongodb:
-        image: mongo:4.0
-        ports:
-          - 27017:27017
-
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
+        shell: bash -l {0}
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
 
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up micromamba
-        uses: mamba-org/setup-micromamba@main
+      - uses: mamba-org/setup-micromamba@main
         with:
           environment-name: a2
           cache-environment: false
-          create-args: >-
-            python=${{ matrix.python-version }}
+          create-args: python=${{ matrix.python-version }}
 
       - name: Install uv
         run: micromamba run -n a2 pip install uv
 
       - name: Install conda dependencies
-        run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol openbabel --yes
+        run: micromamba install -n a2 -c conda-forge enumlib packmol openbabel --yes
 
       - name: Install dependencies
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          uv pip install .[strict,aims] --group tests
-          uv pip install tblite>=0.4.0
+          uv pip install '.[strict,aims]' --group tests
+          uv pip install 'tblite>=0.4.0'
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -290,29 +352,22 @@ jobs:
           micromamba activate a2
           uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
-      - name: Test Notebooks
+      - name: Test notebooks
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --durations=5 -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb 
-
-      - name: Test ASE
-        env:
-          MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: |
-          micromamba activate a2
-          pytest --durations=5 -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
-
-      - uses: codecov/codecov-action@v1
-        if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          pytest --durations=5 -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb
 
   test-torchsim:
+    needs: changes
     # prevent this action from running on forks
-    if: github.repository == 'materialsproject/atomate2'
+    if: >-
+      github.repository == 'materialsproject/atomate2' &&
+      (github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'repository_dispatch' ||
+      needs.changes.outputs.torchsim == 'true' ||
+      needs.changes.outputs.shared == 'true')
 
     services:
       local_mongodb:
@@ -389,7 +444,8 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [docs, lint, test-forcefields, test-non-ase, test-notebooks-and-ase, test-openff, test-torchsim]
+    needs: [changes, docs, lint, test-abinit, test-aims, test-ase, test-common, test-cp2k, test-forcefields, test-jdftx, test-lammps, test-lobster, test-notebooks, test-openff, test-openmm, test-qchem, test-torchsim, test-vasp]
+    if: always() && needs.changes.result == 'success' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-latest
 
     permissions:
