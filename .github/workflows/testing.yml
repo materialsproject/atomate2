@@ -213,7 +213,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |  # TODO: migrate openff tests to use non smirnoff99frosst forcefields as recommended by devs
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-utilities==0.1.17 openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
 
       - name: Install dependencies
         run: |
