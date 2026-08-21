@@ -215,6 +215,7 @@ ignore = [
     "C408",    # Unnecessary (dict/list/tuple) call - remove call
     "C901",    # function too complex
     "COM812",  # trailing comma missing
+    "CPY001",  # copyright notice at top of file
     "EM",      # exception message must not use f-string literal
     "ERA001",  # found commented out code
     "FBT001",
@@ -229,6 +230,7 @@ ignore = [
     "PLR0912", # too many branches
     "PLR0913", # too many arguments
     "PLR0915", # too many local statements
+    "PLR0917", # too many positional arguments
     "PLR2004",
     "PT006",   # pytest-parametrize-names-wrong-type
     "PT013",   # pytest-incorrect-pytest-import
