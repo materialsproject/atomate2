@@ -10,7 +10,6 @@ from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker, MatPesMetaGGAStaticM
 expected_incar = {
     "ALGO": "Normal",
     "EDIFF": 1e-05,
-    "ENAUG": 1360,
     "ENCUT": 680,
     "GGA": "PE",
     "ISMEAR": 0,
@@ -62,6 +61,11 @@ expected_incar = {
         },
     },
 }
+
+# Newer versions of pymatgen-core have removed ENAUG  per VASP recommendation
+# TODO: Remove after a few releases of pymatgen-core after 2026.8.13
+if "ENAUG" in MatPESStaticSet.CONFIG["INCAR"]:
+    expected_incar["ENAUG"] = 1360.0
 
 
 @pytest.mark.parametrize("maker_cls", [MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker])
