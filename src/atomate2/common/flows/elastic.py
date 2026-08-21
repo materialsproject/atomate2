@@ -24,6 +24,7 @@ if TYPE_CHECKING:
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.torchsim import TorchSimOptimizeMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -72,26 +73,38 @@ class BaseElasticMaker(Maker, ABC):
         Keyword arguments passed to :obj:`fit_elastic_tensor`.
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.ElasticDocument.from_stresses()`.
+    socket : bool
+        If True, uses the socket-io interface to run all deformations in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all structure relaxations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
 
     name: str = "elastic"
     order: int = 2
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
-    bulk_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker | None = None
-    elastic_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker = (
-        None  # constant volume optimization
-    )
+    bulk_relax_maker: (
+        BaseAimsMaker
+        | BaseVaspMaker
+        | ForceFieldRelaxMaker
+        | TorchSimOptimizeMaker
+        | None
+    ) = None
+    elastic_relax_maker: (
+        BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker | TorchSimOptimizeMaker
+    ) = None  # constant volume optimization
     max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+    socket: bool = False
 
     def make(
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        equilibrium_stress: Matrix3D = None,
+        equilibrium_stress: Matrix3D | None = None,
         conventional: bool = False,
     ) -> Flow:
         """
@@ -135,15 +148,16 @@ class BaseElasticMaker(Maker, ABC):
             **self.generate_elastic_deformations_kwargs,
         )
 
-        vasp_deformation_calcs = run_elastic_deformations(
+        deformation_calcs = run_elastic_deformations(
             structure,
             deformations.output,
             elastic_relax_maker=self.elastic_relax_maker,
             prev_dir=prev_dir,
+            socket=self.socket,
         )
         fit_tensor = fit_elastic_tensor(
             structure,
-            vasp_deformation_calcs.output,
+            deformation_calcs.output,
             equilibrium_stress=equilibrium_stress,
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
@@ -156,7 +170,7 @@ class BaseElasticMaker(Maker, ABC):
         # allow some of the deformations to fail
         fit_tensor.config.on_missing_references = OnMissing.NONE
 
-        jobs += [deformations, vasp_deformation_calcs, fit_tensor]
+        jobs += [deformations, deformation_calcs, fit_tensor]
 
         return Flow(
             jobs=jobs,

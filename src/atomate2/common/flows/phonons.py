@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+    from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields", "ase", "torchsim"))
@@ -99,13 +100,16 @@ class BasePhononMaker(Maker, ABC):
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
         bulk relaxation
-    static_energy_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
+    static_energy_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker,
+        .TorchSimStaticMaker, or None
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker, or None
+    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker,
+        .TorchSimStaticMaker, or None
         Maker to compute the BORN charges.
-    phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker
+    phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker,
+        .TorchSimStaticMaker
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
@@ -132,7 +136,10 @@ class BasePhononMaker(Maker, ABC):
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
-        If True, use the socket/batch for the calculation
+        If True, uses the socket-io interface to run all displacements in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all static structure evaluations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
 
     name: str = "phonon"
@@ -145,14 +152,26 @@ class BasePhononMaker(Maker, ABC):
     allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
-    bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
-    static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = (
+    bulk_relax_maker: (
+        ForceFieldRelaxMaker
+        | BaseVaspMaker
+        | BaseAimsMaker
+        | TorchSimOptimizeMaker
+        | None
+    ) = None
+    static_energy_maker: (
+        ForceFieldRelaxMaker
+        | BaseVaspMaker
+        | BaseAimsMaker
+        | TorchSimStaticMaker
+        | None
+    ) = None
+    born_maker: ForceFieldStaticMaker | BaseVaspMaker | TorchSimStaticMaker | None = (
         None
     )
-    born_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
-        None
-    )
+    phonon_displacement_maker: (
+        ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker | TorchSimStaticMaker
+    ) = None
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(
         default_factory=lambda: {
