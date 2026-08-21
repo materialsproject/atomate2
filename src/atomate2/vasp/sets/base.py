@@ -10,7 +10,6 @@ from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet, VaspInputSet
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
     from pymatgen.io.vasp import Kpoints
     from pymatgen.io.vasp.sets import UserPotcarFunctional
 
