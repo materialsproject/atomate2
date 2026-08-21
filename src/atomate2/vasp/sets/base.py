@@ -174,7 +174,8 @@ class VaspInputGenerator(VaspInputSet):
             from_prev_calc.
     """
 
-    structure: Structure | None = None
+    # Do not redeclare `structure` here: VaspInputSet so setting structure
+    # uses pymatgen.io.vasp.sets setter which sorts the structure
     config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
     files_to_transfer: dict = field(default_factory=dict)
     user_incar_settings: dict = field(default_factory=dict)
