@@ -1,42 +1,78 @@
-"""Functions for manipulating Abinit files."""
+"""Functions for manipulating ABINIT files."""
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
+from itertools import chain
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from abipy.flowtk.utils import abi_extensions
+from jobflow.core.job import job
 from monty.serialization import loadfn
 
+from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import INDIR_NAME
+from atomate2.common.files import delete_files, gzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-    from pathlib import Path
 
     from abipy.abio.inputs import AbinitInput
     from pymatgen.core.structure import Structure
 
+    from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
     from atomate2.abinit.sets.base import AbinitInputGenerator
+    from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
+    from atomate2.abinit.sets.mrgdvdb import MrgdvInputGenerator
 
+__all__ = [
+    "del_gzip_files",
+    "fname2ext",
+    "load_abinit_input",
+    "out_to_in",
+    "write_abinit_input_set",
+    "write_anaddb_input_set",
+    "write_mrgddb_input_set",
+    "write_mrgdv_input_set",
+]
 
 logger = logging.getLogger(__name__)
-
 
 ALL_ABIEXTS = abi_extensions()
 
 
-def fname2ext(filepath: Path | str) -> None | str:
-    """Get the abinit extension of a given filename.
+def fname2ext(filepath: Path | str) -> str | None:
+    """
+    Get the ABINIT extension of a given filename.
 
-    This will return None if no extension is found.
+    Parameters
+    ----------
+    filepath : Path or str
+        Path to the file.
+
+    Returns
+    -------
+    str or None
+        The ABINIT extension if found, None otherwise.
+
+    Notes
+    -----
+    For perturbations, the density file is named out_DENxx instead of
+    out_1DENxx, so the extension is normalized to 1DEN.
     """
     filename = os.path.basename(filepath)
     if "_" not in filename:
         return None
     ext = filename.split("_")[-1].replace(".nc", "")
+    if "1WF" in ext:
+        ext = "1WF"
+    if "DEN" in ext and ext[-1].isdigit():
+        ext = "1DEN"
     if ext not in ALL_ABIEXTS:
         return None
     return ext
@@ -51,24 +87,24 @@ def out_to_in(
     link_files: bool = True,
 ) -> None:
     """
-    Copy or link abinit output files to the Abinit input directory.
+    Copy or link ABINIT output files to the ABINIT input directory.
 
     Parameters
     ----------
-    out_files : list of tuples
-        The list of (abinit output filepath, abinit input filename) to be copied
-        or linked.
+    out_files : Iterable[tuple[str, str]]
+        The list of (ABINIT output filepath, ABINIT input filename) tuples
+        to be copied or linked.
     src_host : str or None
-        The source hostname used to specify a remote filesystem. Can be given as
-        either "username@remote_host" or just "remote_host" in which case the username
-        will be inferred from the current user. If ``None``, the local filesystem will
-        be used as the source.
+        The source hostname used to specify a remote filesystem. Can be given
+        as either "username@remote_host" or just "remote_host" in which case
+        the username will be inferred from the current user. If None, the
+        local filesystem will be used as the source. Default is None.
     indir : Path or str
-        The input directory for Abinit input files.
-    file_client : .FileClient
-        A file client to use for performing file operations.
+        The input directory for ABINIT input files. Default is INDIR_NAME.
+    file_client : FileClient or None
+        A file client to use for performing file operations. Default is None.
     link_files : bool
-        Whether to link the files instead of copying them.
+        Whether to link the files instead of copying them. Default is True.
     """
     dest_dir = file_client.abspath(indir, host=None)
 
@@ -84,24 +120,36 @@ def out_to_in(
 def load_abinit_input(
     dirpath: Path | str, fname: str = "abinit_input.json"
 ) -> AbinitInput:
-    """Load the AbinitInput object from a given directory.
+    """
+    Load the AbinitInput object from a given directory.
 
     Parameters
     ----------
-    dirpath
+    dirpath : Path or str
         Directory to load the AbinitInput from.
-    fname
-        Name of the json file containing the AbinitInput.
+    fname : str
+        Name of the JSON file containing the AbinitInput.
+        Default is "abinit_input.json".
 
     Returns
     -------
     AbinitInput
         The AbinitInput object.
+
+    Raises
+    ------
+    NotImplementedError
+        If the specified file does not exist in the directory.
+
+    Notes
+    -----
+    Future implementation could use FileClient for remote filesystem support.
     """
+    dirpath = strip_hostname(dirpath)
     abinit_input_file = os.path.join(dirpath, f"{fname}")
     if not os.path.exists(abinit_input_file):
         raise NotImplementedError(
-            f"Cannot load AbinitInput from directory without {fname} file."
+            f"Cannot load AbinitInput from directory {dirpath} without {fname} file."
         )
 
     return loadfn(abinit_input_file)
@@ -114,21 +162,28 @@ def write_abinit_input_set(
     restart_from: str | Path | list[str] | None = None,
     directory: str | Path = ".",
 ) -> None:
-    """Write the abinit inputs for a given structure using a given generator.
+    """
+    Write the ABINIT inputs for a given structure using a given generator.
 
     Parameters
     ----------
-    structure
-        The structure for which the abinit inputs have to be written.
-    input_set_generator
-        The input generator used to write the abinit inputs.
-    prev_outputs
+    structure : Structure
+        The structure for which the ABINIT inputs have to be written.
+    input_set_generator : AbinitInputGenerator
+        The input generator used to write the ABINIT inputs.
+    prev_outputs : str or Path or list[str] or None
         The list of previous directories needed for the calculation.
-    restart_from
+        Default is None.
+    restart_from : str or Path or list[str] or None
         The previous directory of the same calculation (in case of a restart).
-        Note that this should be provided as a list of one directory.
-    directory
-        Directory in which to write the abinit inputs.
+        Should be provided as a list of one directory. Default is None.
+    directory : str or Path
+        Directory in which to write the ABINIT inputs. Default is ".".
+
+    Raises
+    ------
+    RuntimeError
+        If the generated AbinitInputSet is not valid.
     """
     ais = input_set_generator.get_input_set(
         structure=structure,
@@ -139,3 +194,191 @@ def write_abinit_input_set(
         raise RuntimeError("AbinitInputSet is not valid.")
 
     ais.write_input(directory=directory, make_dir=True, overwrite=False)
+
+
+def write_mrgddb_input_set(
+    input_set_generator: MrgddbInputGenerator,
+    prev_outputs: str | Path | list[str] | None = None,
+    directory: str | Path = ".",
+) -> None:
+    """
+    Write the MRGDDB input using a given generator.
+
+    Parameters
+    ----------
+    input_set_generator : MrgddbInputGenerator
+        The input generator used to write the MRGDDB inputs.
+    prev_outputs : str or Path or list[str] or None
+        The list of previous directories needed for the calculation.
+        Default is None.
+    directory : str or Path
+        Directory in which to write the MRGDDB inputs. Default is ".".
+
+    Raises
+    ------
+    RuntimeError
+        If the generated MrgddbInputSet is not valid or if some previous
+        outputs do not exist.
+    """
+    mrgis = input_set_generator.get_input_set(
+        prev_outputs=prev_outputs,
+        workdir=directory,
+    )
+    if not mrgis.validate():
+        raise RuntimeError(
+            "MrgddbInputSet is not valid. Some previous outputs do not exist."
+        )
+
+    mrgis.write_input(directory=directory, make_dir=True, overwrite=False)
+
+
+def write_mrgdv_input_set(
+    input_set_generator: MrgdvInputGenerator,
+    prev_outputs: str | Path | list[str] | None = None,
+    directory: str | Path = ".",
+) -> None:
+    """
+    Write the MRGDV input using a given generator.
+
+    Parameters
+    ----------
+    input_set_generator : MrgdvInputGenerator
+        The input generator used to write the MRGDV inputs.
+    prev_outputs : str or Path or list[str] or None
+        The list of previous directories needed for the calculation.
+        Default is None.
+    directory : str or Path
+        Directory in which to write the MRGDV inputs. Default is ".".
+
+    Raises
+    ------
+    RuntimeError
+        If the generated MrgdvInputSet is not valid or if some previous
+        outputs do not exist.
+    """
+    mrgis = input_set_generator.get_input_set(
+        prev_outputs=prev_outputs,
+        workdir=directory,
+    )
+    if not mrgis.validate():
+        raise RuntimeError(
+            "MrgdvInputSet is not valid. Some previous outputs do not exist."
+        )
+
+    mrgis.write_input(directory=directory, make_dir=True, overwrite=False)
+
+
+def write_anaddb_input_set(
+    structure: Structure,
+    input_set_generator: AnaddbInputGenerator,
+    prev_outputs: str | Path | list[str] | None = None,
+    directory: str | Path = ".",
+) -> None:
+    """
+    Write the ANADDB input using a given generator.
+
+    Parameters
+    ----------
+    structure : Structure
+        The structure for the ANADDB calculation.
+    input_set_generator : AnaddbInputGenerator
+        The input generator used to write the ANADDB inputs.
+    prev_outputs : str or Path or list[str] or None
+        The list of previous directories needed for the calculation.
+        Default is None.
+    directory : str or Path
+        Directory in which to write the ANADDB inputs. Default is ".".
+
+    Raises
+    ------
+    RuntimeError
+        If the generated AnaddbInputSet is not valid or if some previous
+        outputs do not exist.
+    """
+    anais = input_set_generator.get_input_set(
+        structure=structure,
+        prev_outputs=prev_outputs,
+    )
+    if not anais.validate():
+        raise RuntimeError(
+            "AnaddbInputSet is not valid. Some previous outputs do not exist."
+        )
+
+    anais.write_input(directory=directory, make_dir=True, overwrite=False)
+
+
+# TODO: does not take the directories of the store_inputs
+@job
+def del_gzip_files(
+    outputs: list,
+    exclude_files_from_zip: list[str | Path] | None = None,
+    delete: bool = True,
+    exclude_files_from_del: list[str | Path] | None = None,
+    include_files_to_del: list[str | Path] | None = None,
+) -> None:
+    r"""
+    Delete and gzip files from a previous Job or Flow.
+
+    Parameters
+    ----------
+    outputs : list
+        Outputs of the Job or Flow that needs its files deleted/compressed.
+    exclude_files_from_zip : list[str or Path] or None
+        Filenames to exclude from compression. Supports glob file matching,
+        e.g., "\*.dat". Default is None.
+    delete : bool
+        Whether to activate deletion of files. Default is True.
+    exclude_files_from_del : list[str or Path] or None
+        Filenames to exclude from deletion. Supports glob file matching,
+        e.g., "\*.dat". Default is None.
+    include_files_to_del : list[str or Path] or None
+        Filenames to include for deletion as a list of str or Path objects
+        given relative to directory. Glob file paths are supported,
+        e.g., "\*.dat". If None, all files in the directory will be deleted.
+        Default is None.
+    """
+    dirs_to_clean = []
+    for o in outputs:
+        with contextlib.suppress(TypeError, AttributeError):
+            dirs_to_clean.append(o.dir_name)
+        with contextlib.suppress(TypeError, AttributeError, KeyError):
+            o_dirs = o["dirs"]
+            if type(o_dirs) is dict:
+                dirs_to_clean.extend(
+                    list(chain(*o_dirs.values()))
+                )  # flatten values of dict
+            else:
+                dirs_to_clean.extend(o_dirs)
+        with contextlib.suppress(TypeError, AttributeError, KeyError):
+            dirs_to_clean.append(o["dir_name"])  # to zip run_rf and generate_perts
+        with contextlib.suppress(TypeError, AttributeError, KeyError):
+            dirs_to_clean.extend(
+                o.history_dirs
+            )  # to clean dirs unconverged and restarted
+
+    recursiv_dirs_to_clean = []
+    for dz_ in dirs_to_clean:
+        dz = strip_hostname(dz_)
+        recursiv_dirs_to_clean.append(Path(dz))
+        for root, _, _ in os.walk(dz):
+            recursiv_dirs_to_clean.append(Path(root))
+    # to take its own directory into account
+    recursiv_dirs_to_clean.append(Path(os.getcwd()))
+
+    if delete:
+        if include_files_to_del is None:
+            include_files_to_del = SETTINGS.ABINIT_FILES_TO_DEL
+        for d in recursiv_dirs_to_clean:
+            delete_files(
+                directory=strip_hostname(d),
+                include_files=include_files_to_del,
+                exclude_files=exclude_files_from_del,
+                allow_missing=True,
+            )
+
+    for d in recursiv_dirs_to_clean:
+        gzip_files(
+            directory=strip_hostname(d),
+            exclude_files=exclude_files_from_zip,
+            force=True,
+        )
