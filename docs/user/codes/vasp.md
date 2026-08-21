@@ -342,9 +342,39 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 )
 ```
 
+#### Pheasy
+
+Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
+`Pheasy` can be installed with `pip install pheasy`.
+By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
+To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
+
+By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg and the `ALAMODE` code.
+
+To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
+Linux and MacOS x86-64 users can try to install using conda forge:
+```
+conda install -c conda-forge alm
+```
+
+Windows and MacOS ARM users cannot use the pre-built wheels on conda forge at this time, and should instead try the following installation using `conda`:
+```
+conda install -c conda-forge "numpy<=2.2" scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes
+git clone https://github.com/ttadano/ALM.git
+cd ALM/python
+python setup.py build
+pip install -e .
+```
+NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
+Note also that `boost` and `eigen` can be installed via `homebrew`.
+For example, using `gcc-15` from `homebrew`, one might set:
+```
+export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
+```
+
 ### Grüneisen parameter workflow
 
-Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
+Calculates mode-dependent Grüneisen parameters with the help of [Phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 
 Initially, a tight structural relaxation is performed to obtain a structure without
 forces on the atoms. The optimized structure (ground state) is further expanded and
