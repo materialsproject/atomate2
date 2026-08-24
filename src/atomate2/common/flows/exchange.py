@@ -49,8 +49,10 @@ class ExchangeMaker(Maker):
         ``cutoff`` (Angstrom) and the distance-grouping ``tol``.
     run_vampire : bool
         Whether to run the Vampire Monte-Carlo step to estimate the critical
-        temperature. Requires the external ``vampire-serial`` binary on PATH; the step
-        raises a clear error if it is missing. Defaults to True (atomate1 parity).
+        temperature. Requires a VAMPIRE binary on PATH - ``vampire-serial`` unless
+        ``ATOMATE2_VAMPIRE_CMD`` names another (e.g. ``srun -n 24 vampire-parallel``
+        for the MPI build); the step raises a clear error if it is missing.
+        Defaults to True (atomate1 parity).
     mc_settings : dict | None
         Keyword arguments for the Vampire Monte-Carlo run (e.g. ``mc_box_size``,
         ``equil_timesteps``, ``mc_timesteps``). Only used if ``run_vampire``.

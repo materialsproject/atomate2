@@ -22,8 +22,9 @@ def run_vampire(
     """Run Vampire Monte-Carlo to estimate the critical temperature.
 
     This wraps the (vendored) ``VampireCaller``, which shells out to the external
-    ``vampire-serial`` binary. A clear error is raised if the binary is not found
-    on PATH.
+    VAMPIRE binary named by ``ATOMATE2_VAMPIRE_CMD`` (``vampire-serial`` by
+    default; set e.g. ``srun -n 24 vampire-parallel`` to run the MPI build). A
+    clear error is raised if the binary is not found on PATH.
 
     Parameters
     ----------

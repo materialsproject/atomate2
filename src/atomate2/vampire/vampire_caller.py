@@ -38,6 +38,8 @@ and R. W. Chantrell. J. Phys.: Condens. Matter 26, 103202 (2014)
 from __future__ import annotations
 
 import logging
+import os
+import shlex
 import subprocess
 from shutil import which
 
@@ -47,16 +49,20 @@ from monty.json import MSONable
 
 from atomate2.vampire.schemas.vampire_output import VampireOutput
 
-__author__ = "ncfrey"
-__version__ = "0.1"
-__maintainer__ = "Nathan C. Frey"
-__email__ = "ncfrey@lbl.gov"
+__author__ = "Luguza, ncfrey"
+__version__ = "0.2"
+__maintainer__ = "Luca Frey, Nathan C. Frey"
+__email__ = "luca.frey@student.kit.edu, ncfrey@lbl.gov"
 __status__ = "Development"
-__date__ = "June 2019"
+__date__ = "August 2026"
 
 logger = logging.getLogger(__name__)
 
-VAMP_EXE = which("vampire-serial")
+# Command used to launch VAMPIRE, overridable per worker like ATOMATE2_VASP_CMD.
+# Defaults to the serial binary; set it to the MPI build behind a launcher to run
+# in parallel, e.g. ATOMATE2_VAMPIRE_CMD="srun -n 24 vampire-parallel".
+VAMP_CMD = shlex.split(os.environ.get("ATOMATE2_VAMPIRE_CMD", "vampire-serial"))
+VAMP_EXE = which(VAMP_CMD[0]) if VAMP_CMD else None
 
 
 class VampireCaller:
@@ -81,7 +87,8 @@ class VampireCaller:
 
     @requires(
         VAMP_EXE is not None,
-        "VampireCaller requires vampire-serial to be in the path."
+        f"VampireCaller requires {VAMP_CMD[0] if VAMP_CMD else 'vampire-serial'} "
+        "(from ATOMATE2_VAMPIRE_CMD) to be in the path."
         "Please follow the instructions at https://vampire.york.ac.uk/download/.",
     )
     def __init__(
@@ -148,7 +155,7 @@ class VampireCaller:
         self._create_ucf()
 
         # Call Vampire
-        with subprocess.Popen([VAMP_EXE], stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
+        with subprocess.Popen([VAMP_EXE, *VAMP_CMD[1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
             _stdout, stderr = process.communicate()
             stdout: str = _stdout.decode()
 
