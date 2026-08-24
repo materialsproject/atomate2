@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 from jobflow import run_locally
-from pymatgen.analysis.elasticity import Stress
+from pymatgen.analysis.elasticity import Strain, Stress
+from pymatgen.core import Lattice, Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
@@ -41,6 +42,57 @@ def test_reduce_expand_strains(clean_dir, symmetry_structure, conventional):
 
     for fs in full_strains:
         assert any(np.allclose(fs, rs) for rs in recovered_strains)
+
+
+def test_expand_strains_zeroes_numerical_components():
+    """Ensure symmetry residues use the same zero tolerance as expansion."""
+    base = Structure.from_spacegroup("Im-3m", Lattice.cubic(2.87), ["Fe"], [[0, 0, 0]])
+    lattice = np.asarray(base.lattice.matrix).copy()
+    lattice[0, 1] += 1e-3
+    lattice[1, 2] -= 7e-4
+    lattice[2, 0] += 3e-4
+    structure = Structure(Lattice(lattice), base.species, base.frac_coords)
+
+    strain = Strain.from_voigt([0.01, 0, 0, 0, 0, 0])
+    stresses = [Stress(np.zeros((3, 3)))]
+    expanded, _, _, _ = expand_strains(
+        structure,
+        [strain],
+        stresses=stresses,
+        uuids=["dummy"],
+        job_dirs=["dummy"],
+        symprec=0.1,
+    )
+
+    assert len(expanded) == 3
+    for expanded_strain in expanded:
+        components = np.abs(expanded_strain.voigt)
+        assert np.all((components == 0) | (components > 1e-3))
+
+
+@pytest.mark.parametrize(
+    ("tol", "strain_voigt"),
+    [
+        (-1e-3, [0.01, 0, 0, 0, 0, 0]),
+        (0, [0.01, 0, 0, 0, 0, 0]),
+        (1e-3, [5e-4, 0, 0, 0, 0, 0]),
+        (1e-3, [0.01, 5e-4, 0, 0, 0, 0]),
+    ],
+)
+def test_expand_strains_rejects_invalid_zero_tolerance(tol, strain_voigt):
+    structure = Structure(Lattice.cubic(2.87), ["Fe"], [[0, 0, 0]])
+    strain = Strain.from_voigt(strain_voigt)
+
+    with pytest.raises(ValueError, match="tol"):
+        expand_strains(
+            structure,
+            [strain],
+            stresses=[Stress(np.zeros((3, 3)))],
+            uuids=["dummy"],
+            job_dirs=["dummy"],
+            symprec=0.1,
+            tol=tol,
+        )
 
 
 def _get_strains(structure, sym_reduce):

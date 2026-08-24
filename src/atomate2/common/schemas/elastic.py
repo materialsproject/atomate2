@@ -302,15 +302,32 @@ def expand_strains(
         strains will not contain the ones with other strain states. Also see:
         `generate_elastic_deformations()`.
     """
+    if tol <= 0:
+        raise ValueError(f"tol must be positive, got {tol}")
+    for strain in strains:
+        applied_components = np.abs(strain.voigt)
+        nonzero_components = applied_components[applied_components != 0]
+        if not len(nonzero_components) or np.any(nonzero_components <= tol):
+            raise ValueError(
+                "tol must be smaller than every nonzero applied strain component"
+            )
+
+    def zero_numerical_components(strain: Strain) -> Strain:
+        voigt = np.asarray(strain.voigt).copy()
+        voigt[np.abs(voigt) <= tol] = 0
+        return Strain.from_voigt(voigt)
+
     sga = SpacegroupAnalyzer(structure, symprec=symprec)
     symm_ops = sga.get_symmetry_operations(cartesian=True)
 
-    full_strains = deepcopy(strains)
+    full_strains = [zero_numerical_components(strain) for strain in strains]
     full_stresses = deepcopy(stresses)
     full_uuids = deepcopy(uuids)
     full_job_dirs = deepcopy(job_dirs)
 
-    mapping = TensorMapping(full_strains, [True for _ in full_strains])
+    # Preserve the original strains for identity comparisons so normalization does
+    # not change which symmetry-equivalent strains are accepted.
+    mapping = TensorMapping(deepcopy(strains), [True for _ in strains])
     for idx, strain in enumerate(strains):
         for symm_op in symm_ops:
             rotated_strain = strain.transform(symm_op)
@@ -327,7 +344,7 @@ def expand_strains(
             mapping[rotated_strain] = True
 
             # expand the other properties
-            full_strains.append(rotated_strain)
+            full_strains.append(zero_numerical_components(rotated_strain))
             full_stresses.append(stresses[idx].transform(symm_op))
             full_uuids.append(uuids[idx])
             full_job_dirs.append(job_dirs[idx])
