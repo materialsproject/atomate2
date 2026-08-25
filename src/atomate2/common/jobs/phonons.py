@@ -21,10 +21,8 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
-from atomate2.ase.jobs import AseRelaxMaker
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
-from atomate2.common.utils import get_supercell_matrix
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
@@ -33,6 +31,8 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.ase.jobs import AseRelaxMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 logger = logging.getLogger(__name__)
 
@@ -265,26 +265,31 @@ def run_phonon_displacements(
     Run phonon displacements.
 
     Note, this job will replace itself with N displacement calculations,
-    or a single socket calculation for all displacements.
+    or a single batched calculation using the socket interface to run all
+    displacements simultaneously. This results in lower overhead as well as
+    parallel evaluation of the displacements for TorchSim.
 
     Parameters
     ----------
     displacements: Sequence
-        All displacements to calculate
+        All displacements to calculate.
     structure: Structure object
         Fully optimized structure used for phonon computations.
     supercell_matrix: Matrix3D
-        supercell matrix for meta data
-    phonon_maker : .BaseVaspMaker, .AseRelaxMaker,
+        Supercell matrix for metadata.
+    phonon_maker : .BaseVaspMaker, .AseRelaxMaker, .TorchSimStaticMaker,
         .ForceFieldRelaxMaker, or .BaseAimsMaker
-        A maker to use to generate dispacement calculations.
+        A maker to use to generate displacement calculations.
         NB: this should be a static maker.
     prev_dir: str or Path
-        The previous working directory
+        The previous working directory.
     prev_dir_argname: str
-        argument name for the prev_dir variable
+        Argument name for the prev_dir variable.
     socket: bool
-        If True use the socket-io (batch-mode) interface to increase performance
+        If True, uses the socket-io interface to run all displacements in a single
+        job, reducing overhead. In the specific case of TorchSim, this enables batching
+        of all static structure evaluations.
+        Note: socket=True is not supported for BaseVaspMaker.
     """
     phonon_jobs = []
     outputs: dict[str, list] = {
@@ -297,26 +302,28 @@ def run_phonon_displacements(
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
 
+    if socket and isinstance(phonon_maker, BaseVaspMaker):
+        raise ValueError("VASP makers do not currently support socket/batch mode.")
+
+    infos = []
+
     num_disp = len(displacements)
     if socket:
-        if isinstance(phonon_maker, BaseVaspMaker):
-            raise ValueError("VASP makers do not currently support socket/batch mode.")
-
         phonon_job = phonon_maker.make(displacements, **phonon_job_kwargs)
+
         info = {
             "original_structure": structure,
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        if not isinstance(phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker):
-            phonon_job.update_maker_kwargs(
-                {"_set": {"write_additional_data->phonon_info:json": info}},
-                dict_mod=True,
-            )
+        infos.append(info)
 
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(num_disp))
-        if isinstance(phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker):
+        if check_class_name(
+            phonon_maker,
+            ["AseRelaxMaker", "ForceFieldStaticMaker", "ForceFieldRelaxMaker"],
+        ):
             outputs["uuids"] = [phonon_job.output[0].uuid] * num_disp
             outputs["dirs"] = [phonon_job.output[0].dir_name] * num_disp
             outputs["forces"] = [
@@ -338,17 +345,30 @@ def run_phonon_displacements(
                 "supercell_matrix": supercell_matrix,
                 "displaced_structure": displacement,
             }
-            with contextlib.suppress(Exception):
-                if not isinstance(phonon_maker, AseRelaxMaker | ForceFieldRelaxMaker):
-                    phonon_job.update_maker_kwargs(
-                        {"_set": {"write_additional_data->phonon_info:json": info}},
-                        dict_mod=True,
-                    )
+            infos.append(info)
+
             phonon_jobs.append(phonon_job)
             outputs["displacement_number"].append(idx)
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)
+
+    for info, phonon_job in zip(infos, phonon_jobs, strict=True):
+        with contextlib.suppress(Exception):
+            if not check_class_name(
+                phonon_maker,
+                [
+                    "AseRelaxMaker",
+                    "ForceFieldRelaxMaker",
+                    "ForceFieldStaticMaker",
+                    "TorchSimStaticMaker",
+                    "TorchSimOptimizeMaker",
+                ],
+            ):
+                phonon_job.update_maker_kwargs(
+                    {"_set": {"write_additional_data->phonon_info:json": info}},
+                    dict_mod=True,
+                )
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)

@@ -167,7 +167,7 @@ class ElasticDocument(StructureMetadata):
         equilibrium_stress: Matrix3D | None = None,
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
-        failed_uuids: list[str] = None,
+        failed_uuids: list[str] | None = None,
     ) -> Self:
         """Create an elastic document from strains and stresses.
 
@@ -199,7 +199,7 @@ class ElasticDocument(StructureMetadata):
         allow_elastically_unstable_structs : bool
             Whether to allow the ElasticDocument to still complete in the event that
             the structure is elastically unstable.
-        failed_uuids: list of str
+        failed_uuids: list of str or None
             The uuids of perturbations that were not completed
         """
         strains = [d.green_lagrange_strain for d in deformations]
@@ -216,7 +216,7 @@ class ElasticDocument(StructureMetadata):
         stresses = [-0.1 * s for s in stresses]
         eq_stress = None
         if equilibrium_stress:
-            eq_stress = -0.1 * Stress(equilibrium_stress)
+            eq_stress = -0.1 * Stress(np.squeeze(equilibrium_stress))
 
         pk_stresses = [
             s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations, strict=True)
