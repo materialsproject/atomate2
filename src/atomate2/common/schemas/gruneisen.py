@@ -143,11 +143,16 @@ class GruneisenParameterDocument(StructureMetadata):
         .GruneisenParameterDocument
         """
         ground = phonopy.load(
-            Path(phonopy_yaml_paths_dict["ground"]) / "ground_phonopy.yaml"
+            Path(phonopy_yaml_paths_dict["ground"]) / "ground_phonopy.yaml",
+            primitive_matrix="P",
         )
-        plus = phonopy.load(Path(phonopy_yaml_paths_dict["plus"]) / "plus_phonopy.yaml")
+        plus = phonopy.load(
+            Path(phonopy_yaml_paths_dict["plus"]) / "plus_phonopy.yaml",
+            primitive_matrix="P",
+        )
         minus = phonopy.load(
-            Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml"
+            Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml",
+            primitive_matrix="P",
         )
         gru = PhonopyGruneisen(phonon=ground, phonon_plus=plus, phonon_minus=minus)
         if type(mesh) is tuple:
