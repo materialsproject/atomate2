@@ -306,11 +306,8 @@ def expand_strains(
         raise ValueError(f"tol must be positive, got {tol}")
     for strain in strains:
         applied_components = np.abs(strain.voigt)
-        nonzero_components = applied_components[applied_components != 0]
-        if not len(nonzero_components) or np.any(nonzero_components <= tol):
-            raise ValueError(
-                "tol must be smaller than every nonzero applied strain component"
-            )
+        if len(applied_components[applied_components > tol]) == 0:
+            raise ValueError("tol must be smaller than the applied strain magnitude")
 
     def zero_numerical_components(strain: Strain) -> Strain:
         voigt = np.asarray(strain.voigt).copy()

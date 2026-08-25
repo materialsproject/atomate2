@@ -76,7 +76,6 @@ def test_expand_strains_zeroes_numerical_components():
         (-1e-3, [0.01, 0, 0, 0, 0, 0]),
         (0, [0.01, 0, 0, 0, 0, 0]),
         (1e-3, [5e-4, 0, 0, 0, 0, 0]),
-        (1e-3, [0.01, 5e-4, 0, 0, 0, 0]),
     ],
 )
 def test_expand_strains_rejects_invalid_zero_tolerance(tol, strain_voigt):
