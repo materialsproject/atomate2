@@ -12,8 +12,8 @@ from atomate2.common.files import copy_files, get_zfile, gunzip_files, rename_fi
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
-if TYPE_CHECKING:
-    from pathlib import Path
+
+from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
@@ -55,17 +55,18 @@ def copy_amset_files(
         "band_structure_data.json",
         "wavefunction.h5",
         "deformation.h5",
-        "transport.json",
     ):
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
             files.append(found_file)
+    files.append("transport_*.json*")
 
     copy_files(
         src_dir,
         src_host=src_host,
         include_files=files,
         file_client=file_client,
+        allow_missing=True,
     )
 
     gunzip_files(
@@ -74,7 +75,9 @@ def copy_amset_files(
         file_client=file_client,
     )
 
-    rename_files({"transport.json": "transport.prev.json"}, allow_missing=True)
+    local_transport = next(Path().glob("transport_*.json*"), None)
+    if local_transport is not None:
+        local_transport.rename("transport.prev.json")
     logger.info("Finished copying inputs")
 
 
