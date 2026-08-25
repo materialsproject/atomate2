@@ -1,7 +1,8 @@
 import pytest
 from pymatgen.core import Lattice, Species, Structure
-from pymatgen.io.vasp.sets import MPScanRelaxSet
+from pymatgen.io.vasp.sets import MPScanRelaxSet, VaspInputSet
 
+from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.core import (
     ElectronPhononSetGenerator,
     HSEBSSetGenerator,
@@ -292,3 +293,47 @@ def test_core(struct_no_magmoms):
     assert incar["EDIFF"] == 1e-7
     assert incar["ISYM"] == 0
     assert incar["LWAVE"] is True
+
+
+def test_structure_field_not_shadowed():
+    """VaspInputGenerator must not redeclare `structure` as a plain field:
+    pymatgen's VaspInputSet already defines it as a property (with a setter
+    that applies sort_structure/reduce_structure/validate_magmom), and
+    redeclaring it here would shadow that property in the MRO, silently
+    disabling the setter for every generator derived from this class.
+    """
+    # The property should be the one pymatgen's VaspInputSet defines, not
+    # redeclared (and thereby shadowed) on atomate2's VaspInputGenerator.
+    assert "structure" not in vars(VaspInputGenerator)
+    assert isinstance(vars(VaspInputSet)["structure"], property)
+
+    # Setting `.structure` on a generator must still work end-to-end.
+    input_gen = MDSetGenerator()
+    structure = Structure(
+        lattice=Lattice.cubic(3),
+        species=("Fe", "O"),
+        coords=((0, 0, 0), (0.5, 0.5, 0.5)),
+    )
+    input_gen.structure = structure
+    assert input_gen.structure.composition == structure.composition
+
+
+def test_md_set_generator_sorts_structure():
+    """MDSetGenerator's npt ensemble sizes LANGEVIN_GAMMA to the number of
+    distinct elements, but VASP counts POSCAR "types" as contiguous
+    same-element runs. If the structure passed in isn't already grouped by
+    element and sort_structure doesn't run, the two counts diverge and VASP
+    aborts with "Error reading item LANGEVIN_GAMMA from file INCAR".
+    """
+    structure = Structure(
+        lattice=Lattice.cubic(10),
+        species=["Al", "Cl", "Al", "Cl", "O", "Cl", "Li", "Li"],
+        coords=[[0.1 * i, 0.1 * i, 0.1 * i] for i in range(8)],
+    )
+
+    input_gen = MDSetGenerator(ensemble="npt")
+    vasp_input = input_gen.get_input_set(structure, potcar_spec=True)
+
+    n_types_in_poscar = len(vasp_input["POSCAR"].natoms)
+    n_langevin_gamma = len(vasp_input["INCAR"]["LANGEVIN_GAMMA"])
+    assert n_types_in_poscar == n_langevin_gamma
