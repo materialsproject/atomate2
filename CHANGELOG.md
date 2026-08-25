@@ -1,5 +1,40 @@
 # Change log
 
+
+## v0.1.5
+
+### New Features 🎉
+* Batched workflows for TorchSim by @akwarii in https://github.com/materialsproject/atomate2/pull/1505
+### Documentation 📖
+* Update contributors list by @akwarii in https://github.com/materialsproject/atomate2/pull/1508
+### House-Keeping 🧹
+* Update FF dependencies. by @shyuep in https://github.com/materialsproject/atomate2/pull/1495
+### Other Changes
+* Bump nequip from 0.17.1 to 0.18.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1488
+* Bump nequip-allegro from 0.8.2 to 0.8.3 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1487
+* Bump monty from 2026.2.18 to 2026.5.18 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1485
+* Bump jupyterlab from 4.5.7 to 4.5.8 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1491
+* Bump ipython from 9.13.0 to 9.14.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1492
+* Bump myst-parser from 5.0.0 to 5.1.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1482
+* Bump openmm from 8.5.1 to 8.5.2 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1493
+* Bump jupyterlab from 4.5.8 to 4.5.9 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1496
+* Bump sevenn from 0.12.1 to 0.13.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1498
+* Bump jupyterlab from 4.5.9 to 4.6.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1497
+* Bump mace-torch from 0.3.15 to 0.3.16 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1499
+* Bump wandb from 0.24.0 to 0.27.2 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1502
+* Bump pytest from 9.0.3 to 9.1.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1501
+* Bump calorine from 3.3 to 3.4 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1503
+* Bump wandb from 0.27.2 to 0.28.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1507
+* Bump ipython from 9.14.1 to 9.15.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1506
+* Bump jupyterlab from 4.6.0 to 4.6.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1509
+* Update setuptools requirement from <83,>=42 to >=42,<84 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1510
+* Bump matgl from 4.0.2 to 4.0.3 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1511
+
+## New Contributors
+* @akwarii made their first contribution in https://github.com/materialsproject/atomate2/pull/1505
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.1.4...v0.1.5
+
 ## v0.0.21
 
 ### Bug Fixes 🐛
