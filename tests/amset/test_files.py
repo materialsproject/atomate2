@@ -21,6 +21,6 @@ def test_copy_amset_files_transport_handling(
     new_dir.mkdir()
     monkeypatch.chdir(new_dir)
 
-    copy_amset_files(src_dir=str(prev_dir))  # should not raise either way
+    copy_amset_files(src_dir=str(prev_dir))  
 
     assert (new_dir / "transport.prev.json").exists() == expect_prev_file
