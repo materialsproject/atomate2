@@ -5,11 +5,12 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+from monty.serialization import loadfn
+
 from atomate2 import SETTINGS
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
-from monty.serialization import loadfn
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ def copy_amset_files(
         found_file = get_zfile(directory_listing, file, allow_missing=True)
         if found_file is not None:
             files.append(found_file)
-    files.append("transport_*.json*")
+    files.append(Path("transport_*.json*"))
 
     copy_files(
         src_dir,
