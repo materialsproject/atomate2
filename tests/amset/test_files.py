@@ -13,7 +13,7 @@ from atomate2.amset.files import copy_amset_files
     ],
 )
 # testing if a transport file can be extracted from the prev_dir and renamed
-# testing that first run case where no prev_dir exists behaves
+# testing first run case where no prev_dir exists is well behaved
 def test_copy_amset_files_transport_handling(
     tmp_path, monkeypatch, transport_filename, expect_prev_file
 ):
