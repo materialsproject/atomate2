@@ -1,9 +1,15 @@
 """Module for classical md workflows."""
 
-from openff.interchange import Interchange
-from openff.toolkit.topology import Topology
-from openff.toolkit.topology.molecule import Molecule
-from openff.units import Quantity
+try:
+    from openff.interchange import Interchange
+    from openff.toolkit.topology import Topology
+    from openff.toolkit.topology.molecule import Molecule
+    from openff.units import Quantity
+except ImportError as exc:
+    raise ImportError(
+        "openff must be installed via conda-forge to use atomate2.openff:\n"
+        "`conda install -c conda-forge openff-toolkit openff-interchange`"
+    ) from exc
 
 
 def openff_mol_as_monty_dict(self: Molecule) -> dict:
