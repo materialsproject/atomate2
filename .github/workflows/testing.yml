@@ -66,8 +66,6 @@ jobs:
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          mkdir -p ~/.abinit/pseudos
-          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims] --group tests
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
@@ -139,14 +137,13 @@ jobs:
 
       - name: Install conda dependencies
         run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader --yes
+          # abinit is needed to generate the perturbations (dte, phonons, dde)
+          micromamba install -n a2 -c conda-forge enumlib packmol bader abinit --yes
 
       - name: Install dependencies
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          mkdir -p ~/.abinit/pseudos
-          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,abinit,approxneb,aims] --group tests
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
