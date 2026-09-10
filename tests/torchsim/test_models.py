@@ -23,6 +23,7 @@ from .conftest import (
     _SKIP_MATTERSIM,
     _SKIP_METATOMIC,
     _SKIP_NEQUIP,
+    _SKIP_NVALCHEMIOPS,
     _SKIP_ORB,
     _SKIP_SEVENNET,
 )
@@ -79,3 +80,63 @@ def test_pick_model_orb() -> None:
 @pytest.mark.skipif(_SKIP_SEVENNET, reason="sevenn is not installed.")
 def test_pick_model_sevennet() -> None:
     pick_model(TorchSimModelType.SEVENNET, model_path="7net-0")
+
+
+def _dummy_d3_params(max_z: int = 18):
+    """Build a D3Parameters instance with arbitrary (non-physical) values."""
+    import torch
+    from torch_sim.models.dispersion import D3Parameters
+
+    return D3Parameters(
+        rcov=torch.rand(max_z + 1, dtype=torch.float64),
+        r4r2=torch.rand(max_z + 1, dtype=torch.float64),
+        c6ab=torch.rand(max_z + 1, max_z + 1, 5, 5, dtype=torch.float64),
+        cn_ref=torch.rand(max_z + 1, max_z + 1, 5, 5, dtype=torch.float64),
+    )
+
+
+@pytest.mark.skipif(_SKIP_NVALCHEMIOPS, reason="nvalchemiops is not installed.")
+def test_pick_model_dispersion() -> None:
+    """A D3 dispersion correction should be summed with the base model.
+
+    The base model's cutoff must be preserved, while the D3 model should fall
+    back to its own default cutoff rather than inheriting the base model's.
+    """
+    from torch_sim.models.dispersion import D3DispersionModel
+    from torch_sim.models.interface import SumModel
+    from torch_sim.models.lennard_jones import LennardJonesModel
+
+    model = pick_model(
+        TorchSimModelType.LENNARD_JONES,
+        model_path="",
+        sigma=3.405,
+        epsilon=0.0104,
+        cutoff=6.0,
+        dispersion=True,
+        a1=0.4289,
+        a2=4.4407,
+        s8=0.7875,
+        d3_params=_dummy_d3_params(),
+    )
+
+    assert isinstance(model, SumModel)
+    base_model, d3_model = model.models
+    assert isinstance(base_model, LennardJonesModel)
+    assert isinstance(d3_model, D3DispersionModel)
+
+    assert base_model.cutoff == pytest.approx(6.0)
+    assert d3_model.cutoff != pytest.approx(6.0)
+
+
+@pytest.mark.skipif(_SKIP_NVALCHEMIOPS, reason="nvalchemiops is not installed.")
+def test_pick_model_dispersion_missing_params() -> None:
+    """Missing required D3 parameters should raise a clear KeyError."""
+    with pytest.raises(KeyError, match="a2"):
+        pick_model(
+            TorchSimModelType.LENNARD_JONES,
+            model_path="",
+            dispersion=True,
+            a1=0.4289,
+            s8=0.7875,
+            d3_params=_dummy_d3_params(),
+        )
