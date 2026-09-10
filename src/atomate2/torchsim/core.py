@@ -553,6 +553,12 @@ class TorchSimOptimizeMaker(Maker):
 
         final_structures = state.to_structures()
 
+        # TorchSim SimState drops (site) properties, so we need to re-attach them
+        for initial, final in zip(structures, final_structures, strict=True):
+            final.properties = initial.properties
+            for key, value in initial.site_properties.items():
+                final.add_site_property(key, value)
+
         # Get final calculation output
         calculation_output = get_calculation_output(state, model, autobatcher)
 
@@ -718,6 +724,12 @@ class TorchSimIntegrateMaker(Maker):
         calculation_output = get_calculation_output(state, model, autobatcher)
 
         final_structures = state.to_structures()
+
+        # TorchSim SimState drops (site) properties, so we need to re-attach them
+        for initial, final in zip(structures, final_structures, strict=True):
+            final.properties = initial.properties
+            for key, value in initial.site_properties.items():
+                final.add_site_property(key, value)
 
         # Create calculation object
         calculation = TorchSimCalculation(

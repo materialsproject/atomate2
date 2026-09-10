@@ -48,6 +48,10 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     perturbed_structure.translate_sites(
         list(range(len(perturbed_structure))), [0.01, 0.01, 0.01]
     )
+    perturbed_structure.properties["my_prop"] = 1.5
+    perturbed_structure.add_site_property(
+        "my_site_prop", list(range(len(perturbed_structure)))
+    )
 
     n_systems = 2
     trajectory_reporter_dict = {
@@ -85,6 +89,13 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert isinstance(result.structures, list)
     assert len(result.structures) == n_systems
     assert isinstance(result.structures[0], Structure)
+
+    # Check that structure properties and site properties survive the round trip
+    for final_structure in result.structures:
+        assert final_structure.properties == perturbed_structure.properties
+        assert final_structure.site_properties["my_site_prop"] == list(
+            range(len(perturbed_structure))
+        )
 
     # Check calculation details
     assert len(result.calcs_reversed) == 1
@@ -180,6 +191,10 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
 
     Includes trajectory reporter and autobatcher.
     """
+    structure = ar_structure.copy()
+    structure.properties["my_prop"] = 1.5
+    structure.add_site_property("my_site_prop", list(range(len(structure))))
+
     n_systems = 2
     trajectory_reporter_dict = {
         "filenames": [tmp_path / f"md_{i}.h5md" for i in range(n_systems)],
@@ -202,7 +217,7 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
         model_kwargs={"sigma": 3.405, "epsilon": 0.0104, "compute_stress": True},
     )
 
-    job = maker.make([ar_structure] * n_systems)
+    job = maker.make([structure] * n_systems)
     response_dict = run_locally(job, ensure_success=True, root_dir=tmp_path)
     result = list(response_dict.values())[-1][1].output
 
@@ -215,6 +230,13 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert isinstance(result.structures, list)
     assert len(result.structures) == n_systems
     assert isinstance(result.structures[0], Structure)
+
+    # Check that structure properties and site properties survive the round trip
+    for final_structure in result.structures:
+        assert final_structure.properties == structure.properties
+        assert final_structure.site_properties["my_site_prop"] == list(
+            range(len(structure))
+        )
 
     # Check calculation details
     assert len(result.calcs_reversed) == 1
