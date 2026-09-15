@@ -349,6 +349,13 @@ Alternatively, users can accelerate the calculation of interatomic force constan
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
 
+#### hiPhive
+
+The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
+`hiPhive` can be installed with `pip install hiphive`.
+
+To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
+
 By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg and the `ALAMODE` code.
 
 To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).

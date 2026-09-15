@@ -63,25 +63,6 @@ class PhononMaker(BasePhononMaker):
         for harmonic phonon calculations. The default value is 0 and the number of
         displacements is automatically determined by the number of atoms in the
         supercell and its space group.
-    cal_anhar_fcs: bool
-        if set to True, anharmonic force constants(FCs) up to fourth-order FCs will
-        be calculated. The default value is False, and only harmonic phonons will
-        be calculated.
-    displacement_anhar: float
-        displacement distance for anharmonic force constants(FCs) up to fourth-order
-        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
-    num_disp_anhar: int
-        number of displacements to be generated using a random-displacement approach
-        for anharmonic phonon calculations. The default value is 0 and the number of
-        displacements is automatically determined by the number of atoms in the
-        supercell, cutoff distance for anharmonic FCs its space group. generally,
-        50 large-distance displacements are enough for most cases.
-    fcs_cutoff_radius: list
-        cutoff distance for anharmonic force constants(FCs) up to fourth-order FCs.
-        The default value is [-1, 12, 10], which means that the cutoff distance for
-        second-order FCs is the Wigner-Seitz cell boundary and the cutoff distance
-        for third-order FCs is 12 Borh, and the cutoff distance for fourth-order FCs
-        is 10 Bohr. Generally, the default value is good enough.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 14.0 A. In most cases, the default value is good
@@ -149,12 +130,10 @@ class PhononMaker(BasePhononMaker):
     name: str = "phonon"
     sym_reduce: bool = True
     symprec: float = SETTINGS.PHONON_SYMPREC
-    cal_anhar_fcs: bool = False
     displacement: float = 0.01
-    displacement_anhar: float = 0.08
     num_displaced_supercells: int = 0
-    num_disp_anhar: int = 0
-    fcs_cutoff_radius: list = field(default_factory=lambda: [-1, 12, 10])
+    cutoff_2nd: float | None = None
+    fit_method: str = "rfe"
     min_length: float | None = 8.0
     max_atoms: float | None = 200
     force_90_degrees: bool = True

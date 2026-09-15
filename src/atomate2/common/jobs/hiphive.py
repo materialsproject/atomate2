@@ -1,10 +1,8 @@
-"""Jobs for running phonon calculations with phonopy and pheasy."""
+"""Jobs for running phonon calculations with phonopy and hiPhive."""
 
 from __future__ import annotations
 
 import logging
-import shlex
-import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -12,13 +10,16 @@ import numpy as np
 from ase.io import read as ase_read
 from emmet.core import __version__ as _emmet_core_version
 from emmet.core.phonon import PhononBSDOSDoc
-from hiphive import ClusterSpace, ForceConstantPotential, enforce_rotational_sum_rules
-from hiphive import ForceConstants as HiPhiveForceConstants
+from hiphive import (
+    ClusterSpace,
+    ForceConstantPotential,
+    StructureContainer,
+    enforce_rotational_sum_rules,
+)
 from hiphive.cutoffs import estimate_maximum_cutoff
-from hiphive.utilities import extract_parameters
 from jobflow import job
 from packaging.version import parse as parse_version
-from phonopy.file_IO import parse_FORCE_CONSTANTS, write_force_constants_to_hdf5
+from phonopy.file_IO import parse_FORCE_CONSTANTS
 from phonopy.interface.vasp import write_vasp
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
@@ -29,6 +30,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
+from trainstation import Optimizer
 
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
@@ -38,6 +40,7 @@ from atomate2.common.jobs.phonons import (
 )
 
 if TYPE_CHECKING:
+    from ase.atoms import Atoms
     from emmet.core.math import Matrix3D
 
 logger = logging.getLogger(__name__)
@@ -46,9 +49,6 @@ try:
     from alm import ALM
 except ImportError:
     ALM = None
-
-# CODATA 2018: 1 Angstrom = 1 / 0.529177210903 Bohr
-ANGSTROM_TO_BOHR = 1.8897261246257702
 
 _DEFAULT_FILE_PATHS = {
     "force_displacements": "dataset_forces.npy",
@@ -66,6 +66,53 @@ _DEFAULT_FILE_PATHS = {
     "anharmonic_force_matrix": "force_matrix_anhar.npy",
     "website": "phonon_website.json",
 }
+
+
+def _fit_force_constants(
+    prim: Atoms,
+    supercell: Atoms,
+    atoms_list: list[Atoms],
+    cutoff: float,
+    fit_method: str,
+    fc_filename: str,
+) -> tuple[int, float]:
+    """Fit second-order force constants with hiPhive and write them to file.
+
+    Parameters
+    ----------
+    prim: Atoms
+        Unit cell the cluster space is built from.
+    supercell: Atoms
+        Ideal supercell the force constants are produced for.
+    atoms_list: list[Atoms]
+        Displaced supercells carrying "displacements" and "forces" arrays.
+    cutoff: float
+        Second-order cutoff in Angstrom.
+    fit_method: str
+        Regressor name passed to the trainstation optimizer.
+    fc_filename: str
+        Path the phonopy-format force constants are written to.
+
+    Returns
+    -------
+    tuple[int, float]
+        Number of free parameters and the training RMSE.
+    """
+    cs = ClusterSpace(prim, [cutoff])
+    container = StructureContainer(cs)
+    for atoms in atoms_list:
+        container.add_structure(atoms)
+
+    opt = Optimizer(container.get_fit_data(), fit_method=fit_method, train_size=1.0)
+    opt.train()
+
+    # Rotational sum rules. hiPhive equivalent of pheasy --rasr BHH.
+    parameters = enforce_rotational_sum_rules(
+        cs, opt.parameters, ["Huang", "Born-Huang"], alpha=1e-6
+    )
+    fcp = ForceConstantPotential(cs, parameters)
+    fcp.get_force_constants(supercell).write_to_phonopy(fc_filename, format="text")
+    return cs.n_dofs, opt.rmse_train
 
 
 @job
@@ -112,10 +159,6 @@ def generate_phonon_displacements(
     supercell_matrix: np.array,
     displacement: float,
     num_displaced_supercells: int,
-    cal_anhar_fcs: bool,
-    displacement_anhar: float,
-    num_disp_anhar: int,
-    fcs_cutoff_radius: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -126,7 +169,6 @@ def generate_phonon_displacements(
 ) -> list[Structure]:
     """Generate small-distance perturbed structures with phonopy based on two ways.
 
-    (we will directly use the pheasy to generate the supercell in the near future)
     1. finite-displacment method (one displaced atom) when the displacement number
     is less than 3. 2. random-displacement method (all-displaced atoms) when the
     displacement number is more than 3.
@@ -141,10 +183,6 @@ def generate_phonon_displacements(
         displacement in Angstrom (default: 0.01)
     num_displaced_supercells: int
         number of displaced supercells defined by users
-    cal_anhar_fcs: bool
-        TODO : docstr
-    displacement_anhar: float
-        TODO : docstr
     sym_reduce: bool
         if True, symmetry will be used to generate displacements
     symprec: float
@@ -234,39 +272,6 @@ def generate_phonon_displacements(
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
 
-    # Here, the ALAMODE code is used to determine the number of
-    # third and fourth-order FCs are needed for the supercell
-    if cal_anhar_fcs:
-        # Due to the cutoff radius of the force constants use the unit of Bohr in ALM,
-        # we need to convert the cutoff radius from Angstrom to Bohr.
-        with ALM(lattice * ANGSTROM_TO_BOHR, positions, numbers) as alm:
-            # Define the force constants up to fourth order with a list of
-            # cutoff radius
-            alm.define(3, fcs_cutoff_radius)
-            # Perform symmetry analysis and suggest irreducible force constants.
-            alm.suggest()
-            # Get the number of irreducible elements for both 3RD- and 4TH-order
-            # force constants
-            n_rd_anh = alm._get_number_of_irred_fc_elements(  # noqa: SLF001
-                2
-            ) + alm._get_number_of_irred_fc_elements(3)  # noqa: SLF001
-            # we can determine how many displaced supercells we need to use to extract
-            # the 3rd and 4th order force constants, and we can add a scaling factor
-            # to reduce the number of displaced supercells due to we use the lasso
-            # technique.
-            num_d_anh = int(np.ceil(n_rd_anh / (3.0 * natom)))
-            num_dis_cells_anhar = num_disp_anhar if num_disp_anhar != 0 else num_d_anh
-
-        num_dis_cells_anhar = 20
-        # generate the supercells for anharmonic force constants
-        phonon.generate_displacements(
-            distance=displacement_anhar,
-            number_of_snapshots=num_dis_cells_anhar,
-            random_seed=random_seed,
-        )
-        supercells = phonon.supercells_with_displacements
-        displacements += [get_pmg_structure(cell) for cell in supercells]
-
     # add the equilibrium structure to the list for calculating
     # the residual forces.
     displacements.append(get_pmg_structure(phonon.supercell))
@@ -281,12 +286,6 @@ def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
     displacement: float,
-    cal_anhar_fcs: bool,
-    fcs_cutoff_radius: list[int],
-    renorm_phonon: bool,
-    cal_ther_cond: bool,
-    ther_cond_mesh: list[int],
-    ther_cond_temp: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -296,6 +295,8 @@ def generate_frequencies_eigenvectors(
     total_dft_energy: float,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
+    cutoff_2nd: float | None = None,
+    fit_method: str = "rfe",
     **kwargs,
 ) -> PhononBSDOSDoc:
     """
@@ -327,6 +328,12 @@ def generate_frequencies_eigenvectors(
         The high-frequency dielectric constant
     born: Matrix3D
         Born charges
+    cutoff_2nd: float | None
+        second-order cutoff in Angstrom for the hiPhive cluster space. If
+        None, the largest cutoff the supercell allows is used.
+    fit_method: str
+        regressor passed to the trainstation optimizer, e.g. "rfe",
+        "least-squares" or "lasso".
     verbose : bool = False
         Whether to log error messages.
     kwargs: dict
@@ -344,7 +351,8 @@ def generate_frequencies_eigenvectors(
         verbose=False,
     )
 
-    # Write the POSCAR and SPOSCAR files for the input of pheasy code
+    # Write POSCAR and SPOSCAR. hiPhive reads them as the unit cell the
+    # cluster space is built on and the supercell the fit targets.
     supercell = phonon._supercell  # noqa: SLF001
     write_vasp("POSCAR", get_phonopy_structure(structure))
     write_vasp("SPOSCAR", supercell)
@@ -402,37 +410,7 @@ def generate_frequencies_eigenvectors(
 
     dataset_disps_array_use = dataset_disps_array_rr_cartesian[:-1, :, :]
 
-    # separate the dataset into harmonic and anharmonic parts
     num_har = dataset_disps_array_use.shape[0]
-    if cal_anhar_fcs:
-        if not ALM:
-            raise ImportError(
-                "Error importing ALM. Please ensure the 'alm' library is installed."
-            )
-
-        supercell_ph = phonon.supercell
-        lattice = supercell_ph.cell
-        positions = supercell_ph.scaled_positions
-        numbers = supercell_ph.numbers
-        natom = len(numbers)
-
-        # get the number of free parameters of 2ND FCs from ALM, labeled as n_fp
-        with ALM(lattice, positions, numbers) as alm:
-            alm.define(1)
-            alm.suggest()
-            n_fp = alm._get_number_of_irred_fc_elements(1)  # noqa: SLF001
-
-        # get the number of displaced supercells based on the
-        # number of free parameters
-        num = int(np.ceil(n_fp / (3.0 * natom)))
-
-        # get the number of displaced supercells from phonopy to compared
-        # with the number of 3, if the number of displaced supercells is
-        # less than 3, we will use the finite displacement method to generate
-        # the supercells. Otherwise, we will use the random displacement
-        # method to generate the supercells.
-        num_disp_f = len(phonon.displacements)
-        num_har = int(np.ceil(num * 1.8)) if num_disp_f > 3 else num_disp_f
 
     np.save(
         _DEFAULT_FILE_PATHS["harmonic_displacements"],
@@ -475,172 +453,49 @@ def generate_frequencies_eigenvectors(
     prim = ase_read("POSCAR")
     supercell = ase_read("SPOSCAR")
 
-    # Create the clusters and orbitals for second order force constants
-    # For the variables: --w, --nbody, they are used to specify the order of the
-    # force constants. in the near future, we will add the option to specify the
-    # order of the force constants. And these two variables can be defined by the
-    # users.
-    pheasy_cmd_1 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} "
-        f"-s -w 2 --symprec {float(symprec)} --nbody 2"
+    # Collect the displaced supercells and their forces. The displacements
+    # are already residual-corrected and in Cartesian Angstrom, so they are
+    # used as they are.
+    atoms_list = []
+    for disp, force in zip(
+        dataset_disps_array_use[:num_har],
+        dataset_forces_array_disp[:num_har],
+        strict=True,
+    ):
+        # Positions stay at the ideal supercell. hiPhive aligns that cell
+        # against the primitive cell to map the orbits, which only works
+        # while the symmetry is intact. The displacement is carried in the
+        # array, not in the coordinates.
+        atoms = supercell.copy()
+        atoms.new_array("displacements", np.ascontiguousarray(disp))
+        atoms.new_array("forces", np.ascontiguousarray(force))
+        atoms_list.append(atoms)
+
+    # Random displacements give an underdetermined system, so a sparse
+    # regressor is used above 3 configurations. Below that the dataset comes
+    # from the finite-displacement path and least squares is enough. This is
+    # the same criterion pheasy applies.
+    fit_method_2nd = fit_method if len(phonon.displacements) > 3 else "least-squares"
+
+    # When no cutoff is given, use the largest the supercell allows. That is
+    # the hiPhive analogue of the Wigner-Seitz boundary pheasy defaults to.
+    max_cutoff = estimate_maximum_cutoff(supercell) - 0.01
+    cutoff = max_cutoff if cutoff_2nd is None else min(cutoff_2nd, max_cutoff)
+
+    n_dofs, rmse = _fit_force_constants(
+        prim,
+        supercell,
+        atoms_list,
+        cutoff,
+        fit_method_2nd,
+        _DEFAULT_FILE_PATHS["force_constants"],
     )
+    logger.info(f"Fit at {cutoff:.2f} A: {n_dofs} parameters, RMSE {rmse}")
 
-    # Create the null space to further reduce the free parameters for
-    # specific force constants and make them physically correct.
-    pheasy_cmd_2 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} -c --symprec "
-        f"{float(symprec)} -w 2"
-    )
-
-    # Generate the Compressive Sensing matrix,i.e., displacement matrix
-    # for the input of machine leaning method.i.e., LASSO,
-    pheasy_cmd_3 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} -w 2 -d "
-        f"--symprec {float(symprec)} "
-        f"--ndata {int(num_har)} --disp_file "
-        f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
-    )
-
-    # Here we set a criteria to determine which method to use to generate the
-    # force constants. If the number of displacements is larger than 3, we
-    # will use the LASSO method to generate the force constants. Otherwise,
-    # we will use the least-squred method to generate the force constants.
-    if len(phonon.displacements) > 3:
-        # Calculate the force constants using the LASSO method due to the
-        # random-displacement method Obviously, the rotaional invariance
-        # constraint, i.e., tag: --rasr BHH, is enforced during the
-        # fitting process.
-        pheasy_cmd_4 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f --full_ifc "
-            f"-w 2 --symprec {float(symprec)} "
-            f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-        )
-
-    else:
-        # Calculate the force constants using the least-squred method
-        pheasy_cmd_4 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f --full_ifc "
-            f"-w 2 --symprec {float(symprec)} "
-            f"--rasr BHH --ndata {int(num_har)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-        )
-
-    logger.info("Start running pheasy in cluster")
-
-    subprocess.call(shlex.split(pheasy_cmd_1))
-    subprocess.call(shlex.split(pheasy_cmd_2))
-    subprocess.call(shlex.split(pheasy_cmd_3))
-    subprocess.call(shlex.split(pheasy_cmd_4))
-
-    # When this code is run on Github tests, it is failing because it is
-    # not able to find the FORCE_CONSTANTS file. This is because the file is
-    # somehow getting generated in some temp directory. Can you fix the bug?
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
 
-    if cal_anhar_fcs and fc_file.exists():
-        np.save(
-            _DEFAULT_FILE_PATHS["anharmonic_displacements"],
-            dataset_disps_array_use[num_har:, :, :],
-        )
-        np.save(
-            _DEFAULT_FILE_PATHS["anharmonic_force_matrix"],
-            dataset_forces_array_disp[num_har:, :, :],
-        )
-        num_anhar = dataset_forces_array_disp.shape[0] - num_har
-
-        # We next begin to generate the anharmonic force constants up to fourth
-        # order using the LASSO method
-        pheasy_cmd_5 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -s -w 4 --symprec "
-            f"{float(symprec)} "
-            f"--nbody 2 3 3 --c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)} "
-            f"--c4 {float(fcs_cutoff_radius[2] / ANGSTROM_TO_BOHR)}"
-        )
-
-        pheasy_cmd_6 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -c --symprec "
-            f"{float(symprec)} -w 4"
-        )
-        pheasy_cmd_7 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -w 4 -d --symprec "
-            f"{float(symprec)} "
-            f"--ndata {int(num_anhar)} --disp_file "
-            f"--disp_matrix_file {_DEFAULT_FILE_PATHS['anharmonic_displacements']}"
-        )
-        pheasy_cmd_8 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f -w 4 --fix_fc2 "
-            f"--symprec {float(symprec)} "
-            f"--ndata {int(num_anhar)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['anharmonic_force_matrix']}"
-        )
-
-        subprocess.call(shlex.split(pheasy_cmd_5))
-        subprocess.call(shlex.split(pheasy_cmd_6))
-        subprocess.call(shlex.split(pheasy_cmd_7))
-        subprocess.call(shlex.split(pheasy_cmd_8))
-
-    # begin to renormzlize the phonon energies
-    if renorm_phonon:
-        pheasy_cmd_9 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f -w 4 --fix_fc2 "
-            f"--hdf5 --symprec {float(symprec)} "
-            f"--ndata {int(num_anhar)}"
-        )
-
-        subprocess.call(shlex.split(pheasy_cmd_9))
-
-        # write the born charges and dielectric constant to the pheasy format
-
-    # begin to convert the force constants to the phonopy and phono3py format
-    # for the further lattice thermal conductivity calculations
-    if cal_ther_cond and fc_file.exists():
-        # convert the 2ND order force constants to the phonopy format
-        fc_phonopy_text = parse_FORCE_CONSTANTS(filename=fc_file)
-        write_force_constants_to_hdf5(fc_phonopy_text, filename="fc2.hdf5")
-
-        # convert the 3RD order force constants to the phonopy format
-
-        prim_hiphive = ase_read("POSCAR")
-        supercell_hiphive = ase_read("SPOSCAR")
-        fcs = HiPhiveForceConstants.read_shengBTE(
-            supercell_hiphive, "FORCE_CONSTANTS_3RD", prim_hiphive
-        )
-        fcs.write_to_phono3py("fc3.hdf5")
-
-        phono3py_cmd = (
-            f"phono3py --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} {int(supercell_matrix[2][2])} "
-            f"--fc2 --fc3 --br --isotope --wigner "
-            f"--mesh {ther_cond_mesh[0]} {ther_cond_mesh[1]} {ther_cond_mesh[2]} "
-            f"--tmin {ther_cond_temp[0]} --tmax {ther_cond_temp[1]} "
-            f"--tstep {ther_cond_temp[2]}"
-        )
-
-        subprocess.call(shlex.split(phono3py_cmd))
-
     if fc_file.exists():
-        # Read the force constants from the output file of pheasy code
+        # Read back the force constants written by the hiPhive fit
         force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
         phonon.force_constants = force_constants
         # symmetrize the force constants to make them physically correct based on
@@ -675,129 +530,34 @@ def generate_frequencies_eigenvectors(
         tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
     )
 
-    # If imaginary modes are present, we first use the hiphive code to enforce
-    # some symmetry constraints to eliminate the imaginary modes (generally work
-    # for small imaginary modes near Gamma point). If the imaginary modes are
-    # still present, we will use the pheasy code to generate the force constants
-    # using a shorter cutoff (10 A) to eliminate the imaginary modes, also we
-    # just want to remove the imaginary modes near Gamma point. In the future,
-    # we will only use the pheasy code to do the job.
-
+    # If imaginary modes remain, refit at a shorter cutoff. The smaller
+    # cluster space has fewer free parameters and is better conditioned,
+    # which usually clears small imaginary modes near Gamma. pheasy used a
+    # 10 A cutoff for the same purpose.
     if imaginary_modes:
-        # Define a cluster space using the largest cutoff you can
-        max_cutoff = estimate_maximum_cutoff(supercell) - 0.01
-        cutoffs = [max_cutoff]  # only second order needed
-        cs = ClusterSpace(prim, cutoffs)
-
-        # import the phonopy force constants using the correct supercell also
-        # provided by phonopy
-        fcs = HiPhiveForceConstants.read_phonopy(supercell, "FORCE_CONSTANTS")
-
-        # Find the parameters that best fits the force constants given you
-        # cluster space
-        parameters = extract_parameters(fcs, cs)
-
-        # Enforce the rotational sum rules
-        parameters_rot = enforce_rotational_sum_rules(
-            cs, parameters, ["Huang", "Born-Huang"], alpha=1e-6
-        )
-
-        # use the new parameters to make a fcp and then create the force
-        # constants and write to a phonopy file
-        fcp = ForceConstantPotential(cs, parameters_rot)
-        fcs = fcp.get_force_constants(supercell)
+        short_cutoff = min(10.0, max_cutoff)
         new_fc_file = f"{_DEFAULT_FILE_PATHS['force_constants']}_short_cutoff"
-        fcs.write_to_phonopy(new_fc_file, format="text")
+        n_dofs, rmse = _fit_force_constants(
+            prim,
+            supercell,
+            atoms_list,
+            short_cutoff,
+            fit_method_2nd,
+            new_fc_file,
+        )
+        logger.info(f"Refit at {short_cutoff:.2f} A: {n_dofs} params, RMSE {rmse}")
 
-        force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
-        phonon.force_constants = force_constants
+        phonon.force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
         phonon.symmetrize_force_constants()
-
-        bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
-            phonon,
-            kpath_dict,
-            kpath_concrete,
-            _DEFAULT_FILE_PATHS["band_structure"],
-            has_nac=born is not None,
-            npoints_band=kwargs.get("npoints_band", 101),
-            with_eigenvectors=True,
-            filename_bs=bs_plot_file,
-            units=kwargs.get("units", "THz"),
-            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
-        )
-
-    # Using a shorter cutoff (10 A) to generate the force constants to
-    # eliminate the imaginary modes near Gamma point in pheasy code
-    if imaginary_modes:
-        pheasy_cmd_11 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -s -w 2 --c2 "
-            f"10.0 --symprec {float(symprec)} "
-            f"--nbody 2"
-        )
-
-        pheasy_cmd_12 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -c --symprec "
-            f"{float(symprec)} --c2 10.0 -w 2"
-        )
-
-        pheasy_cmd_13 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -w 2 -d --symprec "
-            f"{float(symprec)} --c2 10.0 "
-            f"--ndata {int(num_har)} --disp_file"
-        )
-
-        phonon.generate_displacements(distance=displacement)
-
-        if len(phonon.displacements) > 3:
-            pheasy_cmd_14 = (
-                f"pheasy --dim {int(supercell_matrix[0][0])} "
-                f"{int(supercell_matrix[1][1])} "
-                f"{int(supercell_matrix[2][2])} -f --c2 10.0 "
-                f"--full_ifc -w 2 --symprec {float(symprec)} "
-                f"-l LASSO --std --rasr BHH --ndata {int(num_har)}"
-            )
-
-        else:
-            pheasy_cmd_14 = (
-                f"pheasy --dim {int(supercell_matrix[0][0])} "
-                f"{int(supercell_matrix[1][1])} "
-                f"{int(supercell_matrix[2][2])} -f --full_ifc "
-                f"--c2 10.0 -w 2 --symprec {float(symprec)} "
-                f"--rasr BHH --ndata {int(num_har)}"
-            )
-
-        subprocess.call(shlex.split(pheasy_cmd_11))
-        subprocess.call(shlex.split(pheasy_cmd_12))
-        subprocess.call(shlex.split(pheasy_cmd_13))
-        subprocess.call(shlex.split(pheasy_cmd_14))
-
-        force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
-        phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
-
         phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
 
-        # get phonon band structure
-        kpath_dict, kpath_concrete = _get_kpath(
-            structure=get_pmg_structure(phonon.primitive),
-            kpath_scheme=kpath_scheme,
-            symprec=symprec,
-        )
-
-        # phonon band structures will always be computed
         bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
             phonon,
             kpath_dict,
             kpath_concrete,
             _DEFAULT_FILE_PATHS["band_structure"],
             has_nac=born is not None,
-            npoints_band=kwargs.get("npoints_band", 101),
+            npoints_band=npoints_band,
             with_eigenvectors=True,
             filename_bs=bs_plot_file,
             units=kwargs.get("units", "THz"),

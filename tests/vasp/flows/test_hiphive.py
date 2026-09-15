@@ -20,6 +20,8 @@ from atomate2.vasp.powerups import update_user_incar_settings
 
 
 def test_hiphive_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir):
+    # The hiPhive flow generates the same displaced supercells as the pheasy
+    # flow, so the reference VASP data is shared rather than duplicated.
     # mapping from job name to directory containing test files
     ref_paths = {
         "tight relax 1": "Si_pheasy/tight_relax_1",
@@ -50,7 +52,6 @@ def test_hiphive_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir
     job = PhononMaker(
         force_diagonal=True,
         min_length=12,
-        cal_anhar_fcs=False,
         create_thermal_displacements=True,
         # use_symmetrized_structure="primitive"
     ).make(structure=si_struct)

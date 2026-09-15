@@ -78,25 +78,12 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         for harmonic phonon calculations. The default value is 0 and the number of
         displacements is automatically determined by the number of atoms in the
         supercell and its space group.
-    cal_anhar_fcs: bool
-        if set to True, anharmonic force constants(FCs) up to fourth-order FCs will
-        be calculated. The default value is False, and only harmonic phonons will
-        be calculated.
-    displacement_anhar: float
-        displacement distance for anharmonic force constants(FCs) up to fourth-order
-        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
-    num_disp_anhar: int
-        number of displacements to be generated using a random-displacement approach
-        for anharmonic phonon calculations. The default value is 0 and the number of
-        displacements is automatically determined by the number of atoms in the
-        supercell, cutoff distance for anharmonic FCs its space group. generally,
-        50 large-distance displacements are enough for most cases.
-    fcs_cutoff_radius: list
-        cutoff distance for anharmonic force constants(FCs) up to fourth-order FCs.
-        The default value is [-1, 12, 10], which means that the cutoff distance for
-        second-order FCs is the Wigner-Seitz cell boundary and the cutoff distance
-        for third-order FCs is 12 Borh, and the cutoff distance for fourth-order FCs
-        is 10 Bohr. Generally, the default value is good enough.
+    cutoff_2nd: float | None
+        second-order cutoff in Angstrom for the hiPhive cluster space. If None,
+        the largest cutoff the supercell allows is used.
+    fit_method: str
+        regressor used to fit the force constants. Passed to the trainstation
+        optimizer. Common choices are "rfe", "least-squares" and "lasso".
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 14.0 A. In most cases, the default value is good
@@ -165,17 +152,8 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
     symprec: float = 1e-3
     displacement: float = 0.01
     num_displaced_supercells: int = 0
-    cal_anhar_fcs: bool = False
-    displacement_anhar: float = 0.08
-    num_disp_anhar: int = 0
-    fcs_cutoff_radius: list = field(
-        default_factory=lambda: [-1, 12, 10]
-    )  # units in Bohr
-    renorm_phonon: bool = False
-    renorm_temp: list = field(default_factory=lambda: [100, 700, 100])
-    cal_ther_cond: bool = False
-    ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
-    ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
+    cutoff_2nd: float | None = None
+    fit_method: str = "rfe"
     min_length: float | None = 8.0
     max_atoms: float | None = 200
     force_90_degrees: bool = True
@@ -217,10 +195,6 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             num_displaced_supercells=self.num_displaced_supercells,
-            cal_anhar_fcs=self.cal_anhar_fcs,
-            displacement_anhar=self.displacement_anhar,
-            num_disp_anhar=self.num_disp_anhar,
-            fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
@@ -301,17 +275,12 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
-            cal_anhar_fcs=self.cal_anhar_fcs,
-            fcs_cutoff_radius=self.fcs_cutoff_radius,
-            renorm_phonon=self.renorm_phonon,
-            renorm_temp=self.renorm_temp,
-            cal_ther_cond=self.cal_ther_cond,
-            ther_cond_mesh=self.ther_cond_mesh,
-            ther_cond_temp=self.ther_cond_temp,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
+            cutoff_2nd=self.cutoff_2nd,
+            fit_method=self.fit_method,
             code=self.code,
             structure=structure,
             displacement_data=displacement_calcs.output,
