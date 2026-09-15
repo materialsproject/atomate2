@@ -324,6 +324,13 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        # TorchSim model backends have conflicting dependencies (chiefly e3nn
+        # pins), so they are split into separate dep-groups, mirroring the
+        # forcefields dep-groups above.
+        dep-group: ["mace", "generic"]
 
     steps:
       - name: Check out repo
@@ -344,9 +351,9 @@ jobs:
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          uv pip install torch --index-url https://download.pytorch.org/whl/cpu
-          uv pip install .[torchsim,ase,phonons] --group tests
-          uv pip install mace-torch>=0.3.3
+          uv pip install .[torchsim-${{ matrix.dep-group }},ase,phonons] --group tests \
+            --extra-index-url https://download.pytorch.org/whl/cpu \
+            --index-strategy unsafe-best-match
 
       - name: Test TorchSim
         env:
@@ -356,6 +363,7 @@ jobs:
           pytest --durations=5 -n auto tests/torchsim --cov=atomate2 --cov-report=xml
 
       - name: Test TorchSim notebook
+        if: matrix.dep-group == 'mace'
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
@@ -366,6 +374,7 @@ jobs:
         if: github.repository == 'materialsproject/atomate2'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          name: coverage-torchsim-${{ matrix.dep-group }}
           file: ./coverage.xml
 
   docs:
