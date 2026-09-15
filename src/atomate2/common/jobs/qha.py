@@ -60,7 +60,7 @@ def get_supercell_size(
     )
 
 
-@job
+@job(data=[EmmetPhononBSDOSDoc, Atomate2PhononBSDOSDoc])
 def get_phonon_jobs(
     phonon_maker: BasePhononMaker, eos_output: dict, supercell_matrix: list[list[float]]
 ) -> Flow:

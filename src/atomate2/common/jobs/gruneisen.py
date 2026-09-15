@@ -53,7 +53,7 @@ def shrink_expand_structure(structure: Structure, perc_vol: float) -> Response:
     return Response(output={"plus": plus_struct, "minus": minus_struct})
 
 
-@job
+@job(data=[EmmetPhononBSDOSDoc, Atomate2PhononBSDOSDoc])
 def run_phonon_jobs(
     opt_struct: dict,
     phonon_maker: BasePhononMaker = None,
