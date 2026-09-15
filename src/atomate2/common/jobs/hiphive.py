@@ -23,10 +23,12 @@ from phonopy.file_IO import parse_FORCE_CONSTANTS
 from phonopy.interface.vasp import write_vasp
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
+from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
@@ -50,6 +52,9 @@ try:
 except ImportError:
     ALM = None
 
+# Safety margin below hiPhive's maximum allowed cutoff, in Angstrom.
+_CUTOFF_MARGIN = 0.1
+
 _DEFAULT_FILE_PATHS = {
     "force_displacements": "dataset_forces.npy",
     "displacements": "dataset_disps.npy",
@@ -68,6 +73,26 @@ _DEFAULT_FILE_PATHS = {
 }
 
 
+def _idealize(atoms: Atoms, symprec: float) -> Atoms:
+    """Return a symmetry-idealized copy of a prototype cell.
+
+    hiPhive builds its cluster space from a prototype structure and assumes the
+    lattice satisfies the symmetry operations it detects. A relaxed cell does
+    not: vectors that should be identical differ in the eighth decimal. hiPhive
+    still reports the right space group, but orbit construction then fails to
+    match a translated cluster and raises "is not in list". Snapping the
+    prototype back onto its ideal lattice avoids that. The supercell carrying
+    the forces is deliberately left alone, since its atom order indexes the
+    force array, and hiPhive relates the two through `symprec` when it aligns
+    them.
+    """
+    structure = AseAtomsAdaptor.get_structure(atoms)
+    ideal = SpacegroupAnalyzer(
+        structure, symprec=symprec
+    ).get_primitive_standard_structure()
+    return AseAtomsAdaptor.get_atoms(ideal)
+
+
 def _fit_force_constants(
     prim: Atoms,
     supercell: Atoms,
@@ -75,6 +100,7 @@ def _fit_force_constants(
     cutoff: float,
     fit_method: str,
     fc_filename: str,
+    symprec: float,
 ) -> tuple[int, float]:
     """Fit second-order force constants with hiPhive and write them to file.
 
@@ -92,13 +118,17 @@ def _fit_force_constants(
         Regressor name passed to the trainstation optimizer.
     fc_filename: str
         Path the phonopy-format force constants are written to.
+    symprec: float
+        Symmetry tolerance for the cluster space. hiPhive defaults to 1e-5,
+        which is tighter than the rest of the workflow and can miss symmetry
+        in a relaxed cell, inflating the number of free parameters.
 
     Returns
     -------
     tuple[int, float]
         Number of free parameters and the training RMSE.
     """
-    cs = ClusterSpace(prim, [cutoff])
+    cs = ClusterSpace(_idealize(prim, symprec), [cutoff], symprec=symprec)
     container = StructureContainer(cs)
     for atoms in atoms_list:
         container.add_structure(atoms)
@@ -479,7 +509,9 @@ def generate_frequencies_eigenvectors(
 
     # When no cutoff is given, use the largest the supercell allows. That is
     # the hiPhive analogue of the Wigner-Seitz boundary pheasy defaults to.
-    max_cutoff = estimate_maximum_cutoff(supercell) - 0.01
+    # A hundredth of an Angstrom leaves no room against a bound computed in
+    # floating point, so keep a wider margin.
+    max_cutoff = estimate_maximum_cutoff(supercell) - _CUTOFF_MARGIN
     cutoff = max_cutoff if cutoff_2nd is None else min(cutoff_2nd, max_cutoff)
 
     n_dofs, rmse = _fit_force_constants(
@@ -489,6 +521,7 @@ def generate_frequencies_eigenvectors(
         cutoff,
         fit_method_2nd,
         _DEFAULT_FILE_PATHS["force_constants"],
+        symprec,
     )
     logger.info(f"Fit at {cutoff:.2f} A: {n_dofs} parameters, RMSE {rmse}")
 
@@ -544,6 +577,7 @@ def generate_frequencies_eigenvectors(
             short_cutoff,
             fit_method_2nd,
             new_fc_file,
+            symprec,
         )
         logger.info(f"Refit at {short_cutoff:.2f} A: {n_dofs} params, RMSE {rmse}")
 
