@@ -35,4 +35,4 @@ def test_qha(mock_vasp, clean_dir, si_diamond: Structure):
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(qha_maker, create_folders=True, ensure_success=True)
-    assert len(responses) == 9
+    assert len(responses) == 10
