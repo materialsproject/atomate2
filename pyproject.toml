@@ -64,7 +64,19 @@ ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 
 torchsim = [
-    "torch-sim-atomistic[symmetry]==0.6.0; python_version >= '3.12'"
+    "torch-sim-atomistic[symmetry]==0.6.1; python_version >= '3.12'"
+]
+
+# TorchSim's optional model backends pin to minimum versions to avoid the backend
+# from being absent. We also have to keep mace separate from the generic group
+# to avoid conflicts with e3nn versions.
+# ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the
+# current set of torchsim dependency groups.
+torchsim-mace = [
+    "torch-sim-atomistic[mace,symmetry]==0.6.1; python_version >= '3.12'"
+]
+torchsim-generic = [
+    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.1; python_version >= '3.12'"
 ]
 jdftx = ["pymatgen==2026.5.4"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
