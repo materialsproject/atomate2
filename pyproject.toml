@@ -36,7 +36,7 @@ dependencies = [
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
     "pymatgen-core>=2026.5.18",
-    "pymongo<=4.18.0",
+    "pymongo<=4.18.1",
 ]
 
 [project.optional-dependencies]
@@ -100,7 +100,7 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 #     "mattersim>=1.2.3", # need to be activated again
-    "wandb==0.29.0", # required for mattersim
+    "wandb==0.30.0", # required for mattersim
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
