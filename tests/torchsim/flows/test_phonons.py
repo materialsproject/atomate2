@@ -21,6 +21,8 @@ from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
 from atomate2.torchsim.flows.phonons import PhononMaker
 from atomate2.torchsim.schema import TorchSimModelType
 
+from ..conftest import _SKIP_MACE  # noqa: TID252
+
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
@@ -142,6 +144,7 @@ def test_torchsim_output_schema_compatibility(si_diamond: Structure, tmp_path) -
             assert len(row) == 3
 
 
+@pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")
 @pytest.mark.parametrize("socket", [True, False])
 def test_torchsim_phonon_maker_integration(
     si_structure: Structure, tmp_path, test_dir, socket: bool
