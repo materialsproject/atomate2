@@ -40,7 +40,7 @@ class Cp2kInputSet(InputSet):
     def __init__(
         self,
         cp2k_input: Cp2kInput,
-        optional_files: dict | None | Literal[False] = None,
+        optional_files: dict | Literal[False] | None = None,
     ) -> None:
         """Initialize the set.
 
@@ -187,7 +187,7 @@ class Cp2kInputGenerator(InputGenerator):
         self,
         structure: Structure | Molecule = None,
         prev_dir: str | Path = None,
-        optional_files: dict | None | Literal[False] = None,
+        optional_files: dict | Literal[False] | None = None,
     ) -> Cp2kInputSet:
         """Get a CP2K input set.
 

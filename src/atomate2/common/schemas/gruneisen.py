@@ -23,7 +23,7 @@ from pymatgen.phonon.gruneisen import (
 from pymatgen.phonon.plotter import GruneisenPhononBSPlotter, GruneisenPlotter
 from typing_extensions import Self
 
-from atomate2.common.schemas.phonons import PhononBSDOSDoc
+from atomate2.common.jobs.phonons import _get_kpath
 
 logger = logging.getLogger(__name__)
 
@@ -143,11 +143,16 @@ class GruneisenParameterDocument(StructureMetadata):
         .GruneisenParameterDocument
         """
         ground = phonopy.load(
-            Path(phonopy_yaml_paths_dict["ground"]) / "ground_phonopy.yaml"
+            Path(phonopy_yaml_paths_dict["ground"]) / "ground_phonopy.yaml",
+            primitive_matrix="P",
         )
-        plus = phonopy.load(Path(phonopy_yaml_paths_dict["plus"]) / "plus_phonopy.yaml")
+        plus = phonopy.load(
+            Path(phonopy_yaml_paths_dict["plus"]) / "plus_phonopy.yaml",
+            primitive_matrix="P",
+        )
         minus = phonopy.load(
-            Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml"
+            Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml",
+            primitive_matrix="P",
         )
         gru = PhonopyGruneisen(phonon=ground, phonon_plus=plus, phonon_minus=minus)
         if type(mesh) is tuple:
@@ -201,7 +206,7 @@ class GruneisenParameterDocument(StructureMetadata):
             img_format=compute_gruneisen_param_kwargs.get("img_format", "pdf"),
         )
         # get phonon band structure
-        kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
+        kpath_dict, kpath_concrete = _get_kpath(
             structure=structure, kpath_scheme=kpath_scheme, symprec=symprec
         )
         qpoints, _connections = get_band_qpoints_and_path_connections(

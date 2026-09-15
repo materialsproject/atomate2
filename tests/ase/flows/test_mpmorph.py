@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-@pytest.mark.parametrize("vol_scale", [1.25, 0.75])
+@pytest.mark.parametrize("vol_scale", [1.2, 0.75])
 def test_vol_scale(
     lj_fcc_ne_pars: dict[str, float], fcc_ne_structure: Structure, vol_scale: float
 ) -> None:

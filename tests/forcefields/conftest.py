@@ -44,7 +44,7 @@ def get_deepmd_pretrained_model_path(test_dir: Path) -> Path:
     file_url = "https://raw.github.com/sliutheorygroup/UniPero/main/model/graph.pb"
     local_path = tempfile.NamedTemporaryFile(suffix=".pb")  # noqa : SIM115
     ref_md5 = "2814ae7f2eb1c605dd78f2964187de40"
-    _, http_message = urllib.request.urlretrieve(file_url, local_path.name)  # noqa: S310
+    _, http_message = urllib.request.urlretrieve(file_url, local_path.name)
     if "Content-Type: text/html" in http_message:
         raise RuntimeError(f"Failed to download from: {file_url}")
 

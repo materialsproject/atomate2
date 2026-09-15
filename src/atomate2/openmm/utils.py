@@ -181,9 +181,11 @@ def generate_opls_xml(
 
                 # Run LigParGen via Shifter / Docker / Apptainer
                 lpg_cmd = [
-                    f"ligpargen -n {name} -p {name} "
-                    f"-r {name} -c {charge} -o {checkopt} "
-                    f"-cgen {charge_method} -s '{smiles}'"
+                    (
+                        f"ligpargen -n {name} -p {name} "
+                        f"-r {name} -c {charge} -o {checkopt} "
+                        f"-cgen {charge_method} -s '{smiles}'"
+                    )
                 ]
                 run_container = (
                     f"{os.environ['CONTAINER_SOFTWARE']} "

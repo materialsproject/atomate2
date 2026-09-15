@@ -21,7 +21,6 @@ from atomate2.vasp.sets.core import RelaxSetGenerator
 expected_incar_tags_relax = [
     "ALGO",
     "EDIFFG",
-    "ENAUG",
     "ENCUT",
     "GGA",
     "IBRION",

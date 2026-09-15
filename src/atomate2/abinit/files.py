@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 ALL_ABIEXTS = abi_extensions()
 
 
-def fname2ext(filepath: Path | str) -> None | str:
+def fname2ext(filepath: Path | str) -> str | None:
     """Get the abinit extension of a given filename.
 
     This will return None if no extension is found.

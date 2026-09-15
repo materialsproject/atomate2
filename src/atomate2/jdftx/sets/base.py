@@ -64,7 +64,7 @@ class JdftxInputGenerator(InputGenerator):
     user_settings: dict = field(default_factory=dict)
     coulomb_truncation: bool = False
     auto_kpoint_density: int = 1000
-    potential: None | float = None
+    potential: float | None = None
     calc_type: str = "bulk"
     pseudopotentials: str = "GBRV"
     config_dict: dict = field(default_factory=lambda: _GENERATION_CONFIG)

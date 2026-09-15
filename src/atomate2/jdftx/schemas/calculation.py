@@ -189,7 +189,7 @@ class CalculationOutput(BaseModel):
                 if kwargs.get("store_trajectory", True)
                 else None
             ),
-            parameters=jdftxoutput.to_dict(),
+            parameters=jdftxoutput.as_dict(),
         )
 
 
