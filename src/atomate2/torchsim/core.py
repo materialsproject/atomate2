@@ -377,9 +377,14 @@ def pick_model(
             base_model = MaceModel(model=model_path, **model_kwargs)
 
         case TorchSimModelType.MATTERSIM:
+            from mattersim.forcefield.potential import Potential
             from torch_sim.models.mattersim import MatterSimModel
 
-            base_model = MatterSimModel(model=model_path, **model_kwargs)
+            model_instance = Potential.from_checkpoint(
+                load_path=model_path,
+                load_training_state=False,
+            )
+            base_model = MatterSimModel(model=model_instance, **model_kwargs)
 
         case TorchSimModelType.METATOMIC:
             from torch_sim.models.metatomic import MetatomicModel

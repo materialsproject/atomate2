@@ -52,6 +52,8 @@ mp = ["mp-api>=0.37.5"]
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
 phonons = ["phonopy>=2.43,<4", "seekpath>=2.0.0"]
+pheasy = ["hiphive==1.3.1", "numpy<=2.2", "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@support-disp-force-matrix-input"]
+alamode = ["alm @ git+https://github.com/ttadano/ALM.git@develop#subdirectory=python"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -64,7 +66,22 @@ ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 
 torchsim = [
-    "torch-sim-atomistic[symmetry]==0.6.0; python_version >= '3.12'"
+    "torch-sim-atomistic[symmetry]==0.6.1; python_version >= '3.12'"
+]
+
+# TorchSim's optional model backends pin to minimum versions to avoid the backend
+# from being absent. We also have to keep mace separate from the generic group
+# to avoid conflicts with e3nn versions. Note that the groups are different
+# from the ones used for the forcefields backend.
+
+# ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the
+# current set of torchsim dependency groups.
+torchsim-mace = [
+    "torch-sim-atomistic[mace,symmetry]==0.6.1; python_version >= '3.12'"
+]
+# mattersim can be added to torchsim-generic once they clean their dependencies
+torchsim-generic = [
+    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.1; python_version >= '3.12'"
 ]
 jdftx = ["pymatgen==2026.5.4"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]

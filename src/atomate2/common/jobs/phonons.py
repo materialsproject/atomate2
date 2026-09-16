@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import contextlib
+import copy
 import logging
 import warnings
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 try:
@@ -15,19 +17,33 @@ except ImportError as exc:
     ) from exc
 
 import numpy as np
+from emmet.core import __version__ as _emmet_core_version
+from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
+from packaging.version import parse as parse_version
+from phonopy import Phonopy
+from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
+from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
-from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
+from pymatgen.io.phonopy import (
+    get_ph_bs_symm_line,
+    get_ph_dos,
+    get_phonopy_structure,
+    get_pmg_structure,
+)
+from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
+from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
+from pymatgen.symmetry.bandstructure import HighSymmKpath
+from pymatgen.symmetry.kpath import KPathSeek
 
-from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
+from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
+from atomate2.common.schemas.phonons import get_factor
 from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -35,6 +51,111 @@ if TYPE_CHECKING:
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 logger = logging.getLogger(__name__)
+
+
+def _get_kpath(
+    structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
+) -> tuple:
+    """Get high-symmetry points in k-space in phonopy format.
+
+    Parameters
+    ----------
+    structure: Structure Object
+    kpath_scheme: str
+        string describing kpath
+    symprec: float
+        precision for symmetry determination
+    **kpath_kwargs:
+        additional parameters that can be passed to this method as a dict
+    """
+    valid_schemes = {"setyawan_curtarolo", "latimer_munro", "hinuma", "seekpath"}
+    if kpath_scheme in (valid_schemes - {"seekpath"}):
+        high_symm_kpath = HighSymmKpath(
+            structure, path_type=kpath_scheme, symprec=symprec, **kpath_kwargs
+        )
+        kpath = high_symm_kpath.kpath
+    elif kpath_scheme == "seekpath":
+        high_symm_kpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
+        kpath = high_symm_kpath._kpath  # noqa: SLF001
+    else:
+        raise ValueError(f"Unexpected {kpath_scheme=}, must be one of {valid_schemes}")
+
+    path = copy.deepcopy(kpath["path"])
+
+    for set_idx, label_set in enumerate(kpath["path"]):
+        for lbl_idx, label in enumerate(label_set):
+            path[set_idx][lbl_idx] = kpath["kpoints"][label]
+    return kpath["kpoints"], path
+
+
+def _run_band_structure_and_plot(
+    phonon: Phonopy,
+    kpath_dict: dict,
+    kpath_concrete: list,
+    filename_band_yaml: str,
+    has_nac: bool = False,
+    npoints_band: int = 101,
+    with_eigenvectors: bool = False,
+    is_band_connection: bool = False,
+    filename_bs: str = "phonon_band_structure.pdf",
+    units: str = "THz",
+    tol_imaginary_modes: float = 1e-5,
+) -> tuple[PhononBandStructureSymmLine, bool]:
+    """Compute, save, and plot a phonon band structure on a Phonopy object.
+
+    This helper is shared between the phonopy and pheasy workflows so that
+    updates to the band-structure post-processing/plotting only need to be
+    made in one place.
+
+    Returns
+    -------
+    tuple of the band structure as a pymatgen PhononBandStructureSymmLine and
+    a bool indicating whether imaginary modes are present.
+    """
+    qpoints, connections = get_band_qpoints_and_path_connections(
+        kpath_concrete, npoints=npoints_band
+    )
+    phonon.run_band_structure(
+        qpoints,
+        path_connections=connections,
+        with_eigenvectors=with_eigenvectors,
+        is_band_connection=is_band_connection,
+    )
+    phonon.write_yaml_band_structure(filename=filename_band_yaml)
+    bs_symm_line = get_ph_bs_symm_line(
+        filename_band_yaml, labels_dict=kpath_dict, has_nac=has_nac
+    )
+    new_plotter = PhononBSPlotter(bs=bs_symm_line)
+    new_plotter.save_plot(filename=filename_bs, units=units)
+
+    # will determine if imaginary modes are present in the structure
+    imaginary_modes = bs_symm_line.has_imaginary_freq(tol=tol_imaginary_modes)
+    return bs_symm_line, imaginary_modes
+
+
+def _run_total_dos_and_plot(
+    phonon: Phonopy,
+    kpoint: Kpoints,
+    filename_dos_yaml: str,
+    filename_dos: str,
+    units: str = "THz",
+    sigma: float | None = None,
+    use_tetrahedron_method: bool = True,
+) -> PhononDos:
+    """Compute, save, and plot the total phonon DOS on a Phonopy object.
+
+    This helper is shared between the phonopy and pheasy workflows so that
+    updates to the DOS post-processing/plotting only need to be made in one
+    place.
+    """
+    phonon.run_mesh(kpoint.kpts[0])
+    phonon.run_total_dos(sigma=sigma, use_tetrahedron_method=use_tetrahedron_method)
+    phonon.write_total_dos(filename=filename_dos_yaml)
+    dos = get_ph_dos(filename_dos_yaml)
+    new_plotter_dos = PhononDosPlotter()
+    new_plotter_dos.add_dos(label="total", dos=dos)
+    new_plotter_dos.save_plot(filename=filename_dos, units=units)
+    return dos
 
 
 @job
@@ -96,6 +217,91 @@ def get_supercell_size(
     )
 
 
+def _generate_phonon_object(
+    structure: Structure,
+    supercell_matrix: np.array,
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str,
+    code: str,
+    verbose: bool = False,
+) -> Phonopy:
+    """Bundle commonly-used Phonopy object construction.
+
+    Parameters
+    ----------
+    structure: Structure object
+        Fully optimized input structure for phonon run
+    supercell_matrix: np.array
+        array to describe supercell matrix
+    displacement: float
+        displacement in Angstrom
+    sym_reduce: bool
+        if True, symmetry will be used to generate displacements
+    symprec: float
+        precision to determine symmetry
+    use_symmetrized_structure: str or None
+        primitive, conventional or None
+    kpath_scheme: str
+        scheme to generate kpath
+    code:
+        code to perform the computations
+    use_min_dof : bool = False
+        Whether to use the minimal number of degrees of freedom
+        in calculating randomly-displaced structures.
+        Requires ALAMODE.
+    verbose : bool = False
+        Whether to log error messages.
+
+    Returns
+    -------
+    Phonopy object.
+    """
+    if "magmom" in structure.site_properties and verbose:
+        warnings.warn(
+            "Initial magnetic moments will not be considered for the determination "
+            "of the symmetry of the structure and thus will be removed now.",
+            stacklevel=2,
+        )
+
+    cell = get_phonopy_structure(
+        structure.copy().remove_site_property(property_name="magmom")
+        if "magmom" in structure.site_properties
+        else structure.copy()
+    )
+    factor = get_factor(code)
+
+    # a bit of code repetition here as I currently
+    # do not see how to pass the phonopy object?
+    primitive_matrix: np.ndarray | str = (
+        np.eye(3)
+        if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath"
+        else "auto"
+    )
+
+    # TARP: THIS IS BAD! Including for discussions sake
+    if cell.magnetic_moments is not None and primitive_matrix == "auto":
+        if np.any(cell.magnetic_moments != 0.0):
+            raise ValueError(
+                "For materials with magnetic moments, "
+                "use_symmetrized_structure must be 'primitive'"
+            )
+        cell.magnetic_moments = None
+
+    phonon = Phonopy(
+        cell,
+        supercell_matrix,
+        primitive_matrix=primitive_matrix,
+        symprec=symprec,
+        is_symmetry=sym_reduce,
+    )
+    phonon.unit_conversion_factor = factor
+    phonon.generate_displacements(distance=displacement)
+    return phonon
+
+
 @job(data=[Structure])
 def generate_phonon_displacements(
     structure: Structure,
@@ -106,6 +312,7 @@ def generate_phonon_displacements(
     use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
+    verbose: bool = False,
 ) -> list[Structure]:
     """
     Generate displaced structures with phonopy.
@@ -128,59 +335,36 @@ def generate_phonon_displacements(
         scheme to generate kpath
     code:
         code to perform the computations
+    use_min_dof : bool = False
+        Whether to use the minimal number of degrees of freedom
+        in calculating randomly-displaced structures.
+        Requires ALAMODE.
+    verbose : bool = False
+        Whether to log error messages.
 
     Returns
     -------
     List[Structure]
         Displaced structures
     """
-    warnings.warn(
-        "Initial magnetic moments will not be considered for the determination "
-        "of the symmetry of the structure and thus will be removed now.",
-        stacklevel=2,
-    )
-    if "magmom" in structure.site_properties:
-        # remove_site_property is in-place so make a structure copy first
-        no_mag_struct = structure.copy().remove_site_property(property_name="magmom")
-    else:
-        no_mag_struct = structure
-    cell = get_phonopy_structure(no_mag_struct)
-    factor = get_factor(code)
-
-    # a bit of code repetition here as I currently
-    # do not see how to pass the phonopy object?
-    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: np.ndarray | str = np.eye(3)
-    else:
-        primitive_matrix = "auto"
-
-    # TARP: THIS IS BAD! Including for discussions sake
-    if cell.magnetic_moments is not None and primitive_matrix == "auto":
-        if np.any(cell.magnetic_moments != 0.0):
-            raise ValueError(
-                "For materials with magnetic moments, "
-                "use_symmetrized_structure must be 'primitive'"
-            )
-        cell.magnetic_moments = None
-
-    phonon = Phonopy(
-        cell,
+    phonon = _generate_phonon_object(
+        structure,
         supercell_matrix,
-        primitive_matrix=primitive_matrix,
-        symprec=symprec,
-        is_symmetry=sym_reduce,
+        displacement,
+        sym_reduce,
+        symprec,
+        use_symmetrized_structure,
+        kpath_scheme,
+        code,
+        verbose=verbose,
     )
-    phonon.unit_conversion_factor = factor
-    phonon.generate_displacements(distance=displacement)
-
     supercells = phonon.supercells_with_displacements
-
     return [get_pmg_structure(cell) for cell in supercells]
 
 
 @job(
-    output_schema=PhononBSDOSDoc,
-    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants],
+    output_schema=None,
+    data=[PhononDos, PhononBandStructureSymmLine, "force_constants"],
 )
 def generate_frequencies_eigenvectors(
     structure: Structure,
@@ -193,10 +377,10 @@ def generate_frequencies_eigenvectors(
     code: str,
     displacement_data: dict[str, list],
     total_dft_energy: float,
-    epsilon_static: Matrix3D = None,
-    born: Matrix3D = None,
+    epsilon_static: Matrix3D | None = None,
+    born: Matrix3D | None = None,
     **kwargs,
-) -> PhononBSDOSDoc:
+) -> EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc:
     """
     Analyze the phonon runs and summarize the results.
 
@@ -229,22 +413,245 @@ def generate_frequencies_eigenvectors(
     kwargs: dict
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
     """
-    return PhononBSDOSDoc.from_forces_born(
-        structure=structure.remove_site_property(property_name="magmom")
-        if "magmom" in structure.site_properties
-        else structure,
-        supercell_matrix=supercell_matrix,
-        displacement=displacement,
-        sym_reduce=sym_reduce,
-        symprec=symprec,
-        use_symmetrized_structure=use_symmetrized_structure,
+    phonon_doc_schema = kwargs.pop("phonon_doc_schema", "atomate2")
+    if phonon_doc_schema not in {"atomate2", "emmet"}:
+        raise ValueError(
+            f"Invalid phonon_doc_schema={phonon_doc_schema!r}. "
+            "Expected one of {'atomate2', 'emmet'}."
+        )
+    phonon = _generate_phonon_object(
+        structure,
+        supercell_matrix,
+        displacement,
+        sym_reduce,
+        symprec,
+        use_symmetrized_structure,
+        kpath_scheme,
+        code,
+        verbose=False,
+    )
+    set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
+
+    if born is not None and epsilon_static is not None:
+        if len(structure) == len(born):
+            borns, epsilon = symmetrize_borns_and_epsilon(
+                ucell=phonon.unitcell,
+                borns=np.array(born),
+                epsilon=np.array(epsilon_static),
+                symprec=symprec,
+                primitive_matrix=phonon.primitive_matrix,
+                supercell_matrix=phonon.supercell_matrix,
+                is_symmetry=kwargs.get("symmetrize_born", True),
+            )
+        else:
+            raise ValueError(
+                "Number of Born charges does not agree with number of atoms"
+            )
+        if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
+            phonon.nac_params = {
+                "born": borns,
+                "dielectric": epsilon,
+                "factor": 14.399652,  # TODO: where is this magic number coming from?
+            }
+        # Other codes could be added here
+    else:
+        borns = None
+        epsilon = None
+
+    # Produces all force constants
+    phonon.produce_force_constants(forces=set_of_forces)
+
+    filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
+    create_force_constants_file = kwargs.get("create_force_constants_file", False)
+    force_constants_filename = kwargs.get("force_constants_filename", "FORCE_CONSTANTS")
+    phonon.save(
+        filename_phonopy_yaml,
+        settings={
+            "force_constants": kwargs.get(
+                "store_force_constants", not create_force_constants_file
+            )
+        },
+    )
+    if create_force_constants_file:
+        from phonopy.file_IO import write_FORCE_CONSTANTS
+
+        write_FORCE_CONSTANTS(  # save force_constants to text file
+            phonon.force_constants, filename=force_constants_filename
+        )
+
+    # get phonon band structure
+    kpath_dict, kpath_concrete = _get_kpath(
+        structure=get_pmg_structure(phonon.primitive),
         kpath_scheme=kpath_scheme,
+        symprec=symprec,
+    )
+
+    # phonon band structures will always be computed
+    filename_band_yaml = kwargs.get("filename_band_yaml", "phonon_band_structure.yaml")
+    npoints_band = kwargs.get("npoints_band", 101)
+
+    # TODO: potentially add kwargs to avoid computation of eigenvectors
+    bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
+        phonon,
+        kpath_dict,
+        kpath_concrete,
+        filename_band_yaml,
+        has_nac=born is not None,
+        npoints_band=npoints_band,
+        with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
+        is_band_connection=kwargs.get("band_structure_eigenvectors", False),
+        filename_bs=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+        units=kwargs.get("units", "THz"),
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+    )
+
+    # gets data for visualization on website - yaml is also enough
+    if kwargs.get("band_structure_eigenvectors"):
+        bs_symm_line.write_phononwebsite("phonon_website.json")
+
+    # get phonon density of states
+    filename_dos_yaml = kwargs.get("filename_dos_yaml", "phonon_dos.yaml")
+    # filename_dos_yaml = "phonon_dos.yaml"
+
+    kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
+    kpoint = Kpoints.automatic_density(
+        structure=get_pmg_structure(phonon.primitive),
+        kppa=kpoint_density_dos,
+        force_gamma=True,
+    )
+
+    # projected dos
+    if kwargs.get("calculate_pdos", False):
+        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
+        phonon_dos_sigma = kwargs.get("phonon_dos_sigma")
+        dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
+        phonon.run_projected_dos(
+            sigma=phonon_dos_sigma,
+            use_tetrahedron_method=dos_use_tetrahedron_method,
+        )
+        phonon.write_projected_dos()
+
+    dos = _run_total_dos_and_plot(
+        phonon,
+        kpoint,
+        filename_dos_yaml,
+        filename_dos=kwargs.get("filename_dos", "phonon_dos.pdf"),
+        units=kwargs.get("units", "THz"),
+        sigma=kwargs.get("phonon_dos_sigma"),
+        use_tetrahedron_method=kwargs.get("dos_use_tetrahedron_method", True),
+    )
+
+    # will compute thermal displacement matrices
+    # for the primitive cell (phonon.primitive!)
+    # only this is available in phonopy
+    if kwargs.get("create_thermal_displacements"):
+        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
+        freq_min_thermal_displacements = kwargs.get(
+            "freq_min_thermal_displacements", 0.0
+        )
+        phonon.run_thermal_displacement_matrices(
+            t_min=kwargs.get("tmin_thermal_displacements", 0),
+            t_max=kwargs.get("tmax_thermal_displacements", 500),
+            t_step=kwargs.get("tstep_thermal_displacements", 100),
+            freq_min=freq_min_thermal_displacements,
+        )
+
+        temperature_range_thermal_displacements = np.arange(
+            kwargs.get("tmin_thermal_displacements", 0),
+            kwargs.get("tmax_thermal_displacements", 500),
+            kwargs.get("tstep_thermal_displacements", 100),
+        )
+        for idx, temp in enumerate(temperature_range_thermal_displacements):
+            phonon.thermal_displacement_matrices.write_cif(
+                phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
+            )
+        _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
+        tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
+
+        tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
+
+    else:
+        tdisp_mat = None
+        tdisp_mat_cif = None
+
+    formula_units = (
+        structure.composition.num_atoms
+        / structure.composition.reduced_composition.num_atoms
+    )
+
+    total_dft_energy_per_formula_unit = (
+        total_dft_energy / formula_units if total_dft_energy is not None else None
+    )
+
+    volume_per_formula_unit = structure.volume / formula_units
+
+    if phonon_doc_schema == "atomate2":
+        return Atomate2PhononBSDOSDoc.from_forces_born(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            displacement=displacement,
+            sym_reduce=sym_reduce,
+            symprec=symprec,
+            use_symmetrized_structure=use_symmetrized_structure,
+            kpath_scheme=kpath_scheme,
+            code=code,
+            displacement_data=displacement_data,
+            total_dft_energy=total_dft_energy,
+            epsilon_static=epsilon_static,
+            born=born,
+            **kwargs,
+        )
+
+    cls_constructor = (
+        "migrate_fields"
+        if parse_version(_emmet_core_version) >= parse_version("0.85.1")
+        else "from_structure"
+    )
+
+    return getattr(EmmetPhononBSDOSDoc, cls_constructor)(
+        structure=structure,
+        meta_structure=structure,
+        phonon_bandstructure=bs_symm_line.as_dict(),
+        phonon_dos=dos.as_dict(),
+        total_dft_energy=total_dft_energy_per_formula_unit,
+        volume_per_formula_unit=volume_per_formula_unit,
+        formula_units=formula_units,
+        has_imaginary_modes=imaginary_modes,
+        force_constants={"force_constants": phonon.force_constants.tolist()}
+        if kwargs["store_force_constants"]
+        else None,
+        born=borns.tolist() if borns is not None else None,
+        epsilon_static=epsilon.tolist() if epsilon is not None else None,
+        supercell_matrix=phonon.supercell_matrix.tolist(),
+        primitive_matrix=phonon.primitive_matrix.tolist(),
         code=code,
-        displacement_data=displacement_data,
-        total_dft_energy=total_dft_energy,
-        epsilon_static=epsilon_static,
-        born=born,
-        **kwargs,
+        thermal_displacement_data={
+            "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
+            "thermal_displacement_matrix_cif": tdisp_mat_cif,
+            "thermal_displacement_matrix": tdisp_mat,
+            "freq_min_thermal_displacements": freq_min_thermal_displacements,
+        }
+        if kwargs.get("create_thermal_displacements")
+        else None,
+        jobdirs={
+            "displacements_job_dirs": displacement_data["dirs"],
+            "static_run_job_dir": kwargs["static_run_job_dir"],
+            "born_run_job_dir": kwargs["born_run_job_dir"],
+            "optimization_run_job_dir": kwargs["optimization_run_job_dir"],
+            "taskdoc_run_job_dir": str(Path.cwd()),
+        },
+        uuids={
+            "displacements_uuids": displacement_data["uuids"],
+            "born_run_uuid": kwargs["born_run_uuid"],
+            "optimization_run_uuid": kwargs["optimization_run_uuid"],
+            "static_run_uuid": kwargs["static_run_uuid"],
+        },
+        post_process_settings={
+            "npoints_band": npoints_band,
+            "kpath_scheme": kpath_scheme,
+            "kpoint_density_dos": kpoint_density_dos,
+        },
+        **kwargs.get("additional_fields", {}),
     )
 
 
@@ -256,10 +663,12 @@ def run_phonon_displacements(
     phonon_maker: BaseVaspMaker
     | AseRelaxMaker
     | ForceFieldRelaxMaker
-    | BaseAimsMaker = None,
-    prev_dir: str | Path = None,
-    prev_dir_argname: str = None,
+    | BaseAimsMaker
+    | None = None,
+    prev_dir: str | Path | None = None,
+    prev_dir_argname: str | None = None,
     socket: bool = False,
+    store_displaced_structures: bool = False,
 ) -> Flow:
     """
     Run phonon displacements.
@@ -290,14 +699,15 @@ def run_phonon_displacements(
         job, reducing overhead. In the specific case of TorchSim, this enables batching
         of all static structure evaluations.
         Note: socket=True is not supported for BaseVaspMaker.
+    store_displaced_structures : bool = False
+        Whether to also save the displaced structures.
     """
     phonon_jobs = []
-    outputs: dict[str, list] = {
-        "displacement_number": [],
-        "forces": [],
-        "uuids": [],
-        "dirs": [],
-    }
+    save_props = {"displacement_number", "forces", "uuids", "dirs"}
+    if store_displaced_structures:
+        save_props.add("displaced_structures")
+    outputs: dict[str, list] = {k: [] for k in save_props}
+
     phonon_job_kwargs = {}
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
@@ -333,6 +743,10 @@ def run_phonon_displacements(
             outputs["uuids"] = [phonon_job.output.uuid] * num_disp
             outputs["dirs"] = [phonon_job.output.dir_name] * num_disp
             outputs["forces"] = phonon_job.output.output.all_forces
+
+        # TODO: ensure order is correct.
+        if store_displaced_structures:
+            outputs["displaced_structures"] = displacements
     else:
         for idx, displacement in enumerate(displacements):
             phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
@@ -352,6 +766,8 @@ def run_phonon_displacements(
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)
+            if store_displaced_structures:
+                outputs["displaced_structures"].append(displacement)
 
     for info, phonon_job in zip(infos, phonon_jobs, strict=True):
         with contextlib.suppress(Exception):

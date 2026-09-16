@@ -4,20 +4,20 @@ from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import numpy as np
 import pytest
 from ase.calculators.calculator import Calculator
+from emmet.core.phonon import (
+    CalcMeta,
+    PhononBS,
+    PhononBSDOSDoc,
+    PhononComputationalSettings,
+    PhononDOS,
+)
 from jobflow import Flow, JobStore, run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
-from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
-from pymatgen.phonon.dos import PhononDos
 
-from atomate2.common.schemas.phonons import (
-    PhononBSDOSDoc,
-    PhononComputationalSettings,
-    PhononJobDirs,
-    PhononUUIDs,
-)
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.utils import MLFF
@@ -146,6 +146,7 @@ def test_phonon_wf_force_field(
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={
             "tstep": 100,
             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
@@ -186,30 +187,15 @@ def test_phonon_wf_force_field(
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
 
-    # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
-    # CHGNet weights distributed by matgl 3.x; the legacy MPtrj-trained CHGNet
-    # references are kept for the `chgnet` package path.
-    assert_allclose(
-        ph_bs_dos_doc.free_energies,
-        (
-            [3164.0, 3053.0, 2351.0, 999.0, -868.0]
-            if is_matgl_chgnet
-            else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174]
-        ),
-        atol=1000,
-    )
-
     ph_band_struct = ph_bs_dos_doc.phonon_bandstructure
-    assert isinstance(ph_band_struct, PhononBandStructureSymmLine)
+    assert isinstance(ph_band_struct, PhononBS)
 
     ph_dos = ph_bs_dos_doc.phonon_dos
-    assert isinstance(ph_dos, PhononDos)
+    assert isinstance(ph_dos, PhononDOS)
     assert ph_bs_dos_doc.thermal_displacement_data is None
     assert isinstance(ph_bs_dos_doc.structure, Structure)
-    assert_allclose(ph_bs_dos_doc.temperatures, [0, 100, 200, 300, 400])
     assert ph_bs_dos_doc.force_constants is None
-    assert isinstance(ph_bs_dos_doc.jobdirs, PhononJobDirs)
-    assert isinstance(ph_bs_dos_doc.uuids, PhononUUIDs)
+    assert all(isinstance(cm, CalcMeta) for cm in ph_bs_dos_doc.calc_meta)
     assert_allclose(ph_bs_dos_doc.total_dft_energy, -5.37245798, 4)
     assert ph_bs_dos_doc.born is None
     assert ph_bs_dos_doc.epsilon_static is None
@@ -223,35 +209,64 @@ def test_phonon_wf_force_field(
         atol=1e-8,
     )
     assert ph_bs_dos_doc.code == "forcefields"
-    assert isinstance(ph_bs_dos_doc.phonopy_settings, PhononComputationalSettings)
-    assert ph_bs_dos_doc.phonopy_settings.npoints_band == 101
-    assert ph_bs_dos_doc.phonopy_settings.kpath_scheme == "seekpath"
-    assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
+    assert isinstance(ph_bs_dos_doc.post_process_settings, PhononComputationalSettings)
+    assert ph_bs_dos_doc.post_process_settings.npoints_band == 101
+    assert ph_bs_dos_doc.post_process_settings.kpath_scheme == "seekpath"
+    assert ph_bs_dos_doc.post_process_settings.kpoint_density_dos == 7_000
+
     # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
-    # CHGNet weights distributed by matgl 3.x.
-    assert_allclose(
-        ph_bs_dos_doc.entropies,
-        (
+    # CHGNet weights distributed by matgl 3.x (which has a softer phonon
+    # spectrum); the legacy MPtrj-trained CHGNet references are kept for the
+    # `chgnet` package path. heat_capacities and internal_energies depend
+    # strongly on the phonon spectrum; loose tolerances let the test work for
+    # both CHGNet variants.
+    ref_vals = {
+        "entropy": (
             [0.0, 3.46, 10.50, 16.31, 20.85]
             if is_matgl_chgnet
             else [0.0, 3.733666, 12.536534, 20.344558, 26.627292]
         ),
-        atol=2,
+        "heat_capacity": [
+            0.0,
+            8.86060586,
+            17.55758943,
+            21.08903916,
+            22.62587271,
+        ],
+        "internal_energy": [
+            5058.44158791,
+            5385.88058579,
+            6765.19854165,
+            8723.78588089,
+            10919.0199409,
+        ],
+        "free_energy": (
+            [3164.0, 3053.0, 2351.0, 999.0, -868.0]
+            if is_matgl_chgnet
+            else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174]
+        ),
+    }
+    tolerances = {
+        "entropy": 2.0,
+        "heat_capacity": 10.0,
+        "internal_energy": 4000.0,
+        "free_energy": 1000.0,
+    }
+    # The emmet document normalizes thermodynamic quantities per atom; the
+    # reference values above are the historical ones from the legacy atomate2
+    # PhononBSDOSDoc convention, which for this Si cell are 4x the per-atom
+    # values, so the computed values are rescaled before comparison.
+    legacy_norm_factor = 4.0
+    thermo_props = ph_bs_dos_doc.compute_thermo_quantities(
+        [0, 100, 200, 300, 400], normalization="atoms"
     )
-    # heat_capacities and internal_energies depend strongly on the phonon
-    # spectrum; loose tolerances let the test work for both the legacy
-    # chgnet-package CHGNet and the matgl-served MatPES-PBE-2025.2.10 variant
-    # (which has a softer phonon spectrum).
-    assert_allclose(
-        ph_bs_dos_doc.heat_capacities,
-        [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
-        atol=10,
-    )
-    assert_allclose(
-        ph_bs_dos_doc.internal_energies,
-        [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
-        atol=4000,
-    )
+
+    for key, vals in ref_vals.items():
+        assert_allclose(
+            legacy_norm_factor * np.asarray(thermo_props[key]),
+            vals,
+            atol=tolerances[key],
+        )
 
     # check phonon plots exist
     assert os.path.isfile(filename_bs)
