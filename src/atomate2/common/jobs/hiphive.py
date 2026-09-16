@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from ase.io import read as ase_read
+from ase.neighborlist import neighbor_list
 from emmet.core import __version__ as _emmet_core_version
 from emmet.core.phonon import PhononBSDOSDoc
 from hiphive import (
@@ -53,7 +54,19 @@ except ImportError:
     ALM = None
 
 # Safety margin below hiPhive's maximum allowed cutoff, in Angstrom.
+# Configurations per suggested displacement set. ALM sizes num_disp_sc so the
+# equation count reaches its own free-parameter tally, and this scales from
+# there. pheasy uses 1.8. hiPhive's cluster space has a different, smaller
+# parameter count, and the ratio between the two varies by a factor of three
+# across materials, so 1.8 leaves a low-symmetry cell with too little data for
+# a LASSO fit and the modes come out soft.
+_N_CONFIG_MULTIPLIER = 1.8
+
 _CUTOFF_MARGIN = 0.1
+
+# hiPhive refuses a cutoff that clears a neighbour shell by less than its
+# symmetry tolerance. Anything above 1 works; the margin absorbs float noise.
+_CUTOFF_TOL_FACTOR = 1.1
 
 _DEFAULT_FILE_PATHS = {
     "force_displacements": "dataset_forces.npy",
@@ -91,6 +104,88 @@ def _idealize(atoms: Atoms, symprec: float) -> Atoms:
         structure, symprec=symprec
     ).get_primitive_standard_structure()
     return AseAtomsAdaptor.get_atoms(ideal)
+
+
+def _shell_distances(
+    prim: Atoms, supercell: Atoms, symprec: float
+) -> tuple[np.ndarray, float]:
+    """Neighbour shell distances of the cell hiPhive inspects, and the bound.
+
+    hiPhive builds the cluster space from the idealized prototype, so the
+    shells that matter are that cell's, not the relaxed supercell's.
+    """
+    bound = estimate_maximum_cutoff(supercell)
+    distances = neighbor_list("d", _idealize(prim, symprec), bound)
+    distances = distances[distances > 1e-8]
+    return np.unique(np.round(np.sort(distances), 8)), bound
+
+
+def _safe_cutoff(
+    prim: Atoms, supercell: Atoms, symprec: float, requested: float | None
+) -> float:
+    """Return a pair cutoff hiPhive will accept.
+
+    hiPhive rejects a cutoff that does not clear every neighbour shell by more
+    than its symmetry tolerance, because then whether a pair falls inside the
+    cutoff is decided by numerical noise. The default cutoff is the largest the
+    supercell allows, which for a symmetry-broken cell can land on a shell.
+
+    The cutoff is kept wherever hiPhive accepts it, so a cell whose shells are
+    well separated is unaffected. Only when hiPhive would refuse is the cutoff
+    moved to the middle of the gap between the two shells it lies between.
+    """
+    shells, bound = _shell_distances(prim, supercell, symprec)
+    cutoff = bound - _CUTOFF_MARGIN
+    if requested is not None:
+        cutoff = min(requested, cutoff)
+    if shells.size == 0 or shells.min() >= cutoff:
+        # no neighbour shell fits, so the cluster space would come out empty
+        # and hiPhive would fail with "There are no degrees of freedom". This
+        # happens when the supercell is too small or too skewed, for instance
+        # a diagonal repeat of a centred primitive cell.
+        nearest = f"{shells.min():.3f} A" if shells.size else "none found"
+        raise ValueError(
+            f"Supercell supports a pair cutoff of only {cutoff:.3f} A, which "
+            f"reaches no neighbour shell (nearest: {nearest}). Use a larger "
+            f"supercell_matrix, or one matching the cell's centring."
+        )
+
+    tol = _CUTOFF_TOL_FACTOR * symprec
+    if np.abs(shells - cutoff).min() > tol:
+        return cutoff
+
+    below, above = shells[shells < cutoff], shells[shells > cutoff]
+    low = below.max() if below.size else 0.0
+    high = min(above.min(), bound) if above.size else bound
+    moved = 0.5 * (low + high)
+    if np.abs(shells - moved).min() > tol:
+        return moved
+
+    # that gap is itself too tight, so step in to a wider one
+    edges = np.append(shells[1:], bound)
+    for start, end in zip(shells[::-1], edges[::-1], strict=True):
+        if 0.5 * (end - start) > tol:
+            return 0.5 * (start + end)
+    return cutoff
+
+
+def _shorter_cutoff(
+    prim: Atoms, supercell: Atoms, symprec: float, cutoff: float
+) -> float | None:
+    """One neighbour shell inside `cutoff`, or None when none can be dropped.
+
+    pheasy refit at a literal 10 A, shorter than its own default but longer
+    than any supercell of this size supports, so clamping that to the maximum
+    made the refit reproduce the first fit exactly.
+    """
+    shells, _bound = _shell_distances(prim, supercell, symprec)
+    shells = shells[shells < cutoff]
+    tol = _CUTOFF_TOL_FACTOR * symprec
+    edges = np.append(shells[1:], cutoff)
+    for start, end in zip(shells[:-1][::-1], edges[:-1][::-1], strict=True):
+        if 0.5 * (end - start) > tol:
+            return 0.5 * (start + end)
+    return None
 
 
 def _fit_force_constants(
@@ -294,7 +389,7 @@ def generate_phonon_displacements(
             number_of_snapshots=(
                 num_displaced_supercells
                 if num_displaced_supercells != 0
-                else int(np.ceil(num_disp_sc * 1.8)) + 1
+                else int(np.ceil(num_disp_sc * _N_CONFIG_MULTIPLIER)) + 1
             ),
             random_seed=random_seed,
         )
@@ -326,7 +421,7 @@ def generate_frequencies_eigenvectors(
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
     cutoff_2nd: float | None = None,
-    fit_method: str = "rfe",
+    fit_method: str = "lasso",
     **kwargs,
 ) -> PhononBSDOSDoc:
     """
@@ -362,7 +457,8 @@ def generate_frequencies_eigenvectors(
         second-order cutoff in Angstrom for the hiPhive cluster space. If
         None, the largest cutoff the supercell allows is used.
     fit_method: str
-        regressor passed to the trainstation optimizer, e.g. "rfe",
+        regressor passed to the trainstation optimizer, e.g. "lasso",
+        "rfe",
         "least-squares" or "lasso".
     verbose : bool = False
         Whether to log error messages.
@@ -509,10 +605,7 @@ def generate_frequencies_eigenvectors(
 
     # When no cutoff is given, use the largest the supercell allows. That is
     # the hiPhive analogue of the Wigner-Seitz boundary pheasy defaults to.
-    # A hundredth of an Angstrom leaves no room against a bound computed in
-    # floating point, so keep a wider margin.
-    max_cutoff = estimate_maximum_cutoff(supercell) - _CUTOFF_MARGIN
-    cutoff = max_cutoff if cutoff_2nd is None else min(cutoff_2nd, max_cutoff)
+    cutoff = _safe_cutoff(prim, supercell, symprec, cutoff_2nd)
 
     n_dofs, rmse = _fit_force_constants(
         prim,
@@ -523,7 +616,15 @@ def generate_frequencies_eigenvectors(
         _DEFAULT_FILE_PATHS["force_constants"],
         symprec,
     )
-    logger.info(f"Fit at {cutoff:.2f} A: {n_dofs} parameters, RMSE {rmse}")
+    # The displacement count is sized by ALM's tally of irreducible force
+    # constant elements, which is not hiPhive's parameter count, so log how
+    # much data each parameter actually gets. A low ratio is the signature of
+    # a regularized fit that has too little data and softens the modes.
+    n_forces = len(atoms_list) * len(supercell) * 3
+    logger.info(
+        f"Fit at {cutoff:.2f} A: {n_dofs} parameters, {n_forces} force "
+        f"components ({n_forces / n_dofs:.1f} per parameter), RMSE {rmse}"
+    )
 
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
 
@@ -563,12 +664,15 @@ def generate_frequencies_eigenvectors(
         tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
     )
 
-    # If imaginary modes remain, refit at a shorter cutoff. The smaller
+    # If imaginary modes remain, refit one neighbour shell in. The smaller
     # cluster space has fewer free parameters and is better conditioned,
-    # which usually clears small imaginary modes near Gamma. pheasy used a
-    # 10 A cutoff for the same purpose.
-    if imaginary_modes:
-        short_cutoff = min(10.0, max_cutoff)
+    # which usually clears small imaginary modes near Gamma. pheasy refit at
+    # a fixed 10 A for the same purpose, which no supercell of this size
+    # reaches, so the shell is chosen from the structure instead.
+    short_cutoff = (
+        _shorter_cutoff(prim, supercell, symprec, cutoff) if imaginary_modes else None
+    )
+    if short_cutoff is not None:
         new_fc_file = f"{_DEFAULT_FILE_PATHS['force_constants']}_short_cutoff"
         n_dofs, rmse = _fit_force_constants(
             prim,

@@ -133,7 +133,7 @@ class PhononMaker(BasePhononMaker):
     displacement: float = 0.01
     num_displaced_supercells: int = 0
     cutoff_2nd: float | None = None
-    fit_method: str = "rfe"
+    fit_method: str = "lasso"
     min_length: float | None = 8.0
     max_atoms: float | None = 200
     force_90_degrees: bool = True

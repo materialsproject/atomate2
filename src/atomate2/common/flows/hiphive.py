@@ -83,7 +83,14 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         the largest cutoff the supercell allows is used.
     fit_method: str
         regressor used to fit the force constants. Passed to the trainstation
-        optimizer. Common choices are "rfe", "least-squares" and "lasso".
+        optimizer. Second-order force constants decay with distance, so
+        most orbit coefficients are zero and a regularized regression is
+        the right estimator. This matches pheasy, which fits with LASSO.
+        Plain least squares would return dense force constants that fit
+        the training forces without respecting that structure. Other
+        trainstation choices such as "rfe", "ardr" and "least-squares"
+        remain available, though "rfe" refits once per feature and does
+        not scale past a few hundred parameters.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 14.0 A. In most cases, the default value is good
@@ -153,7 +160,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
     displacement: float = 0.01
     num_displaced_supercells: int = 0
     cutoff_2nd: float | None = None
-    fit_method: str = "rfe"
+    fit_method: str = "lasso"
     min_length: float | None = 8.0
     max_atoms: float | None = 200
     force_90_degrees: bool = True
