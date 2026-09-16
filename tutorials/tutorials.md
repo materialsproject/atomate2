@@ -13,6 +13,7 @@ openmm_tutorial
 phonon_workflow
 phonon_workflow_aims
 pheasy_workflow
+hiphive_workflow
 force_fields/phonon_workflow
 grueneisen_workflow
 qha_workflow
