@@ -372,6 +372,19 @@ For example, using `gcc-15` from `homebrew`, one might set:
 export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
 ```
 
+#### hiPhive
+
+The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
+`hiPhive` can be installed with `pip install hiphive`.
+
+To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
+
+This workflow has only been tested on a small set of materials so far, not at high-throughput scale.
+The test set is 14 Materials Project entries, two per crystal system, with forces from a machine-learned potential rather than DFT.
+The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
+Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
+The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
+
 ### Grüneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of [Phonopy](https://doi.org/10.7566/JPSJ.92.012001).
