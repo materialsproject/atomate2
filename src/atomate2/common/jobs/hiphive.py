@@ -79,9 +79,7 @@ _DEFAULT_FILE_PATHS = {
     "dos_plot": "phonon_dos.pdf",
     "force_constants": "FORCE_CONSTANTS",
     "harmonic_displacements": "disp_matrix.npy",
-    "anharmonic_displacements": "disp_matrix_anhar.npy",
     "harmonic_force_matrix": "force_matrix.npy",
-    "anharmonic_force_matrix": "force_matrix_anhar.npy",
     "website": "phonon_website.json",
 }
 
@@ -343,7 +341,11 @@ def generate_phonon_displacements(
 
     # 1. the ALM module is used to determine the number of free parameters
     # (irreducible force constants) corresponding to the second order
-    # force constants (FCs) given a supercell.
+    # force constants (FCs) given a supercell. hiPhive's own cluster space
+    # cannot supply this number: it counts only the parameters inside the pair
+    # cutoff, while ALM counts them over the whole supercell, so ALM's tally is
+    # larger by a factor of two to three. Sizing the displacement set with ALM
+    # is also what pheasy does, which keeps the two workflows comparable.
     # 2. Based on the number of free parameters, we can determine how many
     # displaced supercells we need to use to extract the second order force
     # constants. Generally, the number of free parameters should be less than

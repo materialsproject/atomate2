@@ -20,20 +20,21 @@ if TYPE_CHECKING:
 class PhononMaker(BasePhononMaker):
     """Maker to calculate harmonic phonons with the cluster-expansion code hiPhive.
 
-    Calculate the zero-K harmonic phonons of a material and higher-order FCs.
+    Calculate the zero-K harmonic phonons of a material. The scope is harmonic
+    only. Third- and fourth-order force constants are not computed.
     Initially, a tight structural relaxation is performed to obtain a structure
     without forces on the atoms. Subsequently, supercells with all atoms displaced
     by a small amplitude (generally using 0.01 A) are generated and accurate forces
     are computed for these structures for the second order force constants. hiPhive
     builds a cluster space from the supercell symmetry and fits the force constants
-    to those forces by regression. In this Workflow, we separate the harmonic phonon
-    calculations and anharmonic force constants calculations. To correct for
-    polarization effects, a correction of the dynamical matrix based on BORN charges
-    can be performed. Finally, phonon densities of states, phonon band structures and
-    thermodynamic properties are computed. For the anharmonic force constants, the
-    supercells with all atoms displaced by a larger amplitude (generally using 0.08 A)
-    are generated and accurate forces are computed for these structures. The third-
-    and fourth-order force constants are fitted from the same cluster space.
+    to those forces by regression. To correct for polarization effects, a correction
+    of the dynamical matrix based on BORN charges can be performed. Finally, phonon
+    densities of states, phonon band structures and thermodynamic properties are
+    computed.
+
+    Anharmonic force constants are deferred to a later PR. pheasy fits them with
+    the second-order terms held fixed, and hiPhive has no equivalent of that, so
+    the anharmonic fit needs a design decision of its own.
 
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to
