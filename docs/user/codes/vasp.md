@@ -348,6 +348,7 @@ Alternatively, users can accelerate the calculation of interatomic force constan
 `Pheasy` can be installed with `pip install pheasy`.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
+This workflow was used to build the Materials Project's Harmonic Phonon Database, described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
 
 By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg and the `ALAMODE` code.
 
