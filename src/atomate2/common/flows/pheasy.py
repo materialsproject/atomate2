@@ -6,6 +6,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
+from pymatgen.util.due import Doi, due
+
 from atomate2.common.flows.phonons import BasePhononMaker as PurePhonopyMaker
 from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
@@ -28,6 +30,10 @@ if TYPE_CHECKING:
 SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
+@due.dcite(
+    Doi("10.26434/chemrxiv.15004632/v1"),
+    description="Materials Project's Harmonic Phonon Database.",
+)
 @dataclass
 class BasePhononMaker(PurePhonopyMaker, ABC):
     """Maker to calculate harmonic phonons with LASSO-based ML code Pheasy.
