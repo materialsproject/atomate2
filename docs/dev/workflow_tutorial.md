@@ -28,7 +28,7 @@ class ExampleInputSet(InputSet):
             file.write(directory / path)
 ```
 
-Similarly to the way that `Maker` classes generate `Flow`s, `InputSet`s are most easily created by `InputGenerator` classes. `InputGenerator` classes have a method `get_input_set()` that typically takes atomic coordinates (e.g., a `Structure` or `Molecule` object) and produce an `InputSet`, e.g.,
+Similarly to the way that `Maker` classes generate `Flow`s and `Job`s, `InputSet`s are most easily created by `InputGenerator` classes. `InputGenerator` classes have a method `get_input_set()` that typically takes atomic coordinates (e.g., a `Structure` or `Molecule` object) and produces an `InputSet`, e.g.,
 
 ```py
 class ExampleInputGenerator(InputGenerator):
