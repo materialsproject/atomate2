@@ -8,7 +8,9 @@ They can also be found in the form of jupyter notebooks in:
 
 ```{toctree}
 blob_storage
+lammps_workflow
 lobster_workflow
+materials_project_workflows
 openmm_tutorial
 phonon_workflow
 phonon_workflow_aims
@@ -17,4 +19,5 @@ hiphive_workflow
 force_fields/phonon_workflow
 grueneisen_workflow
 qha_workflow
+torchsim_tutorial
 ```
