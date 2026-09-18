@@ -22,4 +22,4 @@ Beyond add-ons, several software packages exist which build upon atomate2 workfl
 - [AtomisticSkills: General-purpose AI coding agents for atomistic research across materials science ](https://github.com/learningmatter-mit/AtomisticSkills)
 - [Autoplex: Automatic Training Workflows for ML Interatomic Potentials](https://github.com/autoatml/autoplex)
 
-If you have developed an add-on or software package building on atomate2 in any other way, please feel free to raise a PR to add it.
+If you have developed a software package built on atomate2 in another way, feel free to open a PR to add it.
