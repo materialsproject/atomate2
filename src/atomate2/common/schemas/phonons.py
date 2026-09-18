@@ -2,6 +2,7 @@
 
 import copy
 import logging
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Union
 
@@ -65,10 +66,14 @@ class PhononComputationalSettings(BaseModel):
     """Collection to store computational settings for the phonon computation."""
 
     # could be optional and implemented at a later stage?
-    npoints_band: int = Field("number of points for band structure computation")
-    kpath_scheme: str = Field("indicates the kpath scheme")
-    kpoint_density_dos: int = Field(
-        "number of points for computation of free energies and densities of states",
+    npoints_band: int | None = Field(
+        None, description="number of points for band structure computation"
+    )
+    kpath_scheme: str | None = Field(None, description="indicates the kpath scheme")
+    kpoint_density_dos: int | None = Field(
+        None,
+        description="number of points for computation of free energies and "
+        "densities of states",
     )
 
 
@@ -236,6 +241,41 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         None, description="Field including all relevant uuids"
     )
 
+    def _get_thermo_value(
+        self,
+        temperatures: Sequence[float] | None,
+        values: Sequence[float] | None,
+        temp: float,
+    ) -> float:
+        """Interpolate a thermodynamic quantity at a given temperature."""
+        if temperatures is None or values is None:
+            raise AttributeError(
+                "Thermodynamic data not available in this PhononBSDOSDoc."
+            )
+
+        return float(np.interp(temp, np.array(temperatures), np.array(values)))
+
+    def heat_capacity(self, temp: float) -> float:
+        """Return heat capacity at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.heat_capacities, temp)
+
+    def entropy(self, temp: float) -> float:
+        """Return entropy at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.entropies, temp)
+
+    def free_energy(self, temp: float) -> float:
+        """Return Helmholtz free energy at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.free_energies, temp)
+
+    def internal_energy(self, temp: float) -> float:
+        """Return internal energy at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.internal_energies, temp)
+
+    @property
+    def post_process_settings(self) -> PhononComputationalSettings | None:
+        """Backward-compatible alias for legacy callers/tests."""
+        return self.phonopy_settings
+
     @classmethod
     def from_forces_born(
         cls,
@@ -296,7 +336,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             primitive_matrix = "auto"
 
         # TARP: THIS IS BAD! Including for discussions sake
-        if cell.magnetic_moments is not None and primitive_matrix == "auto":
+        if (
+            cell.magnetic_moments is not None
+            and isinstance(primitive_matrix, str)
+            and primitive_matrix == "auto"
+        ):
             if np.any(cell.magnetic_moments != 0.0):
                 raise ValueError(
                     "For materials with magnetic moments, "
@@ -399,6 +443,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             has_nac=born is not None,
             labels_dict=kpath_dict,
         )
+        # Backward compatibility for older atomate2 tests/callers
+        if not hasattr(bs_symm_line, "frequencies") and hasattr(bs_symm_line, "bands"):
+            bs_symm_line.frequencies = np.array(bs_symm_line.bands)
+
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
         new_plotter.save_plot(
             filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),

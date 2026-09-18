@@ -1,8 +1,8 @@
-# Add-ons for `atomate2`
+# Add-ons for `atomate2` and the software ecosystem
 
 ## Applications
 
-`atomate2` contains, in its github source, a set of applications which use the tools in `atomate2` to build more focused workflows. An example of a MOF screening pipeline is included there. If you have developed a complex workflow which focuses on a specific class of materials/molecules, or may be less "generic" than the core `atomate2` tools, this is a great space to contribute them!
+`atomate2` contains, in its GitHub source, a set of applications that use the tools in `atomate2` to build more focused workflows. It includes an example MOF screening pipeline. If you have developed a complex workflow which focuses on a specific class of materials/molecules, or may be less "generic" than the core `atomate2` tools, this is a great space to contribute them!
 
 ## Add-ons
 
@@ -15,3 +15,11 @@ Some add-ons for `atomate2` are:
 Contributors are welcome to include their add-ons here!
 
 <b>`atomate2` is an open-source code used worldwide and primarily supported by public funding. We strongly encourage those using `atomate2` to eventually contribute their extensions / add-ons back to the main source of `atomate2` if usage restrictions permit it.</b>
+
+## Software ecosystem
+
+Beyond add-ons, several software packages exist which build upon atomate2 workflows:
+- [AtomisticSkills: General-purpose AI coding agents for atomistic research across materials science ](https://github.com/learningmatter-mit/AtomisticSkills)
+- [Autoplex: Automatic Training Workflows for ML Interatomic Potentials](https://github.com/autoatml/autoplex)
+
+If you have developed a software package built on atomate2 in another way, feel free to open a PR to add it.

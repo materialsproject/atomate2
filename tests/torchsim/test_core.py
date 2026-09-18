@@ -9,19 +9,38 @@ import pytest
 
 ts = pytest.importorskip("torch_sim")
 
+import torch
 from ase.build import bulk
 from jobflow import run_locally
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+from torch_sim.models.dispersion import D3Parameters
 
 from atomate2.torchsim.core import (
     TorchSimIntegrateMaker,
     TorchSimOptimizeMaker,
     TorchSimStaticMaker,
+    pick_model,
 )
 from atomate2.torchsim.schema import ConvergenceFn, TorchSimModelType
 
-from .conftest import _SKIP_MACE
+from .conftest import (
+    _SKIP_FAIRCHEM,
+    _SKIP_MACE,
+    _SKIP_MATTERSIM,
+    _SKIP_METATOMIC,
+    _SKIP_NEQUIP,
+    _SKIP_NVALCHEMIOPS,
+    _SKIP_ORB,
+    _SKIP_SEVENNET,
+)
+
+try:
+    from huggingface_hub.utils._auth import get_token
+
+    HAS_HF = True
+except ImportError:
+    HAS_HF = False
 
 
 @pytest.fixture
@@ -47,6 +66,10 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     perturbed_structure = ar_structure.copy()
     perturbed_structure.translate_sites(
         list(range(len(perturbed_structure))), [0.01, 0.01, 0.01]
+    )
+    perturbed_structure.properties["my_prop"] = 1.5
+    perturbed_structure.add_site_property(
+        "my_site_prop", list(range(len(perturbed_structure)))
     )
 
     n_systems = 2
@@ -85,6 +108,13 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert isinstance(result.structures, list)
     assert len(result.structures) == n_systems
     assert isinstance(result.structures[0], Structure)
+
+    # Check that structure properties and site properties survive the round trip
+    for final_structure in result.structures:
+        assert final_structure.properties == perturbed_structure.properties
+        assert final_structure.site_properties["my_site_prop"] == list(
+            range(len(perturbed_structure))
+        )
 
     # Check calculation details
     assert len(result.calcs_reversed) == 1
@@ -180,6 +210,10 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
 
     Includes trajectory reporter and autobatcher.
     """
+    structure = ar_structure.copy()
+    structure.properties["my_prop"] = 1.5
+    structure.add_site_property("my_site_prop", list(range(len(structure))))
+
     n_systems = 2
     trajectory_reporter_dict = {
         "filenames": [tmp_path / f"md_{i}.h5md" for i in range(n_systems)],
@@ -202,7 +236,7 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
         model_kwargs={"sigma": 3.405, "epsilon": 0.0104, "compute_stress": True},
     )
 
-    job = maker.make([ar_structure] * n_systems)
+    job = maker.make([structure] * n_systems)
     response_dict = run_locally(job, ensure_success=True, root_dir=tmp_path)
     result = list(response_dict.values())[-1][1].output
 
@@ -215,6 +249,13 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert isinstance(result.structures, list)
     assert len(result.structures) == n_systems
     assert isinstance(result.structures[0], Structure)
+
+    # Check that structure properties and site properties survive the round trip
+    for final_structure in result.structures:
+        assert final_structure.properties == structure.properties
+        assert final_structure.site_properties["my_site_prop"] == list(
+            range(len(structure))
+        )
 
     # Check calculation details
     assert len(result.calcs_reversed) == 1
@@ -326,3 +367,115 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
 
     # Check time elapsed
     assert result.time_elapsed > 0
+
+
+@pytest.mark.skipif(
+    not HAS_HF or get_token() is None,
+    reason="Hugging Face is not installed or token is not available.",
+)
+@pytest.mark.skipif(_SKIP_FAIRCHEM, reason="fairchem-core is not installed.")
+def test_pick_model_fairchem() -> None:
+    pick_model(TorchSimModelType.FAIRCHEM, model_path="uma-s-1p1")
+
+
+@pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")
+def test_pick_model_mace(test_dir) -> None:
+    path = f"{test_dir}/forcefields/mace/MACE.model"
+    pick_model(TorchSimModelType.MACE, model_path=path)
+
+
+@pytest.mark.skipif(_SKIP_MATTERSIM, reason="mattersim is not installed.")
+def test_pick_model_mattersim() -> None:
+    pick_model(TorchSimModelType.MATTERSIM, model_path="mattersim-v1.0.0-1m.pth")
+
+
+@pytest.mark.skipif(
+    _SKIP_METATOMIC, reason="metatomic_torchsim or upet is not installed."
+)
+def test_pick_model_metatomic() -> None:
+    from upet import get_upet
+
+    # get_upet returns an instance of AtomisticModel and not a path
+    # which will break the type checker but is actually supported by
+    # MetatomicModel so its good enough for testing
+    model = get_upet(model="pet-mad", size="s")
+    pick_model(TorchSimModelType.METATOMIC, model_path=model)
+
+
+@pytest.mark.skipif(_SKIP_NEQUIP, reason="nequip is not installed.")
+def test_pick_model_nequip(test_dir) -> None:
+    path = f"{test_dir}/forcefields/nequip/nequip_ff_sr_ti_o3.nequip.pth"
+    pick_model(TorchSimModelType.NEQUIPFRAMEWORK, model_path=path)
+
+
+@pytest.mark.skipif(_SKIP_ORB, reason="orb_models is not installed.")
+def test_pick_model_orb() -> None:
+    pick_model(TorchSimModelType.ORB, model_path="orb-v2")
+
+
+@pytest.mark.skipif(_SKIP_SEVENNET, reason="sevenn is not installed.")
+def test_pick_model_sevennet() -> None:
+    pick_model(TorchSimModelType.SEVENNET, model_path="7net-0")
+
+
+def _dummy_d3_params(max_z: int = 18):
+    """Build a D3Parameters instance with arbitrary (non-physical) values."""
+    return D3Parameters(
+        rcov=torch.rand(max_z + 1, dtype=torch.float64),
+        r4r2=torch.rand(max_z + 1, dtype=torch.float64),
+        c6ab=torch.rand(max_z + 1, max_z + 1, 5, 5, dtype=torch.float64),
+        cn_ref=torch.rand(max_z + 1, max_z + 1, 5, 5, dtype=torch.float64),
+    )
+
+
+@pytest.mark.skipif(_SKIP_NVALCHEMIOPS, reason="nvalchemiops is not installed.")
+def test_pick_model_dispersion() -> None:
+    """A D3 dispersion correction should be summed with the base model.
+
+    The base model's cutoff must be preserved, while the D3 model should fall
+    back to its own default cutoff rather than inheriting the base model's.
+    """
+    from torch_sim.models.dispersion import D3DispersionModel
+    from torch_sim.models.interface import SumModel
+    from torch_sim.models.lennard_jones import LennardJonesModel
+
+    model = pick_model(
+        TorchSimModelType.LENNARD_JONES,
+        model_path="",
+        sigma=3.405,
+        epsilon=0.0104,
+        cutoff=6.0,
+        dispersion=True,
+        a1=0.4289,
+        a2=4.4407,
+        s8=0.7875,
+        d3_params=_dummy_d3_params(),
+    )
+
+    assert isinstance(model, SumModel)
+    base_model, d3_model = model.models
+    assert isinstance(base_model, LennardJonesModel)
+    assert isinstance(d3_model, D3DispersionModel)
+    assert isinstance(d3_model.d3_params, D3Parameters)
+
+    assert base_model.cutoff == pytest.approx(6.0)
+    assert d3_model.cutoff != pytest.approx(6.0)
+
+    assert d3_model.a1 == 0.4289
+    assert d3_model.a2 == 4.4407
+    assert d3_model.s8 == 0.7875
+    assert d3_model.s6 == 1.0
+
+
+@pytest.mark.skipif(_SKIP_NVALCHEMIOPS, reason="nvalchemiops is not installed.")
+def test_pick_model_dispersion_missing_params() -> None:
+    """Missing required D3 parameters should raise a clear KeyError."""
+    with pytest.raises(KeyError, match="a2"):
+        pick_model(
+            TorchSimModelType.LENNARD_JONES,
+            model_path="",
+            dispersion=True,
+            a1=0.4289,
+            s8=0.7875,
+            d3_params=_dummy_d3_params(),
+        )
