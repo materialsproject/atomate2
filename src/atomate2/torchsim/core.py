@@ -307,7 +307,16 @@ def pick_model(
     model_path : str | Path
         Path to the model file or checkpoint.
     **model_kwargs : Any
-        Additional keyword arguments to pass to the model constructor.
+        Additional keyword arguments to pass to the model constructor. If
+        ``dispersion=True`` is passed, a D3 dispersion correction
+        (:obj:`~torch_sim.models.dispersion.D3DispersionModel`) is built from
+        the ``a1``, ``a2``, ``s8``, ``s6`` and ``d3_params`` keys and summed
+        with the base model. The BJ damping parameters (``a1``, ``a2``, ``s8``)
+        are functional-dependent; see the parameter table at
+        https://github.com/dftd3/simple-dftd3/blob/main/assets/parameters.toml.
+        ``d3_params`` must be a
+        :obj:`~torch_sim.models.dispersion.D3Parameters` instance carrying the
+        element reference data (``rcov``, ``r4r2``, ``c6ab``, ``cn_ref``).
 
     Returns
     -------
@@ -319,6 +328,43 @@ def pick_model(
     ValueError
         If an invalid model type is provided.
     """
+    d3_model = None
+    if model_kwargs.pop("dispersion", False):
+        from torch_sim.models.dispersion import D3DispersionModel
+
+        d3_keys = {"a1", "a2", "s8", "s6", "d3_params"}
+        d3_kwargs = {
+            key: model_kwargs.pop(key) for key in d3_keys if key in model_kwargs
+        }
+
+        missing = {"a1", "a2", "s8", "d3_params"} - d3_kwargs.keys()
+        if missing:
+            raise KeyError(
+                f"Missing required D3 dispersion parameter(s): {sorted(missing)}. "
+                "Depending on your DFT functional, other parameters may be required. "
+            )
+
+        # Only forward keys D3DispersionModel actually accepts; everything else
+        # left in model_kwargs is meant for the base model. cutoff is intentionally
+        # excluded so the D3 model keeps its own default.
+        d3_model_keys = {
+            "device",
+            "dtype",
+            "compute_forces",
+            "compute_stress",
+            "neighbor_list_fn",
+        }
+        forwarded_kwargs = {k: v for k, v in model_kwargs.items() if k in d3_model_keys}
+
+        d3_model = D3DispersionModel(
+            a1=d3_kwargs["a1"],
+            a2=d3_kwargs["a2"],
+            s8=d3_kwargs["s8"],
+            s6=d3_kwargs.get("s6", 1.0),
+            d3_params=d3_kwargs.get("d3_params"),
+            **forwarded_kwargs,
+        )
+
     match model_type:
         case TorchSimModelType.FAIRCHEM:
             from torch_sim.models.fairchem import FairChemModel
@@ -380,6 +426,11 @@ def pick_model(
 
         case _:
             raise ValueError(f"Invalid model type: {model_type}")
+
+    if d3_model is not None:
+        from torch_sim.models.interface import SumModel
+
+        return SumModel(base_model, d3_model)
 
     return base_model
 
@@ -558,6 +609,12 @@ class TorchSimOptimizeMaker(Maker):
 
         final_structures = state.to_structures()
 
+        # TorchSim SimState drops (site) properties, so we need to re-attach them
+        for initial, final in zip(structures, final_structures, strict=True):
+            final.properties = initial.properties
+            for key, value in initial.site_properties.items():
+                final.add_site_property(key, value)
+
         # Get final calculation output
         calculation_output = get_calculation_output(state, model, autobatcher)
 
@@ -723,6 +780,12 @@ class TorchSimIntegrateMaker(Maker):
         calculation_output = get_calculation_output(state, model, autobatcher)
 
         final_structures = state.to_structures()
+
+        # TorchSim SimState drops (site) properties, so we need to re-attach them
+        for initial, final in zip(structures, final_structures, strict=True):
+            final.properties = initial.properties
+            for key, value in initial.site_properties.items():
+                final.add_site_property(key, value)
 
         # Create calculation object
         calculation = TorchSimCalculation(

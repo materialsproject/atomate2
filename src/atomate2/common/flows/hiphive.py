@@ -1,4 +1,4 @@
-"""Flow for calculating (an)harmonic FCs and phonon renormalisation with pheasy."""
+"""Flow for calculating (an)harmonic FCs and phonon renormalisation with hiPhive."""
 
 from __future__ import annotations
 
@@ -6,10 +6,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
-from pymatgen.util.due import Doi, due
-
 from atomate2.common.flows.phonons import BasePhononMaker as PurePhonopyMaker
-from atomate2.common.jobs.pheasy import (
+from atomate2.common.jobs.hiphive import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
     get_supercell_size,
@@ -30,33 +28,30 @@ if TYPE_CHECKING:
 SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
-@due.dcite(
-    Doi("10.26434/chemrxiv.15004632/v1"),
-    description="Materials Project's Harmonic Phonon Database.",
-)
 @dataclass
 class BasePhononMaker(PurePhonopyMaker, ABC):
-    """Maker to calculate harmonic phonons with LASSO-based ML code Pheasy.
+    """Maker to calculate harmonic phonons with the cluster-expansion code hiPhive.
 
-    Calculate the zero-K harmonic phonons of a material and higher-order FCs.
+    Calculate the zero-K harmonic phonons of a material. The scope is harmonic
+    only. Third- and fourth-order force constants are not computed.
     Initially, a tight structural relaxation is performed to obtain a structure
     without forces on the atoms. Subsequently, supercells with all atoms displaced
     by a small amplitude (generally using 0.01 A) are generated and accurate forces
-    are computed for these structures for the second order force constants. With the
-    help of pheasy (LASSO technique), these forces are then converted into a dynamical
-    matrix. In this Workflow, we separate the harmonic phonon calculations and
-    anharmonic force constants calculations. To correct for polarization effects, a
-    correction of the dynamical matrix based on BORN charges can be performed. Finally,
-    phonon densities of states, phonon band structures and thermodynamic properties
-    are computed. For the anharmonic force constants, the supercells with all atoms
-    displaced by a larger amplitude (generally using 0.08 A) are generated and accurate
-    forces are computed for these structures. With the help of pheasy (LASSO technique),
-    the third- and fourth-order force constants are extracted at once.
+    are computed for these structures for the second order force constants. hiPhive
+    builds a cluster space from the supercell symmetry and fits the force constants
+    to those forces by regression. To correct for polarization effects, a correction
+    of the dynamical matrix based on BORN charges can be performed. Finally, phonon
+    densities of states, phonon band structures and thermodynamic properties are
+    computed.
+
+    Anharmonic force constants are deferred to a later PR. pheasy fits them with
+    the second-order terms held fixed, and hiPhive has no equivalent of that, so
+    the anharmonic fit needs a design decision of its own.
 
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to
         this flow. Otherwise, a different space group might be detected and too many
-        displacement calculations will be required for pheasy phonon calculation. It
+        displacement calculations will be required for hiPhive phonon calculation. It
         is recommended to check the convergence parameters here and adjust them if
         necessary. The default might not be strict enough for your specific case.
         Additionally, for high-throughoput calculations, it is recommended to calculate
@@ -74,7 +69,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         Symmetry precision to use in the
         reduction of symmetry to find the primitive/conventional cell
         (use_primitive_standard_structure, use_conventional_standard_structure)
-        and to handle all symmetry-related tasks in pheasy, we recommend to
+        and to handle all symmetry-related tasks in hiPhive, we recommend to
         use the value of 1e-3.
     displacement: float
         displacement distance for phonons, for most cases 0.01 A is a good choice,
@@ -84,25 +79,19 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         for harmonic phonon calculations. The default value is 0 and the number of
         displacements is automatically determined by the number of atoms in the
         supercell and its space group.
-    cal_anhar_fcs: bool
-        if set to True, anharmonic force constants(FCs) up to fourth-order FCs will
-        be calculated. The default value is False, and only harmonic phonons will
-        be calculated.
-    displacement_anhar: float
-        displacement distance for anharmonic force constants(FCs) up to fourth-order
-        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
-    num_disp_anhar: int
-        number of displacements to be generated using a random-displacement approach
-        for anharmonic phonon calculations. The default value is 0 and the number of
-        displacements is automatically determined by the number of atoms in the
-        supercell, cutoff distance for anharmonic FCs its space group. generally,
-        50 large-distance displacements are enough for most cases.
-    fcs_cutoff_radius: list
-        cutoff distance for anharmonic force constants(FCs) up to fourth-order FCs.
-        The default value is [-1, 12, 10], which means that the cutoff distance for
-        second-order FCs is the Wigner-Seitz cell boundary and the cutoff distance
-        for third-order FCs is 12 Borh, and the cutoff distance for fourth-order FCs
-        is 10 Bohr. Generally, the default value is good enough.
+    cutoff_2nd: float | None
+        second-order cutoff in Angstrom for the hiPhive cluster space. If None,
+        the largest cutoff the supercell allows is used.
+    fit_method: str
+        regressor used to fit the force constants. Passed to the trainstation
+        optimizer. Second-order force constants decay with distance, so
+        most orbit coefficients are zero and a regularized regression is
+        the right estimator. This matches pheasy, which fits with LASSO.
+        Plain least squares would return dense force constants that fit
+        the training forces without respecting that structure. Other
+        trainstation choices such as "rfe", "ardr" and "least-squares"
+        remain available, though "rfe" refits once per feature and does
+        not scale past a few hundred parameters.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 14.0 A. In most cases, the default value is good
@@ -171,17 +160,8 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
     symprec: float = 1e-3
     displacement: float = 0.01
     num_displaced_supercells: int = 0
-    cal_anhar_fcs: bool = False
-    displacement_anhar: float = 0.08
-    num_disp_anhar: int = 0
-    fcs_cutoff_radius: list = field(
-        default_factory=lambda: [-1, 12, 10]
-    )  # units in Bohr
-    renorm_phonon: bool = False
-    renorm_temp: list = field(default_factory=lambda: [100, 700, 100])
-    cal_ther_cond: bool = False
-    ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
-    ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
+    cutoff_2nd: float | None = None
+    fit_method: str = "lasso"
     min_length: float | None = 8.0
     max_atoms: float | None = 200
     force_90_degrees: bool = True
@@ -223,10 +203,6 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             num_displaced_supercells=self.num_displaced_supercells,
-            cal_anhar_fcs=self.cal_anhar_fcs,
-            displacement_anhar=self.displacement_anhar,
-            num_disp_anhar=self.num_disp_anhar,
-            fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
@@ -307,17 +283,12 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
-            cal_anhar_fcs=self.cal_anhar_fcs,
-            fcs_cutoff_radius=self.fcs_cutoff_radius,
-            renorm_phonon=self.renorm_phonon,
-            renorm_temp=self.renorm_temp,
-            cal_ther_cond=self.cal_ther_cond,
-            ther_cond_mesh=self.ther_cond_mesh,
-            ther_cond_temp=self.ther_cond_temp,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
+            cutoff_2nd=self.cutoff_2nd,
+            fit_method=self.fit_method,
             code=self.code,
             structure=structure,
             displacement_data=displacement_calcs.output,
