@@ -13,7 +13,7 @@ class ExampleMaker(Maker):
         return Flow(...)
 ```
 
-The `Maker` class usually contains most of the calculation parameters and other settings that are required to set up the calculation in the correct way. Much of this logic can be written like normal python functions and then turned into a `Job` via the `@job` decorator.
+The `Maker` class usually contains most calculation parameters and other settings needed to set up the calculation correctly. Much of this logic can be written within methods of the `Maker` or independent functions and then turned into a ' Job ' via the `make` method and the `@job` decorator, or into a `Flow` via the `make` method and by returning a `Flow` object.
 
 One common task in almost any materials science calculation is writing calculation input files to disk so the underlying software (e.g., VASP, Q-Chem, CP2K, etc.) can execute them. This is preferably done via a `pymatgen` `InputSet` class. `InputSet` is essentially a dict-like container that specifies which files to write and their contents. It has a `write_input()` method that writes those files to disk, e.g.,
 
