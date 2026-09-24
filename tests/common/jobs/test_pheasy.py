@@ -21,6 +21,7 @@ import atomate2.common.jobs.pheasy as pheasy_jobs
 from atomate2.common.jobs.pheasy import (
     _check_lasso_alpha,
     _get_num_anharmonic_supercells,
+    _run_harmonic_fit,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
 )
@@ -174,17 +175,57 @@ def test_get_num_anharmonic_supercells(monkeypatch):
         _get_num_anharmonic_supercells(num_disp_anhar=0, **kwargs)
 
 
+def test_run_harmonic_fit(monkeypatch):
+    """The fit flags of the pheasy workflow and the finite-temperature fit."""
+    calls = []
+
+    def fake_run(args, check):
+        calls.append((args, check))
+
+    monkeypatch.setattr(pheasy_jobs.subprocess, "run", fake_run)
+    matrix = np.diag([2, 3, 4])
+
+    _run_harmonic_fit(matrix, 1e-3, 5)
+    assert [args[:4] for args, _ in calls] == [["pheasy", "--dim", "2", "3"]] * 4
+    assert all(check for _, check in calls)
+    assert [args[9] for args, _ in calls] == ["-s", "-c", "-d", "-f"]
+    fit = " ".join(calls[-1][0])
+    assert "-l LASSO --std --seed 103 --rasr BHH --ndata 5" in fit
+    assert "--alpha_min" not in fit
+    assert " -o " not in fit
+
+    calls.clear()
+    _run_harmonic_fit(matrix, 1e-3, 3, use_lasso=False)
+    fit = " ".join(calls[-1][0])
+    assert "-f --full_ifc --rasr BHH --ndata 3" in fit
+    for flag in ("-l", "--std", "--seed"):
+        assert flag not in calls[-1][0]
+
+    calls.clear()
+    _run_harmonic_fit(
+        matrix, 1e-3, 5, rotational_sum_rule=None, alpha_min=-8, log_file="x.log"
+    )
+    fit = " ".join(calls[-1][0])
+    assert "--alpha_min -8 --seed 103 --ndata 5" in fit
+    assert fit.endswith("-o x.log")
+    assert "--rasr" not in fit
+
+
 def test_check_lasso_alpha(tmp_dir):
     log_file = Path("pheasy_anharmonic_fit.log")
 
     log_file.write_text("- alpha_min: 1e-12\n- alpha_opt: 2.947052e-09\n")
     with warnings.catch_warnings():
         warnings.simplefilter("error")
-        _check_lasso_alpha(log_file, alpha_min=-12)
+        assert _check_lasso_alpha(log_file, alpha_min=-12) == pytest.approx(
+            2.947052e-09
+        )
 
     log_file.write_text("- alpha_min: 1e-12\n- alpha_opt: 1.000000e-12\n")
-    with pytest.warns(UserWarning, match="on the lower bound"):
+    with pytest.warns(UserWarning, match="on the lower bound.*anhar_alpha_min"):
         _check_lasso_alpha(log_file, alpha_min=-12)
+    with pytest.warns(UserWarning, match="Lower alpha_min and refit"):
+        _check_lasso_alpha(log_file, alpha_min=-12, alpha_min_name="alpha_min")
 
     log_file.write_text("- alpha_max: 1e-2\n- alpha_opt: 1.000000e-02\n")
     with pytest.warns(UserWarning, match="on the upper bound"):

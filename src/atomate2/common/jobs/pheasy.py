@@ -69,6 +69,7 @@ _DEFAULT_FILE_PATHS = {
     "website": "phonon_website.json",
     "one_shot_dir": "one_shot",
     "anharmonic_fit_log": "pheasy_anharmonic_fit.log",
+    "harmonic_fit_log": "pheasy_harmonic_fit.log",
 }
 
 # The anharmonic training set is sized so that the fit has this many force
@@ -215,7 +216,9 @@ def _check_anharmonic_settings(
         )
 
 
-def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
+def _check_lasso_alpha(
+    log_file: Path, alpha_min: int, alpha_min_name: str = "anhar_alpha_min"
+) -> float:
     """
     Warn if the cross-validated LASSO penalty is on either bound of the search.
 
@@ -230,11 +233,18 @@ def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
         Log file written by pheasy during the fit.
     alpha_min: int
         Base-10 exponent of the smallest penalty in the search.
+    alpha_min_name: str
+        Name of the setting that gives alpha_min, used in the warning.
+
+    Returns
+    -------
+    float
+        The penalty chosen by cross-validation.
     """
     if not log_file.exists():
         raise FileNotFoundError(
             f"pheasy exited without writing {log_file}, so the result of the "
-            "anharmonic fit is unknown."
+            "fit is unknown."
         )
     match = re.search(r"alpha_opt:\s*([-+0-9.eE]+)", log_file.read_text())
     if match is None:
@@ -253,11 +263,85 @@ def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
     if alpha_opt <= 10.0**alpha_min * (1 + 1e-6):
         warnings.warn(
             f"The LASSO penalty chosen by cross-validation ({alpha_opt:e}) is on "
-            f"the lower bound 1e{alpha_min} in {log_file}. The anharmonic force "
-            "constants depend on this bound and may be wrong. Lower "
-            "anhar_alpha_min and refit.",
+            f"the lower bound 1e{alpha_min} in {log_file}. The force constants "
+            f"depend on this bound and may be wrong. Lower {alpha_min_name} and "
+            "refit.",
             stacklevel=2,
         )
+    return alpha_opt
+
+
+def _run_harmonic_fit(
+    supercell_matrix: np.ndarray,
+    symprec: float,
+    num_har: int,
+    use_lasso: bool = True,
+    rotational_sum_rule: str | None = "BHH",
+    alpha_min: int | None = None,
+    random_seed: int | None = 103,
+    log_file: str | None = None,
+) -> None:
+    """
+    Fit the second-order force constants with pheasy in the current folder.
+
+    pheasy reads POSCAR, SPOSCAR and the harmonic displacement and force
+    matrices, and writes FORCE_CONSTANTS. The caller removes the files of an
+    earlier fit and checks the result, since the pheasy phonon workflow and
+    the finite-temperature workflow check different things.
+
+    Parameters
+    ----------
+    supercell_matrix: np.ndarray
+        Diagonal supercell matrix.
+    symprec: float
+        Symmetry precision.
+    num_har: int
+        Number of displaced supercells in the fit.
+    use_lasso: bool
+        If True, fit with LASSO on standardized data. If False, fit with
+        pheasy's default least squares.
+    rotational_sum_rule: str | None
+        Rotational sum rule passed to pheasy with --rasr, or None for none.
+    alpha_min: int | None
+        Base-10 exponent of the smallest LASSO penalty in the search. None
+        keeps pheasy's default. Ignored without LASSO.
+    random_seed: int | None
+        Seed for the LASSO fit. Ignored without LASSO.
+    log_file: str | None
+        Log file of the fit. None keeps pheasy's default.
+    """
+    dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
+    base = f"pheasy --dim {dim} -w 2 --symprec {float(symprec)}"
+    fit = f"{base} -f --full_ifc"
+    if use_lasso:
+        fit += " -l LASSO --std"
+        if alpha_min is not None:
+            fit += f" --alpha_min {int(alpha_min)}"
+        if random_seed is not None:
+            fit += f" --seed {int(random_seed)}"
+    if rotational_sum_rule is not None:
+        fit += f" --rasr {rotational_sum_rule}"
+    fit += (
+        f" --ndata {int(num_har)} "
+        f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
+    )
+    if log_file is not None:
+        fit += f" -o {log_file}"
+
+    commands = [
+        # clusters and orbits of the second-order force constants
+        f"{base} -s --nbody 2",
+        # null space
+        f"{base} -c",
+        # sensing matrix from the displacement matrix
+        (
+            f"{base} -d --ndata {int(num_har)} --disp_file "
+            f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
+        ),
+        fit,
+    ]
+    for cmd in commands:
+        subprocess.run(shlex.split(cmd), check=True)
 
 
 def _run_anharmonic_fit(
@@ -730,71 +814,17 @@ def generate_frequencies_eigenvectors(
     prim = ase_read("POSCAR")
     supercell = ase_read("SPOSCAR")
 
-    # Create the clusters and orbitals for second order force constants.
-    # The harmonic fit is always second order (-w 2, --nbody 2).
-    pheasy_cmd_1 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} "
-        f"-s -w 2 --symprec {float(symprec)} --nbody 2"
-    )
-
-    # Create the null space to further reduce the free parameters for
-    # specific force constants and make them physically correct.
-    pheasy_cmd_2 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} -c --symprec "
-        f"{float(symprec)} -w 2"
-    )
-
-    # Generate the Compressive Sensing matrix,i.e., displacement matrix
-    # for the input of machine leaning method.i.e., LASSO,
-    pheasy_cmd_3 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} -w 2 -d "
-        f"--symprec {float(symprec)} "
-        f"--ndata {int(num_har)} --disp_file "
-        f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
-    )
-
-    # Here we set a criteria to determine which method to use to generate the
-    # force constants. If the number of displacements is larger than 3, we
-    # will use the LASSO method to generate the force constants. Otherwise,
-    # we will use the least-squred method to generate the force constants.
-    if len(phonon.displacements) > 3:
-        # Calculate the force constants using the LASSO method due to the
-        # random-displacement method Obviously, the rotaional invariance
-        # constraint, i.e., tag: --rasr BHH, is enforced during the
-        # fitting process.
-        pheasy_cmd_4 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f --full_ifc "
-            f"-w 2 --symprec {float(symprec)} "
-            f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-            + (f" --seed {int(random_seed)}" if random_seed is not None else "")
-        )
-
-    else:
-        # Calculate the force constants using the least-squred method
-        pheasy_cmd_4 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f --full_ifc "
-            f"-w 2 --symprec {float(symprec)} "
-            f"--rasr BHH --ndata {int(num_har)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-        )
-
+    # With more than 3 displacements, the random-displacement data are fitted
+    # with LASSO. Otherwise, least squares is used. The rotational sum rule
+    # BHH is enforced in both.
     logger.info("Start running pheasy in cluster")
-
-    subprocess.call(shlex.split(pheasy_cmd_1))
-    subprocess.call(shlex.split(pheasy_cmd_2))
-    subprocess.call(shlex.split(pheasy_cmd_3))
-    subprocess.call(shlex.split(pheasy_cmd_4))
+    _run_harmonic_fit(
+        supercell_matrix,
+        symprec,
+        num_har,
+        use_lasso=len(phonon.displacements) > 3,
+        random_seed=random_seed,
+    )
 
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
     if cal_anhar_fcs and not fc_file.exists():
