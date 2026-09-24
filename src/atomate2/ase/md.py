@@ -62,6 +62,7 @@ class DynamicsPresets(Enum):
     nvt_berendsen = "ase.md.nvtberendsen.NVTBerendsen"
     nvt_langevin = "ase.md.langevin.Langevin"
     nvt_nose_hoover = "ase.md.npt.NPT"
+    nvt_nose_hoover_chain = "ase.md.nose_hoover_chain.NoseHooverChainNVT"
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
     npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
     npt_nose_hoover_chain = "ase.md.nose_hoover_chain.MTKNPT"
@@ -403,13 +404,22 @@ class AseMDMaker(AseMaker, ABC):
 
         md_runner.attach(md_observer, interval=self.traj_interval)
 
+        can_set_temperature = hasattr(md_runner, "_temperature_K") or hasattr(
+            md_runner, "set_temperature"
+        )
+        if not can_set_temperature and np.ptp(self.t_schedule) > 0:
+            raise ValueError(
+                f"{type(md_runner).__name__} cannot follow a temperature schedule."
+            )
+
         def _callback(dyn: MolecularDynamics = md_runner) -> None:
             if self.ensemble == MDEnsemble.nve:
                 return
             if hasattr(dyn, "_temperature_K"):
                 dyn._temperature_K = self.t_schedule[dyn.nsteps]  # noqa: SLF001
-            else:
+            elif hasattr(dyn, "set_temperature"):
                 dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
+            # NoseHooverChainNVT has neither and keeps its initial temperature
             if self.ensemble == MDEnsemble.nvt:
                 return
 
