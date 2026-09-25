@@ -97,7 +97,6 @@ strict-openff = [
     "monty==2026.7.16",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.6.1",
-    "pymatgen-core==2026.8.30",
     "pymatgen==2026.5.4", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
