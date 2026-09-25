@@ -1,10 +1,12 @@
-"""Flow for calculating (an)harmonic FCs and phonon renormalisation with hiPhive."""
+"""Flow for calculating harmonic FCs with hiPhive."""
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
+
+from pymatgen.util.due import Doi, due
 
 from atomate2.common.flows.phonons import BasePhononMaker as PurePhonopyMaker
 from atomate2.common.jobs.hiphive import (
@@ -28,6 +30,14 @@ if TYPE_CHECKING:
 SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
+@due.dcite(
+    Doi("10.1002/adts.201800184"),
+    description="hiPhive, force constant potentials by regression.",
+)
+@due.dcite(
+    Doi("10.1088/0953-8984/26/22/225402"),
+    description="ALM, used to count the free force constants.",
+)
 @dataclass
 class BasePhononMaker(PurePhonopyMaker, ABC):
     """Maker to calculate harmonic phonons with the cluster-expansion code hiPhive.
