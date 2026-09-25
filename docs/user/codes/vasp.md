@@ -345,12 +345,15 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 #### Pheasy
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
-`Pheasy` can be installed with `pip install pheasy`.
+The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs the pheasy version this workflow needs, together with phonopy and ALM.
+It also installs phono3py for the thermal expansion workflow.
+ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
 This workflow was used to build the Materials Project's Harmonic Phonon Database, described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
 
-By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg and the `ALAMODE` code.
+By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg.
+ALM, from the ALAMODE package, counts the free force constants used to size the random displacement sets.
 
 To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
 Linux and MacOS x86-64 users can try to install using conda forge:
@@ -366,12 +369,24 @@ cd ALM/python
 python setup.py build
 pip install -e .
 ```
+The `pheasy` extra pins ALM to commit `f1d668f`. When building ALM by hand, check out that commit.
 NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
 Note also that `boost` and `eigen` can be installed via `homebrew`.
 For example, using `gcc-15` from `homebrew`, one might set:
 ```
 export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
 ```
+
+With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
+The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
+Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 the job stops and asks for a shorter cutoff, a larger supercell or an explicit `num_disp_anhar`. An explicit `num_disp_anhar` is used as given.
+`anhar_max_order` selects third-order force constants (3, the default) or third- and fourth-order force constants (4).
+`anhar_fit_methods` selects how the second-order force constants are treated.
+`"cocktail"` (the default) keeps them fixed to the harmonic fit, and `"one-shot"` fits them together with the higher orders and writes the results to a `one_shot` folder.
+Both can be requested in one run.
+If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
+The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
+The anharmonic force constants are written to files in the job folder and are not stored in the output document.
 
 #### hiPhive
 
@@ -414,6 +429,59 @@ gruneisen_flow = GruneisenMaker(
     kpath_scheme="seekpath", vol=0.01, mesh=(15, 15, 15)
 ).make(structure=structure)
 ```
+
+### Thermal expansion workflow
+
+`CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
+It needs the `pheasy` extra, see the Pheasy section above.
+
+First, a tight structural relaxation is performed.
+The relaxed structure is then passed to the pheasy phonon workflow and to the elastic constant workflow.
+The two do not depend on each other, so a workflow manager can run them at the same time.
+Neither of them relaxes the structure again, so both use the same structure.
+The phonon workflow fits the third-order force constants with LASSO, on randomly displaced supercells with 0.03 Å displacements.
+The phonon maker builds its supercells with `min_length=12.0`.
+By default, it uses the one-shot fit, which fits the second-order force constants together with them.
+The cocktail fit keeps the second-order force constants of the harmonic fit.
+The thermal expansion of each fit uses the second-order force constants of that fit.
+phono3py then gives the mode Grüneisen tensors on a 12x12x12 q-point mesh.
+The thermal expansion tensor follows from the mode heat capacities, the Grüneisen tensors and the elastic compliance.
+It is computed for each fit in `anhar_fit_methods` of the phonon maker, from 0 K to 1000 K in steps of 10 K by default.
+If a frequency on the mesh is below -0.1 THz, a warning is raised and the thermal expansion of that fit is not computed.
+
+The mode Grüneisen tensors come from the third-order force constants at the relaxed structure.
+The phonon frequencies are not renormalized with temperature.
+The workflow uses PBEsol by default.
+The stress is more sensitive to ENCUT than the forces are, so check the ENCUT convergence of the elastic tensor for your material.
+For metals, set `born_maker=None` in the phonon maker to skip the Born charge calculation.
+The `compute_cte` job reads the force constant files from the folder of the pheasy fit, so it must run where that folder can be read.
+
+A thermal expansion workflow for VASP can be started as follows:
+```python
+from atomate2.vasp.flows.cte import CTEMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+cte_flow = CTEMaker().make(structure=structure)
+```
+
+`update_user_incar_settings` changes the INCAR of every VASP job in the flow.
+For example, this switches all of them to r2SCAN:
+```python
+from atomate2.vasp.powerups import update_user_incar_settings
+
+cte_flow = update_user_incar_settings(cte_flow, {"GGA": None, "METAGGA": "R2SCAN"})
+```
+The Born charge job uses DFPT with `LEPSILON = True`.
+Check that your VASP version runs DFPT with r2SCAN before you use this setting.
+
+The same workflow runs with a force field via `from atomate2.forcefields.flows.cte import CTEMaker`.
+`CTEMaker.from_force_field_name` sets one force field for the relaxation, the phonons and the elastic tensor.
 
 ### Quasi-harmonic Workflow
 
