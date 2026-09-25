@@ -345,12 +345,14 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 #### Pheasy
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
-`Pheasy` can be installed with `pip install pheasy`.
+The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs the pheasy version this workflow needs, together with phonopy and ALM.
+ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
 This workflow was used to build the Materials Project's Harmonic Phonon Database, described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
 
-By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg and the `ALAMODE` code.
+By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg.
+ALM, from the ALAMODE package, counts the free force constants used to size the random displacement sets.
 
 To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
 Linux and MacOS x86-64 users can try to install using conda forge:
@@ -366,12 +368,24 @@ cd ALM/python
 python setup.py build
 pip install -e .
 ```
+The `pheasy` extra pins ALM to commit `f1d668f`. When building ALM by hand, check out that commit.
 NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
 Note also that `boost` and `eigen` can be installed via `homebrew`.
 For example, using `gcc-15` from `homebrew`, one might set:
 ```
 export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
 ```
+
+With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
+The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
+Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 the job stops and asks for a shorter cutoff, a larger supercell or an explicit `num_disp_anhar`. An explicit `num_disp_anhar` is used as given.
+`anhar_max_order` selects third-order force constants (3, the default) or third- and fourth-order force constants (4).
+`anhar_fit_methods` selects how the second-order force constants are treated.
+`"cocktail"` (the default) keeps them fixed to the harmonic fit, and `"one-shot"` fits them together with the higher orders and writes the results to a `one_shot` folder.
+Both can be requested in one run.
+If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
+The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
+The anharmonic force constants are written to files in the job folder and are not stored in the output document.
 
 #### hiPhive
 
@@ -385,6 +399,54 @@ The test set is 14 Materials Project entries, two per crystal system, with force
 The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
 Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
 The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
+
+#### Finite-temperature phonons
+
+`FiniteTemperaturePhononMaker` fits effective harmonic force constants at a finite temperature, as in the temperature-dependent effective potential ([TDEP](https://doi.org/10.1103/PhysRevB.84.180301)) method.
+They include the anharmonic effects at that temperature, at the volume of the relaxed structure.
+Thermal expansion is not included.
+The structure is relaxed first.
+An NVT MD run then samples the displacements at the temperature.
+By default, it runs for 8 ps at 300 K with a time step of 1 fs and a Nosé-Hoover thermostat.
+The first 1 ps is left out, and 50 snapshots are picked evenly spread over the rest.
+Static calculations give the forces on the snapshots and on the undisplaced supercell.
+The displacements are measured from the relaxed positions.
+Pheasy then fits the second-order force constants to them with LASSO.
+As in the pheasy phonon workflow, a `DielectricMaker` computes the Born charges and the dielectric tensor for the non-analytical correction.
+It needs the `pheasy` extra, like the pheasy phonon workflow above.
+
+```python
+from atomate2.vasp.flows.finite_temperature_phonons import (
+    FiniteTemperaturePhononMaker,
+)
+
+flow = FiniteTemperaturePhononMaker(temperature=300).make(structure)
+```
+
+The MD uses looser settings than the statics, for example ENCUT = 500 eV instead of 600 eV.
+Only the forces of the statics enter the fit.
+The relaxation, the MD and the statics use the same functional, +U, smearing and k-point settings.
+The MD and the statics start from the magnetic moments of the relaxed structure, if it has any.
+Both set ISPIN from the relaxation directory with `auto_ispin`.
+`md_runs` splits the MD into consecutive jobs, for example to stay within the walltime of a queue.
+Each job continues from the positions and velocities of the previous one.
+The thermostat variables start again from zero in each job.
+
+The trajectory is also checked before the fit.
+The check looks for melting and for a move away from the reference structure.
+It also looks at the drift of the potential energy late in the run.
+The result is stored in `trajectory_health` of the output `FiniteTemperaturePhononDoc`, and a warning is raised when the check fails.
+Imaginary modes are counted at the q-points commensurate with the supercell.
+They are reported and not removed.
+
+The MD and the statics can also come from different codes.
+Three more makers are in `atomate2.forcefields.flows.finite_temperature_phonons`.
+`VaspMDMLFFStaticFiniteTemperaturePhononMaker` runs the MD with VASP and the statics with a force field.
+`MLFFMDVaspStaticFiniteTemperaturePhononMaker` runs the MD with a force field and the statics with VASP.
+`ForceFieldFiniteTemperaturePhononMaker` uses a force field for all steps.
+Each has a `from_force_field_name` method to choose the force field.
+They need the package of the force field, for example `mace-torch` for MACE.
+All of them use the same fit.
 
 ### Grüneisen parameter workflow
 

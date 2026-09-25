@@ -44,13 +44,124 @@ from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from emmet.core.math import Matrix3D
+    from phonopy.structure.atoms import PhonopyAtoms
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.ase.jobs import AseRelaxMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 logger = logging.getLogger(__name__)
+
+# CODATA 2018: 1 Angstrom = 1 / 0.529177210903 Bohr
+ANGSTROM_TO_BOHR = 1.8897261246257702
+
+
+def _get_num_irreducible_fcs(
+    supercell: PhonopyAtoms,
+    max_order: int,
+    fcs_cutoff_radius: Sequence[float] | None = None,
+    nbody: Sequence[int] | None = None,
+) -> list[int]:
+    """
+    Count the symmetry-irreducible force constants of each order with ALM.
+
+    Used by the pheasy and hiPhive workflows to size their displacement sets.
+
+    Parameters
+    ----------
+    supercell: PhonopyAtoms
+        Supercell used for the force constant fit.
+    max_order: int
+        Highest force constant order to count, 2, 3 or 4.
+    fcs_cutoff_radius: Sequence[float] | None
+        Cutoff radius in Bohr for each order, starting at second order.
+        Only needed when max_order is larger than 2.
+    nbody: Sequence[int] | None
+        Largest number of atoms in a cluster for each order, starting at second
+        order, as in ALM's define. None keeps all clusters.
+
+    Returns
+    -------
+    list[int]
+        Number of irreducible force constants for each order, starting at
+        second order.
+    """
+    try:
+        from alm import ALM
+    except ImportError as exc:
+        raise ImportError(
+            "Error importing ALM. Please ensure the 'alm' library is installed."
+        ) from exc
+
+    positions = supercell.scaled_positions
+    numbers = supercell.numbers
+
+    if max_order == 2:
+        # TODO: remove ALMODE dependence for 2nd order force constants
+        # the harmonic count uses no cutoff, so the lattice stays in Angstrom
+        with ALM(supercell.cell, positions, numbers) as alm:
+            alm.define(1)
+            alm.suggest()
+            return [alm._get_number_of_irred_fc_elements(1)]  # noqa: SLF001
+
+    # ALM expects the lattice in Bohr when cutoff radii in Bohr are given, and
+    # one cutoff per order and per pair of elements
+    n_elements = len(set(numbers))
+    cutoff_radii = [
+        np.full((n_elements, n_elements), radius)
+        for radius in fcs_cutoff_radius[: max_order - 1]
+    ]
+    with ALM(supercell.cell * ANGSTROM_TO_BOHR, positions, numbers) as alm:
+        alm.define(max_order - 1, cutoff_radii=cutoff_radii, nbody=nbody)
+        alm.suggest()
+        return [
+            alm._get_number_of_irred_fc_elements(order)  # noqa: SLF001
+            for order in range(1, max_order)
+        ]
+
+
+def _get_num_harmonic_supercells(
+    phonon: Phonopy, num_displaced_supercells: int, multiplier: float = 1.8
+) -> int:
+    """
+    Get the number of displaced supercells used for the harmonic force constants.
+
+    Used by the pheasy and hiPhive workflows. In pheasy, both the displacement
+    generation and the fit call this function, so the dataset is always split
+    into its harmonic and anharmonic parts at the same place.
+
+    If phonopy needs three or fewer finite displacements, these are used as
+    they are. Otherwise random displacements are used. Their number is either
+    given by the user or set from the number of free second-order force
+    constants, n_fp. The minimum is ceil(n_fp / (3 * natom)). Because the full
+    rank of the matrix does not guarantee an accurate fit, multiplier times
+    this minimum plus one configuration is used.
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        Phonopy object holding the finite displacements.
+    num_displaced_supercells: int
+        Number of random displacements requested by the user, 0 for automatic.
+    multiplier: float
+        Number of configurations per minimum configuration set.
+
+    Returns
+    -------
+    int
+        Number of harmonic displaced supercells.
+    """
+    if len(phonon.displacements) <= 3:
+        return len(phonon.displacements)
+    if num_displaced_supercells != 0:
+        return num_displaced_supercells
+    (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+    natom = len(phonon.supercell.numbers)
+    num_disp_sc = int(np.ceil(n_fp / (3.0 * natom)))
+    return int(np.ceil(num_disp_sc * multiplier)) + 1
 
 
 def _get_kpath(

@@ -74,6 +74,29 @@ def test_npt_init_kwargs(si_structure, clean_dir, caplog):
         assert "The `NPT` module in ASE is no longer recommended" in caplog.text
 
 
+def test_nvt_nose_hoover_chain(si_structure, clean_dir):
+    """NoseHooverChainNVT runs at a constant temperature only."""
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics="nose-hoover-chain",
+        temperature=300,
+        n_steps=5,
+        ase_md_kwargs={"tdamp": 10, "tchain": 1},
+    )
+    result = maker.run_ase(si_structure)
+    assert len(result.trajectory) == 6
+
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics="nose-hoover-chain",
+        temperature=[300, 600],
+        n_steps=5,
+        ase_md_kwargs={"tdamp": 10},
+    )
+    with pytest.raises(ValueError, match="cannot follow a temperature schedule"):
+        maker.run_ase(si_structure)
+
+
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
 def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
     # Langevin thermostat no longer works with single atom structures in ase>3.24.x
