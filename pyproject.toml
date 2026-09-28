@@ -84,7 +84,7 @@ torchsim-mace = [
 torchsim-generic = [
     "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.1; python_version >= '3.12'"
 ]
-jdftx = ["pymatgen==2026.5.4"]
+jdftx = ["pymatgen==2026.9.24"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 openmm = [
     "mdanalysis>=2.8.0",
@@ -97,7 +97,7 @@ strict-openff = [
     "monty==2026.7.16",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.6.1",
-    "pymatgen==2026.5.4", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "pymatgen==2026.9.24", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
 # Forcefields have separate strict groupings because of conflicting dependencies.
@@ -138,7 +138,7 @@ strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
-    "pymatgen==2026.5.4",
+    "pymatgen==2026.9.24",
     "pymatgen-core==2026.9.23",
 ]
 
