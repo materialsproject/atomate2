@@ -383,6 +383,11 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
         Author extracted from transformations
     icsd_id: str
         International crystal structure database id of the structure
+    run_stats (dict[str, float | None]):
+        Various useful run stats including "System time (sec)",
+        "Total CPU time used (sec)", "Minimum memory used (kb)",
+        "Maximum memory used (kb)", "Average memory used (kb)",
+        "cores".
     calcs_reversed: List[.Calculation]
         The inputs and outputs for all FHI-aims runs in this task.
     transformations: Dict[str, Any]
@@ -434,6 +439,9 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
     )
     icsd_id: str | None = Field(
         None, description="International crystal structure database id of the structure"
+    )
+    run_stats: dict[str, Any] | None = Field(
+        None, description="Summary of runtime statistics for this calculation"
     )
     calcs_reversed: list[Calculation] | None = Field(
         None, description="The inputs and outputs for all FHI-aims runs in this task."
@@ -522,6 +530,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
             "tags": tags,
             "completed": calcs_reversed[-1].completed,
             "completed_at": calcs_reversed[-1].completed_at,
+            "run_stats": calcs_reversed[-1].output.run_stats,
             "input": InputDoc.from_aims_calc_doc(calcs_reversed[-1]),
             "output": OutputDoc.from_aims_calc_doc(calcs_reversed[-1]),
             "state": _get_state(calcs_reversed, analysis),
