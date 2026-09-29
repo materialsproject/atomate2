@@ -1,4 +1,5 @@
-"""Jobs for running phonon calculations with phonopy and pheasy."""
+"""Jobs for running phonon，Higher-order FCs calculations with phonopy and pheasy.
+and lattice thermal conductivity calculations using SHENGBTE and FOURPHONON."""
 
 from __future__ import annotations
 
