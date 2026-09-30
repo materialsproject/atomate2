@@ -314,7 +314,10 @@ def _run_anharmonic_fit(
         from run to run on the same forces.
     """
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
-    base = f"pheasy --dim {dim} -w {anhar_max_order} --symprec {float(symprec)}"
+    base = (
+        f"pheasy --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
+        f"--symprec {float(symprec)}"
+    )
     cutoffs = f"--c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)}"
     if anhar_max_order == 4:
         cutoffs += f" --c4 {float(fcs_cutoff_radius[2] / ANGSTROM_TO_BOHR)}"
@@ -631,7 +634,10 @@ def generate_frequencies_eigenvectors(
         verbose=False,
     )
 
-    # Write the POSCAR and SPOSCAR files for the input of pheasy code
+    # Write the POSCAR and SPOSCAR files for the input of pheasy code. pheasy
+    # reads SPOSCAR (--scell SPOSCAR), so its atoms are in the order of the
+    # displacement and force matrices. The supercell pheasy builds itself from
+    # POSCAR can put an atom on a cell face one lattice vector away.
     supercell = phonon._supercell  # noqa: SLF001
     write_vasp("POSCAR", get_phonopy_structure(structure))
     write_vasp("SPOSCAR", supercell)
@@ -738,7 +744,7 @@ def generate_frequencies_eigenvectors(
     # Create the clusters and orbitals for second order force constants.
     # The harmonic fit is always second order (-w 2, --nbody 2).
     pheasy_cmd_1 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
+        f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
         f"{int(supercell_matrix[1][1])} "
         f"{int(supercell_matrix[2][2])} "
         f"-s -w 2 --symprec {float(symprec)} --nbody 2"
@@ -747,7 +753,7 @@ def generate_frequencies_eigenvectors(
     # Create the null space to further reduce the free parameters for
     # specific force constants and make them physically correct.
     pheasy_cmd_2 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
+        f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
         f"{int(supercell_matrix[1][1])} "
         f"{int(supercell_matrix[2][2])} -c --symprec "
         f"{float(symprec)} -w 2"
@@ -756,7 +762,7 @@ def generate_frequencies_eigenvectors(
     # Generate the Compressive Sensing matrix,i.e., displacement matrix
     # for the input of machine leaning method.i.e., LASSO,
     pheasy_cmd_3 = (
-        f"pheasy --dim {int(supercell_matrix[0][0])} "
+        f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
         f"{int(supercell_matrix[1][1])} "
         f"{int(supercell_matrix[2][2])} -w 2 -d "
         f"--symprec {float(symprec)} "
@@ -774,7 +780,7 @@ def generate_frequencies_eigenvectors(
         # constraint, i.e., tag: --rasr BHH, is enforced during the
         # fitting process.
         pheasy_cmd_4 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
+            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -f --full_ifc "
             f"-w 2 --symprec {float(symprec)} "
@@ -786,7 +792,7 @@ def generate_frequencies_eigenvectors(
     else:
         # Calculate the force constants using the least-squred method
         pheasy_cmd_4 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
+            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -f --full_ifc "
             f"-w 2 --symprec {float(symprec)} "
@@ -829,6 +835,7 @@ def generate_frequencies_eigenvectors(
                 work_dir.mkdir(exist_ok=True)
                 for filename in (
                     "POSCAR",
+                    "SPOSCAR",
                     _DEFAULT_FILE_PATHS["anharmonic_displacements"],
                     _DEFAULT_FILE_PATHS["anharmonic_force_matrix"],
                 ):
@@ -945,13 +952,14 @@ def generate_frequencies_eigenvectors(
         refit_dir.mkdir(exist_ok=True)
         for filename in (
             "POSCAR",
+            "SPOSCAR",
             _DEFAULT_FILE_PATHS["harmonic_displacements"],
             _DEFAULT_FILE_PATHS["harmonic_force_matrix"],
         ):
             shutil.copy(filename, refit_dir / filename)
 
         pheasy_cmd_11 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
+            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -s -w 2 --c2 "
             f"10.0 --symprec {float(symprec)} "
@@ -959,14 +967,14 @@ def generate_frequencies_eigenvectors(
         )
 
         pheasy_cmd_12 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
+            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -c --symprec "
             f"{float(symprec)} --c2 10.0 -w 2"
         )
 
         pheasy_cmd_13 = (
-            f"pheasy --dim {int(supercell_matrix[0][0])} "
+            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -w 2 -d --symprec "
             f"{float(symprec)} --c2 10.0 "
@@ -978,7 +986,7 @@ def generate_frequencies_eigenvectors(
 
         if len(phonon.displacements) > 3:
             pheasy_cmd_14 = (
-                f"pheasy --dim {int(supercell_matrix[0][0])} "
+                f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --c2 10.0 "
                 f"--full_ifc -w 2 --symprec {float(symprec)} "
@@ -988,7 +996,7 @@ def generate_frequencies_eigenvectors(
 
         else:
             pheasy_cmd_14 = (
-                f"pheasy --dim {int(supercell_matrix[0][0])} "
+                f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --full_ifc "
                 f"--c2 10.0 -w 2 --symprec {float(symprec)} "

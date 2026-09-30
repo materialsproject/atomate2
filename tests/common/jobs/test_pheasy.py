@@ -172,6 +172,52 @@ def test_imaginary_mode_refit(tmp_dir, monkeypatch):
     assert parse_FORCE_CONSTANTS(str(refit)).shape == (32, 32, 3, 3)
 
 
+def test_atom_on_cell_face(tmp_dir):
+    """An atom on a cell face must not spoil the harmonic fit.
+
+    pheasy used to build its own supercell from POSCAR. Reading POSCAR can move
+    an atom on a cell face by one lattice vector, and the atoms of that supercell
+    then no longer matched the order of the force data.
+    """
+    # Cu on the diamond sites of an fcc primitive cell, with the second atom
+    # just below x = 1 instead of at x = 0, as in a relaxed Si cell. For this
+    # lattice, reading POSCAR moves that atom by one lattice vector.
+    structure = Structure(
+        Lattice([[0, 2.725, 2.725], [2.725, 0, 2.725], [2.725, 2.725, 0]]),
+        ["Cu", "Cu"],
+        [[0.25, 0.25, 0.25], [1 - 1e-16, 0, 0]],
+    )
+    kwargs = {
+        **COMMON_KWARGS,
+        "supercell_matrix": [[4, 0, 0], [0, 4, 0], [0, 0, 4]],
+        "cal_anhar_fcs": False,
+        "fcs_cutoff_radius": FCS_CUTOFF_RADIUS,
+    }
+
+    job = generate_phonon_displacements(
+        structure=structure,
+        num_displaced_supercells=0,
+        displacement_anhar=0.03,
+        num_disp_anhar=0,
+        **kwargs,
+    )
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+    job = generate_frequencies_eigenvectors(
+        structure=structure,
+        displacement_data=_emt_displacement_data(responses[job.uuid][1].output),
+        **FIT_KWARGS,
+        **kwargs,
+    )
+    run_locally(job, create_folders=True, ensure_success=True)
+
+    (fit_dir,) = (path.parent for path in Path.cwd().glob("job_*/disp_matrix.npy"))
+    fc = parse_FORCE_CONSTANTS(str(fit_dir / "FORCE_CONSTANTS"))
+    disps = np.load(fit_dir / "disp_matrix.npy")
+    forces = np.load(fit_dir / "force_matrix.npy")
+    residual = forces + np.einsum("ijab,njb->nia", fc, disps)
+    assert np.linalg.norm(residual) < 0.05 * np.linalg.norm(forces)
+
+
 def test_get_num_anharmonic_supercells(monkeypatch):
     phonon = _generate_phonon_object(_cu_structure(), **COMMON_KWARGS)
     kwargs = {
