@@ -272,9 +272,11 @@ def test_run_harmonic_fit(monkeypatch):
     matrix = np.diag([2, 3, 4])
 
     _run_harmonic_fit(matrix, 1e-3, 5)
-    assert [args[:4] for args, _ in calls] == [["pheasy", "--dim", "2", "3"]] * 4
+    assert [args[:6] for args, _ in calls] == [
+        ["pheasy", "--scell", "SPOSCAR", "--dim", "2", "3"]
+    ] * 4
     assert all(check for _, check in calls)
-    assert [args[9] for args, _ in calls] == ["-s", "-c", "-d", "-f"]
+    assert [args[11] for args, _ in calls] == ["-s", "-c", "-d", "-f"]
     fit = " ".join(calls[-1][0])
     assert "-l LASSO --std --seed 103 --rasr BHH --ndata 5" in fit
     assert "--alpha_min" not in fit
