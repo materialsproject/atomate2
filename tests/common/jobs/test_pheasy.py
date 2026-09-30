@@ -27,6 +27,7 @@ from atomate2.common.jobs.pheasy import (
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
     _get_num_irreducible_fcs,
+    _run_band_structure_and_plot,
 )
 
 # fcs_cutoff_radius in Bohr. 8 Bohr (4.2 A) covers the first two neighbour
@@ -130,6 +131,45 @@ def test_harmonic_and_anharmonic_split(tmp_dir, num_displaced_supercells):
     # the anharmonic set is drawn with its own seed, so its directions differ
     # from those of the random harmonic set
     assert not np.allclose(harmonic[0] / 0.01, anharmonic[0] / 0.03)
+
+
+def test_imaginary_mode_refit(tmp_dir, monkeypatch):
+    """The short-cutoff refit reads the matrix files and runs in its own folder."""
+
+    def _report_imaginary_modes(*args, **kwargs):
+        bs_symm_line, _ = _run_band_structure_and_plot(*args, **kwargs)
+        return bs_symm_line, True
+
+    monkeypatch.setattr(
+        pheasy_jobs, "_run_band_structure_and_plot", _report_imaginary_modes
+    )
+    structure = _cu_structure()
+    kwargs = {
+        **COMMON_KWARGS,
+        "supercell_matrix": [[2, 0, 0], [0, 2, 0], [0, 0, 2]],
+        "cal_anhar_fcs": False,
+        "fcs_cutoff_radius": FCS_CUTOFF_RADIUS,
+    }
+
+    job = generate_phonon_displacements(
+        structure=structure,
+        num_displaced_supercells=0,
+        displacement_anhar=0.03,
+        num_disp_anhar=0,
+        **kwargs,
+    )
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+    job = generate_frequencies_eigenvectors(
+        structure=structure,
+        displacement_data=_emt_displacement_data(responses[job.uuid][1].output),
+        **FIT_KWARGS,
+        **kwargs,
+    )
+    run_locally(job, create_folders=True, ensure_success=True)
+
+    (fit_dir,) = (path.parent for path in Path.cwd().glob("job_*/disp_matrix.npy"))
+    refit = fit_dir / "short_cutoff_refit" / "FORCE_CONSTANTS"
+    assert parse_FORCE_CONSTANTS(str(refit)).shape == (32, 32, 3, 3)
 
 
 def test_get_num_anharmonic_supercells(monkeypatch):

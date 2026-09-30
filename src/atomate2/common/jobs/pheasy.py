@@ -72,6 +72,7 @@ _DEFAULT_FILE_PATHS = {
     "anharmonic_force_matrix": "force_matrix_anhar.npy",
     "website": "phonon_website.json",
     "one_shot_dir": "one_shot",
+    "refit_dir": "short_cutoff_refit",
     "anharmonic_fit_log": "pheasy_anharmonic_fit.log",
 }
 
@@ -890,8 +891,7 @@ def generate_frequencies_eigenvectors(
     # If imaginary modes are present, we first use the hiphive code to enforce
     # some symmetry constraints to eliminate the imaginary modes (generally work
     # for small imaginary modes near Gamma point). If the imaginary modes are
-    # still present, a pheasy refit with a shorter cutoff (10 A) follows, but
-    # its result is currently not used (see the NOTE below).
+    # still present, a pheasy refit with a shorter cutoff (10 A) follows.
 
     if imaginary_modes:
         # Define a cluster space using the largest cutoff you can
@@ -937,12 +937,19 @@ def generate_frequencies_eigenvectors(
         )
 
     # Using a shorter cutoff (10 A) to generate the force constants to
-    # eliminate the imaginary modes near Gamma point in pheasy code.
-    # NOTE: the force constants are read back below from
-    # FORCE_CONSTANTS_short_cutoff, the file the hiPhive step above wrote, so
-    # the result of this pheasy refit is not used. If the refit succeeds, it
-    # overwrites FORCE_CONSTANTS in the job folder.
+    # eliminate the imaginary modes near Gamma point in pheasy code. The refit
+    # runs in its own folder, so FORCE_CONSTANTS of the harmonic fit, which the
+    # cocktail fit kept fixed, stays unchanged.
     if imaginary_modes:
+        refit_dir = Path(_DEFAULT_FILE_PATHS["refit_dir"]).resolve()
+        refit_dir.mkdir(exist_ok=True)
+        for filename in (
+            "POSCAR",
+            _DEFAULT_FILE_PATHS["harmonic_displacements"],
+            _DEFAULT_FILE_PATHS["harmonic_force_matrix"],
+        ):
+            shutil.copy(filename, refit_dir / filename)
+
         pheasy_cmd_11 = (
             f"pheasy --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
@@ -963,7 +970,8 @@ def generate_frequencies_eigenvectors(
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -w 2 -d --symprec "
             f"{float(symprec)} --c2 10.0 "
-            f"--ndata {int(num_har)} --disp_file"
+            f"--ndata {int(num_har)} --disp_file "
+            f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
         )
 
         phonon.generate_displacements(distance=displacement)
@@ -974,7 +982,8 @@ def generate_frequencies_eigenvectors(
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --c2 10.0 "
                 f"--full_ifc -w 2 --symprec {float(symprec)} "
-                f"-l LASSO --std --rasr BHH --ndata {int(num_har)}"
+                f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
+                f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
             )
 
         else:
@@ -983,15 +992,16 @@ def generate_frequencies_eigenvectors(
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --full_ifc "
                 f"--c2 10.0 -w 2 --symprec {float(symprec)} "
-                f"--rasr BHH --ndata {int(num_har)}"
+                f"--rasr BHH --ndata {int(num_har)} "
+                f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
             )
 
-        subprocess.call(shlex.split(pheasy_cmd_11))
-        subprocess.call(shlex.split(pheasy_cmd_12))
-        subprocess.call(shlex.split(pheasy_cmd_13))
-        subprocess.call(shlex.split(pheasy_cmd_14))
+        for cmd in (pheasy_cmd_11, pheasy_cmd_12, pheasy_cmd_13, pheasy_cmd_14):
+            subprocess.run(shlex.split(cmd), cwd=refit_dir, check=True)
 
-        force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
+        force_constants = parse_FORCE_CONSTANTS(
+            filename=refit_dir / _DEFAULT_FILE_PATHS["force_constants"]
+        )
         phonon.force_constants = force_constants
         phonon.symmetrize_force_constants()
 
