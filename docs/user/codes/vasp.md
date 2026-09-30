@@ -437,7 +437,9 @@ gruneisen_flow = GruneisenMaker(
 `CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
 It needs the `pheasy` extra, see the Pheasy section above.
 
-First, a tight structural relaxation is performed.
+First, the structure is converted to the standard primitive cell, and a tight structural relaxation is performed.
+The pheasy fits can fail for cells that are not in a standard setting.
+Set `use_symmetrized_structure="conventional"` to use the standard conventional cell instead.
 The relaxed structure is then passed to the pheasy phonon workflow and to the elastic constant workflow.
 The two do not depend on each other, so a workflow manager can run them at the same time.
 Neither of them relaxes the structure again, so both use the same structure.

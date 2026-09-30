@@ -11,7 +11,9 @@ def test_cte_maker_vasp_flow(si_structure: Structure):
     """The relaxed structure goes to both flows, and their outputs to compute_cte."""
     maker = CTEMaker(temperatures=[100, 300], mesh=(10, 10, 10))
     flow = maker.make(si_structure)
-    relax, phonon_flow, elastic_flow, cte = flow.jobs
+    prim, relax, phonon_flow, elastic_flow, cte = flow.jobs
+    assert prim.name == "structure_to_primitive"
+    assert relax.jobs[0].function_args[0].uuid == prim.output.uuid
     assert isinstance(phonon_flow, Flow)
     assert isinstance(elastic_flow, Flow)
 

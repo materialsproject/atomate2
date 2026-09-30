@@ -60,7 +60,8 @@ class CTEMaker(BaseCTEMaker):
     """
     Maker to calculate the thermal expansion with a force field and pheasy.
 
-    A tight relaxation is performed first. The relaxed structure is then passed
+    By default, the structure is converted to the standard primitive cell and
+    relaxed tightly. The relaxed structure is then passed
     to the pheasy phonon flow, which fits the second- and third-order force
     constants, and to the elastic flow. Neither flow relaxes the structure
     again. Finally, phono3py gives the mode Grueneisen tensors, and the thermal
@@ -76,6 +77,10 @@ class CTEMaker(BaseCTEMaker):
     ----------
     name: str
         Name of the flows produced by this maker.
+    use_symmetrized_structure: str or None
+        Convert the input structure to the standard "primitive" or
+        "conventional" cell before the relaxation. The pheasy fits can fail
+        for cells that are not in a standard setting.
     bulk_relax_maker: .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk. Set to None to skip
         the relaxation.

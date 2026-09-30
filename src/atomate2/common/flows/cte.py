@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 from pymatgen.util.due import Doi, due
 
 from atomate2.common.jobs.cte import compute_cte
+from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -35,7 +36,8 @@ class BaseCTEMaker(Maker, ABC):
     """
     Maker to calculate the thermal expansion from third-order force constants.
 
-    A tight structural relaxation is performed first. The relaxed structure is
+    By default, the structure is first converted to the standard primitive
+    cell, and a tight structural relaxation follows. The relaxed structure is
     then passed to the pheasy phonon flow, which fits the second- and
     third-order force constants, and to the elastic flow. The two flows do not
     depend on each other, so a workflow manager can run them at the same time.
@@ -51,6 +53,12 @@ class BaseCTEMaker(Maker, ABC):
     ----------
     name: str
         Name of the flows produced by this maker.
+    use_symmetrized_structure: str or None
+        Convert the input structure to the standard "primitive" or
+        "conventional" cell before the relaxation. The phonon and elastic flows
+        both use the converted structure. The pheasy fits can fail for cells
+        that are not in a standard setting, so only set this to None for an
+        input structure that already is.
     bulk_relax_maker: .ForceFieldRelaxMaker, .BaseVaspMaker, or None
         A maker to perform a tight relaxation on the bulk. Set to None to skip
         the relaxation.
@@ -74,6 +82,7 @@ class BaseCTEMaker(Maker, ABC):
     """
 
     name: str = "cte"
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = "primitive"
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
     phonon_maker: BasePhononMaker = None
     elastic_maker: BaseElasticMaker = None
@@ -118,6 +127,15 @@ class BaseCTEMaker(Maker, ABC):
             A previous calculation directory to use for copying outputs.
         """
         jobs = []
+        if self.use_symmetrized_structure == "primitive":
+            prim_job = structure_to_primitive(structure, self.phonon_maker.symprec)
+            jobs.append(prim_job)
+            structure = prim_job.output
+        elif self.use_symmetrized_structure == "conventional":
+            conv_job = structure_to_conventional(structure, self.phonon_maker.symprec)
+            jobs.append(conv_job)
+            structure = conv_job.output
+
         equilibrium_stress = None
         if self.bulk_relax_maker is not None:
             bulk_kwargs = {}

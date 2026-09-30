@@ -147,8 +147,12 @@ def test_expand_born_to_unitcell():
 def test_cte_maker_emt(clean_dir, monkeypatch):
     """Run the whole force field workflow with EMT forces on fcc Cu."""
     structure = AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61, cubic=True))
+    # the conventional cell keeps the 4-atom cubic unit cell used below
     maker = CTEMaker.from_force_field_name(
-        EMT, temperatures=[0, 100, 300], mesh=(8, 8, 8)
+        EMT,
+        use_symmetrized_structure="conventional",
+        temperatures=[0, 100, 300],
+        mesh=(8, 8, 8),
     )
     # a 2x2x2 supercell of the cubic cell, 32 atoms, and an fc3 cutoff of 6 Bohr
     # (3.2 A), which covers the nearest neighbours at 2.55 A
@@ -280,6 +284,7 @@ def test_cte_maker_emt(clean_dir, monkeypatch):
 def test_cte_maker_force_field_defaults():
     """The default phonon maker uses min_length=12.0 for the supercells."""
     maker = CTEMaker()
+    assert maker.use_symmetrized_structure == "primitive"
     assert maker.phonon_maker.min_length == 12.0
     assert maker.phonon_maker.cal_anhar_fcs
     assert maker.phonon_maker.displacement_anhar == 0.03
