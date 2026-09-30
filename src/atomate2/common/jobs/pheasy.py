@@ -1,5 +1,8 @@
-"""Jobs for running phonon，Higher-order FCs calculations with phonopy and pheasy.
-and lattice thermal conductivity calculations using SHENGBTE and FOURPHONON."""
+"""Jobs for running phonon and higher-order FC calculations with phonopy and pheasy.
+
+Lattice thermal conductivity calculations using ShengBTE and FourPhonon are
+planned.
+"""
 
 from __future__ import annotations
 
@@ -840,12 +843,13 @@ def generate_frequencies_eigenvectors(
                 work_dir=work_dir,
                 random_seed=random_seed,
             )
-        
+
         # End of anharmonic fit section
-        # and begin to calculate the anharmonic phonon priopoerties 
-        # (e.g., phonon lifetimes, linewidths, etc.) using SHENGBTE and FOURPHONON.
-        # maybe we also need to do the phonon renormalization here. 
-        # TODO: Implement the calculation of anharmonic phonon properties and phonon renormalization here.
+        # and begin to calculate the anharmonic phonon properties
+        # (e.g., phonon lifetimes, linewidths, etc.) using ShengBTE and FourPhonon.
+        # maybe we also need to do the phonon renormalization here.
+        # TODO: Implement the calculation of anharmonic phonon properties and
+        # phonon renormalization here.
 
     if fc_file.exists():
         # Read the force constants from the output file of pheasy code
