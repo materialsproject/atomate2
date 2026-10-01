@@ -421,10 +421,12 @@ def _run_anharmonic_fit(
             f"--disp_matrix_file {_DEFAULT_FILE_PATHS['anharmonic_displacements']}"
         ),
         # LASSO fit. OLS, pheasy's default, gives dense force constants.
-        # --std and --rasr are not passed to the anharmonic fit.
+        # --std and --rasr are not passed to the anharmonic fit. With pheasy's
+        # default --tol of 1e-4 the fits at small penalties do not converge, and
+        # the penalty chosen by cross-validation can change between machines.
         (
             f"{base} -f {fix_fc2}-l LASSO --alpha_min {anhar_alpha_min} {seed}"
-            f"--ndata {int(num_anhar)} --hdf5 "
+            f"--tol 1e-8 --ndata {int(num_anhar)} --hdf5 "
             f"--force_matrix_file {_DEFAULT_FILE_PATHS['anharmonic_force_matrix']} "
             f"-o {log_file}"
         ),
