@@ -1,39 +1,45 @@
 """Test that FHI-aims convergence is reflected in the task document state."""
 
-import gzip
-import shutil
-from pathlib import Path
+import os
 
 import pytest
+from jobflow import run_locally
 from pymatgen.io.aims.outputs import AimsOutput
+from pymatgen.io.aims.sets.core import StaticSetGenerator
 
+from atomate2.aims.jobs.core import StaticMaker
 from atomate2.aims.run import should_stop_children
 from atomate2.aims.schemas.calculation import TaskState
-from atomate2.aims.schemas.task import AimsTaskDoc
 
-REF_DIR = Path(__file__).resolve().parents[2] / "test_data/aims/static-si"
-
-
-@pytest.fixture
-def aims_dir(tmp_path):
-    """Copy the static-si reference calculation, uncompressed, to a temp dir."""
-    for name in ("aims.out", "geometry.in"):
-        with gzip.open(REF_DIR / f"{name}.gz", "rb") as src:
-            with open(tmp_path / name, "wb") as dst:
-                shutil.copyfileobj(src, dst)
-    shutil.copy(REF_DIR / "parameters.json", tmp_path / "parameters.json")
-    return tmp_path
+cwd = os.getcwd()
 
 
-def _set_converged(monkeypatch, value: bool) -> None:
+def _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, converged):
+    """Run a mocked static calculation with a patched AimsOutput.converged."""
     monkeypatch.setattr(
-        AimsOutput, "converged", property(lambda _: value), raising=False
+        AimsOutput, "converged", property(lambda _: converged), raising=False
     )
+    mock_aims({"base": "static-si"}, {})
+
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
+    maker = StaticMaker(input_set_generator=StaticSetGenerator(user_params=parameters))
+    maker.name = "base"
+    job = maker.make(si)
+
+    os.chdir(tmp_path)
+    try:
+        responses = run_locally(job, create_folders=True, ensure_success=True)
+    finally:
+        os.chdir(cwd)
+    return responses[job.uuid][1]
 
 
-def test_converged_calculation(aims_dir, monkeypatch):
-    _set_converged(monkeypatch, True)
-    doc = AimsTaskDoc.from_directory(aims_dir)
+def test_converged_calculation(si, tmp_path, mock_aims, species_dir, monkeypatch):
+    response = _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, True)
+    doc = response.output
     calc = doc.calcs_reversed[-1]
 
     assert calc.completed
@@ -42,12 +48,13 @@ def test_converged_calculation(aims_dir, monkeypatch):
     assert doc.completed
     assert doc.converged
     assert doc.state == TaskState.SUCCESS
+    assert not response.stop_children
     assert not should_stop_children(doc)
 
 
-def test_unconverged_calculation(aims_dir, monkeypatch):
-    _set_converged(monkeypatch, False)
-    doc = AimsTaskDoc.from_directory(aims_dir)
+def test_unconverged_calculation(si, tmp_path, mock_aims, species_dir, monkeypatch):
+    response = _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, False)
+    doc = response.output
     calc = doc.calcs_reversed[-1]
 
     # the run finished and produced results, but did not converge
@@ -57,6 +64,7 @@ def test_unconverged_calculation(aims_dir, monkeypatch):
     assert doc.completed
     assert not doc.converged
     assert doc.state == TaskState.FAILED
+    assert response.stop_children
 
     assert should_stop_children(doc)
     assert should_stop_children(doc, handle_unsuccessful=True)
