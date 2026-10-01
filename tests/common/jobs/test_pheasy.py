@@ -307,9 +307,13 @@ def test_anharmonic_fit_cocktail_and_one_shot(tmp_dir):
     # 20, then the undisplaced supercell
     assert len(displacements) == 1 + 20 + 1
 
+    # the converged cocktail fit picks a penalty of about 1e-12, the default
+    # lower bound, so the bound is lowered to keep the penalty inside the
+    # search. In local runs the force constants did not change with the bound.
     job = generate_frequencies_eigenvectors(
         structure=structure,
         displacement_data=_emt_displacement_data(displacements),
+        anhar_alpha_min=-14,
         **anhar_kwargs,
         **FIT_KWARGS,
         **COMMON_KWARGS,
