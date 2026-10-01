@@ -69,7 +69,7 @@ class AnalysisDoc(BaseModel):
 
         final_calc = calc_docs[-1]
         max_force = None
-        if final_calc.has_aims_completed == TaskState.SUCCESS:
+        if final_calc.completed:
             max_force = _get_max_force(final_calc)
 
         return cls(
@@ -357,6 +357,8 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
         Timestamp for this task document was last updated
     completed: bool
         Whether this calculation completed
+    converged: bool
+        Whether the final calculation converged
     completed_at: str
         Timestamp for when this task was completed
     input: .InputDoc
@@ -402,6 +404,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
         description="Timestamp for this task document was last updated",
     )
     completed: bool = Field(None, description="Whether this calculation completed")
+    converged: bool = Field(None, description="Whether the final calculation converged")
     completed_at: str = Field(
         None, description="Timestamp for when this task was completed"
     )
@@ -521,6 +524,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
             "analysis": analysis,
             "tags": tags,
             "completed": calcs_reversed[-1].completed,
+            "converged": calcs_reversed[-1].converged,
             "completed_at": calcs_reversed[-1].completed_at,
             "input": InputDoc.from_aims_calc_doc(calcs_reversed[-1]),
             "output": OutputDoc.from_aims_calc_doc(calcs_reversed[-1]),
