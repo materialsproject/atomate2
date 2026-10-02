@@ -446,6 +446,7 @@ def get_supercell_size(
     max_atoms: int,
     force_90_degrees: bool,
     force_diagonal: bool,
+    **kwargs,
 ) -> list[list[float]]:
     """
     Determine the supercell matrix with pymatgen's CubicSupercellTransformation.
@@ -462,14 +463,17 @@ def get_supercell_size(
         if True, only supercells with three 90 degree angles are allowed
     force_diagonal: bool
         if True, only diagonal supercell matrices are allowed
+    **kwargs:
+        Additional parameters passed to CubicSupercellTransformation. They
+        override the defaults angle_tolerance=1e-2 and allow_orthorhombic=False.
     """
+    kwargs = {"angle_tolerance": 1e-2, "allow_orthorhombic": False} | kwargs
     transformation = CubicSupercellTransformation(
         min_length=min_length,
         max_atoms=max_atoms,
         force_90_degrees=force_90_degrees,
         force_diagonal=force_diagonal,
-        angle_tolerance=1e-2,
-        allow_orthorhombic=False,
+        **kwargs,
     )
     transformation.apply_transformation(structure=structure)
     return transformation.transformation_matrix.transpose().tolist()
