@@ -437,6 +437,68 @@ gruneisen_flow = GruneisenMaker(
 ).make(structure=structure)
 ```
 
+### Thermal expansion workflow
+
+`CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
+It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
+For the pheasy extra, see the Pheasy section above.
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
+First, the structure is converted to the standard primitive cell, and a tight structural relaxation is performed.
+The pheasy fits can fail for cells that are not in a standard setting.
+Set `use_symmetrized_structure="conventional"` to use the standard conventional cell instead.
+The relaxed structure is then passed to the pheasy phonon workflow and to the elastic constant workflow.
+The two do not depend on each other, so a workflow manager can run them at the same time.
+Neither of them relaxes the structure again, so both use the same structure.
+The phonon workflow fits the third-order force constants with LASSO, on randomly displaced supercells with 0.03 Å displacements.
+The phonon maker builds its supercells with `min_length=12.0`.
+By default, it uses the one-shot fit, which fits the second-order force constants together with them.
+The cocktail fit keeps the second-order force constants of the harmonic fit.
+The thermal expansion of each fit uses the second-order force constants of that fit.
+phono3py then gives the mode Grüneisen tensors on a 12x12x12 q-point mesh.
+The thermal expansion tensor follows from the mode heat capacities, the Grüneisen tensors and the elastic compliance.
+It is computed for each fit in `anhar_fit_methods` of the phonon maker, from 0 K to 1000 K in steps of 10 K by default.
+If a frequency on the mesh is below -0.1 THz, a warning is raised and the thermal expansion of that fit is not computed.
+
+The mode Grüneisen tensors come from the third-order force constants at the relaxed structure.
+The phonon frequencies are not renormalized with temperature.
+The workflow uses PBEsol by default.
+The stress is more sensitive to ENCUT than the forces are, so check the ENCUT convergence of the elastic tensor for your material.
+For metals, set `born_maker=None` in the phonon maker to skip the Born charge calculation.
+The `compute_cte` job reads the force constant files from the folder of the pheasy fit, so it must run where that folder can be read.
+
+A thermal expansion workflow for VASP can be started as follows:
+```python
+from atomate2.vasp.flows.cte import CTEMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+cte_flow = CTEMaker().make(structure=structure)
+```
+
+`update_user_incar_settings` changes the INCAR of every VASP job in the flow.
+For example, this switches all of them to r2SCAN:
+```python
+from atomate2.vasp.powerups import update_user_incar_settings
+
+cte_flow = update_user_incar_settings(cte_flow, {"GGA": None, "METAGGA": "R2SCAN"})
+```
+The Born charge job uses DFPT with `LEPSILON = True`.
+Check that your VASP version runs DFPT with r2SCAN before you use this setting.
+
+The same workflow runs with a force field via `from atomate2.forcefields.flows.cte import CTEMaker`.
+`CTEMaker.from_force_field_name` sets one force field for the relaxation, the phonons and the elastic tensor.
+The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-medium.
+
 ### Quasi-harmonic Workflow
 
 Uses the quasi-harmonic approximation with the help of Phonopy to compute thermodynamic properties.

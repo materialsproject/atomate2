@@ -496,7 +496,12 @@ def revert_default_dtype() -> Generator[None]:
     Originally added for use with MACE(Relax|Static)Maker.
     https://github.com/ACEsuit/mace/issues/328
     """
-    import torch
+    try:
+        import torch
+    except ImportError:
+        # force fields that do not use torch, such as EMT, have no dtype to revert
+        yield
+        return
 
     orig = torch.get_default_dtype()
     yield
