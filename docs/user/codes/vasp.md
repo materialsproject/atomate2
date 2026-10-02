@@ -350,7 +350,7 @@ It also installs phono3py for the thermal expansion workflow.
 ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
-This workflow was used to build the Materials Project's Harmonic Phonon Database, described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
+This workflow was used to build the [Materials Project's Harmonic Phonon Database](https://next-gen.materialsproject.org/materials?has_props=phonon), described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
 The pheasy fits can fail for a cell that is not in a standard setting, for example the primitive cell of MgO (mp-1265) as the Materials Project serves it.
 For such a structure, set `use_symmetrized_structure="primitive"`, as was done for the database.
 

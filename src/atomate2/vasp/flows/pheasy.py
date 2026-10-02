@@ -123,7 +123,7 @@ class PhononMaker(BasePhononMaker):
     allow_orthorhombic: bool
         not used by this workflow.
     get_supercell_size_kwargs: dict
-        not used by this workflow.
+        kwargs that will be passed to get_supercell_size to determine supercell size
     use_symmetrized_structure: str
         allowed strings: "primitive", "conventional", None
 

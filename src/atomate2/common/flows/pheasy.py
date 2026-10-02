@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
-from pymatgen.util.due import Doi, due
+from pymatgen.util.due import Doi, Url, due
 
 from atomate2.common.flows.phonons import BasePhononMaker as PurePhonopyMaker
 from atomate2.common.jobs.pheasy import (
@@ -33,8 +33,12 @@ SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
 @due.dcite(
-    Doi("10.26434/chemrxiv.15004632/v1"),
+    Url("https://next-gen.materialsproject.org/materials?has_props=phonon"),
     description="Materials Project's Harmonic Phonon Database.",
+)
+@due.dcite(
+    Doi("10.26434/chemrxiv.15004632/v1"),
+    description="Preprint on the Materials Project's Harmonic Phonon Database.",
 )
 @due.dcite(
     Doi("10.48550/arXiv.2508.01020"),
@@ -148,7 +152,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         if set to True, only diagonal supercell matrices are allowed. The pheasy
         commands take the diagonal of the supercell matrix.
     get_supercell_size_kwargs: dict
-        not used by this workflow.
+        kwargs that will be passed to get_supercell_size to determine supercell size
     use_symmetrized_structure: str
         allowed strings: "primitive", "conventional", None
 
@@ -400,6 +404,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             self.max_atoms,
             self.force_90_degrees,
             self.force_diagonal,
+            **self.get_supercell_size_kwargs,
         )
 
     @property
