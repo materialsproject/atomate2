@@ -346,7 +346,6 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
 The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs the pheasy version this workflow needs, together with phonopy and ALM.
-It also installs phono3py for the thermal expansion workflow.
 ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
@@ -441,7 +440,8 @@ gruneisen_flow = GruneisenMaker(
 ### Thermal expansion workflow
 
 `CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
-It needs the `pheasy` extra, see the Pheasy section above.
+It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
+For the pheasy extra, see the Pheasy section above.
 
 First, the structure is converted to the standard primitive cell, and a tight structural relaxation is performed.
 The pheasy fits can fail for cells that are not in a standard setting.

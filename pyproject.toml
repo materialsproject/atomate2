@@ -54,9 +54,10 @@ mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=2.43,<5", "seekpath>=2.0.0"]
 # the pheasy fork adds the --disp_matrix_file and --force_matrix_file options
 # and fixes the --scell option
+pheasy = ["atomate2[phonons,alamode]", "hiphive==1.5", "numpy<=2.2", "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 # phonors 0.5 breaks the Grueneisen q-point mesh of phonopy and phono3py 4.5
-pheasy = ["atomate2[phonons,alamode]", "hiphive==1.5", "numpy<=2.2", "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d", "phono3py==4.5.0", "phonors<0.5"]
+phono3py = ["atomate2[phonons]", "phono3py==4.5.0", "phonors<0.5"]
 alamode = ["alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"]
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons,alamode]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
