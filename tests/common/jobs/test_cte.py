@@ -176,21 +176,21 @@ def test_cte_maker_emt(clean_dir, monkeypatch):
 
     for result in doc.results:
         assert not result.has_imaginary_modes
-        alpha = np.array(result.thermal_expansion)
+        alpha = np.array(result.thermal_expansion_tensor)
         assert np.all(alpha[0] == 0.0)
         # cubic, so alpha is isotropic in every frame
         assert alpha[2] == pytest.approx(alpha[2, 0, 0] * np.eye(3), abs=1e-12)
-        assert result.volumetric_thermal_expansion[2] == pytest.approx(
-            3 * alpha[2, 0, 0]
-        )
+        assert result.thermal_expansion[2] == pytest.approx(3 * alpha[2, 0, 0])
     # linear thermal expansion at 300 K in 1/K, and the mean Grueneisen parameter.
     # The one-shot fit has few supercells in this small cell, so its value is only
     # compared with the cocktail value.
     cocktail, one_shot = doc.results
-    assert cocktail.thermal_expansion[2][0][0] == pytest.approx(1.859e-5, rel=0.02)
+    assert cocktail.thermal_expansion_tensor[2][0][0] == pytest.approx(
+        1.859e-5, rel=0.02
+    )
     assert np.trace(cocktail.average_gruneisen[2]) / 3 == pytest.approx(2.237, rel=0.02)
-    assert one_shot.thermal_expansion[2][0][0] == pytest.approx(
-        cocktail.thermal_expansion[2][0][0], rel=0.2
+    assert one_shot.thermal_expansion_tensor[2][0][0] == pytest.approx(
+        cocktail.thermal_expansion_tensor[2][0][0], rel=0.2
     )
     assert Path(doc.phonon_job_dir, "one_shot", "fc3.hdf5").exists()
 
@@ -212,7 +212,7 @@ def test_cte_maker_emt(clean_dir, monkeypatch):
     assert flagged_doc.mesh == (2, 2, 2)
     (flagged,) = flagged_doc.results
     assert flagged.has_imaginary_modes
-    assert flagged.thermal_expansion is None
+    assert flagged.thermal_expansion_tensor is None
 
     # the non-analytical term correction with zero Born charges leaves alpha
     # unchanged. pheasy only stores Born charges for VASP, so they are added here.
@@ -254,8 +254,8 @@ def test_cte_maker_emt(clean_dir, monkeypatch):
     (nac_params,) = nac_params_used
     assert nac_params["born"].shape == (4, 3, 3)
     assert nac_params["dielectric"] == pytest.approx(np.eye(3) * 10.0)
-    assert np.array(nac_doc.results[0].thermal_expansion[0]) == pytest.approx(
-        np.array(cocktail.thermal_expansion[2]), rel=1e-6, abs=1e-15
+    assert np.array(nac_doc.results[0].thermal_expansion_tensor[0]) == pytest.approx(
+        np.array(cocktail.thermal_expansion_tensor[2]), rel=1e-6, abs=1e-15
     )
 
     # a structure with another lattice or other atoms is refused

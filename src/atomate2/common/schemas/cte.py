@@ -146,12 +146,12 @@ class CTEResult(BaseModel):
         description="Whether a frequency on the sampling mesh lies below "
         "-tol_imaginary_modes. The thermal expansion is not computed in that case."
     )
-    thermal_expansion: list[Matrix3D] | None = Field(
+    thermal_expansion_tensor: list[Matrix3D] | None = Field(
         None,
         description="Thermal expansion tensor in 1/K at each temperature, in the "
         "Cartesian frame of the structure.",
     )
-    volumetric_thermal_expansion: list[float] | None = Field(
+    thermal_expansion: list[float] | None = Field(
         None,
         description="Volumetric thermal expansion in 1/K at each temperature, the "
         "trace of the thermal expansion tensor.",
@@ -346,8 +346,8 @@ class CTEDocument(StructureMetadata):
                     temperatures,
                     min_frequency=min_frequency,
                 )
-                result["thermal_expansion"] = alphas.tolist()
-                result["volumetric_thermal_expansion"] = np.trace(
+                result["thermal_expansion_tensor"] = alphas.tolist()
+                result["thermal_expansion"] = np.trace(
                     alphas, axis1=1, axis2=2
                 ).tolist()
                 result["average_gruneisen"] = [
