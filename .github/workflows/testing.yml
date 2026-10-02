@@ -70,6 +70,14 @@ jobs:
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims] --group tests
 
+      # the thermal expansion tests use EMT, so one group is enough to run them
+      - name: Install pheasy, ALM and phono3py for the thermal expansion tests
+        if: matrix.dep-group == 'numpy-limited'
+        run: |
+          micromamba install -n a2 -c conda-forge compilers boost eigen=3.3 cmake spglib --yes
+          micromamba activate a2
+          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests
+
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |
