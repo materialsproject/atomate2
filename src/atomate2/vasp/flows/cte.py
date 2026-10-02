@@ -36,6 +36,9 @@ class CTEMaker(BaseCTEMaker):
     relaxation. The stress is more sensitive to ENCUT than the forces are, so
     check the ENCUT convergence of the elastic tensor for your material.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     Parameters
     ----------
     name: str

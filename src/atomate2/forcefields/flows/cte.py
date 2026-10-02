@@ -73,6 +73,9 @@ class CTEMaker(BaseCTEMaker):
     constants with the one-shot method from randomly displaced supercells with
     0.03 A displacements, and builds the supercells with min_length=12.0.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     Parameters
     ----------
     name: str

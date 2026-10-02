@@ -49,6 +49,9 @@ class BaseCTEMaker(Maker, ABC):
     constants at the relaxed structure. The frequencies are not renormalized
     with temperature.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     Parameters
     ----------
     name: str

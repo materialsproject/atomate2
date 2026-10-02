@@ -443,6 +443,11 @@ gruneisen_flow = GruneisenMaker(
 It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
 For the pheasy extra, see the Pheasy section above.
 
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
 First, the structure is converted to the standard primitive cell, and a tight structural relaxation is performed.
 The pheasy fits can fail for cells that are not in a standard setting.
 Set `use_symmetrized_structure="conventional"` to use the standard conventional cell instead.
