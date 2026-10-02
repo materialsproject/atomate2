@@ -30,6 +30,17 @@ def test_get_ref_file(mock_avg_vol_db):
     assert isinstance(_get_average_volumes_file(), DataFrame)
 
 
+def test_download_ref_file(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        atomate2.common.jobs.mpmorph,
+        "_DEFAULT_AVG_VOL_FILE",
+        tmp_path / "db_avg_vols.json.gz",
+    )
+    avg_vols = _get_average_volumes_file()
+    assert isinstance(avg_vols, DataFrame)
+    assert len(avg_vols) > 0
+
+
 @pytest.mark.parametrize(
     "db, ignore_oxi_states", [("icsd", [True, False]), ("mp", [True])]
 )
