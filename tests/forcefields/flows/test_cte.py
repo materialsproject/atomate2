@@ -5,12 +5,17 @@ DFT reference data and no machine-learned force field. pheasy, ALM and phono3py
 are only installed in the numpy-limited forcefield CI job, so the tests are
 skipped in the other forcefield jobs.
 """
+# ruff: noqa: E402
 
 from pathlib import Path
 
+import pytest
+
+pytest.importorskip("pheasy")
+gruneisen_module = pytest.importorskip("phono3py.phonon3.gruneisen")
+
 import numpy as np
 import phonopy
-import pytest
 from ase.build import bulk
 from jobflow import run_locally
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -18,9 +23,6 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from atomate2.common.jobs.cte import compute_cte
 from atomate2.common.schemas.cte import CTEDocument
 from atomate2.forcefields.flows.cte import CTEMaker
-
-pytest.importorskip("pheasy")
-gruneisen_module = pytest.importorskip("phono3py.phonon3.gruneisen")
 
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 
