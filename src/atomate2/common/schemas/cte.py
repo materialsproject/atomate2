@@ -169,6 +169,9 @@ class CTEDocument(StructureMetadata):
     structure: Structure | None = Field(
         None, description="Structure used for the phonon and elastic calculations."
     )
+    supercell_matrix: Matrix3D | None = Field(
+        None, description="Supercell matrix of the phonon calculation."
+    )
     temperatures: list[float] | None = Field(None, description="Temperatures in K.")
     mesh: tuple[int, int, int] | None = Field(
         None, description="q-point mesh used for the mode Grueneisen tensors."
@@ -358,6 +361,7 @@ class CTEDocument(StructureMetadata):
         return cls.from_structure(
             meta_structure=structure,
             structure=structure,
+            supercell_matrix=phonon.supercell_matrix.tolist(),
             temperatures=list(temperatures),
             mesh=mesh_numbers,
             elastic_tensor=np.asarray(elastic_tensor).tolist(),

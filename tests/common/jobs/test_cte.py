@@ -167,6 +167,7 @@ def test_cte_maker_emt(clean_dir, monkeypatch):
     doc = responses[flow.output.uuid][1].output
     assert isinstance(doc, CTEDocument)
     assert doc.mesh == (8, 8, 8)
+    assert np.array(doc.supercell_matrix) == pytest.approx(2 * np.eye(3))
     assert [result.fit_method for result in doc.results] == ["cocktail", "one-shot"]
 
     # EMT elastic constants of Cu in GPa
