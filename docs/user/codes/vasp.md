@@ -354,6 +354,12 @@ The pheasy fits can fail for a cell that is not in a standard setting, for examp
 For such a structure, set `use_symmetrized_structure="primitive"`, as was done for the database.
 
 By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg.
+
+```{warning}
+The anharmonic part of this workflow has not been tested as widely as the harmonic part.
+It might still change in future versions.
+```
+
 ALM, from the ALAMODE package, counts the free force constants used to size the random displacement sets.
 
 To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
