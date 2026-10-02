@@ -18,6 +18,7 @@ pheasy_workflow
 hiphive_workflow
 force_fields/phonon_workflow
 grueneisen_workflow
+cte_workflow
 qha_workflow
 torchsim_tutorial
 ```

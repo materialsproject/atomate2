@@ -38,6 +38,8 @@ from trainstation import Optimizer
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
     _get_kpath,
+    _get_num_harmonic_supercells,
+    _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
 )
@@ -48,20 +50,14 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-try:
-    from alm import ALM
-except ImportError:
-    ALM = None
-
-# Safety margin below hiPhive's maximum allowed cutoff, in Angstrom.
-# Configurations per suggested displacement set. ALM sizes num_disp_sc so the
-# equation count reaches its own free-parameter tally, and this scales from
-# there. pheasy uses 1.8. hiPhive's cluster space has a different, smaller
-# parameter count, and the ratio between the two varies by a factor of three
-# across materials, so 1.8 leaves a low-symmetry cell with too little data for
-# a LASSO fit and the modes come out soft.
+# Configurations per suggested displacement set. The minimum set is sized from
+# ALM's free-parameter tally so the equation count reaches it (see
+# _get_num_harmonic_supercells), and this scales from there. pheasy uses the
+# same 1.8. hiPhive's own cluster space has a smaller parameter count than
+# ALM's tally, and the ratio between the two differs between materials.
 _N_CONFIG_MULTIPLIER = 1.8
 
+# Safety margin below hiPhive's maximum allowed cutoff, in Angstrom.
 _CUTOFF_MARGIN = 0.1
 
 # hiPhive refuses a cutoff that clears a neighbour shell by less than its
@@ -290,11 +286,12 @@ def generate_phonon_displacements(
     random_seed: int | None = 103,
     verbose: bool = False,
 ) -> list[Structure]:
-    """Generate small-distance perturbed structures with phonopy based on two ways.
+    """Generate the displaced supercells with phonopy.
 
-    1. finite-displacment method (one displaced atom) when the displacement number
-    is less than 3. 2. random-displacement method (all-displaced atoms) when the
-    displacement number is more than 3.
+    The finite-displacement method (one displaced atom) is used when phonopy
+    needs at most three displacements, and the random-displacement method (all
+    atoms displaced) otherwise. The undisplaced supercell is added last, for
+    the residual forces.
 
     Parameters
     ----------
@@ -322,11 +319,6 @@ def generate_phonon_displacements(
         Whether to log warnings.
 
     """
-    # TODO: remove ALMODE dependence for 2nd order force constants
-    if not ALM:
-        raise ImportError(
-            "Error importing ALM. Please ensure the 'alm' library is installed."
-        )
     phonon = _generate_phonon_object(
         structure,
         supercell_matrix,
@@ -353,46 +345,28 @@ def generate_phonon_displacements(
     # of the matrix can not always guarantee accurate results, you
     # may need to displace more random configurations. Use at least one or
     # two more configurations based on the suggested number of displacements.
-    supercell_ph = phonon.supercell
-    lattice = supercell_ph.cell
-    positions = supercell_ph.scaled_positions
-    numbers = supercell_ph.numbers
-    natom = len(numbers)
-
-    # get the number of free parameters of 2ND FCs from ALM, labeled as n_fp
-    with ALM(lattice, positions, numbers) as alm:
-        alm.define(1)
-        alm.suggest()
-        n_fp = alm._get_number_of_irred_fc_elements(1)  # noqa: SLF001
-
-    # get the number of displaced supercells based on the number of free parameters
-    num_disp_sc = int(np.ceil(n_fp / (3.0 * natom)))
+    num_har = _get_num_harmonic_supercells(
+        phonon, num_displaced_supercells, multiplier=_N_CONFIG_MULTIPLIER
+    )
 
     if verbose:
+        (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
         logger.info(
-            f"There are {n_fp} free parameters for the second-order "
-            "force constants (FCs)."
-            f"There are {3 * natom * num_disp_sc} equations used to "
-            "obtain the second-order FCs."
-            "CAUTION: you may need to increase the number of "
-            "displacements in some cases."
-            "If the number of atoms in the supercell are less than 100 and "
+            f"There are {n_fp} free parameters for the second-order force "
+            f"constants (FCs), and {num_har} displaced supercells are used to "
+            "fit them. CAUTION: you may need to increase the number of "
+            "displacements in some cases. "
+            "If the number of atoms in the supercell is less than 100 and "
             "all lattice constants are less than 10 Å, the user is advised "
             "to use 1-2 more randomly-displaced configurations."
         )
 
-    # get the number of displaced supercells from phonopy to compared with the number
-    # of 3, if the number of displaced supercells is less than 3, we will use the finite
-    # displacement method to generate the supercells. Otherwise, we will use the random
-    # displacement method to generate the supercells.
+    # if phonopy needs more than three finite displacements, we use the random
+    # displacement method instead
     if len(phonon.displacements) > 3:
         phonon.generate_displacements(
             distance=displacement,
-            number_of_snapshots=(
-                num_displaced_supercells
-                if num_displaced_supercells != 0
-                else int(np.ceil(num_disp_sc * _N_CONFIG_MULTIPLIER)) + 1
-            ),
+            number_of_snapshots=num_har,
             random_seed=random_seed,
         )
 
