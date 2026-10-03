@@ -125,12 +125,12 @@ We maintain a list of all contributors [here][contributors].
 
 ## License
 
-Atomate2 is released under a modified BSD license; the full text can be found [here][license].
+Atomate2 is released under a modified BSD license; the full text is available [here][license].
 
 ## Acknowledgements
 
 The development of atomate2 has benefited from many people across several research groups.
-A full list of contributors can be found [here][contributors].
+A full list of contributors is available [here][contributors].
 
 ## Citing atomate2
 
@@ -147,10 +147,10 @@ If you use atomate2, please cite the [following article](https://doi.org/10.1039
 	urldate = {2025-07-01},
 }
 ```
-## Journal publications for new contributions to atomate2?
-We have published the initial publication on atomate2 in Digital Discovery. New additions to atomate2 can be published within a [https://pubs.rsc.org/dd/article/4/2/301/846290/Commit-Mini-article-for-dynamic-reporting-of](Commit) independent of the previous authors.
+## Publications on New atomate2 Contributions
+We published the initial atomate2 paper in Digital Discovery. New additions to atomate2 can be published as a [Commit](https://pubs.rsc.org/dd/article/4/2/301/846290/Commit-Mini-article-for-dynamic-reporting-of) independent of the previous authors.
 
-We are of course happy to mention and link such Commits in our Readme, the documentation or at relevant parts in the code.
+We are happy to mention and link such Commits in our README, the documentation, or in relevant parts of the code.
 
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/

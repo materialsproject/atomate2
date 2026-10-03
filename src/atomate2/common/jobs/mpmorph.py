@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 _DEFAULT_AVG_VOL_FILE = Path("~/.cache/atomate2").expanduser() / "db_avg_vols.json.gz"
 if not _DEFAULT_AVG_VOL_FILE.parents[0].exists():
     os.makedirs(_DEFAULT_AVG_VOL_FILE.parents[0], exist_ok=True)
-_DEFAULT_AVG_VOL_URL = "https://figshare.com/ndownloader/files/49704288"
+_DEFAULT_AVG_VOL_URL = "https://api.figshare.com/v2/file/download/49704288"
 
 
 def _get_average_volumes_file(

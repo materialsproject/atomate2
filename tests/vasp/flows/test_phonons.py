@@ -115,6 +115,46 @@ def test_phonon_wf_vasp_only_displacements3(
 
 
 # structure will be kept in the format that was transferred
+@pytest.mark.parametrize(
+    ("kwargs", "expected_temperatures"),
+    [
+        ({}, np.arange(0, 1001, 10)),  # default grid is 0-1000 K, as in phonopy
+        ({"tmax": 500, "tstep": 100}, [0, 100, 200, 300, 400, 500]),  # tmax included
+    ],
+)
+def test_phonon_wf_vasp_temperature_grid(
+    mock_vasp, clean_dir, si_structure: Structure, kwargs, expected_temperatures
+):
+    ref_paths = {
+        "phonon static 1/1": "Si_phonons_2/phonon_static_1_1",
+        "static": "Si_phonons_2/static",
+    }
+    mock_vasp(
+        ref_paths,
+        {
+            "phonon static 1/1": {"incar_settings": ["NSW", "ISMEAR"]},
+            "static": {"incar_settings": ["NSW", "ISMEAR"]},
+        },
+    )
+
+    job = PhononMaker(
+        min_length=3.0,
+        bulk_relax_maker=None,
+        born_maker=None,
+        use_symmetrized_structure="conventional",
+        create_thermal_displacements=False,
+        store_force_constants=False,
+        prefer_90_degrees=False,
+        generate_frequencies_eigenvectors_kwargs=kwargs,
+    ).make(si_structure)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert_allclose(ph_doc.temperatures, expected_temperatures)
+    assert len(ph_doc.free_energies) == len(expected_temperatures)
+    assert len(ph_doc.heat_capacities) == len(expected_temperatures)
+
+
 def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     mock_vasp, clean_dir, si_structure: Structure
 ):

@@ -12,14 +12,16 @@ from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 
-from atomate2.common.flows.pheasy import BasePhononMaker
+from atomate2.common.flows.hiphive import BasePhononMaker
 from atomate2.common.powerups import add_metadata_to_flow
-from atomate2.vasp.flows.pheasy import PhononMaker
+from atomate2.vasp.flows.hiphive import PhononMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 
-def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir):
+def test_hiphive_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir):
+    # The hiPhive flow generates the same displaced supercells as the pheasy
+    # flow, so the reference VASP data is shared rather than duplicated.
     # mapping from job name to directory containing test files
     ref_paths = {
         "tight relax 1": "Si_pheasy/tight_relax_1",
@@ -50,7 +52,6 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     job = PhononMaker(
         force_diagonal=True,
         min_length=12,
-        cal_anhar_fcs=False,
         create_thermal_displacements=True,
         # use_symmetrized_structure="primitive"
     ).make(structure=si_struct)
@@ -131,7 +132,7 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
 
     assert ph_doc.chemsys == "Si"
 
-    # --- check the actual phonon results obtained from the pheasy FC fit ---
+    # --- check the actual phonon results obtained from the hiPhive FC fit ---
     frequencies = np.asarray(ph_doc.phonon_bandstructure.frequencies)
 
     # acoustic sum rule: the acoustic modes at the Gamma point must vanish
@@ -154,68 +155,3 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     assert thermo_props["heat_capacity"][1] == pytest.approx(20.0, abs=2.5)
     # the high-T limit must approach (but not exceed) Dulong-Petit (3R per atom)
     assert 23.0 < thermo_props["heat_capacity"][2] < 3 * 8.3145
-
-
-@pytest.mark.parametrize(
-    ("settings", "match"),
-    [
-        ({"cal_anhar_fcs": True, "anhar_max_order": 5}, "anhar_max_order"),
-        ({"cal_anhar_fcs": True, "anhar_fit_methods": ["joint"]}, "anhar_fit_methods"),
-        ({"cal_anhar_fcs": True, "anhar_fit_methods": []}, "anhar_fit_methods"),
-        ({"cal_anhar_fcs": True, "fcs_cutoff_radius": [-1, -2, 10]}, "positive"),
-        ({"anhar_alpha_min": -12.0}, "integer below -2"),
-        ({"cal_anhar_fcs": True, "num_disp_anhar": -1}, "non-negative integer"),
-        (
-            {"cal_anhar_fcs": True, "anhar_fit_methods": ["cocktail", "cocktail"]},
-            "without repeats",
-        ),
-        ({"anhar_alpha_min": -1}, "integer below -2"),
-        (
-            {
-                "cal_anhar_fcs": True,
-                "anhar_max_order": 4,
-                "fcs_cutoff_radius": [-1, 12],
-            },
-            "positive",
-        ),
-    ],
-)
-def test_pheasy_anharmonic_settings_are_checked(settings, match):
-    with pytest.raises(ValueError, match=match):
-        PhononMaker(**settings)
-
-
-def test_pheasy_maker_passes_anharmonic_settings(si_structure: Structure):
-    """Both pheasy jobs must get the same settings, or the dataset is split wrong."""
-    # every value differs from its default, so a dropped keyword is caught
-    settings = {
-        "cal_anhar_fcs": True,
-        "num_displaced_supercells": 5,
-        "num_disp_anhar": 30,
-        "displacement_anhar": 0.05,
-        "anhar_max_order": 4,
-        "anhar_fit_methods": ["cocktail", "one-shot"],
-        "anhar_alpha_min": -10,
-        "fcs_cutoff_radius": [-1, 11, 9],
-        "displacement": 0.02,
-        "symprec": 1e-4,
-        "sym_reduce": False,
-    }
-    flow = PhononMaker(**settings).make(structure=si_structure)
-    jobs = {job.name: job for job in flow.jobs}
-    displacements = jobs["generate_phonon_displacements"].function_kwargs
-    fit = jobs["generate_frequencies_eigenvectors"].function_kwargs
-    for key in (
-        "cal_anhar_fcs",
-        "num_displaced_supercells",
-        "anhar_max_order",
-        "anhar_fit_methods",
-        "fcs_cutoff_radius",
-        "displacement",
-        "symprec",
-        "sym_reduce",
-    ):
-        assert displacements[key] == fit[key] == settings[key]
-    assert displacements["num_disp_anhar"] == 30
-    assert displacements["displacement_anhar"] == 0.05
-    assert fit["anhar_alpha_min"] == -10

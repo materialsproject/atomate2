@@ -178,7 +178,7 @@ def test_torchsim_phonon_maker_integration(
         phonon_displacement_maker=static_maker,
         create_thermal_displacements=False,
         store_force_constants=False,
-        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100, "tmax": 400},
         socket=socket,
     )
 
