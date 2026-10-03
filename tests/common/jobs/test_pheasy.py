@@ -278,7 +278,7 @@ def test_run_harmonic_fit(monkeypatch):
     assert all(check for _, check in calls)
     assert [args[11] for args, _ in calls] == ["-s", "-c", "-d", "-f"]
     fit = " ".join(calls[-1][0])
-    assert "-l LASSO --std --seed 103 --rasr BHH --ndata 5" in fit
+    assert "-l LASSO --std --tol 1e-8 --seed 103 --rasr BHH --ndata 5" in fit
     assert "--alpha_min" not in fit
     assert " -o " not in fit
 
@@ -286,7 +286,7 @@ def test_run_harmonic_fit(monkeypatch):
     _run_harmonic_fit(matrix, 1e-3, 3, use_lasso=False)
     fit = " ".join(calls[-1][0])
     assert "-f --full_ifc --rasr BHH --ndata 3" in fit
-    for flag in ("-l", "--std", "--seed"):
+    for flag in ("-l", "--std", "--tol", "--seed"):
         assert flag not in calls[-1][0]
 
     calls.clear()

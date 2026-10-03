@@ -303,8 +303,8 @@ def _run_harmonic_fit(
     num_har: int
         Number of displaced supercells in the fit.
     use_lasso: bool
-        If True, fit with LASSO on standardized data. If False, fit with
-        pheasy's default least squares.
+        If True, fit with LASSO on standardized data, converged to --tol 1e-8.
+        If False, fit with pheasy's default least squares.
     rotational_sum_rule: str | None
         Rotational sum rule passed to pheasy with --rasr, or None for none.
     alpha_min: int | None
@@ -319,7 +319,9 @@ def _run_harmonic_fit(
     base = f"pheasy --scell SPOSCAR --dim {dim} -w 2 --symprec {float(symprec)}"
     fit = f"{base} -f --full_ifc"
     if use_lasso:
-        fit += " -l LASSO --std"
+        # pheasy's default --tol of 1e-4 leaves the fit unconverged, so the force
+        # constants change between machines and package versions
+        fit += " -l LASSO --std --tol 1e-8"
         if alpha_min is not None:
             fit += f" --alpha_min {int(alpha_min)}"
         if random_seed is not None:
@@ -1026,7 +1028,7 @@ def generate_frequencies_eigenvectors(
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --c2 10.0 "
                 f"--full_ifc -w 2 --symprec {float(symprec)} "
-                f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
+                f"-l LASSO --std --tol 1e-8 --rasr BHH --ndata {int(num_har)} "
                 f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
             )
 
