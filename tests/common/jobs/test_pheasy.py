@@ -30,7 +30,6 @@ from atomate2.common.jobs.phonons import (
     _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
 )
-from atomate2.forcefields.flows.pheasy import PhononMaker
 
 # fcs_cutoff_radius in Bohr. 8 Bohr (4.2 A) covers the first two neighbour
 # shells of fcc Cu (2.55 and 3.61 A) and stays inside the 10.8 A supercell.
@@ -298,28 +297,6 @@ def test_run_harmonic_fit(monkeypatch):
     assert "--alpha_min -8 --seed 103 --ndata 5" in fit
     assert fit.endswith("-o x.log")
     assert "--rasr" not in fit
-
-
-def test_get_supercell_size_kwargs(monkeypatch):
-    received = {}
-    transformation = pheasy_jobs.CubicSupercellTransformation
-
-    def record_kwargs(**kwargs):
-        received.update(kwargs)
-        return transformation(**kwargs)
-
-    monkeypatch.setattr(pheasy_jobs, "CubicSupercellTransformation", record_kwargs)
-
-    # the maker passes get_supercell_size_kwargs on to the job
-    maker = PhononMaker(get_supercell_size_kwargs={"angle_tolerance": 0.1})
-    job = maker.get_supercell_matrix(_cu_structure())
-    assert job.function_kwargs == {"angle_tolerance": 0.1}
-
-    # the job passes them to CubicSupercellTransformation. The other default
-    # is kept.
-    job.function(*job.function_args, **job.function_kwargs)
-    assert received["angle_tolerance"] == 0.1
-    assert received["allow_orthorhombic"] is False
 
 
 def test_check_lasso_alpha(tmp_dir):

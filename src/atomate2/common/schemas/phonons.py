@@ -503,9 +503,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # compute vibrational part of free energies per formula unit
-        temperature_range = np.arange(
-            kwargs.get("tmin", 0), kwargs.get("tmax", 500), kwargs.get("tstep", 10)
-        )
+        # the grid includes tmax and defaults to 0-1000 K, as in phonopy
+        tmin = kwargs.get("tmin", 0)
+        tmax = kwargs.get("tmax", 1000)
+        tstep = kwargs.get("tstep", 10)
+        temperature_range = np.arange(tmin, tmax + tstep / 2, tstep)
 
         free_energies = [
             dos.helmholtz_free_energy(
