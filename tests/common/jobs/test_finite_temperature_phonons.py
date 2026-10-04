@@ -96,8 +96,8 @@ def test_assess_trajectory(cu_supercell):
     assert health_moved.verdict == "stable"
     assert health_moved.u_ref == pytest.approx(health.u_ref)
 
-    # a vibration of 0.2 A per direction is above the Lindemann limit
-    frac, energies = _trajectory(cu_supercell, rng, sigma=0.2)
+    # a vibration of 0.25 A per direction is above the Lindemann limit
+    frac, energies = _trajectory(cu_supercell, rng, sigma=0.25)
     assert _verdict(cu_supercell, frac, energies) == "melted"
 
     # the mean positions move in the second half, with a flat energy

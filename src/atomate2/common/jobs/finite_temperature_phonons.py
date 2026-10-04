@@ -62,7 +62,9 @@ _KPATH_SCHEME = "seekpath"
 # so a large displacement in the first frames means the atom order does not match.
 _START_LIMIT = 0.5  # Angstrom
 _RMS_LIMIT = 1.0  # Angstrom
-_LINDEMANN_LIMIT = 0.12
+# Lindemann ratio at melting of an fcc solid, Saija et al., J. Chem. Phys. 124,
+# 244504 (2006)
+_LINDEMANN_LIMIT = 0.15
 _SHIFT_RATIO_LIMIT = 1.5
 _DRIFT_SIGMA = 3.0
 _N_START_FRAMES = 10
@@ -246,7 +248,7 @@ def _assess_trajectory(
 
     - A root mean square displacement above 0.5 Angstrom in the first 10
       frames means the atoms are not in the order of the reference.
-    - A root mean square vibration u_vib above 0.12 of the nearest-neighbor
+    - A root mean square vibration u_vib above 0.15 of the nearest-neighbor
       distance means the structure melted.
     - A total displacement u_ref above 1.5 times u_vib means the mean
       positions moved away from the reference.
