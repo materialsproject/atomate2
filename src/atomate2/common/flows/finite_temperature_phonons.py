@@ -17,6 +17,7 @@ from atomate2.common.jobs.finite_temperature_phonons import (
     fit_finite_temperature_phonons,
     get_md_restart_structure,
     get_md_supercell,
+    get_npt_structure,
     select_md_snapshots,
 )
 from atomate2.common.jobs.pheasy import get_supercell_size
@@ -70,6 +71,14 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     give the phonon band structure and density of states. Imaginary modes are
     reported, not removed.
 
+    If npt_maker is set, thermal expansion is included. An NPT MD run at the
+    temperature and pressure first starts from the undisplaced supercell of the
+    relaxed structure. Its cell, averaged over the frames after
+    npt_equilibration_time, gives the unit cell at the temperature, see
+    :obj:`.get_npt_structure`. If fixed_cell_relax_maker is set, it relaxes the
+    atoms in this cell. The NVT MD, the phonon displacement calculations and the
+    fit then use this cell.
+
     The MD maker and the phonon displacement maker are independent. Either can
     be a VASP or a force field maker, so the forces can come from a different
     level of theory than the trajectory. The residual forces of the undisplaced
@@ -109,6 +118,13 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         Number of consecutive MD jobs that make up the trajectory. Each job
         continues from the positions and velocities of the previous one. The
         thermostat variables start again from zero in each job.
+    npt_time: float
+        Length of the NPT MD in ps, if there is one.
+    npt_equilibration_time: float
+        Time at the start of the NPT trajectory that is left out of the average
+        cell, in ps.
+    pressure: float
+        Pressure of the NPT MD in kbar.
     min_length: float
         Each lattice vector of the diagonal supercell is at least min_length
         long, in Angstrom.
@@ -140,6 +156,13 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     born_maker: Maker | None
         VASP maker for the Born effective charges and the dielectric tensor,
         used for the non-analytical correction. None skips it.
+    npt_maker: Maker | None
+        Maker for the NPT MD. The flow sets its temperature, pressure, time
+        step and number of steps. None skips the NPT MD.
+    fixed_cell_relax_maker: Maker | None
+        Maker for the relaxation of the atoms in the cell from the NPT MD. It
+        must keep the cell. None keeps the fractional coordinates of the relaxed
+        structure. Only used with npt_maker.
     md_maker: Maker
         Maker for the MD. The flow sets its temperature, time step, number of
         steps and thermostat.
@@ -156,6 +179,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     n_snapshots: int = 50
     thermostat: Literal["nose-hoover", "langevin"] = "nose-hoover"
     md_runs: int = 1
+    npt_time: float = 8.0
+    npt_equilibration_time: float = 2.0
+    pressure: float = 0.0
     min_length: float = 12.0
     symprec: float = SETTINGS.PHONON_SYMPREC
     rotational_sum_rule: Literal["BH", "H", "BHH"] | None = "BHH"
@@ -168,6 +194,8 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     socket: bool = False
     bulk_relax_maker: Maker | None = None
     born_maker: Maker | None = None
+    npt_maker: Maker | None = None
+    fixed_cell_relax_maker: Maker | None = None
     md_maker: Maker | None = None
     phonon_displacement_maker: Maker | None = None
 
@@ -219,6 +247,15 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             raise ValueError(
                 f"md_runs ({self.md_runs}) is larger than the {n_steps} MD steps."
             )
+        if self.npt_maker is not None and not (
+            0 <= self.npt_equilibration_time < self.npt_time
+        ):
+            raise ValueError(
+                "npt_equilibration_time must be at least zero and shorter than "
+                "npt_time."
+            )
+        if self.fixed_cell_relax_maker is not None and self.npt_maker is None:
+            raise ValueError("fixed_cell_relax_maker is only used with npt_maker.")
 
     def get_md_steps(self) -> list[int]:
         """Get the number of MD steps of each MD job."""
@@ -269,6 +306,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         jobs: list[Job | Flow] = []
         optimization_run_job_dir = optimization_run_uuid = None
         born_run_job_dir = born_run_uuid = None
+        npt_kwargs: dict = {}
 
         if self.bulk_relax_maker is not None:
             relax = self.bulk_relax_maker.make(structure, prev_dir=prev_dir)
@@ -290,6 +328,44 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             )
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output
+
+        if self.npt_maker is not None:
+            start_job = get_md_supercell(
+                structure, supercell_matrix, self.symprec, self.code
+            )
+            n_steps = round(self.npt_time * 1000 / self.md_time_step)
+            npt_job = self.get_npt_maker(n_steps).make(
+                start_job.output, prev_dir=prev_dir
+            )
+            npt_job.append_name(" NPT")
+            npt_cell_job = get_npt_structure(
+                npt_job.output.dir_name,
+                self.md_code,
+                structure,
+                supercell_matrix,
+                start_job.output,
+                self.temperature,
+                self.md_time_step,
+                self.npt_equilibration_time,
+                self.symprec,
+            )
+            jobs.extend([start_job, npt_job, npt_cell_job])
+            npt_kwargs = {
+                "npt_input_structure": structure,
+                "pressure": self.pressure,
+                "npt_time": self.npt_time,
+                "npt_equilibration_time": self.npt_equilibration_time,
+                "npt_trajectory_health": npt_cell_job.output["trajectory_health"],
+                "npt_uuid": npt_job.uuid,
+                "npt_dir": npt_job.output.dir_name,
+            }
+            structure = npt_cell_job.output["structure"]
+            if self.fixed_cell_relax_maker is not None:
+                relax = self.fixed_cell_relax_maker.make(structure, prev_dir=prev_dir)
+                jobs.append(relax)
+                npt_kwargs["fixed_cell_relax_uuid"] = relax.uuid
+                npt_kwargs["fixed_cell_relax_job_dir"] = relax.output.dir_name
+                structure = relax.output.structure
 
         if self.born_maker is not None and (born is None or epsilon_static is None):
             born_job = self.born_maker.make(structure, prev_dir=prev_dir)
@@ -367,6 +443,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             born=born,
             epsilon_static=epsilon_static,
             store_force_constants=self.store_force_constants,
+            **npt_kwargs,
         )
         jobs.append(fit_job)
         return Flow(jobs, fit_job.output, name=self.name)
@@ -419,6 +496,21 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         """Name of the argument that passes prev_dir to the phonon displacement maker.
 
         As this differs between codes, it is implemented by the inheriting class.
+        """
+
+    @abstractmethod
+    def get_npt_maker(self, n_steps: int) -> Maker:
+        """
+        Get the maker of the NPT MD job, with the settings of this flow.
+
+        Parameters
+        ----------
+        n_steps: int
+            Number of MD steps.
+
+        Returns
+        -------
+        Maker
         """
 
     @abstractmethod

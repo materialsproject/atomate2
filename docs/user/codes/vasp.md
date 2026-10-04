@@ -412,7 +412,7 @@ The cluster space grows faster there than the number of displacements the workfl
 
 `FiniteTemperaturePhononMaker` fits effective harmonic force constants at a finite temperature, as in the temperature-dependent effective potential ([TDEP](https://doi.org/10.1103/PhysRevB.84.180301)) method.
 They include the anharmonic effects at that temperature, at the volume of the relaxed structure.
-Thermal expansion is not included.
+By default, thermal expansion is not included.
 The structure is relaxed first.
 An NVT MD run then samples the displacements at the temperature.
 By default, it runs for 8 ps at 300 K with a time step of 1 fs and a Nosé-Hoover thermostat.
@@ -439,6 +439,13 @@ Both set ISPIN from the relaxation directory with `auto_ispin`.
 `md_runs` splits the MD into consecutive jobs, for example to stay within the walltime of a queue.
 Each job continues from the positions and velocities of the previous one.
 The thermostat variables start again from zero in each job.
+
+An NPT MD can be run first to include thermal expansion.
+Set `npt_maker` to a VASP `MDMaker` with an `MDSetGenerator`, and use a larger ENCUT than for the NVT MD, since the cell changes.
+The flow runs it at the temperature and at `pressure`, 0 kbar by default, with MDALGO = 3 and ISIF = 3.
+Its cell is averaged over the frames after `npt_equilibration_time`, given the symmetry of the relaxed structure, and used for the NVT MD, the statics and the fit.
+`fixed_cell_relax_maker` can relax the atoms in this cell, for example with ISIF = 2.
+With a force field, `from_force_field_name(..., run_npt=True)` sets both makers.
 
 The trajectory is also checked before the fit.
 The check looks for melting and for a move away from the reference structure.

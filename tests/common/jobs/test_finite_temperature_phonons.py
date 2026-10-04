@@ -22,6 +22,7 @@ from pymatgen.core import Lattice, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
+from atomate2.ase.md import MDEnsemble
 from atomate2.common.jobs.finite_temperature_phonons import (
     ASE_TRAJECTORY_FILE,
     _assess_trajectory,
@@ -30,13 +31,14 @@ from atomate2.common.jobs.finite_temperature_phonons import (
     fit_finite_temperature_phonons,
     get_md_restart_structure,
     get_md_supercell,
+    get_npt_structure,
     select_md_snapshots,
 )
 from atomate2.forcefields.flows.finite_temperature_phonons import (
     ForceFieldFiniteTemperaturePhononMaker,
     _get_force_field_md_maker,
 )
-from atomate2.forcefields.jobs import ForceFieldStaticMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 
 EMT_CALCULATOR = {"@module": "ase.calculators.emt", "@callable": "EMT"}
@@ -231,10 +233,12 @@ def test_select_md_snapshots_vasp(cu_supercell):
         )
 
 
-def _write_ase_md(directory, reference, frac, energies):
+def _write_ase_md(directory, reference, frac, energies, cells=None):
     frames = []
-    for coords, energy in zip(frac, energies, strict=True):
+    for idx, (coords, energy) in enumerate(zip(frac, energies, strict=True)):
         atoms = AseAtomsAdaptor.get_atoms(reference)
+        if cells is not None:
+            atoms.set_cell(cells[idx])
         atoms.set_scaled_positions(coords)
         atoms.calc = SinglePointCalculator(atoms, energy=energy)
         frames.append(atoms)
@@ -291,6 +295,39 @@ def test_select_md_snapshots_forcefields(cu_supercell):
             14,
         )
     assert output["trajectory_health"]["verdict"] == "melted"
+
+
+def test_get_npt_structure(cu_supercell):
+    unit_cell = AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61, cubic=True))
+    rng = np.random.default_rng(4)
+    n_frames = 201
+    frac = _frames(cu_supercell, n_frames, 0.05, rng)
+    # the cell is 2% longer in each direction, with random strains, and it
+    # rotates about the z axis
+    cells = []
+    for angle in rng.uniform(0, 2 * np.pi, n_frames):
+        strain = np.eye(3) + rng.normal(0, 0.005, (3, 3))
+        cos, sin = np.cos(angle), np.sin(angle)
+        rotation = np.array([[cos, -sin, 0], [sin, cos, 0], [0, 0, 1]])
+        cells.append(1.02 * cu_supercell.lattice.matrix @ strain @ rotation.T)
+    energies = rng.normal(0, 0.01, n_frames)
+    _write_ase_md(Path("npt"), cu_supercell, frac, energies, cells=cells)
+
+    args = ("forcefields", unit_cell, (2 * np.eye(3)).tolist(), cu_supercell, 300)
+    output = get_npt_structure.original(
+        str(Path("npt").resolve()), *args, 2.0, 0.02, 1e-4
+    )
+    structure = output["structure"]
+    # the cell stays cubic and keeps the orientation of the unit cell
+    assert np.allclose(
+        structure.lattice.matrix, 1.02 * unit_cell.lattice.matrix, atol=5e-3
+    )
+    assert structure.lattice.abc == pytest.approx([structure.lattice.a] * 3)
+    assert np.allclose(structure.frac_coords, unit_cell.frac_coords)
+    assert output["trajectory_health"]["verdict"] == "stable"
+
+    with pytest.raises(ValueError, match="none of them after"):
+        get_npt_structure.original(str(Path("npt").resolve()), *args, 2.0, 1.0, 1e-4)
 
 
 def test_get_md_supercell():
@@ -431,6 +468,14 @@ def test_rms_displacement_matches_mode_sampling():
         ({"md_maker": None}, "md_maker and phonon_displacement_maker must be set"),
         ({"code": "aims"}, "code must be one of"),
         ({"md_code": None}, "md_code must be one of"),
+        (
+            {"npt_maker": ForceFieldMDMaker(), "npt_equilibration_time": 8.0},
+            "npt_equilibration_time must be",
+        ),
+        (
+            {"fixed_cell_relax_maker": ForceFieldRelaxMaker()},
+            "only used with npt_maker",
+        ),
     ],
 )
 def test_maker_checks(kwargs, match):
@@ -489,6 +534,35 @@ def test_force_field_md_maker(cu_supercell):
         _get_force_field_md_maker(
             ForceFieldFiniteTemperaturePhononMaker(md_maker=ForceFieldStaticMaker()), 10
         )
+
+
+def test_force_field_npt_maker(cu_supercell):
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
+        EMT_CALCULATOR, run_npt=True, md_time_step=2.0, pressure=10.0
+    )
+    npt_maker = maker.get_npt_maker(100)
+    assert npt_maker.ensemble == MDEnsemble.npt
+    assert npt_maker.dynamics == "nose-hoover-chain"
+    assert npt_maker.n_steps == 100
+    assert npt_maker.pressure == 10.0
+    # a barostat time constant of 1000 steps
+    assert npt_maker.ase_md_kwargs["pdamp"] / units.fs == pytest.approx(2000)
+    assert maker.get_md_maker(100).ensemble == MDEnsemble.nvt
+    # the atoms are relaxed in the cell from the NPT MD
+    assert not maker.fixed_cell_relax_maker.relax_cell
+    assert maker.fixed_cell_relax_maker.fix_symmetry
+
+    flow = maker.make(cu_supercell, supercell_matrix=np.eye(3).tolist())
+    names = [job.name for job in flow.jobs]
+    assert "ASE MD NPT" in names
+    assert "get_npt_structure" in names
+
+    # no NPT MD by default
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(EMT_CALCULATOR)
+    assert maker.npt_maker is None
+    assert maker.fixed_cell_relax_maker is None
+    flow = maker.make(cu_supercell, supercell_matrix=np.eye(3).tolist())
+    assert not any("NPT" in job.name for job in flow.jobs)
 
 
 def _commensurate_frequencies(phonon):
@@ -661,3 +735,42 @@ def test_finite_temperature_phonon_maker_emt(clean_dir):
     freqs = _commensurate_frequencies(phonon)
     top = len(freqs) // 3
     assert freqs[-top:].mean() == pytest.approx(freqs_0k[-top:].mean(), rel=0.15)
+
+
+def test_finite_temperature_phonon_maker_emt_npt(clean_dir):
+    """Run the force field workflow with an NPT MD first, with EMT on Cu3Au."""
+    structure = Structure(
+        Lattice.cubic(3.75),
+        ["Au", "Cu", "Cu", "Cu"],
+        [[0, 0, 0], [0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]],
+    )
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
+        EMT_CALCULATOR,
+        run_npt=True,
+        min_length=7.0,
+        npt_time=2.0,
+        npt_equilibration_time=0.5,
+        md_time=1.0,
+        md_time_step=2.0,
+        equilibration_time=0.2,
+        n_snapshots=10,
+    )
+    flow = maker.make(structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    doc = responses[flow.output.uuid][1].output
+
+    assert doc.pressure == 0.0
+    assert doc.npt_time == 2.0
+    assert doc.npt_equilibration_time == 0.5
+    assert doc.npt_trajectory_health.verdict == "stable"
+    assert doc.npt_uuid is not None
+    assert doc.npt_dir is not None
+    assert doc.fixed_cell_relax_uuid is not None
+    # the NVT MD and the fit use the cubic cell from the NPT MD
+    assert doc.structure.lattice.abc == pytest.approx([doc.structure.lattice.a] * 3)
+    assert doc.structure.lattice.angles == pytest.approx((90, 90, 90))
+    ratio = doc.structure.volume / doc.npt_input_structure.volume
+    assert ratio != 1
+    assert ratio == pytest.approx(1, abs=0.05)
+    assert doc.trajectory_health.verdict == "stable"
+    assert not doc.has_imaginary_modes

@@ -77,6 +77,16 @@ _MD_FLOW_TAGS = (
 )
 
 
+def _check_md_incar(user_incar: dict, name: str) -> None:
+    """Check that an MD maker leaves the INCAR tags that the flow sets alone."""
+    if tags := sorted(set(_MD_FLOW_TAGS) & set(user_incar)):
+        raise ValueError(f"The flow sets {tags}. Remove them from the {name}.")
+    if int(user_incar.get("NBLOCK", 1)) != 1:
+        raise ValueError(
+            "The MD must write every step to XDATCAR, so NBLOCK must be 1."
+        )
+
+
 def _get_relax_maker() -> DoubleRelaxMaker:
     """Get a tight relaxation with the basis set and smearing of the statics."""
     return DoubleRelaxMaker.from_relax_maker(
@@ -147,6 +157,14 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         user_incar_settings must not contain IBRION, ISIF, LANGEVIN_GAMMA,
         MDALGO, NSW, POTIM, SMASS, TEBEG or TEEND, since the flow sets them.
         NBLOCK must be 1 if it is set.
+    npt_maker: .MDMaker | None
+        Maker for the NPT MD, with an :obj:`.MDSetGenerator`, under the same
+        conditions as md_maker. It must not set PSTRESS either. Its ENCUT should
+        be larger than that of the NVT MD, since the cell changes. None skips
+        the NPT MD.
+    fixed_cell_relax_maker: .Maker | None
+        Maker for the relaxation of the atoms in the cell from the NPT MD, for
+        example with ISIF = 2.
     phonon_displacement_maker: .BaseVaspMaker
         Maker for the static calculations on the snapshots and the undisplaced
         supercell.
@@ -196,13 +214,7 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
                 "The MD maker must be a VASP MDMaker with an MDSetGenerator."
             )
         generator = md_maker.input_set_generator
-        user_incar = generator.user_incar_settings
-        if tags := sorted(set(_MD_FLOW_TAGS) & set(user_incar)):
-            raise ValueError(f"The flow sets {tags}. Remove them from the MD maker.")
-        if int(user_incar.get("NBLOCK", 1)) != 1:
-            raise ValueError(
-                "The MD must write every step to XDATCAR, so NBLOCK must be 1."
-            )
+        _check_md_incar(generator.user_incar_settings, "MD maker")
         if isinstance(generator, LangevinMDSetGenerator):
             if self.thermostat != "langevin":
                 raise ValueError(
@@ -221,5 +233,46 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
             end_temp=self.temperature,
             nsteps=n_steps,
             time_step=self.md_time_step,
+        )
+        return replace(md_maker, input_set_generator=generator)
+
+    def get_npt_maker(self, n_steps: int) -> MDMaker:
+        """
+        Get the VASP maker of the NPT MD job.
+
+        The NPT MD uses the Langevin thermostat with the Parrinello-Rahman
+        barostat of VASP, MDALGO = 3 with ISIF = 3, as MDSetGenerator sets them
+        for ensemble="npt". PSTRESS is the pressure of the flow.
+
+        Parameters
+        ----------
+        n_steps: int
+            Number of MD steps.
+
+        Returns
+        -------
+        MDMaker
+        """
+        md_maker = self.npt_maker
+        if (
+            not isinstance(md_maker, MDMaker)
+            or type(md_maker.input_set_generator) is not MDSetGenerator
+        ):
+            raise TypeError(
+                "The NPT maker must be a VASP MDMaker with an MDSetGenerator."
+            )
+        generator = md_maker.input_set_generator
+        user_incar = generator.user_incar_settings
+        _check_md_incar(user_incar, "NPT maker")
+        if "PSTRESS" in user_incar:
+            raise ValueError("The flow sets PSTRESS. Remove it from the NPT maker.")
+        generator = replace(
+            generator,
+            ensemble="npt",
+            start_temp=self.temperature,
+            end_temp=self.temperature,
+            nsteps=n_steps,
+            time_step=self.md_time_step,
+            user_incar_settings={**user_incar, "PSTRESS": self.pressure},
         )
         return replace(md_maker, input_set_generator=generator)

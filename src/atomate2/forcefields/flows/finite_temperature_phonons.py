@@ -29,6 +29,8 @@ _DEFAULT_FORCE_FIELD = "MACE-MP-0"
 # period of about 40 time steps. With ASE's thermostat mass Q = 3 N k_B T tdamp**2, the
 # linearised Nose-Hoover period is close to pi * sqrt(2) * tdamp.
 _NOSE_HOOVER_TDAMP_STEPS = 40 / (math.pi * math.sqrt(2))
+# time constant of the barostat of the NPT MD
+_BAROSTAT_PDAMP_STEPS = 1000
 
 
 def _get_md_maker(
@@ -44,7 +46,7 @@ def _get_md_maker(
 
 
 def _get_force_field_md_maker(
-    maker: BaseFiniteTemperaturePhononMaker, n_steps: int
+    maker: BaseFiniteTemperaturePhononMaker, n_steps: int, npt: bool = False
 ) -> ForceFieldMDMaker:
     """
     Get the force field MD maker of one MD job of a finite-temperature flow.
@@ -57,35 +59,42 @@ def _get_force_field_md_maker(
         The finite-temperature phonon maker.
     n_steps: int
         Number of MD steps of the job.
+    npt: bool
+        If True, get the NPT MD maker from maker.npt_maker. If False, get the
+        NVT MD maker from maker.md_maker.
 
     Returns
     -------
     ForceFieldMDMaker
     """
-    md_maker = maker.md_maker
+    md_maker = maker.npt_maker if npt else maker.md_maker
+    name = "NPT maker" if npt else "MD maker"
     if not isinstance(md_maker, ForceFieldMDMaker):
         raise TypeError(
-            f"The MD maker must be a ForceFieldMDMaker, not {type(md_maker).__name__}."
+            f"The {name} must be a ForceFieldMDMaker, not {type(md_maker).__name__}."
         )
     if md_maker.dynamics is not None or md_maker.ase_md_kwargs:
         raise ValueError(
-            "The flow sets the thermostat. The MD maker must not set dynamics or "
+            f"The flow sets the thermostat. The {name} must not set dynamics or "
             "ase_md_kwargs."
         )
-    if maker.thermostat == "nose-hoover":
+    if npt or maker.thermostat == "nose-hoover":
         dynamics = "nose-hoover-chain"
         md_kwargs = {
             "tdamp": _NOSE_HOOVER_TDAMP_STEPS * maker.md_time_step * units.fs,
             "tchain": 1,
         }
+        if npt:
+            md_kwargs["pdamp"] = _BAROSTAT_PDAMP_STEPS * maker.md_time_step * units.fs
     else:
         # AseMDMaker sets its default friction of 10 ps^-1
         dynamics = "langevin"
         md_kwargs = {}
     return replace(
         md_maker,
-        ensemble=MDEnsemble.nvt,
+        ensemble=MDEnsemble.npt if npt else MDEnsemble.nvt,
         temperature=maker.temperature,
+        pressure=maker.pressure if npt else md_maker.pressure,
         n_steps=n_steps,
         time_step=maker.md_time_step,
         dynamics=dynamics,
@@ -113,7 +122,11 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     0 in VASP. The Langevin thermostat has the default friction of
     :obj:`.AseMDMaker`, 10 ps^-1. The initial velocities of the first MD job
     follow the Maxwell-Boltzmann distribution, seeded with random_seed, with
-    zero total momentum.
+    zero total momentum. The NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover
+    chain thermostat and barostat that change the whole cell, whatever the
+    thermostat setting. Its thermostat time constant is that of the
+    Nose-Hoover thermostat above, and its barostat time constant is 1000 time
+    steps.
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
 
@@ -127,6 +140,12 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     born_maker: .Maker | None
         Maker for the Born effective charges and the dielectric tensor. It is
         None by default, as in the force field pheasy phonon workflow.
+    npt_maker: .ForceFieldMDMaker | None
+        Maker for the NPT MD. It must not set dynamics or ase_md_kwargs. None
+        skips the NPT MD.
+    fixed_cell_relax_maker: .ForceFieldRelaxMaker | None
+        Maker for the relaxation of the atoms in the cell from the NPT MD. It
+        must keep the cell.
     md_maker: .ForceFieldMDMaker
         Maker for the MD. It must not set dynamics or ase_md_kwargs, since the
         flow sets the thermostat.
@@ -181,12 +200,28 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         """
         return _get_force_field_md_maker(self, n_steps)
 
+    def get_npt_maker(self, n_steps: int) -> ForceFieldMDMaker:
+        """
+        Get the force field maker of the NPT MD job.
+
+        Parameters
+        ----------
+        n_steps: int
+            Number of MD steps.
+
+        Returns
+        -------
+        ForceFieldMDMaker
+        """
+        return _get_force_field_md_maker(self, n_steps, npt=True)
+
     @classmethod
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
         calculator_kwargs: dict | None = None,
         relax_initial_structure: bool = True,
+        run_npt: bool = False,
         **kwargs,
     ) -> Self:
         """
@@ -204,6 +239,9 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
             The keyword arguments to pass to the calculator.
         relax_initial_structure: bool = True
             Whether to relax the initial structure.
+        run_npt: bool = False
+            Whether to run an NPT MD with the force field first. The NVT MD then
+            uses its average cell, with the atoms relaxed in that cell.
         **kwargs
             Additional kwargs to pass to ForceFieldFiniteTemperaturePhononMaker.
 
@@ -216,7 +254,20 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
             force_field_name=force_field_name,
             calculator_kwargs=calculator_kwargs,
         )
+        npt_maker: ForceFieldMDMaker | None = None
+        fixed_cell_relax_maker: ForceFieldRelaxMaker | None = None
+        if run_npt:
+            npt_maker = _get_md_maker(force_field_name, calculator_kwargs)
+            fixed_cell_relax_maker = ForceFieldRelaxMaker(
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
+                relax_cell=False,
+                relax_kwargs={"fmax": 1e-5},
+                fix_symmetry=True,
+            )
         kwargs.update(
+            npt_maker=npt_maker,
+            fixed_cell_relax_maker=fixed_cell_relax_maker,
             bulk_relax_maker=(
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
@@ -353,6 +404,9 @@ class MLFFMDVaspStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
     md_maker: .ForceFieldMDMaker
         Maker for the MD. It must not set dynamics or ase_md_kwargs, since the
         flow sets the thermostat.
+    npt_maker: .ForceFieldMDMaker | None
+        Maker for the NPT MD, under the same conditions as md_maker. None skips
+        the NPT MD.
     phonon_displacement_maker: .BaseVaspMaker
         Maker for the static calculations on the snapshots and the undisplaced
         supercell.
@@ -378,6 +432,21 @@ class MLFFMDVaspStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
         ForceFieldMDMaker
         """
         return _get_force_field_md_maker(self, n_steps)
+
+    def get_npt_maker(self, n_steps: int) -> ForceFieldMDMaker:
+        """
+        Get the force field maker of the NPT MD job.
+
+        Parameters
+        ----------
+        n_steps: int
+            Number of MD steps.
+
+        Returns
+        -------
+        ForceFieldMDMaker
+        """
+        return _get_force_field_md_maker(self, n_steps, npt=True)
 
     @classmethod
     def from_force_field_name(

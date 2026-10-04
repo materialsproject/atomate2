@@ -22,6 +22,7 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Xdatcar
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2.common.jobs.pheasy import (
     _DEFAULT_FILE_PATHS,
@@ -184,11 +185,14 @@ def get_md_restart_structure(
     return structure
 
 
-def _read_vasp_md(directory: Path) -> tuple[np.ndarray, np.ndarray, list[str], float]:
-    """Read the frames, energies and time step of a VASP MD run."""
+def _read_vasp_md(
+    directory: Path,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str], float]:
+    """Read the frames, cells, energies and time step of a VASP MD run."""
     incar = Incar.from_file(zpath(str(directory / "INCAR")))
     xdatcar = Xdatcar(zpath(str(directory / "XDATCAR")))
     frac_coords = np.array([frame.frac_coords for frame in xdatcar.structures])
+    cells = np.array([frame.lattice.matrix for frame in xdatcar.structures])
     species = [str(site.specie) for site in xdatcar.structures[0]]
 
     # the free energy F of each ionic step
@@ -204,20 +208,67 @@ def _read_vasp_md(directory: Path) -> tuple[np.ndarray, np.ndarray, list[str], f
             f"{len(energies)} MD steps in OSZICAR. XDATCAR must have a frame at "
             "every step, with NBLOCK = 1."
         )
-    return frac_coords, np.array(energies), species, float(incar["POTIM"])
+    return frac_coords, cells, np.array(energies), species, float(incar["POTIM"])
 
 
 def _read_ase_md(
     directory: Path, time_step: float, skip_first: bool
-) -> tuple[np.ndarray, np.ndarray, list[str], float]:
-    """Read the frames and energies of a force field MD run."""
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str], float]:
+    """Read the frames, cells and energies of a force field MD run."""
     frames = ase_read(directory / ASE_TRAJECTORY_FILE, index=":")
     if skip_first:
         # the starting structure is the last frame of the previous MD run
         frames = frames[1:]
     frac_coords = np.array([atoms.get_scaled_positions() for atoms in frames])
+    cells = np.array([atoms.cell[:] for atoms in frames])
     energies = np.array([atoms.get_potential_energy() for atoms in frames])
-    return frac_coords, energies, frames[0].get_chemical_symbols(), time_step
+    return frac_coords, cells, energies, frames[0].get_chemical_symbols(), time_step
+
+
+def _read_md(
+    md_dirs: Sequence[str], md_code: str, reference: Structure, md_time_step: float
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, float]:
+    """
+    Read and join the trajectories of MD runs, in order.
+
+    For VASP, XDATCAR, OSZICAR and the POTIM of INCAR are read from each run
+    directory. For force fields, the ASE trajectory file is read, and
+    md_time_step is the time step. Returns the fractional coordinates, the cell
+    and the potential energy of each frame, and the time step in fs.
+    """
+    directories = [Path(strip_hostname(md_dir)) for md_dir in md_dirs]
+    if len(set(directories)) != len(directories):
+        raise ValueError(
+            f"Each MD run must have its own directory, but the directories are "
+            f"{md_dirs}."
+        )
+    frac_coords, cells, energies, time_steps = [], [], [], set()
+    for idx, directory in enumerate(directories):
+        if md_code == "vasp":
+            coords, cell, energy, species, time_step = _read_vasp_md(directory)
+        elif md_code == "forcefields":
+            coords, cell, energy, species, time_step = _read_ase_md(
+                directory, md_time_step, skip_first=idx > 0
+            )
+        else:
+            raise ValueError(f"MD code must be 'vasp' or 'forcefields', not {md_code}.")
+        if species != [str(site.specie) for site in reference]:
+            raise ValueError(
+                f"The atoms of the MD in {directory} are not in the order of the "
+                "reference supercell."
+            )
+        frac_coords.append(coords)
+        cells.append(cell)
+        energies.append(energy)
+        time_steps.add(time_step)
+    if len(time_steps) != 1:
+        raise ValueError(f"The MD runs have different time steps: {time_steps} fs.")
+    return (
+        np.concatenate(frac_coords),
+        np.concatenate(cells),
+        np.concatenate(energies),
+        time_steps.pop(),
+    )
 
 
 def _get_displacements(frac_coords: np.ndarray, reference: Structure) -> np.ndarray:
@@ -343,6 +394,94 @@ def _assess_trajectory(
     )
 
 
+@job
+def get_npt_structure(
+    npt_dir: str,
+    md_code: str,
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    reference: Structure,
+    temperature: float,
+    md_time_step: float,
+    equilibration_time: float,
+    symprec: float,
+) -> dict:
+    """
+    Get the unit cell at the temperature from an NPT MD run.
+
+    The metric tensor L L^T of the supercell, with the lattice vectors as the
+    rows of L, is averaged over the frames after equilibration_time. Unlike the
+    lattice vectors, it does not change when the cell rotates. It is converted
+    to the metric tensor of the unit cell with the supercell matrix and averaged
+    over the point group of the structure, so that the cell keeps its symmetry.
+    The new lattice is the stretch of the lattice of the structure, without a
+    rotation, that has this metric tensor. The atoms keep their fractional
+    coordinates. The NPT trajectory is checked as in :obj:`select_md_snapshots`.
+
+    Parameters
+    ----------
+    npt_dir: str
+        Directory of the NPT MD run.
+    md_code: str
+        Code of the MD, "vasp" or "forcefields".
+    structure: Structure
+        Unit cell whose supercell the NPT MD started from.
+    supercell_matrix: Matrix3D
+        Supercell matrix.
+    reference: Structure
+        The undisplaced supercell the NPT MD started from.
+    temperature: float
+        MD temperature in K.
+    md_time_step: float
+        MD time step in fs. Only used for force field trajectories.
+    equilibration_time: float
+        Time at the start of the trajectory that is left out, in ps.
+    symprec: float
+        Symmetry precision for the point group of the structure.
+
+    Returns
+    -------
+    dict
+        The unit cell at the temperature and the check of the NPT trajectory.
+    """
+    frac_coords, cells, energies, time_step = _read_md(
+        [npt_dir], md_code, reference, md_time_step
+    )
+    n_equil = round(equilibration_time * 1000 / time_step)
+    if n_equil >= len(cells):
+        raise ValueError(
+            f"The NPT trajectory has {len(cells)} frames of {time_step} fs, none "
+            f"of them after the {equilibration_time} ps that are left out."
+        )
+    metric = np.mean([cell @ cell.T for cell in cells[n_equil:]], axis=0)
+    inv_matrix = np.linalg.inv(np.array(supercell_matrix, dtype=float))
+    metric = inv_matrix @ metric @ inv_matrix.T
+    # a rotation W of fractional coordinates leaves the metric tensor of the
+    # symmetric cell unchanged, W^T G W = G
+    analyzer = SpacegroupAnalyzer(structure, symprec=symprec)
+    rotations = [op.rotation_matrix for op in analyzer.get_symmetry_operations()]
+    metric = np.mean([rot.T @ metric @ rot for rot in rotations], axis=0)
+    lattice = structure.lattice.matrix
+    inv_lattice = np.linalg.inv(lattice)
+    eigvals, eigvecs = np.linalg.eigh(inv_lattice @ metric @ inv_lattice.T)
+    stretch = eigvecs @ np.diag(np.sqrt(eigvals)) @ eigvecs.T
+    npt_structure = Structure(
+        lattice @ stretch,
+        structure.species,
+        structure.frac_coords,
+        site_properties=structure.site_properties,
+    )
+
+    health = _assess_trajectory(frac_coords, energies, reference, temperature)
+    if not health.is_stable:
+        warnings.warn(
+            f"The NPT trajectory did not stay at the reference structure (verdict: "
+            f"{health.verdict}). The averaged cell may not describe it.",
+            stacklevel=2,
+        )
+    return {"structure": npt_structure, "trajectory_health": health.model_dump()}
+
+
 @job(data=["structures"])
 def select_md_snapshots(
     md_dirs: Sequence[str],
@@ -390,35 +529,9 @@ def select_md_snapshots(
         root mean square displacement of the snapshots in Angstrom, with the
         displacement of the center of mass removed. The trajectory check.
     """
-    directories = [Path(strip_hostname(md_dir)) for md_dir in md_dirs]
-    if len(set(directories)) != len(directories):
-        raise ValueError(
-            f"Each MD run must have its own directory, but the directories are "
-            f"{md_dirs}."
-        )
-    frac_coords, energies, time_steps = [], [], set()
-    for idx, directory in enumerate(directories):
-        if md_code == "vasp":
-            coords, energy, species, time_step = _read_vasp_md(directory)
-        elif md_code == "forcefields":
-            coords, energy, species, time_step = _read_ase_md(
-                directory, md_time_step, skip_first=idx > 0
-            )
-        else:
-            raise ValueError(f"MD code must be 'vasp' or 'forcefields', not {md_code}.")
-        if species != [str(site.specie) for site in reference]:
-            raise ValueError(
-                f"The atoms of the MD in {directory} are not in the order of the "
-                "reference supercell."
-            )
-        frac_coords.append(coords)
-        energies.append(energy)
-        time_steps.add(time_step)
-    if len(time_steps) != 1:
-        raise ValueError(f"The MD runs have different time steps: {time_steps} fs.")
-    time_step = time_steps.pop()
-    all_coords = np.concatenate(frac_coords)
-    all_energies = np.concatenate(energies)
+    all_coords, _, all_energies, time_step = _read_md(
+        md_dirs, md_code, reference, md_time_step
+    )
     n_frames = len(all_coords)
 
     n_equil = round(equilibration_time * 1000 / time_step)
@@ -513,6 +626,15 @@ def fit_finite_temperature_phonons(
     optimization_run_job_dir: str | None = None,
     born_run_uuid: str | None = None,
     born_run_job_dir: str | None = None,
+    npt_input_structure: Structure | None = None,
+    pressure: float | None = None,
+    npt_time: float | None = None,
+    npt_equilibration_time: float | None = None,
+    npt_trajectory_health: dict | None = None,
+    npt_uuid: str | None = None,
+    npt_dir: str | None = None,
+    fixed_cell_relax_uuid: str | None = None,
+    fixed_cell_relax_job_dir: str | None = None,
     rotational_sum_rule: str | None = "BHH",
     alpha_min: int = -6,
     random_seed: int | None = 103,
@@ -537,7 +659,8 @@ def fit_finite_temperature_phonons(
     Parameters
     ----------
     structure: Structure
-        Relaxed unit cell. This job sorts its atoms by electronegativity.
+        Unit cell of the NVT MD, the relaxed unit cell or the cell from the NPT
+        MD. This job sorts its atoms by electronegativity.
     supercell_matrix: Matrix3D
         Diagonal supercell matrix.
     snapshot_data: dict
@@ -580,6 +703,24 @@ def fit_finite_temperature_phonons(
         UUID of the Born charge calculation.
     born_run_job_dir: str | None
         Directory of the Born charge calculation.
+    npt_input_structure: Structure | None
+        Unit cell whose supercell the NPT MD started from, if there was one.
+    pressure: float | None
+        Pressure of the NPT MD in kbar.
+    npt_time: float | None
+        Length of the NPT MD in ps.
+    npt_equilibration_time: float | None
+        Time at the start of the NPT trajectory that was left out, in ps.
+    npt_trajectory_health: dict | None
+        Check of the NPT trajectory.
+    npt_uuid: str | None
+        UUID of the NPT MD job.
+    npt_dir: str | None
+        Directory of the NPT MD job.
+    fixed_cell_relax_uuid: str | None
+        UUID of the relaxation of the atoms in the cell from the NPT MD.
+    fixed_cell_relax_job_dir: str | None
+        Directory of the relaxation of the atoms in the cell from the NPT MD.
     rotational_sum_rule: str | None
         Rotational sum rule passed to pheasy with --rasr, or None for none.
     alpha_min: int
@@ -753,6 +894,15 @@ def fit_finite_temperature_phonons(
         epsilon_static=epsilon.tolist() if epsilon is not None else None,
         md_uuids=md_uuids,
         md_dirs=md_dirs,
+        npt_input_structure=npt_input_structure,
+        pressure=pressure,
+        npt_time=npt_time,
+        npt_equilibration_time=npt_equilibration_time,
+        npt_trajectory_health=npt_trajectory_health,
+        npt_uuid=npt_uuid,
+        npt_dir=npt_dir,
+        fixed_cell_relax_uuid=fixed_cell_relax_uuid,
+        fixed_cell_relax_job_dir=fixed_cell_relax_job_dir,
         uuids=PhononUUIDs(
             optimization_run_uuid=optimization_run_uuid,
             displacements_uuids=displacement_data["uuids"],

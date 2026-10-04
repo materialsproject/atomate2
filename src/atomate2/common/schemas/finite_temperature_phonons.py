@@ -100,7 +100,9 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
 
     structure: Structure | None = Field(
         None,
-        description="Relaxed unit cell, with its atoms sorted by electronegativity.",
+        description="Unit cell of the NVT MD and the fit, with its atoms sorted by "
+        "electronegativity. It is the relaxed unit cell, or the cell from the NPT MD "
+        "if there was one.",
     )
     temperature: float | None = Field(None, description="MD temperature in K.")
     code: str | None = Field(
@@ -221,6 +223,32 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
     )
     md_uuids: list[str] | None = Field(None, description="UUIDs of the MD jobs.")
     md_dirs: list[str] | None = Field(None, description="Directories of the MD jobs.")
+    npt_input_structure: Structure | None = Field(
+        None,
+        description="Unit cell whose supercell the NPT MD started from. None without "
+        "an NPT MD.",
+    )
+    pressure: float | None = Field(None, description="Pressure of the NPT MD in kbar.")
+    npt_time: float | None = Field(None, description="Length of the NPT MD in ps.")
+    npt_equilibration_time: float | None = Field(
+        None,
+        description="Time at the start of the NPT trajectory left out of the "
+        "average cell, in ps.",
+    )
+    npt_trajectory_health: TrajectoryHealth | None = Field(
+        None, description="Check of the NPT trajectory."
+    )
+    npt_uuid: str | None = Field(None, description="UUID of the NPT MD job.")
+    npt_dir: str | None = Field(None, description="Directory of the NPT MD job.")
+    fixed_cell_relax_uuid: str | None = Field(
+        None,
+        description="UUID of the relaxation of the atoms in the cell from the NPT MD.",
+    )
+    fixed_cell_relax_job_dir: str | None = Field(
+        None,
+        description="Directory of the relaxation of the atoms in the cell from the "
+        "NPT MD.",
+    )
     uuids: PhononUUIDs | None = Field(
         None,
         description="UUIDs of the relaxation, the phonon displacement calculations "

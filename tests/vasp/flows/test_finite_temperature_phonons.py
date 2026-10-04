@@ -223,6 +223,45 @@ def test_md_maker_checks():
         FiniteTemperaturePhononMaker(md_maker=StaticMaker()).get_md_maker(10)
 
 
+def test_npt_maker(si_structure, nio_supercell):
+    npt_maker = MDMaker(
+        input_set_generator=MDSetGenerator(user_incar_settings={"ENCUT": 700})
+    )
+    maker = FiniteTemperaturePhononMaker(
+        temperature=600, pressure=5.0, npt_maker=npt_maker
+    )
+    incar = (
+        maker.get_npt_maker(100)
+        .input_set_generator.get_input_set(nio_supercell, potcar_spec=True)
+        .incar
+    )
+    assert incar["ISIF"] == 3
+    assert incar["MDALGO"] == 3
+    assert incar["PSTRESS"] == 5.0
+    assert incar["TEBEG"] == incar["TEEND"] == 600
+    assert incar["NSW"] == 100
+    assert incar["ENCUT"] == 700
+    flow = maker.make(si_structure)
+    assert any(job.name.endswith(" NPT") for job in flow.jobs)
+
+    maker = FiniteTemperaturePhononMaker(
+        npt_maker=MDMaker(
+            input_set_generator=MDSetGenerator(user_incar_settings={"PSTRESS": 1})
+        )
+    )
+    with pytest.raises(ValueError, match="The flow sets PSTRESS"):
+        maker.get_npt_maker(10)
+    maker = FiniteTemperaturePhononMaker(
+        npt_maker=MDMaker(input_set_generator=LangevinMDSetGenerator())
+    )
+    with pytest.raises(TypeError, match="VASP MDMaker with an MDSetGenerator"):
+        maker.get_npt_maker(10)
+
+    # a force field MD gets a force field NPT MD
+    maker = MLFFMDVaspStaticFiniteTemperaturePhononMaker(npt_maker=ForceFieldMDMaker())
+    assert maker.get_npt_maker(10).pressure == 0.0
+
+
 def test_from_force_field_name():
     maker = VaspMDMLFFStaticFiniteTemperaturePhononMaker.from_force_field_name(
         "MACE-MP-0",
