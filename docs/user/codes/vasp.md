@@ -411,8 +411,9 @@ The cluster space grows faster there than the number of displacements the workfl
 #### Finite-temperature phonons
 
 `FiniteTemperaturePhononMaker` fits effective harmonic force constants at a finite temperature, as in the temperature-dependent effective potential ([TDEP](https://doi.org/10.1103/PhysRevB.84.180301)) method.
-They include the anharmonic effects at that temperature, at the volume of the relaxed structure.
-By default, thermal expansion is not included.
+They include the anharmonic effects at that temperature.
+By default, the MD runs at the volume of the relaxed structure, so thermal expansion is not included.
+It can be switched on with an NPT MD before the NVT MD, see below.
 The structure is relaxed first.
 An NVT MD run then samples the displacements at the temperature.
 By default, it runs for 8 ps at 300 K with a time step of 1 fs and a Langevin thermostat.
