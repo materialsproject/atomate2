@@ -346,6 +346,8 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
 The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs the pheasy version this workflow needs, together with phonopy and ALM.
+The workflows call the `pheasy` command.
+A different command can be set with `PHEASY_CMD` in the atomate2 settings.
 ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
@@ -476,7 +478,7 @@ Three more makers are in `atomate2.forcefields.flows.finite_temperature_phonons`
 Each has a `from_force_field_name` method to choose the force field.
 They need the package of the force field, for example `mace-torch` for MACE.
 All of them use the same fit.
-A force field NPT MD uses ASE's `MTKNPT`, a Nosé-Hoover chain thermostat with the barostat of [Martyna et al.](https://doi.org/10.1063/1.467468).
+A force field NPT MD uses ASE's `MTKNPT`, a Nosé-Hoover thermostat with the barostat of [Martyna et al.](https://doi.org/10.1063/1.467468).
 
 ```python
 from atomate2.forcefields.flows.finite_temperature_phonons import (
@@ -490,6 +492,16 @@ flow = maker.make(structure)
 ```
 
 `run_npt=True` sets the NPT MD and the relaxation of the atoms in its cell.
+
+A force field gives no Born charges, so the force field makers skip the non-analytical correction by default.
+The Born charges and the dielectric tensor can still come from VASP.
+Either pass `born` and `epsilon_static` to `make`, or set a VASP `born_maker`:
+
+```python
+from atomate2.vasp.jobs.core import DielectricMaker
+
+maker.born_maker = DielectricMaker()
+```
 
 Known limitations:
 

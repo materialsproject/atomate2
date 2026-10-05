@@ -364,7 +364,12 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 structure = relax.output.structure
 
         if self.born_maker is not None and (born is None or epsilon_static is None):
-            born_job = self.born_maker.make(structure, prev_dir=prev_dir)
+            # as in the phonon workflow, so that a VASP born_maker can run after a
+            # force field relaxation, whose folder has no VASP files
+            born_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                born_kwargs[self.prev_calc_dir_argname] = prev_dir
+            born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
             born = born_job.output.calcs_reversed[0].output.outcar["born"]
             epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
@@ -488,7 +493,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     @property
     @abstractmethod
     def prev_calc_dir_argname(self) -> str | None:
-        """Name of the argument that passes prev_dir to the phonon displacement maker.
+        """Name of the prev_dir argument of the phonon displacement and Born makers.
 
         As this differs between codes, it is implemented by the inheriting class.
         """

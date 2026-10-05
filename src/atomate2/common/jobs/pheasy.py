@@ -38,6 +38,7 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2 import SETTINGS
 from atomate2.common.jobs.phonons import (
     ANGSTROM_TO_BOHR,
     _generate_phonon_object,
@@ -316,7 +317,10 @@ def _run_harmonic_fit(
         Log file of the fit. None keeps pheasy's default.
     """
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
-    base = f"pheasy --scell SPOSCAR --dim {dim} -w 2 --symprec {float(symprec)}"
+    base = (
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w 2 "
+        f"--symprec {float(symprec)}"
+    )
     fit = f"{base} -f --full_ifc"
     if use_lasso:
         # pheasy's default --tol of 1e-4 leaves the fit unconverged, so the force
@@ -401,7 +405,7 @@ def _run_anharmonic_fit(
     """
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
     base = (
-        f"pheasy --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
         f"--symprec {float(symprec)}"
     )
     cutoffs = f"--c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)}"
@@ -997,7 +1001,8 @@ def generate_frequencies_eigenvectors(
             shutil.copy(filename, refit_dir / filename)
 
         pheasy_cmd_11 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
+            f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR "
+            f"--dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -s -w 2 --c2 "
             f"10.0 --symprec {float(symprec)} "
@@ -1005,14 +1010,16 @@ def generate_frequencies_eigenvectors(
         )
 
         pheasy_cmd_12 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
+            f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR "
+            f"--dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -c --symprec "
             f"{float(symprec)} --c2 10.0 -w 2"
         )
 
         pheasy_cmd_13 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
+            f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR "
+            f"--dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -w 2 -d --symprec "
             f"{float(symprec)} --c2 10.0 "
@@ -1024,7 +1031,8 @@ def generate_frequencies_eigenvectors(
 
         if len(phonon.displacements) > 3:
             pheasy_cmd_14 = (
-                f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
+                f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR "
+                f"--dim {int(supercell_matrix[0][0])} "
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --c2 10.0 "
                 f"--full_ifc -w 2 --symprec {float(symprec)} "
@@ -1034,7 +1042,8 @@ def generate_frequencies_eigenvectors(
 
         else:
             pheasy_cmd_14 = (
-                f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
+                f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR "
+                f"--dim {int(supercell_matrix[0][0])} "
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -f --full_ifc "
                 f"--c2 10.0 -w 2 --symprec {float(symprec)} "

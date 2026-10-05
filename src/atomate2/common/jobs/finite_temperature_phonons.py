@@ -16,7 +16,6 @@ from monty.os.path import zpath
 from phonopy.file_IO import parse_FORCE_CONSTANTS
 from phonopy.harmonic.dynmat_to_fc import get_commensurate_points
 from phonopy.interface.vasp import write_vasp
-from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Xdatcar
@@ -34,6 +33,7 @@ from atomate2.common.jobs.phonons import (
     _get_kpath,
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
+    _set_nac_params,
 )
 from atomate2.common.schemas.finite_temperature_phonons import (
     FiniteTemperaturePhononDoc,
@@ -390,6 +390,60 @@ def _assess_trajectory(
     )
 
 
+def average_npt_structure(
+    cells: np.ndarray,
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    symprec: float,
+) -> Structure:
+    """
+    Average the supercell lattices of an NPT MD into a unit cell.
+
+    The metric tensor L L^T of the supercell, with the lattice vectors as the
+    rows of L, is averaged over the cells. Unlike the lattice vectors, it does
+    not change when the cell rotates. It is converted to the metric tensor of
+    the unit cell with the supercell matrix and averaged over the point group of
+    the structure, so that the cell keeps its symmetry. The new lattice is the
+    stretch of the lattice of the structure, without a rotation, that has this
+    metric tensor. The atoms keep their fractional coordinates.
+
+    Parameters
+    ----------
+    cells: np.ndarray
+        Supercell lattices of the frames to average, with the lattice vectors
+        as rows, in Angstrom.
+    structure: Structure
+        Unit cell whose supercell the NPT MD started from.
+    supercell_matrix: Matrix3D
+        Supercell matrix.
+    symprec: float
+        Symmetry precision for the point group of the structure.
+
+    Returns
+    -------
+    Structure
+        The unit cell with the averaged lattice.
+    """
+    metric = np.mean([cell @ cell.T for cell in cells], axis=0)
+    inv_matrix = np.linalg.inv(np.array(supercell_matrix, dtype=float))
+    metric = inv_matrix @ metric @ inv_matrix.T
+    # a rotation W of fractional coordinates leaves the metric tensor of the
+    # symmetric cell unchanged, W^T G W = G
+    analyzer = SpacegroupAnalyzer(structure, symprec=symprec)
+    rotations = [op.rotation_matrix for op in analyzer.get_symmetry_operations()]
+    metric = np.mean([rot.T @ metric @ rot for rot in rotations], axis=0)
+    lattice = structure.lattice.matrix
+    inv_lattice = np.linalg.inv(lattice)
+    eigvals, eigvecs = np.linalg.eigh(inv_lattice @ metric @ inv_lattice.T)
+    stretch = eigvecs @ np.diag(np.sqrt(eigvals)) @ eigvecs.T
+    return Structure(
+        lattice @ stretch,
+        structure.species,
+        structure.frac_coords,
+        site_properties=structure.site_properties,
+    )
+
+
 @job
 def get_npt_structure(
     npt_dir: str,
@@ -404,14 +458,9 @@ def get_npt_structure(
     """
     Get the unit cell at the temperature from an NPT MD run.
 
-    The metric tensor L L^T of the supercell, with the lattice vectors as the
-    rows of L, is averaged over the frames after equilibration_time. Unlike the
-    lattice vectors, it does not change when the cell rotates. It is converted
-    to the metric tensor of the unit cell with the supercell matrix and averaged
-    over the point group of the structure, so that the cell keeps its symmetry.
-    The new lattice is the stretch of the lattice of the structure, without a
-    rotation, that has this metric tensor. The atoms keep their fractional
-    coordinates. The NPT trajectory is checked as in :obj:`select_md_snapshots`.
+    The cells after equilibration_time are averaged with
+    :obj:`average_npt_structure`. The NPT trajectory is checked as in
+    :obj:`select_md_snapshots`.
 
     Parameters
     ----------
@@ -446,23 +495,8 @@ def get_npt_structure(
             f"The NPT trajectory has {len(cells)} frames of {time_step} fs, none "
             f"of them after the {equilibration_time} ps that are left out."
         )
-    metric = np.mean([cell @ cell.T for cell in cells[n_equil:]], axis=0)
-    inv_matrix = np.linalg.inv(np.array(supercell_matrix, dtype=float))
-    metric = inv_matrix @ metric @ inv_matrix.T
-    # a rotation W of fractional coordinates leaves the metric tensor of the
-    # symmetric cell unchanged, W^T G W = G
-    analyzer = SpacegroupAnalyzer(structure, symprec=symprec)
-    rotations = [op.rotation_matrix for op in analyzer.get_symmetry_operations()]
-    metric = np.mean([rot.T @ metric @ rot for rot in rotations], axis=0)
-    lattice = structure.lattice.matrix
-    inv_lattice = np.linalg.inv(lattice)
-    eigvals, eigvecs = np.linalg.eigh(inv_lattice @ metric @ inv_lattice.T)
-    stretch = eigvecs @ np.diag(np.sqrt(eigvals)) @ eigvecs.T
-    npt_structure = Structure(
-        lattice @ stretch,
-        structure.species,
-        structure.frac_coords,
-        site_properties=structure.site_properties,
+    npt_structure = average_npt_structure(
+        cells[n_equil:], structure, supercell_matrix, symprec
     )
 
     health = _assess_trajectory(frac_coords, energies, reference, time_step)
@@ -781,22 +815,7 @@ def fit_finite_temperature_phonons(
 
     borns = epsilon = None
     if born is not None and epsilon_static is not None:
-        borns, epsilon = symmetrize_borns_and_epsilon(
-            ucell=phonon.unitcell,
-            borns=np.array(born),
-            epsilon=np.array(epsilon_static),
-            symprec=symprec,
-            primitive_matrix=phonon.primitive_matrix,
-            supercell_matrix=phonon.supercell_matrix,
-        )
-        if not np.all(np.isclose(borns, 0.0)):
-            # the factor is for forces in eV/Angstrom, as from VASP and the force
-            # fields
-            phonon.nac_params = {
-                "born": borns,
-                "dielectric": epsilon,
-                "factor": 14.399652,
-            }
+        borns, epsilon = _set_nac_params(phonon, born, epsilon_static, symprec)
 
     # frequencies at the q-points commensurate with the supercell
     matrix = np.linalg.inv(phonon.primitive_matrix) @ phonon.supercell_matrix

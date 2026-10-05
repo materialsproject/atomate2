@@ -125,7 +125,7 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     Its time constant gives a period of about 40 time steps, like SMASS = 0 in
     VASP. The initial velocities of the first MD job follow the
     Maxwell-Boltzmann distribution, seeded with random_seed, with zero total
-    momentum. The NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover chain
+    momentum. The NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover
     thermostat and barostat that change the whole cell, whatever the
     thermostat setting (Martyna et al., J. Chem. Phys. 101, 4177 (1994)). Its
     thermostat time constant is that of the Nose-Hoover thermostat above, and

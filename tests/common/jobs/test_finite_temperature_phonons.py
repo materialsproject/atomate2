@@ -23,6 +23,7 @@ from atomate2.common.jobs.finite_temperature_phonons import (
     _assess_trajectory,
     _get_rms_displacement,
     _remove_center_of_mass,
+    average_npt_structure,
     fit_finite_temperature_phonons,
     get_md_restart_structure,
     get_md_supercell,
@@ -273,6 +274,23 @@ def test_select_md_snapshots_forcefields(cu_supercell):
             14,
         )
     assert output["trajectory_health"]["verdict"] == "melted"
+
+
+def test_average_npt_structure():
+    """Rotated cells of an expanded tetragonal supercell average to its unit cell."""
+    structure = Structure(
+        Lattice.tetragonal(3.0, 5.0), ["Si", "Si"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+    )
+    matrix = np.diag([2, 2, 1])
+    supercell = np.diag([1.01, 1.01, 1.03]) @ matrix @ structure.lattice.matrix
+    rng = np.random.default_rng(7)
+    cells = []
+    for _ in range(5):
+        rotation, _ = np.linalg.qr(rng.normal(size=(3, 3)))
+        cells.append(supercell @ rotation.T)
+    averaged = average_npt_structure(np.array(cells), structure, matrix, 1e-3)
+    assert np.allclose(averaged.lattice.matrix, np.diag([3.03, 3.03, 5.15]))
+    assert np.allclose(averaged.frac_coords, structure.frac_coords)
 
 
 def test_get_npt_structure(cu_supercell):

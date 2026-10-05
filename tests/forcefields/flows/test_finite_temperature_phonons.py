@@ -22,6 +22,7 @@ from atomate2.forcefields.flows.finite_temperature_phonons import (
 )
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.vasp.jobs.core import DielectricMaker
 
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 
@@ -163,6 +164,15 @@ def test_force_field_npt_maker(cu3au):
     assert maker.fixed_cell_relax_maker is None
     flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
     assert not any("NPT" in job.name for job in flow.jobs)
+
+
+def test_force_field_with_vasp_born_charges(cu3au):
+    """A VASP born_maker after a force field relaxation gets no prev_dir."""
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(EMT)
+    maker.born_maker = DielectricMaker()
+    flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
+    born_job = next(job for job in flow.jobs if job.name == "dielectric")
+    assert born_job.function_kwargs.get("prev_dir") is None
 
 
 def test_finite_temperature_phonon_maker_emt(clean_dir, cu3au):

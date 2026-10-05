@@ -15,6 +15,7 @@ from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import (
     LangevinMDSetGenerator,
     MDSetGenerator,
+    StaticSetGenerator,
     TightRelaxSetGenerator,
 )
 
@@ -22,36 +23,6 @@ if TYPE_CHECKING:
     from jobflow import Maker
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
-
-# The relaxation, the MD and the phonon displacement calculations use the same
-# smearing and k-point density.
-_ELECTRONIC_INCAR = {"ISMEAR": 0, "SIGMA": 0.05}
-_KPOINTS = {"reciprocal_density": 100}
-
-# The MD only samples the displacements. The forces of the fit come from the
-# phonon displacement calculations, which use tighter settings.
-_MD_INCAR = {
-    "ENCUT": 500,
-    "EDIFF": 1e-5,
-    "ALGO": "Normal",
-    "LREAL": "Auto",
-    "NBLOCK": 1,
-    "LWAVE": False,
-    **_ELECTRONIC_INCAR,
-}
-# changes to the INCAR of PhononDisplacementMaker
-_STATIC_INCAR = {
-    "ENCUT": 600,
-    "ENAUG": 1360,
-    "PREC": "Accurate",
-    "LASPH": True,
-    "NELM": 200,
-    "LWAVE": False,
-    **_ELECTRONIC_INCAR,
-}
-_RELAX_INCAR = {
-    key: _STATIC_INCAR[key] for key in ("ENCUT", "ENAUG", "PREC", "LASPH")
-} | _ELECTRONIC_INCAR
 
 # INCAR tags of the MD that the flow sets
 _MD_FLOW_TAGS = (
@@ -75,35 +46,6 @@ def _check_md_incar(user_incar: dict, name: str) -> None:
         raise ValueError(
             "The MD must write every step to XDATCAR, so NBLOCK must be 1."
         )
-
-
-def _get_relax_maker() -> DoubleRelaxMaker:
-    """Get a tight relaxation with the basis set and smearing of the statics."""
-    return DoubleRelaxMaker.from_relax_maker(
-        TightRelaxMaker(
-            input_set_generator=TightRelaxSetGenerator(
-                user_incar_settings=dict(_RELAX_INCAR),
-                user_kpoints_settings=dict(_KPOINTS),
-            )
-        )
-    )
-
-
-def _get_md_maker() -> MDMaker:
-    """Get the MD maker, whose temperature, steps and thermostat the flow sets."""
-    return MDMaker(
-        input_set_generator=MDSetGenerator(
-            user_incar_settings=dict(_MD_INCAR),
-            user_kpoints_settings=dict(_KPOINTS),
-        )
-    )
-
-
-def _get_phonon_displacement_maker() -> PhononDisplacementMaker:
-    """Get the static maker for the forces on the snapshots."""
-    maker = PhononDisplacementMaker()
-    maker.input_set_generator.user_incar_settings.update(_STATIC_INCAR)
-    return maker
 
 
 @dataclass
@@ -161,11 +103,66 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         Code of the MD.
     """
 
-    bulk_relax_maker: Maker | None = field(default_factory=_get_relax_maker)
+    bulk_relax_maker: Maker | None = field(
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(
+            TightRelaxMaker(
+                input_set_generator=TightRelaxSetGenerator(
+                    user_incar_settings={
+                        "ENCUT": 600,
+                        "ENAUG": 1360,
+                        "PREC": "Accurate",
+                        "LASPH": True,
+                        "ISMEAR": 0,
+                        "SIGMA": 0.05,
+                    },
+                    user_kpoints_settings={"reciprocal_density": 100},
+                )
+            )
+        )
+    )
     born_maker: BaseVaspMaker | None = field(default_factory=DielectricMaker)
-    md_maker: Maker = field(default_factory=_get_md_maker)
+    md_maker: Maker = field(
+        default_factory=lambda: MDMaker(
+            input_set_generator=MDSetGenerator(
+                user_incar_settings={
+                    "ENCUT": 500,
+                    "EDIFF": 1e-5,
+                    "ALGO": "Normal",
+                    "LREAL": "Auto",
+                    "NBLOCK": 1,
+                    "LWAVE": False,
+                    "ISMEAR": 0,
+                    "SIGMA": 0.05,
+                },
+                user_kpoints_settings={"reciprocal_density": 100},
+            )
+        )
+    )
     phonon_displacement_maker: Maker = field(
-        default_factory=_get_phonon_displacement_maker
+        default_factory=lambda: PhononDisplacementMaker(
+            input_set_generator=StaticSetGenerator(
+                user_incar_settings={
+                    "IBRION": 2,
+                    "ISIF": 3,
+                    "NSW": 0,
+                    "ENCUT": 600,
+                    "ENAUG": 1360,
+                    "EDIFF": 1e-7,
+                    "PREC": "Accurate",
+                    "ALGO": "Normal",
+                    "LASPH": True,
+                    "NELM": 200,
+                    "LREAL": False,
+                    "LAECHG": False,
+                    "LCHARG": False,
+                    "LWAVE": False,
+                    "ISMEAR": 0,
+                    "SIGMA": 0.05,
+                },
+                user_kpoints_settings={"reciprocal_density": 100},
+                auto_ispin=True,
+            )
+        )
     )
     code: str = "vasp"
     md_code: str = "vasp"
