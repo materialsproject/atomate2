@@ -281,7 +281,8 @@ class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
             atoms.get_potential_energy()
         return ForceFieldDielectricDocument(
             structure=structure,
-            born=atoms.calc.results["becs"].tolist(),
+            # MACE-Field returns the Born charges flattened, one row of 9 per atom
+            born=atoms.calc.results["becs"].reshape(-1, 3, 3).tolist(),
             epsilon_static=(
                 np.eye(3) + atoms.calc.results["polarizability"].reshape(3, 3)
             ).tolist(),

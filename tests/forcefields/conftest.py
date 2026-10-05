@@ -77,7 +77,7 @@ class FakeDielectricCalculator(Calculator):
         sign = np.where(self.atoms.numbers == self.atoms.numbers[0], 1.0, -1.0)
         self.results = {
             "energy": 0.0,
-            "becs": 2 * sign[:, None, None] * np.eye(3),
+            "becs": (2 * sign[:, None, None] * np.eye(3)).reshape(-1, 9),
             "polarizability": 3 * np.eye(3),
         }
 
