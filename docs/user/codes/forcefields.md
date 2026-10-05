@@ -73,6 +73,90 @@ However, this may not be preserved in future versions, and `calculator_meta` is 
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
 
+## CALPHAD workflow {#calphad}
+
+`CalphadMaker` fits a CALPHAD database for a binary system with a force field.
+It uses the `sqs2tdb` tool of [ATAT](https://axelvandewalle.github.io/www-avdw/atat/) ([van de Walle et al., 2017](https://doi.org/10.1016/j.calphad.2017.05.005)).
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
+ATAT is not a Python package, so install it yourself.
+`make` and `make install` in the ATAT folder build all of ATAT, copy it to `~/bin` and write the `~/.atat.rc` file that `sqs2tdb` reads.
+This workflow only needs three of the ATAT programs, which build in a few seconds:
+
+```bash
+make -C atat/src cellcvrt nntouch lsfit
+echo "set atatdir=$PWD/atat" > ~/.atat.rc
+export PATH=$PWD/atat/src:$PATH
+```
+
+`sqs2tdb` calls the other ATAT programs by name, so the ATAT `src` folder must be on your `PATH`.
+`SQS2TDB_CMD` in the atomate2 settings only sets how `sqs2tdb` itself is called.
+
+The special quasirandom structures (SQS) of each lattice come from the ATAT database.
+The default lattices are FCC_A1, BCC_A2, HCP_A3 and LIQUID.
+Each solid SQS is relaxed, including the cell, with `fmax=0.001` eV/Å.
+Each liquid SQS is melted for 10 ps at `melt_temperature`.
+It is then run for 20 ps at `liquid_temperature`, and the first 5 ps are left out of the mean potential energy.
+Both liquid runs are isotropic NPT at zero pressure.
+Finally, `sqs2tdb` fits the energies of each lattice and writes one TDB file.
+
+```py
+from jobflow import run_locally
+
+from atomate2.forcefields.flows.calphad import CalphadMaker
+
+maker = CalphadMaker.from_force_field_name(
+    "MACE-MP-0", melt_temperature=4000, liquid_temperature=3500
+)
+maker.lattices = ["FCC_A1", "HCP_A3", "NI3SN_D019", "NI4MO_D1A", "LIQUID"]
+maker.terms["NI3SN_D019"] = ["1,0:1,0", "2,0:1,0"]
+maker.terms["NI4MO_D1A"] = ["1,0:1,0", "2,0:1,0"]
+flow = maker.make(["Ni", "Re"])
+responses = run_locally(flow, create_folders=True)
+tdb = responses[flow.output.uuid][1].output.tdb
+```
+
+The liquid temperatures depend on the system, so there are no defaults.
+Choose `melt_temperature` high enough that every composition melts with the force field.
+Choose `liquid_temperature` above the force field liquidus.
+Check `mean_squared_displacement` of each liquid calculation in the output.
+In a liquid it grows with the length of the run.
+In a crystal it stays at the size of the thermal vibrations, well below 1 Å².
+Check also `is_force_converged` and `relaxation_strain` of each solid calculation.
+The ATAT `checkrelax` help calls a `relaxation_strain` above 0.1 too large for a cluster expansion.
+
+`terms` sets the lines of the `sqs2tdb` `terms.in` file of each lattice.
+Each line has the form `order,level`, with one pair per sublattice separated by `:`.
+Order 1 gives the end members and order 2 the binary interactions.
+Level is the highest Redlich-Kister order.
+The ordered lattices need the lattices of their pure element end members.
+If an ordered lattice is fitted, the stable lattice of each element must be fitted too.
+The fit job stops with an error otherwise.
+
+For lattices in the SGTE database, such as FCC_A1, HCP_A3 and LIQUID, `sqs2tdb` takes the free energies of the pure elements from SGTE.
+Only the mixing terms come from the force field, so the melting points of the pure elements are those of SGTE.
+The liquid mixing terms are the excess energies at `liquid_temperature`, used at all temperatures.
+The vibrational and short-range order options of `sqs2tdb` are not used.
+On systems where `/bin/sh` is not bash, such as Ubuntu, `sqs2tdb` skips a symmetry check of the SQS of ordered lattices.
+
+The TDB file can be read with [pycalphad](https://pycalphad.org), which is installed separately:
+
+```py
+from pycalphad import Database, binplot, variables as v
+
+db = Database.from_string(tdb, fmt="tdb")
+binplot(
+    db,
+    ["NI", "RE"],
+    list(db.phases),
+    {v.X("RE"): (0, 1, 0.01), v.T: (300, 3600, 10), v.P: 101325, v.N: 1},
+)
+```
+
 ## Notes on FairChem (Meta) models {#fairchem-notes}
 
 The FAIRChem models provided by Meta require extra authentication via HuggingFace:

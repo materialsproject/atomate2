@@ -78,6 +78,17 @@ jobs:
           micromamba activate a2
           uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests
 
+      # the CALPHAD tests use EMT, so one group is enough to run them
+      - name: Build ATAT for the CALPHAD tests
+        if: matrix.dep-group == 'numpy-limited'
+        run: |
+          curl -sSL https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
+          echo "8536fb078375b30096df780e02f4e0c97972f5ebaad9a84a94f22e00f50c7516  atat.tar.gz" | sha256sum -c
+          tar xzf atat.tar.gz -C ~
+          make -C ~/atat/src cellcvrt nntouch lsfit
+          echo "set atatdir=$HOME/atat" > ~/.atat.rc
+          echo "$HOME/atat/src" >> $GITHUB_PATH
+
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |
@@ -159,6 +170,15 @@ jobs:
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
           
+      - name: Build ATAT for the CALPHAD tests
+        run: |
+          curl -sSL https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
+          echo "8536fb078375b30096df780e02f4e0c97972f5ebaad9a84a94f22e00f50c7516  atat.tar.gz" | sha256sum -c
+          tar xzf atat.tar.gz -C ~
+          make -C ~/atat/src cellcvrt nntouch lsfit
+          echo "set atatdir=$HOME/atat" > ~/.atat.rc
+          echo "$HOME/atat/src" >> $GITHUB_PATH
+
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |

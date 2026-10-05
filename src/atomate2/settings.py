@@ -287,6 +287,8 @@ class Atomate2Settings(BaseSettings):
         examples=["gpu 0", "gpu 1 split 0.75", "gpu 2 split -1.0", "gpu 1 omp 4"],
     )
 
+    SQS2TDB_CMD: str = Field("sqs2tdb", description="The command to run ATAT sqs2tdb.")
+
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:

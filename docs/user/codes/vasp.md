@@ -499,6 +499,10 @@ The same workflow runs with a force field via `from atomate2.forcefields.flows.c
 `CTEMaker.from_force_field_name` sets one force field for the relaxation, the phonons and the elastic tensor.
 The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-medium.
 
+### CALPHAD workflow
+
+The CALPHAD workflow is only available for force fields so far, see the [CALPHAD section of the force field docs](forcefields.md#calphad).
+
 ### Quasi-harmonic Workflow
 
 Uses the quasi-harmonic approximation with the help of Phonopy to compute thermodynamic properties.
