@@ -20,7 +20,11 @@ from atomate2.forcefields.flows.finite_temperature_phonons import (
     ForceFieldFiniteTemperaturePhononMaker,
     _get_force_field_md_maker,
 )
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.jobs import (
+    ForceFieldDielectricMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.vasp.jobs.core import DielectricMaker
 
@@ -246,3 +250,31 @@ def test_finite_temperature_phonon_maker_emt_npt(clean_dir, cu3au):
     assert doc.trajectory_health.verdict == "stable"
     assert not doc.has_imaginary_modes
     assert np.max(doc.phonon_bandstructure.bands) == pytest.approx(6.554, rel=0.05)
+
+
+def test_finite_temperature_phonon_maker_emt_born_charges(
+    clean_dir, cu3au, fake_dielectric_calculator
+):
+    """Born charges from a force field dielectric job enter the NAC."""
+    np.random.seed(103)  # noqa: NPY002
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
+        EMT,
+        min_length=7.0,
+        md_time_step=2.0,
+        md_time=1.0,
+        equilibration_time=0.2,
+        n_snapshots=10,
+    )
+    maker.born_maker = ForceFieldDielectricMaker()
+    flow = maker.make(cu3au)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    doc = responses[flow.output.uuid][1].output
+
+    # the fake calculator gives +2 to the first species of the sorted cell, Cu
+    born = np.array(doc.born)
+    assert born.shape == (4, 3, 3)
+    assert np.all(np.diagonal(born[:3], axis1=1, axis2=2) > 0)
+    assert np.all(np.diagonal(born[3:], axis1=1, axis2=2) < 0)
+    assert np.array(doc.epsilon_static) == pytest.approx(4 * np.eye(3))
+    assert doc.uuids.born_run_uuid is not None
+    assert doc.phonon_bandstructure.has_nac

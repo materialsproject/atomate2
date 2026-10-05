@@ -141,8 +141,10 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         Maker for the relaxation of the unit cell. It keeps the symmetry of
         the structure. None skips the relaxation.
     born_maker: .Maker | None
-        Maker for the Born effective charges and the dielectric tensor. It is
-        None by default, as in the force field pheasy phonon workflow.
+        Maker for the Born effective charges and the dielectric tensor, for
+        example a ForceFieldDielectricMaker with MACE-Field or a VASP
+        DielectricMaker. It is None by default, as in the force field pheasy
+        phonon workflow.
     npt_maker: .ForceFieldMDMaker | None
         Maker for the NPT MD. It must not set dynamics or ase_md_kwargs. None
         skips the NPT MD.

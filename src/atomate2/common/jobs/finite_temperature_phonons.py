@@ -33,13 +33,17 @@ from atomate2.common.jobs.phonons import (
     _get_kpath,
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
-    _set_nac_params,
 )
 from atomate2.common.schemas.finite_temperature_phonons import (
     FiniteTemperaturePhononDoc,
     TrajectoryHealth,
 )
-from atomate2.common.schemas.phonons import ForceConstants, PhononJobDirs, PhononUUIDs
+from atomate2.common.schemas.phonons import (
+    ForceConstants,
+    PhononJobDirs,
+    PhononUUIDs,
+    _set_nac_params,
+)
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
@@ -815,7 +819,7 @@ def fit_finite_temperature_phonons(
 
     borns = epsilon = None
     if born is not None and epsilon_static is not None:
-        borns, epsilon = _set_nac_params(phonon, born, epsilon_static, symprec)
+        borns, epsilon = _set_nac_params(phonon, born, epsilon_static, symprec, code)
 
     # frequencies at the q-points commensurate with the supercell
     matrix = np.linalg.inv(phonon.primitive_matrix) @ phonon.supercell_matrix

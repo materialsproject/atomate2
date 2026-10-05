@@ -300,6 +300,11 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             if not np.allclose(matrix, np.diag(np.diag(matrix))):
                 raise ValueError("pheasy needs a diagonal supercell matrix.")
 
+        # VASP sorts the atoms by electronegativity. Sorting here as well keeps
+        # the Born charges of a force field born_maker in the order of the fit.
+        if not isinstance(structure, OutputReference):
+            structure = structure.get_sorted_structure()
+
         jobs: list[Job | Flow] = []
         optimization_run_job_dir = optimization_run_uuid = None
         born_run_job_dir = born_run_uuid = None
@@ -371,8 +376,16 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 born_kwargs[self.prev_calc_dir_argname] = prev_dir
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
-            born = born_job.output.calcs_reversed[0].output.outcar["born"]
-            epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
+            # as in the phonon workflow, a force field dielectric document has the
+            # Born charges as fields, a VASP task document in its last calculation
+            schema = born_job.output_schema
+            if schema is not None and "born" in schema.model_fields:
+                born = born_job.output.born
+                epsilon_static = born_job.output.epsilon_static
+            else:
+                calc_output = born_job.output.calcs_reversed[0].output
+                born = calc_output.outcar["born"]
+                epsilon_static = calc_output.epsilon_static
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
 

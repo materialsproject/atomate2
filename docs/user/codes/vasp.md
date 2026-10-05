@@ -493,13 +493,19 @@ flow = maker.make(structure)
 
 `run_npt=True` sets the NPT MD and the relaxation of the atoms in its cell.
 
-A force field gives no Born charges, so the force field makers skip the non-analytical correction by default.
-The Born charges and the dielectric tensor can still come from VASP.
-Either pass `born` and `epsilon_static` to `make`, or set a VASP `born_maker`:
+Most force fields give no Born charges, so the force field makers skip the non-analytical correction by default.
+The Born charges and the dielectric tensor can come from MACE-Field, see the [force field notes](forcefields.md#mace-field-notes), or from VASP.
+Either pass `born` and `epsilon_static` to `make`, or set a `born_maker`:
 
 ```python
+from atomate2.forcefields.jobs import ForceFieldDielectricMaker
 from atomate2.vasp.jobs.core import DielectricMaker
 
+# with MACE-Field
+maker.born_maker = ForceFieldDielectricMaker(
+    calculator_kwargs={"model": "MACEField-MH-0-omat-dielectric.model"}
+)
+# or with VASP
 maker.born_maker = DielectricMaker()
 ```
 

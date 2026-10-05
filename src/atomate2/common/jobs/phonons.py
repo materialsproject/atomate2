@@ -163,51 +163,6 @@ def _get_num_harmonic_supercells(
     return int(np.ceil(num_disp_sc * multiplier)) + 1
 
 
-def _set_nac_params(
-    phonon: Phonopy,
-    born: Sequence[Matrix3D],
-    epsilon_static: Matrix3D,
-    symprec: float,
-    is_symmetry: bool = True,
-) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Symmetrize the Born charges and the dielectric tensor and set the NAC.
-
-    The non-analytical correction is only set if a Born charge is not zero.
-
-    Parameters
-    ----------
-    phonon: Phonopy
-        Phonopy object whose unit cell the Born charges belong to.
-    born: Sequence[Matrix3D]
-        Born effective charges, one per atom of the unit cell.
-    epsilon_static: Matrix3D
-        High-frequency dielectric tensor.
-    symprec: float
-        Symmetry precision.
-    is_symmetry: bool
-        Whether to symmetrize the Born charges and the dielectric tensor.
-
-    Returns
-    -------
-    tuple[np.ndarray, np.ndarray]
-        The Born charges and the dielectric tensor.
-    """
-    borns, epsilon = symmetrize_borns_and_epsilon(
-        ucell=phonon.unitcell,
-        borns=np.array(born),
-        epsilon=np.array(epsilon_static),
-        symprec=symprec,
-        primitive_matrix=phonon.primitive_matrix,
-        supercell_matrix=phonon.supercell_matrix,
-        is_symmetry=is_symmetry,
-    )
-    if not np.all(np.isclose(borns, 0.0)):
-        # e^2 / (4 pi epsilon_0) in eV Angstrom, for forces in eV/Angstrom
-        phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.399652}
-    return borns, epsilon
-
-
 def _get_kpath(
     structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
 ) -> tuple:
