@@ -817,9 +817,7 @@ def fit_finite_temperature_phonons(
     predicted = -np.einsum("ijab,mjb->mia", phonon.force_constants, disps)
     force_rmse = float(np.sqrt(np.mean((fit_forces - predicted) ** 2)))
 
-    borns = epsilon = None
-    if born is not None and epsilon_static is not None:
-        borns, epsilon = _set_nac_params(phonon, born, epsilon_static, symprec, code)
+    borns, epsilon = _set_nac_params(phonon, born, epsilon_static, symprec, code)
 
     # frequencies at the q-points commensurate with the supercell
     matrix = np.linalg.inv(phonon.primitive_matrix) @ phonon.supercell_matrix

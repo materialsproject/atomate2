@@ -503,7 +503,7 @@ from atomate2.vasp.jobs.core import DielectricMaker
 
 # with MACE-Field
 maker.born_maker = ForceFieldDielectricMaker(
-    calculator_kwargs={"model": "MACEField-MH-0-omat-dielectric.model"}
+    calculator_kwargs={"model": "/path/to/MACEField-MH-0-omat-dielectric.model"}
 )
 # or with VASP
 maker.born_maker = DielectricMaker()

@@ -170,8 +170,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     bulk_relax_maker: Maker | None
         Maker for the relaxation of the unit cell. None skips the relaxation.
     born_maker: Maker | None
-        VASP maker for the Born effective charges and the dielectric tensor,
-        used for the non-analytical correction. None skips it.
+        Maker for the Born effective charges and the dielectric tensor, used
+        for the non-analytical correction, for example a
+        ForceFieldDielectricMaker or a VASP DielectricMaker. None skips it.
     npt_maker: Maker | None
         Maker for the NPT MD. The flow sets its temperature, pressure, time
         step and number of steps. None skips the NPT MD.
@@ -376,9 +377,10 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 born_kwargs[self.prev_calc_dir_argname] = prev_dir
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
-            # as in the phonon workflow, a force field dielectric document has the
-            # Born charges as fields, a VASP task document in its last calculation
-            schema = born_job.output_schema
+            # As in the phonon workflow, a force field dielectric document has the
+            # Born charges as fields. A VASP task document has them in its last
+            # calculation.
+            schema = getattr(born_job, "output_schema", None)
             if schema is not None and "born" in schema.model_fields:
                 born = born_job.output.born
                 epsilon_static = born_job.output.epsilon_static
