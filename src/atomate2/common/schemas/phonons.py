@@ -35,6 +35,9 @@ from atomate2.aims.utils.units import omegaToTHz
 
 logger = logging.getLogger(__name__)
 
+# codes whose forces are in eV/Angstrom
+_EV_ANGSTROM_CODES = ("ase", "forcefields", "vasp", "torchsim")
+
 
 def get_factor(code: str) -> float:
     """
@@ -55,7 +58,7 @@ def get_factor(code: str) -> float:
     ValueError
         If code is not defined
     """
-    if code in ["ase", "forcefields", "vasp", "torchsim"]:
+    if code in _EV_ANGSTROM_CODES:
         return VaspToTHz
     if code == "aims":
         return omegaToTHz  # Based on CODATA 2002
@@ -64,26 +67,25 @@ def get_factor(code: str) -> float:
 
 def _set_nac_params(
     phonon: Phonopy,
-    born: Sequence[Matrix3D],
-    epsilon_static: Matrix3D,
+    born: Sequence[Matrix3D] | None,
+    epsilon_static: Matrix3D | None,
     symprec: float,
     code: str,
     is_symmetry: bool = True,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray | None, np.ndarray | None]:
     """
     Symmetrize the Born charges and the dielectric tensor and set the NAC.
 
-    The non-analytical correction is only set for VASP and force field
-    calculations, whose forces are in eV/Angstrom, and only if a Born charge
-    is not zero.
+    The non-analytical correction is set unless all Born charges are zero. Its
+    factor assumes forces in eV/Angstrom, so it is only set for those codes.
 
     Parameters
     ----------
     phonon: Phonopy
         Phonopy object whose unit cell the Born charges belong to.
-    born: Sequence[Matrix3D]
+    born: Sequence[Matrix3D] | None
         Born effective charges, one per atom of the unit cell.
-    epsilon_static: Matrix3D
+    epsilon_static: Matrix3D | None
         High-frequency dielectric tensor.
     symprec: float
         Symmetry precision.
@@ -94,9 +96,12 @@ def _set_nac_params(
 
     Returns
     -------
-    tuple[np.ndarray, np.ndarray]
-        The Born charges and the dielectric tensor.
+    tuple[np.ndarray | None, np.ndarray | None]
+        The Born charges and the dielectric tensor, or None if either was not
+        given.
     """
+    if born is None or epsilon_static is None:
+        return None, None
     if len(born) != len(phonon.unitcell):
         raise ValueError("Number of Born charges does not agree with number of atoms")
     borns, epsilon = symmetrize_borns_and_epsilon(
@@ -108,8 +113,8 @@ def _set_nac_params(
         supercell_matrix=phonon.supercell_matrix,
         is_symmetry=is_symmetry,
     )
-    if code in ("vasp", "forcefields") and not np.all(np.isclose(borns, 0.0)):
-        # e^2 / (4 pi epsilon_0) in eV Angstrom, for forces in eV/Angstrom
+    if code in _EV_ANGSTROM_CODES and not np.all(np.isclose(borns, 0.0)):
+        # e^2 / (4 pi epsilon_0) in eV Angstrom
         phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.399652}
     return borns, epsilon
 
@@ -411,18 +416,14 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
-        if born is not None and epsilon_static is not None:
-            borns, epsilon = _set_nac_params(
-                phonon,
-                born,
-                epsilon_static,
-                symprec,
-                code,
-                is_symmetry=kwargs.get("symmetrize_born", True),
-            )
-        else:
-            borns = None
-            epsilon = None
+        borns, epsilon = _set_nac_params(
+            phonon,
+            born,
+            epsilon_static,
+            symprec,
+            code,
+            is_symmetry=kwargs.get("symmetrize_born", True),
+        )
 
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)

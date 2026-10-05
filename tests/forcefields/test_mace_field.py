@@ -48,7 +48,8 @@ def test_mace_field_dielectric_maker(mace_field_model, clean_dir):
     born = np.array(output.born)
     # the acoustic sum rule holds by construction
     assert born.sum(axis=0) == pytest.approx(np.zeros((3, 3)), abs=1e-6)
-    # cubic, so the tensors are isotropic. DFPT gives about 1.09 and 2.5.
+    # cubic, so the tensors are isotropic. The Materials Project's Harmonic Phonon
+    # Database has 1.09 and 2.56 from DFPT.
     species = [str(site.specie) for site in output.structure]
     assert born[species.index("Na")] == pytest.approx(1.0898 * np.eye(3), abs=1e-3)
     epsilon = np.array(output.epsilon_static)

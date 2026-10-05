@@ -920,7 +920,7 @@ def test_dielectric_maker(fake_dielectric_calculator, clean_dir):
     structure = Structure.from_spacegroup(
         "Fm-3m", Lattice.cubic(5.6), ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]
     ).get_primitive_structure()
-    job = ForceFieldDielectricMaker(force_field_name="MACE-Field").make(structure)
+    job = ForceFieldDielectricMaker().make(structure)
     output = run_locally(job, ensure_success=True)[job.uuid][1].output
 
     assert isinstance(output, ForceFieldDielectricDocument)

@@ -4,7 +4,6 @@ import hashlib
 import tempfile
 import urllib.request
 from importlib import import_module
-from importlib.util import find_spec
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -27,9 +26,12 @@ _INSTALLED_MLFF: dict[str, bool] = {
     for mlff in MLFF
 }
 # the MACE-Field fork installs as mace-torch, so only its model class tells them apart
-_INSTALLED_MLFF["MACE_Field"] = find_spec("mace") is not None and hasattr(
-    import_module("mace.modules.extensions"), "MACEField"
-)
+try:
+    _INSTALLED_MLFF["MACE_Field"] = hasattr(
+        import_module("mace.modules.extensions"), "MACEField"
+    )
+except ImportError:
+    _INSTALLED_MLFF["MACE_Field"] = False
 
 
 def mlff_is_installed(mlff: str | MLFF) -> bool:
@@ -65,9 +67,10 @@ def get_deepmd_pretrained_model_path(test_dir: Path) -> Path:
 
 
 class FakeDielectricCalculator(Calculator):
-    """Born charges of +2 and -2 and a susceptibility of 3, as MACE-Field gives them.
+    """Born charges of +2 and -2 and a susceptibility of 3.
 
-    The atoms of the first species get +2, all others -2.
+    The atoms of the first species get +2, all others -2. Both results are
+    flattened, as MACE-Field returns them.
     """
 
     implemented_properties = ("energy", "becs", "polarizability")
@@ -78,7 +81,7 @@ class FakeDielectricCalculator(Calculator):
         self.results = {
             "energy": 0.0,
             "becs": (2 * sign[:, None, None] * np.eye(3)).reshape(-1, 9),
-            "polarizability": 3 * np.eye(3),
+            "polarizability": (3 * np.eye(3)).reshape(9),
         }
 
 

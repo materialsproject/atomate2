@@ -110,8 +110,7 @@ class BasePhononMaker(Maker, ABC):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, .TorchSimStaticMaker,
-        or None
+    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
         Maker to compute the BORN charges.
     phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker,
         .TorchSimStaticMaker
@@ -171,9 +170,7 @@ class BasePhononMaker(Maker, ABC):
         | TorchSimStaticMaker
         | None
     ) = None
-    born_maker: (
-        ForceFieldDielectricMaker | BaseVaspMaker | TorchSimStaticMaker | None
-    ) = None
+    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
     phonon_displacement_maker: (
         ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker | TorchSimStaticMaker
     ) = None
@@ -343,10 +340,10 @@ class BasePhononMaker(Maker, ABC):
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
 
-            # a force field dielectric document has the Born charges and the
-            # dielectric tensor as fields, a VASP task document has them in its
-            # last calculation
-            schema = born_job.output_schema
+            # A force field dielectric document has the Born charges and the
+            # dielectric tensor as fields. A VASP task document has them in its
+            # last calculation.
+            schema = getattr(born_job, "output_schema", None)
             if schema is not None and "born" in schema.model_fields:
                 epsilon_static = born_job.output.epsilon_static
                 born = born_job.output.born

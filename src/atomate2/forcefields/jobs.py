@@ -238,8 +238,8 @@ class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
 
     The force field must give the Born effective charges and the electronic
     susceptibility chi as the results "becs" and "polarizability", as MACE-Field
-    does. The high-frequency dielectric tensor is 1 + chi. Unless an electric
-    field is set in calculator_kwargs, both are computed at zero field.
+    does. The high-frequency dielectric tensor is 1 + chi. Both are computed at
+    zero electric field by default.
 
     Parameters
     ----------
@@ -286,7 +286,7 @@ class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
             epsilon_static=(
                 np.eye(3) + atoms.calc.results["polarizability"].reshape(3, 3)
             ).tolist(),
-            forcefield_name=self.force_field_name,
+            forcefield_name=self.ase_calculator_name,
             forcefield_version=_get_pkg_version(self.calculator_meta),
             dir_name=str(Path.cwd()),
         )

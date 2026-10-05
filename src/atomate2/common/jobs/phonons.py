@@ -542,18 +542,14 @@ def generate_frequencies_eigenvectors(
     )
     set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
-    if born is not None and epsilon_static is not None:
-        borns, epsilon = _set_nac_params(
-            phonon,
-            born,
-            epsilon_static,
-            symprec,
-            code,
-            is_symmetry=kwargs.get("symmetrize_born", True),
-        )
-    else:
-        borns = None
-        epsilon = None
+    borns, epsilon = _set_nac_params(
+        phonon,
+        born,
+        epsilon_static,
+        symprec,
+        code,
+        is_symmetry=kwargs.get("symmetrize_born", True),
+    )
 
     # Produces all force constants
     phonon.produce_force_constants(forces=set_of_forces)

@@ -3,7 +3,10 @@ import json
 import numpy as np
 import pytest
 from monty.json import MontyEncoder
+from phonopy import Phonopy
 from pydantic import ValidationError
+from pymatgen.core import Lattice, Structure
+from pymatgen.io.phonopy import get_phonopy_structure
 
 from atomate2.common.schemas.phonons import (
     PhononBSDOSDoc,
@@ -11,6 +14,7 @@ from atomate2.common.schemas.phonons import (
     PhononJobDirs,
     PhononUUIDs,
     ThermalDisplacementData,
+    _set_nac_params,
 )
 
 
@@ -58,3 +62,39 @@ def test_phonon_bs_dos_doc():
 def test_model_validate(model_cls):
     validated = model_cls.model_validate_json(json.dumps(model_cls(), cls=MontyEncoder))
     assert isinstance(validated, model_cls)
+
+
+def get_nacl_phonon():
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(5.6), ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+    ).get_primitive_structure()
+    return Phonopy(get_phonopy_structure(structure), supercell_matrix=np.eye(3))
+
+
+@pytest.mark.parametrize(
+    ("code", "charge", "has_nac"),
+    [
+        ("vasp", 1, True),
+        ("forcefields", 1, True),
+        ("aims", 1, False),
+        ("vasp", 0, False),
+    ],
+)
+def test_set_nac_params(code, charge, has_nac):
+    phonon = get_nacl_phonon()
+    born = charge * np.array([1, -1])[:, None, None] * np.eye(3)
+    borns, epsilon = _set_nac_params(
+        phonon, born.tolist(), (2 * np.eye(3)).tolist(), 1e-4, code
+    )
+
+    assert borns == pytest.approx(born)
+    assert epsilon == pytest.approx(2 * np.eye(3))
+    assert (phonon.nac_params is not None) == has_nac
+
+
+def test_set_nac_params_without_born():
+    phonon = get_nacl_phonon()
+    assert _set_nac_params(phonon, None, None, 1e-4, "vasp") == (None, None)
+    assert phonon.nac_params is None
+    with pytest.raises(ValueError, match="Number of Born charges"):
+        _set_nac_params(phonon, [np.eye(3).tolist()], np.eye(3).tolist(), 1e-4, "vasp")
