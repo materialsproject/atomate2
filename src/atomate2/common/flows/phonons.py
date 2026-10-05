@@ -17,6 +17,7 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.common.utils import check_class_name
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -340,17 +341,12 @@ class BasePhononMaker(Maker, ABC):
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
 
-            # A force field dielectric document has the Born charges and the
-            # dielectric tensor as fields. A VASP task document has them in its
-            # last calculation.
-            schema = getattr(born_job, "output_schema", None)
-            if schema is not None and "born" in schema.model_fields:
+            if check_class_name(self.born_maker, "ForceFieldDielectricMaker"):
                 epsilon_static = born_job.output.epsilon_static
                 born = born_job.output.born
             else:
-                calc_output = born_job.output.calcs_reversed[0].output
-                epsilon_static = calc_output.epsilon_static
-                born = calc_output.outcar["born"]
+                epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
+                born = born_job.output.calcs_reversed[0].output.outcar["born"]
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
 

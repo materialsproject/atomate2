@@ -13,7 +13,7 @@ from monty.json import MSONable
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
-from phonopy.units import VaspToTHz
+from phonopy.units import Bohr, Hartree, VaspToTHz
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
@@ -35,9 +35,6 @@ from atomate2.aims.utils.units import omegaToTHz
 
 logger = logging.getLogger(__name__)
 
-# codes whose forces are in eV/Angstrom
-_EV_ANGSTROM_CODES = ("ase", "forcefields", "vasp", "torchsim")
-
 
 def get_factor(code: str) -> float:
     """
@@ -58,7 +55,7 @@ def get_factor(code: str) -> float:
     ValueError
         If code is not defined
     """
-    if code in _EV_ANGSTROM_CODES:
+    if code in ["ase", "forcefields", "vasp", "torchsim"]:
         return VaspToTHz
     if code == "aims":
         return omegaToTHz  # Based on CODATA 2002
@@ -76,8 +73,8 @@ def _set_nac_params(
     """
     Symmetrize the Born charges and the dielectric tensor and set the NAC.
 
-    The non-analytical correction is set unless all Born charges are zero. Its
-    factor assumes forces in eV/Angstrom, so it is only set for those codes.
+    The non-analytical correction is set unless all Born charges are zero or
+    the code is FHI-aims.
 
     Parameters
     ----------
@@ -97,8 +94,8 @@ def _set_nac_params(
     Returns
     -------
     tuple[np.ndarray | None, np.ndarray | None]
-        The Born charges and the dielectric tensor, or None if either was not
-        given.
+        The symmetrized Born charges and dielectric tensor, or None if either
+        was not given.
     """
     if born is None or epsilon_static is None:
         return None, None
@@ -113,9 +110,12 @@ def _set_nac_params(
         supercell_matrix=phonon.supercell_matrix,
         is_symmetry=is_symmetry,
     )
-    if code in _EV_ANGSTROM_CODES and not np.all(np.isclose(borns, 0.0)):
-        # e^2 / (4 pi epsilon_0) in eV Angstrom
-        phonon.nac_params = {"born": borns, "dielectric": epsilon, "factor": 14.399652}
+    if code != "aims" and not np.all(np.isclose(borns, 0.0)):
+        phonon.nac_params = {
+            "born": borns,
+            "dielectric": epsilon,
+            "factor": Hartree * Bohr,
+        }
     return borns, epsilon
 
 

@@ -916,7 +916,7 @@ def test_roundtrip_legacy(si_structure: Structure, import_str: str):
     assert isinstance(deser.maker.calculator, Calculator)
 
 
-def test_dielectric_maker(fake_dielectric_calculator, clean_dir):
+def test_dielectric_maker(fake_dielectric_calculator):
     structure = Structure.from_spacegroup(
         "Fm-3m", Lattice.cubic(5.6), ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]
     ).get_primitive_structure()
@@ -926,6 +926,5 @@ def test_dielectric_maker(fake_dielectric_calculator, clean_dir):
     assert isinstance(output, ForceFieldDielectricDocument)
     assert output.structure == structure
     assert np.array(output.born) == approx(np.array([2, -2])[:, None, None] * np.eye(3))
-    # eps_inf = 1 + chi
     assert np.array(output.epsilon_static) == approx(4 * np.eye(3))
-    assert output.forcefield_name == "MLFF.MACE_Field"
+    assert output.forcefield_name == "MLFF.MACE_FIELD"

@@ -35,7 +35,7 @@ Support is provided for the following models, which can be selected using `atoma
 | FAIRChem | `FAIRChem` | [Meta's FAIRChem Github](https://github.com/facebookresearch/fairchem) | Proprietary, requires extra authentication. [See notes below.](#fairchem-notes) |
 | Gaussian Approximation Potential (GAP) | `GAP` | [10.1103/PhysRevLett.104.136403](https://doi.org/10.1103/PhysRevLett.104.136403) |  Relies on `quippy-ase` package |
 | M3GNet | `M3GNet` | [10.1038/s43588-022-00349-3](https://doi.org/10.1038/s43588-022-00349-3) | Relies on `matgl` package |
-| MACE-Field | `MACE_Field` | [10.1103/b116-xy8k](https://doi.org/10.1103/b116-xy8k) | Born effective charges and dielectric tensor only, via `ForceFieldDielectricMaker`. Needs the MACE-Field fork of `mace_torch` and a model file. [See notes below.](#mace-field-notes) |
+| MACE-Field | `MACE_FIELD` | [10.1103/b116-xy8k](https://doi.org/10.1103/b116-xy8k) | Born effective charges and dielectric tensor only, via `ForceFieldDielectricMaker`. Relies on the MACE-Field fork of `mace_torch` and a model file. [See notes below.](#mace-field-notes) |
 | MACE-MP-0 | `MACE` or `MACE_MP_0` (recommended) | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
 | MACE-MP-0b3 | `MACE_MP_0B3` | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
 | MACE-MPA-0 | `MACE_MPA_0` | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
@@ -74,60 +74,6 @@ However, this may not be preserved in future versions, and `calculator_meta` is 
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
 
-## Notes on MACE-Field {#mace-field-notes}
-
-[MACE-Field](https://doi.org/10.1103/b116-xy8k) gives the Born effective charges and the high-frequency dielectric tensor of inorganic crystals.
-`ForceFieldDielectricMaker` computes them.
-The phonon workflows use them for the non-analytical correction when it is set as `born_maker`.
-
-MACE-Field is a fork of MACE that installs as `mace_torch`, so it replaces MACE.
-Install it with `pip install 'atomate2[mace-field]'`.
-The fork still runs the MACE foundation models, so the forces can come from MACE in the same environment.
-The model file has to be downloaded from the [MACE-Field releases](https://github.com/mdi-group/mace-field/releases).
-There is no default model, so `model` must be set.
-Give its absolute path, since each job runs in its own folder:
-
-```py
-from pymatgen.core import Lattice, Structure
-
-from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import ForceFieldDielectricMaker
-
-structure = Structure.from_spacegroup(
-    "Fm-3m", Lattice.cubic(5.64), ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]
-).get_primitive_structure()
-
-maker = PhononMaker.from_force_field_name(
-    "MACE_MP_0", calculator_kwargs={"model": "medium-omat-0"}
-)
-# from_force_field_name sets born_maker to None
-maker.born_maker = ForceFieldDielectricMaker(
-    calculator_kwargs={"model": "/path/to/MACEField-MH-0-omat-dielectric.model"}
-)
-flow = maker.make(structure)
-```
-
-The Born charges can also come from VASP.
-Pass them to `make` as `born` and `epsilon_static`, or set a VASP maker such as `atomate2.vasp.jobs.core.DielectricMaker` as `born_maker`.
-
-Limitations:
-
-- Both tensors are computed at zero electric field. The dielectric tensor is the clamped-ion one, 1 + chi, with chi the electronic susceptibility of the model.
-- The model has the heads "mp-dielectric", "mp-ferroelectric" and "pt_head". "mp-dielectric" is used by default.
-- The model runs on the CPU unless `device` is set in `calculator_kwargs`.
-- The fork reports itself as `mace-torch` 0.3.15, so this is the `forcefield_version` in the output.
-
-```{warning}
-This feature is new and has not been tested widely.
-It might still change in future versions.
-```
-
-As a spot check, we compared the "mp-dielectric" head with the DFPT results in the Materials Project's Harmonic Phonon Database for NaCl, KCl, MgO and Bi4S3N2.
-NaCl, KCl and MgO are in the training data of MACE-Field.
-For them, the Born charges agree to 0.02 e and the high-frequency dielectric constants to 5%.
-For Bi4S3N2, the Born charges are about 15% too small and the dielectric tensor is off by up to 10%.
-For alpha-quartz, the authors report a high-frequency dielectric constant of 2.64 along the c axis, against 2.41 from PBE DFPT.
-
 ## Notes on FairChem (Meta) models {#fairchem-notes}
 
 The FAIRChem models provided by Meta require extra authentication via HuggingFace:
@@ -157,3 +103,55 @@ calculator = FAIRChemCalculator(
 ```
 
 The default in `atomate2` is the OMat24 model with `uma-s-1p1`.
+
+## Notes on MACE-Field {#mace-field-notes}
+
+[MACE-Field](https://doi.org/10.1103/b116-xy8k) gives the Born effective charges and the high-frequency dielectric tensor of inorganic crystals.
+`ForceFieldDielectricMaker` computes them.
+The phonon workflows use them for the non-analytical correction when `ForceFieldDielectricMaker` is set as `born_maker`.
+
+MACE-Field is a fork of MACE that installs as `mace_torch`, so it replaces MACE.
+Install it with `pip install 'atomate2[mace-field]'`.
+The fork also runs the MACE foundation models, so the forces can come from MACE-OMAT in the same environment.
+The model file has to be downloaded from the [MACE-Field releases](https://github.com/mdi-group/mace-field/releases).
+There is no default model, so `model` must be set.
+Give its absolute path, since each job runs in its own folder:
+
+```py
+from pymatgen.core import Lattice, Structure
+
+from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldDielectricMaker
+
+structure = Structure.from_spacegroup(
+    "Fm-3m", Lattice.cubic(5.64), ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+).get_primitive_structure()
+
+flow = PhononMaker.from_force_field_name(
+    "MACE_MP_0",
+    calculator_kwargs={"model": "medium-omat-0"},
+    born_maker=ForceFieldDielectricMaker(
+        calculator_kwargs={"model": "/path/to/MACEField-MH-0-omat-dielectric.model"}
+    ),
+).make(structure)
+```
+
+Born charges from VASP can be passed to `make` as `born` and `epsilon_static`.
+They must be in the same order as the sites of the structure.
+
+Limitations:
+
+- Both tensors are computed at zero electric field by default. The dielectric tensor is the clamped-ion one, 1 + chi, with chi the electronic susceptibility of the model.
+- The model has the heads "mp-dielectric", "mp-ferroelectric" and "pt_head". "mp-dielectric" is used by default.
+- The model runs on the CPU unless `device` is set in `calculator_kwargs`.
+- The fork reports itself as `mace-torch` 0.3.15, so this is the `forcefield_version` in the output.
+
+```{warning}
+This feature is new and has not been tested widely.
+It might still change in future versions.
+```
+
+We compared the "mp-dielectric" head with the DFPT results in the Materials Project's Harmonic Phonon Database.
+The 50 materials have no Materials Project dielectric data, so they are likely not in the training data of MACE-Field.
+The Born charges are off by 0.26 e on average, about 11%.
+The high-frequency dielectric constants are off by 8% on average, and by more than 20% for 2 of the 50 materials.

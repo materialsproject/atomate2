@@ -27,11 +27,11 @@ _INSTALLED_MLFF: dict[str, bool] = {
 }
 # the MACE-Field fork installs as mace-torch, so only its model class tells them apart
 try:
-    _INSTALLED_MLFF["MACE_Field"] = hasattr(
+    _INSTALLED_MLFF["MACE_FIELD"] = hasattr(
         import_module("mace.modules.extensions"), "MACEField"
     )
 except ImportError:
-    _INSTALLED_MLFF["MACE_Field"] = False
+    _INSTALLED_MLFF["MACE_FIELD"] = False
 
 
 def mlff_is_installed(mlff: str | MLFF) -> bool:

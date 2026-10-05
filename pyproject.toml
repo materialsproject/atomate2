@@ -70,7 +70,6 @@ defects = [
 ase = ["ase>=3.26.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
-# the MACE-Field fork of MACE replaces mace-torch
 mace-field = ["atomate2[ase]", "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64"]
 
 torchsim = [
