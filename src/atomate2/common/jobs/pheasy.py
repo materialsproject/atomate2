@@ -806,18 +806,14 @@ def generate_frequencies_eigenvectors(
     )
 
     # get the born charges and dielectric constant
-    if born is not None and epsilon_static is not None:
-        borns, epsilon = _set_nac_params(
-            phonon,
-            born,
-            epsilon_static,
-            symprec,
-            code,
-            is_symmetry=kwargs.get("symmetrize_born", True),
-        )
-    else:
-        borns = None
-        epsilon = None
+    borns, epsilon = _set_nac_params(
+        phonon,
+        born,
+        epsilon_static,
+        symprec,
+        code,
+        is_symmetry=kwargs.get("symmetrize_born", True),
+    )
 
     prim = ase_read("POSCAR")
     supercell = ase_read("SPOSCAR")

@@ -181,7 +181,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ).from_ase_task_doc(ase_task_doc, **ff_kwargs)
 
 
-class ForceFieldDielectricDocument(BaseModel):
+class ForceFieldDielectricDocument(ForceFieldMeta):
     """Born effective charges and dielectric tensor from a force field."""
 
     structure: Structure = Field(description="The structure of the calculation.")
@@ -190,11 +190,4 @@ class ForceFieldDielectricDocument(BaseModel):
     )
     epsilon_static: Matrix3D = Field(
         description="The high-frequency dielectric tensor."
-    )
-    forcefield_name: str | None = Field(None, description="Name of the force field.")
-    forcefield_version: str | None = Field(
-        None, description="Version of the force field package."
-    )
-    dir_name: str | None = Field(
-        None, description="Directory where the calculation was performed."
     )

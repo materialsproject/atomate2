@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from atomate2.forcefields import MLFF
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
@@ -92,8 +93,8 @@ class PhononMaker(BasePhononMaker):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldDielectricMaker or None
-        Maker to compute the BORN charges, for example with MACE-Field.
+    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
+        Maker to compute the BORN charges.
     phonon_displacement_maker : .ForceFieldStaticMaker or None
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
@@ -143,7 +144,7 @@ class PhononMaker(BasePhononMaker):
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
     code: str = "forcefields"
-    born_maker: ForceFieldDielectricMaker | None = None
+    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
 
     @property
     def prev_calc_dir_argname(self) -> None:
