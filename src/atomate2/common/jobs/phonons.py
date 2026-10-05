@@ -23,7 +23,6 @@ from jobflow import Flow, Response, job
 from packaging.version import parse as parse_version
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
     get_ph_bs_symm_line,
@@ -39,7 +38,7 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
-from atomate2.common.schemas.phonons import get_factor
+from atomate2.common.schemas.phonons import _set_nac_params, get_factor
 from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -544,27 +543,14 @@ def generate_frequencies_eigenvectors(
     set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
     if born is not None and epsilon_static is not None:
-        if len(structure) == len(born):
-            borns, epsilon = symmetrize_borns_and_epsilon(
-                ucell=phonon.unitcell,
-                borns=np.array(born),
-                epsilon=np.array(epsilon_static),
-                symprec=symprec,
-                primitive_matrix=phonon.primitive_matrix,
-                supercell_matrix=phonon.supercell_matrix,
-                is_symmetry=kwargs.get("symmetrize_born", True),
-            )
-        else:
-            raise ValueError(
-                "Number of Born charges does not agree with number of atoms"
-            )
-        if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
-            phonon.nac_params = {
-                "born": borns,
-                "dielectric": epsilon,
-                "factor": 14.399652,  # TODO: where is this magic number coming from?
-            }
-        # Other codes could be added here
+        borns, epsilon = _set_nac_params(
+            phonon,
+            born,
+            epsilon_static,
+            symprec,
+            code,
+            is_symmetry=kwargs.get("symmetrize_born", True),
+        )
     else:
         borns = None
         epsilon = None

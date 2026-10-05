@@ -6,13 +6,18 @@ from pathlib import Path
 import numpy as np
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Molecule, Structure
+from pymatgen.core import Lattice, Molecule, Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.jobs import (
+    ForceFieldDielectricMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 from atomate2.forcefields.schemas import (
+    ForceFieldDielectricDocument,
     ForceFieldMoleculeTaskDocument,
     ForceFieldTaskDocument,
 )
@@ -909,3 +914,18 @@ def test_roundtrip_legacy(si_structure: Structure, import_str: str):
     assert deser.maker.mlff == MLFF.Forcefield
     assert isinstance(deser.maker.calculator, MACECalculator)
     assert isinstance(deser.maker.calculator, Calculator)
+
+
+def test_dielectric_maker(fake_dielectric_calculator, clean_dir):
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(5.6), ["Na", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+    ).get_primitive_structure()
+    job = ForceFieldDielectricMaker(force_field_name="MACE-Field").make(structure)
+    output = run_locally(job, ensure_success=True)[job.uuid][1].output
+
+    assert isinstance(output, ForceFieldDielectricDocument)
+    assert output.structure == structure
+    assert np.array(output.born) == approx(np.array([2, -2])[:, None, None] * np.eye(3))
+    # eps_inf = 1 + chi
+    assert np.array(output.epsilon_static) == approx(4 * np.eye(3))
+    assert output.forcefield_name == "MLFF.MACE_Field"
