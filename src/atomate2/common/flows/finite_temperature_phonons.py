@@ -21,6 +21,7 @@ from atomate2.common.jobs.finite_temperature_phonons import (
 )
 from atomate2.common.jobs.pheasy import get_supercell_size
 from atomate2.common.jobs.phonons import run_phonon_displacements
+from atomate2.common.utils import check_class_name
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -377,17 +378,12 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 born_kwargs[self.prev_calc_dir_argname] = prev_dir
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
-            # As in the phonon workflow, a force field dielectric document has the
-            # Born charges as fields. A VASP task document has them in its last
-            # calculation.
-            schema = getattr(born_job, "output_schema", None)
-            if schema is not None and "born" in schema.model_fields:
+            if check_class_name(self.born_maker, "ForceFieldDielectricMaker"):
                 born = born_job.output.born
                 epsilon_static = born_job.output.epsilon_static
             else:
-                calc_output = born_job.output.calcs_reversed[0].output
-                born = calc_output.outcar["born"]
-                epsilon_static = calc_output.epsilon_static
+                born = born_job.output.calcs_reversed[0].output.outcar["born"]
+                epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
 
