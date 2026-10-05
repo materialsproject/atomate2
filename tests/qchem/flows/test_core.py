@@ -1,7 +1,8 @@
 from pathlib import Path
 
 import pytest
-from jobflow import run_locally
+from jobflow import JobStore, run_locally
+from maggma.stores import MemoryStore
 
 from atomate2.qchem.flows.core import FrequencyOptFlatteningMaker, FrequencyOptMaker
 
@@ -52,13 +53,16 @@ def test_frequency_opt_flattening_maker(
 
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
     flow = FrequencyOptFlatteningMaker().make(h2o_molecule)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
+    responses = run_locally(flow, store=store, create_folders=True, ensure_success=True)
 
     # first get job name / uuid pairs from dynamic flow
     uuid_to_name = {}
+    jobs = {}
     for resp in responses.values():
         if replace_flow := getattr(resp[1], "replace", None):
             uuid_to_name.update({job.uuid: job.name for job in replace_flow.jobs})
+            jobs.update({job.name: job for job in replace_flow.jobs})
 
     # then get job output
     output = {}
@@ -85,3 +89,15 @@ def test_frequency_opt_flattening_maker(
         == output["Frequency Analysis 1"].output.initial_molecule
     )
     assert output["Frequency Analysis 1"].output.optimized_molecule is None
+
+    # the frequency analysis should copy files from the optimization directory
+    assert (
+        jobs["Frequency Analysis 1"].function_kwargs["prev_dir"]
+        == output["Geometry Optimization"].dir_name
+    )
+
+    # the flow output should be the final frequency analysis task document
+    flow_output = flow.output.resolve(store)
+    assert flow_output is not None
+    assert flow_output.output.final_energy == pytest.approx(ref_total_energy, rel=1e-6)
+    assert flow_output.output.frequencies == pytest.approx(ref_freq, abs=1e-2)

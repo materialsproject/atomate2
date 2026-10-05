@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -13,10 +14,13 @@ from atomate2.qchem.jobs.core import FreqMaker, OptMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from emmet.core.qc_tasks import TaskDoc
     from jobflow import Job
     from pymatgen.core.structure import Molecule
 
     from atomate2.qchem.jobs.base import BaseQCMaker
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -164,6 +168,7 @@ class FrequencyOptFlatteningMaker(Maker):
         ffopt_runs: int = 0,
         overwrite_inputs: dict | None = None,
         prev_dir: str | Path | None = None,
+        freq_output: TaskDoc | None = None,
     ) -> Flow:
         """
         Optimize geometry and perturb negative frequency modes.
@@ -174,11 +179,15 @@ class FrequencyOptFlatteningMaker(Maker):
             A pymatgen Molecule object.
         prev_dir : str or Path or None
             A previous QChem calculation directory to copy output files from.
+        freq_output : .TaskDoc or None
+            Output of the frequency calculation from the previous iteration. It is
+            returned as the flow output once no further iterations are needed.
 
         Returns
         -------
         Flow
-            A flow containing with optimization and frequency calculation.
+            A flow containing with optimization and frequency calculation. The
+            output is the task document of the final frequency calculation.
         """
         mode = mode or [[0.0, 0.0, 0.0] for _ in range(len(molecule))]
 
@@ -202,7 +211,7 @@ class FrequencyOptFlatteningMaker(Maker):
             jobs += [opt]
             molecule = opt.output.output.optimized_molecule
 
-            freq = self.freq_maker.make(molecule, prev_dir=prev_dir)
+            freq = self.freq_maker.make(molecule, prev_dir=opt.output.dir_name)
             freq.name = f"Frequency Analysis {ffopt_runs + 1}"
             jobs += [freq]
 
@@ -212,6 +221,7 @@ class FrequencyOptFlatteningMaker(Maker):
                 lowest_freq=freq.output.output.frequencies[0],
                 ffopt_runs=ffopt_runs + 1,
                 prev_dir=prev_dir,
+                freq_output=freq.output,
             )
             new_flow = Flow([*jobs, recursive], output=recursive.output)
             new_output = recursive.output
@@ -221,5 +231,13 @@ class FrequencyOptFlatteningMaker(Maker):
             freq.name = f"Frequency Analysis {ffopt_runs + 1}"
             new_flow = [freq]
             new_output = freq.output
+
+        else:
+            if lowest_freq < 0:
+                logger.warning(
+                    f"Lowest frequency is still negative ({lowest_freq}) after "
+                    f"{ffopt_runs} frequency flattening optimizations."
+                )
+            new_output = freq_output
 
         return Response(replace=new_flow, output=new_output)
