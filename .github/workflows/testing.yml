@@ -68,7 +68,9 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims] --group tests
+          # the MACE-Field fork is the mace-field dependency group, not an extra
+          uv pip install .[strict,abinit,approxneb,aims${{ matrix.dep-group != 'mace-field' && format(',strict-forcefields-{0}', matrix.dep-group) || '' }}] \
+            --group tests ${{ matrix.dep-group == 'mace-field' && '--group mace-field' || '' }}
 
       # the thermal expansion tests use EMT, so one group is enough to run them
       - name: Install pheasy, ALM and phono3py for the thermal expansion tests

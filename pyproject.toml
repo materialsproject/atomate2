@@ -70,7 +70,6 @@ defects = [
 ase = ["ase>=3.26.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
-mace-field = ["atomate2[ase]", "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64"]
 
 torchsim = [
     "torch-sim-atomistic[symmetry]==0.6.1; python_version >= '3.12'"
@@ -139,9 +138,6 @@ strict-forcefields-e3nn-limited = [
 strict-forcefields-numpy-limited = [
     "nequip-allegro==0.8.3",
 ]
-# MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
-# Remove this group once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
-strict-forcefields-mace-field = ["atomate2[mace-field]"]
 
 strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
@@ -162,6 +158,12 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
+# MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
+# It is a dependency group, since PyPI does not accept git URLs in extras.
+# Remove it once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
+mace-field = [
+    "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
+]
 tests = [
     "fireworks==2.1.4",
     "nbmake==1.5.5",

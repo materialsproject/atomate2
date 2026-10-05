@@ -111,7 +111,7 @@ The default in `atomate2` is the OMat24 model with `uma-s-1p1`.
 The phonon workflows use them for the non-analytical correction when `ForceFieldDielectricMaker` is set as `born_maker`.
 
 MACE-Field is a fork of MACE that installs as `mace_torch`, so it replaces MACE.
-Install it with `pip install 'atomate2[mace-field]'`.
+Install it with `pip install git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64`, the commit atomate2 is tested with.
 The fork also runs the MACE foundation models, so the forces can come from MACE-OMAT in the same environment.
 The model file has to be downloaded from the [MACE-Field releases](https://github.com/mdi-group/mace-field/releases).
 There is no default model, so `model` must be set.
