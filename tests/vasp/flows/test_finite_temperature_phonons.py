@@ -45,15 +45,19 @@ def test_vasp_flows(si_structure, maker_cls, md_code, code):
         "get_supercell_size",
         *born_names,
         "get_md_supercell",
-        f"{md_names[0]} 1/2",
-        "get_md_restart_structure",
-        f"{md_names[1]} 2/2",
+        "chained MD",
         "select_md_snapshots",
         "run_phonon_displacements",
         "fit_finite_temperature_phonons",
     ]
     relax = flow.jobs[0]
-    reference, md_1, restart, md_2, snapshots, statics, fit = flow.jobs[-7:]
+    reference, md_flow, snapshots, statics, fit = flow.jobs[-5:]
+    md_1, restart, md_2 = md_flow.jobs
+    assert [job.name for job in md_flow.jobs] == [
+        f"{md_names[0]} 1/2",
+        "get_md_restart_structure",
+        f"{md_names[1]} 2/2",
+    ]
     assert isinstance(relax, Flow)
 
     # a diagonal supercell
@@ -115,7 +119,7 @@ def test_flow_from_output_reference():
     structure = OutputReference("1234", attributes=(("a", "structure"),))
     flow = FiniteTemperaturePhononMaker().make(structure)
     assert flow.jobs[0].name == "double relax"
-    assert [job.name for job in flow.jobs][4] == "molecular dynamics"
+    assert [job.name for job in flow.jobs][4] == "chained MD"
 
 
 def test_non_diagonal_supercell_matrix(si_structure):

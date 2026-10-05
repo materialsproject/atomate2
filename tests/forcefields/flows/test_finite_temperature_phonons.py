@@ -112,11 +112,13 @@ def test_force_field_md_maker(cu3au):
 
     # the MD jobs have a number only when there are several
     flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
-    md_names = [job.name for job in flow.jobs if "MD" in job.name]
+    md_flow = next(job for job in flow.jobs if job.name == "chained MD")
+    md_names = [job.name for job in md_flow.jobs if "MD" in job.name]
     assert md_names == ["ASE MD 1/3", "ASE MD 2/3", "ASE MD 3/3"]
     maker = ForceFieldFiniteTemperaturePhononMaker(md_time=2.0)
     flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
-    assert [job.name for job in flow.jobs if "MD" in job.name] == ["ASE MD"]
+    md_flow = next(job for job in flow.jobs if job.name == "chained MD")
+    assert [job.name for job in md_flow.jobs] == ["ASE MD"]
 
     nose_hoover = ForceFieldFiniteTemperaturePhononMaker(
         thermostat="nose-hoover", md_time_step=2.0

@@ -456,6 +456,7 @@ Both set ISPIN from the relaxation directory with `auto_ispin`.
 `md_runs` splits the MD into consecutive jobs, for example to stay within the walltime of a queue.
 Each job continues from the positions and velocities of the previous one.
 The thermostat variables start again from zero in each job.
+`ChainedMDMaker` in `atomate2.common.flows.finite_temperature_phonons` makes these jobs, for VASP and for force fields.
 The MD files are read by the job that picks the snapshots, so the MD run directories must be on a file system that this job can read.
 
 An NPT MD can be run first to include thermal expansion.
