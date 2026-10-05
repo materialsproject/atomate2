@@ -8,6 +8,7 @@ import pytest
 
 pytest.importorskip("pheasy")
 
+import numpy as np
 from ase.build import bulk
 from emmet.core.phonon import (
     PhononBS,
@@ -16,12 +17,16 @@ from emmet.core.phonon import (
     ThermalDisplacementData,
 )
 from jobflow import run_locally
-from pymatgen.core import Structure
+from pymatgen.core import Lattice, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 import atomate2.common.jobs.pheasy as pheasy_jobs
 from atomate2.forcefields.flows.pheasy import PhononMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.jobs import (
+    ForceFieldDielectricMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 
@@ -76,3 +81,29 @@ def test_pheasy_wf_force_field(clean_dir):
     assert isinstance(ph_doc.structure, Structure)
     assert ph_doc.has_imaginary_modes is False
     assert isinstance(ph_doc.force_constants, list)
+
+
+def test_pheasy_wf_force_field_born_charges(clean_dir, fake_dielectric_calculator):
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(4.17), ["Ni", "O"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+    ).get_primitive_structure()
+    maker = PhononMaker(
+        bulk_relax_maker=None,
+        static_energy_maker=None,
+        phonon_displacement_maker=ForceFieldStaticMaker(force_field_name=EMT),
+        born_maker=ForceFieldDielectricMaker(),
+        min_length=8,
+        create_thermal_displacements=False,
+        store_force_constants=False,
+    )
+    flow = maker.make(structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    ph_doc = responses[flow.jobs[-1].uuid][1].output
+
+    assert np.array(ph_doc.born) == pytest.approx(
+        np.array([2, -2])[:, None, None] * np.eye(3)
+    )
+    # the LO-TO splitting raises the highest frequency
+    assert np.max(ph_doc.phonon_bandstructure.frequencies) == pytest.approx(
+        17.974, abs=1e-2
+    )

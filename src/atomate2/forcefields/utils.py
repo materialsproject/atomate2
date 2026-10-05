@@ -40,7 +40,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     MACE_MP_0 = "MACE-MP-0"
     MACE_MPA_0 = "MACE-MPA-0"
     MACE_MP_0B3 = "MACE-MP-0b3"
-    MACE_Field = "MACE-Field"
+    MACE_FIELD = "MACE-Field"
     GAP = "GAP"
     M3GNet = "M3GNet"
     CHGNet = "CHGNet"
@@ -79,7 +79,7 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.MACE_MP_0: {"model": "medium"},
     MLFF.MACE_MP_0B3: {"model": "medium-0b3"},
     MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
-    MLFF.MACE_Field: {"head": "mp-dielectric", "default_dtype": "float64"},
+    MLFF.MACE_FIELD: {"head": "mp-dielectric", "default_dtype": "float64"},
     MLFF.MATPES_PBE: {
         "architecture": "TensorNet",
         "version": "2025.2",
@@ -430,7 +430,7 @@ def ase_calculator(
                 else:
                     calculator = mace_mp(default_dtype=default_dtype or "", **kwargs)
 
-            case MLFF.MACE_Field:
+            case MLFF.MACE_FIELD:
                 # needs the MACE-Field fork of mace and the path of a model file
                 from mace.calculators import MACECalculator
 
@@ -559,7 +559,7 @@ def _get_pkg_name(calculator_meta: MLFF | str | dict[str, Any]) -> str | None:
                 | MLFF.MACE_MP_0
                 | MLFF.MACE_MPA_0
                 | MLFF.MACE_MP_0B3
-                | MLFF.MACE_Field
+                | MLFF.MACE_FIELD
             ):
                 ff_pkg = "mace-torch"
             case MLFF.MatterSim:

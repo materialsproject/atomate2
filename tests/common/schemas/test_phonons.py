@@ -76,6 +76,8 @@ def get_nacl_phonon():
     [
         ("vasp", 1, True),
         ("forcefields", 1, True),
+        ("ase", 1, True),
+        ("torchsim", 1, True),
         ("aims", 1, False),
         ("vasp", 0, False),
     ],

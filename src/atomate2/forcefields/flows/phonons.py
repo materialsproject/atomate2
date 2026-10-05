@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from atomate2.forcefields import MLFF
-    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
@@ -32,7 +31,8 @@ class PhononMaker(BasePhononMaker):
     forces are computed for these structures. With the help of phonopy, these
     forces are then converted into a dynamical matrix. To correct for polarization
     effects, a correction of the dynamical matrix based on BORN charges can
-    be performed. The BORN charges can be supplied manually.
+    be performed. The BORN charges can be supplied manually or computed
+    with ``born_maker``.
     Finally, phonon densities of states, phonon band structures
     and thermodynamic properties are computed.
 
@@ -93,7 +93,7 @@ class PhononMaker(BasePhononMaker):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
+    born_maker: .ForceFieldDielectricMaker or None
         Maker to compute the BORN charges.
     phonon_displacement_maker : .ForceFieldStaticMaker or None
         Maker used to compute the forces for a supercell.
@@ -144,7 +144,7 @@ class PhononMaker(BasePhononMaker):
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
     code: str = "forcefields"
-    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
+    born_maker: ForceFieldDielectricMaker | None = None
 
     @property
     def prev_calc_dir_argname(self) -> None:
@@ -214,7 +214,6 @@ class PhononMaker(BasePhononMaker):
                 force_field_name=force_field_name,
                 calculator_kwargs=calculator_kwargs,
             ),
-            born_maker=None,
         )
         return cls(
             name=(f"{static_energy_maker.mlff.name} Phonon Maker"),

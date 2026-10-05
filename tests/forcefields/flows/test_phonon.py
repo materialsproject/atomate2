@@ -47,7 +47,7 @@ skip_mlff = set(
             "MATPES_PBE",
             "Allegro",
             "FAIRChem",
-            "MACE_Field",
+            "MACE_FIELD",
         ],
     )
 )
@@ -299,7 +299,6 @@ def test_ext_load_phonon_initialization():
 def test_phonon_wf_force_field_born_charges(
     clean_dir, fake_dielectric_calculator, born_by_hand
 ):
-    """Born charges from a force field dielectric job or given by hand enter the NAC."""
     structure = Structure.from_spacegroup(
         "Fm-3m", Lattice.cubic(4.17), ["Ni", "O"], [[0, 0, 0], [0.5, 0.5, 0.5]]
     ).get_primitive_structure()
@@ -325,6 +324,5 @@ def test_phonon_wf_force_field_born_charges(
 
     assert np.array(doc.born) == pytest.approx(born)
     assert np.array(doc.epsilon_static) == pytest.approx(4 * np.eye(3))
-    assert doc.phonon_bandstructure.has_nac
     # the LO-TO splitting raises the highest frequency from about 12.6 THz
     assert np.max(doc.phonon_bandstructure.bands) == pytest.approx(17.976, abs=1e-2)

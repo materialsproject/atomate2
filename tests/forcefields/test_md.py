@@ -47,7 +47,7 @@ def test_maker_initialization(mlff):
 
 # MACE-Field needs the path of its model file
 _mlffs_for_test = set(INSTALLED_MLFF).difference(
-    map(MLFF, ("Forcefield", "Allegro", "M3GNet", "MACE", "Nequip", "MACE_Field"))
+    map(MLFF, ("Forcefield", "Allegro", "M3GNet", "MACE", "Nequip", "MACE_FIELD"))
 )
 _md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=str)
 

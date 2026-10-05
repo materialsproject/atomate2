@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
+import os
 import warnings
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -28,6 +28,7 @@ from atomate2.forcefields.utils import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from pathlib import Path
 
     from pymatgen.core.structure import Molecule, Structure
 
@@ -231,6 +232,14 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     Doi("10.1103/b116-xy8k"),
     description="MACE-Field: Born effective charges and dielectric tensor",
 )
+@due.dcite(
+    Doi("10.1038/sdata.2016.134"),
+    description="MACE-Field training data: Materials Project dielectric data",
+)
+@due.dcite(
+    Doi("10.1038/s41597-020-0407-9"),
+    description="MACE-Field training data: Materials Project ferroelectric data",
+)
 @dataclass
 class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
     """
@@ -241,6 +250,10 @@ class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
     does. The high-frequency dielectric tensor is 1 + chi. Both are computed at
     zero electric field by default.
 
+    MACE-Field needs the MACE-Field fork of mace-torch and a model file, see the
+    force field docs. This maker is new and less tested than the other force
+    field makers. It might still change in future versions.
+
     Parameters
     ----------
     name : str
@@ -249,11 +262,11 @@ class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator. For
-        MACE-Field, "model" is the path of the model file.
+        MACE-Field, "model" must be set to the path of the model file.
     """
 
     name: str = "Force field dielectric"
-    force_field_name: str | MLFF | dict = MLFF.MACE_Field
+    force_field_name: str | MLFF | dict = MLFF.MACE_FIELD
     calculator_kwargs: dict = field(default_factory=dict)
 
     @job(output_schema=ForceFieldDielectricDocument)
@@ -288,5 +301,5 @@ class ForceFieldDielectricMaker(ForceFieldMixin, Maker):
             ).tolist(),
             forcefield_name=self.ase_calculator_name,
             forcefield_version=_get_pkg_version(self.calculator_meta),
-            dir_name=str(Path.cwd()),
+            dir_name=os.getcwd(),
         )
