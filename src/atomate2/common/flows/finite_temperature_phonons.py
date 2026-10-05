@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import numbers
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
@@ -31,8 +30,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 SUPPORTED_CODES = frozenset(("vasp", "forcefields"))
-_THERMOSTATS = ("nose-hoover", "langevin")
-_ROTATIONAL_SUM_RULES = ("BH", "H", "BHH")
 
 
 def _get_force_field(maker: Maker, code: str) -> tuple[str | None, dict | None]:
@@ -52,6 +49,18 @@ def _get_force_field(maker: Maker, code: str) -> tuple[str | None, dict | None]:
 @due.dcite(
     Doi("10.1103/PhysRevB.84.180301"),
     description="Effective harmonic force constants fitted to MD, as in TDEP.",
+)
+@due.dcite(
+    Doi("10.1103/PhysRevB.87.104111"),
+    description="Temperature dependent effective potential method.",
+)
+@due.dcite(
+    Doi("10.1088/1361-648X/acd831"),
+    description="Implementation strategies in phonopy and phono3py.",
+)
+@due.dcite(
+    Doi("10.7566/JPSJ.92.012001"),
+    description="Phonopy and phono3py.",
 )
 @dataclass
 class BaseFiniteTemperaturePhononMaker(Maker, ABC):
@@ -89,6 +98,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     potential energy late in the run. The result is stored in the output
     document. A warning is raised if the check fails, but the fit is still done.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     .. Note::
         The atoms of the relaxed structure are sorted by electronegativity
         before the supercell is built, as the VASP input sets do. The atoms are
@@ -113,7 +125,11 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     n_snapshots: int
         Number of MD snapshots in the fit.
     thermostat: Literal["nose-hoover", "langevin"]
-        Thermostat of the NVT MD.
+        Thermostat of the NVT MD. Langevin, the default, samples the canonical
+        ensemble also for nearly harmonic modes (Bussi and Parrinello, Phys. Rev.
+        E 75, 056707 (2007)). A Nose-Hoover thermostat may leave such modes out
+        of equilibrium (Legoll et al., Arch. Ration. Mech. Anal. 184, 449
+        (2007)). The NPT MD does not use this setting.
     md_runs: int
         Number of consecutive MD jobs that make up the trajectory. Each job
         continues from the positions and velocities of the previous one. The
@@ -177,7 +193,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     md_time_step: float = 1.0
     equilibration_time: float = 1.0
     n_snapshots: int = 50
-    thermostat: Literal["nose-hoover", "langevin"] = "nose-hoover"
+    thermostat: Literal["nose-hoover", "langevin"] = "langevin"
     md_runs: int = 1
     npt_time: float = 8.0
     npt_equilibration_time: float = 2.0
@@ -209,31 +225,12 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                     f"{key} must be one of {sorted(SUPPORTED_CODES)}, not "
                     f"{getattr(self, key)!r}."
                 )
-        if self.thermostat not in _THERMOSTATS:
-            raise ValueError(
-                f"thermostat must be one of {_THERMOSTATS}, not {self.thermostat!r}."
-            )
-        if self.rotational_sum_rule not in (*_ROTATIONAL_SUM_RULES, None):
-            raise ValueError(
-                f"rotational_sum_rule must be one of {_ROTATIONAL_SUM_RULES} or "
-                f"None, not {self.rotational_sum_rule!r}."
-            )
-        for key in ("md_runs", "n_snapshots"):
-            value = getattr(self, key)
-            if (
-                isinstance(value, bool)
-                or not isinstance(value, numbers.Integral)
-                or value < 1
-            ):
-                raise ValueError(f"{key} must be a positive integer, not {value!r}.")
-        if (
-            isinstance(self.alpha_min, bool)
-            or not isinstance(self.alpha_min, numbers.Integral)
-            or self.alpha_min >= -2
-        ):
-            raise ValueError(
-                f"alpha_min must be an integer below -2, not {self.alpha_min!r}."
-            )
+        if self.socket and self.code == "vasp":
+            raise ValueError("socket is not supported by VASP.")
+        if min(self.md_runs, self.n_snapshots) < 1:
+            raise ValueError("md_runs and n_snapshots must be at least 1.")
+        if self.alpha_min >= -2:
+            raise ValueError(f"alpha_min must be below -2, not {self.alpha_min}.")
         if min(self.temperature, self.md_time, self.md_time_step) <= 0:
             raise ValueError("temperature, md_time and md_time_step must be positive.")
         n_steps = round(self.md_time * 1000 / self.md_time_step)
@@ -267,9 +264,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        supercell_matrix: Matrix3D | None = None,
         born: list[Matrix3D] | None = None,
         epsilon_static: Matrix3D | None = None,
+        supercell_matrix: Matrix3D | None = None,
     ) -> Flow:
         """
         Make a flow to calculate effective harmonic phonons at a temperature.
@@ -280,17 +277,17 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             The unit cell.
         prev_dir: str | Path | None
             A previous calculation directory. It is passed to the relaxation.
-            The born job, the MD jobs and the phonon displacement calculations
-            get the relaxation directory, or this directory if there is no
-            relaxation.
-        supercell_matrix: Matrix3D | None
-            Diagonal supercell matrix. If None, it is chosen from min_length.
+            All later jobs get the relaxation directory, or this directory if
+            there is no relaxation.
         born: list[Matrix3D] | None
-            Born effective charges of the relaxed structure with its atoms
-            sorted by electronegativity. If given with epsilon_static, the
-            born_maker is not run.
+            Born effective charges of the structure the NVT MD runs in, with its
+            atoms sorted by electronegativity. This is the relaxed structure, or
+            the structure at the temperature with npt_maker. If given with
+            epsilon_static, the born_maker is not run.
         epsilon_static: Matrix3D | None
             High-frequency dielectric tensor.
+        supercell_matrix: Matrix3D | None
+            Diagonal supercell matrix. If None, it is chosen from min_length.
 
         Returns
         -------
@@ -344,7 +341,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 structure,
                 supercell_matrix,
                 start_job.output,
-                self.temperature,
                 self.md_time_step,
                 self.npt_equilibration_time,
                 self.symprec,
@@ -357,7 +353,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 "npt_equilibration_time": self.npt_equilibration_time,
                 "npt_trajectory_health": npt_cell_job.output["trajectory_health"],
                 "npt_uuid": npt_job.uuid,
-                "npt_dir": npt_job.output.dir_name,
+                "npt_job_dir": npt_job.output.dir_name,
             }
             structure = npt_cell_job.output["structure"]
             if self.fixed_cell_relax_maker is not None:
@@ -389,7 +385,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             md_dirs,
             self.md_code,
             reference,
-            self.temperature,
             self.md_time_step,
             self.equilibration_time,
             self.n_snapshots,
@@ -431,7 +426,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             md_force_field_name=md_force_field_name,
             md_force_field_kwargs=md_force_field_kwargs,
             md_uuids=[md_job.uuid for md_job in md_jobs],
-            md_dirs=md_dirs,
+            md_job_dirs=md_dirs,
             optimization_run_uuid=optimization_run_uuid,
             optimization_run_job_dir=optimization_run_job_dir,
             born_run_uuid=born_run_uuid,

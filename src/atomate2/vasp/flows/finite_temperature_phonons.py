@@ -15,7 +15,6 @@ from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import (
     LangevinMDSetGenerator,
     MDSetGenerator,
-    StaticSetGenerator,
     TightRelaxSetGenerator,
 )
 
@@ -34,28 +33,19 @@ _KPOINTS = {"reciprocal_density": 100}
 _MD_INCAR = {
     "ENCUT": 500,
     "EDIFF": 1e-5,
-    "PREC": "Normal",
     "ALGO": "Normal",
     "LREAL": "Auto",
     "NBLOCK": 1,
     "LWAVE": False,
-    "LCHARG": False,
     **_ELECTRONIC_INCAR,
 }
+# changes to the INCAR of PhononDisplacementMaker
 _STATIC_INCAR = {
-    "IBRION": 2,
-    "ISIF": 3,
-    "NSW": 0,
     "ENCUT": 600,
     "ENAUG": 1360,
-    "EDIFF": 1e-7,
     "PREC": "Accurate",
-    "ALGO": "Normal",
     "LASPH": True,
     "NELM": 200,
-    "LREAL": False,
-    "LAECHG": False,
-    "LCHARG": False,
     "LWAVE": False,
     **_ELECTRONIC_INCAR,
 }
@@ -111,13 +101,9 @@ def _get_md_maker() -> MDMaker:
 
 def _get_phonon_displacement_maker() -> PhononDisplacementMaker:
     """Get the static maker for the forces on the snapshots."""
-    return PhononDisplacementMaker(
-        input_set_generator=StaticSetGenerator(
-            user_incar_settings=dict(_STATIC_INCAR),
-            user_kpoints_settings=dict(_KPOINTS),
-            auto_ispin=True,
-        )
-    )
+    maker = PhononDisplacementMaker()
+    maker.input_set_generator.user_incar_settings.update(_STATIC_INCAR)
+    return maker
 
 
 @dataclass
@@ -130,15 +116,16 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     All three use ISMEAR = 0 with SIGMA = 0.05 and the same reciprocal_density
     setting of 100. The relaxation is a double tight relaxation with ENCUT =
     600 eV, ENAUG = 1360 eV and PREC = Accurate, as in the phonon displacement
-    calculations. These also use EDIFF = 1e-7. The MD uses ENCUT = 500 eV,
-    EDIFF = 1e-5 and PREC = Normal, and writes every step to XDATCAR with
-    NBLOCK = 1. The Nose-Hoover thermostat uses MDALGO = 2 and SMASS = 0. The
-    Langevin thermostat uses MDALGO = 3 with LANGEVIN_GAMMA = 10 ps^-1 for each
-    species. VASP draws the initial velocities of the first MD job. The MD and
-    the phonon displacement calculations start from the magnetic moments of the
-    relaxed structure, if it has any. They all get the same prev_dir, the
-    relaxation directory by default. auto_ispin of the MD and of the phonon
-    displacement calculations sets ISPIN from it.
+    calculations. These otherwise keep the settings of PhononDisplacementMaker,
+    such as EDIFF = 1e-7. The MD uses ENCUT = 500 eV, EDIFF = 1e-5 and PREC =
+    Normal, and writes every step to XDATCAR with NBLOCK = 1. The Langevin
+    thermostat uses MDALGO = 3 with LANGEVIN_GAMMA = 10 ps^-1 for each species.
+    The Nose-Hoover thermostat uses MDALGO = 2 and SMASS = 0. VASP draws the
+    initial velocities of the first MD job. The MD and the phonon displacement
+    calculations start from the magnetic moments of the relaxed structure, if
+    it has any. They all get the same prev_dir, the relaxation directory by
+    default. auto_ispin of the MD and of the phonon displacement calculations
+    sets ISPIN from it.
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
 

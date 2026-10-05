@@ -102,6 +102,7 @@ def _get_force_field_md_maker(
         traj_file=ASE_TRAJECTORY_FILE,
         traj_file_fmt="ase",
         traj_interval=1,
+        store_trajectory="no",
         mb_velocity_seed=maker.random_seed,
         zero_linear_momentum=True,
     )
@@ -116,17 +117,19 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     force field, MACE-MP-0 by default. Use :obj:`from_force_field_name` to use
     another one. The MD writes an ASE trajectory file with a frame at every
     time step. The snapshots are read from this file, and the trajectory is not
-    stored in the output document of the MD job. The Nose-Hoover thermostat is
-    ASE's NoseHooverChainNVT with one thermostat variable, like MDALGO = 2 in
-    VASP. Its time constant gives a period of about 40 time steps, like SMASS =
-    0 in VASP. The Langevin thermostat has the default friction of
-    :obj:`.AseMDMaker`, 10 ps^-1. The initial velocities of the first MD job
-    follow the Maxwell-Boltzmann distribution, seeded with random_seed, with
-    zero total momentum. The NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover
-    chain thermostat and barostat that change the whole cell, whatever the
-    thermostat setting. Its thermostat time constant is that of the
-    Nose-Hoover thermostat above, and its barostat time constant is 1000 time
-    steps.
+    stored in the output document of the MD job. The Langevin thermostat has
+    the default friction of :obj:`.AseMDMaker`, 10 ps^-1. Its random forces
+    come from numpy's global random number generator, so two runs give
+    different trajectories. The Nose-Hoover thermostat is ASE's
+    NoseHooverChainNVT with one thermostat variable, like MDALGO = 2 in VASP.
+    Its time constant gives a period of about 40 time steps, like SMASS = 0 in
+    VASP. The initial velocities of the first MD job follow the
+    Maxwell-Boltzmann distribution, seeded with random_seed, with zero total
+    momentum. The NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover chain
+    thermostat and barostat that change the whole cell, whatever the
+    thermostat setting (Martyna et al., J. Chem. Phys. 101, 4177 (1994)). Its
+    thermostat time constant is that of the Nose-Hoover thermostat above, and
+    its barostat time constant is 1000 time steps.
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
 

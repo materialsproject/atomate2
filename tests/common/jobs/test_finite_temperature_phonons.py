@@ -1,8 +1,6 @@
-"""Tests of the finite-temperature phonon workflow.
+"""Tests of the jobs of the finite-temperature phonon workflow.
 
-The end-to-end test runs the force field workflow with ASE's EMT potential, so
-it needs no reference data. It lives here and not under tests/forcefields,
-because pheasy is only installed in the test-non-ase CI job.
+The tests of the whole force field workflow are in tests/forcefields/flows.
 """
 
 import gzip
@@ -15,14 +13,11 @@ from ase.build import bulk
 from ase.calculators import emt
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import write as ase_write
-from jobflow import run_locally
 from phonopy import Phonopy
-from phonopy.harmonic.dynmat_to_fc import get_commensurate_points
 from pymatgen.core import Lattice, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
-from atomate2.ase.md import MDEnsemble
 from atomate2.common.jobs.finite_temperature_phonons import (
     ASE_TRAJECTORY_FILE,
     _assess_trajectory,
@@ -34,15 +29,11 @@ from atomate2.common.jobs.finite_temperature_phonons import (
     get_npt_structure,
     select_md_snapshots,
 )
-from atomate2.forcefields.flows.finite_temperature_phonons import (
-    ForceFieldFiniteTemperaturePhononMaker,
-    _get_force_field_md_maker,
-)
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
-from atomate2.forcefields.md import ForceFieldMDMaker
 
-EMT_CALCULATOR = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 TEMPERATURE = 300.0
+# a long time step, so that the second half of the synthetic trajectories of 400
+# frames lasts 2 ps and the mean positions are checked
+TIME_STEP = 10.0
 TEST_DIR = Path(__file__).resolve().parents[2] / "test_data"
 
 
@@ -73,8 +64,8 @@ def _trajectory(reference, rng, sigma=0.05, shift=None, energies=None):
     return frac, energies
 
 
-def _verdict(reference, frac, energies):
-    return _assess_trajectory(frac, energies, reference, TEMPERATURE).verdict
+def _verdict(reference, frac, energies, time_step=TIME_STEP):
+    return _assess_trajectory(frac, energies, reference, time_step).verdict
 
 
 def test_assess_trajectory(cu_supercell):
@@ -82,19 +73,17 @@ def test_assess_trajectory(cu_supercell):
     n_atoms = len(cu_supercell)
 
     frac, energies = _trajectory(cu_supercell, rng)
-    health = _assess_trajectory(frac, energies, cu_supercell, TEMPERATURE)
+    health = _assess_trajectory(frac, energies, cu_supercell, TIME_STEP)
     assert health.verdict == "stable"
-    assert health.is_stable
     assert health.n_frames == 400
     # u_vib is sqrt(3) sigma for Gaussian displacements
     assert health.u_vib == pytest.approx(np.sqrt(3) * 0.05, rel=0.05)
     assert health.u_ref**2 == pytest.approx(health.u_shift**2 + health.u_vib**2)
     assert health.nearest_neighbor_distance == pytest.approx(3.61 / np.sqrt(2))
-    assert health.equipartition_rise == pytest.approx(1.5 * units.kB * TEMPERATURE)
 
     # a translation of the whole cell is not a displacement
     moved = frac + np.array([0.1, 0.05, 0])
-    health_moved = _assess_trajectory(moved, energies, cu_supercell, TEMPERATURE)
+    health_moved = _assess_trajectory(moved, energies, cu_supercell, TIME_STEP)
     assert health_moved.verdict == "stable"
     assert health_moved.u_ref == pytest.approx(health.u_ref)
 
@@ -105,9 +94,11 @@ def test_assess_trajectory(cu_supercell):
     # the mean positions move in the second half, with a flat energy
     shift = rng.normal(0, 0.4, size=(n_atoms, 3))
     frac, energies = _trajectory(cu_supercell, rng, shift=shift)
-    health = _assess_trajectory(frac, energies, cu_supercell, TEMPERATURE)
+    health = _assess_trajectory(frac, energies, cu_supercell, TIME_STEP)
     assert health.verdict == "shifted_or_diffusing"
     assert health.shift_ratio > 1.5
+    # in a second half shorter than 1 ps the mean positions are not checked
+    assert _verdict(cu_supercell, frac, energies, time_step=1.0) == "stable"
 
     # the same move with a falling energy is a transformation
     falling = np.concatenate([np.zeros(200), np.linspace(0, -0.1, 200)]) * n_atoms
@@ -121,7 +112,7 @@ def test_assess_trajectory(cu_supercell):
     # a rising energy at the reference is disordering
     rising = np.linspace(0, 0.1, 400) * n_atoms
     frac, energies = _trajectory(cu_supercell, rng, energies=rising)
-    health = _assess_trajectory(frac, energies, cu_supercell, TEMPERATURE)
+    health = _assess_trajectory(frac, energies, cu_supercell, TIME_STEP)
     assert health.verdict == "disordering"
     assert health.energy_drift == pytest.approx(0.05, rel=0.05)
 
@@ -131,7 +122,7 @@ def test_assess_trajectory(cu_supercell):
     frac, energies = _trajectory(sparse, rng)
     move = rng.choice([-2.2, 2.2], size=(len(sparse), 3)) / np.sqrt(3)
     frac[360:] = _frames(sparse, 40, 0.05, rng, shift=move)
-    health = _assess_trajectory(frac, energies, sparse, TEMPERATURE)
+    health = _assess_trajectory(frac, energies, sparse, TIME_STEP)
     assert health.verdict == "diffusing_or_soft"
     assert health.rms_displacement_end > 1.0
 
@@ -141,7 +132,7 @@ def test_assess_trajectory(cu_supercell):
     assert _verdict(cu_supercell, frac, energies) == "reference_mismatch"
 
     # too few frames to compare the quarters
-    health = _assess_trajectory(frac[:15], energies[:15], cu_supercell, TEMPERATURE)
+    health = _assess_trajectory(frac[:15], energies[:15], cu_supercell, TIME_STEP)
     assert health.energy_drift is None
 
 
@@ -185,43 +176,31 @@ def test_select_md_snapshots_vasp(cu_supercell):
     md_dirs = ["host:" + str(Path("md1").resolve()), str(Path("md2").resolve())]
 
     # 0.1 ps is 50 frames of 2 fs, so 250 frames are left for 10 snapshots
-    output = select_md_snapshots.original(
-        md_dirs, "vasp", cu_supercell, TEMPERATURE, 1.0, 0.1, 10
-    )
+    output = select_md_snapshots.original(md_dirs, "vasp", cu_supercell, 1.0, 0.1, 10)
     structures = output["structures"]
     assert len(structures) == 11
     assert structures[-1] == cu_supercell
-    indices = range(50, 300, 25)
+    # from the first to the last frame after 0.1 ps
+    indices = [50, 78, 105, 133, 161, 188, 216, 244, 271, 299]
     for structure, idx in zip(structures[:-1], indices, strict=True):
         diff = structure.frac_coords - frac[idx]
         assert np.allclose(diff - np.round(diff), 0, atol=1e-8)
-    assert output["snapshot_times"] == pytest.approx([idx * 0.002 for idx in indices])
+    # XDATCAR has the frames after steps 1 to 300
+    assert output["snapshot_times"] == pytest.approx(
+        [(idx + 1) * 0.002 for idx in indices]
+    )
     assert output["md_time"] == pytest.approx(0.6)
     assert output["rms_displacement"] == pytest.approx(np.sqrt(3) * 0.05, rel=0.1)
     assert output["trajectory_health"]["n_frames"] == 300
 
     with pytest.raises(ValueError, match="fewer than the 300 snapshots"):
-        select_md_snapshots.original(
-            md_dirs[:1], "vasp", cu_supercell, 300, 1, 0.1, 300
-        )
+        select_md_snapshots.original(md_dirs[:1], "vasp", cu_supercell, 1, 0.1, 300)
 
     # atoms of another species at the same positions
     other = cu_supercell.copy()
     other.replace_species({"Cu": "Ag"})
     with pytest.raises(ValueError, match="not in the order of the reference"):
-        select_md_snapshots.original(md_dirs[:1], "vasp", other, 300, 1, 0.1, 10)
-
-    # the same run twice, once with a host name
-    with pytest.raises(ValueError, match="its own directory"):
-        select_md_snapshots.original(
-            [md_dirs[0], str(Path("md1").resolve())],
-            "vasp",
-            cu_supercell,
-            300,
-            1,
-            0.1,
-            10,
-        )
+        select_md_snapshots.original(md_dirs[:1], "vasp", other, 1, 0.1, 10)
 
     Path("md4").mkdir()
     for name in ("INCAR", "XDATCAR"):
@@ -229,7 +208,7 @@ def test_select_md_snapshots_vasp(cu_supercell):
     (Path("md4") / "OSZICAR").write_text("")
     with pytest.raises(ValueError, match=r"0 MD steps in OSZICAR\..*NBLOCK = 1"):
         select_md_snapshots.original(
-            [str(Path("md4").resolve())], "vasp", cu_supercell, 300, 1, 0.1, 10
+            [str(Path("md4").resolve())], "vasp", cu_supercell, 1, 0.1, 10
         )
 
 
@@ -258,24 +237,24 @@ def test_select_md_snapshots_forcefields(cu_supercell):
         [str(Path(name).resolve()) for name in ("md1", "md2")],
         "forcefields",
         cu_supercell,
-        300,
         2.0,
         0.02,
         14,
     )
-    assert output["trajectory_health"]["n_frames"] == 151
-    # 10 frames of 2 fs are left out, and 141 frames are left for 14 snapshots
-    indices = range(10, 150, 10)
-    assert output["snapshot_times"] == pytest.approx([idx * 0.002 for idx in indices])
+    # the starting structure of each run is left out, so frame 0 is step 1
+    assert output["trajectory_health"]["n_frames"] == 150
+    # 10 frames of 2 fs are left out, and 140 frames are left for 14 snapshots
+    indices = np.linspace(10, 149, 14).round().astype(int)
+    assert output["snapshot_times"] == pytest.approx((indices + 1) * 0.002)
     for structure, idx in zip(output["structures"][:-1], indices, strict=True):
-        diff = structure.frac_coords - frac[idx]
+        diff = structure.frac_coords - frac[idx + 1]
         assert np.allclose(diff - np.round(diff), 0, atol=1e-8)
 
     # the snapshots keep the magnetic moments of the reference
     magmoms = [1.0] * len(cu_supercell)
     magnetic = cu_supercell.copy(site_properties={"magmom": magmoms})
     output = select_md_snapshots.original(
-        [str(Path("md1").resolve())], "forcefields", magnetic, 300, 2.0, 0.02, 14
+        [str(Path("md1").resolve())], "forcefields", magnetic, 2.0, 0.02, 14
     )
     for structure in output["structures"]:
         assert structure.site_properties == {"magmom": magmoms}
@@ -289,7 +268,6 @@ def test_select_md_snapshots_forcefields(cu_supercell):
             [str(Path("md3").resolve())],
             "forcefields",
             cu_supercell,
-            300,
             2.0,
             0.02,
             14,
@@ -313,7 +291,7 @@ def test_get_npt_structure(cu_supercell):
     energies = rng.normal(0, 0.01, n_frames)
     _write_ase_md(Path("npt"), cu_supercell, frac, energies, cells=cells)
 
-    args = ("forcefields", unit_cell, (2 * np.eye(3)).tolist(), cu_supercell, 300)
+    args = ("forcefields", unit_cell, (2 * np.eye(3)).tolist(), cu_supercell)
     output = get_npt_structure.original(
         str(Path("npt").resolve()), *args, 2.0, 0.02, 1e-4
     )
@@ -391,9 +369,6 @@ def test_get_md_restart_structure(cu_supercell):
     assert np.allclose(restart.cart_coords, cu_supercell.cart_coords)
     assert restart.site_properties["magmom"] == [1.0] * 32
 
-    with pytest.raises(ValueError, match="MD code must be"):
-        get_md_restart_structure.original("ase", "lammps", reference)
-
 
 def test_get_rms_displacement():
     """An Einstein crystal has <u**2> = 3 k_B T / k per atom."""
@@ -447,128 +422,6 @@ def test_rms_displacement_matches_mode_sampling():
     )
     unweighted = disps - disps.mean(axis=1, keepdims=True)
     assert not np.allclose(unweighted, removed, atol=1e-3)
-
-
-@pytest.mark.parametrize(
-    ("kwargs", "match"),
-    [
-        ({"thermostat": "berendsen"}, "thermostat must be one of"),
-        ({"rotational_sum_rule": "X"}, "rotational_sum_rule must be one of"),
-        ({"md_runs": 0}, "md_runs must be a positive integer"),
-        ({"n_snapshots": 2.5}, "n_snapshots must be a positive integer"),
-        ({"alpha_min": -2}, "alpha_min must be an integer below -2"),
-        ({"alpha_min": -6.0}, "alpha_min must be an integer below -2"),
-        ({"md_time_step": 0}, "must be positive"),
-        ({"equilibration_time": 8.0}, "fewer than the 50 snapshots"),
-        ({"equilibration_time": -1.0}, "fewer than the 50 snapshots"),
-        (
-            {"md_time": 0.01, "equilibration_time": 0, "n_snapshots": 5, "md_runs": 20},
-            "larger than the 10",
-        ),
-        ({"md_maker": None}, "md_maker and phonon_displacement_maker must be set"),
-        ({"code": "aims"}, "code must be one of"),
-        ({"md_code": None}, "md_code must be one of"),
-        (
-            {"npt_maker": ForceFieldMDMaker(), "npt_equilibration_time": 8.0},
-            "npt_equilibration_time must be",
-        ),
-        (
-            {"fixed_cell_relax_maker": ForceFieldRelaxMaker()},
-            "only used with npt_maker",
-        ),
-    ],
-)
-def test_maker_checks(kwargs, match):
-    with pytest.raises(ValueError, match=match):
-        ForceFieldFiniteTemperaturePhononMaker(**kwargs)
-
-
-def test_force_field_md_maker(cu_supercell):
-    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
-        EMT_CALCULATOR,
-        md_time=1.0,
-        md_time_step=2.0,
-        equilibration_time=0.5,
-        md_runs=3,
-        random_seed=5,
-    )
-    assert maker.get_md_steps() == [167, 167, 166]
-    md_maker = maker.get_md_maker(167)
-    assert md_maker.n_steps == 167
-    assert md_maker.time_step == 2.0
-    assert md_maker.temperature == TEMPERATURE
-    assert md_maker.mb_velocity_seed == 5
-    assert md_maker.dynamics == "nose-hoover-chain"
-    assert md_maker.ase_md_kwargs["tchain"] == 1
-    # a thermostat period of 40 steps, 80 fs
-    period = np.pi * np.sqrt(2) * md_maker.ase_md_kwargs["tdamp"] / units.fs
-    assert period == pytest.approx(80.0)
-    # the maker of the flow is not changed
-    assert maker.md_maker.n_steps == 1000
-    assert maker.md_maker.dynamics is None
-    # the force field relaxation keeps the symmetry
-    assert maker.bulk_relax_maker.fix_symmetry
-    assert ForceFieldFiniteTemperaturePhononMaker().bulk_relax_maker.fix_symmetry
-
-    # the MD jobs have a number only when there are several
-    flow = maker.make(cu_supercell, supercell_matrix=np.eye(3).tolist())
-    md_names = [job.name for job in flow.jobs if "MD" in job.name]
-    assert md_names == ["ASE MD 1/3", "ASE MD 2/3", "ASE MD 3/3"]
-    maker = ForceFieldFiniteTemperaturePhononMaker(md_time=2.0)
-    flow = maker.make(cu_supercell, supercell_matrix=np.eye(3).tolist())
-    assert [job.name for job in flow.jobs if "MD" in job.name] == ["ASE MD"]
-
-    langevin = ForceFieldFiniteTemperaturePhononMaker(
-        thermostat="langevin"
-    ).get_md_maker(10)
-    # AseMDMaker sets its default friction when the job runs
-    assert langevin.dynamics == "langevin"
-    assert langevin.ase_md_kwargs == {}
-
-    maker = ForceFieldFiniteTemperaturePhononMaker(
-        md_maker=ForceFieldMDMaker(ase_md_kwargs={"tdamp": 10})
-    )
-    with pytest.raises(ValueError, match="must not set dynamics or ase_md_kwargs"):
-        maker.get_md_maker(10)
-    with pytest.raises(TypeError, match="must be a ForceFieldMDMaker"):
-        _get_force_field_md_maker(
-            ForceFieldFiniteTemperaturePhononMaker(md_maker=ForceFieldStaticMaker()), 10
-        )
-
-
-def test_force_field_npt_maker(cu_supercell):
-    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
-        EMT_CALCULATOR, run_npt=True, md_time_step=2.0, pressure=10.0
-    )
-    npt_maker = maker.get_npt_maker(100)
-    assert npt_maker.ensemble == MDEnsemble.npt
-    assert npt_maker.dynamics == "nose-hoover-chain"
-    assert npt_maker.n_steps == 100
-    assert npt_maker.pressure == 10.0
-    # a barostat time constant of 1000 steps
-    assert npt_maker.ase_md_kwargs["pdamp"] / units.fs == pytest.approx(2000)
-    assert maker.get_md_maker(100).ensemble == MDEnsemble.nvt
-    # the atoms are relaxed in the cell from the NPT MD
-    assert not maker.fixed_cell_relax_maker.relax_cell
-    assert maker.fixed_cell_relax_maker.fix_symmetry
-
-    flow = maker.make(cu_supercell, supercell_matrix=np.eye(3).tolist())
-    names = [job.name for job in flow.jobs]
-    assert "ASE MD NPT" in names
-    assert "get_npt_structure" in names
-
-    # no NPT MD by default
-    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(EMT_CALCULATOR)
-    assert maker.npt_maker is None
-    assert maker.fixed_cell_relax_maker is None
-    flow = maker.make(cu_supercell, supercell_matrix=np.eye(3).tolist())
-    assert not any("NPT" in job.name for job in flow.jobs)
-
-
-def _commensurate_frequencies(phonon):
-    matrix = np.linalg.inv(phonon.primitive_matrix) @ phonon.supercell_matrix
-    phonon.run_qpoints(get_commensurate_points(np.rint(matrix).astype(int)))
-    return np.sort(phonon.qpoints.frequencies.ravel())
 
 
 def _emt_phonon(structure, supercell_matrix):
@@ -627,7 +480,7 @@ def test_fit_recovers_harmonic_force_constants():
         "snapshot_data": snapshot_data,
         "displacement_data": displacement_data,
         "temperature": TEMPERATURE,
-        "thermostat": "nose-hoover",
+        "thermostat": "langevin",
         "md_time_step": 1.0,
         "equilibration_time": 0.5,
         "code": "forcefields",
@@ -652,125 +505,3 @@ def test_fit_recovers_harmonic_force_constants():
     with pytest.raises(ValueError, match="number of Born charges"):
         fit_finite_temperature_phonons.original(born=born[:3], **fit_kwargs)
     assert Path("FORCE_CONSTANTS").stat().st_mtime_ns == fc_time
-
-    with pytest.raises(ValueError, match="diagonal supercell matrix"):
-        fit_finite_temperature_phonons.original(
-            **{**fit_kwargs, "supercell_matrix": [[1, 1, 0], [0, 1, 0], [0, 0, 1]]}
-        )
-    with pytest.raises(ValueError, match="snapshots followed by the undisplaced"):
-        fit_finite_temperature_phonons.original(
-            **{**fit_kwargs, "snapshot_data": {"snapshot_times": [0.0] * 19}}
-        )
-    shuffled = {
-        **displacement_data,
-        "displaced_structures": [supercell, *snapshots],
-    }
-    with pytest.raises(ValueError, match="not the undisplaced supercell"):
-        fit_finite_temperature_phonons.original(
-            **{**fit_kwargs, "displacement_data": shuffled}
-        )
-
-
-def test_finite_temperature_phonon_maker_emt(clean_dir):
-    """Run the whole force field workflow with EMT on L1_2 Cu3Au at 300 K."""
-    # Au first, so that sorting the atoms by electronegativity reorders them
-    structure = Structure(
-        Lattice.cubic(3.75),
-        ["Au", "Cu", "Cu", "Cu"],
-        [[0, 0, 0], [0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]],
-    )
-    # a 2x2x2 supercell of the cubic cell, 32 atoms, and 2 ps of MD at 2 fs in
-    # two MD jobs
-    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
-        EMT_CALCULATOR,
-        min_length=7.0,
-        md_time=2.0,
-        md_time_step=2.0,
-        md_runs=2,
-        equilibration_time=0.5,
-        n_snapshots=12,
-    )
-    flow = maker.make(structure)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
-    doc = responses[flow.output.uuid][1].output
-
-    assert [str(site.specie) for site in doc.structure] == ["Cu", "Cu", "Cu", "Au"]
-    assert doc.temperature == TEMPERATURE
-    assert doc.thermostat == "nose-hoover"
-    assert doc.md_code == doc.code == "forcefields"
-    assert doc.md_force_field_name == doc.force_field_name == "ase.calculators.emt.EMT"
-    assert doc.force_field_kwargs == {}
-    # 1000 steps and the starting structure
-    assert doc.md_time == pytest.approx(2.002)
-    assert doc.n_snapshots == 12
-    assert len(doc.snapshot_times) == 12
-    assert min(doc.snapshot_times) == pytest.approx(0.5)
-    assert len(doc.md_uuids) == len(doc.md_dirs) == 2
-    assert len(doc.uuids.displacements_uuids) == 13
-    assert doc.uuids.optimization_run_uuid is not None
-    assert doc.uuids.born_run_uuid is None
-    assert doc.supercell_matrix == ((2, 0, 0), (0, 2, 0), (0, 0, 2))
-    assert doc.trajectory_health.verdict == "stable"
-    assert doc.max_residual_force < 1e-8
-    assert 0 < doc.force_rmse < 0.2
-    assert doc.lasso_alpha > 0
-    # Cu3Au is stable at 300 K
-    assert not doc.has_imaginary_modes
-    assert doc.n_imaginary_modes == 0
-    assert doc.min_frequency > -0.1
-    # the snapshot amplitude agrees with the one of the fitted force constants
-    assert doc.rms_displacement == pytest.approx(
-        doc.rms_displacement_from_force_constants, rel=0.25
-    )
-    force_constants = np.array(doc.force_constants.force_constants)
-    assert force_constants.shape == (32, 32, 3, 3)
-    fit_dir = Path(doc.jobdirs.taskdoc_run_job_dir)
-    for name in ("FORCE_CONSTANTS", "phonopy.yaml", "pheasy_harmonic_fit.log"):
-        assert (fit_dir / name).exists()
-
-    # at a fixed volume, the frequencies stay close to the 0 K ones of EMT
-    phonon = _emt_phonon(doc.structure, np.array(doc.supercell_matrix))
-    freqs_0k = _commensurate_frequencies(phonon)
-    phonon.force_constants = force_constants
-    freqs = _commensurate_frequencies(phonon)
-    top = len(freqs) // 3
-    assert freqs[-top:].mean() == pytest.approx(freqs_0k[-top:].mean(), rel=0.15)
-
-
-def test_finite_temperature_phonon_maker_emt_npt(clean_dir):
-    """Run the force field workflow with an NPT MD first, with EMT on Cu3Au."""
-    structure = Structure(
-        Lattice.cubic(3.75),
-        ["Au", "Cu", "Cu", "Cu"],
-        [[0, 0, 0], [0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]],
-    )
-    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
-        EMT_CALCULATOR,
-        run_npt=True,
-        min_length=7.0,
-        npt_time=2.0,
-        npt_equilibration_time=0.5,
-        md_time=1.0,
-        md_time_step=2.0,
-        equilibration_time=0.2,
-        n_snapshots=10,
-    )
-    flow = maker.make(structure)
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
-    doc = responses[flow.output.uuid][1].output
-
-    assert doc.pressure == 0.0
-    assert doc.npt_time == 2.0
-    assert doc.npt_equilibration_time == 0.5
-    assert doc.npt_trajectory_health.verdict == "stable"
-    assert doc.npt_uuid is not None
-    assert doc.npt_dir is not None
-    assert doc.fixed_cell_relax_uuid is not None
-    # the NVT MD and the fit use the cubic cell from the NPT MD
-    assert doc.structure.lattice.abc == pytest.approx([doc.structure.lattice.a] * 3)
-    assert doc.structure.lattice.angles == pytest.approx((90, 90, 90))
-    ratio = doc.structure.volume / doc.npt_input_structure.volume
-    assert ratio != 1
-    assert ratio == pytest.approx(1, abs=0.05)
-    assert doc.trajectory_health.verdict == "stable"
-    assert not doc.has_imaginary_modes

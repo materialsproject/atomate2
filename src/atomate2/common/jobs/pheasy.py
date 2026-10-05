@@ -290,9 +290,9 @@ def _run_harmonic_fit(
     Fit the second-order force constants with pheasy in the current folder.
 
     pheasy reads POSCAR, SPOSCAR and the harmonic displacement and force
-    matrices, and writes FORCE_CONSTANTS. The caller removes the files of an
-    earlier fit and checks the result, since the pheasy phonon workflow and
-    the finite-temperature workflow check different things.
+    matrices, and writes FORCE_CONSTANTS. The caller checks the result, since
+    the pheasy phonon workflow and the finite-temperature workflow check
+    different things.
 
     Parameters
     ----------

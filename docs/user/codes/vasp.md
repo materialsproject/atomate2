@@ -415,13 +415,18 @@ They include the anharmonic effects at that temperature, at the volume of the re
 By default, thermal expansion is not included.
 The structure is relaxed first.
 An NVT MD run then samples the displacements at the temperature.
-By default, it runs for 8 ps at 300 K with a time step of 1 fs and a Nosé-Hoover thermostat.
+By default, it runs for 8 ps at 300 K with a time step of 1 fs and a Langevin thermostat.
 The first 1 ps is left out, and 50 snapshots are picked evenly spread over the rest.
 Static calculations give the forces on the snapshots and on the undisplaced supercell.
-The displacements are measured from the relaxed positions.
+The displacements are measured from the undisplaced supercell.
 Pheasy then fits the second-order force constants to them with LASSO.
 As in the pheasy phonon workflow, a `DielectricMaker` computes the Born charges and the dielectric tensor for the non-analytical correction.
 It needs the `pheasy` extra, like the pheasy phonon workflow above.
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
 
 ```python
 from atomate2.vasp.flows.finite_temperature_phonons import (
@@ -431,6 +436,12 @@ from atomate2.vasp.flows.finite_temperature_phonons import (
 flow = FiniteTemperaturePhononMaker(temperature=300).make(structure)
 ```
 
+The fit only uses the positions of the MD, not its dynamics.
+What matters is that the MD samples the canonical ensemble.
+A Langevin thermostat does this for every mode ([Bussi and Parrinello](https://doi.org/10.1103/PhysRevE.75.056707)).
+A Nosé-Hoover thermostat can leave nearly harmonic modes out of equilibrium ([Legoll et al.](https://doi.org/10.1007/s00205-006-0029-1)), most of all at low temperature.
+`thermostat="nose-hoover"` switches to it, but this is not recommended.
+
 The MD uses looser settings than the statics, for example ENCUT = 500 eV instead of 600 eV.
 Only the forces of the statics enter the fit.
 The relaxation, the MD and the statics use the same functional, +U, smearing and k-point settings.
@@ -439,18 +450,20 @@ Both set ISPIN from the relaxation directory with `auto_ispin`.
 `md_runs` splits the MD into consecutive jobs, for example to stay within the walltime of a queue.
 Each job continues from the positions and velocities of the previous one.
 The thermostat variables start again from zero in each job.
+The MD files are read by the job that picks the snapshots, so the MD run directories must be on a file system that this job can read.
 
 An NPT MD can be run first to include thermal expansion.
 Set `npt_maker` to a VASP `MDMaker` with an `MDSetGenerator`, and use a larger ENCUT than for the NVT MD, since the cell changes.
 The flow runs it at the temperature and at `pressure`, 0 kbar by default, with MDALGO = 3 and ISIF = 3.
-Its cell is averaged over the frames after `npt_equilibration_time`, given the symmetry of the relaxed structure, and used for the NVT MD, the statics and the fit.
+VASP only runs NPT MD with its Langevin thermostat.
+The cell is averaged over the frames after `npt_equilibration_time`, given the symmetry of the relaxed structure, and used for the NVT MD, the statics and the fit.
 `fixed_cell_relax_maker` can relax the atoms in this cell, for example with ISIF = 2.
-With a force field, `from_force_field_name(..., run_npt=True)` sets both makers.
 
 The trajectory is also checked before the fit.
 The check looks for melting and for a move away from the reference structure.
 It also looks at the drift of the potential energy late in the run.
 The result is stored in `trajectory_health` of the output `FiniteTemperaturePhononDoc`, and a warning is raised when the check fails.
+The limits of the check are rules of thumb, except for the Lindemann ratio of 0.15 at melting ([Saija et al.](https://doi.org/10.1063/1.2208357)).
 Imaginary modes are counted at the q-points commensurate with the supercell.
 They are reported and not removed.
 
@@ -462,6 +475,27 @@ Three more makers are in `atomate2.forcefields.flows.finite_temperature_phonons`
 Each has a `from_force_field_name` method to choose the force field.
 They need the package of the force field, for example `mace-torch` for MACE.
 All of them use the same fit.
+A force field NPT MD uses ASE's `MTKNPT`, a Nosé-Hoover chain thermostat with the barostat of [Martyna et al.](https://doi.org/10.1063/1.467468).
+
+```python
+from atomate2.forcefields.flows.finite_temperature_phonons import (
+    ForceFieldFiniteTemperaturePhononMaker,
+)
+
+maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
+    "MACE-MP-0", temperature=600, run_npt=True
+)
+flow = maker.make(structure)
+```
+
+`run_npt=True` sets the NPT MD and the relaxation of the atoms in its cell.
+
+Known limitations:
+
+- pheasy needs a diagonal supercell matrix.
+- The MD is classical, so there is no zero-point motion.
+- Each result comes from one MD trajectory, so it carries the noise of that trajectory.
+- With a force field MD and VASP statics, the trajectory and the forces come from different potential energy surfaces.
 
 ### Grüneisen parameter workflow
 

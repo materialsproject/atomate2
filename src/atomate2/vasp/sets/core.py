@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from pymatgen.core.periodic_table import Element
-from pymatgen.io.vasp import Poscar
 
 try:
     from pymatgen.io.vasp.sets import LobsterSet  # type: ignore[attr-defined]
@@ -754,9 +753,9 @@ class LangevinMDSetGenerator(MDSetGenerator):
         updates = super().incar_updates
         # the Nose mass is only used by the Nose-Hoover thermostat
         updates.pop("SMASS", None)
-        # one value for each species block of the POSCAR
-        n_species = len(Poscar(self.structure).site_symbols)
-        updates.update(MDALGO=3, LANGEVIN_GAMMA=[self.langevin_gamma] * n_species)
+        # one value for each element, as for ensemble="npt"
+        n_elements = len(self.structure.composition)
+        updates.update(MDALGO=3, LANGEVIN_GAMMA=[self.langevin_gamma] * n_elements)
         return updates
 
 

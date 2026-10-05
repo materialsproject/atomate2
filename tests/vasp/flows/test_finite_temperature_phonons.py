@@ -72,7 +72,7 @@ def test_vasp_flows(si_structure, maker_cls, md_code, code):
 
     args = snapshots.function_args
     assert [ref.uuid for ref in args[0]] == [md_1.uuid, md_2.uuid]
-    assert args[1:] == (md_code, reference.output, 300.0, 1.0, 1.0, 50)
+    assert args[1:] == (md_code, reference.output, 1.0, 1.0, 50)
 
     # the statics get the snapshots followed by the undisplaced supercell, and
     # only VASP statics get the relaxation directory
@@ -127,7 +127,9 @@ def test_non_diagonal_supercell_matrix(si_structure):
 
 def test_relax_md_and_static_settings_match(nio_supercell, test_dir):
     """The relaxation, the MD and the statics must see the same Hamiltonian."""
-    maker = FiniteTemperaturePhononMaker(md_time=4.0, md_time_step=0.5)
+    maker = FiniteTemperaturePhononMaker(
+        md_time=4.0, md_time_step=0.5, thermostat="nose-hoover"
+    )
     md_generator = maker.get_md_maker(maker.get_md_steps()[0]).input_set_generator
     static_generator = maker.phonon_displacement_maker.input_set_generator
     relax_generator = maker.bulk_relax_maker.relax_maker1.input_set_generator
@@ -181,7 +183,8 @@ def test_relax_md_and_static_settings_match(nio_supercell, test_dir):
 
 
 def test_langevin_thermostat(nio_supercell):
-    maker = FiniteTemperaturePhononMaker(thermostat="langevin", temperature=600)
+    # Langevin by default
+    maker = FiniteTemperaturePhononMaker(temperature=600)
     md_maker = maker.get_md_maker(100)
     assert isinstance(md_maker.input_set_generator, LangevinMDSetGenerator)
     incar = md_maker.input_set_generator.get_input_set(
@@ -195,7 +198,7 @@ def test_langevin_thermostat(nio_supercell):
     assert type(maker.md_maker.input_set_generator) is MDSetGenerator
 
     # a Langevin MD maker needs the Langevin thermostat
-    maker = FiniteTemperaturePhononMaker(md_maker=md_maker)
+    maker = FiniteTemperaturePhononMaker(md_maker=md_maker, thermostat="nose-hoover")
     with pytest.raises(ValueError, match="Set thermostat to 'langevin'"):
         maker.get_md_maker(100)
     maker = FiniteTemperaturePhononMaker(md_maker=md_maker, thermostat="langevin")

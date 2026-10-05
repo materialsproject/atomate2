@@ -40,7 +40,6 @@ class TrajectoryHealth(BaseModel):
         "the MD are not in the order of the reference. Every other verdict except "
         "'stable' means the trajectory left the reference structure.",
     )
-    is_stable: bool | None = Field(None, description="True if the verdict is 'stable'.")
     n_frames: int | None = Field(None, description="Number of MD frames analysed.")
     rms_displacement_start: float | None = Field(
         None,
@@ -88,11 +87,6 @@ class TrajectoryHealth(BaseModel):
         description="Standard deviation of the potential energy in the last fifth of "
         "the frames, in eV/atom.",
     )
-    equipartition_rise: float | None = Field(
-        None,
-        description="Potential energy per atom that a harmonic MD run gains when "
-        "it starts from the reference structure, 3/2 k_B T, in eV/atom.",
-    )
 
 
 class FiniteTemperaturePhononDoc(StructureMetadata):
@@ -133,7 +127,8 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
     md_time_step: float | None = Field(None, description="MD time step in fs.")
     md_time: float | None = Field(
         None,
-        description="Number of MD frames read from disk times the time step, in ps.",
+        description="Length of the joined MD trajectory, the number of frames times "
+        "the time step, in ps.",
     )
     equilibration_time: float | None = Field(
         None, description="Time at the start of the trajectory left out, in ps."
@@ -143,8 +138,8 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
     )
     snapshot_times: list[float] | None = Field(
         None,
-        description="MD time of each snapshot in ps, with the first frame of the "
-        "trajectory at time zero.",
+        description="MD time of each snapshot in ps, its step number times the time "
+        "step.",
     )
     supercell_matrix: Matrix3D | None = Field(
         None, description="Supercell matrix of the MD and the statics."
@@ -195,7 +190,7 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
         description="Number of imaginary modes at the q-points commensurate with the "
         "supercell.",
     )
-    min_frequency: float | None = Field(
+    lowest_frequency: float | None = Field(
         None,
         description="Lowest frequency at the q-points commensurate with the "
         "supercell, in THz. Imaginary frequencies are negative.",
@@ -222,7 +217,9 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
         "non-analytical correction together with born.",
     )
     md_uuids: list[str] | None = Field(None, description="UUIDs of the MD jobs.")
-    md_dirs: list[str] | None = Field(None, description="Directories of the MD jobs.")
+    md_job_dirs: list[str] | None = Field(
+        None, description="Directories of the MD jobs."
+    )
     npt_input_structure: Structure | None = Field(
         None,
         description="Unit cell whose supercell the NPT MD started from. None without "
@@ -239,7 +236,7 @@ class FiniteTemperaturePhononDoc(StructureMetadata):
         None, description="Check of the NPT trajectory."
     )
     npt_uuid: str | None = Field(None, description="UUID of the NPT MD job.")
-    npt_dir: str | None = Field(None, description="Directory of the NPT MD job.")
+    npt_job_dir: str | None = Field(None, description="Directory of the NPT MD job.")
     fixed_cell_relax_uuid: str | None = Field(
         None,
         description="UUID of the relaxation of the atoms in the cell from the NPT MD.",

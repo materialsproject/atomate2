@@ -39,12 +39,7 @@ from atomate2.common.schemas.finite_temperature_phonons import (
     FiniteTemperaturePhononDoc,
     TrajectoryHealth,
 )
-from atomate2.common.schemas.phonons import (
-    ForceConstants,
-    PhononJobDirs,
-    PhononUUIDs,
-    get_factor,
-)
+from atomate2.common.schemas.phonons import ForceConstants, PhononJobDirs, PhononUUIDs
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
@@ -59,16 +54,26 @@ logger = logging.getLogger(__name__)
 ASE_TRAJECTORY_FILE = "md_trajectory.traj"
 _KPATH_SCHEME = "seekpath"
 
-# Thresholds of the trajectory check. The MD starts from the reference structure,
-# so a large displacement in the first frames means the atom order does not match.
-_START_LIMIT = 0.5  # Angstrom
-_RMS_LIMIT = 1.0  # Angstrom
-# Lindemann ratio at melting of an fcc solid, Saija et al., J. Chem. Phys. 124,
-# 244504 (2006)
-_LINDEMANN_LIMIT = 0.15
-_SHIFT_RATIO_LIMIT = 1.5
-_DRIFT_SIGMA = 3.0
+# Limits of the trajectory check
+# Rule of thumb: in the first 10 steps thermal motion moves an atom by about a
+# tenth of an Angstrom or less, while a wrong atom order moves it by a bond length.
 _N_START_FRAMES = 10
+_START_LIMIT = 0.5  # Angstrom
+# Lindemann ratio at melting of an fcc solid. It is about 0.18 for a bcc solid.
+# Saija et al., J. Chem. Phys. 124, 244504 (2006)
+_LINDEMANN_LIMIT = 0.15
+# Rule of thumb: u_ref / u_vib = 1.5 means the mean positions moved by about as
+# much as the atoms vibrate (u_shift = 1.1 u_vib).
+_SHIFT_RATIO_LIMIT = 1.5
+# Rule of thumb: the mean positions are only checked if the second half of the
+# trajectory lasts at least one period of a 1 THz vibration.
+_MIN_SHIFT_WINDOW = 1.0  # ps
+# Three sigma rule: without a drift, a change this large has a probability below
+# 5% for any unimodal distribution. Pukelsheim, Am. Stat. 48, 88 (1994)
+_DRIFT_SIGMA = 3.0
+# Rule of thumb: a third of a typical nearest-neighbor distance of 3 Angstrom,
+# about twice the vibration at the Lindemann limit for that distance.
+_RMS_LIMIT = 1.0  # Angstrom
 
 
 def _get_phonopy(
@@ -169,7 +174,7 @@ def get_md_restart_structure(
     directory = Path(strip_hostname(md_dir))
     if md_code == "vasp":
         structure = Poscar.from_file(zpath(str(directory / "CONTCAR"))).structure
-    elif md_code == "forcefields":
+    else:
         atoms = ase_read(directory / ASE_TRAJECTORY_FILE, index=-1)
         structure = Structure(
             atoms.cell[:],
@@ -178,8 +183,6 @@ def get_md_restart_structure(
             coords_are_cartesian=True,
             site_properties={"velocities": atoms.get_velocities().tolist()},
         )
-    else:
-        raise ValueError(f"MD code must be 'vasp' or 'forcefields', not {md_code}.")
     for key, values in _get_site_properties(reference).items():
         structure.add_site_property(key, values)
     return structure
@@ -212,13 +215,12 @@ def _read_vasp_md(
 
 
 def _read_ase_md(
-    directory: Path, time_step: float, skip_first: bool
+    directory: Path, time_step: float
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str], float]:
     """Read the frames, cells and energies of a force field MD run."""
-    frames = ase_read(directory / ASE_TRAJECTORY_FILE, index=":")
-    if skip_first:
-        # the starting structure is the last frame of the previous MD run
-        frames = frames[1:]
+    # the first frame is the starting structure, before the first step, which
+    # XDATCAR leaves out as well
+    frames = ase_read(directory / ASE_TRAJECTORY_FILE, index=":")[1:]
     frac_coords = np.array([atoms.get_scaled_positions() for atoms in frames])
     cells = np.array([atoms.cell[:] for atoms in frames])
     energies = np.array([atoms.get_potential_energy() for atoms in frames])
@@ -236,22 +238,15 @@ def _read_md(
     md_time_step is the time step. Returns the fractional coordinates, the cell
     and the potential energy of each frame, and the time step in fs.
     """
-    directories = [Path(strip_hostname(md_dir)) for md_dir in md_dirs]
-    if len(set(directories)) != len(directories):
-        raise ValueError(
-            f"Each MD run must have its own directory, but the directories are "
-            f"{md_dirs}."
-        )
-    frac_coords, cells, energies, time_steps = [], [], [], set()
-    for idx, directory in enumerate(directories):
+    frac_coords, cells, energies = [], [], []
+    for md_dir in md_dirs:
+        directory = Path(strip_hostname(md_dir))
         if md_code == "vasp":
             coords, cell, energy, species, time_step = _read_vasp_md(directory)
-        elif md_code == "forcefields":
-            coords, cell, energy, species, time_step = _read_ase_md(
-                directory, md_time_step, skip_first=idx > 0
-            )
         else:
-            raise ValueError(f"MD code must be 'vasp' or 'forcefields', not {md_code}.")
+            coords, cell, energy, species, time_step = _read_ase_md(
+                directory, md_time_step
+            )
         if species != [str(site.specie) for site in reference]:
             raise ValueError(
                 f"The atoms of the MD in {directory} are not in the order of the "
@@ -260,14 +255,11 @@ def _read_md(
         frac_coords.append(coords)
         cells.append(cell)
         energies.append(energy)
-        time_steps.add(time_step)
-    if len(time_steps) != 1:
-        raise ValueError(f"The MD runs have different time steps: {time_steps} fs.")
     return (
         np.concatenate(frac_coords),
         np.concatenate(cells),
         np.concatenate(energies),
-        time_steps.pop(),
+        time_step,
     )
 
 
@@ -289,20 +281,22 @@ def _assess_trajectory(
     frac_coords: np.ndarray,
     energies: np.ndarray,
     reference: Structure,
-    temperature: float,
+    time_step: float,
 ) -> TrajectoryHealth:
     """
     Check whether the MD trajectory stayed at the reference structure.
 
     The displacement of the center of mass of each frame is removed from its
-    displacements. The checks are applied in this order.
+    displacements. The checks are applied in this order. The limits are rules
+    of thumb, except where a source is given next to them in this module.
 
     - A root mean square displacement above 0.5 Angstrom in the first 10
       frames means the atoms are not in the order of the reference.
     - A root mean square vibration u_vib above 0.15 of the nearest-neighbor
       distance means the structure melted.
     - A total displacement u_ref above 1.5 times u_vib means the mean
-      positions moved away from the reference.
+      positions moved away from the reference. This check is skipped if the
+      second half of the trajectory is shorter than 1 ps.
     - A change of the mean potential energy from the second to the last
       quarter of the frames above 3 times the standard deviation of the
       energy in the last fifth means the structure transformed (falling energy)
@@ -322,8 +316,8 @@ def _assess_trajectory(
         Potential energy of each frame in eV.
     reference: Structure
         The undisplaced supercell.
-    temperature: float
-        MD temperature in K.
+    time_step: float
+        MD time step in fs.
 
     Returns
     -------
@@ -352,6 +346,10 @@ def _assess_trajectory(
     d_nn = float(distances.min(axis=1).mean())
     lindemann_ratio = u_vib / d_nn
     shift_ratio = u_ref / max(u_vib, 1e-9)
+    shifted = (
+        shift_ratio > _SHIFT_RATIO_LIMIT
+        and len(tail) * time_step / 1000 >= _MIN_SHIFT_WINDOW
+    )
 
     energy = energies / n_atoms
     quarter = len(energy) // 4
@@ -367,7 +365,7 @@ def _assess_trajectory(
         verdict = "reference_mismatch"
     elif lindemann_ratio > _LINDEMANN_LIMIT:
         verdict = "melted"
-    elif shift_ratio > _SHIFT_RATIO_LIMIT:
+    elif shifted:
         verdict = "transformed" if big_drift and drift < 0 else "shifted_or_diffusing"
     elif big_drift:
         verdict = "transformed" if drift < 0 else "disordering"
@@ -378,7 +376,6 @@ def _assess_trajectory(
 
     return TrajectoryHealth(
         verdict=verdict,
-        is_stable=verdict == "stable",
         n_frames=n_frames,
         rms_displacement_start=rms_start,
         rms_displacement_end=rms_end,
@@ -390,7 +387,6 @@ def _assess_trajectory(
         shift_ratio=shift_ratio,
         energy_drift=drift,
         energy_fluctuation=fluctuation,
-        equipartition_rise=1.5 * kB * temperature,
     )
 
 
@@ -401,7 +397,6 @@ def get_npt_structure(
     structure: Structure,
     supercell_matrix: Matrix3D,
     reference: Structure,
-    temperature: float,
     md_time_step: float,
     equilibration_time: float,
     symprec: float,
@@ -430,8 +425,6 @@ def get_npt_structure(
         Supercell matrix.
     reference: Structure
         The undisplaced supercell the NPT MD started from.
-    temperature: float
-        MD temperature in K.
     md_time_step: float
         MD time step in fs. Only used for force field trajectories.
     equilibration_time: float
@@ -472,8 +465,8 @@ def get_npt_structure(
         site_properties=structure.site_properties,
     )
 
-    health = _assess_trajectory(frac_coords, energies, reference, temperature)
-    if not health.is_stable:
+    health = _assess_trajectory(frac_coords, energies, reference, time_step)
+    if health.verdict != "stable":
         warnings.warn(
             f"The NPT trajectory did not stay at the reference structure (verdict: "
             f"{health.verdict}). The averaged cell may not describe it.",
@@ -487,7 +480,6 @@ def select_md_snapshots(
     md_dirs: Sequence[str],
     md_code: str,
     reference: Structure,
-    temperature: float,
     md_time_step: float,
     equilibration_time: float,
     n_snapshots: int,
@@ -495,11 +487,11 @@ def select_md_snapshots(
     """
     Pick snapshots from the MD trajectory and check the trajectory.
 
-    The trajectories of all MD runs are joined in order, with a frame at every
-    time step. The time of a frame is its index in the joined trajectory times
-    the time step, so the first frame is at time zero. The frames of the first
-    equilibration_time are left out, and n_snapshots frames are picked evenly
-    spread over the rest. For VASP, XDATCAR, OSZICAR and the POTIM of INCAR are
+    The trajectories of all MD runs are joined in order, with a frame after
+    every time step. The time of a frame is its step number times the time
+    step. The frames of the first equilibration_time are left out, and
+    n_snapshots frames are picked evenly spread over the rest, from the first
+    to the last. For VASP, XDATCAR, OSZICAR and the POTIM of INCAR are
     read from each run directory. For force fields, the ASE trajectory file is
     read. The run directories must be readable from where this job runs.
 
@@ -511,8 +503,6 @@ def select_md_snapshots(
         Code of the MD, "vasp" or "forcefields".
     reference: Structure
         The undisplaced supercell the MD started from.
-    temperature: float
-        MD temperature in K.
     md_time_step: float
         MD time step in fs. Only used for force field trajectories.
     equilibration_time: float
@@ -542,8 +532,7 @@ def select_md_snapshots(
             f"leaving out {equilibration_time} ps, {max(n_left, 0)} frames are "
             f"left, fewer than the {n_snapshots} snapshots."
         )
-    stride = n_left // n_snapshots
-    indices = list(range(n_equil, n_frames, stride))[:n_snapshots]
+    indices = np.linspace(n_equil, n_frames - 1, n_snapshots).round().astype(int)
 
     site_properties = _get_site_properties(reference)
     snapshots = [
@@ -559,8 +548,8 @@ def select_md_snapshots(
         np.array([_get_displacements(all_coords[idx], reference) for idx in indices]),
         reference,
     )
-    health = _assess_trajectory(all_coords, all_energies, reference, temperature)
-    if not health.is_stable:
+    health = _assess_trajectory(all_coords, all_energies, reference, time_step)
+    if health.verdict != "stable":
         warnings.warn(
             f"The MD trajectory did not stay at the reference structure (verdict: "
             f"{health.verdict}). The fitted force constants may not describe it.",
@@ -568,7 +557,7 @@ def select_md_snapshots(
         )
     return {
         "structures": [*snapshots, reference],
-        "snapshot_times": [idx * time_step / 1000 for idx in indices],
+        "snapshot_times": [(idx + 1) * time_step / 1000 for idx in indices],
         "md_time": n_frames * time_step / 1000,
         "rms_displacement": float(np.sqrt(np.mean(np.sum(disps**2, axis=2)))),
         "trajectory_health": health.model_dump(),
@@ -593,7 +582,9 @@ def _get_rms_displacement(phonon: Phonopy, temperature: float, tol: float) -> fl
     inv_sqrt_mass = 1 / np.sqrt(masses)
     dynmat = force_constants * np.outer(inv_sqrt_mass, inv_sqrt_mass)
     eigvals, eigvecs = np.linalg.eigh((dynmat + dynmat.T) / 2)
-    frequencies = np.sign(eigvals) * np.sqrt(np.abs(eigvals)) * get_factor("vasp")
+    frequencies = (
+        np.sign(eigvals) * np.sqrt(np.abs(eigvals)) * phonon.unit_conversion_factor
+    )
     keep = frequencies > tol
     weights = np.sum(eigvecs[:, keep] ** 2 / masses[:, None], axis=0)
     msd = kB * temperature * np.sum(weights / eigvals[keep])
@@ -621,7 +612,7 @@ def fit_finite_temperature_phonons(
     md_force_field_name: str | None = None,
     md_force_field_kwargs: dict | None = None,
     md_uuids: list[str] | None = None,
-    md_dirs: list[str] | None = None,
+    md_job_dirs: list[str] | None = None,
     optimization_run_uuid: str | None = None,
     optimization_run_job_dir: str | None = None,
     born_run_uuid: str | None = None,
@@ -632,7 +623,7 @@ def fit_finite_temperature_phonons(
     npt_equilibration_time: float | None = None,
     npt_trajectory_health: dict | None = None,
     npt_uuid: str | None = None,
-    npt_dir: str | None = None,
+    npt_job_dir: str | None = None,
     fixed_cell_relax_uuid: str | None = None,
     fixed_cell_relax_job_dir: str | None = None,
     rotational_sum_rule: str | None = "BHH",
@@ -693,7 +684,7 @@ def fit_finite_temperature_phonons(
         Keyword arguments of the force field calculator of the MD.
     md_uuids: list[str] | None
         UUIDs of the MD jobs.
-    md_dirs: list[str] | None
+    md_job_dirs: list[str] | None
         Directories of the MD jobs.
     optimization_run_uuid: str | None
         UUID of the relaxation.
@@ -715,7 +706,7 @@ def fit_finite_temperature_phonons(
         Check of the NPT trajectory.
     npt_uuid: str | None
         UUID of the NPT MD job.
-    npt_dir: str | None
+    npt_job_dir: str | None
         Directory of the NPT MD job.
     fixed_cell_relax_uuid: str | None
         UUID of the relaxation of the atoms in the cell from the NPT MD.
@@ -746,9 +737,6 @@ def fit_finite_temperature_phonons(
     FiniteTemperaturePhononDoc
     """
     supercell_matrix = np.array(supercell_matrix)
-    if not np.allclose(supercell_matrix, np.diag(np.diag(supercell_matrix))):
-        raise ValueError("pheasy needs a diagonal supercell matrix.")
-
     structure = structure.get_sorted_structure()
     if born is not None and len(born) != len(structure):
         raise ValueError("The number of Born charges is not the number of atoms.")
@@ -757,15 +745,6 @@ def fit_finite_temperature_phonons(
 
     forces = np.array(displacement_data["forces"])
     structures = displacement_data["displaced_structures"]
-    if len(structures) != len(snapshot_data["snapshot_times"]) + 1:
-        raise ValueError(
-            "The phonon displacement calculations must be the snapshots followed "
-            "by the undisplaced supercell."
-        )
-    if not np.allclose(structures[-1].frac_coords, supercell.frac_coords, atol=1e-6):
-        raise ValueError(
-            "The last phonon displacement calculation is not the undisplaced supercell."
-        )
     residual_forces = forces[-1]
     fit_forces = forces[:-1] - residual_forces
     disps = np.array(
@@ -778,12 +757,8 @@ def fit_finite_temperature_phonons(
     np.save(_DEFAULT_FILE_PATHS["harmonic_displacements"], disps)
     np.save(_DEFAULT_FILE_PATHS["harmonic_force_matrix"], fit_forces)
 
-    # Remove the files of an earlier fit. pheasy appends to its log, and a failed
-    # fit would leave the old force constants behind.
     log_file = Path(_DEFAULT_FILE_PATHS["harmonic_fit_log"])
-    log_file.unlink(missing_ok=True)
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
-    fc_file.unlink(missing_ok=True)
     _run_harmonic_fit(
         supercell_matrix,
         symprec,
@@ -815,6 +790,8 @@ def fit_finite_temperature_phonons(
             supercell_matrix=phonon.supercell_matrix,
         )
         if not np.all(np.isclose(borns, 0.0)):
+            # the factor is for forces in eV/Angstrom, as from VASP and the force
+            # fields
             phonon.nac_params = {
                 "born": borns,
                 "dielectric": epsilon,
@@ -884,7 +861,7 @@ def fit_finite_temperature_phonons(
         tol_imaginary_modes=tol_imaginary_modes,
         has_imaginary_modes=has_imaginary_modes,
         n_imaginary_modes=int(np.sum(frequencies < -tol_imaginary_modes)),
-        min_frequency=float(frequencies.min()),
+        lowest_frequency=float(frequencies.min()),
         phonon_bandstructure=bs_symm_line,
         phonon_dos=dos,
         force_constants=ForceConstants(phonon.force_constants.tolist())
@@ -893,14 +870,14 @@ def fit_finite_temperature_phonons(
         born=borns.tolist() if borns is not None else None,
         epsilon_static=epsilon.tolist() if epsilon is not None else None,
         md_uuids=md_uuids,
-        md_dirs=md_dirs,
+        md_job_dirs=md_job_dirs,
         npt_input_structure=npt_input_structure,
         pressure=pressure,
         npt_time=npt_time,
         npt_equilibration_time=npt_equilibration_time,
         npt_trajectory_health=npt_trajectory_health,
         npt_uuid=npt_uuid,
-        npt_dir=npt_dir,
+        npt_job_dir=npt_job_dir,
         fixed_cell_relax_uuid=fixed_cell_relax_uuid,
         fixed_cell_relax_job_dir=fixed_cell_relax_job_dir,
         uuids=PhononUUIDs(
