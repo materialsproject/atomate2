@@ -38,6 +38,7 @@ Support is provided for the following models, which can be selected using `atoma
 | MACE-MP-0 | `MACE` or `MACE_MP_0` (recommended) | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
 | MACE-MP-0b3 | `MACE_MP_0B3` | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
 | MACE-MPA-0 | `MACE_MPA_0` | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
+| MACE-Field | `MACE_Field` | [10.1103/b116-xy8k](https://doi.org/10.1103/b116-xy8k) | Born effective charges and dielectric tensor only, via `ForceFieldDielectricMaker`. Needs the MACE-Field fork of `mace_torch` and a model file. [See notes below.](#mace-field-notes) |
 | MatPES-PBE | `MATPES_PBE` | [10.48550/arXiv.2503.04070](https://doi.org/10.48550/arXiv.2503.04070) | Relies on `matgl`. Defaults to TensorNet architecture, but can also use M3GNet or CHGNet architectures via kwargs. See `atomate2.forcefields.utils._DEFAULT_CALCULATOR_KWARGS` for more options. |
 | MatPES-r<sup>2</sup>SCAN | `MATPES_R2SCAN`| [10.48550/arXiv.2503.04070](https://doi.org/10.48550/arXiv.2503.04070) | Relies on `matgl`. Defaults to TensorNet architecture, but can also use M3GNet or CHGNet architectures via kwargs. See `atomate2.forcefields.utils._DEFAULT_CALCULATOR_KWARGS` for more options. |
 | MatterSim | `MatterSim` | [arXiv:2405.04967](https://arxiv.org/abs/2405.04967) | Requires the `mattersim` package |
@@ -72,6 +73,37 @@ Note that one can also specify `force_field_name = {"@module": ...,"@callable": 
 However, this may not be preserved in future versions, and `calculator_meta` is preferred.
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
+
+## Notes on MACE-Field {#mace-field-notes}
+
+[MACE-Field](https://doi.org/10.1103/b116-xy8k) gives the Born effective charges and the high-frequency dielectric tensor of inorganic crystals.
+`ForceFieldDielectricMaker` computes them, and the phonon workflows use them for the non-analytical correction when it is set as `born_maker`.
+MACE-Field is a fork of MACE that installs as `mace_torch`, so it cannot be installed together with MACE.
+It is in the `strict-forcefields-mace-field` extra.
+The model file has to be downloaded from the [MACE-Field releases](https://github.com/mdi-group/mace-field/releases) and passed as `model`:
+
+```py
+from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldDielectricMaker
+
+born_maker = ForceFieldDielectricMaker(
+    calculator_kwargs={"model": "MACEField-MH-0-omat-dielectric.model"}
+)
+flow = PhononMaker(born_maker=born_maker).make(structure)
+```
+
+The model head "mp-dielectric" is used by default.
+The dielectric tensor is 1 + chi, with chi the electronic susceptibility of the model.
+
+```{warning}
+This feature is new and has not been tested widely.
+It might still change in future versions.
+```
+
+We compared it with the DFPT results in the Materials Project's Harmonic Phonon Database for NaCl, KCl, MgO and Bi4S3N2.
+For NaCl, KCl and MgO, which are likely in its training data, the Born charges agree to 0.02 e and the dielectric constants to about 5%.
+For Bi4S3N2, the Born charges are about 15% too small and the dielectric tensor is off by up to 10%.
+The authors report a dielectric constant about 10% too large for alpha-quartz.
 
 ## Notes on FairChem (Meta) models {#fairchem-notes}
 

@@ -16,10 +16,15 @@ from emmet.core.phonon import (
 )
 from jobflow import Flow, JobStore, run_locally
 from numpy.testing import assert_allclose
+from pymatgen.core import Lattice
 from pymatgen.core.structure import Structure
 
 from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.jobs import (
+    ForceFieldDielectricMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 from atomate2.forcefields.utils import MLFF
 
 from ..conftest import mlff_is_installed  # noqa: TID252
@@ -286,3 +291,28 @@ def test_ext_load_phonon_initialization():
     assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
     assert maker.static_energy_maker.ase_calculator_name == "mace_mp"
     assert maker.phonon_displacement_maker.ase_calculator_name == "mace_mp"
+
+
+def test_phonon_wf_force_field_born_charges(clean_dir, fake_dielectric_calculator):
+    """Born charges from a force field dielectric job enter the NAC."""
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(4.17), ["Ni", "O"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+    ).get_primitive_structure()
+    emt = {"@module": "ase.calculators.emt", "@callable": "EMT"}
+    flow = PhononMaker(
+        bulk_relax_maker=None,
+        static_energy_maker=None,
+        phonon_displacement_maker=ForceFieldStaticMaker(force_field_name=emt),
+        born_maker=ForceFieldDielectricMaker(),
+        min_length=8,
+        create_thermal_displacements=False,
+        store_force_constants=False,
+    ).make(structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    doc = responses[flow[-1].uuid][1].output
+
+    assert np.array(doc.born) == pytest.approx(
+        np.array([2, -2])[:, None, None] * np.eye(3)
+    )
+    assert np.array(doc.epsilon_static) == pytest.approx(4 * np.eye(3))
+    assert doc.phonon_bandstructure.has_nac

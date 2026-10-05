@@ -3,13 +3,18 @@ from __future__ import annotations
 import hashlib
 import tempfile
 import urllib.request
+from importlib import import_module
+from importlib.util import find_spec
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import numpy as np
 import pytest
 import torch
+from ase.calculators.calculator import Calculator, all_changes
 from emmet.core.utils import get_hash_blocked
 
+from atomate2.forcefields.jobs import ForceFieldDielectricMaker
 from atomate2.forcefields.utils import MLFF, _get_pkg_version
 
 if TYPE_CHECKING:
@@ -21,6 +26,10 @@ _INSTALLED_MLFF: dict[str, bool] = {
     )
     for mlff in MLFF
 }
+# the MACE-Field fork installs as mace-torch, so only its model class tells them apart
+_INSTALLED_MLFF["MACE_Field"] = find_spec("mace") is not None and hasattr(
+    import_module("mace.modules.extensions"), "MACEField"
+)
 
 
 def mlff_is_installed(mlff: str | MLFF) -> bool:
@@ -53,3 +62,30 @@ def get_deepmd_pretrained_model_path(test_dir: Path) -> Path:
         raise RuntimeError(f"MD5 mismatch: {file_md5} != {ref_md5}")
     yield Path(local_path.name)
     local_path.close()
+
+
+class FakeDielectricCalculator(Calculator):
+    """Born charges of +2 and -2 and a susceptibility of 3, as MACE-Field gives them.
+
+    The atoms of the first species get +2, all others -2.
+    """
+
+    implemented_properties = ("energy", "becs", "polarizability")
+
+    def calculate(self, atoms=None, properties=None, system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        sign = np.where(self.atoms.numbers == self.atoms.numbers[0], 1.0, -1.0)
+        self.results = {
+            "energy": 0.0,
+            "becs": (2 * sign[:, None, None] * np.eye(3)).reshape(-1, 9),
+            "polarizability": 3 * np.eye(3),
+        }
+
+
+@pytest.fixture
+def fake_dielectric_calculator(monkeypatch):
+    monkeypatch.setattr(
+        ForceFieldDielectricMaker,
+        "_get_calculator",
+        lambda _self: FakeDielectricCalculator(),
+    )
