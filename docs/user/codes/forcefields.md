@@ -114,7 +114,7 @@ from jobflow import run_locally
 from atomate2.forcefields.flows.calphad import CalphadMaker
 
 maker = CalphadMaker.from_force_field_name(
-    "MACE-MP-0", melt_temperature=4000, liquid_temperature=3500
+    "MACE-MP-0", melt_temperature=4500, liquid_temperature=2800
 )
 maker.lattices = ["FCC_A1", "HCP_A3", "NI3SN_D019", "NI4MO_D1A", "LIQUID"]
 maker.terms["NI3SN_D019"] = ["1,0:1,0", "2,0:1,0"]
@@ -126,10 +126,15 @@ tdb = responses[flow.output.uuid][1].output.tdb
 
 The liquid temperatures depend on the system, so there are no defaults.
 Choose `melt_temperature` high enough that every composition melts with the force field.
-Choose `liquid_temperature` above the force field liquidus.
+All compositions are then run at the same `liquid_temperature`.
+Energies taken at a different temperature for each composition would add the different heat capacities of the liquids to the mixing energy.
+The liquid mixing terms still depend on `liquid_temperature`.
+For Ni-Re with GRACE-2L-OMAT, L0 of the liquid changes by about −3.6 J/mol per K.
+Choose `liquid_temperature` as low as possible while every composition stays liquid during the run, which may be below the melting point of the pure elements.
 Check `mean_squared_displacement` of each liquid calculation in the output.
 In a liquid it grows with the length of the run.
 In a crystal it stays at the size of the thermal vibrations, well below 1 Å².
+A liquid that crystallizes during the run also drops in energy, which shows in the energies of the liquid MD job.
 Check also `is_force_converged` and `relaxation_strain` of each solid calculation.
 The ATAT `checkrelax` help calls a `relaxation_strain` above 0.1 too large for a cluster expansion.
 
