@@ -71,6 +71,9 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     Parameters
     ----------
     name: str
@@ -169,7 +172,7 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
 
     @property
     def prev_calc_dir_argname(self) -> str | None:
-        """Name of the argument that passes prev_dir to the phonon displacement maker.
+        """Name of the prev_dir argument of the phonon displacement and Born makers.
 
         Returns
         -------
@@ -177,7 +180,7 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         """
         return "prev_dir"
 
-    def get_md_maker(self, n_steps: int) -> MDMaker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> MDMaker:
         """
         Get the VASP MD maker of one MD job.
 
@@ -185,6 +188,8 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         ----------
         n_steps: int
             Number of MD steps of the job.
+        index: int
+            Position of the job in the MD, counted from 0. Unused.
 
         Returns
         -------

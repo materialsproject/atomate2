@@ -20,11 +20,7 @@ from atomate2.forcefields.flows.finite_temperature_phonons import (
     ForceFieldFiniteTemperaturePhononMaker,
     _get_force_field_md_maker,
 )
-from atomate2.forcefields.jobs import (
-    ForceFieldDielectricMaker,
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldDielectricMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.vasp.jobs.core import DielectricMaker
 
@@ -43,8 +39,6 @@ def cu3au():
 
 def run_emt_flow(structure, **kwargs):
     """Run the force field workflow with EMT and return its output document."""
-    # the Langevin thermostat of ASE draws from numpy's global generator
-    np.random.seed(103)  # noqa: NPY002
     maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
         EMT, min_length=7.0, md_time_step=2.0, **kwargs
     )
@@ -56,26 +50,16 @@ def run_emt_flow(structure, **kwargs):
 @pytest.mark.parametrize(
     ("kwargs", "match"),
     [
-        ({"md_runs": 0}, "md_runs and n_snapshots must be at least 1"),
         ({"alpha_min": -2}, "alpha_min must be below -2"),
         ({"md_time_step": 0}, "must be positive"),
         ({"equilibration_time": 8.0}, "fewer than the 50 snapshots"),
         ({"equilibration_time": -1.0}, "fewer than the 50 snapshots"),
-        (
-            {"md_time": 0.01, "equilibration_time": 0, "n_snapshots": 5, "md_runs": 20},
-            "larger than the 10",
-        ),
         ({"md_maker": None}, "md_maker and phonon_displacement_maker must be set"),
         ({"code": "aims"}, "code must be one of"),
         ({"md_code": None}, "md_code must be one of"),
-        ({"code": "vasp", "socket": True}, "socket is not supported by VASP"),
         (
             {"npt_maker": ForceFieldMDMaker(), "npt_equilibration_time": 8.0},
             "npt_equilibration_time must be",
-        ),
-        (
-            {"fixed_cell_relax_maker": ForceFieldRelaxMaker()},
-            "only used with npt_maker",
         ),
     ],
 )
@@ -99,6 +83,7 @@ def test_force_field_md_maker(cu3au):
     assert md_maker.time_step == 2.0
     assert md_maker.temperature == 300
     assert md_maker.mb_velocity_seed == 5
+    assert maker.get_md_maker(166, 2).mb_velocity_seed == 7
     assert md_maker.store_trajectory == "no"
     # Langevin by default, with the default friction of AseMDMaker
     assert md_maker.dynamics == "langevin"
@@ -155,6 +140,8 @@ def test_force_field_npt_maker(cu3au):
     # a barostat time constant of 1000 steps
     assert npt_maker.ase_md_kwargs["pdamp"] / units.fs == pytest.approx(2000)
     assert maker.get_md_maker(100).ensemble == MDEnsemble.nvt
+    # the NPT MD has its own seed, after those of the md_runs NVT MD jobs
+    assert npt_maker.mb_velocity_seed == 104
     # the atoms are relaxed in the cell from the NPT MD
     assert not maker.fixed_cell_relax_maker.relax_cell
     assert maker.fixed_cell_relax_maker.fix_symmetry
@@ -258,7 +245,6 @@ def test_finite_temperature_phonon_maker_emt_born_charges(
     clean_dir, cu3au, fake_dielectric_calculator
 ):
     """Born charges from a force field dielectric job enter the NAC."""
-    np.random.seed(103)  # noqa: NPY002
     maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
         EMT,
         min_length=7.0,

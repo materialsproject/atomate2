@@ -74,12 +74,14 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     rest of the trajectory. The phonon displacement maker computes the forces on
     these snapshots and on the undisplaced supercell. The displacements of the
     snapshots are measured from the relaxed positions. pheasy fits one set of
-    second-order force constants to the displacements and forces with LASSO, as
-    in the temperature-dependent effective potential method. These force
-    constants contain the anharmonic effects at the temperature and at the
-    volume of the relaxed structure. Thermal expansion is not included. They
-    give the phonon band structure and density of states. Imaginary modes are
-    reported, not removed.
+    second-order force constants to the displacements and forces with LASSO.
+    Fitting effective harmonic force constants to MD is the idea of the
+    temperature-dependent effective potential method. The force constants
+    include the effect of the anharmonic forces on the frequencies, at the
+    temperature and at the volume of the relaxed structure. They give no
+    phonon lifetimes. The MD is classical. Thermal expansion is not included.
+    The force constants give the phonon band structure and density of states.
+    Imaginary modes are reported, not removed.
 
     If npt_maker is set, thermal expansion is included. An NPT MD run at the
     temperature and pressure first starts from the undisplaced supercell of the
@@ -128,9 +130,10 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     thermostat: Literal["nose-hoover", "langevin"]
         Thermostat of the NVT MD. Langevin, the default, samples the canonical
         ensemble also for nearly harmonic modes (Bussi and Parrinello, Phys. Rev.
-        E 75, 056707 (2007)). A Nose-Hoover thermostat may leave such modes out
-        of equilibrium (Legoll et al., Arch. Ration. Mech. Anal. 184, 449
-        (2007)). The NPT MD does not use this setting.
+        E 75, 056707 (2007)). For a harmonic oscillator weakly coupled to a
+        Nose-Hoover thermostat, the dynamics is not ergodic (Legoll et al.,
+        Arch. Ration. Mech. Anal. 184, 449 (2007)). The NPT MD does not use
+        this setting.
     md_runs: int
         Number of consecutive MD jobs that make up the trajectory. Each job
         continues from the positions and velocities of the previous one. The
@@ -155,8 +158,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         default. A warning is raised if the chosen penalty is on either bound of
         the search.
     random_seed: int | None
-        Seed of the LASSO fit, and of the initial velocities of a force field
-        MD.
+        Seed of the LASSO fit. It also seeds the initial velocities and the
+        Langevin random forces of a force field MD. MD job i, counted from 0,
+        uses random_seed + i and the NPT MD uses random_seed + md_runs.
     tol_imaginary_modes: float
         Frequencies below -tol_imaginary_modes in THz are imaginary.
     store_force_constants: bool
@@ -227,10 +231,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                     f"{key} must be one of {sorted(SUPPORTED_CODES)}, not "
                     f"{getattr(self, key)!r}."
                 )
-        if self.socket and self.code == "vasp":
-            raise ValueError("socket is not supported by VASP.")
-        if min(self.md_runs, self.n_snapshots) < 1:
-            raise ValueError("md_runs and n_snapshots must be at least 1.")
         if self.alpha_min >= -2:
             raise ValueError(f"alpha_min must be below -2, not {self.alpha_min}.")
         if min(self.temperature, self.md_time, self.md_time_step) <= 0:
@@ -242,10 +242,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 f"The MD has {n_steps} steps. After leaving out equilibration_time, "
                 f"fewer than the {self.n_snapshots} snapshots are left."
             )
-        if self.md_runs > n_steps:
-            raise ValueError(
-                f"md_runs ({self.md_runs}) is larger than the {n_steps} MD steps."
-            )
         if self.npt_maker is not None and not (
             0 <= self.npt_equilibration_time < self.npt_time
         ):
@@ -253,8 +249,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 "npt_equilibration_time must be at least zero and shorter than "
                 "npt_time."
             )
-        if self.fixed_cell_relax_maker is not None and self.npt_maker is None:
-            raise ValueError("fixed_cell_relax_maker is only used with npt_maker.")
 
     def get_md_steps(self) -> list[int]:
         """Get the number of MD steps of each MD job."""
@@ -302,8 +296,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             if not np.allclose(matrix, np.diag(np.diag(matrix))):
                 raise ValueError("pheasy needs a diagonal supercell matrix.")
 
-        # VASP sorts the atoms by electronegativity. Sorting here as well keeps
-        # the Born charges of a force field born_maker in the order of the fit.
+        # The VASP input sets sort the atoms by electronegativity. Sorting here as
+        # well keeps the Born charges of a force field born_maker in the order of
+        # the fit.
         if not isinstance(structure, OutputReference):
             structure = structure.get_sorted_structure()
 
@@ -327,7 +322,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 structure,
                 self.min_length,
                 None,
-                force_90_degrees=True,
+                force_90_degrees=False,
                 force_diagonal=True,
             )
             jobs.append(supercell_job)
@@ -394,7 +389,10 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         reference = reference_job.output
 
         md_flow = ChainedMDMaker(
-            md_makers=[self.get_md_maker(n_steps) for n_steps in self.get_md_steps()],
+            md_makers=[
+                self.get_md_maker(n_steps, idx)
+                for idx, n_steps in enumerate(self.get_md_steps())
+            ],
         ).make(reference, prev_dir=prev_dir)
         jobs.append(md_flow)
         md_dirs = md_flow.output["dir_names"]
@@ -485,7 +483,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def get_md_maker(self, n_steps: int) -> Maker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> Maker:
         """
         Get the maker of one MD job, with the settings of this flow.
 
@@ -493,6 +491,8 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         ----------
         n_steps: int
             Number of MD steps of the job.
+        index: int
+            Position of the job in the MD, counted from 0.
 
         Returns
         -------

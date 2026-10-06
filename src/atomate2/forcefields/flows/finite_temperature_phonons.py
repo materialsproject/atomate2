@@ -46,7 +46,10 @@ def _get_md_maker(
 
 
 def _get_force_field_md_maker(
-    maker: BaseFiniteTemperaturePhononMaker, n_steps: int, npt: bool = False
+    maker: BaseFiniteTemperaturePhononMaker,
+    n_steps: int,
+    index: int = 0,
+    npt: bool = False,
 ) -> ForceFieldMDMaker:
     """
     Get the force field MD maker of one MD job of a finite-temperature flow.
@@ -59,6 +62,9 @@ def _get_force_field_md_maker(
         The finite-temperature phonon maker.
     n_steps: int
         Number of MD steps of the job.
+    index: int
+        Position of the job in the MD, counted from 0. It is added to
+        maker.random_seed. The NPT MD uses maker.md_runs instead.
     npt: bool
         If True, get the NPT MD maker from maker.npt_maker. If False, get the
         NVT MD maker from maker.md_maker.
@@ -103,7 +109,11 @@ def _get_force_field_md_maker(
         traj_file_fmt="ase",
         traj_interval=1,
         store_trajectory="no",
-        mb_velocity_seed=maker.random_seed,
+        mb_velocity_seed=(
+            None
+            if maker.random_seed is None
+            else maker.random_seed + (maker.md_runs if npt else index)
+        ),
         zero_linear_momentum=True,
     )
 
@@ -118,20 +128,23 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     another one. The MD writes an ASE trajectory file with a frame at every
     time step. The snapshots are read from this file, and the trajectory is not
     stored in the output document of the MD job. The Langevin thermostat has
-    the default friction of :obj:`.AseMDMaker`, 10 ps^-1. Its random forces
-    come from numpy's global random number generator, so two runs give
-    different trajectories. The Nose-Hoover thermostat is ASE's
-    NoseHooverChainNVT with one thermostat variable, like MDALGO = 2 in VASP.
-    Its time constant gives a period of about 40 time steps, like SMASS = 0 in
-    VASP. The initial velocities of the first MD job follow the
-    Maxwell-Boltzmann distribution, seeded with random_seed, with zero total
-    momentum. The NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover
-    thermostat and barostat that change the whole cell, whatever the
-    thermostat setting (Martyna et al., J. Chem. Phys. 101, 4177 (1994)). Its
-    thermostat time constant is that of the Nose-Hoover thermostat above, and
-    its barostat time constant is 1000 time steps.
+    the default friction of :obj:`.AseMDMaker`, 10 ps^-1. The Nose-Hoover
+    thermostat is ASE's NoseHooverChainNVT with one thermostat variable, like
+    MDALGO = 2 in VASP. Its time constant gives a period of about 40 time
+    steps, like SMASS = 0 in VASP. The initial velocities of the first MD job
+    follow the Maxwell-Boltzmann distribution, with zero total momentum. The
+    NPT MD, if any, uses ASE's MTKNPT, a Nose-Hoover thermostat and barostat
+    that change the whole cell, whatever the thermostat setting (Martyna et
+    al., J. Chem. Phys. 101, 4177 (1994)). Its thermostat time constant is
+    that of the Nose-Hoover thermostat above, and its barostat time constant
+    is 1000 time steps. MD job i, counted from 0, seeds its initial velocities
+    and its Langevin random forces with random_seed + i. The NPT MD uses
+    random_seed + md_runs.
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
+
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
 
     Parameters
     ----------
@@ -146,14 +159,17 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         DielectricMaker. It is None by default, as in the force field pheasy
         phonon workflow.
     npt_maker: .ForceFieldMDMaker | None
-        Maker for the NPT MD. It must not set dynamics or ase_md_kwargs. None
-        skips the NPT MD.
+        Maker for the NPT MD. The flow sets the same settings as for md_maker,
+        and the pressure. It must not set dynamics or ase_md_kwargs. None skips
+        the NPT MD.
     fixed_cell_relax_maker: .ForceFieldRelaxMaker | None
         Maker for the relaxation of the atoms in the cell from the NPT MD. It
         must keep the cell.
     md_maker: .ForceFieldMDMaker
-        Maker for the MD. It must not set dynamics or ase_md_kwargs, since the
-        flow sets the thermostat.
+        Maker for the MD. The flow sets its ensemble, temperature, n_steps,
+        time_step, dynamics, ase_md_kwargs, traj_file, traj_file_fmt,
+        traj_interval, store_trajectory, mb_velocity_seed and
+        zero_linear_momentum. It must not set dynamics or ase_md_kwargs.
     phonon_displacement_maker: .ForceFieldStaticMaker
         Maker for the static calculations on the snapshots and the undisplaced
         supercell.
@@ -184,13 +200,14 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
 
     @property
     def prev_calc_dir_argname(self) -> None:
-        """Name of the argument that passes prev_dir to the phonon displacement maker.
+        """Name of the prev_dir argument of the phonon displacement and Born makers.
 
-        Force field makers take no previous directory.
+        Force field makers take no previous directory, so it is None. A VASP
+        born_maker then runs without a previous directory.
         """
         return
 
-    def get_md_maker(self, n_steps: int) -> ForceFieldMDMaker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> ForceFieldMDMaker:
         """
         Get the force field MD maker of one MD job.
 
@@ -198,12 +215,14 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         ----------
         n_steps: int
             Number of MD steps of the job.
+        index: int
+            Position of the job in the MD, counted from 0.
 
         Returns
         -------
         ForceFieldMDMaker
         """
-        return _get_force_field_md_maker(self, n_steps)
+        return _get_force_field_md_maker(self, n_steps, index)
 
     def get_npt_maker(self, n_steps: int) -> ForceFieldMDMaker:
         """
@@ -305,6 +324,9 @@ class VaspMDMLFFStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
     the undisplaced supercell come from a force field, MACE-MP-0 by default.
     Use :obj:`from_force_field_name` to use another one.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     Parameters
     ----------
     name: str
@@ -335,9 +357,10 @@ class VaspMDMLFFStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
 
     @property
     def prev_calc_dir_argname(self) -> None:
-        """Name of the argument that passes prev_dir to the phonon displacement maker.
+        """Name of the prev_dir argument of the phonon displacement and Born makers.
 
-        Force field makers take no previous directory.
+        Force field makers take no previous directory, so it is None. A VASP
+        born_maker then runs without a previous directory.
         """
         return
 
@@ -396,6 +419,9 @@ class MLFFMDVaspStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
     force field. The MD settings are those of
     :obj:`ForceFieldFiniteTemperaturePhononMaker`.
 
+    This workflow is new and has not been tested widely. It might still change
+    in future versions.
+
     Parameters
     ----------
     name: str
@@ -407,8 +433,10 @@ class MLFFMDVaspStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
         for the non-analytical correction. It is a DielectricMaker by default,
         as in the VASP pheasy phonon workflow. None skips it.
     md_maker: .ForceFieldMDMaker
-        Maker for the MD. It must not set dynamics or ase_md_kwargs, since the
-        flow sets the thermostat.
+        Maker for the MD. The flow sets its ensemble, temperature, n_steps,
+        time_step, dynamics, ase_md_kwargs, traj_file, traj_file_fmt,
+        traj_interval, store_trajectory, mb_velocity_seed and
+        zero_linear_momentum. It must not set dynamics or ase_md_kwargs.
     npt_maker: .ForceFieldMDMaker | None
         Maker for the NPT MD, under the same conditions as md_maker. None skips
         the NPT MD.
@@ -423,7 +451,7 @@ class MLFFMDVaspStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
     md_maker: Maker = field(default_factory=lambda: _get_md_maker(_DEFAULT_FORCE_FIELD))
     md_code: str = "forcefields"
 
-    def get_md_maker(self, n_steps: int) -> ForceFieldMDMaker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> ForceFieldMDMaker:
         """
         Get the force field MD maker of one MD job.
 
@@ -431,12 +459,14 @@ class MLFFMDVaspStaticFiniteTemperaturePhononMaker(FiniteTemperaturePhononMaker)
         ----------
         n_steps: int
             Number of MD steps of the job.
+        index: int
+            Position of the job in the MD, counted from 0.
 
         Returns
         -------
         ForceFieldMDMaker
         """
-        return _get_force_field_md_maker(self, n_steps)
+        return _get_force_field_md_maker(self, n_steps, index)
 
     def get_npt_maker(self, n_steps: int) -> ForceFieldMDMaker:
         """

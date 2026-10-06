@@ -41,6 +41,7 @@ from atomate2.common.schemas.finite_temperature_phonons import (
 )
 from atomate2.common.schemas.phonons import (
     ForceConstants,
+    PhononComputationalSettings,
     PhononJobDirs,
     PhononUUIDs,
     _set_nac_params,
@@ -73,8 +74,7 @@ _SHIFT_RATIO_LIMIT = 1.5
 # Rule of thumb: the mean positions are only checked if the second half of the
 # trajectory lasts at least one period of a 1 THz vibration.
 _MIN_SHIFT_WINDOW = 1.0  # ps
-# Three sigma rule: without a drift, a change this large has a probability below
-# 5% for any unimodal distribution. Pukelsheim, Am. Stat. 48, 88 (1994)
+# Rule of thumb: three standard deviations of the energy of single frames
 _DRIFT_SIGMA = 3.0
 # Rule of thumb: a third of a typical nearest-neighbor distance of 3 Angstrom,
 # about twice the vibration at the Lindemann limit for that distance.
@@ -246,14 +246,16 @@ def _assess_trajectory(
     - A root mean square displacement above 0.5 Angstrom in the first 10
       frames means the atoms are not in the order of the reference.
     - A root mean square vibration u_vib above 0.15 of the nearest-neighbor
-      distance means the structure melted.
+      distance means the structure melted. u_vib and u_ref are measured in
+      the second half of the frames.
     - A total displacement u_ref above 1.5 times u_vib means the mean
       positions moved away from the reference. This check is skipped if the
       second half of the trajectory is shorter than 1 ps.
     - A change of the mean potential energy from the second to the last
       quarter of the frames above 3 times the standard deviation of the
       energy in the last fifth means the structure transformed (falling energy)
-      or is disordering (rising energy).
+      or is disordering (rising energy). This check is skipped below 20
+      frames.
     - A root mean square displacement above 1 Angstrom in the last fifth of the
       frames points at diffusion or very soft motion.
 
@@ -834,6 +836,11 @@ def fit_finite_temperature_phonons(
         lowest_frequency=float(frequencies.min()),
         phonon_bandstructure=bs_symm_line,
         phonon_dos=dos,
+        phonopy_settings=PhononComputationalSettings(
+            npoints_band=npoints_band,
+            kpath_scheme=_KPATH_SCHEME,
+            kpoint_density_dos=kpoint_density_dos,
+        ),
         force_constants=ForceConstants(phonon.force_constants.tolist())
         if store_force_constants
         else None,

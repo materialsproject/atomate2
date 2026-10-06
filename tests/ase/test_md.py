@@ -97,6 +97,24 @@ def test_nvt_nose_hoover_chain(si_structure, clean_dir):
         maker.run_ase(si_structure)
 
 
+def test_langevin_seed(si_structure, clean_dir):
+    """mb_velocity_seed also seeds the random forces of the Langevin thermostat."""
+    si_structure.add_site_property("velocities", [[0.0, 0.0, 0.0]] * len(si_structure))
+
+    def positions(seed):
+        maker = LennardJonesMDMaker(
+            ensemble="nvt",
+            dynamics="langevin",
+            temperature=300,
+            n_steps=5,
+            mb_velocity_seed=seed,
+        )
+        return maker.run_ase(si_structure).final_mol_or_struct.cart_coords
+
+    assert positions(1) == pytest.approx(positions(1))
+    assert positions(1) != pytest.approx(positions(2))
+
+
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
 def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
     # Langevin thermostat no longer works with single atom structures in ase>3.24.x
