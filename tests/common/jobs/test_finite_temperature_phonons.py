@@ -19,6 +19,7 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 from atomate2.common.jobs.finite_temperature_phonons import (
+    ASE_TRAJECTORY_FILE,
     _assess_trajectory,
     _get_rms_displacement,
     _remove_center_of_mass,
@@ -28,7 +29,6 @@ from atomate2.common.jobs.finite_temperature_phonons import (
     get_npt_structure,
     select_md_snapshots,
 )
-from atomate2.common.jobs.md import ASE_TRAJECTORY_FILE
 
 TEMPERATURE = 300.0
 # a long time step, so that the second half of the synthetic trajectories of 400

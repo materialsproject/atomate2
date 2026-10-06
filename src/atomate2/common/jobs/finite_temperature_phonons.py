@@ -23,7 +23,7 @@ from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-from atomate2.common.jobs.md import ASE_TRAJECTORY_FILE, _get_site_properties
+from atomate2.common.jobs.md import _get_site_properties
 from atomate2.common.jobs.pheasy import (
     _DEFAULT_FILE_PATHS,
     _check_lasso_alpha,
@@ -55,6 +55,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# file of the force field MD trajectory, written in the ASE format
+ASE_TRAJECTORY_FILE = "md_trajectory.traj"
 _KPATH_SCHEME = "seekpath"
 
 # Limits of the trajectory check

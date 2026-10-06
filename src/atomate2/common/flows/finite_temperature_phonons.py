@@ -395,7 +395,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
 
         md_flow = ChainedMDMaker(
             md_makers=[self.get_md_maker(n_steps) for n_steps in self.get_md_steps()],
-            md_code=self.md_code,
         ).make(reference, prev_dir=prev_dir)
         jobs.append(md_flow)
         md_dirs = md_flow.output["dir_names"]

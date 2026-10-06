@@ -2,6 +2,7 @@ import pytest
 from jobflow import Flow, OutputReference
 from pymatgen.core import Lattice, Structure
 
+from atomate2.common.jobs.finite_temperature_phonons import ASE_TRAJECTORY_FILE
 from atomate2.forcefields.flows.finite_temperature_phonons import (
     MLFFMDVaspStaticFiniteTemperaturePhononMaker,
     VaspMDMLFFStaticFiniteTemperaturePhononMaker,
@@ -69,7 +70,8 @@ def test_vasp_flows(si_structure, maker_cls, md_code, code):
     # end of the first, and both get the relaxation directory
     assert md_1.function_args[0].uuid == reference.uuid
     assert md_2.function_args[0].uuid == restart.uuid
-    assert restart.function_args == (md_1.output.dir_name, md_code, reference.output)
+    traj_file = ASE_TRAJECTORY_FILE if md_code == "forcefields" else None
+    assert restart.function_args == (md_1.output.dir_name, reference.output, traj_file)
     for md_job in (md_1, md_2):
         assert md_job.function_kwargs["prev_dir"].uuid == relax.output.uuid
     assert maker.get_md_steps() == [4000, 4000]
