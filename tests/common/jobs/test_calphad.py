@@ -1,6 +1,7 @@
 """Tests for the sqs2tdb fit of the CALPHAD workflow."""
 
 import shutil
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -10,6 +11,7 @@ from scipy.constants import electron_volt, physical_constants
 from atomate2.common.jobs.calphad import (
     _get_relaxation_strain,
     fit_tdb,
+    get_liquid_energy,
     get_sqs_structures,
 )
 
@@ -27,6 +29,25 @@ def test_get_relaxation_strain():
     assert _get_relaxation_strain(initial, relaxed) == pytest.approx(0.0791, abs=1e-4)
     scaled = Structure(Lattice(4.3 * np.eye(3)), ["Cu"], [[0, 0, 0]])
     assert _get_relaxation_strain(initial, scaled) == pytest.approx(0)
+
+
+def test_get_liquid_energy():
+    """One of two Cu atoms moves by 0.4 A, then the whole cell moves by 1 A."""
+    lattice = Lattice(10 * np.eye(3))
+    coords = np.array([[0.0, 0.0, 0.0], [0.5, 0.5, 0.5]])
+    moved = coords + np.array([[0.04, 0, 0], [0, 0, 0]])
+    frames = [coords, moved, moved + np.array([0, 0.1, 0])]
+    steps = [
+        SimpleNamespace(structure=Structure(lattice, ["Cu", "Cu"], c), energy=e)
+        for c, e in zip(frames, (8.0, 16.0, 24.0), strict=True)
+    ]
+    md_output = SimpleNamespace(
+        output=SimpleNamespace(ionic_steps=steps), dir_name="md"
+    )
+    result = get_liquid_energy.original(md_output, "LIQUID", "folder", 0, 8)
+    assert result["energy"] == pytest.approx(2.0)
+    # relative to the centre of mass each atom moved 0.2 A
+    assert result["mean_squared_displacement"] == pytest.approx(0.04)
 
 
 @needs_atat

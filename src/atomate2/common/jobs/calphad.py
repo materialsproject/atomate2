@@ -107,13 +107,15 @@ def run_sqs_calculations(
     liquid_melt_maker: Maker,
     liquid_md_maker: Maker,
     n_equilibration_frames: int,
+    liquid_supercell: int,
 ) -> Response:
     """
     Relax each solid SQS and run MD for each liquid SQS.
 
-    Each liquid SQS is first melted with liquid_melt_maker. The melt is then run
-    with liquid_md_maker. The first n_equilibration_frames frames of that run are
-    discarded before the energy is averaged.
+    Each liquid SQS is repeated liquid_supercell times along each lattice vector
+    and melted with liquid_melt_maker. The melt is then run with liquid_md_maker.
+    The first n_equilibration_frames frames of that run are discarded before the
+    energy is averaged.
 
     Parameters
     ----------
@@ -128,6 +130,8 @@ def run_sqs_calculations(
         of each frame.
     n_equilibration_frames : int
         Number of frames of the liquid MD that are discarded.
+    liquid_supercell : int
+        Number of repeats of the liquid SQS along each lattice vector.
 
     Returns
     -------
@@ -140,10 +144,14 @@ def run_sqs_calculations(
     for calc in sqs:
         name = f" {calc['lattice']} {calc['folder']}"
         if calc["lattice"] == "LIQUID":
-            melt = liquid_melt_maker.make(calc["structure"])
+            melt = liquid_melt_maker.make(calc["structure"] * liquid_supercell)
             md = liquid_md_maker.make(melt.output.structure)
             energy = get_liquid_energy(
-                md.output, calc["lattice"], calc["folder"], n_equilibration_frames
+                md.output,
+                calc["lattice"],
+                calc["folder"],
+                n_equilibration_frames,
+                liquid_supercell**3,
             )
             for new_job in (melt, md, energy):
                 new_job.append_name(name)
@@ -168,13 +176,19 @@ def run_sqs_calculations(
 
 @job
 def get_liquid_energy(
-    md_output: Any, lattice: str, folder: str, n_equilibration_frames: int
+    md_output: Any,
+    lattice: str,
+    folder: str,
+    n_equilibration_frames: int,
+    n_cells: int = 1,
 ) -> dict[str, Any]:
     """
     Get the mean potential energy and the mean squared displacement of a liquid MD.
 
-    The displacement between two frames is the minimum image of the change in
-    fractional coordinates, converted with the lattice of the later frame.
+    The energy is divided by n_cells, the number of SQS cells in the MD cell. The
+    displacement between two frames is the minimum image of the change in
+    fractional coordinates, converted with the lattice of the later frame. The
+    displacement of the centre of mass is removed.
 
     Parameters
     ----------
@@ -186,6 +200,8 @@ def get_liquid_energy(
         Name of the ATAT folder of the structure.
     n_equilibration_frames : int
         Number of frames at the start that are discarded.
+    n_cells : int
+        Number of SQS cells in the MD cell.
 
     Returns
     -------
@@ -198,10 +214,12 @@ def get_liquid_energy(
     for previous, current in pairwise(structures):
         delta = current.frac_coords - previous.frac_coords
         displacement += (delta - np.round(delta)) @ current.lattice.matrix
+    masses = np.array([site.specie.atomic_mass for site in structures[0]])
+    displacement -= masses @ displacement / masses.sum()
     return {
         "lattice": lattice,
         "folder": folder,
-        "energy": float(np.mean([step.energy for step in steps])),
+        "energy": float(np.mean([step.energy for step in steps])) / n_cells,
         "mean_squared_displacement": float(np.mean(np.sum(displacement**2, axis=1))),
         "dir_name": md_output.dir_name,
     }

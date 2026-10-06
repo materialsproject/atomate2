@@ -74,6 +74,9 @@ class BaseCalphadMaker(Maker):
     n_equilibration_frames : int
         Number of stored frames at the start of the liquid MD that are left out
         of the mean energy.
+    liquid_supercell : int
+        Number of repeats of each liquid SQS along each lattice vector for the
+        liquid MD. The energy is divided by the number of SQS cells.
     """
 
     name: str = "calphad"
@@ -91,6 +94,7 @@ class BaseCalphadMaker(Maker):
     liquid_melt_maker: Maker | None = None
     liquid_md_maker: Maker | None = None
     n_equilibration_frames: int = 0
+    liquid_supercell: int = 1
 
     def make(self, elements: Sequence[str]) -> Flow:
         """
@@ -114,6 +118,7 @@ class BaseCalphadMaker(Maker):
             self.liquid_melt_maker,
             self.liquid_md_maker,
             self.n_equilibration_frames,
+            self.liquid_supercell,
         )
         fit = fit_tdb(
             elements,

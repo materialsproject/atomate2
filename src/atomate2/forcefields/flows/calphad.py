@@ -28,6 +28,7 @@ def _get_liquid_md_maker(
     """Get an isotropic NPT maker at zero pressure with a 2 fs time step."""
     return ForceFieldMDMaker(
         store_trajectory=StoreTrajectoryOption.NO,
+        zero_linear_momentum=True,
         ensemble=MDEnsemble.npt,
         # AseMDMaker takes the class, its type hint says an instance
         dynamics=IsotropicMTKNPT,  # type: ignore[arg-type]
@@ -54,7 +55,7 @@ def _get_makers(
     }
     makers: dict[str, Any] = {
         "relax_maker": ForceFieldRelaxMaker(
-            relax_cell=True, relax_kwargs={"fmax": 0.001}, **calculator
+            relax_cell=True, steps=2000, relax_kwargs={"fmax": 0.001}, **calculator
         )
     }
     if melt_temperature is not None and liquid_temperature is not None:
@@ -77,11 +78,12 @@ class CalphadMaker(BaseCalphadMaker):
     """
     Maker to fit a CALPHAD database for a binary system with a force field.
 
-    The solid SQS are relaxed, including the cell, with fmax = 0.001 eV/A. Each
-    liquid SQS is melted for 10 ps at melt_temperature and then run for 20 ps
-    at liquid_temperature. Both runs are isotropic NPT at zero pressure with a
-    2 fs time step. The first 5 ps of the second run are left out of the mean
-    energy.
+    The solid SQS are relaxed, including the cell, with fmax = 0.001 eV/A for
+    at most 2000 steps. Each liquid SQS is doubled along each lattice
+    vector. It is melted for 10 ps at melt_temperature and then run for 20 ps at
+    liquid_temperature. Both runs are isotropic NPT at zero pressure with a 2 fs
+    time step and no net momentum. The first 5 ps of the second run are left out
+    of the mean energy.
 
     By default, all steps use MACE-MP-0. Use :obj:`from_force_field_name` to
     run every step with another force field. The liquid makers are only set
@@ -113,16 +115,20 @@ class CalphadMaker(BaseCalphadMaker):
     n_equilibration_frames : int
         Number of stored frames at the start of the liquid MD that are left out
         of the mean energy.
+    liquid_supercell : int
+        Number of repeats of each liquid SQS along each lattice vector.
     """
 
     relax_maker: ForceFieldRelaxMaker = field(
         default_factory=lambda: ForceFieldRelaxMaker(
             force_field_name=_DEFAULT_FORCE_FIELD,
             relax_cell=True,
+            steps=2000,
             relax_kwargs={"fmax": 0.001},
         )
     )
     n_equilibration_frames: int = 250
+    liquid_supercell: int = 2
 
     @classmethod
     def from_force_field_name(

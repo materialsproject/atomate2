@@ -98,10 +98,12 @@ export PATH=$PWD/atat/src:$PATH
 
 The special quasirandom structures (SQS) of each lattice come from the ATAT database.
 The default lattices are FCC_A1, BCC_A2, HCP_A3 and LIQUID.
-Each solid SQS is relaxed, including the cell, with `fmax=0.001` eV/Å.
-Each liquid SQS is melted for 10 ps at `melt_temperature`.
+Each solid SQS is relaxed, including the cell, with `fmax=0.001` eV/Å for at most 2000 steps.
+Each liquid SQS is doubled along each lattice vector, which gives 256 atoms for the 32-atom SQS of the database.
+It is melted for 10 ps at `melt_temperature`.
 It is then run for 20 ps at `liquid_temperature`, and the first 5 ps are left out of the mean potential energy.
-Both liquid runs are isotropic NPT at zero pressure.
+Both liquid runs are isotropic NPT at zero pressure, with no net momentum.
+The mean squared displacement leaves out the motion of the centre of mass.
 Finally, `sqs2tdb` fits the energies of each lattice and writes one TDB file.
 
 ```py
