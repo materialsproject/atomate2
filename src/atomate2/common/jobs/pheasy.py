@@ -360,10 +360,7 @@ def _run_anharmonic_fit(
     supercell_matrix: np.ndarray,
     symprec: float,
     anhar_max_order: int,
-    # set a defaut value for the cutoff radius of each order, I recommend the default values for third- and fourth order
-    # are 6.3 and 5.3 angstroms, respectively. Those values are large enough for accurate third- and fourth-order force constant fits.
-    # and they are more efficient than using larger cutoff radii.
-    fcs_cutoff_radius: Sequence[float], 
+    fcs_cutoff_radius: Sequence[float],
     num_anhar: int,
     anhar_alpha_min: int,
     work_dir: Path,
@@ -380,9 +377,7 @@ def _run_anharmonic_fit(
 
     pheasy writes FORCE_CONSTANTS_3RD and fc3.hdf5 to work_dir, and
     FORCE_CONSTANTS_4TH and fc4.hdf5 for fourth order. The one-shot fit also
-    writes its second-order force constants, fc2.hdf5. In order to make the FCs can
-    be read correctly by SHENGBTE and FourPhonon, we force pheasy to write FCs in the 
-    text format.
+    writes its second-order force constants, fc2.hdf5.
 
     Parameters
     ----------
@@ -408,10 +403,6 @@ def _run_anharmonic_fit(
         it, the cross-validated penalty and the fitted force constants change
         from run to run on the same forces.
     """
-
-    # use the default cutoff radii if not provided by the users. In order to make the FCs fitting 
-    # more effcient and accurate, oterwise, the users can not do the high-throughput calculations efficiently.
-    
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
     base = (
         f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
