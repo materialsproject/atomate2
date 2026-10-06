@@ -429,7 +429,7 @@ The displacements are measured from the undisplaced supercell.
 Pheasy then fits the second-order force constants to them with LASSO.
 As in the pheasy phonon workflow, a `DielectricMaker` computes the Born charges and the dielectric tensor for the non-analytical correction.
 It needs the `pheasy` extra, like the pheasy phonon workflow above.
-The notebook `tutorials/finite_temperature_phonons.ipynb` runs it for six materials with three MACE potentials.
+The notebook `tutorials/finite_temperature_phonons.ipynb` runs it for seven materials with three MACE potentials.
 
 ```{warning}
 This workflow is new and has not been tested widely.
