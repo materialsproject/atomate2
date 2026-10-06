@@ -12,7 +12,7 @@ from atomate2.ase.md import MDEnsemble
 from atomate2.common.flows.finite_temperature_phonons import (
     BaseFiniteTemperaturePhononMaker,
 )
-from atomate2.common.jobs.finite_temperature_phonons import ASE_TRAJECTORY_FILE
+from atomate2.common.jobs.md import ASE_TRAJECTORY_FILE
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.vasp.flows.finite_temperature_phonons import FiniteTemperaturePhononMaker

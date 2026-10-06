@@ -18,11 +18,12 @@ from phonopy.harmonic.dynmat_to_fc import get_commensurate_points
 from phonopy.interface.vasp import write_vasp
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
-from pymatgen.io.vasp import Incar, Kpoints, Poscar, Xdatcar
+from pymatgen.io.vasp import Incar, Kpoints, Xdatcar
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
+from atomate2.common.jobs.md import ASE_TRAJECTORY_FILE, _get_site_properties
 from atomate2.common.jobs.pheasy import (
     _DEFAULT_FILE_PATHS,
     _check_lasso_alpha,
@@ -54,8 +55,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# file of the force field MD trajectory, written in the ASE format
-ASE_TRAJECTORY_FILE = "md_trajectory.traj"
 _KPATH_SCHEME = "seekpath"
 
 # Limits of the trajectory check
@@ -94,13 +93,6 @@ def _get_phonopy(
         kpath_scheme=_KPATH_SCHEME,
         code=code,
     )
-
-
-def _get_site_properties(reference: Structure) -> dict:
-    """Get the magnetic moments of the reference, the only site property kept."""
-    if "magmom" in reference.site_properties:
-        return {"magmom": reference.site_properties["magmom"]}
-    return {}
 
 
 @job
@@ -145,51 +137,6 @@ def get_md_supercell(
         supercell.scaled_positions,
         site_properties=site_properties,
     )
-
-
-@job
-def get_md_restart_structure(
-    md_dir: str, md_code: str, reference: Structure
-) -> Structure:
-    """
-    Get the final positions and velocities of an MD run.
-
-    For VASP, they are read from CONTCAR, with the velocities in Angstrom/fs.
-    For force fields, they are read from the last frame of the ASE trajectory
-    file, with the velocities in ASE units. In both cases, the velocities are a
-    site property that the next MD run starts from. The thermostat variables
-    are not carried over, so they start again from zero in the next run. The
-    magnetic moments of the reference, if any, are added as a site property.
-
-    Parameters
-    ----------
-    md_dir: str
-        Directory of the MD run.
-    md_code: str
-        Code of the MD, "vasp" or "forcefields".
-    reference: Structure
-        The undisplaced supercell the MD started from.
-
-    Returns
-    -------
-    Structure
-        The final structure, with a "velocities" site property.
-    """
-    directory = Path(strip_hostname(md_dir))
-    if md_code == "vasp":
-        structure = Poscar.from_file(zpath(str(directory / "CONTCAR"))).structure
-    else:
-        atoms = ase_read(directory / ASE_TRAJECTORY_FILE, index=-1)
-        structure = Structure(
-            atoms.cell[:],
-            atoms.get_chemical_symbols(),
-            atoms.get_positions(),
-            coords_are_cartesian=True,
-            site_properties={"velocities": atoms.get_velocities().tolist()},
-        )
-    for key, values in _get_site_properties(reference).items():
-        structure.add_site_property(key, values)
-    return structure
 
 
 def _read_vasp_md(
