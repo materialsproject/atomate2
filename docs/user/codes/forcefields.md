@@ -145,7 +145,6 @@ For lattices in the SGTE database, such as FCC_A1, HCP_A3 and LIQUID, `sqs2tdb` 
 Only the mixing terms come from the force field, so the melting points of the pure elements are those of SGTE.
 The liquid mixing terms are the excess energies at `liquid_temperature`, used at all temperatures.
 The vibrational and short-range order options of `sqs2tdb` are not used.
-On systems where `/bin/sh` is not bash, such as Ubuntu, `sqs2tdb` skips a symmetry check of the SQS of ordered lattices.
 
 The TDB file can be read with [pycalphad](https://pycalphad.org), which is installed separately:
 

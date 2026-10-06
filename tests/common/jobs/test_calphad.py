@@ -9,6 +9,7 @@ from pymatgen.core import Lattice, Structure
 from scipy.constants import electron_volt, physical_constants
 
 from atomate2.common.jobs.calphad import (
+    _copy_sqs,
     _get_relaxation_strain,
     fit_tdb,
     get_liquid_energy,
@@ -48,6 +49,14 @@ def test_get_liquid_energy():
     assert result["energy"] == pytest.approx(2.0)
     # relative to the centre of mass each atom moved 0.2 A
     assert result["mean_squared_displacement"] == pytest.approx(0.04)
+
+
+@needs_atat
+def test_copy_sqs_bump(tmp_path):
+    """The pure element end members of CSCL_B2 have the symmetry of BCC_A2."""
+    _copy_sqs(("Cu", "Ni"), ("CSCL_B2",), 1, str(tmp_path))
+    bumps = sorted(path.parent.name for path in tmp_path.glob("CSCL_B2/*/bump"))
+    assert bumps == ["sqs_lev=0_a_Cu=1,b_Cu=1", "sqs_lev=0_a_Ni=1,b_Ni=1"]
 
 
 @needs_atat

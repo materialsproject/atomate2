@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import os
 import re
 import shlex
 import subprocess
 import tempfile
+from collections import defaultdict
 from itertools import pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -18,7 +20,7 @@ from atomate2 import SETTINGS
 from atomate2.common.schemas.calphad import CalphadDoc, SqsCalculation
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Iterable, Sequence
 
     from jobflow import Maker
     from pymatgen.core import Structure
@@ -43,6 +45,66 @@ def _copy_sqs(
                 cwd=cwd,
                 check=True,
             )
+        _add_bump_files(lattice, cwd)
+
+
+def _add_bump_files(lattice: str, cwd: str) -> None:
+    """
+    Write a bump file for each SQS with a higher symmetry than in the database.
+
+    sqs2tdb -cp does this check with the shell pipe |&, which only bash 4 and
+    newer understand. Where /bin/sh is another shell, such as dash on Ubuntu or
+    bash 3.2 on macOS, it writes no bump files. Without them the fit does not
+    raise these SQS by 5 meV/atom above the equivalent higher symmetry structure.
+    """
+    # sqs2tdb reads the lower-case variable
+    atatdir = os.environ.get("atatdir") or re.sub(  # noqa: SIM112
+        r".*atatdir\s*=\s*", "", (Path.home() / ".atat.rc").read_text().split("\n")[0]
+    )
+    database = Path(atatdir, "data", "sqsdb", lattice)
+    sqs_files = {}
+    for line in (database / "sqsgen.in").read_text().splitlines():
+        level, *sites = line.split()
+        level = level.replace("level", "lev")
+        name = "_".join(["sqsdb", level, *sites])
+        sqs_files[level, _get_occupations(site.split("=") for site in sites)] = (
+            database / name / "bestsqs.out"
+        )
+
+    for str_in in Path(cwd, lattice).glob("sqs_lev=*/str.in"):
+        folder = str_in.parent
+        level, _, decoration = folder.name.removeprefix("sqs_").partition("_")
+        concentrations = defaultdict(list)
+        for entry in decoration.split(","):
+            site, _, species = entry.partition("_")
+            concentrations[site].append(species.partition("=")[2])
+        occupations = (
+            (site, ",".join(values)) for site, values in concentrations.items()
+        )
+        sqs_file = sqs_files[level, _get_occupations(occupations)]
+        if _get_symmetry_count(sqs_file) < _get_symmetry_count(str_in):
+            (folder / "bump").touch()
+
+
+def _get_occupations(sites: Iterable[Sequence[str]]) -> frozenset:
+    """Get the site occupations of an SQS from (site, "x1,x2,...") pairs."""
+    return frozenset(
+        (site, tuple(sorted(map(float, values.split(",")), reverse=True)))
+        for site, values in sites
+    )
+
+
+def _get_symmetry_count(path: Path) -> int:
+    """Get the number of symmetry operations that ATAT cellcvrt finds."""
+    with path.open() as file:
+        output = subprocess.run(
+            ["cellcvrt", "-sym"],  # noqa: S607
+            stdin=file,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    return int(output.split()[0])
 
 
 def _get_relaxation_strain(initial: Structure, relaxed: Structure) -> float:
