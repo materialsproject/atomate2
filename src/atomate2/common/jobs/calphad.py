@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 def _copy_sqs(
     elements: Sequence[str], lattices: Sequence[str], level: int, cwd: str = "."
 ) -> None:
-    """Copy the SQS of each lattice from the ATAT database into a folder."""
+    """Copy the SQS of each lattice from the ATAT database and add bump files."""
     cmd = shlex.split(SETTINGS.SQS2TDB_CMD)
     for lattice in lattices:
         # the first call only writes species.in, the second copies the structures
@@ -54,8 +54,8 @@ def _add_bump_files(lattice: str, cwd: str) -> None:
 
     sqs2tdb -cp does this check with the shell pipe |&, which only bash 4 and
     newer understand. Where /bin/sh is another shell, such as dash on Ubuntu or
-    bash 3.2 on macOS, it writes no bump files. Without them the fit does not
-    raise these SQS by 5 meV/atom above the equivalent higher symmetry structure.
+    bash 3.2 on macOS, it writes no bump files. sqs2tdb -fit raises the energy
+    of an SQS with a bump file by 5 meV/atom.
     """
     # sqs2tdb reads the lower-case variable
     atatdir = os.environ.get("atatdir") or re.sub(  # noqa: SIM112
@@ -151,7 +151,7 @@ def get_sqs_structures(
         _copy_sqs(elements, lattices, level, tmp_dir)
         return [
             {
-                "lattice": wait.parent.parent.name,
+                "lattice": lattice,
                 "folder": wait.parent.name,
                 "structure": Mcsqs.structure_from_str(
                     (wait.parent / "str.out").read_text()
@@ -242,7 +242,7 @@ def get_liquid_energy(
     lattice: str,
     folder: str,
     n_equilibration_frames: int,
-    n_cells: int = 1,
+    n_cells: int,
 ) -> dict[str, Any]:
     """
     Get the mean potential energy and the mean squared displacement of a liquid MD.
@@ -328,7 +328,7 @@ def fit_tdb(
         if key not in energies:
             raise ValueError(f"No energy for {'/'.join(key)}.")
         (wait.parent / "energy").write_text(f"{energies[key]}\n")
-    # a link is relative to the lattice folder or, for another lattice, to this one
+    # a link points into its own lattice folder or into another lattice folder
     for link in Path().glob("*/*/link"):
         target = link.read_text().strip()
         if not (Path(link.parent.parent, target).is_dir() or Path(target).is_dir()):

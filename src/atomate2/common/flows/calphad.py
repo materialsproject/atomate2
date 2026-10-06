@@ -19,6 +19,10 @@ if TYPE_CHECKING:
 
 
 @due.dcite(
+    Doi("10.1016/S0364-5916(02)80006-2"),
+    description="ATAT: the Alloy Theoretic Automated Toolkit.",
+)
+@due.dcite(
     Doi("10.1016/j.calphad.2017.05.005"),
     description="sqs2tdb: CALPHAD models from special quasirandom structures.",
 )
@@ -45,6 +49,10 @@ class BaseCalphadMaker(Maker):
     terms come from the calculations.
 
     ATAT must be installed, with its programs on the PATH.
+
+    The jobs read the energy and is_force_converged of the relaxation outputs
+    and the ionic steps of the liquid MD output, as in the force field task
+    documents. So far only force field makers give these.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
@@ -90,7 +98,7 @@ class BaseCalphadMaker(Maker):
             for lattice in ("FCC_A1", "BCC_A2", "HCP_A3", "LIQUID")
         }
     )
-    relax_maker: Maker = None
+    relax_maker: Maker | None = None
     liquid_melt_maker: Maker | None = None
     liquid_md_maker: Maker | None = None
     n_equilibration_frames: int = 0

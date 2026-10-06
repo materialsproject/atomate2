@@ -7,13 +7,10 @@ from jobflow import run_locally
 
 from atomate2.forcefields.flows.calphad import CalphadMaker
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("sqs2tdb") is None, reason="ATAT sqs2tdb is not installed"
-)
-
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 
 
+@pytest.mark.skipif(shutil.which("sqs2tdb") is None, reason="ATAT is not installed")
 def test_calphad_maker_emt(clean_dir):
     lattices = ["FCC_A1", "LIQUID"]
     maker = CalphadMaker.from_force_field_name(
@@ -42,19 +39,14 @@ def test_calphad_maker_emt(clean_dir):
     liquid = [calc for calc in doc.calculations if calc.lattice == "LIQUID"]
     # a crystal stays well below 1 A^2, the melt diffuses much further
     assert min(calc.mean_squared_displacement for calc in liquid) > 1
+    # the 32-atom liquid at 2000 K is about 0.54 eV/atom above the relaxed solid
+    solid = {calc.folder: calc.energy / len(calc.structure) for calc in solids}
+    for calc in liquid:
+        assert calc.energy / 32 - solid[calc.folder] == pytest.approx(0.54, abs=0.05)
 
-    l0 = {
-        lattice: float(
-            next(
-                line for line in doc.tdb.splitlines() if f"L({lattice},CU,NI;0)" in line
-            ).split()[3]
-        )
-        for lattice in lattices
-    }
-    # EMT mixing energy of the relaxed 32-atom SQS, 0.0211 eV/atom
-    assert l0["FCC_A1"] == pytest.approx(8168.4, abs=1)
-    # the MD trajectories differ between platforms, so the liquid value is not pinned
-    assert "LIQUID" in l0
+    line = next(line for line in doc.tdb.splitlines() if "L(FCC_A1,CU,NI;0)" in line)
+    # EMT mixing energy of the relaxed 32-atom SQS, 0.0212 eV/atom
+    assert float(line.split()[3]) == pytest.approx(8168.4, abs=1)
 
 
 def test_calphad_maker_needs_liquid_makers():

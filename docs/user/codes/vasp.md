@@ -504,7 +504,7 @@ The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-med
 
 ### CALPHAD workflow
 
-The CALPHAD workflow is only available for force fields so far, see the [CALPHAD section of the force field docs](forcefields.md#calphad).
+The CALPHAD workflow only runs with force fields so far. See the [CALPHAD section of the force field docs](forcefields.md#calphad).
 
 ### Quasi-harmonic Workflow
 

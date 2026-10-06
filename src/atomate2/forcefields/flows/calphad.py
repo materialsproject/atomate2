@@ -85,10 +85,10 @@ class CalphadMaker(BaseCalphadMaker):
     net momentum. The first 5 ps of the second run are left out of the mean
     energy.
 
-    By default, all steps use MACE-MP-0. Use :obj:`from_force_field_name` to
-    run every step with another force field. The liquid makers are only set
-    by :obj:`from_force_field_name`, since their temperatures depend on the
-    system.
+    By default, the solids are relaxed with MACE-MP-0 and there are no liquid
+    makers, so LIQUID must be removed from the lattices. Use
+    :obj:`from_force_field_name` to set the force field of every step and the
+    liquid temperatures, which depend on the system.
 
     See :obj:`.BaseCalphadMaker` for what the TDB file contains.
 
@@ -120,11 +120,7 @@ class CalphadMaker(BaseCalphadMaker):
     """
 
     relax_maker: ForceFieldRelaxMaker = field(
-        default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name=_DEFAULT_FORCE_FIELD,
-            relax_cell=True,
-            relax_kwargs={"fmax": 0.001},
-        )
+        default_factory=lambda: _get_makers(_DEFAULT_FORCE_FIELD)["relax_maker"]
     )
     n_equilibration_frames: int = 250
     liquid_supercell: int = 3

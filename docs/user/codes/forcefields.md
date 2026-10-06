@@ -90,6 +90,8 @@ ATAT is not a Python package, so install it yourself.
 This workflow only needs three of the ATAT programs, which build in a few seconds:
 
 ```bash
+curl -sSLO https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz
+tar xzf atat3_52.tar.gz
 make -C atat/src cellcvrt nntouch lsfit
 echo "set atatdir=$PWD/atat" > ~/.atat.rc
 export PATH=$PWD/atat/src:$PATH
@@ -97,12 +99,13 @@ export PATH=$PWD/atat/src:$PATH
 
 `sqs2tdb` calls the other ATAT programs by name, so the ATAT `src` folder must be on your `PATH`.
 `SQS2TDB_CMD` in the atomate2 settings only sets how `sqs2tdb` itself is called.
+The workflow also runs `cellcvrt` and reads `atatdir` itself, so both must work in the Python process that runs the jobs.
 
 The special quasirandom structures (SQS) of each lattice come from the ATAT database.
 The default lattices are FCC_A1, BCC_A2, HCP_A3 and LIQUID.
 Each solid SQS is relaxed, including the cell, with `fmax=0.001` eV/Å.
 Each liquid SQS is repeated three times along each lattice vector, which gives 864 atoms for the 32-atom SQS of the database.
-With 256 atoms, the liquid mixing energy of Ni-Re with MACE-OMAT-0-medium was still off by 2 kJ/mol.
+With 256 atoms, the liquid mixing energy of Ni-Re with MACE-OMAT-0-medium differed by 2 kJ/mol from that with 864 atoms.
 It is melted for 10 ps at `melt_temperature`.
 It is then run for 20 ps at `liquid_temperature`, and the first 5 ps are left out of the mean potential energy.
 Both liquid runs are isotropic NPT at zero pressure, with no net momentum.
@@ -150,8 +153,16 @@ The fit job stops with an error otherwise.
 For lattices in the SGTE database, such as FCC_A1, HCP_A3 and LIQUID, `sqs2tdb` takes the free energies of the pure elements from SGTE.
 Only the mixing terms come from the force field, so the melting points of the pure elements are those of SGTE.
 The liquid mixing terms are the excess energies at `liquid_temperature`, used at all temperatures.
-That they change with `liquid_temperature` shows that the liquid also has an excess entropy, which the fit leaves out.
+They change with `liquid_temperature`, so the liquid has an excess heat capacity.
+Its excess entropy then cannot be zero at all temperatures, and the fit leaves it out.
 The vibrational and short-range order options of `sqs2tdb` are not used.
+
+Known limitations:
+
+- An ordered lattice takes the energy of each pure element end member, relative to the stable lattice of the element, from the force field. FCC_A1 and HCP_A3 take the energy of a pure element from SGTE. So pure Re on FCC sites can have a different free energy in NI4MO_D1A than in FCC_A1.
+- GAMMA_L12 cannot be fitted. Its ATAT database links to FCC_A1 folders that `sqs2tdb` does not create.
+- The fit job must run in an empty folder, for example with `create_folders=True` in `run_locally`.
+- The liquid MD job stores the structure of every tenth step. With 864 atoms this is about 190 MB per liquid, so use a job store with a separate data store.
 
 The TDB file can be read with [pycalphad](https://pycalphad.org), which is installed separately:
 

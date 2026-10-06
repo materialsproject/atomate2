@@ -114,6 +114,16 @@ def test_fit_tdb_links():
 
 
 @needs_atat
+def test_fit_tdb_missing_link():
+    """CSCL_B2 links to the BCC_A2 end members, which are not fitted."""
+    terms = {"FCC_A1": ["1,0", "2,0"], "CSCL_B2": ["1,0:1,0", "2,0:1,0"]}
+    sqs = get_sqs_structures.original(("Cu", "Ni"), list(terms), 1)
+    calculations = [{**calc, "energy": -1.0} for calc in sqs]
+    with pytest.raises(ValueError, match="links to BCC_A2"):
+        fit_tdb.original(("Cu", "Ni"), 1, terms, calculations)
+
+
+@needs_atat
 def test_fit_tdb_missing_energy():
     sqs = get_sqs_structures.original(("Cu", "Ni"), ("FCC_A1",), 1)
     calculations = [{**calc, "energy": -1.0} for calc in sqs[:-1]]
@@ -133,8 +143,17 @@ def test_fit_tdb_missing_stable_lattice():
 
 
 @needs_atat
-def test_fit_tdb_ni_re(test_dir):
-    """Refit Ni-Re from the MACE-OMAT-0-medium energies of the CALPHAD tutorial."""
+@pytest.mark.parametrize(
+    ("model", "l0"),
+    [
+        ("MACE-OMAT-0-medium", (7168.0, 15938.0, 366.0)),
+        ("MACE-MATPES-PBE-0", (-2722.8, 2480.6, -17578.7)),
+        ("MACE-MATPES-r2SCAN-0", (3980.0, 14099.9, -13919.9)),
+        ("GRACE-2L-OMAT", (1357.5, 891.5, -3860.4)),
+    ],
+)
+def test_fit_tdb_ni_re(test_dir, model, l0):
+    """Refit Ni-Re from the energies of the CALPHAD tutorial."""
     energies = json.loads(
         (test_dir / "common" / "calphad" / "ni_re_energies.json").read_text()
     )
@@ -145,9 +164,9 @@ def test_fit_tdb_ni_re(test_dir):
         "NI4MO_D1A": ["1,0:1,0", "2,0:1,0"],
         "LIQUID": ["1,0", "2,0"],
     }
-    doc = fit_tdb.original(("Ni", "Re"), 2, terms, energies["MACE-OMAT-0-medium"])
-    for lattice, l0 in {"FCC_A1": 7168, "HCP_A3": 15938, "LIQUID": 366}.items():
+    doc = fit_tdb.original(("Ni", "Re"), 2, terms, energies[model])
+    for lattice, value in zip(("FCC_A1", "HCP_A3", "LIQUID"), l0, strict=True):
         line = next(
             line for line in doc.tdb.splitlines() if f"L({lattice},NI,RE;0)" in line
         )
-        assert float(line.split()[3]) == pytest.approx(l0, abs=1)
+        assert float(line.split()[3]) == pytest.approx(value, abs=1)

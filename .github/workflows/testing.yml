@@ -84,12 +84,17 @@ jobs:
       - name: Build ATAT for the CALPHAD tests
         if: matrix.dep-group == 'numpy-limited'
         run: |
-          curl -sSL https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
+          curl -fsSL --retry 3 https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
           echo "8536fb078375b30096df780e02f4e0c97972f5ebaad9a84a94f22e00f50c7516  atat.tar.gz" | sha256sum -c
           tar xzf atat.tar.gz -C ~
           make -C ~/atat/src cellcvrt nntouch lsfit
           echo "set atatdir=$HOME/atat" > ~/.atat.rc
           echo "$HOME/atat/src" >> $GITHUB_PATH
+
+      # without ATAT on the PATH, the CALPHAD tests would be skipped
+      - name: Check that ATAT is on the PATH
+        if: matrix.dep-group == 'numpy-limited'
+        run: which sqs2tdb cellcvrt nntouch lsfit
 
       # without the fork, the MACE-Field tests would be skipped
       - name: Check that the MACE-Field fork is installed
@@ -180,12 +185,16 @@ jobs:
           
       - name: Build ATAT for the CALPHAD tests
         run: |
-          curl -sSL https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
+          curl -fsSL --retry 3 https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
           echo "8536fb078375b30096df780e02f4e0c97972f5ebaad9a84a94f22e00f50c7516  atat.tar.gz" | sha256sum -c
           tar xzf atat.tar.gz -C ~
           make -C ~/atat/src cellcvrt nntouch lsfit
           echo "set atatdir=$HOME/atat" > ~/.atat.rc
           echo "$HOME/atat/src" >> $GITHUB_PATH
+
+      # without ATAT on the PATH, the CALPHAD tests would be skipped
+      - name: Check that ATAT is on the PATH
+        run: which sqs2tdb cellcvrt nntouch lsfit
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'

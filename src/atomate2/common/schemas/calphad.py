@@ -12,8 +12,9 @@ class SqsCalculation(BaseModel):
     lattice: str = Field(description="ATAT lattice name, e.g. FCC_A1 or LIQUID.")
     folder: str = Field(description="Name of the ATAT folder of the structure.")
     energy: float = Field(
-        description="Total energy of the structure, in eV. For the liquid, the "
-        "mean potential energy of the production MD."
+        description="Energy of the SQS cell in eV. For a solid, the total energy "
+        "of the relaxed structure. For the liquid, the mean potential energy of "
+        "the liquid MD after the equilibration frames, per SQS cell."
     )
     structure: Structure | None = Field(
         None, description="Relaxed structure. None for the liquid."
@@ -24,12 +25,15 @@ class SqsCalculation(BaseModel):
         "it. None for the liquid.",
     )
     is_force_converged: bool | None = Field(
-        None, description="Whether the relaxation converged. None for the liquid."
+        None,
+        description="Whether the forces reached fmax within the relaxation steps. "
+        "None for the liquid.",
     )
     mean_squared_displacement: float | None = Field(
         None,
-        description="Mean squared displacement of the atoms over the production "
-        "MD, in Angstrom^2. Only for the liquid.",
+        description="Mean squared displacement of the atoms over the liquid MD "
+        "after the equilibration frames, without the motion of the centre of "
+        "mass, in Angstrom^2. Only for the liquid.",
     )
     dir_name: str | None = Field(
         None, description="Folder of the relaxation or of the liquid MD."
