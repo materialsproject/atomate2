@@ -17,6 +17,7 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.common.utils import check_class_name
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -27,7 +28,11 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+    from atomate2.forcefields.jobs import (
+        ForceFieldDielectricMaker,
+        ForceFieldRelaxMaker,
+        ForceFieldStaticMaker,
+    )
     from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -106,8 +111,7 @@ class BasePhononMaker(Maker, ABC):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker,
-        .TorchSimStaticMaker, or None
+    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
         Maker to compute the BORN charges.
     phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker,
         .TorchSimStaticMaker
@@ -167,9 +171,7 @@ class BasePhononMaker(Maker, ABC):
         | TorchSimStaticMaker
         | None
     ) = None
-    born_maker: ForceFieldStaticMaker | BaseVaspMaker | TorchSimStaticMaker | None = (
-        None
-    )
+    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
     phonon_displacement_maker: (
         ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker | TorchSimStaticMaker
     ) = None
@@ -339,12 +341,12 @@ class BasePhononMaker(Maker, ABC):
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
 
-            # I am not happy how we currently access "born" charges
-            # This is very vasp specific code aims and forcefields
-            # do not support this at the moment, if this changes we have
-            # to update this section
-            epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
-            born = born_job.output.calcs_reversed[0].output.outcar["born"]
+            if check_class_name(self.born_maker, "ForceFieldDielectricMaker"):
+                epsilon_static = born_job.output.epsilon_static
+                born = born_job.output.born
+            else:
+                epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
+                born = born_job.output.calcs_reversed[0].output.outcar["born"]
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
 

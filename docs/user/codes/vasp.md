@@ -342,6 +342,9 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 )
 ```
 
+The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
+See the [notes on MACE-Field](forcefields.md#mace-field-notes).
+
 #### Pheasy
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).

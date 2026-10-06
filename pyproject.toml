@@ -158,6 +158,12 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
+# MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
+# It is a dependency group, since PyPI does not accept git URLs in extras.
+# Remove it once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
+mace-field = [
+    "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
+]
 tests = [
     "fireworks==2.1.4",
     "nbmake==1.5.5",
