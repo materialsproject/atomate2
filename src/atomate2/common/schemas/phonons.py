@@ -13,7 +13,7 @@ from monty.json import MSONable
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
-from phonopy.units import VaspToTHz
+from phonopy.units import Bohr, Hartree, VaspToTHz
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
@@ -60,6 +60,63 @@ def get_factor(code: str) -> float:
     if code == "aims":
         return omegaToTHz  # Based on CODATA 2002
     raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
+
+
+def _set_nac_params(
+    phonon: Phonopy,
+    born: Sequence[Matrix3D] | None,
+    epsilon_static: Matrix3D | None,
+    symprec: float,
+    code: str,
+    is_symmetry: bool = True,
+) -> tuple[np.ndarray | None, np.ndarray | None]:
+    """
+    Symmetrize the Born charges and the dielectric tensor and set the NAC.
+
+    The non-analytical correction is set unless all Born charges are zero or
+    the code is FHI-aims.
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        Phonopy object whose unit cell the Born charges belong to.
+    born: Sequence[Matrix3D] | None
+        Born effective charges, one per atom of the unit cell.
+    epsilon_static: Matrix3D | None
+        High-frequency dielectric tensor.
+    symprec: float
+        Symmetry precision.
+    code: str
+        Code of the force calculations.
+    is_symmetry: bool
+        Whether to symmetrize the Born charges and the dielectric tensor.
+
+    Returns
+    -------
+    tuple[np.ndarray | None, np.ndarray | None]
+        The symmetrized Born charges and dielectric tensor, or None if either
+        was not given.
+    """
+    if born is None or epsilon_static is None:
+        return None, None
+    if len(born) != len(phonon.unitcell):
+        raise ValueError("Number of Born charges does not agree with number of atoms")
+    borns, epsilon = symmetrize_borns_and_epsilon(
+        ucell=phonon.unitcell,
+        borns=np.array(born),
+        epsilon=np.array(epsilon_static),
+        symprec=symprec,
+        primitive_matrix=phonon.primitive_matrix,
+        supercell_matrix=phonon.supercell_matrix,
+        is_symmetry=is_symmetry,
+    )
+    if code != "aims" and not np.all(np.isclose(borns, 0.0)):
+        phonon.nac_params = {
+            "born": borns,
+            "dielectric": epsilon,
+            "factor": Hartree * Bohr,
+        }
+    return borns, epsilon
 
 
 class PhononComputationalSettings(BaseModel):
@@ -359,31 +416,14 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
-        if born is not None and epsilon_static is not None:
-            if len(structure) == len(born):
-                borns, epsilon = symmetrize_borns_and_epsilon(
-                    ucell=phonon.unitcell,
-                    borns=np.array(born),
-                    epsilon=np.array(epsilon_static),
-                    symprec=symprec,
-                    primitive_matrix=phonon.primitive_matrix,
-                    supercell_matrix=phonon.supercell_matrix,
-                    is_symmetry=kwargs.get("symmetrize_born", True),
-                )
-            else:
-                raise ValueError(
-                    "Number of Born charges does not agree with number of atoms"
-                )
-            if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
-                phonon.nac_params = {
-                    "born": borns,
-                    "dielectric": epsilon,
-                    "factor": 14.399652,
-                }
-            # Other codes could be added here
-        else:
-            borns = None
-            epsilon = None
+        borns, epsilon = _set_nac_params(
+            phonon,
+            born,
+            epsilon_static,
+            symprec,
+            code,
+            is_symmetry=kwargs.get("symmetrize_born", True),
+        )
 
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
@@ -503,9 +543,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # compute vibrational part of free energies per formula unit
-        temperature_range = np.arange(
-            kwargs.get("tmin", 0), kwargs.get("tmax", 500), kwargs.get("tstep", 10)
-        )
+        # the grid includes tmax and defaults to 0-1000 K, as in phonopy
+        tmin = kwargs.get("tmin", 0)
+        tmax = kwargs.get("tmax", 1000)
+        tstep = kwargs.get("tstep", 10)
+        temperature_range = np.arange(tmin, tmax + tstep / 2, tstep)
 
         free_energies = [
             dos.helmholtz_free_energy(

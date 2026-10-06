@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.12"]
-        dep-group: ["generic", "torch-limited", "e3nn-limited", "numpy-limited"]
+        dep-group: ["generic", "torch-limited", "e3nn-limited", "numpy-limited", "mace-field"]
 
     steps:
       - name: Check out repo
@@ -68,7 +68,22 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims] --group tests
+          # the MACE-Field fork is the mace-field dependency group, not an extra
+          uv pip install .[strict,abinit,approxneb,aims${{ matrix.dep-group != 'mace-field' && format(',strict-forcefields-{0}', matrix.dep-group) || '' }}] \
+            --group tests ${{ matrix.dep-group == 'mace-field' && '--group mace-field' || '' }}
+
+      # the thermal expansion tests use EMT, so one group is enough to run them
+      - name: Install pheasy, ALM and phono3py for the thermal expansion tests
+        if: matrix.dep-group == 'numpy-limited'
+        run: |
+          micromamba install -n a2 -c conda-forge compilers boost eigen=3.3 cmake spglib --yes
+          micromamba activate a2
+          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests
+
+      # without the fork, the MACE-Field tests would be skipped
+      - name: Check that the MACE-Field fork is installed
+        if: matrix.dep-group == 'mace-field'
+        run: micromamba run -n a2 python -c "from mace.modules.extensions import MACEField"
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -83,9 +98,10 @@ jobs:
         # torch-limited loads the heaviest MLIP stack (matgl + nequip + torch);
         # running it single-process avoids the OOM that kills the runner when
         # xdist spawns multiple workers each holding a copy of the models.
+        # The mace-field group only runs the MACE-Field tests, in one process.
         run: |
           micromamba activate a2
-          pytest --durations=5 -n ${{ matrix.dep-group == 'torch-limited' && '1' || 'auto' }} --cov=atomate2 --cov-report=xml tests/forcefields
+          pytest -v --durations=5 -n ${{ (matrix.dep-group == 'torch-limited' || matrix.dep-group == 'mace-field') && '1' || 'auto' }} --cov=atomate2 --cov-report=xml ${{ matrix.dep-group == 'mace-field' && 'tests/forcefields/test_mace_field.py' || 'tests/forcefields' }}
 
       - name: Forcefield tutorial
         if: matrix.dep-group == 'torch-limited'
@@ -93,7 +109,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --durations=5 -n auto --nbmake ./tutorials/force_fields
+          pytest -v --durations=5 -n auto --nbmake ./tutorials/force_fields
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
@@ -147,7 +163,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,abinit,approxneb,aims,pheasy,alamode,hiphive] --group tests
+          uv pip install .[strict,abinit,approxneb,aims,pheasy,alamode,hiphive,phono3py] --group tests
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
           
@@ -168,7 +184,7 @@ jobs:
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest --durations=5 -n auto --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --ignore=tests/forcefields --ignore=tests/torchsim --cov=atomate2 --cov-report=xml
+          pytest -v --durations=5 -n auto --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --ignore=tests/forcefields --ignore=tests/torchsim --cov=atomate2 --cov-report=xml
 
 
       - uses: codecov/codecov-action@v1
@@ -295,7 +311,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --durations=5 -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb --ignore=./tutorials/pheasy_workflow.ipynb --ignore=./tutorials/hiphive_workflow.ipynb 
+          pytest --durations=5 -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb --ignore=./tutorials/pheasy_workflow.ipynb --ignore=./tutorials/hiphive_workflow.ipynb --ignore=./tutorials/cte_workflow.ipynb 
 
       - name: Test ASE
         env:

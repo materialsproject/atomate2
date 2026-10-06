@@ -1,10 +1,12 @@
-"""Flow for calculating (an)harmonic FCs and phonon renormalisation with hiPhive."""
+"""Flow for calculating harmonic FCs with hiPhive."""
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
+
+from pymatgen.util.due import Doi, due
 
 from atomate2.common.flows.phonons import BasePhononMaker as PurePhonopyMaker
 from atomate2.common.jobs.hiphive import (
@@ -22,12 +24,24 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+    from atomate2.forcefields.jobs import (
+        ForceFieldDielectricMaker,
+        ForceFieldRelaxMaker,
+        ForceFieldStaticMaker,
+    )
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
+@due.dcite(
+    Doi("10.1002/adts.201800184"),
+    description="hiPhive, force constant potentials by regression.",
+)
+@due.dcite(
+    Doi("10.1088/0953-8984/26/22/225402"),
+    description="ALM, used to count the free force constants.",
+)
 @dataclass
 class BasePhononMaker(PurePhonopyMaker, ABC):
     """Maker to calculate harmonic phonons with the cluster-expansion code hiPhive.
@@ -128,7 +142,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker, or None
+    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
         Maker to compute the BORN charges.
     phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker
         Maker used to compute the forces for a supercell.
@@ -172,7 +186,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
     static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = (
         None
     )
-    born_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
     phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
         None
     )
