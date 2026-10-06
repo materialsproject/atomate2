@@ -5,9 +5,10 @@ from __future__ import annotations
 import warnings
 from typing import TYPE_CHECKING, Any
 
+from emmet.core.math import Matrix3D
 from emmet.core.types.enums import StoreTrajectoryOption
 from pydantic import BaseModel, Field
-from pymatgen.core import Molecule
+from pymatgen.core import Molecule, Structure
 
 from atomate2.ase.schemas import (
     AseMoleculeTaskDoc,
@@ -178,3 +179,15 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
             if isinstance(result.final_mol_or_struct, Molecule)
             else cls
         ).from_ase_task_doc(ase_task_doc, **ff_kwargs)
+
+
+class ForceFieldDielectricDocument(ForceFieldMeta):
+    """Born effective charges and dielectric tensor from a force field."""
+
+    structure: Structure = Field(description="The structure of the calculation.")
+    born: list[Matrix3D] = Field(
+        description="Born effective charges, one per site, in units of e."
+    )
+    epsilon_static: Matrix3D = Field(
+        description="The high-frequency dielectric tensor."
+    )

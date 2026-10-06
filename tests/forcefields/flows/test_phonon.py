@@ -16,10 +16,15 @@ from emmet.core.phonon import (
 )
 from jobflow import Flow, JobStore, run_locally
 from numpy.testing import assert_allclose
+from pymatgen.core import Lattice
 from pymatgen.core.structure import Structure
 
 from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.jobs import (
+    ForceFieldDielectricMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 from atomate2.forcefields.utils import MLFF
 
 from ..conftest import mlff_is_installed  # noqa: TID252
@@ -30,6 +35,7 @@ from ..conftest import mlff_is_installed  # noqa: TID252
 # skip m3gnet and matpes models due to matcalc requiring
 # DGL which is PyTorch 2.4 incompatible, raises
 # "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
+# skip MACE-Field, which needs the path of its model file
 skip_mlff = set(
     map(
         MLFF,
@@ -41,6 +47,7 @@ skip_mlff = set(
             "MATPES_PBE",
             "Allegro",
             "FAIRChem",
+            "MACE_FIELD",
         ],
     )
 )
@@ -286,3 +293,36 @@ def test_ext_load_phonon_initialization():
     assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
     assert maker.static_energy_maker.ase_calculator_name == "mace_mp"
     assert maker.phonon_displacement_maker.ase_calculator_name == "mace_mp"
+
+
+@pytest.mark.parametrize("born_by_hand", [False, True])
+def test_phonon_wf_force_field_born_charges(
+    clean_dir, fake_dielectric_calculator, born_by_hand
+):
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(4.17), ["Ni", "O"], [[0, 0, 0], [0.5, 0.5, 0.5]]
+    ).get_primitive_structure()
+    born = np.array([2, -2])[:, None, None] * np.eye(3)
+    emt = {"@module": "ase.calculators.emt", "@callable": "EMT"}
+    maker = PhononMaker(
+        bulk_relax_maker=None,
+        static_energy_maker=None,
+        phonon_displacement_maker=ForceFieldStaticMaker(force_field_name=emt),
+        born_maker=None if born_by_hand else ForceFieldDielectricMaker(),
+        min_length=8,
+        create_thermal_displacements=False,
+        store_force_constants=False,
+    )
+    if born_by_hand:
+        flow = maker.make(
+            structure, born=born.tolist(), epsilon_static=(4 * np.eye(3)).tolist()
+        )
+    else:
+        flow = maker.make(structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    doc = responses[flow[-1].uuid][1].output
+
+    assert np.array(doc.born) == pytest.approx(born)
+    assert np.array(doc.epsilon_static) == pytest.approx(4 * np.eye(3))
+    # the LO-TO splitting raises the highest frequency from about 12.6 THz
+    assert np.max(doc.phonon_bandstructure.bands) == pytest.approx(17.976, abs=1e-2)
