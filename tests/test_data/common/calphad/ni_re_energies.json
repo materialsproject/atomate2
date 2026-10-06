@@ -1,0 +1,590 @@
+{
+ "MACE-OMAT-0-medium": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -5.49209853
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -12.33654039
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -284.71462134
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -339.22431107
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -230.33194036
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -10.96839031
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Re=1",
+   "energy": -24.85183259
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
+   "energy": -285.27336656
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
+   "energy": -340.62461569
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
+   "energy": -230.47173992
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
+   "energy": -85.67987041
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
+   "energy": -57.26517478
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
+   "energy": -304.29669863
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
+   "energy": -553.98891007
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -385.71742144
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -468.69714088
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
+   "energy": -427.23088126
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
+   "energy": -34.46826631
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
+   "energy": -54.93189197
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
+   "energy": -164.50251049
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
+   "energy": -191.5431141
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -123.6822928
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -233.01581704
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
+   "energy": -177.54910385
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -154.63700187
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -373.11648141
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -263.76065999
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -318.34944228
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -209.47487976
+  }
+ ],
+ "MACE-MATPES-PBE-0": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -5.4747177
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -12.34326536
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -285.56191987
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -339.69707156
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -230.48022471
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -10.92828321
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Re=1",
+   "energy": -24.8367194
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
+   "energy": -286.04978408
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
+   "energy": -340.92055073
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
+   "energy": -230.82737752
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
+   "energy": -85.40853431
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
+   "energy": -57.72741151
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
+   "energy": -304.98225441
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
+   "energy": -553.36727309
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -386.47987275
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -468.8524664
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
+   "energy": -428.16417685
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
+   "energy": -34.46971654
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
+   "energy": -54.93295983
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
+   "energy": -164.93724543
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
+   "energy": -191.99555333
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -123.71179622
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -233.0373081
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
+   "energy": -177.88365554
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -154.13010892
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -372.10516255
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -264.52363672
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -318.55750887
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -209.93386317
+  }
+ ],
+ "MACE-MATPES-r2SCAN-0": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -11.95708834
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -52.35914458
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -1029.10123433
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -1351.96897539
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -705.15189284
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -23.90892309
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Re=1",
+   "energy": -104.88089442
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
+   "energy": -1029.40481884
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
+   "energy": -1353.11344443
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
+   "energy": -705.42385073
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
+   "energy": -338.76180051
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
+   "energy": -176.23368313
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
+   "energy": -815.53092629
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
+   "energy": -2273.59233061
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -1300.033087
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -1786.12827701
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
+   "energy": -1543.45688302
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
+   "energy": -100.25704698
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
+   "energy": -221.63123017
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
+   "energy": -562.52691324
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
+   "energy": -724.08151448
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -319.78014422
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -966.436665
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
+   "energy": -642.71716391
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -361.25238398
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -1652.94910055
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -1008.31781114
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -1331.36425824
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -684.48310863
+  }
+ ],
+ "GRACE-2L-OMAT": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -5.49377845
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -12.32522647
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -285.05457725
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -339.43344811
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -230.52037786
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -10.94756268
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Re=1",
+   "energy": -24.77506765
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
+   "energy": -285.79517832
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
+   "energy": -340.78359046
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
+   "energy": -230.54821098
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
+   "energy": -85.91382426
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
+   "energy": -57.26791724
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
+   "energy": -304.29129942
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
+   "energy": -553.94491608
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -386.05044014
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
+   "energy": -469.31958256
+  },
+  {
+   "lattice": "NI3SN_D019",
+   "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
+   "energy": -427.89276251
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
+   "energy": -34.56108084
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
+   "energy": -54.8895829
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
+   "energy": -164.70384208
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
+   "energy": -191.77955326
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -123.8971733
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
+   "energy": -232.79282086
+  },
+  {
+   "lattice": "NI4MO_D1A",
+   "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
+   "energy": -177.85394644
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -154.47053477
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Re=1",
+   "energy": -373.25145864
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
+   "energy": -264.16398553
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
+   "energy": -318.65226701
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
+   "energy": -209.57295232
+  }
+ ]
+}

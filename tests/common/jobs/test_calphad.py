@@ -1,5 +1,6 @@
 """Tests for the sqs2tdb fit of the CALPHAD workflow."""
 
+import json
 import shutil
 from types import SimpleNamespace
 
@@ -129,3 +130,24 @@ def test_fit_tdb_missing_stable_lattice():
     calculations = [{**calc, "energy": -1.0} for calc in sqs]
     with pytest.raises(ValueError, match="ABIN_HCP_A3_RE"):
         fit_tdb.original(elements, 1, terms, calculations)
+
+
+@needs_atat
+def test_fit_tdb_ni_re(test_dir):
+    """Refit Ni-Re from the MACE-OMAT-0-medium energies of the CALPHAD tutorial."""
+    energies = json.loads(
+        (test_dir / "common" / "calphad" / "ni_re_energies.json").read_text()
+    )
+    terms = {
+        "FCC_A1": ["1,0", "2,0"],
+        "HCP_A3": ["1,0", "2,0"],
+        "NI3SN_D019": ["1,0:1,0", "2,0:1,0"],
+        "NI4MO_D1A": ["1,0:1,0", "2,0:1,0"],
+        "LIQUID": ["1,0", "2,0"],
+    }
+    doc = fit_tdb.original(("Ni", "Re"), 2, terms, energies["MACE-OMAT-0-medium"])
+    for lattice, l0 in {"FCC_A1": 7168, "HCP_A3": 15938, "LIQUID": 366}.items():
+        line = next(
+            line for line in doc.tdb.splitlines() if f"L({lattice},NI,RE;0)" in line
+        )
+        assert float(line.split()[3]) == pytest.approx(l0, abs=1)

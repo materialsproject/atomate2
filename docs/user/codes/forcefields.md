@@ -78,6 +78,7 @@ However, this may not be preserved in future versions, and `calculator_meta` is 
 
 `CalphadMaker` fits a CALPHAD database for a binary system with a force field.
 It uses the `sqs2tdb` tool of [ATAT](https://axelvandewalle.github.io/www-avdw/atat/) ([van de Walle et al., 2017](https://doi.org/10.1016/j.calphad.2017.05.005)).
+The [CALPHAD tutorial](https://github.com/materialsproject/atomate2/blob/main/tutorials/calphad_workflow.ipynb) runs it for Ni-Re with four force fields.
 
 ```{warning}
 This workflow is new and has not been tested widely.
@@ -129,7 +130,7 @@ Choose `melt_temperature` high enough that every composition melts with the forc
 All compositions are then run at the same `liquid_temperature`.
 Energies taken at a different temperature for each composition would add the different heat capacities of the liquids to the mixing energy.
 The liquid mixing terms still depend on `liquid_temperature`.
-For Ni-Re with GRACE-2L-OMAT, L0 of the liquid changes by about −3.6 J/mol per K.
+For Ni-Re with GRACE-2L-OMAT, L0 of the liquid changes by about −3.7 J/mol per K.
 Choose `liquid_temperature` as low as possible while every composition stays liquid during the run, which may be below the melting point of the pure elements.
 Check `mean_squared_displacement` of each liquid calculation in the output.
 In a liquid it grows with the length of the run.
@@ -149,6 +150,7 @@ The fit job stops with an error otherwise.
 For lattices in the SGTE database, such as FCC_A1, HCP_A3 and LIQUID, `sqs2tdb` takes the free energies of the pure elements from SGTE.
 Only the mixing terms come from the force field, so the melting points of the pure elements are those of SGTE.
 The liquid mixing terms are the excess energies at `liquid_temperature`, used at all temperatures.
+That they change with `liquid_temperature` shows that the liquid also has an excess entropy, which the fit leaves out.
 The vibrational and short-range order options of `sqs2tdb` are not used.
 
 The TDB file can be read with [pycalphad](https://pycalphad.org), which is installed separately:
