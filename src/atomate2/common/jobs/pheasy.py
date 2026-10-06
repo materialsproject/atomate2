@@ -360,7 +360,10 @@ def _run_anharmonic_fit(
     supercell_matrix: np.ndarray,
     symprec: float,
     anhar_max_order: int,
-    fcs_cutoff_radius: Sequence[float],
+    # set a defaut value for the cutoff radius of each order, I recommend the default values for third- and fourth order
+    # are 6.3 and 5.3 angstroms, respectively. Those values are large enough for accurate third- and fourth-order force constant fits.
+    # and they are more efficient than using larger cutoff radii.
+    fcs_cutoff_radius: Sequence[float], 
     num_anhar: int,
     anhar_alpha_min: int,
     work_dir: Path,
