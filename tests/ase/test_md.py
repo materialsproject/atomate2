@@ -8,6 +8,7 @@ Light tests here to validate that base classes work as intended
 import logging
 import os
 
+import numpy as np
 import pytest
 from jobflow import run_locally
 from pymatgen.io.vasp.outputs import Xdatcar
@@ -113,6 +114,34 @@ def test_langevin_seed(si_structure, clean_dir):
 
     assert positions(1) == pytest.approx(positions(1))
     assert positions(1) != pytest.approx(positions(2))
+
+
+def test_md_seed_defaults(si_structure, clean_dir):
+    """Dynamics without an rng argument run as before, and a given rng is kept."""
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics="berendsen",
+        temperature=[300, 600],
+        n_steps=5,
+        mb_velocity_seed=1,
+        ase_md_kwargs={"taut": 100},
+    )
+    assert len(maker.run_ase(si_structure).trajectory) == 6
+
+    si_structure.add_site_property("velocities", [[0.0, 0.0, 0.0]] * len(si_structure))
+
+    def positions(seed):
+        maker = LennardJonesMDMaker(
+            ensemble="nvt",
+            dynamics="langevin",
+            temperature=300,
+            n_steps=5,
+            mb_velocity_seed=seed,
+            ase_md_kwargs={"rng": np.random.default_rng(7)},
+        )
+        return maker.run_ase(si_structure).final_mol_or_struct.cart_coords
+
+    assert positions(1) == pytest.approx(positions(2))
 
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
