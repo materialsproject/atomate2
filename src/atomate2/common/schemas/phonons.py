@@ -549,29 +549,20 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         tstep = kwargs.get("tstep", 10)
         temperature_range = np.arange(tmin, tmax + tstep / 2, tstep)
 
-        free_energies = [
-            dos.helmholtz_free_energy(
-                temp=temp, structure=get_pmg_structure(phonon.primitive)
-            )
-            for temp in temperature_range
-        ]
-
-        entropies = [
-            dos.entropy(temp=temp, structure=get_pmg_structure(phonon.primitive))
-            for temp in temperature_range
-        ]
-
-        internal_energies = [
-            dos.internal_energy(
-                temp=temp, structure=get_pmg_structure(phonon.primitive)
-            )
-            for temp in temperature_range
-        ]
-
-        heat_capacities = [
-            dos.cv(temp=temp, structure=get_pmg_structure(phonon.primitive))
-            for temp in temperature_range
-        ]
+        # phonopy's sum over the q-point mesh of the DOS, per primitive cell
+        phonon.run_thermal_properties(temperatures=temperature_range)
+        thermal_properties = phonon.get_thermal_properties_dict()
+        primitive = get_pmg_structure(phonon.primitive).composition
+        formula_units_primitive = (
+            primitive.num_atoms / primitive.reduced_composition.num_atoms
+        )
+        # free energy in kJ/mol
+        free_energies = (
+            1000 * thermal_properties["free_energy"] / formula_units_primitive
+        )
+        entropies = thermal_properties["entropy"] / formula_units_primitive
+        internal_energies = free_energies + temperature_range * entropies
+        heat_capacities = thermal_properties["heat_capacity"] / formula_units_primitive
 
         # will compute thermal displacement matrices
         # for the primitive cell (phonon.primitive!)
