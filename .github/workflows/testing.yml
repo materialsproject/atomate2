@@ -81,7 +81,7 @@ jobs:
           # pheasy and ALM are the pheasy dependency group, not extras
           uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests --group pheasy
 
-      # without pheasy and ALM, the pheasy and thermal expansion tests would be skipped
+      # without pheasy the pheasy and thermal expansion tests are skipped, and without ALM they fail
       - name: Check that pheasy and ALM are installed
         if: matrix.dep-group == 'numpy-limited'
         run: micromamba run -n a2 python -c "from alm import ALM; import pheasy"

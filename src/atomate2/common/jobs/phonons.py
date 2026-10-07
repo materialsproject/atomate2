@@ -92,7 +92,7 @@ def _get_num_irreducible_fcs(
         from alm import ALM
     except ImportError as exc:
         raise ImportError(
-            "ALM is not installed. Install it from git as described in the "
+            "ALM could not be imported. Install it from git as described in the "
             "Pheasy section of the atomate2 VASP docs. The alm package on PyPI "
             "is an unrelated project."
         ) from exc

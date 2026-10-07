@@ -171,7 +171,7 @@ mace-field = [
 # The pheasy fork adds the --disp_matrix_file and --force_matrix_file options
 # and fixes the --scell option. It is a dependency group, since PyPI does not
 # accept git URLs in extras. Move it back to the pheasy extra once a pheasy
-# release on PyPI has these options.
+# release on PyPI has these changes.
 pheasy = [
     {include-group = "alamode"},
     "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d",

@@ -349,7 +349,8 @@ See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
 The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy and hiPhive.
-PyPI does not accept git URLs in extras. So pheasy and ALM are installed from git, at the commits atomate2 is tested with:
+The pheasy and ALM packages are not in the extra, since PyPI does not accept git URLs in extras.
+Install them from git, at the commits atomate2 is tested with:
 ```
 pip install "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"
 pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"
@@ -378,6 +379,7 @@ Linux and MacOS x86-64 users can try to install using conda forge:
 ```
 conda install -c conda-forge alm
 ```
+This conda-forge `alm` is the ALAMODE one.
 
 Windows and MacOS ARM users cannot use the pre-built wheels on conda forge at this time, and should instead try the following installation using `conda`:
 ```
@@ -453,8 +455,9 @@ gruneisen_flow = GruneisenMaker(
 ### Thermal expansion workflow
 
 `CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
-It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`, and pheasy and ALM from git, as in the Pheasy section above.
-From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs all of them in one step.
+It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
+It also needs pheasy and ALM from git, installed as in the Pheasy section above.
+From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs the extras, pheasy and ALM in one step. This needs pip 25.1 or newer.
 
 ```{warning}
 This workflow is new and has not been tested widely.
