@@ -355,6 +355,7 @@ def get_vibrational_entropy(
 
     The force constants come from the forces of the displaced supercells. The
     entropy at temperature is phonopy's sum over a q-point mesh of density 50.
+    It leaves out frequencies below 0.05 THz, such as the acoustic modes at Gamma.
     It is converted from J/(K mol) per primitive cell to k_B per SQS cell.
     sqs2tdb uses it as the high temperature limit of the vibrational entropy.
     The imaginary fraction is the part of the frequencies on the mesh below
@@ -391,7 +392,7 @@ def get_vibrational_entropy(
     phonon.forces = np.array(forces)
     phonon.produce_force_constants()
     phonon.run_mesh(50.0)
-    phonon.run_thermal_properties(temperatures=[temperature])
+    phonon.run_thermal_properties(temperatures=[temperature], cutoff_frequency=0.05)
     entropy = phonon.get_thermal_properties_dict()["entropy"][0]
     frequencies = phonon.mesh.frequencies
     return {
@@ -464,6 +465,7 @@ def fit_tdb(
     terms: dict[str, list[str]],
     calculations: list[dict[str, Any]],
     max_imaginary_fraction: float = 0.03,
+    short_range_order: bool = False,
 ) -> CalphadDoc:
     """
     Fit the CALPHAD models with sqs2tdb and write the TDB file.
@@ -480,6 +482,11 @@ def fit_tdb(
     also have an imaginary_fraction of at most max_imaginary_fraction. Otherwise
     a warning is given and the lattice is fitted to the energy only.
 
+    With short_range_order, sqs2tdb -fit -sro adds its low-order CVM approximation
+    of the short range order to the mixing terms. It does so for the lattices
+    with a coordination number in the ATAT database, which are FCC_A1, BCC_A2,
+    HCP_A3 and DIAMOND_A4.
+
     Parameters
     ----------
     elements : Sequence[str]
@@ -493,6 +500,8 @@ def fit_tdb(
     max_imaginary_fraction : float
         Largest imaginary_fraction of an SQS for which the vibrational entropy
         of its lattice is used.
+    short_range_order : bool
+        Whether to add the short range order approximation of sqs2tdb.
 
     Returns
     -------
@@ -549,7 +558,11 @@ def fit_tdb(
     for lattice in lattices:
         Path(lattice, "terms.in").write_text("\n".join(terms[lattice]) + "\n")
         fit_logs[lattice] = subprocess.run(
-            [*cmd, "-fit"], cwd=lattice, check=True, capture_output=True, text=True
+            [*cmd, "-fit", *(["-sro"] if short_range_order else [])],
+            cwd=lattice,
+            check=True,
+            capture_output=True,
+            text=True,
         ).stdout
     subprocess.run([*cmd, "-tdb", "-oc"], check=True)
     tdb = next(Path().glob("*.tdb")).read_text()

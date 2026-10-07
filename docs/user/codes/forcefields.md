@@ -120,6 +120,8 @@ In our tests it changed by at most 0.014 k_B/atom between supercells of 20 and 2
 Finally, `sqs2tdb` fits the energies and vibrational entropies of each lattice and writes one TDB file.
 The vibrational entropy adds a term linear in T to the mixing terms of the solids.
 Set `phonon_maker=None` to fit the energies only.
+Set `short_range_order=True` to add the low-order CVM approximation of the short range order of `sqs2tdb -fit -sro`.
+It applies to FCC_A1, BCC_A2, HCP_A3 and DIAMOND_A4, the lattices with a coordination number in the ATAT database.
 
 ```py
 from jobflow import run_locally

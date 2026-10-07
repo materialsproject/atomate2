@@ -43,7 +43,7 @@ def test_calphad_maker_emt(clean_dir):
     assert all(calc.imaginary_fraction == 0 for calc in solids)
     # EMT vibrational entropy in k_B/atom of the end members and the SQS
     entropy = [calc.vibrational_entropy / len(calc.structure) for calc in solids]
-    assert entropy == pytest.approx([10.543, 9.752, 10.131], abs=1e-3)
+    assert entropy == pytest.approx([10.543, 9.748, 10.131], abs=1e-3)
     liquid = [calc for calc in doc.calculations if calc.lattice == "LIQUID"]
     # a crystal stays well below 1 A^2, the melt diffuses much further
     assert min(calc.mean_squared_displacement for calc in liquid) > 1
@@ -55,12 +55,12 @@ def test_calphad_maker_emt(clean_dir):
 
     line = next(line for line in doc.tdb.splitlines() if "L(FCC_A1,CU,NI;0)" in line)
     # EMT mixing energy of the relaxed 32-atom SQS, 0.0212 eV/atom, and its
-    # excess vibrational entropy, -0.017 k_B/atom
+    # excess vibrational entropy, -0.015 k_B/atom
     enthalpy, entropy_term = re.fullmatch(
         r"([-+][\d.]+)([-+][\d.]+)\*T", line.split()[3]
     ).groups()
     assert float(enthalpy) == pytest.approx(8169.4, abs=1)
-    assert float(entropy_term) == pytest.approx(0.562, abs=0.01)
+    assert float(entropy_term) == pytest.approx(0.503, abs=0.01)
 
 
 def test_calphad_maker_needs_liquid_makers():

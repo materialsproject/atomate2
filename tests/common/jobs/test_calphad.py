@@ -172,6 +172,21 @@ def test_fit_tdb_vibrational_entropy():
 
 
 @needs_atat
+def test_fit_tdb_short_range_order():
+    """The CVM term of sqs2tdb scales with |L0| / (12 R) for 12 FCC neighbours."""
+    elements, lattices = ("Cu", "Ni"), ("FCC_A1", "LIQUID")
+    sqs = get_sqs_structures.original(elements, lattices, 1)
+    terms = {lattice: ["1,0", "2,0"] for lattice in lattices}
+    calculations = _get_mixing_calculations(sqs)
+    doc = fit_tdb.original(elements, 1, terms, calculations, short_range_order=True)
+    tdb = doc.tdb.replace("\n    ", "")
+    assert "L(FCC_A1,CU,NI;2) 298.15 +3859.4" in tdb
+    assert "EXP(-77.363" in tdb
+    line = next(line for line in tdb.splitlines() if "L(LIQUID,CU,NI;0)" in line)
+    assert "EXP" not in line
+
+
+@needs_atat
 def test_fit_tdb_vibrational_entropy_unstable():
     """CSCL_B2 links to the BCC_A2 end members, whose phonons are unstable."""
     elements = ("Cu", "Ni")

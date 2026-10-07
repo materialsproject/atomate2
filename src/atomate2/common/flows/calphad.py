@@ -99,6 +99,9 @@ class BaseCalphadMaker(Maker):
     max_imaginary_fraction : float
         A lattice is fitted to the energies only if one of its SQS has a larger
         fraction of imaginary phonon frequencies on the q-point mesh.
+    short_range_order : bool
+        Whether to add the low-order CVM approximation of the short range order
+        of sqs2tdb to the mixing terms of FCC_A1, BCC_A2, HCP_A3 and DIAMOND_A4.
     """
 
     name: str = "calphad"
@@ -117,6 +120,7 @@ class BaseCalphadMaker(Maker):
     liquid_supercell: int = 1
     phonon_maker: BasePhononMaker | None = None
     max_imaginary_fraction: float = 0.03
+    short_range_order: bool = False
 
     def make(self, elements: Sequence[str]) -> Flow:
         """
@@ -149,5 +153,6 @@ class BaseCalphadMaker(Maker):
             {lattice: self.terms[lattice] for lattice in self.lattices},
             calculations.output,
             self.max_imaginary_fraction,
+            self.short_range_order,
         )
         return Flow([sqs, calculations, fit], output=fit.output, name=self.name)
