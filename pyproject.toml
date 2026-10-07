@@ -52,14 +52,13 @@ mp = ["mp-api>=0.37.5"]
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
 phonons = ["phonopy>=2.43,<5", "seekpath>=2.0.0"]
-# the pheasy fork adds the --disp_matrix_file and --force_matrix_file options
-# and fixes the --scell option
-pheasy = ["atomate2[phonons,alamode]", "hiphive==1.5", "numpy<=2.2", "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"]
+# pheasy itself and ALM are in the pheasy dependency group
+pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 # phonors 0.5 breaks the Grueneisen q-point mesh of phonopy and phono3py 4.5
 phono3py = ["atomate2[phonons]", "phono3py==4.5.0", "phonors<0.5"]
-alamode = ["alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"]
-hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons,alamode]"]
+# ALM is in the alamode dependency group
+hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -157,12 +156,23 @@ documentation = "https://materialsproject.github.io/atomate2/"
 changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [dependency-groups]
+# PyPI does not accept git URLs in extras, so the dependencies that install from
+# git are dependency groups. The alm package on PyPI is an unrelated project.
+alamode = [
+    "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python",
+]
 dev = ["pre-commit>=4.5.1"]
 # MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
 # It is a dependency group, since PyPI does not accept git URLs in extras.
 # Remove it once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
 mace-field = [
     "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
+]
+# the pheasy fork adds the --disp_matrix_file and --force_matrix_file options
+# and fixes the --scell option
+pheasy = [
+    {include-group = "alamode"},
+    "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d",
 ]
 tests = [
     "fireworks==2.1.4",

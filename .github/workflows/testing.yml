@@ -78,7 +78,8 @@ jobs:
         run: |
           micromamba install -n a2 -c conda-forge compilers boost eigen=3.3 cmake spglib --yes
           micromamba activate a2
-          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests
+          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests --group pheasy
+          python -c "import alm, pheasy"
 
       # without the fork, the MACE-Field tests would be skipped
       - name: Check that the MACE-Field fork is installed
@@ -163,7 +164,8 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,abinit,approxneb,aims,pheasy,alamode,hiphive,phono3py] --group tests
+          uv pip install .[strict,abinit,approxneb,aims,pheasy,hiphive,phono3py] --group tests --group pheasy
+          python -c "import alm, pheasy"
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
           
