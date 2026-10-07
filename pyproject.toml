@@ -51,7 +51,7 @@ mp = ["mp-api>=0.37.5"]
 # phonopy 4.x changed force-constants/primitive-axis handling, breaking the
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
-phonons = ["phonopy>=2.43,<5", "seekpath>=2.0.0"]
+phonons = ["phonopy>=4.6,<5", "seekpath>=2.0.0"]
 # the pheasy fork adds the --disp_matrix_file and --force_matrix_file options
 # and fixes the --scell option
 pheasy = ["atomate2[phonons,alamode]", "hiphive==1.5", "numpy<=2.2", "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"]

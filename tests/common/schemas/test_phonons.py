@@ -61,7 +61,7 @@ def test_phonon_bs_dos_doc():
 
 
 def test_from_forces_born_thermal_properties(clean_dir):
-    """Cu3Au with EMT reaches 4 x 3R per formula unit at high temperature."""
+    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit."""
     structure = Structure(
         Lattice.cubic(3.74),
         ["Au", "Cu", "Cu", "Cu"],
@@ -88,20 +88,17 @@ def test_from_forces_born_thermal_properties(clean_dir):
         total_dft_energy=None,
         store_force_constants=False,
         tmax=3000,
-        **dict.fromkeys(
-            (
-                "static_run_job_dir",
-                "static_run_uuid",
-                "born_run_job_dir",
-                "born_run_uuid",
-                "optimization_run_job_dir",
-                "optimization_run_uuid",
-            )
-        ),
+        static_run_job_dir=None,
+        static_run_uuid=None,
+        born_run_job_dir=None,
+        born_run_uuid=None,
+        optimization_run_job_dir=None,
+        optimization_run_uuid=None,
     )
     assert doc.entropies[0] == 0
     assert doc.heat_capacities[0] == 0
     assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
+    assert doc.internal_energies[-1] == pytest.approx(12 * R * 3000, rel=1e-3)
 
 
 # schemas where all fields have default values
