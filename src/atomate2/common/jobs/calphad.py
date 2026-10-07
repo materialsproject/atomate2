@@ -16,8 +16,15 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from jobflow import Flow, Response, job
 from pymatgen.io.atat import Mcsqs
+from scipy.constants import R
 
 from atomate2 import SETTINGS
+from atomate2.common.jobs.phonons import (
+    _generate_phonon_object,
+    generate_phonon_displacements,
+    get_supercell_size,
+    run_phonon_displacements,
+)
 from atomate2.common.schemas.calphad import CalphadDoc, SqsCalculation
 
 if TYPE_CHECKING:
@@ -25,6 +32,8 @@ if TYPE_CHECKING:
 
     from jobflow import Maker
     from pymatgen.core import Structure
+
+    from atomate2.common.flows.phonons import BasePhononMaker
 
 
 def _copy_sqs(
@@ -123,6 +132,48 @@ def _get_relaxation_strain(initial: Structure, relaxed: Structure) -> float:
     return float(np.linalg.norm((deformation + deformation.T) / 2 - np.eye(3)))
 
 
+def _remove_vibrational_entropy(
+    lattices: Sequence[str], unstable: set[str]
+) -> set[str]:
+    """
+    Remove the svib_ht files of the lattices that cannot use them.
+
+    A lattice in unstable, or one that reads an SQS without an svib_ht file
+    through a link, cannot use them. This is repeated, since a removal can
+    affect the lattices that link to it. Lattices without svib_ht files are
+    left alone. The lattices whose files were removed are returned.
+    """
+
+    def get_target(folder: Path) -> Path:
+        if not (link := folder / "link").exists():
+            return folder
+        target = link.read_text().strip()
+        return (
+            Path(folder.parent, target)
+            if Path(folder.parent, target).is_dir()
+            else Path(target)
+        )
+
+    removed: set[str] = set()
+    while remove := {
+        lattice
+        for lattice in lattices
+        if any(Path(lattice).glob("*/svib_ht"))
+        and (
+            lattice in unstable
+            or not all(
+                (get_target(folder) / "svib_ht").exists()
+                for folder in Path(lattice).glob("sqs_*")
+            )
+        )
+    }:
+        for lattice in remove:
+            for file in Path(lattice).glob("*/svib_ht"):
+                file.unlink()
+        removed |= remove
+    return removed
+
+
 @job
 def get_sqs_structures(
     elements: Sequence[str], lattices: Sequence[str], level: int
@@ -171,6 +222,7 @@ def run_sqs_calculations(
     liquid_md_maker: Maker,
     n_equilibration_frames: int,
     liquid_supercell: int,
+    phonon_maker: BasePhononMaker | None = None,
 ) -> Response:
     """
     Relax each solid SQS and run MD for each liquid SQS.
@@ -178,7 +230,8 @@ def run_sqs_calculations(
     Each liquid SQS is repeated liquid_supercell times along each lattice vector
     and melted with liquid_melt_maker. The melt is then run with liquid_md_maker.
     The first n_equilibration_frames frames of that run are discarded before the
-    energy is averaged.
+    energy is averaged. If phonon_maker is given, it is run on each relaxed solid
+    SQS for the vibrational entropy.
 
     Parameters
     ----------
@@ -195,6 +248,10 @@ def run_sqs_calculations(
         Number of frames of the liquid MD that are discarded.
     liquid_supercell : int
         Number of repeats of the liquid SQS along each lattice vector.
+    phonon_maker : BasePhononMaker or None
+        Phonon maker whose relaxation, supercell, displacement and force
+        settings are used for the vibrational entropy of the solid SQS. None
+        skips the phonons.
 
     Returns
     -------
@@ -224,17 +281,125 @@ def run_sqs_calculations(
             relax = relax_maker.make(calc["structure"])
             relax.append_name(name)
             jobs.append(relax)
-            outputs.append(
-                {
-                    "lattice": calc["lattice"],
-                    "folder": calc["folder"],
-                    "energy": relax.output.output.energy,
-                    "structure": relax.output.structure,
-                    "is_force_converged": relax.output.is_force_converged,
-                    "dir_name": relax.output.dir_name,
-                }
-            )
+            output = {
+                "lattice": calc["lattice"],
+                "folder": calc["folder"],
+                "energy": relax.output.output.energy,
+                "structure": relax.output.structure,
+                "is_force_converged": relax.output.is_force_converged,
+                "dir_name": relax.output.dir_name,
+            }
+            if phonon_maker is not None:
+                phonon_jobs = _get_phonon_jobs(relax.output.structure, phonon_maker)
+                for new_job in phonon_jobs:
+                    new_job.append_name(name)
+                jobs += phonon_jobs
+                for key in ("vibrational_entropy", "imaginary_fraction"):
+                    output[key] = phonon_jobs[-1].output[key]
+            outputs.append(output)
     return Response(replace=Flow(jobs, output=outputs))
+
+
+def _get_phonon_jobs(structure: Structure, phonon_maker: BasePhononMaker) -> list:
+    """
+    Get the jobs of the vibrational entropy of one relaxed solid SQS.
+
+    These are the jobs of the phonon maker up to the forces of the displaced
+    supercells, followed by get_vibrational_entropy.
+    """
+    jobs = []
+    if phonon_maker.bulk_relax_maker is not None:
+        jobs.append(phonon_maker.bulk_relax_maker.make(structure))
+        structure = jobs[-1].output.structure
+    supercell = get_supercell_size(
+        structure,
+        phonon_maker.min_length,
+        phonon_maker.max_length,
+        phonon_maker.prefer_90_degrees,
+        phonon_maker.allow_orthorhombic,
+        **phonon_maker.get_supercell_size_kwargs,
+    )
+    displacements = generate_phonon_displacements(
+        structure,
+        supercell.output,
+        phonon_maker.displacement,
+        phonon_maker.sym_reduce,
+        phonon_maker.symprec,
+        phonon_maker.use_symmetrized_structure,
+        phonon_maker.kpath_scheme,
+        phonon_maker.code,
+    )
+    forces = run_phonon_displacements(
+        displacements.output,
+        structure,
+        supercell.output,
+        phonon_maker.phonon_displacement_maker,
+        socket=phonon_maker.socket,
+    )
+    entropy = get_vibrational_entropy(
+        structure, supercell.output, forces.output["forces"], phonon_maker
+    )
+    return [*jobs, supercell, displacements, forces, entropy]
+
+
+@job
+def get_vibrational_entropy(
+    structure: Structure,
+    supercell_matrix: list[list[float]],
+    forces: list,
+    phonon_maker: BasePhononMaker,
+    temperature: float = 3000,
+) -> dict[str, float]:
+    """
+    Get the harmonic vibrational entropy of a relaxed SQS cell.
+
+    The force constants come from the forces of the displaced supercells. The
+    entropy at temperature is phonopy's sum over a q-point mesh of density 50.
+    It is converted from J/(K mol) per primitive cell to k_B per SQS cell.
+    sqs2tdb uses it as the high temperature limit of the vibrational entropy.
+    The imaginary fraction is the part of the frequencies on the mesh below
+    -0.05 THz.
+
+    Parameters
+    ----------
+    structure : Structure
+        Relaxed SQS used for the displacements.
+    supercell_matrix : list of list of float
+        Supercell matrix of the displacements.
+    forces : list
+        Forces of the displaced supercells.
+    phonon_maker : BasePhononMaker
+        Phonon maker that set up the displacements.
+    temperature : float
+        Temperature of the entropy in K.
+
+    Returns
+    -------
+    dict
+        The vibrational_entropy and imaginary_fraction of SqsCalculation.
+    """
+    phonon = _generate_phonon_object(
+        structure,
+        supercell_matrix,
+        phonon_maker.displacement,
+        phonon_maker.sym_reduce,
+        phonon_maker.symprec,
+        phonon_maker.use_symmetrized_structure,
+        phonon_maker.kpath_scheme,
+        phonon_maker.code,
+    )
+    phonon.forces = np.array(forces)
+    phonon.produce_force_constants()
+    phonon.run_mesh(50.0)
+    phonon.run_thermal_properties(temperatures=[temperature])
+    entropy = phonon.get_thermal_properties_dict()["entropy"][0]
+    frequencies = phonon.mesh.frequencies
+    return {
+        "vibrational_entropy": float(
+            entropy / R / len(phonon.primitive) * len(structure)
+        ),
+        "imaginary_fraction": float((frequencies < -0.05).mean()),
+    }
 
 
 @job
@@ -298,16 +463,22 @@ def fit_tdb(
     level: int,
     terms: dict[str, list[str]],
     calculations: list[dict[str, Any]],
+    max_imaginary_fraction: float = 0.03,
 ) -> CalphadDoc:
     """
     Fit the CALPHAD models with sqs2tdb and write the TDB file.
 
     The ATAT folders of all lattices are copied again into the folder of this
     job, since the ordered lattices link to the end members of other lattices.
-    The energy of each SQS is written to its folder. Then sqs2tdb -fit is run
-    for each lattice, and sqs2tdb -tdb -oc joins the fits into one TDB file.
-    A warning is given for each solid whose relaxation did not converge or has a
-    relaxation_strain above 0.1.
+    The energy and the vibrational entropy of each SQS are written to its
+    folder. Then sqs2tdb -fit is run for each lattice, and sqs2tdb -tdb -oc
+    joins the fits into one TDB file. A warning is given for each solid whose
+    relaxation did not converge or has a relaxation_strain above 0.1.
+
+    The vibrational entropy of a lattice is only used if every SQS that the
+    lattice reads, also through links, has one. All SQS of the lattice must
+    also have an imaginary_fraction of at most max_imaginary_fraction. Otherwise
+    a warning is given and the lattice is fitted to the energy only.
 
     Parameters
     ----------
@@ -319,6 +490,9 @@ def fit_tdb(
         Lines of the sqs2tdb terms.in file for each lattice to fit.
     calculations : list of dict
         Output of run_sqs_calculations.
+    max_imaginary_fraction : float
+        Largest imaginary_fraction of an SQS for which the vibrational entropy
+        of its lattice is used.
 
     Returns
     -------
@@ -327,19 +501,32 @@ def fit_tdb(
     """
     lattices = list(terms)
     _copy_sqs(elements, lattices, level)
-    energies = {
-        (calc["lattice"], calc["folder"]): calc["energy"] for calc in calculations
-    }
+    by_folder = {(calc["lattice"], calc["folder"]): calc for calc in calculations}
     for wait in Path().glob("*/*/wait"):
         key = (wait.parent.parent.name, wait.parent.name)
-        if key not in energies:
+        if key not in by_folder:
             raise ValueError(f"No energy for {'/'.join(key)}.")
-        (wait.parent / "energy").write_text(f"{energies[key]}\n")
+        (wait.parent / "energy").write_text(f"{by_folder[key]['energy']}\n")
+        if by_folder[key].get("vibrational_entropy") is not None:
+            entropy = by_folder[key]["vibrational_entropy"]
+            (wait.parent / "svib_ht").write_text(f"{entropy}\n")
     # a link points into its own lattice folder or into another lattice folder
     for link in Path().glob("*/*/link"):
         target = link.read_text().strip()
         if not (Path(link.parent.parent, target).is_dir() or Path(target).is_dir()):
             raise ValueError(f"{link.parent} links to {target}, which does not exist.")
+    unstable = {
+        calc["lattice"]
+        for calc in calculations
+        if (calc.get("imaginary_fraction") or 0) > max_imaginary_fraction
+    }
+    for lattice in sorted(_remove_vibrational_entropy(lattices, unstable)):
+        warnings.warn(
+            f"The vibrational entropy of {lattice} is not used, since one of its "
+            "SQS has none or has an imaginary_fraction above "
+            f"{max_imaginary_fraction}.",
+            stacklevel=1,
+        )
     for calc in calculations:
         if "structure" in calc:
             initial = Mcsqs.structure_from_str(

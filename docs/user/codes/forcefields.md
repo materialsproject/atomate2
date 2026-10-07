@@ -85,6 +85,7 @@ This workflow is new and has not been tested widely.
 It might still change in future versions.
 ```
 
+The workflow needs the `phonons` extra, `pip install 'atomate2[phonons]'`.
 ATAT is not a Python package, so install it yourself.
 `make` and `make install` in the ATAT folder build all of ATAT, copy it to `~/bin` and write the `~/.atat.rc` file that `sqs2tdb` reads.
 This workflow only needs three of the ATAT programs, which build in a few seconds:
@@ -110,7 +111,15 @@ It is melted for 10 ps at `melt_temperature`.
 It is then run for 20 ps at `liquid_temperature`, and the first 5 ps are left out of the mean potential energy.
 Both liquid runs are isotropic NPT at zero pressure, with no net momentum.
 The mean squared displacement leaves out the motion of the centre of mass.
-Finally, `sqs2tdb` fits the energies of each lattice and writes one TDB file.
+The phonons of each relaxed solid SQS give its harmonic vibrational entropy.
+For them the atoms are relaxed again at fixed cell to `fmax=0.001` eV/Å.
+The displacements are run in a diagonal supercell with all lattice vectors at least 20 Å long.
+The entropy is phonopy's sum over a q-point mesh at 3000 K.
+At this temperature the excess entropy of an SQS is close to its high temperature limit, which `sqs2tdb` expects.
+In our tests it changed by at most 0.014 k_B/atom between supercells of 20 and 25 Å.
+Finally, `sqs2tdb` fits the energies and vibrational entropies of each lattice and writes one TDB file.
+The vibrational entropy adds a term linear in T to the mixing terms of the solids.
+Set `phonon_maker=None` to fit the energies only.
 
 ```py
 from jobflow import run_locally
@@ -150,6 +159,8 @@ If it is too large, run the liquid MD longer or average the energies of several 
 Check also `is_force_converged` and `relaxation_strain` of each solid calculation.
 The ATAT `checkrelax` help calls a `relaxation_strain` above 0.1 too large for a cluster expansion.
 The fit job gives a warning for each solid where one of these two checks fails.
+`imaginary_fraction` of each solid calculation is the part of its phonon frequencies on the q-point mesh that are imaginary.
+If it is above `max_imaginary_fraction`, 0.03 by default, for one SQS of a lattice, that lattice is fitted to the energies only and the fit job gives a warning.
 BCC_A2 is not in the default lattices.
 A BCC SQS of elements that are not stable in BCC can collapse during the relaxation, so check its `relaxation_strain` if you add it.
 

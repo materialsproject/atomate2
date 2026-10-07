@@ -1,13 +1,17 @@
 """Tests for the sqs2tdb fit of the CALPHAD workflow."""
 
 import json
+import re
 import shutil
 from types import SimpleNamespace
 
 import numpy as np
 import pytest
+from ase.calculators.emt import EMT
 from pymatgen.core import Lattice, Structure
-from scipy.constants import electron_volt, physical_constants
+from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.io.phonopy import get_pmg_structure
+from scipy.constants import R, electron_volt, physical_constants
 
 from atomate2.common.jobs.calphad import (
     _copy_sqs,
@@ -15,7 +19,10 @@ from atomate2.common.jobs.calphad import (
     fit_tdb,
     get_liquid_energy,
     get_sqs_structures,
+    get_vibrational_entropy,
 )
+from atomate2.common.jobs.phonons import _generate_phonon_object
+from atomate2.forcefields.flows.phonons import PhononMaker
 
 needs_atat = pytest.mark.skipif(
     shutil.which("sqs2tdb") is None, reason="ATAT sqs2tdb is not installed"
@@ -54,6 +61,62 @@ def test_get_liquid_energy():
     assert result["mean_squared_displacement"] == pytest.approx(0.04)
 
 
+def test_get_vibrational_entropy():
+    """FCC Cu with EMT, in its 1-atom and its 4-atom cell."""
+    maker = PhononMaker()
+    a = 3.6
+    cells = {
+        1: Structure(Lattice((a / 2) * (1 - np.eye(3))), ["Cu"], [[0, 0, 0]]),
+        4: Structure(
+            Lattice.cubic(a),
+            ["Cu"] * 4,
+            [[0, 0, 0], [0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]],
+        ),
+    }
+    for n_sites, repeats in ((1, 5), (4, 3)):
+        supercell = np.diag([repeats] * 3).tolist()
+        phonon = _generate_phonon_object(
+            cells[n_sites],
+            supercell,
+            maker.displacement,
+            maker.sym_reduce,
+            maker.symprec,
+            maker.use_symmetrized_structure,
+            maker.kpath_scheme,
+            maker.code,
+        )
+        forces = []
+        for cell in phonon.supercells_with_displacements:
+            atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(cell))
+            atoms.calc = EMT()
+            forces.append(atoms.get_forces())
+        result = get_vibrational_entropy.original(
+            cells[n_sites], supercell, forces, maker
+        )
+        # the entropy is per SQS cell, 10.60 k_B per atom at 3000 K
+        assert result["vibrational_entropy"] == pytest.approx(
+            10.60 * n_sites, abs=0.01 * n_sites
+        )
+        assert result["imaginary_fraction"] == 0
+
+
+def _get_mixing_calculations(sqs, entropy=None):
+    """Mixing energy -0.02 eV/atom and vibrational entropy -0.25 k_B/atom at 50%."""
+    end_members = {"Cu": -3.7, "Ni": -5.0}
+    calculations = []
+    for calc in sqs:
+        composition = calc["structure"].composition
+        energy = sum(end_members[str(el)] * n for el, n in composition.items())
+        if len(composition) == 2:
+            energy -= 0.02 * composition.num_atoms
+        calculations.append({**calc, "energy": energy})
+        if entropy is not None and calc["lattice"] != "LIQUID":
+            calculations[-1]["vibrational_entropy"] = composition.num_atoms * (
+                entropy - 0.25 * (len(composition) == 2)
+            )
+    return calculations
+
+
 @needs_atat
 def test_copy_sqs_bump(tmp_path):
     """The pure element end members of CSCL_B2 have the symmetry of BCC_A2."""
@@ -77,15 +140,7 @@ def test_fit_tdb():
         )
     ]
 
-    end_members = {"Cu": -3.7, "Ni": -5.0}
-    calculations = []
-    for calc in sqs:
-        composition = calc["structure"].composition
-        energy = sum(end_members[str(el)] * n for el, n in composition.items())
-        if len(composition) == 2:
-            energy -= 0.02 * composition.num_atoms
-        calculations.append({**calc, "energy": energy})
-
+    calculations = _get_mixing_calculations(sqs)
     terms = {lattice: ["1,0", "2,0"] for lattice in lattices}
     doc = fit_tdb.original(elements, 1, terms, calculations)
 
@@ -98,6 +153,49 @@ def test_fit_tdb():
     # the structures were not relaxed
     strains = [calc.relaxation_strain for calc in doc.calculations]
     assert strains == pytest.approx([0] * 6, abs=1e-12)
+
+
+@needs_atat
+def test_fit_tdb_vibrational_entropy():
+    """-0.25 k_B/atom at x = 0.5 gives L0 = -0.08 eV/atom + R T."""
+    elements, lattices = ("Cu", "Ni"), ("FCC_A1", "LIQUID")
+    sqs = get_sqs_structures.original(elements, lattices, 1)
+    calculations = _get_mixing_calculations(sqs, entropy=3.0)
+    terms = {lattice: ["1,0", "2,0"] for lattice in lattices}
+    doc = fit_tdb.original(elements, 1, terms, calculations)
+    line = next(line for line in doc.tdb.splitlines() if "L(FCC_A1,CU,NI;0)" in line)
+    assert float(line.split()[3].rpartition("+")[2].removesuffix("*T")) == (
+        pytest.approx(R, abs=1e-3)
+    )
+    line = next(line for line in doc.tdb.splitlines() if "L(LIQUID,CU,NI;0)" in line)
+    assert "*T" not in line
+
+
+@needs_atat
+def test_fit_tdb_vibrational_entropy_unstable():
+    """CSCL_B2 links to the BCC_A2 end members, whose phonons are unstable."""
+    elements = ("Cu", "Ni")
+    terms = {
+        "FCC_A1": ["1,0", "2,0"],
+        "BCC_A2": ["1,0", "2,0"],
+        "CSCL_B2": ["1,0:1,0", "2,0:1,0"],
+    }
+    sqs = get_sqs_structures.original(elements, list(terms), 1)
+    calculations = _get_mixing_calculations(sqs, entropy=3.0)
+    for calc in calculations:
+        calc["imaginary_fraction"] = 0.1 * (calc["lattice"] == "BCC_A2")
+    with pytest.warns(UserWarning, match="vibrational entropy of") as record:
+        doc = fit_tdb.original(elements, 1, terms, calculations)
+    assert sorted(str(warning.message).split()[4] for warning in record) == [
+        "BCC_A2",
+        "CSCL_B2",
+    ]
+    fcc, bcc = (
+        next(line for line in doc.tdb.splitlines() if f"L({lattice},CU,NI;0)" in line)
+        for lattice in ("FCC_A1", "BCC_A2")
+    )
+    assert "*T" in fcc
+    assert "*T" not in bcc
 
 
 @needs_atat
@@ -166,16 +264,16 @@ def test_fit_tdb_missing_stable_lattice():
 
 @needs_atat
 @pytest.mark.parametrize(
-    ("model", "l0"),
+    ("model", "l0", "l0_per_k"),
     [
-        ("MACE-OMAT-0-medium", (7168.0, 15938.0, 366.0)),
-        ("MACE-MATPES-PBE-0", (-2722.8, 2480.6, -17578.7)),
-        ("MACE-MATPES-r2SCAN-0", (3980.0, 14099.9, -13919.9)),
-        ("GRACE-2L-OMAT", (1357.5, 891.5, -3860.4)),
+        ("MACE-OMAT-0-medium", (7168.0, 15938.0, 366.0), (0.414, -0.357)),
+        ("MACE-MATPES-PBE-0", (-2722.8, 2480.6, -17578.7), (2.853, 2.893)),
+        ("MACE-MATPES-r2SCAN-0", (3980.0, 14099.9, -13919.9), (-0.116, -0.031)),
+        ("GRACE-2L-OMAT", (1357.5, 891.5, -3860.4), (-1.906, 3.358)),
     ],
 )
-def test_fit_tdb_ni_re(test_dir, model, l0):
-    """Refit Ni-Re from the energies of the CALPHAD tutorial."""
+def test_fit_tdb_ni_re(test_dir, model, l0, l0_per_k):
+    """Refit Ni-Re from the energies and vibrational entropies of the tutorial."""
     energies = json.loads(
         (test_dir / "common" / "calphad" / "ni_re_energies.json").read_text()
     )
@@ -187,8 +285,16 @@ def test_fit_tdb_ni_re(test_dir, model, l0):
         "LIQUID": ["1,0", "2,0"],
     }
     doc = fit_tdb.original(("Ni", "Re"), 2, terms, energies[model])
-    for lattice, value in zip(("FCC_A1", "HCP_A3", "LIQUID"), l0, strict=True):
+    # the liquid has no vibrational entropy, so no term in T
+    slopes = (*l0_per_k, 0.0)
+    for lattice, value, slope in zip(
+        ("FCC_A1", "HCP_A3", "LIQUID"), l0, slopes, strict=True
+    ):
         line = next(
             line for line in doc.tdb.splitlines() if f"L({lattice},NI,RE;0)" in line
         )
-        assert float(line.split()[3]) == pytest.approx(value, abs=1)
+        a, b = re.fullmatch(
+            r"([-+]?[\d.]+)(?:([-+][\d.]+)\*T)?", line.split()[3]
+        ).groups()
+        assert float(a) == pytest.approx(value, abs=1)
+        assert float(b or 0) == pytest.approx(slope, abs=1e-3)

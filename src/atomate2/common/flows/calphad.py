@@ -17,6 +17,8 @@ from atomate2.common.jobs.calphad import (
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from atomate2.common.flows.phonons import BasePhononMaker
+
 
 @due.dcite(
     Doi("10.1016/S0364-5916(02)80006-2"),
@@ -41,8 +43,12 @@ class BaseCalphadMaker(Maker):
 
     The special quasirandom structures (SQS) of each lattice are taken from the
     ATAT database. Each solid SQS is relaxed. Each liquid SQS is melted and then
-    run with MD, and the mean potential energy of that run is used. sqs2tdb fits
-    the energies of each lattice and writes one TDB file.
+    run with MD, and the mean potential energy of that run is used. If
+    phonon_maker is given, the harmonic phonons of each relaxed solid SQS give
+    its vibrational entropy, from phonopy's sum over a q-point mesh. sqs2tdb fits
+    the energies and vibrational entropies of each lattice and writes one TDB
+    file. The vibrational entropy adds a term linear in T to the mixing terms of
+    the solids.
 
     For lattices in the SGTE database (e.g. FCC_A1, HCP_A3 and LIQUID), sqs2tdb
     takes the free energies of the pure elements from SGTE. Only the mixing
@@ -86,6 +92,13 @@ class BaseCalphadMaker(Maker):
     liquid_supercell : int
         Number of repeats of each liquid SQS along each lattice vector for the
         liquid MD. The energy is divided by the number of SQS cells.
+    phonon_maker : BasePhononMaker or None
+        Phonon maker whose relaxation, supercell, displacement and force
+        settings are used for the vibrational entropy of the relaxed solid SQS.
+        None fits the energies only.
+    max_imaginary_fraction : float
+        A lattice is fitted to the energies only if one of its SQS has a larger
+        fraction of imaginary phonon frequencies on the q-point mesh.
     """
 
     name: str = "calphad"
@@ -102,6 +115,8 @@ class BaseCalphadMaker(Maker):
     liquid_md_maker: Maker | None = None
     n_equilibration_frames: int = 0
     liquid_supercell: int = 1
+    phonon_maker: BasePhononMaker | None = None
+    max_imaginary_fraction: float = 0.03
 
     def make(self, elements: Sequence[str]) -> Flow:
         """
@@ -126,11 +141,13 @@ class BaseCalphadMaker(Maker):
             self.liquid_md_maker,
             self.n_equilibration_frames,
             self.liquid_supercell,
+            self.phonon_maker,
         )
         fit = fit_tdb(
             elements,
             self.level,
             {lattice: self.terms[lattice] for lattice in self.lattices},
             calculations.output,
+            self.max_imaginary_fraction,
         )
         return Flow([sqs, calculations, fit], output=fit.output, name=self.name)

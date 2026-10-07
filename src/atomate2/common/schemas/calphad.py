@@ -34,6 +34,16 @@ class SqsCalculation(BaseModel):
         description="Whether the forces reached fmax within the relaxation steps. "
         "None for the liquid.",
     )
+    vibrational_entropy: float | None = Field(
+        None,
+        description="Harmonic vibrational entropy of the relaxed SQS cell in k_B "
+        "at 3000 K. None for the liquid and without a phonon run.",
+    )
+    imaginary_fraction: float | None = Field(
+        None,
+        description="Fraction of the phonon frequencies on the q-point mesh below "
+        "-0.05 THz. None for the liquid and without a phonon run.",
+    )
     mean_squared_displacement: float | None = Field(
         None,
         description="Mean squared displacement of the atoms over the liquid MD "

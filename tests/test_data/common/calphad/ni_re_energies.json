@@ -3,122 +3,170 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -5.49209853
+   "energy": -5.49209853,
+   "vibrational_entropy": 10.18432,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Re=1",
-   "energy": -12.33654039
+   "energy": -12.33654039,
+   "vibrational_entropy": 11.59655,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
-   "energy": -284.71462134
+   "energy": -284.71462134,
+   "vibrational_entropy": 348.61536,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
-   "energy": -339.22431107
+   "energy": -339.22431107,
+   "vibrational_entropy": 359.57408,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
-   "energy": -230.33194036
+   "energy": -230.33194036,
+   "vibrational_entropy": 336.1104,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -10.96839031
+   "energy": -10.96839031,
+   "vibrational_entropy": 20.39652,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Re=1",
-   "energy": -24.85183259
+   "energy": -24.85183259,
+   "vibrational_entropy": 22.68482,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
-   "energy": -285.27336656
+   "energy": -285.27336656,
+   "vibrational_entropy": 345.0624,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
-   "energy": -340.62461569
+   "energy": -340.62461569,
+   "vibrational_entropy": 354.35488,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
-   "energy": -230.47173992
+   "energy": -230.47173992,
+   "vibrational_entropy": 335.36992,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
-   "energy": -85.67987041
+   "energy": -85.67987041,
+   "vibrational_entropy": 86.17536,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
-   "energy": -57.26517478
+   "energy": -57.26517478,
+   "vibrational_entropy": 83.7976,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
-   "energy": -304.29669863
+   "energy": -304.29669863,
+   "vibrational_entropy": 494.82576,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
-   "energy": -553.98891007
+   "energy": -553.98891007,
+   "vibrational_entropy": 534.22848,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -385.71742144
+   "energy": -385.71742144,
+   "vibrational_entropy": 511.7856,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -468.69714088
+   "energy": -468.69714088,
+   "vibrational_entropy": 524.44176,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
-   "energy": -427.23088126
+   "energy": -427.23088126,
+   "vibrational_entropy": 519.02784,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
-   "energy": -34.46826631
+   "energy": -34.46826631,
+   "vibrational_entropy": 51.32615,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
-   "energy": -54.93189197
+   "energy": -54.93189197,
+   "vibrational_entropy": 56.10875,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
-   "energy": -164.50251049
+   "energy": -164.50251049,
+   "vibrational_entropy": 214.266,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
-   "energy": -191.5431141
+   "energy": -191.5431141,
+   "vibrational_entropy": 220.9278,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -123.6822928
+   "energy": -123.6822928,
+   "vibrational_entropy": 205.261,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -233.01581704
+   "energy": -233.01581704,
+   "vibrational_entropy": 227.9786,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
-   "energy": -177.54910385
+   "energy": -177.54910385,
+   "vibrational_entropy": 218.932,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
@@ -150,122 +198,170 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -5.4747177
+   "energy": -5.4747177,
+   "vibrational_entropy": 10.20171,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Re=1",
-   "energy": -12.34326536
+   "energy": -12.34326536,
+   "vibrational_entropy": 11.6354,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
-   "energy": -285.56191987
+   "energy": -285.56191987,
+   "vibrational_entropy": 346.92864,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
-   "energy": -339.69707156
+   "energy": -339.69707156,
+   "vibrational_entropy": 357.99936,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
-   "energy": -230.48022471
+   "energy": -230.48022471,
+   "vibrational_entropy": 336.29056,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -10.92828321
+   "energy": -10.92828321,
+   "vibrational_entropy": 20.51848,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Re=1",
-   "energy": -24.8367194
+   "energy": -24.8367194,
+   "vibrational_entropy": 22.92318,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
-   "energy": -286.04978408
+   "energy": -286.04978408,
+   "vibrational_entropy": 344.80032,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
-   "energy": -340.92055073
+   "energy": -340.92055073,
+   "vibrational_entropy": 354.69472,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
-   "energy": -230.82737752
+   "energy": -230.82737752,
+   "vibrational_entropy": 336.12704,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
-   "energy": -85.40853431
+   "energy": -85.40853431,
+   "vibrational_entropy": 87.0692,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
-   "energy": -57.72741151
+   "energy": -57.72741151,
+   "vibrational_entropy": 83.8524,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
-   "energy": -304.98225441
+   "energy": -304.98225441,
+   "vibrational_entropy": 496.7928,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
-   "energy": -553.36727309
+   "energy": -553.36727309,
+   "vibrational_entropy": 538.57056,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -386.47987275
+   "energy": -386.47987275,
+   "vibrational_entropy": 511.79184,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -468.8524664
+   "energy": -468.8524664,
+   "vibrational_entropy": 525.69168,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
-   "energy": -428.16417685
+   "energy": -428.16417685,
+   "vibrational_entropy": 518.3712,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
-   "energy": -34.46971654
+   "energy": -34.46971654,
+   "vibrational_entropy": 51.55605,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
-   "energy": -54.93295983
+   "energy": -54.93295983,
+   "vibrational_entropy": 55.75715,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
-   "energy": -164.93724543
+   "energy": -164.93724543,
+   "vibrational_entropy": 213.4108,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
-   "energy": -191.99555333
+   "energy": -191.99555333,
+   "vibrational_entropy": 219.9118,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -123.71179622
+   "energy": -123.71179622,
+   "vibrational_entropy": 205.5914,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -233.0373081
+   "energy": -233.0373081,
+   "vibrational_entropy": 227.928,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
-   "energy": -177.88365554
+   "energy": -177.88365554,
+   "vibrational_entropy": 218.3056,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
@@ -297,122 +393,170 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -11.95708834
+   "energy": -11.95708834,
+   "vibrational_entropy": 10.10769,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Re=1",
-   "energy": -52.35914458
+   "energy": -52.35914458,
+   "vibrational_entropy": 11.43793,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
-   "energy": -1029.10123433
+   "energy": -1029.10123433,
+   "vibrational_entropy": 344.24864,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
-   "energy": -1351.96897539
+   "energy": -1351.96897539,
+   "vibrational_entropy": 355.92736,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
-   "energy": -705.15189284
+   "energy": -705.15189284,
+   "vibrational_entropy": 334.5024,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -23.90892309
+   "energy": -23.90892309,
+   "vibrational_entropy": 20.2053,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Re=1",
-   "energy": -104.88089442
+   "energy": -104.88089442,
+   "vibrational_entropy": 22.67282,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
-   "energy": -1029.40481884
+   "energy": -1029.40481884,
+   "vibrational_entropy": 342.42656,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
-   "energy": -1353.11344443
+   "energy": -1353.11344443,
+   "vibrational_entropy": 353.78432,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
-   "energy": -705.42385073
+   "energy": -705.42385073,
+   "vibrational_entropy": 333.16064,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
-   "energy": -338.76180051
+   "energy": -338.76180051,
+   "vibrational_entropy": 86.0432,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
-   "energy": -176.23368313
+   "energy": -176.23368313,
+   "vibrational_entropy": 82.24192,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
-   "energy": -815.53092629
+   "energy": -815.53092629,
+   "vibrational_entropy": 490.23936,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
-   "energy": -2273.59233061
+   "energy": -2273.59233061,
+   "vibrational_entropy": 534.192,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -1300.033087
+   "energy": -1300.033087,
+   "vibrational_entropy": 507.38352,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -1786.12827701
+   "energy": -1786.12827701,
+   "vibrational_entropy": 520.74,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
-   "energy": -1543.45688302
+   "energy": -1543.45688302,
+   "vibrational_entropy": 514.13472,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
-   "energy": -100.25704698
+   "energy": -100.25704698,
+   "vibrational_entropy": 50.9817,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
-   "energy": -221.63123017
+   "energy": -221.63123017,
+   "vibrational_entropy": 55.36085,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
-   "energy": -562.52691324
+   "energy": -562.52691324,
+   "vibrational_entropy": 211.8028,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
-   "energy": -724.08151448
+   "energy": -724.08151448,
+   "vibrational_entropy": 217.9878,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -319.78014422
+   "energy": -319.78014422,
+   "vibrational_entropy": 203.9956,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -966.436665
+   "energy": -966.436665,
+   "vibrational_entropy": 225.7786,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
-   "energy": -642.71716391
+   "energy": -642.71716391,
+   "vibrational_entropy": 216.2028,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
@@ -444,122 +588,170 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -5.49377845
+   "energy": -5.49377845,
+   "vibrational_entropy": 10.07699,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Re=1",
-   "energy": -12.32522647
+   "energy": -12.32522647,
+   "vibrational_entropy": 11.62424,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5",
-   "energy": -285.05457725
+   "energy": -285.05457725,
+   "vibrational_entropy": 348.97984,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.25,a_Re=0.75",
-   "energy": -339.43344811
+   "energy": -339.43344811,
+   "vibrational_entropy": 361.0032,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Ni=0.75,a_Re=0.25",
-   "energy": -230.52037786
+   "energy": -230.52037786,
+   "vibrational_entropy": 336.28736,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -10.94756268
+   "energy": -10.94756268,
+   "vibrational_entropy": 20.32568,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Re=1",
-   "energy": -24.77506765
+   "energy": -24.77506765,
+   "vibrational_entropy": 23.07988,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Ni=0.5,c_Re=0.5",
-   "energy": -285.79517832
+   "energy": -285.79517832,
+   "vibrational_entropy": 344.07296,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.25,c_Re=0.75",
-   "energy": -340.78359046
+   "energy": -340.78359046,
+   "vibrational_entropy": 354.74944,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Ni=0.75,c_Re=0.25",
-   "energy": -230.54821098
+   "energy": -230.54821098,
+   "vibrational_entropy": 334.81376,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Ni=1,h_Re=1",
-   "energy": -85.91382426
+   "energy": -85.91382426,
+   "vibrational_entropy": 85.63816,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=0_d_Re=1,h_Ni=1",
-   "energy": -57.26791724
+   "energy": -57.26791724,
+   "vibrational_entropy": 83.8096,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Ni=1",
-   "energy": -304.29129942
+   "energy": -304.29129942,
+   "vibrational_entropy": 492.79632,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=0.5,d_Re=0.5,h_Re=1",
-   "energy": -553.94491608
+   "energy": -553.94491608,
+   "vibrational_entropy": 534.83568,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Ni=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -386.05044014
+   "energy": -386.05044014,
+   "vibrational_entropy": 510.696,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=1_d_Re=1,h_Ni=0.5,h_Re=0.5",
-   "energy": -469.31958256
+   "energy": -469.31958256,
+   "vibrational_entropy": 521.84544,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI3SN_D019",
    "folder": "sqs_lev=2_d_Ni=0.5,d_Re=0.5,h_Ni=0.5,h_Re=0.5",
-   "energy": -427.89276251
+   "energy": -427.89276251,
+   "vibrational_entropy": 516.44976,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Ni=1,b_Re=1",
-   "energy": -34.56108084
+   "energy": -34.56108084,
+   "vibrational_entropy": 51.04905,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=0_a_Re=1,b_Ni=1",
-   "energy": -54.8895829
+   "energy": -54.8895829,
+   "vibrational_entropy": 56.6647,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Ni=1",
-   "energy": -164.70384208
+   "energy": -164.70384208,
+   "vibrational_entropy": 214.5414,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=0.5,a_Re=0.5,b_Re=1",
-   "energy": -191.77955326
+   "energy": -191.77955326,
+   "vibrational_entropy": 221.1066,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Ni=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -123.8971733
+   "energy": -123.8971733,
+   "vibrational_entropy": 203.5672,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=1_a_Re=1,b_Ni=0.5,b_Re=0.5",
-   "energy": -232.79282086
+   "energy": -232.79282086,
+   "vibrational_entropy": 230.1166,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "NI4MO_D1A",
    "folder": "sqs_lev=2_a_Ni=0.5,a_Re=0.5,b_Ni=0.5,b_Re=0.5",
-   "energy": -177.85394644
+   "energy": -177.85394644,
+   "vibrational_entropy": 218.2012,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",

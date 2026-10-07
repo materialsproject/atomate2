@@ -11,7 +11,8 @@ from emmet.core.types.enums import StoreTrajectoryOption
 
 from atomate2.ase.md import MDEnsemble
 from atomate2.common.flows.calphad import BaseCalphadMaker
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 
 if TYPE_CHECKING:
@@ -49,7 +50,7 @@ def _get_makers(
     liquid_temperature: float | None = None,
     calculator_kwargs: dict | None = None,
 ) -> dict:
-    """Get the relaxation and liquid MD makers for one force field."""
+    """Get the relaxation, phonon and liquid MD makers for one force field."""
     calculator: dict[str, Any] = {
         "force_field_name": force_field_name,
         "calculator_kwargs": dict(calculator_kwargs or {}),
@@ -57,7 +58,17 @@ def _get_makers(
     makers: dict[str, Any] = {
         "relax_maker": ForceFieldRelaxMaker(
             relax_cell=True, steps=1000, relax_kwargs={"fmax": 0.01}, **calculator
-        )
+        ),
+        "phonon_maker": PhononMaker(
+            min_length=20.0,
+            prefer_90_degrees=False,
+            get_supercell_size_kwargs={"force_diagonal": True},
+            bulk_relax_maker=ForceFieldRelaxMaker(
+                relax_cell=False, steps=1000, relax_kwargs={"fmax": 0.001}, **calculator
+            ),
+            phonon_displacement_maker=ForceFieldStaticMaker(**calculator),
+            socket=True,
+        ),
     }
     if melt_temperature is not None and liquid_temperature is not None:
         makers["liquid_melt_maker"] = _get_liquid_md_maker(
@@ -80,16 +91,20 @@ class CalphadMaker(BaseCalphadMaker):
     Maker to fit a CALPHAD database for a binary system with a force field.
 
     The solid SQS are relaxed, including the cell, with fmax = 0.01 eV/A and at
-    most 1000 steps. Each liquid SQS is repeated three times along each lattice
-    vector. It is melted for 10 ps at melt_temperature and then run for 20 ps at
+    most 1000 steps. For the phonons, the atoms are relaxed again at fixed cell
+    to fmax = 0.001 eV/A. The displacements of 0.01 A are run in one job, in a
+    diagonal supercell with all lattice vectors at least 20 A long.
+
+    Each liquid SQS is repeated three times along each lattice vector. It is
+    melted for 10 ps at melt_temperature and then run for 20 ps at
     liquid_temperature. Both runs are isotropic NPT at zero pressure with a 2 fs
     time step and no net momentum. The first 5 ps of the second run are left out
     of the mean energy.
 
-    By default, the solids are relaxed with MACE-OMAT-0-medium in float64 and
-    there are no liquid makers, so LIQUID must be removed from the lattices. Use
-    :obj:`from_force_field_name` to set the force field of every step and the
-    liquid temperatures, which depend on the system.
+    By default, the solids are relaxed and their phonons are run with
+    MACE-OMAT-0-medium in float64. There are no liquid makers, so LIQUID must be
+    removed from the lattices. Use :obj:`from_force_field_name` to set the force
+    field of every step and the liquid temperatures, which depend on the system.
 
     See :obj:`.BaseCalphadMaker` for what the TDB file contains.
 
@@ -108,6 +123,10 @@ class CalphadMaker(BaseCalphadMaker):
         Lines of the sqs2tdb terms.in file for each lattice.
     relax_maker : .ForceFieldRelaxMaker
         Maker to relax the solid SQS.
+    phonon_maker : .PhononMaker or None
+        Phonon maker whose relaxation, supercell, displacement and force
+        settings are used for the vibrational entropy of the relaxed solid SQS.
+        None fits the energies only.
     liquid_melt_maker : .ForceFieldMDMaker or None
         MD maker that melts the liquid SQS.
     liquid_md_maker : .ForceFieldMDMaker or None
@@ -124,6 +143,11 @@ class CalphadMaker(BaseCalphadMaker):
         default_factory=lambda: _get_makers(
             _DEFAULT_FORCE_FIELD, calculator_kwargs=_DEFAULT_CALCULATOR_KWARGS
         )["relax_maker"]
+    )
+    phonon_maker: PhononMaker | None = field(
+        default_factory=lambda: _get_makers(
+            _DEFAULT_FORCE_FIELD, calculator_kwargs=_DEFAULT_CALCULATOR_KWARGS
+        )["phonon_maker"]
     )
     n_equilibration_frames: int = 250
     liquid_supercell: int = 3

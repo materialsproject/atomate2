@@ -3,52 +3,72 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Co=1",
-   "energy": -7.02060077
+   "energy": -7.02060077,
+   "vibrational_entropy": 10.3395,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -5.49209812
+   "energy": -5.49209812,
+   "vibrational_entropy": 10.18572,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
-   "energy": -200.54189353
+   "energy": -200.54189353,
+   "vibrational_entropy": 325.13056,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
-   "energy": -188.10403491
+   "energy": -188.10403491,
+   "vibrational_entropy": 325.0576,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
-   "energy": -212.6169161
+   "energy": -212.6169161,
+   "vibrational_entropy": 327.14144,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Co=1",
-   "energy": -14.07855756
+   "energy": -14.07855756,
+   "vibrational_entropy": 20.29378,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -10.9683871
+   "energy": -10.9683871,
+   "vibrational_entropy": 20.4018,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
-   "energy": -200.72848971
+   "energy": -200.72848971,
+   "vibrational_entropy": 322.92,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
-   "energy": -188.09889185
+   "energy": -188.09889185,
+   "vibrational_entropy": 324.34592,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
-   "energy": -213.06428167
+   "energy": -213.06428167,
+   "vibrational_entropy": 323.12672,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
@@ -80,52 +100,72 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Co=1",
-   "energy": -7.02119797
+   "energy": -7.02119797,
+   "vibrational_entropy": 10.32605,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -5.47471704
+   "energy": -5.47471704,
+   "vibrational_entropy": 10.20328,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
-   "energy": -200.47747765
+   "energy": -200.47747765,
+   "vibrational_entropy": 325.21248,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
-   "energy": -188.07224495
+   "energy": -188.07224495,
+   "vibrational_entropy": 325.11584,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
-   "energy": -212.64513663
+   "energy": -212.64513663,
+   "vibrational_entropy": 326.92032,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Co=1",
-   "energy": -14.0547525
+   "energy": -14.0547525,
+   "vibrational_entropy": 20.6661,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -10.92827886
+   "energy": -10.92827886,
+   "vibrational_entropy": 20.51138,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
-   "energy": -200.45303787
+   "energy": -200.45303787,
+   "vibrational_entropy": 325.5952,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
-   "energy": -187.89995757
+   "energy": -187.89995757,
+   "vibrational_entropy": 326.1264,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
-   "energy": -212.79533077
+   "energy": -212.79533077,
+   "vibrational_entropy": 326.81696,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
@@ -157,52 +197,72 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Co=1",
-   "energy": -13.24081412
+   "energy": -13.24081412,
+   "vibrational_entropy": 10.26038,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -11.95708818
+   "energy": -11.95708818,
+   "vibrational_entropy": 10.10705,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
-   "energy": -403.06135485
+   "energy": -403.06135485,
+   "vibrational_entropy": 325.57888,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
-   "energy": -392.85966835
+   "energy": -392.85966835,
+   "vibrational_entropy": 324.296,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
-   "energy": -413.19218964
+   "energy": -413.19218964,
+   "vibrational_entropy": 327.20672,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Co=1",
-   "energy": -26.45851487
+   "energy": -26.45851487,
+   "vibrational_entropy": 20.64848,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -23.90891926
+   "energy": -23.90891926,
+   "vibrational_entropy": 20.19986,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
-   "energy": -403.0057184
+   "energy": -403.0057184,
+   "vibrational_entropy": 325.73472,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
-   "energy": -392.83059249
+   "energy": -392.83059249,
+   "vibrational_entropy": 323.97056,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
-   "energy": -413.00542118
+   "energy": -413.00542118,
+   "vibrational_entropy": 328.43104,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
@@ -234,52 +294,72 @@
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Co=1",
-   "energy": -7.02278114
+   "energy": -7.02278114,
+   "vibrational_entropy": 10.28094,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=0_a_Ni=1",
-   "energy": -5.49377726
+   "energy": -5.49377726,
+   "vibrational_entropy": 10.07919,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
-   "energy": -200.51036799
+   "energy": -200.51036799,
+   "vibrational_entropy": 324.26368,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
-   "energy": -188.20630537
+   "energy": -188.20630537,
+   "vibrational_entropy": 322.93216,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "FCC_A1",
    "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
-   "energy": -212.64420011
+   "energy": -212.64420011,
+   "vibrational_entropy": 326.07488,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Co=1",
-   "energy": -14.07146885
+   "energy": -14.07146885,
+   "vibrational_entropy": 20.32022,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=0_c_Ni=1",
-   "energy": -10.94755696
+   "energy": -10.94755696,
+   "vibrational_entropy": 20.33138,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
-   "energy": -200.4600999
+   "energy": -200.4600999,
+   "vibrational_entropy": 322.6352,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
-   "energy": -187.86238251
+   "energy": -187.86238251,
+   "vibrational_entropy": 323.39552,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "HCP_A3",
    "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
-   "energy": -212.83957776
+   "energy": -212.83957776,
+   "vibrational_entropy": 323.192,
+   "imaginary_fraction": 0.0
   },
   {
    "lattice": "LIQUID",
