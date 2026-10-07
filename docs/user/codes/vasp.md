@@ -349,12 +349,13 @@ See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
 The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy and hiPhive.
-PyPI does not accept git URLs in extras, so the pheasy version this workflow needs and ALM are installed from git:
+PyPI does not accept git URLs in extras. So pheasy and ALM are installed from git, at the commits atomate2 is tested with:
 ```
 pip install "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"
 pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"
 ```
-From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs all three.
+From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra, pheasy and ALM in one step. This needs pip 25.1 or newer.
+The pheasy release on PyPI lacks options this workflow uses, so do not install it with `pip install pheasy`.
 The `alm` package on PyPI is an unrelated project, so do not install ALM with `pip install alm`.
 ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
@@ -409,7 +410,8 @@ The anharmonic force constants are written to files in the job folder and are no
 
 The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
 The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
-The workflow also needs ALM from git, installed as in the Pheasy section above, or with `--group alamode` from a clone of atomate2.
+The workflow also needs ALM from git, installed as in the Pheasy section above.
+From a clone of atomate2, `pip install ".[hiphive]" --group alamode` installs both in one step. This needs pip 25.1 or newer.
 
 To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
 
@@ -451,8 +453,8 @@ gruneisen_flow = GruneisenMaker(
 ### Thermal expansion workflow
 
 `CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
-It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`, and pheasy and ALM from git.
-See the Pheasy section above.
+It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`, and pheasy and ALM from git, as in the Pheasy section above.
+From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs all of them in one step.
 
 ```{warning}
 This workflow is new and has not been tested widely.
