@@ -40,6 +40,7 @@ def test_calphad_maker_emt(clean_dir):
     liquid = [calc for calc in doc.calculations if calc.lattice == "LIQUID"]
     # a crystal stays well below 1 A^2, the melt diffuses much further
     assert min(calc.mean_squared_displacement for calc in liquid) > 1
+    assert all(calc.energy_standard_error > 0 for calc in liquid)
     # the 32-atom liquid at 2000 K is about 0.54 eV/atom above the relaxed solid
     solid = {calc.folder: calc.energy / len(calc.structure) for calc in solids}
     for calc in liquid:

@@ -248,8 +248,9 @@ def get_liquid_energy(
     """
     Get the mean potential energy and the mean squared displacement of a liquid MD.
 
-    The energy is divided by n_cells, the number of SQS cells in the MD cell. The
-    displacement between two frames is the minimum image of the change in
+    The energy is divided by n_cells, the number of SQS cells in the MD cell. Its
+    standard error comes from the mean energies of five equal blocks of frames.
+    The displacement between two frames is the minimum image of the change in
     fractional coordinates, converted with the lattice of the later frame. The
     displacement of the centre of mass is removed.
 
@@ -272,6 +273,8 @@ def get_liquid_energy(
         The fields of SqsCalculation.
     """
     steps = md_output.output.ionic_steps[n_equilibration_frames:]
+    energies = np.array([step.energy for step in steps]) / n_cells
+    blocks = [block.mean() for block in np.array_split(energies, 5)]
     structures = [step.structure for step in steps]
     displacement = np.zeros((len(structures[0]), 3))
     for previous, current in pairwise(structures):
@@ -282,7 +285,8 @@ def get_liquid_energy(
     return {
         "lattice": lattice,
         "folder": folder,
-        "energy": float(np.mean([step.energy for step in steps])) / n_cells,
+        "energy": float(energies.mean()),
+        "energy_standard_error": float(np.std(blocks, ddof=1) / np.sqrt(5)),
         "mean_squared_displacement": float(np.mean(np.sum(displacement**2, axis=1))),
         "dir_name": md_output.dir_name,
     }

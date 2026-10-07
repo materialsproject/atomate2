@@ -144,6 +144,9 @@ Check `mean_squared_displacement` of each liquid calculation in the output.
 In a liquid it grows with the length of the run.
 In a crystal it stays at the size of the thermal vibrations, well below 1 Å².
 A liquid that crystallizes during the run also drops in energy, which shows in the energies of the liquid MD job.
+`energy_standard_error` of each liquid calculation is the statistical error of its energy, from five blocks of the liquid MD.
+In our Co-Ni and Cr-V runs it was 0.4 to 2 meV/atom, about as large as the scatter between runs with different random seeds.
+If it is too large, run the liquid MD longer or average the energies of several runs.
 Check also `is_force_converged` and `relaxation_strain` of each solid calculation.
 The ATAT `checkrelax` help calls a `relaxation_strain` above 0.1 too large for a cluster expansion.
 The fit job gives a warning for each solid where one of these two checks fails.

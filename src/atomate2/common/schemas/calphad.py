@@ -16,6 +16,11 @@ class SqsCalculation(BaseModel):
         "of the relaxed structure. For the liquid, the mean potential energy of "
         "the liquid MD after the equilibration frames, per SQS cell."
     )
+    energy_standard_error: float | None = Field(
+        None,
+        description="Standard error of the liquid energy in eV per SQS cell, from "
+        "the mean energies of five blocks of the liquid MD. Only for the liquid.",
+    )
     structure: Structure | None = Field(
         None, description="Relaxed structure. None for the liquid."
     )

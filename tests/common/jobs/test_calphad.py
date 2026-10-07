@@ -38,16 +38,18 @@ def test_get_liquid_energy():
     lattice = Lattice(10 * np.eye(3))
     coords = np.array([[0.0, 0.0, 0.0], [0.5, 0.5, 0.5]])
     moved = coords + np.array([[0.04, 0, 0], [0, 0, 0]])
-    frames = [coords, moved, moved + np.array([0, 0.1, 0])]
+    frames = [coords, moved] + [moved + np.array([0, 0.1, 0])] * 3
     steps = [
         SimpleNamespace(structure=Structure(lattice, ["Cu", "Cu"], c), energy=e)
-        for c, e in zip(frames, (8.0, 16.0, 24.0), strict=True)
+        for c, e in zip(frames, (8.0, 16.0, 24.0, 32.0, 40.0), strict=True)
     ]
     md_output = SimpleNamespace(
         output=SimpleNamespace(ionic_steps=steps), dir_name="md"
     )
     result = get_liquid_energy.original(md_output, "LIQUID", "folder", 0, 8)
-    assert result["energy"] == pytest.approx(2.0)
+    assert result["energy"] == pytest.approx(3.0)
+    # five blocks of one frame with 1 to 5 eV per cell
+    assert result["energy_standard_error"] == pytest.approx(np.sqrt(0.5))
     # relative to the centre of mass each atom moved 0.2 A
     assert result["mean_squared_displacement"] == pytest.approx(0.04)
 
