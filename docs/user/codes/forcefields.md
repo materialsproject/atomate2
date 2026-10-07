@@ -78,7 +78,7 @@ However, this may not be preserved in future versions, and `calculator_meta` is 
 
 `CalphadMaker` fits a CALPHAD database for a binary system with a force field.
 It uses the `sqs2tdb` tool of [ATAT](https://axelvandewalle.github.io/www-avdw/atat/) ([van de Walle et al., 2017](https://doi.org/10.1016/j.calphad.2017.05.005)).
-The [CALPHAD tutorial](https://github.com/materialsproject/atomate2/blob/main/tutorials/calphad_workflow.ipynb) runs it for Ni-Re with four force fields.
+The [CALPHAD tutorial](https://github.com/materialsproject/atomate2/blob/main/tutorials/calphad_workflow.ipynb) runs it for Ni-Re, Co-Ni and Cr-V with four force fields.
 
 ```{warning}
 This workflow is new and has not been tested widely.

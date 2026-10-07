@@ -1,0 +1,310 @@
+{
+ "MACE-OMAT-0-medium": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -7.02060077
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -5.49209812
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -200.54189353
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -188.10403491
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -212.6169161
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Co=1",
+   "energy": -14.07855756
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -10.9683871
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
+   "energy": -200.72848971
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
+   "energy": -188.09889185
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
+   "energy": -213.06428167
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -209.21841225
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -159.59491826
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -184.37873732
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -171.9108924
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -196.77997126
+  }
+ ],
+ "MACE-MATPES-PBE-0": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -7.02119797
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -5.47471704
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -200.47747765
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -188.07224495
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -212.64513663
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Co=1",
+   "energy": -14.0547525
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -10.92827886
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
+   "energy": -200.45303787
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
+   "energy": -187.89995757
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
+   "energy": -212.79533077
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -209.01377078
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -159.26251939
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -184.44183877
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -171.99958575
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -196.78083766
+  }
+ ],
+ "MACE-MATPES-r2SCAN-0": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -13.24081412
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -11.95708818
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -403.06135485
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -392.85966835
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -413.19218964
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Co=1",
+   "energy": -26.45851487
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -23.90891926
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
+   "energy": -403.0057184
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
+   "energy": -392.83059249
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
+   "energy": -413.00542118
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -408.10019174
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -366.32790987
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -387.27548308
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -376.82799458
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -397.47844292
+  }
+ ],
+ "GRACE-2L-OMAT": [
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -7.02278114
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -5.49377726
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -200.51036799
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -188.20630537
+  },
+  {
+   "lattice": "FCC_A1",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -212.64420011
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Co=1",
+   "energy": -14.07146885
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=0_c_Ni=1",
+   "energy": -10.94755696
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=1_c_Co=0.5,c_Ni=0.5",
+   "energy": -200.4600999
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.25,c_Ni=0.75",
+   "energy": -187.86238251
+  },
+  {
+   "lattice": "HCP_A3",
+   "folder": "sqs_lev=2_c_Co=0.75,c_Ni=0.25",
+   "energy": -212.83957776
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Co=1",
+   "energy": -209.10325868
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Ni=1",
+   "energy": -159.42165564
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Co=0.5,a_Ni=0.5",
+   "energy": -184.23373764
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.25,a_Ni=0.75",
+   "energy": -171.85255576
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Co=0.75,a_Ni=0.25",
+   "energy": -196.60744022
+  }
+ ]
+}
