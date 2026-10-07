@@ -19,6 +19,7 @@ def test_calphad_maker_emt(clean_dir):
         liquid_temperature=2000,
         lattices=lattices,
         level=1,
+        terms={lattice: ["1,0", "2,0"] for lattice in lattices},
         n_equilibration_frames=50,
         liquid_supercell=1,
     )

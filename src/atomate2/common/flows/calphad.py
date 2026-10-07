@@ -71,7 +71,8 @@ class BaseCalphadMaker(Maker):
         Lines of the sqs2tdb terms.in file for each lattice. Each line has the
         form order,level, with one pair per sublattice separated by ":". Order 1
         gives the end members and order 2 the binary interactions. Level is the
-        highest Redlich-Kister order.
+        highest Redlich-Kister order. The default "2,1" fits L0 and L1, which
+        needs level 2 or higher.
     relax_maker : Maker
         Maker to relax the solid SQS.
     liquid_melt_maker : Maker or None
@@ -88,13 +89,11 @@ class BaseCalphadMaker(Maker):
     """
 
     name: str = "calphad"
-    lattices: list[str] = field(
-        default_factory=lambda: ["FCC_A1", "BCC_A2", "HCP_A3", "LIQUID"]
-    )
+    lattices: list[str] = field(default_factory=lambda: ["FCC_A1", "HCP_A3", "LIQUID"])
     level: int = 2
     terms: dict[str, list[str]] = field(
         default_factory=lambda: {
-            lattice: ["1,0", "2,0"]
+            lattice: ["1,0", "2,1"]
             for lattice in ("FCC_A1", "BCC_A2", "HCP_A3", "LIQUID")
         }
     )

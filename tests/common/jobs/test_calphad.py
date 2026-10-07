@@ -124,6 +124,26 @@ def test_fit_tdb_missing_link():
 
 
 @needs_atat
+def test_fit_tdb_warns_unconverged():
+    sqs = get_sqs_structures.original(("Cu", "Ni"), ("FCC_A1",), 1)
+    calculations = [
+        {**calc, "energy": -1.0, "is_force_converged": True} for calc in sqs
+    ]
+    calculations[0]["is_force_converged"] = False
+    with pytest.warns(UserWarning, match="sqs_lev=0_a_Cu=1 did not converge"):
+        fit_tdb.original(("Cu", "Ni"), 1, {"FCC_A1": ["1,0", "2,0"]}, calculations)
+
+
+@needs_atat
+def test_fit_tdb_empty_parameter():
+    """Level 1 has one mixed composition, too few for L0 and L1."""
+    sqs = get_sqs_structures.original(("Cu", "Ni"), ("FCC_A1",), 1)
+    calculations = [{**calc, "energy": -1.0} for calc in sqs]
+    with pytest.raises(ValueError, match="empty parameter"):
+        fit_tdb.original(("Cu", "Ni"), 1, {"FCC_A1": ["1,0", "2,1"]}, calculations)
+
+
+@needs_atat
 def test_fit_tdb_missing_energy():
     sqs = get_sqs_structures.original(("Cu", "Ni"), ("FCC_A1",), 1)
     calculations = [{**calc, "energy": -1.0} for calc in sqs[:-1]]

@@ -7,6 +7,7 @@ import re
 import shlex
 import subprocess
 import tempfile
+import warnings
 from collections import defaultdict
 from itertools import pairwise
 from pathlib import Path
@@ -301,6 +302,8 @@ def fit_tdb(
     job, since the ordered lattices link to the end members of other lattices.
     The energy of each SQS is written to its folder. Then sqs2tdb -fit is run
     for each lattice, and sqs2tdb -tdb -oc joins the fits into one TDB file.
+    A warning is given for each solid whose relaxation did not converge or has a
+    relaxation_strain above 0.1.
 
     Parameters
     ----------
@@ -341,6 +344,14 @@ def fit_tdb(
             calc["relaxation_strain"] = _get_relaxation_strain(
                 initial, calc["structure"]
             )
+            if calc.get("is_force_converged") is False or (
+                calc["relaxation_strain"] > 0.1
+            ):
+                warnings.warn(
+                    f"The relaxation of {calc['lattice']}/{calc['folder']} did not "
+                    "converge or has a relaxation_strain above 0.1.",
+                    stacklevel=1,
+                )
 
     cmd = shlex.split(SETTINGS.SQS2TDB_CMD)
     fit_logs = {}
@@ -353,6 +364,11 @@ def fit_tdb(
     tdb = next(Path().glob("*.tdb")).read_text()
     # the ordered lattices use the energy of each element's stable lattice, which
     # sqs2tdb leaves undefined if that lattice is not fitted
+    if re.search(r"298\.15\s+;", tdb):
+        raise ValueError(
+            "The TDB file has an empty parameter. A Redlich-Kister level in terms "
+            "needs more compositions, so use a higher SQS level."
+        )
     if undefined := sorted(set(re.findall(r"ABIN_\w+", tdb))):
         raise ValueError(
             f"The TDB file uses {', '.join(undefined)}, which is not defined. Add "

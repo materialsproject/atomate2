@@ -102,8 +102,8 @@ export PATH=$PWD/atat/src:$PATH
 The workflow also runs `cellcvrt` and reads `atatdir` itself, so both must work in the Python process that runs the jobs.
 
 The special quasirandom structures (SQS) of each lattice come from the ATAT database.
-The default lattices are FCC_A1, BCC_A2, HCP_A3 and LIQUID.
-Each solid SQS is relaxed, including the cell, with `fmax=0.001` eV/Å.
+The default lattices are FCC_A1, HCP_A3 and LIQUID.
+Each solid SQS is relaxed, including the cell, with `fmax=0.01` eV/Å and at most 1000 steps.
 Each liquid SQS is repeated three times along each lattice vector, which gives 864 atoms for the 32-atom SQS of the database.
 With 256 atoms, the liquid mixing energy of Ni-Re with MACE-OMAT-0-medium differed by 2 kJ/mol from that with 864 atoms.
 It is melted for 10 ps at `melt_temperature`.
@@ -121,8 +121,13 @@ maker = CalphadMaker.from_force_field_name(
     "MACE-MP-0", melt_temperature=4500, liquid_temperature=2800
 )
 maker.lattices = ["FCC_A1", "HCP_A3", "NI3SN_D019", "NI4MO_D1A", "LIQUID"]
-maker.terms["NI3SN_D019"] = ["1,0:1,0", "2,0:1,0"]
-maker.terms["NI4MO_D1A"] = ["1,0:1,0", "2,0:1,0"]
+maker.terms = {
+    "FCC_A1": ["1,0", "2,0"],
+    "HCP_A3": ["1,0", "2,0"],
+    "NI3SN_D019": ["1,0:1,0", "2,0:1,0"],
+    "NI4MO_D1A": ["1,0:1,0", "2,0:1,0"],
+    "LIQUID": ["1,0", "2,0"],
+}
 flow = maker.make(["Ni", "Re"])
 responses = run_locally(flow, create_folders=True)
 tdb = responses[flow.output.uuid][1].output.tdb
@@ -141,11 +146,18 @@ In a crystal it stays at the size of the thermal vibrations, well below 1 Å².
 A liquid that crystallizes during the run also drops in energy, which shows in the energies of the liquid MD job.
 Check also `is_force_converged` and `relaxation_strain` of each solid calculation.
 The ATAT `checkrelax` help calls a `relaxation_strain` above 0.1 too large for a cluster expansion.
+The fit job gives a warning for each solid where one of these two checks fails.
+BCC_A2 is not in the default lattices.
+A BCC SQS of elements that are not stable in BCC can collapse during the relaxation, so check its `relaxation_strain` if you add it.
 
 `terms` sets the lines of the `sqs2tdb` `terms.in` file of each lattice.
 Each line has the form `order,level`, with one pair per sublattice separated by `:`.
 Order 1 gives the end members and order 2 the binary interactions.
 Level is the highest Redlich-Kister order.
+The default `["1,0", "2,1"]` fits L0 and L1, which needs SQS level 2 or higher.
+At level 2 the ordered lattices have too few SQS for L1, so they take L0 only.
+If ordered lattices are fitted, fit L0 only for the other lattices as well.
+In the Ni-Re tutorial, L1 for HCP_A3 with L0 for NI3SN_D019 made NI3SN_D019 stable up to about 3000 K.
 The ordered lattices need the lattices of their pure element end members.
 If an ordered lattice is fitted, the stable lattice of each element must be fitted too.
 The fit job stops with an error otherwise.

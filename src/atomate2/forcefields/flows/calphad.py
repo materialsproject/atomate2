@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from atomate2.forcefields import MLFF
 
 _DEFAULT_FORCE_FIELD = "MACE-MP-0"
+_DEFAULT_CALCULATOR_KWARGS = {"model": "medium-omat-0", "default_dtype": "float64"}
 
 
 def _get_liquid_md_maker(
@@ -55,7 +56,7 @@ def _get_makers(
     }
     makers: dict[str, Any] = {
         "relax_maker": ForceFieldRelaxMaker(
-            relax_cell=True, relax_kwargs={"fmax": 0.001}, **calculator
+            relax_cell=True, steps=1000, relax_kwargs={"fmax": 0.01}, **calculator
         )
     }
     if melt_temperature is not None and liquid_temperature is not None:
@@ -78,15 +79,15 @@ class CalphadMaker(BaseCalphadMaker):
     """
     Maker to fit a CALPHAD database for a binary system with a force field.
 
-    The solid SQS are relaxed, including the cell, with fmax = 0.001 eV/A. Each
-    liquid SQS is repeated three times along each lattice vector. It is melted
-    for 10 ps at melt_temperature and then run for 20 ps at liquid_temperature.
-    Both runs are isotropic NPT at zero pressure with a 2 fs time step and no
-    net momentum. The first 5 ps of the second run are left out of the mean
-    energy.
+    The solid SQS are relaxed, including the cell, with fmax = 0.01 eV/A and at
+    most 1000 steps. Each liquid SQS is repeated three times along each lattice
+    vector. It is melted for 10 ps at melt_temperature and then run for 20 ps at
+    liquid_temperature. Both runs are isotropic NPT at zero pressure with a 2 fs
+    time step and no net momentum. The first 5 ps of the second run are left out
+    of the mean energy.
 
-    By default, the solids are relaxed with MACE-MP-0 and there are no liquid
-    makers, so LIQUID must be removed from the lattices. Use
+    By default, the solids are relaxed with MACE-OMAT-0-medium in float64 and
+    there are no liquid makers, so LIQUID must be removed from the lattices. Use
     :obj:`from_force_field_name` to set the force field of every step and the
     liquid temperatures, which depend on the system.
 
@@ -120,7 +121,9 @@ class CalphadMaker(BaseCalphadMaker):
     """
 
     relax_maker: ForceFieldRelaxMaker = field(
-        default_factory=lambda: _get_makers(_DEFAULT_FORCE_FIELD)["relax_maker"]
+        default_factory=lambda: _get_makers(
+            _DEFAULT_FORCE_FIELD, calculator_kwargs=_DEFAULT_CALCULATOR_KWARGS
+        )["relax_maker"]
     )
     n_equilibration_frames: int = 250
     liquid_supercell: int = 3
