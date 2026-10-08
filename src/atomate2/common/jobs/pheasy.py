@@ -37,6 +37,7 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2 import SETTINGS
 from atomate2.common.jobs.phonons import (
     ANGSTROM_TO_BOHR,
     _generate_phonon_object,
@@ -265,6 +266,75 @@ def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
         )
 
 
+def _run_harmonic_fit(
+    supercell_matrix: np.ndarray,
+    symprec: float,
+    num_har: int,
+    use_lasso: bool,
+    random_seed: int | None,
+    work_dir: Path | None = None,
+    cutoff: float | None = None,
+) -> None:
+    """
+    Fit the second-order force constants with pheasy.
+
+    pheasy reads POSCAR, SPOSCAR and the harmonic displacement and force
+    matrices in work_dir, and writes FORCE_CONSTANTS there. The rotational sum
+    rule BHH is enforced.
+
+    Parameters
+    ----------
+    supercell_matrix: np.ndarray
+        Diagonal supercell matrix.
+    symprec: float
+        Symmetry precision.
+    num_har: int
+        Number of displaced supercells in the fit.
+    use_lasso: bool
+        Fit with LASSO if True, and with least squares if False.
+    random_seed: int or None
+        Seed of the LASSO fit.
+    work_dir: Path or None
+        Folder of the fit. None is the current folder.
+    cutoff: float or None
+        Cutoff of the second-order force constants in Å. None fits them
+        without a cutoff.
+    """
+    dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
+    base = (
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w 2 "
+        f"--symprec {float(symprec)}"
+    )
+    if cutoff is not None:
+        base += f" --c2 {float(cutoff)}"
+    fit = f"{base} -f --full_ifc"
+    if use_lasso:
+        # with pheasy's default --tol of 1e-4 the fit does not converge, and the
+        # force constants change between machines and package versions
+        fit += " -l LASSO --std --tol 1e-8"
+        if random_seed is not None:
+            fit += f" --seed {int(random_seed)}"
+    fit += (
+        f" --rasr BHH --ndata {int(num_har)} "
+        f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
+    )
+
+    commands = [
+        # clusters and orbits
+        f"{base} -s --nbody 2",
+        # null space
+        f"{base} -c",
+        # sensing matrix from the displacement matrix
+        (
+            f"{base} -d --ndata {int(num_har)} --disp_file "
+            f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
+        ),
+        fit,
+    ]
+    for cmd in commands:
+        subprocess.run(shlex.split(cmd), cwd=work_dir, check=True)
+
+
 def _run_anharmonic_fit(
     method: str,
     supercell_matrix: np.ndarray,
@@ -315,7 +385,7 @@ def _run_anharmonic_fit(
     """
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
     base = (
-        f"pheasy --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
         f"--symprec {float(symprec)}"
     )
     cutoffs = f"--c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)}"
@@ -728,71 +798,17 @@ def generate_frequencies_eigenvectors(
     prim = ase_read("POSCAR")
     supercell = ase_read("SPOSCAR")
 
-    # Create the clusters and orbitals for second order force constants.
-    # The harmonic fit is always second order (-w 2, --nbody 2).
-    pheasy_cmd_1 = (
-        f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} "
-        f"-s -w 2 --symprec {float(symprec)} --nbody 2"
-    )
-
-    # Create the null space to further reduce the free parameters for
-    # specific force constants and make them physically correct.
-    pheasy_cmd_2 = (
-        f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} -c --symprec "
-        f"{float(symprec)} -w 2"
-    )
-
-    # Generate the Compressive Sensing matrix,i.e., displacement matrix
-    # for the input of machine leaning method.i.e., LASSO,
-    pheasy_cmd_3 = (
-        f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-        f"{int(supercell_matrix[1][1])} "
-        f"{int(supercell_matrix[2][2])} -w 2 -d "
-        f"--symprec {float(symprec)} "
-        f"--ndata {int(num_har)} --disp_file "
-        f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
-    )
-
-    # Here we set a criteria to determine which method to use to generate the
-    # force constants. If the number of displacements is larger than 3, we
-    # will use the LASSO method to generate the force constants. Otherwise,
-    # we will use the least-squred method to generate the force constants.
-    if len(phonon.displacements) > 3:
-        # Calculate the force constants using the LASSO method due to the
-        # random-displacement method Obviously, the rotaional invariance
-        # constraint, i.e., tag: --rasr BHH, is enforced during the
-        # fitting process.
-        pheasy_cmd_4 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f --full_ifc "
-            f"-w 2 --symprec {float(symprec)} "
-            f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-            + (f" --seed {int(random_seed)}" if random_seed is not None else "")
+    # LASSO for the random displacements, least squares otherwise
+    use_lasso = len(phonon.displacements) > 3
+    if use_lasso:
+        warnings.warn(
+            "The harmonic LASSO fit now runs with --tol 1e-8 instead of pheasy's "
+            "default of 1e-4. The force constants can differ from those of earlier "
+            "atomate2 versions, mostly in soft low-frequency modes.",
+            stacklevel=2,
         )
-
-    else:
-        # Calculate the force constants using the least-squred method
-        pheasy_cmd_4 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -f --full_ifc "
-            f"-w 2 --symprec {float(symprec)} "
-            f"--rasr BHH --ndata {int(num_har)} "
-            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-        )
-
     logger.info("Start running pheasy in cluster")
-
-    subprocess.call(shlex.split(pheasy_cmd_1))
-    subprocess.call(shlex.split(pheasy_cmd_2))
-    subprocess.call(shlex.split(pheasy_cmd_3))
-    subprocess.call(shlex.split(pheasy_cmd_4))
+    _run_harmonic_fit(supercell_matrix, symprec, num_har, use_lasso, random_seed)
 
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
     if cal_anhar_fcs and not fc_file.exists():
@@ -945,54 +961,16 @@ def generate_frequencies_eigenvectors(
         ):
             shutil.copy(filename, refit_dir / filename)
 
-        pheasy_cmd_11 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -s -w 2 --c2 "
-            f"10.0 --symprec {float(symprec)} "
-            f"--nbody 2"
-        )
-
-        pheasy_cmd_12 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -c --symprec "
-            f"{float(symprec)} --c2 10.0 -w 2"
-        )
-
-        pheasy_cmd_13 = (
-            f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-            f"{int(supercell_matrix[1][1])} "
-            f"{int(supercell_matrix[2][2])} -w 2 -d --symprec "
-            f"{float(symprec)} --c2 10.0 "
-            f"--ndata {int(num_har)} --disp_file "
-            f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
-        )
-
         phonon.generate_displacements(distance=displacement)
-
-        if len(phonon.displacements) > 3:
-            pheasy_cmd_14 = (
-                f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-                f"{int(supercell_matrix[1][1])} "
-                f"{int(supercell_matrix[2][2])} -f --c2 10.0 "
-                f"--full_ifc -w 2 --symprec {float(symprec)} "
-                f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
-                f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-            )
-
-        else:
-            pheasy_cmd_14 = (
-                f"pheasy --scell SPOSCAR --dim {int(supercell_matrix[0][0])} "
-                f"{int(supercell_matrix[1][1])} "
-                f"{int(supercell_matrix[2][2])} -f --full_ifc "
-                f"--c2 10.0 -w 2 --symprec {float(symprec)} "
-                f"--rasr BHH --ndata {int(num_har)} "
-                f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
-            )
-
-        for cmd in (pheasy_cmd_11, pheasy_cmd_12, pheasy_cmd_13, pheasy_cmd_14):
-            subprocess.run(shlex.split(cmd), cwd=refit_dir, check=True)
+        _run_harmonic_fit(
+            supercell_matrix,
+            symprec,
+            num_har,
+            len(phonon.displacements) > 3,
+            random_seed,
+            work_dir=refit_dir,
+            cutoff=10.0,
+        )
 
         force_constants = parse_FORCE_CONSTANTS(
             filename=refit_dir / _DEFAULT_FILE_PATHS["force_constants"]
