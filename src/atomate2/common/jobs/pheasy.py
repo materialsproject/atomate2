@@ -37,6 +37,7 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
+from atomate2 import SETTINGS
 from atomate2.common.jobs.phonons import (
     ANGSTROM_TO_BOHR,
     _generate_phonon_object,
@@ -300,7 +301,10 @@ def _run_harmonic_fit(
         without a cutoff.
     """
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
-    base = f"pheasy --scell SPOSCAR --dim {dim} -w 2 --symprec {float(symprec)}"
+    base = (
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w 2 "
+        f"--symprec {float(symprec)}"
+    )
     if cutoff is not None:
         base += f" --c2 {float(cutoff)}"
     fit = f"{base} -f --full_ifc"
@@ -381,7 +385,7 @@ def _run_anharmonic_fit(
     """
     dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
     base = (
-        f"pheasy --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
         f"--symprec {float(symprec)}"
     )
     cutoffs = f"--c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)}"

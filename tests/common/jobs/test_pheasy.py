@@ -296,6 +296,11 @@ def test_run_harmonic_fit(monkeypatch):
     assert "-f --full_ifc --rasr BHH --ndata 3" in fit
     assert "LASSO" not in fit
 
+    calls.clear()
+    monkeypatch.setattr(pheasy_jobs.SETTINGS, "PHEASY_CMD", "srun -n 1 pheasy")
+    _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103)
+    assert all(args[:4] == ["srun", "-n", "1", "pheasy"] for args, _, _ in calls)
+
 
 def test_check_lasso_alpha(tmp_dir):
     log_file = Path("pheasy_anharmonic_fit.log")
