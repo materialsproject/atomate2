@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from emmet.core.qc_tasks import TaskDoc
-    from jobflow import Job
+    from jobflow import Job, OutputReference
     from pymatgen.core.structure import Molecule
 
     from atomate2.qchem.jobs.base import BaseQCMaker
@@ -196,7 +196,7 @@ class FrequencyOptFlatteningMaker(Maker):
             self.freq_maker.input_set_generator.overwrite_inputs = overwrite_inputs
 
         new_flow = None
-        new_output = None
+        new_output: OutputReference | TaskDoc | None = None
 
         if (lowest_freq < 0) and (ffopt_runs < self.max_ffopt_runs):
             jobs: list[Job] = []
