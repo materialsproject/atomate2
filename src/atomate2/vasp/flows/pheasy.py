@@ -105,9 +105,10 @@ class PhononMaker(BasePhononMaker):
         cutoff distance in Bohr for each FC order, starting at second order. The
         default value is [-1, 12, 10]. The first entry is not used, since pheasy
         fits the second-order FCs without a cutoff. The second and third entries
-        are the cutoffs for third- and fourth-order FCs. The cutoff of each fitted
-        order, up to anhar_max_order, must be positive. Longer cutoffs increase
-        the number of free FCs, and with it the number of displaced supercells.
+        are the cutoffs for third- and fourth-order FCs. The defaults of 12 and 10
+        Bohr are 6.35 and 5.29 Å. The cutoff of each fitted order, up to
+        anhar_max_order, must be positive. Longer cutoffs increase the number of
+        free FCs, and with it the number of displaced supercells.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 8.0 A. It can be increased for larger supercells.
