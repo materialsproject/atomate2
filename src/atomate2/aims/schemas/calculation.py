@@ -231,6 +231,7 @@ class Calculation(BaseModel):
     dir_name: str = Field(
         ..., description="The directory for this FHI-aims calculation"
     )
+    task_name: str = Field(..., description="The task name for this calculation")
     aims_version: str = Field(
         ..., description="FHI-aims version used to perform the calculation"
     )
