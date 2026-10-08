@@ -207,7 +207,7 @@ class FrequencyOptFlatteningMaker(Maker):
                 )
 
             opt = self.opt_maker.make(molecule, prev_dir=prev_dir)
-            opt.name = "Geometry Optimization"
+            opt.name = f"Geometry Optimization {ffopt_runs + 1}"
             jobs += [opt]
             molecule = opt.output.output.optimized_molecule
 
