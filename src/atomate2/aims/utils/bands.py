@@ -47,6 +47,8 @@ def prepare_band_input(structure: Structure, density: float = 20) -> list:
                 current_segment["length"] += 1
                 lines_and_labels.append(current_segment)
                 current_segment = None
+        elif current_segment is None:
+            raise ValueError("Band structure path must start with a labelled point")
         else:
             current_segment["length"] += 1
 

@@ -46,9 +46,7 @@ class AnalysisDoc(BaseModel):
         None, description="Percentage change in volume"
     )
     max_force: float | None = Field(None, description="Maximum force on the atoms")
-    errors: list[str] | None = Field(
-        None, description="Errors from the FHI-aims output"
-    )
+    errors: list[str] = Field(..., description="Errors from the FHI-aims output")
 
     @classmethod
     def from_aims_calc_docs(cls, calc_docs: list[Calculation]) -> Self:
@@ -96,13 +94,13 @@ class InputDoc(BaseModel):
     """
 
     structure: Structure | Molecule = Field(
-        None, description="The input structure object"
+        ..., description="The input structure object"
     )
     parameters: dict[str, Any] = Field(
-        {}, description="The input parameters for FHI-aims"
+        default_factory=dict, description="The input parameters for FHI-aims"
     )
     xc: str = Field(
-        None, description="Exchange-correlation functional used if not the default"
+        ..., description="Exchange-correlation functional used if not the default"
     )
     magnetic_moments: list[float] | None = Field(
         None, description="Magnetic moments for each atom"
@@ -163,16 +161,16 @@ class OutputDoc(BaseModel):
     """
 
     structure: Structure | Molecule = Field(
-        None, description="The output structure object"
+        ..., description="The output structure object"
     )
     trajectory: Sequence[Structure | Molecule] = Field(
-        None, description="The trajectory of output structures"
+        ..., description="The trajectory of output structures"
     )
     energy: float = Field(
-        None, description="The final total DFT energy for the last calculation"
+        ..., description="The final total DFT energy for the last calculation"
     )
     energy_per_atom: float = Field(
-        None, description="The final DFT energy per atom for the last calculation"
+        ..., description="The final DFT energy per atom for the last calculation"
     )
     bandgap: float | None = Field(
         None, description="The DFT bandgap for the last calculation"
@@ -241,21 +239,21 @@ class ConvergenceSummary(BaseModel):
     """
 
     structure: Structure | Molecule = Field(
-        None, description="The pymatgen object of the output structure"
+        ..., description="The pymatgen object of the output structure"
     )
-    converged: bool = Field(None, description="Is convergence achieved?")
+    converged: bool = Field(..., description="Is convergence achieved?")
 
     convergence_criterion_name: str = Field(
-        None, description="The output name of the convergence criterion"
+        ..., description="The output name of the convergence criterion"
     )
     convergence_field_name: str = Field(
-        None, description="The name of the input setting to study convergence against"
+        ..., description="The name of the input setting to study convergence against"
     )
     convergence_criterion_value: float = Field(
-        None, description="The output value of the convergence criterion"
+        ..., description="The output value of the convergence criterion"
     )
     convergence_field_value: Any = Field(
-        None,
+        ...,
         description="The last value of the input setting to study convergence against",
     )
     asked_epsilon: float | None = Field(
@@ -264,7 +262,7 @@ class ConvergenceSummary(BaseModel):
         " asked for",
     )
     actual_epsilon: float = Field(
-        None,
+        ...,
         description="The actual difference in the convergence criteria values",
     )
 
@@ -396,36 +394,32 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
     """
 
     calc_code: str = "aims"
-    dir_name: str = Field(None, description="The directory for this FHI-aims task")
+    dir_name: str = Field(..., description="The directory for this FHI-aims task")
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    completed: bool = Field(None, description="Whether this calculation completed")
+    completed: bool = Field(..., description="Whether this calculation completed")
     completed_at: str = Field(
-        None, description="Timestamp for when this task was completed"
+        ..., description="Timestamp for when this task was completed"
     )
-    input: InputDoc | None = Field(
-        None, description="The input to the first calculation"
-    )
-    output: OutputDoc = Field(None, description="The output of the final calculation")
+    input: InputDoc = Field(..., description="The input to the first calculation")
+    output: OutputDoc = Field(..., description="The output of the final calculation")
     structure: Structure | Molecule = Field(
-        None, description="Final output atoms from the task"
+        ..., description="Final output atoms from the task"
     )
-    state: TaskState = Field(None, description="State of this task")
+    state: TaskState = Field(..., description="State of this task")
     included_objects: list[AimsObject] | None = Field(
         None, description="List of FHI-aims objects included with this task document"
     )
     aims_objects: dict[AimsObject, Any] | None = Field(
         None, description="FHI-aims objects associated with this task"
     )
-    entry: ComputedEntry | None = Field(
-        None, description="The ComputedEntry from the task doc"
-    )
+    entry: ComputedEntry = Field(..., description="The ComputedEntry from the task doc")
     analysis: AnalysisDoc = Field(
-        None, description="Summary of structural relaxation and forces"
+        ..., description="Summary of structural relaxation and forces"
     )
-    task_label: str = Field(None, description="A description of the task")
+    task_label: str | None = Field(None, description="A description of the task")
     tags: list[str] | None = Field(
         None, description="Metadata tags for this task document"
     )
@@ -435,8 +429,8 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
     icsd_id: str | None = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: list[Calculation] | None = Field(
-        None, description="The inputs and outputs for all FHI-aims runs in this task."
+    calcs_reversed: list[Calculation] = Field(
+        ..., description="The inputs and outputs for all FHI-aims runs in this task."
     )
     transformations: dict[str, Any] | None = Field(
         None,
@@ -457,7 +451,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
         cls,
         dir_name: Path | str,
         volumetric_files: Sequence[str] = _VOLUMETRIC_FILES,
-        additional_fields: dict[str, Any] = None,
+        additional_fields: dict[str, Any] | None = None,
         **aims_calculation_kwargs,
     ) -> Self:
         """Create a task document from a directory containing FHi-aims files.
@@ -572,7 +566,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
     @property
     def task_type(self) -> TaskType:
         """Get the task type of the calculation."""
-        if "Relaxation calculation" in self.task_label:
+        if self.task_label and "Relaxation calculation" in self.task_label:
             return TaskType("Structure Optimization")
 
         return TaskType("Static")
@@ -690,6 +684,6 @@ def _get_state(calc_docs: list[Calculation], analysis: AnalysisDoc) -> TaskState
     all_calcs_completed = all(
         c.has_aims_completed == TaskState.SUCCESS for c in calc_docs
     )
-    if len(analysis.errors) == 0 and all_calcs_completed:
-        return TaskState.SUCCESS  # type: ignore  # noqa: PGH003
-    return TaskState.FAILED  # type: ignore  # noqa: PGH003
+    if not analysis.errors and all_calcs_completed:
+        return TaskState.SUCCESS
+    return TaskState.FAILED

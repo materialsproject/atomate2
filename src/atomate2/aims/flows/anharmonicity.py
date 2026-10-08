@@ -29,7 +29,7 @@ class AnharmonicityMaker(BaseAnharmonicityMaker):
     """
 
     name: str = "anharmonicity"
-    phonon_maker: PhononMaker = None
+    phonon_maker: PhononMaker | None = None
 
     @property
     def prev_calc_dir_argname(self) -> str:

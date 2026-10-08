@@ -34,20 +34,26 @@ def copy_aims_outputs(
 
     Parameters
     ----------
-    src_dir : str or Path
+    src_dir : str | Path
         The source directory.
-    src_host : str or None
+    src_host : str | None
         The source hostname used to specify a remote filesystem. Can be given as
         either "username@remote_host" or just "remote_host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    additional_aims_files : list[str]
-        Additional files to copy
+    additional_aims_files : list[str] | None
+        Additional files to copy.
     restart_to_input : bool
         Move the aims restart files to by the aims input in the new directory
-    file_client : .FileClient
-        A file client to use for performing file operations.
+    file_client : .FileClient | None
+        A file client to use for performing file operations. If ``None``, a default file
+        client will be created.
     """
+    if file_client is None:
+        raise RuntimeError(
+            "File client should have been set automatically. This should not happen."
+        )
+
     src_dir = strip_hostname(src_dir)
     logger.info(f"Copying FHI-aims inputs from {src_dir}")
     directory_listing = file_client.listdir(src_dir, host=src_host)
@@ -143,6 +149,11 @@ def cleanup_aims_outputs(
     file_client: .FileClient
         A file client to use for performing file operations.
     """
+    if file_client is None:
+        raise RuntimeError(
+            "File client should have been set automatically. This should not happen."
+        )
+
     files_to_delete = []
     for pattern in file_patterns:
         files_to_delete.extend(file_client.glob(Path(directory) / pattern, host=host))
