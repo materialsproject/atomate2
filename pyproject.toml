@@ -164,6 +164,11 @@ dev = ["pre-commit>=4.5.1"]
 mace-field = [
     "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
 ]
+# anisotropic Debye-Waller factors, not yet in a pymatgen release.
+# Remove it once they are released.
+debye-waller = [
+    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@f854ebe13a42c23270d964f09e81dda7a1ec865e",
+]
 tests = [
     "fireworks==2.1.4",
     "nbmake==1.5.5",
