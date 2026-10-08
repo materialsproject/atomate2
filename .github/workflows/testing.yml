@@ -339,6 +339,8 @@ jobs:
           python -m pip install --upgrade pip
           uv pip install .[strict,aims] --group tests
           uv pip install tblite>=0.4.0
+          # pycalphad draws the phase diagrams of the CALPHAD tutorial
+          uv pip install pycalphad
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -351,7 +353,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --durations=5 -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb --ignore=./tutorials/pheasy_workflow.ipynb --ignore=./tutorials/hiphive_workflow.ipynb --ignore=./tutorials/cte_workflow.ipynb --ignore=./tutorials/calphad_workflow.ipynb 
+          pytest --durations=5 -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb --ignore=./tutorials/pheasy_workflow.ipynb --ignore=./tutorials/hiphive_workflow.ipynb --ignore=./tutorials/cte_workflow.ipynb 
 
       - name: Test ASE
         env:
