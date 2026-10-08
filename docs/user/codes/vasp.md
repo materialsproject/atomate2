@@ -406,6 +406,8 @@ Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 t
 Both can be requested in one run.
 If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
 The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
+Both LASSO fits run with `--tol 1e-8`, since pheasy's default of `1e-4` leaves the fit unconverged, and refits on different machines then differ.
+Harmonic force constants from earlier atomate2 versions can therefore differ, mostly in soft low-frequency modes.
 The anharmonic force constants are written to files in the job folder and are not stored in the output document.
 
 #### hiPhive
