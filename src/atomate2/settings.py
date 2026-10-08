@@ -186,6 +186,13 @@ class Atomate2Settings(BaseSettings):
     AIMS_CMD: str = Field(
         "aims.x > aims.out", description="The default command used run FHI-aims"
     )
+    AIMS_ZIP_FILES: bool | Literal["atomate"] | None = Field(
+        None,
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed. If "
+        "unset, falls back to VASP_ZIP_FILES (deprecated) and then to 'atomate'.",
+    )
 
     # Elastic constant settings
     ELASTIC_FITTING_METHOD: str = Field(

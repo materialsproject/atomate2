@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from glob import glob
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.files import copy_files, get_zfile, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
@@ -148,3 +149,33 @@ def cleanup_aims_outputs(
 
     for file in files_to_delete:
         file_client.remove(file)
+
+
+def get_aims_zip_files_setting() -> bool | Literal["atomate"]:
+    """
+    Get the file compression setting for FHI-aims jobs.
+
+    Uses ``AIMS_ZIP_FILES`` if set. Otherwise, falls back to ``VASP_ZIP_FILES``
+    (deprecated for FHI-aims) if it was explicitly set, and to "atomate" if not.
+
+    Returns
+    -------
+    bool or "atomate"
+        The compression setting passed to ``gzip_output_folder``.
+    """
+    from atomate2 import SETTINGS
+
+    if SETTINGS.AIMS_ZIP_FILES is not None:
+        return SETTINGS.AIMS_ZIP_FILES
+
+    if "VASP_ZIP_FILES" in SETTINGS.model_fields_set:
+        warnings.warn(
+            "Using VASP_ZIP_FILES to control compression of FHI-aims files is "
+            "deprecated and will be removed in a future release. Please set "
+            "AIMS_ZIP_FILES instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return SETTINGS.VASP_ZIP_FILES
+
+    return "atomate"
