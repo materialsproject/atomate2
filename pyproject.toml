@@ -126,7 +126,7 @@ strict-forcefields-generic = [
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
-    "matgl==4.0.3",
+    "matgl==4.1.0",
     "nequip==0.19.1", # requires numpy<2 because of matscipy
 ]
 
