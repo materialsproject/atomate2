@@ -19,6 +19,7 @@ from ase.calculators import emt
 from jobflow import run_locally
 from phonopy import Phonopy
 from phonopy.physical_units import get_physical_units
+from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
@@ -35,7 +36,10 @@ def test_debye_waller_maker_emt(clean_dir):
     """Run the whole force field workflow with EMT forces on fcc Cu."""
     structure = AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61))
     maker = DebyeWallerMaker.from_force_field_name(
-        EMT, temperatures=[0, 300, 600], mesh=(8, 8, 8)
+        EMT,
+        temperatures=[0, 300, 600],
+        mesh=(8, 8, 8),
+        xrd_kwargs={"wavelength": "MoKa"},
     )
     maker.phonon_maker.min_length = 8.0
 
@@ -45,15 +49,17 @@ def test_debye_waller_maker_emt(clean_dir):
     assert isinstance(doc, DebyeWallerDocument)
     assert doc.mesh == (8, 8, 8)
     assert len(doc.structure) == 1
-    assert not doc.has_imaginary_modes
 
-    u = np.array(doc.thermal_displacement_matrices)
+    u = np.array(doc.thermal_displacement_data.thermal_displacement_matrix)
     assert u.shape == (3, 1, 3, 3)
     # cubic, so U is isotropic, and it grows with temperature
     for u_t in u[:, 0]:
         assert u_t == pytest.approx(u_t[0, 0] * np.eye(3), abs=1e-10)
     assert np.all(np.diff(u[:, 0, 0, 0]) > 0)
-    assert u[1, 0, 0, 0] == pytest.approx(0.00546, rel=0.02)
+    assert u[1, 0, 0, 0] == pytest.approx(0.0054614, rel=1e-4)
+
+    static = XRDCalculator("MoKa").get_pattern(doc.structure, scaled=False)
+    assert doc.xrd_pattern_static.y == pytest.approx(static.y)
 
     # the structure factor has exp(-2 pi^2 U / d^2), the intensity its square
     for static, patterns in (
@@ -68,13 +74,17 @@ def test_debye_waller_maker_emt(clean_dir):
             )
     assert len(doc.tem_patterns) == 3
     assert len(doc.tem_patterns[0]) == len(doc.tem_pattern_static)
-    assert set(doc.tem_pattern_static[0]) == {
-        "position",
-        "hkl",
-        "intensity",
-        "film_radius",
-        "interplanar_spacing",
-    }
+    assert set(doc.tem_pattern_static[0]) == {"position", "hkl", "intensity"}
+
+
+def test_debye_waller_maker_defaults():
+    """The default phonon maker uses MACE-MP-0 and stores the force constants."""
+    maker = DebyeWallerMaker()
+    assert maker.phonon_maker.store_force_constants
+    assert (
+        maker.phonon_maker.phonon_displacement_maker.force_field_name
+        == "MLFF.MACE_MP_0"
+    )
 
 
 def test_debye_waller_maker_needs_force_constants():
@@ -102,7 +112,9 @@ def test_imaginary_modes():
         forces.append(atoms.get_forces())
     phonon.forces = forces
     phonon.produce_force_constants()
-    phonon.run_mesh([6, 6, 6], with_eigenvectors=True, is_mesh_symmetry=False)
+    phonon.run_mesh(
+        [6, 6, 6], with_eigenvectors=True, is_mesh_symmetry=False, is_gamma_center=True
+    )
     frequencies = phonon.mesh.frequencies
     assert frequencies.min() < -0.1
 

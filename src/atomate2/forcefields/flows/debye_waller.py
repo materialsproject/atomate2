@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
     from atomate2.forcefields import MLFF
 
+_DEFAULT_FORCE_FIELD = "MACE-MP-0"
+
 
 @dataclass
 class DebyeWallerMaker(BaseDebyeWallerMaker):
@@ -26,8 +28,8 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     temperature, and once without them. The frequencies are not renormalized
     with temperature.
 
-    Use :obj:`from_force_field_name` to run the phonon flow with another force
-    field.
+    By default, the phonon flow uses MACE-MP-0. Use :obj:`from_force_field_name`
+    to run it with another force field.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
@@ -44,8 +46,8 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
         q-point mesh for the thermal displacements, or a q-point density used
         as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out. This removes the
-        acoustic modes at Gamma.
+        Modes below this frequency in THz are left out. The three acoustic
+        modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.
@@ -57,7 +59,9 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
         Keyword arguments of pymatgen's TEMCalculator.
     """
 
-    phonon_maker: PhononMaker = field(default_factory=PhononMaker)
+    phonon_maker: PhononMaker = field(
+        default_factory=lambda: PhononMaker.from_force_field_name(_DEFAULT_FORCE_FIELD)
+    )
 
     @classmethod
     def from_force_field_name(

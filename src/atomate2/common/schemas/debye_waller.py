@@ -5,9 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from emmet.core.math import Matrix3D
+from emmet.core.phonon import ThermalDisplacementData
 from emmet.core.structure import StructureMetadata
 from phonopy import Phonopy
+from phonopy.units import Bohr, Hartree
 from pydantic import Field
 from pymatgen.analysis.diffraction import core as diffraction_core
 from pymatgen.analysis.diffraction.core import DiffractionPattern
@@ -18,8 +19,6 @@ from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
-
-from atomate2.common.schemas.phonons import _set_nac_params
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -47,14 +46,15 @@ def get_thermal_displacement_matrices(
     temperatures: Sequence[float]
         Temperatures in K.
     freq_min: float
-        Modes below this frequency in THz are left out. This removes the
-        acoustic modes at Gamma.
+        Modes below this frequency in THz are left out. The three acoustic
+        modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes with frequencies below -freq_min, as if their
-        frequency were real with the same magnitude. phonopy's sums are odd in
-        the frequency, so a second run over these modes gives their terms.
-        phonopy sets the phonon population to zero at T <= 1 K, where it is -1
-        for a negative frequency, so the sign of those terms is flipped there.
+        frequency were real with the same magnitude. Each term of phonopy's sum
+        is (n + 1/2) / f. It is even in f, since n(-f) = -1 - n(f). So a second
+        run over these modes gives their terms with abs(f). phonopy sets n to
+        zero at T <= 1 K. The term is then odd in f, so its sign is flipped
+        there.
 
     Returns
     -------
@@ -63,11 +63,16 @@ def get_thermal_displacement_matrices(
         (temperatures, primitive sites, 3, 3).
     """
     temps = np.asarray(temperatures, dtype=float)
-    phonon.run_thermal_displacement_matrices(temperatures=temps, freq_min=freq_min)
+    phonon.run_thermal_displacement_matrices(
+        temperatures=temps, freq_min=freq_min, exclude_gamma_acoustic=True
+    )
     matrices = phonon.thermal_displacement_matrices.thermal_displacement_matrices
     if include_imaginary_modes:
         phonon.run_thermal_displacement_matrices(
-            temperatures=temps, freq_min=-np.inf, freq_max=-freq_min
+            temperatures=temps,
+            freq_min=-np.inf,
+            freq_max=-freq_min,
+            exclude_gamma_acoustic=True,
         )
         imaginary = phonon.thermal_displacement_matrices.thermal_displacement_matrices
         imaginary[temps <= 1] *= -1
@@ -83,52 +88,53 @@ class DebyeWallerDocument(StructureMetadata):
         description="Primitive cell of the phonon calculation. The sites are in the "
         "order of the thermal displacement matrices.",
     )
-    temperatures: list[float] | None = Field(None, description="Temperatures in K.")
     mesh: tuple[int, int, int] | None = Field(
         None,
         description="Gamma-centered q-point mesh of the thermal displacement matrices.",
-    )
-    freq_min: float | None = Field(
-        None, description="Modes below this frequency in THz are left out."
     )
     include_imaginary_modes: bool | None = Field(
         None,
         description="Whether the modes below -freq_min are included, as if their "
         "frequency were real with the same magnitude.",
     )
-    has_imaginary_modes: bool | None = Field(
-        None, description="Whether a frequency on the mesh is below -freq_min."
-    )
-    thermal_displacement_matrices: list[list[Matrix3D]] | None = Field(
+    thermal_displacement_data: ThermalDisplacementData | None = Field(
         None,
-        description="Cartesian thermal displacement matrices U in Angstrom^2 of "
-        "each site at each temperature.",
+        description="Cartesian and CIF thermal displacement matrices U of each "
+        "site at each temperature, in Angstrom^2.",
     )
     xrd_pattern_static: DiffractionPattern | None = Field(
-        None, description="X-ray diffraction pattern without Debye-Waller factors."
+        None,
+        description="X-ray diffraction pattern without Debye-Waller factors. The "
+        "intensities are not scaled.",
     )
     xrd_patterns: list[DiffractionPattern] | None = Field(
         None,
         description="X-ray diffraction pattern at each temperature, with the "
-        "Debye-Waller factor exp(-2 pi^2 g^T U g) of each site.",
+        "Debye-Waller factor exp(-2 pi^2 g^T U g) of each site. The intensities "
+        "are not scaled.",
     )
     nd_pattern_static: DiffractionPattern | None = Field(
-        None, description="Neutron diffraction pattern without Debye-Waller factors."
+        None,
+        description="Neutron diffraction pattern without Debye-Waller factors. The "
+        "intensities are not scaled.",
     )
     nd_patterns: list[DiffractionPattern] | None = Field(
         None,
         description="Neutron diffraction pattern at each temperature, with the "
-        "Debye-Waller factor of each site.",
+        "Debye-Waller factor of each site. The intensities are not scaled.",
     )
     tem_pattern_static: list[dict[str, Any]] | None = Field(
         None,
-        description="Electron diffraction spots without Debye-Waller factors, one "
-        "row of pymatgen's TEMCalculator.get_pattern per spot.",
+        description="Electron diffraction spots without Debye-Waller factors, with "
+        "the position, hkl and intensity of each spot from pymatgen's "
+        "TEMCalculator.get_pattern. The intensities are normalized to the "
+        "strongest spot.",
     )
     tem_patterns: list[list[dict[str, Any]]] | None = Field(
         None,
         description="Electron diffraction spots at each temperature, with the "
-        "Debye-Waller factor of each site.",
+        "Debye-Waller factor of each site. The intensities are normalized to the "
+        "strongest spot of each pattern.",
     )
 
     @classmethod
@@ -150,15 +156,15 @@ class DebyeWallerDocument(StructureMetadata):
         Parameters
         ----------
         phonon_doc: PhononDoc
-            Output of a phonopy or pheasy phonon flow, with the force constants
-            stored.
+            Output of a phonon flow, with the force constants stored.
         temperatures: Sequence[float]
             Temperatures in K.
         mesh: tuple[int, int, int] | float
             q-point mesh, or a q-point density used as kppa in pymatgen's
             Kpoints.automatic_density for the primitive cell.
         freq_min: float
-            Modes below this frequency in THz are left out.
+            Modes below this frequency in THz are left out. The three acoustic
+            modes at Gamma are always left out.
         include_imaginary_modes: bool
             Also include the modes below -freq_min, as if their frequency were
             real with the same magnitude.
@@ -169,7 +175,7 @@ class DebyeWallerDocument(StructureMetadata):
         tem_kwargs: dict or None
             Keyword arguments of pymatgen's TEMCalculator.
         symprec: float
-            Symmetry precision for the Born charges.
+            Symmetry precision of the phonon flow.
 
         Returns
         -------
@@ -190,19 +196,23 @@ class DebyeWallerDocument(StructureMetadata):
             get_phonopy_structure(phonon_doc.structure),
             supercell_matrix=phonon_doc.supercell_matrix,
             primitive_matrix=phonon_doc.primitive_matrix,
+            symprec=symprec,
         )
         # atomate2 stores ForceConstants, emmet a plain list
         force_constants = phonon_doc.force_constants
         phonon.force_constants = np.array(
             getattr(force_constants, "force_constants", force_constants)
         )
-        _set_nac_params(
-            phonon,
-            phonon_doc.born,
-            phonon_doc.epsilon_static,
-            symprec,
-            phonon_doc.code,
-        )
+        # the phonon document stores the symmetrized Born charges of the
+        # primitive cell. As in _set_nac_params, there is no NAC for zero
+        # charges or FHI-aims.
+        born = phonon_doc.born
+        if born is not None and np.any(born) and phonon_doc.code != "aims":
+            phonon.nac_params = {
+                "born": np.array(born),
+                "dielectric": np.array(phonon_doc.epsilon_static),
+                "factor": Hartree * Bohr,
+            }
         structure = get_pmg_structure(phonon.primitive)
         if isinstance(mesh, int | float | np.number):
             kpoints = Kpoints.automatic_density(
@@ -211,14 +221,13 @@ class DebyeWallerDocument(StructureMetadata):
             mesh_numbers = tuple(int(m) for m in kpoints.kpts[0])
         else:
             mesh_numbers = tuple(int(m) for m in mesh)
-        # a shifted mesh breaks the symmetry of non-cubic reciprocal cells
+        # without mesh symmetry, a shifted mesh breaks the site symmetry of U
         phonon.run_mesh(
             mesh_numbers,
             with_eigenvectors=True,
             is_mesh_symmetry=False,
             is_gamma_center=True,
         )
-        has_imaginary_modes = bool(phonon.mesh.frequencies.min() < -freq_min)
         matrices = get_thermal_displacement_matrices(
             phonon, temperatures, freq_min, include_imaginary_modes
         )
@@ -229,14 +238,17 @@ class DebyeWallerDocument(StructureMetadata):
             "tem": TEMCalculator(**(tem_kwargs or {})),
         }
         patterns: dict[str, list] = {name: [] for name in calculators}
+        matrices_cif = []
         for u in [None, *matrices]:
             displaced = structure
             if u is not None:
-                displaced = ThermalDisplacementMatrices(
+                tdm = ThermalDisplacementMatrices(
                     ThermalDisplacementMatrices.get_reduced_matrix(u),
                     structure,
                     temperature=None,
-                ).to_structure_with_site_properties_Ucif()
+                )
+                matrices_cif.append(tdm.Ucif.tolist())
+                displaced = tdm.to_structure_with_site_properties_Ucif()
             for name, calculator in calculators.items():
                 if name == "tem":
                     pattern = calculator.get_pattern(displaced)
@@ -249,12 +261,14 @@ class DebyeWallerDocument(StructureMetadata):
         return cls.from_structure(
             meta_structure=structure,
             structure=structure,
-            temperatures=list(temperatures),
             mesh=mesh_numbers,
-            freq_min=freq_min,
             include_imaginary_modes=include_imaginary_modes,
-            has_imaginary_modes=has_imaginary_modes,
-            thermal_displacement_matrices=matrices.tolist(),
+            thermal_displacement_data=ThermalDisplacementData(
+                freq_min_thermal_displacements=freq_min,
+                thermal_displacement_matrix=matrices.tolist(),
+                thermal_displacement_matrix_cif=matrices_cif,
+                temperatures_thermal_displacements=list(temperatures),
+            ),
             xrd_pattern_static=patterns["xrd"][0],
             xrd_patterns=patterns["xrd"][1:],
             nd_pattern_static=patterns["nd"][0],
@@ -271,8 +285,6 @@ def _tem_rows(pattern: Any) -> list[dict[str, Any]]:
             "position": np.asarray(row["Position"]).tolist(),
             "hkl": [int(i) for i in row["(hkl)"]],
             "intensity": float(row["Intensity (norm)"]),
-            "film_radius": float(row["Film radius"]),
-            "interplanar_spacing": float(row["Interplanar Spacing"]),
         }
         for _, row in pattern.iterrows()
     ]

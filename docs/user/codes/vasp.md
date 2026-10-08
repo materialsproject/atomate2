@@ -504,26 +504,31 @@ The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-med
 
 ### Debye-Waller workflow
 
-`DebyeWallerMaker` calculates anisotropic Debye-Waller factors from the harmonic phonons.
-The X-ray, neutron and electron diffraction patterns are then computed with them.
-It needs a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
-Install it with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@e51cd72054c66173d92434eb0a391d9a6d52d369`, or with the `debye-waller` dependency group.
+`DebyeWallerMaker` calculates the thermal displacement matrices from the harmonic phonons.
+pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
+It needs phonopy 4.7.1 or newer and a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
+Install that pymatgen after atomate2 with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@20f6c8672092159bccccd73a2e5f8e0e5bc410fb`, the commit atomate2 is tested with.
+In an atomate2 clone, `pip install --group debye-waller` does the same.
 
 ```{warning}
 This workflow is new and has not been tested widely.
 It might still change in future versions.
 ```
 
-First, the phonopy workflow computes the force constants, with the Born charges for the non-analytical correction.
-It needs `store_force_constants=True`, which is set by default.
+First, the phonon workflow computes the force constants.
+The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
+The phonon maker needs `store_force_constants=True`.
+The default phonon makers of `DebyeWallerMaker` set it, but the VASP `PhononMaker` does not by default.
 phonopy then gives the Cartesian thermal displacement matrix $U$ of each site of the primitive cell.
-The default Gamma-centered q-point mesh has a density of 7000, as for the phonon DOS.
+The q-point mesh is Gamma-centered.
+Its default density is 7000 q-points per reciprocal atom, the same density as for the phonon DOS.
+At high temperature, $U$ converges slowly with the mesh, so check its convergence.
 The Debye-Waller factor of a site for the reciprocal lattice vector $g$ is $\exp(-2\pi^2 g^T U g)$.
-For an isotropic $U$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U$ and $s = |g|/2$.
+For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
 pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator` compute the patterns with these factors.
 This is done from 0 K to 1000 K in steps of 100 K by default, and once without the factors.
 
-Modes below `freq_min=0.01` THz are left out, which removes the acoustic modes at Gamma.
+The three acoustic modes at Gamma are left out, and so are the modes below `freq_min=0.01` THz.
 Imaginary modes are left out as well.
 With `include_imaginary_modes=True`, they are included as if their frequency were real with the same magnitude.
 This only makes sense for small imaginary frequencies.
@@ -544,8 +549,8 @@ debye_waller_flow = DebyeWallerMaker().make(structure=structure)
 ```
 
 The same workflow runs with a force field via `from atomate2.forcefields.flows.debye_waller import DebyeWallerMaker`.
-`DebyeWallerMaker.from_force_field_name` sets the force field of the phonon workflow.
-The notebook `tutorials/debye_waller_workflow.ipynb` runs it with MACE-OMAT-0-medium.
+By default it uses MACE-MP-0.
+`DebyeWallerMaker.from_force_field_name` sets another force field for the phonon workflow.
 
 ### Quasi-harmonic Workflow
 

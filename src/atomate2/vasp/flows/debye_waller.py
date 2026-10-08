@@ -21,8 +21,10 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     with temperature.
 
     By default, the phonon flow is the atomate2 VASP phonon flow with
-    store_force_constants=True. It computes the Born charges and the
-    dielectric tensor for the non-analytical correction.
+    store_force_constants=True and create_thermal_displacements=False, since
+    this workflow computes the thermal displacements itself. The phonon flow
+    computes the Born charges and the dielectric tensor for the non-analytical
+    correction.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
@@ -39,8 +41,8 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
         q-point mesh for the thermal displacements, or a q-point density used
         as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out. This removes the
-        acoustic modes at Gamma.
+        Modes below this frequency in THz are left out. The three acoustic
+        modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.
@@ -53,5 +55,7 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     """
 
     phonon_maker: PhononMaker = field(
-        default_factory=lambda: PhononMaker(store_force_constants=True)
+        default_factory=lambda: PhononMaker(
+            store_force_constants=True, create_thermal_displacements=False
+        )
     )

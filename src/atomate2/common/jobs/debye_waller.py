@@ -32,15 +32,15 @@ def compute_debye_waller(
     Parameters
     ----------
     phonon_output: PhononDoc
-        Output document of a phonopy or pheasy phonon flow, run with
-        store_force_constants=True.
+        Output document of a phonon flow, run with store_force_constants=True.
     temperatures: Sequence[float]
         Temperatures in K.
     mesh: tuple[int, int, int] | float
         q-point mesh, or a q-point density used as kppa in pymatgen's
         Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out.
+        Modes below this frequency in THz are left out. The three acoustic
+        modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.
@@ -51,7 +51,7 @@ def compute_debye_waller(
     tem_kwargs: dict or None
         Keyword arguments of pymatgen's TEMCalculator.
     symprec: float
-        Symmetry precision for the Born charges.
+        Symmetry precision of the phonon flow.
 
     Returns
     -------

@@ -13,7 +13,6 @@ from atomate2.common.jobs.debye_waller import compute_debye_waller
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
@@ -22,6 +21,10 @@ if TYPE_CHECKING:
 @due.dcite(
     Doi("10.1088/1361-648X/acd831"),
     description="Implementation strategies in phonopy and phono3py.",
+)
+@due.dcite(
+    Doi("10.7566/JPSJ.92.012001"),
+    description="Phonopy and phono3py.",
 )
 @dataclass
 class BaseDebyeWallerMaker(Maker):
@@ -35,9 +38,9 @@ class BaseDebyeWallerMaker(Maker):
     diffraction patterns are computed with pymatgen with these factors at each
     temperature, and once without them.
 
-    The frequencies are not renormalized with temperature. The thermal
-    displacements diverge at low frequencies, so a dense mesh is needed for
-    converged results. Imaginary modes are left out by default. With
+    The frequencies are not renormalized with temperature. At high
+    temperature, U converges slowly with the q-point mesh, so check its
+    convergence. Imaginary modes are left out by default. With
     include_imaginary_modes=True, they are included as if their frequency were
     real with the same magnitude. This only makes sense for small imaginary
     frequencies.
@@ -50,16 +53,15 @@ class BaseDebyeWallerMaker(Maker):
     name: str
         Name of the flows produced by this maker.
     phonon_maker: .BasePhononMaker
-        The phonopy or pheasy phonon maker. It must have
-        store_force_constants=True.
+        The phonon maker. It must have store_force_constants=True.
     temperatures: list[float]
         Temperatures in K.
     mesh: tuple[int, int, int] | float
         q-point mesh for the thermal displacements, or a q-point density used
         as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out. This removes the
-        acoustic modes at Gamma.
+        Modes below this frequency in THz are left out. The three acoustic
+        modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.
@@ -93,8 +95,6 @@ class BaseDebyeWallerMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-        born: list[Matrix3D] | None = None,
-        epsilon_static: Matrix3D | None = None,
     ) -> Flow:
         """
         Make a flow to calculate the Debye-Waller factors.
@@ -106,14 +106,8 @@ class BaseDebyeWallerMaker(Maker):
             optimized, as the relaxation settings are strict.
         prev_dir: str or Path or None
             A previous calculation directory to use for copying outputs.
-        born: list[Matrix3D] or None
-            Born effective charges, passed to the phonon flow.
-        epsilon_static: Matrix3D or None
-            High-frequency dielectric tensor, passed to the phonon flow.
         """
-        phonon_flow = self.phonon_maker.make(
-            structure, prev_dir=prev_dir, born=born, epsilon_static=epsilon_static
-        )
+        phonon_flow = self.phonon_maker.make(structure, prev_dir=prev_dir)
         debye_waller = compute_debye_waller(
             phonon_output=phonon_flow.output,
             temperatures=self.temperatures,
