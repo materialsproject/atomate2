@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import inspect
 import io
 import logging
 import os
@@ -62,6 +63,7 @@ class DynamicsPresets(Enum):
     nvt_berendsen = "ase.md.nvtberendsen.NVTBerendsen"
     nvt_langevin = "ase.md.langevin.Langevin"
     nvt_nose_hoover = "ase.md.npt.NPT"
+    nvt_nose_hoover_chain = "ase.md.nose_hoover_chain.NoseHooverChainNVT"
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
     npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
     npt_nose_hoover_chain = "ase.md.nose_hoover_chain.MTKNPT"
@@ -155,7 +157,8 @@ class AseMDMaker(AseMaker, ABC):
         The step interval for saving the trajectories.
     mb_velocity_seed : int or None
         If an int, a random number seed for generating initial velocities
-        from a Maxwell-Boltzmann distribution.
+        from a Maxwell-Boltzmann distribution. It also seeds the random forces
+        of dynamics that take an rng argument, such as Langevin.
     zero_linear_momentum : bool = False
         Whether to initialize the atomic velocities with zero linear momentum
     zero_angular_momentum : bool = False
@@ -380,13 +383,12 @@ class AseMDMaker(AseMaker, ABC):
             # ASE NPT implementation requires upper triangular cell
             atoms.set_cell(atoms.cell.standard_form(form="upper")[0])
 
+        rng = np.random.default_rng(seed=self.mb_velocity_seed)
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
         elif not np.isnan(self.t_schedule).any():
             MaxwellBoltzmannDistribution(
-                atoms=atoms,
-                temperature_K=self.t_schedule[0],
-                rng=np.random.default_rng(seed=self.mb_velocity_seed),
+                atoms=atoms, temperature_K=self.t_schedule[0], rng=rng
             )
             if self.zero_linear_momentum:
                 Stationary(atoms)
@@ -397,19 +399,34 @@ class AseMDMaker(AseMaker, ABC):
 
         md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
+        md_kwargs = dict(self.ase_md_kwargs)
+        if (
+            self.mb_velocity_seed is not None
+            and "rng" in inspect.signature(dynamics).parameters
+        ):
+            md_kwargs.setdefault("rng", rng)
         md_runner = dynamics(
-            atoms=atoms, timestep=self.time_step * units.fs, **self.ase_md_kwargs
+            atoms=atoms, timestep=self.time_step * units.fs, **md_kwargs
         )
 
         md_runner.attach(md_observer, interval=self.traj_interval)
+
+        can_set_temperature = hasattr(md_runner, "_temperature_K") or hasattr(
+            md_runner, "set_temperature"
+        )
+        if not can_set_temperature and np.ptp(self.t_schedule) > 0:
+            raise ValueError(
+                f"{type(md_runner).__name__} cannot follow a temperature schedule."
+            )
 
         def _callback(dyn: MolecularDynamics = md_runner) -> None:
             if self.ensemble == MDEnsemble.nve:
                 return
             if hasattr(dyn, "_temperature_K"):
                 dyn._temperature_K = self.t_schedule[dyn.nsteps]  # noqa: SLF001
-            else:
+            elif hasattr(dyn, "set_temperature"):
                 dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
+            # NoseHooverChainNVT has neither and keeps its initial temperature
             if self.ensemble == MDEnsemble.nvt:
                 return
 
