@@ -15,7 +15,6 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
-from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.aims.inputs import AimsGeometryIn
 from pymatgen.io.aims.outputs import AimsOutput
@@ -31,10 +30,10 @@ STORE_VOLUMETRIC_DATA = ("total_density",)
 def ensure_stress_full(input_stress: Sequence[float] | Matrix3D) -> Matrix3D:
     """Test if the stress if a voigt vector and if so convert it to a 3x3 matrix."""
     if np.array(input_stress).shape == (3, 3):
-        return np.array(input_stress)
+        return np.array(input_stress).tolist()
 
     xx, yy, zz, yz, xz, xy = np.array(input_stress).flatten()
-    return np.array([[xx, xy, xz], [xy, yy, yz], [xz, yz, zz]])
+    return np.array([[xx, xy, xz], [xy, yy, yz], [xz, yz, zz]]).tolist()
 
 
 class TaskState(ValueEnum):
@@ -88,14 +87,14 @@ class CalculationOutput(BaseModel):
     """
 
     energy: float = Field(
-        None, description="The final total DFT energy for the calculation"
+        ..., description="The final total DFT energy for the calculation"
     )
     energy_per_atom: float = Field(
-        None, description="The final DFT energy per atom for the calculation"
+        ..., description="The final DFT energy per atom for the calculation"
     )
 
     structure: Structure | Molecule = Field(
-        None, description="The final structure from the calculation"
+        ..., description="The final structure from the calculation"
     )
 
     efermi: float | None = Field(
@@ -118,7 +117,7 @@ class CalculationOutput(BaseModel):
     bandgap: float | None = Field(
         None, description="The band gap from the calculation in eV"
     )
-    cbm: float = Field(
+    cbm: float | None = Field(
         None,
         description="The conduction band minimum, or LUMO for molecules, in eV "
         "(if system is not metallic)",
@@ -129,7 +128,7 @@ class CalculationOutput(BaseModel):
         "(if system is not metallic)",
     )
     atomic_steps: list[Structure | Molecule] = Field(
-        None, description="Structures for each ionic step"
+        ..., description="Structures for each ionic step"
     )
 
     @classmethod
@@ -165,11 +164,11 @@ class CalculationOutput(BaseModel):
 
         stress = None
         if output.stress is not None:
-            stress = ensure_stress_full(output.stress).tolist()
+            stress = ensure_stress_full(output.stress)
 
         stresses = None
         if output.stresses is not None:
-            stresses = [ensure_stress_full(st).tolist() for st in output.stresses]
+            stresses = [ensure_stress_full(st) for st in output.stresses]
 
         all_forces = None
         if not any(ff is None for ff in output.all_forces):
@@ -200,10 +199,10 @@ class CalculationInput(BaseModel):
     """
 
     structure: Structure | Molecule = Field(
-        None, description="The input structure object"
+        ..., description="The input structure object"
     )
     parameters: dict[str, Any] = Field(
-        {}, description="The input parameters for FHI-aims"
+        default_factory=dict, description="The input parameters for FHI-aims"
     )
 
 
@@ -230,26 +229,27 @@ class Calculation(BaseModel):
     """
 
     dir_name: str = Field(
-        None, description="The directory for this FHI-aims calculation"
+        ..., description="The directory for this FHI-aims calculation"
     )
+    task_name: str = Field(..., description="The task name for this calculation")
     aims_version: str = Field(
-        None, description="FHI-aims version used to perform the calculation"
+        ..., description="FHI-aims version used to perform the calculation"
     )
     has_aims_completed: TaskState = Field(
-        None, description="Whether FHI-aims completed the calculation successfully"
+        ..., description="Whether FHI-aims completed the calculation successfully"
     )
     completed: bool = Field(
-        None, description="Whether FHI-aims completed the calculation successfully"
+        ..., description="Whether FHI-aims completed the calculation successfully"
     )
-    input: CalculationInput = Field(None, description="The FHI-aims calculation input")
+    input: CalculationInput = Field(..., description="The FHI-aims calculation input")
     output: CalculationOutput = Field(
-        None, description="The FHI-aims calculation output"
+        ..., description="The FHI-aims calculation output"
     )
     completed_at: str = Field(
-        None, description="Timestamp for when the calculation was completed"
+        ..., description="Timestamp for when the calculation was completed"
     )
     output_file_paths: dict[str, str] = Field(
-        None,
+        ...,
         description="Paths (relative to dir_name) of the FHI-aims output files "
         "associated with this calculation",
     )
@@ -260,7 +260,7 @@ class Calculation(BaseModel):
         dir_name: Path | str,
         task_name: str,
         aims_output_file: Path | str = "aims.out",
-        volumetric_files: list[str] = None,
+        volumetric_files: list[str] | None = None,
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
         store_trajectory: bool = False,
@@ -344,15 +344,14 @@ class Calculation(BaseModel):
         if bandstructure is not None:
             aims_objects[AimsObject.BANDSTRUCTURE] = bandstructure  # type: ignore  # noqa: PGH003
 
+        if store_trajectory:
+            aims_objects[AimsObject.TRAJECTORY] = aims_output.structures  # type: ignore  # noqa: PGH003
+
         output_doc = CalculationOutput.from_aims_output(aims_output)
 
         has_aims_completed = (
             TaskState.SUCCESS if aims_output.completed else TaskState.FAILED
         )
-
-        if store_trajectory:
-            traj = _parse_trajectory(aims_output=aims_output)
-            aims_objects[AimsObject.TRAJECTORY] = traj  # type: ignore  # noqa: PGH003
 
         instance = cls(
             dir_name=str(dir_name),
@@ -430,7 +429,10 @@ def _get_volumetric_data(
     return volumetric_data
 
 
-def _parse_dos(parse_dos: str | bool, aims_output: AimsOutput) -> Dos | None:
+def _parse_dos(
+    parse_dos: str | bool,
+    aims_output: AimsOutput,  # noqa: ARG001
+) -> Dos | None:
     """Parse DOS outputs from FHI-aims calculation.
 
     Parameters
@@ -446,18 +448,23 @@ def _parse_dos(parse_dos: str | bool, aims_output: AimsOutput) -> Dos | None:
     Returns
     -------
     A Dos object if parse_dos is set accordingly.
+
+    Raises
+    ------
+    NotImplementedError
+        If parse_dos is True, as parsing the DOS is not yet supported.
     """
     if parse_dos == "auto":
-        if len(aims_output.ionic_steps) == 0:
-            return aims_output.complete_dos
+        # DOS parsing is not supported yet, so "auto" never parses it
         return None
     if parse_dos:
-        return aims_output.complete_dos
+        raise NotImplementedError("Parsing DOS is not yet implemented.")
     return None
 
 
 def _parse_bandstructure(
-    parse_bandstructure: str | bool, aims_output: AimsOutput
+    parse_bandstructure: str | bool,
+    aims_output: AimsOutput,  # noqa: ARG001
 ) -> BandStructure | None:
     """
     Get the band structure.
@@ -472,22 +479,13 @@ def _parse_bandstructure(
     Returns
     -------
     The bandstructure
+
+    Raises
+    ------
+    NotImplementedError
+        If parse_bandstructure is set, as parsing the band structure is not yet
+        supported.
     """
     if parse_bandstructure:
-        return aims_output.band_structure
+        raise NotImplementedError("Parsing bandstructure is not yet implemented.")
     return None
-
-
-def _parse_trajectory(aims_output: AimsOutput) -> Trajectory | None:
-    """Grab a Trajectory object given an FHI-aims output object.
-
-    Parameters
-    ----------
-    aims_ouput: .AimsOutput
-        The output object to parse
-
-    Returns
-    -------
-    The trajectory for the calculation
-    """
-    return aims_output.structures
