@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=0.86.1",
+    "emmet-core>=0.87.3",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
@@ -143,10 +143,6 @@ strict = [
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
     "pymatgen==2026.9.24",
     "pymatgen-core==2026.9.23",
-    # pydantic 2.14 breaks the serializers of emmet-core 0.87.2
-    # (materialsproject/emmet#1530). Remove this pin once an emmet-core release
-    # with the fix supports all Python versions atomate2 is tested with.
-    "pydantic<2.14",
 ]
 
 [project.scripts]
