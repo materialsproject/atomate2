@@ -93,6 +93,7 @@ class OptMaker(BaseQCMaker):
 
     name: str = "optimization"
     input_set_generator: QCInputGenerator = field(default_factory=OptSetGenerator)
+    task_type: str = "Geometry Optimization"
 
 
 @dataclass
