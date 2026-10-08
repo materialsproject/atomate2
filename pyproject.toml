@@ -56,7 +56,7 @@ phonons = ["phonopy>=2.43,<5", "seekpath>=2.0.0"]
 pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 # phonors 0.5 breaks the Grueneisen q-point mesh of phonopy and phono3py 4.5
-phono3py = ["atomate2[phonons]", "phono3py==4.5.0", "phonors<0.5"]
+phono3py = ["atomate2[phonons]", "phono3py==4.8.2", "phonors<0.5"]
 # ALM is in the alamode dependency group
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
