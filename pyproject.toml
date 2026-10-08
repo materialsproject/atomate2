@@ -51,12 +51,11 @@ mp = ["mp-api>=0.37.5"]
 # phonopy 4.x changed force-constants/primitive-axis handling, breaking the
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
-phonons = ["phonopy>=2.43,<5", "seekpath>=2.0.0"]
+phonons = ["phonopy>=4.6,<5", "seekpath>=2.0.0"]
 # pheasy itself and ALM are in the pheasy dependency group
 pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
-# phonors 0.5 breaks the Grueneisen q-point mesh of phonopy and phono3py 4.5
-phono3py = ["atomate2[phonons]", "phono3py==4.5.0", "phonors<0.5"]
+phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
 # ALM is in the alamode dependency group
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
