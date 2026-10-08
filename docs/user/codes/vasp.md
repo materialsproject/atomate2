@@ -507,9 +507,9 @@ The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-med
 `DebyeWallerMaker` calculates the thermal displacement matrices from the harmonic phonons with [phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
 It needs phonopy 4.7.1 or newer and a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
-Install them after atomate2 with `pip install "phonopy>=4.7.1" git+https://github.com/hrushikesh-s/pymatgen.git@6cf67dfdc907bb296d3b75778fd6d0474e010660`.
+Install them after atomate2 with `pip install "phonopy>=4.7.1" git+https://github.com/hrushikesh-s/pymatgen.git@3f79488cb5994da6b2127848b3bd8046f01dfb51`.
 This is the pymatgen commit atomate2 is tested with.
-In an atomate2 clone, `pip install --group debye-waller` installs the same with pip 25.1 or newer.
+In the root of an atomate2 clone, `pip install --group debye-waller` installs the same with pip 25.1 or newer.
 
 ```{warning}
 This workflow is new and has not been tested widely.
@@ -526,9 +526,9 @@ The hkl indices of the patterns and the TEM beam direction refer to this primiti
 The q-point mesh is Gamma-centered.
 Its default density is 7000 q-points per reciprocal atom, the same default as for the phonon DOS.
 For some lattices these mesh numbers break the lattice symmetry, and $U$ then loses a little of its site symmetry.
-Pass a mesh tuple to avoid this.
+Pass a mesh tuple with the same number along each axis to avoid this.
 On a coarse mesh, $U$ is too small.
-At finite temperature the error falls only as one over the mesh size, so check its convergence.
+At finite temperature the error falls only as 1/N for an N x N x N mesh, so check its convergence.
 The Debye-Waller factor of a site for the reciprocal lattice vector $g$, with $|g| = 1/d_{hkl}$, is $\exp(-2\pi^2 g^T U g)$.
 For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
 pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator` compute the patterns with these factors.

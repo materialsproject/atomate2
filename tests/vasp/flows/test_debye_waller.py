@@ -4,14 +4,17 @@ from jobflow import Flow, run_locally
 from pymatgen.analysis.diffraction import core as diffraction_core
 from pymatgen.core.structure import Structure
 
+from atomate2.common.schemas.debye_waller import DebyeWallerDocument
 from atomate2.vasp.flows.debye_waller import DebyeWallerMaker
 from atomate2.vasp.flows.phonons import PhononMaker
 
-
-@pytest.mark.skipif(
+requires_dwf = pytest.mark.skipif(
     not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"),
     reason="pymatgen has no anisotropic Debye-Waller factors",
 )
+
+
+@requires_dwf
 def test_debye_waller_maker_vasp_flow(si_structure: Structure):
     """The phonon flow output and the settings go to compute_debye_waller."""
     maker = DebyeWallerMaker(
@@ -51,10 +54,17 @@ def test_debye_waller_maker_checks_phonon_maker():
         DebyeWallerMaker(phonon_maker=PhononMaker())
 
 
-@pytest.mark.skipif(
-    not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"),
-    reason="pymatgen has no anisotropic Debye-Waller factors",
-)
+def test_debye_waller_checks_pymatgen(monkeypatch):
+    monkeypatch.delattr(
+        diffraction_core, "get_anisotropic_debye_waller_factors", raising=False
+    )
+    with pytest.raises(ImportError, match="no anisotropic Debye-Waller factors"):
+        DebyeWallerMaker()
+    with pytest.raises(ImportError, match="no anisotropic Debye-Waller factors"):
+        DebyeWallerDocument.from_phonon_doc(None, [300], mesh=(1, 1, 1))
+
+
+@requires_dwf
 def test_debye_waller_maker_vasp_na_cl(mock_vasp, clean_dir):
     """NaCl from the conventional cell, with the non-analytical correction."""
     structure = Structure(

@@ -44,8 +44,8 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
         q-point mesh for the thermal displacements, or a q-point density used
         as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes with abs(f) below this frequency in THz are left out. The three
-        acoustic modes at Gamma are always left out.
+        Modes with a frequency of magnitude below this value in THz are left
+        out. The three acoustic modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.

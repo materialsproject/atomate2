@@ -31,15 +31,16 @@ if TYPE_CHECKING:
 
 
 def check_pymatgen() -> None:
-    """Check that pymatgen applies the U11_cif, ..., U12_cif site properties.
+    """Check that pymatgen has anisotropic Debye-Waller factors.
 
-    Released pymatgen ignores them, so its patterns would have no Debye-Waller
-    factors.
+    Released pymatgen ignores the U11_cif, ..., U12_cif site properties, so its
+    patterns would have no Debye-Waller factors.
     """
     if not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"):
         raise ImportError(
             "This pymatgen version has no anisotropic Debye-Waller factors. See the "
-            "Debye-Waller workflow section of the atomate2 docs to install one."
+            "Debye-Waller workflow section of the VASP page in the atomate2 docs to "
+            "install one."
         )
 
 
@@ -61,15 +62,15 @@ def _get_thermal_displacement_matrices(
     temperatures: Sequence[float]
         Temperatures in K.
     freq_min: float
-        Modes with abs(f) below this frequency in THz are left out. The three
-        acoustic modes at Gamma are always left out.
+        Modes with a frequency of magnitude below this value in THz are left
+        out. The three acoustic modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes with frequencies below -freq_min, as if their
         frequency were real with the same magnitude. Each term of phonopy's sum
-        is (n + 1/2) / f. It is even in f, since n(-f) = -1 - n(f). So a second
-        run over these modes gives their terms with abs(f). phonopy sets n to
-        zero at T <= 1 K. The term is then odd in f, so its sign is flipped
-        there.
+        is proportional to (n + 1/2) / f. It is even in f, since
+        n(-f) = -1 - n(f). So a second run over these modes gives their terms
+        with abs(f). phonopy sets n to zero at T <= 1 K. The term is then odd in
+        f, so its sign is flipped there.
 
     Returns
     -------
@@ -179,8 +180,8 @@ class DebyeWallerDocument(StructureMetadata):
             q-point mesh, or a q-point density used as kppa in pymatgen's
             Kpoints.automatic_density for the primitive cell.
         freq_min: float
-            Modes with abs(f) below this frequency in THz are left out. The three
-            acoustic modes at Gamma are always left out.
+            Modes with a frequency of magnitude below this value in THz are left
+            out. The three acoustic modes at Gamma are always left out.
         include_imaginary_modes: bool
             Also include the modes below -freq_min, as if their frequency were
             real with the same magnitude.
@@ -239,7 +240,7 @@ class DebyeWallerDocument(StructureMetadata):
             mesh_numbers = tuple(int(m) for m in kpoints.kpts[0])
         else:
             mesh_numbers = tuple(int(m) for m in mesh)
-        # without mesh symmetry, a shifted mesh breaks the site symmetry of U
+        # without mesh symmetry, a shifted mesh can break the site symmetry of U
         phonon.run_mesh(
             mesh_numbers,
             with_eigenvectors=True,

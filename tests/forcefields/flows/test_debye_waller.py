@@ -51,6 +51,7 @@ def test_debye_waller_maker_emt(clean_dir):
     doc = responses[flow.output.uuid][1].output
     assert isinstance(doc, DebyeWallerDocument)
     assert doc.mesh == (8, 8, 8)
+    assert not doc.include_imaginary_modes
     assert len(doc.structure) == 1
 
     data = doc.thermal_displacement_data
@@ -126,7 +127,7 @@ def test_debye_waller_maker_from_force_field_name():
     assert maker.phonon_maker is phonon_maker
 
 
-@pytest.mark.parametrize("freq_min", [1e-6, 0.6])
+@pytest.mark.parametrize("freq_min", [1e-6, 0.6, 1.7])
 def test_imaginary_modes(freq_min):
     """Imaginary modes are included with the magnitude of their frequency."""
     # bcc Cu is unstable with EMT
@@ -149,7 +150,7 @@ def test_imaginary_modes(freq_min):
     )
     frequencies = phonon.mesh.frequencies
     # the acoustic modes at Gamma are at 4e-6 THz. freq_min=0.6 leaves out the
-    # imaginary modes at -0.53 THz.
+    # imaginary modes at -0.53 THz, and 1.7 also the real modes at 1.6 THz.
     assert frequencies.min() < -0.1
 
     # an emmet document, which stores the force constants as a list
@@ -181,6 +182,7 @@ def test_imaginary_modes(freq_min):
     eigenvectors = phonon.mesh.eigenvectors
     masses = phonon.primitive.masses
     reference = np.zeros_like(both)
+    real_reference = np.zeros_like(both)
     for i_t, temperature in enumerate(temperatures):
         for i_q, i_band in zip(*np.nonzero(abs_freq > freq_min), strict=True):
             if i_q == 0 and i_band < 3:
@@ -194,9 +196,19 @@ def test_imaginary_modes(freq_min):
             q2 *= units.EV / units.AMU * 1e8
             vec = eigenvectors[i_q, :, i_band].reshape(-1, 3)
             for i_site, mass in enumerate(masses):
-                reference[i_t, i_site] += (
-                    q2 / mass * np.real(np.outer(vec[i_site], vec[i_site].conj()))
-                )
-    reference /= len(frequencies)
-    assert both == pytest.approx(reference, rel=1e-6)
-    assert np.all(both[:, 0, 0, 0] > real[:, 0, 0, 0])
+                term = q2 / mass * np.real(np.outer(vec[i_site], vec[i_site].conj()))
+                reference[i_t, i_site] += term
+                if frequencies[i_q, i_band] > 0:
+                    real_reference[i_t, i_site] += term
+    assert real == pytest.approx(real_reference / len(frequencies), rel=1e-6)
+    assert both == pytest.approx(reference / len(frequencies), rel=1e-6)
+
+
+def test_debye_waller_document_checks_input():
+    phonon_doc = PhononBSDOSDoc(
+        structure=AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61))
+    )
+    with pytest.raises(ValueError, match="must not be negative"):
+        DebyeWallerDocument.from_phonon_doc(phonon_doc, [-1.0, 300.0], mesh=(1, 1, 1))
+    with pytest.raises(ValueError, match="no force constants"):
+        DebyeWallerDocument.from_phonon_doc(phonon_doc, [300.0], mesh=(1, 1, 1))
