@@ -355,7 +355,7 @@ def get_vibrational_entropy(
 
     The force constants come from the forces of the displaced supercells. The
     entropy at temperature is phonopy's sum over a q-point mesh of density 50.
-    It leaves out frequencies below 0.05 THz, such as the acoustic modes at Gamma.
+    It leaves out the three acoustic modes at Gamma, as PhononBSDOSDoc does.
     It is converted from J/(K mol) per primitive cell to k_B per SQS cell.
     sqs2tdb uses it as the high temperature limit of the vibrational entropy.
     The imaginary fraction is the part of the frequencies on the mesh below
@@ -392,7 +392,9 @@ def get_vibrational_entropy(
     phonon.forces = np.array(forces)
     phonon.produce_force_constants()
     phonon.run_mesh(50.0)
-    phonon.run_thermal_properties(temperatures=[temperature], cutoff_frequency=0.05)
+    phonon.run_thermal_properties(
+        temperatures=[temperature], exclude_gamma_acoustic=True
+    )
     entropy = phonon.get_thermal_properties_dict()["entropy"][0]
     frequencies = phonon.mesh.frequencies
     return {
