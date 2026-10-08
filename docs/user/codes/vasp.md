@@ -504,11 +504,12 @@ The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-med
 
 ### Debye-Waller workflow
 
-`DebyeWallerMaker` calculates the thermal displacement matrices from the harmonic phonons.
+`DebyeWallerMaker` calculates the thermal displacement matrices from the harmonic phonons with [phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
 It needs phonopy 4.7.1 or newer and a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
-Install that pymatgen after atomate2 with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@20f6c8672092159bccccd73a2e5f8e0e5bc410fb`, the commit atomate2 is tested with.
-In an atomate2 clone, `pip install --group debye-waller` does the same.
+Install them after atomate2 with `pip install "phonopy>=4.7.1" git+https://github.com/hrushikesh-s/pymatgen.git@6cf67dfdc907bb296d3b75778fd6d0474e010660`.
+This is the pymatgen commit atomate2 is tested with.
+In an atomate2 clone, `pip install --group debye-waller` installs the same with pip 25.1 or newer.
 
 ```{warning}
 This workflow is new and has not been tested widely.
@@ -519,16 +520,21 @@ First, the phonon workflow computes the force constants.
 The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
 The phonon maker needs `store_force_constants=True`.
 The default phonon makers of `DebyeWallerMaker` set it, but the VASP `PhononMaker` does not by default.
+For metals, set `born_maker=None` in the phonon maker to skip the Born charge calculation.
 phonopy then gives the Cartesian thermal displacement matrix $U$ of each site of the primitive cell.
+The hkl indices of the patterns and the TEM beam direction refer to this primitive cell.
 The q-point mesh is Gamma-centered.
-Its default density is 7000 q-points per reciprocal atom, the same density as for the phonon DOS.
-At high temperature, $U$ converges slowly with the mesh, so check its convergence.
-The Debye-Waller factor of a site for the reciprocal lattice vector $g$ is $\exp(-2\pi^2 g^T U g)$.
+Its default density is 7000 q-points per reciprocal atom, the same default as for the phonon DOS.
+For some lattices these mesh numbers break the lattice symmetry, and $U$ then loses a little of its site symmetry.
+Pass a mesh tuple to avoid this.
+On a coarse mesh, $U$ is too small.
+At finite temperature the error falls only as one over the mesh size, so check its convergence.
+The Debye-Waller factor of a site for the reciprocal lattice vector $g$, with $|g| = 1/d_{hkl}$, is $\exp(-2\pi^2 g^T U g)$.
 For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
 pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator` compute the patterns with these factors.
 This is done from 0 K to 1000 K in steps of 100 K by default, and once without the factors.
 
-The three acoustic modes at Gamma are left out, and so are the modes below `freq_min=0.01` THz.
+The three acoustic modes at Gamma are left out, and so are the modes with a frequency of magnitude below `freq_min=0.01` THz.
 Imaginary modes are left out as well.
 With `include_imaginary_modes=True`, they are included as if their frequency were real with the same magnitude.
 This only makes sense for small imaginary frequencies.

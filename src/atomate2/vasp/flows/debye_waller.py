@@ -36,13 +36,13 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     phonon_maker: .PhononMaker
         The VASP phonon maker. It must have store_force_constants=True.
     temperatures: list[float]
-        Temperatures in K.
+        Temperatures in K, not negative.
     mesh: tuple[int, int, int] | float
         q-point mesh for the thermal displacements, or a q-point density used
         as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out. The three acoustic
-        modes at Gamma are always left out.
+        Modes with abs(f) below this frequency in THz are left out. The three
+        acoustic modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.

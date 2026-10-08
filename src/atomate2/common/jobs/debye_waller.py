@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import job
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.debye_waller import DebyeWallerDocument
 
 if TYPE_CHECKING:
@@ -24,7 +25,7 @@ def compute_debye_waller(
     xrd_kwargs: dict | None = None,
     nd_kwargs: dict | None = None,
     tem_kwargs: dict | None = None,
-    symprec: float = 1e-4,
+    symprec: float = SETTINGS.PHONON_SYMPREC,
 ) -> DebyeWallerDocument:
     """
     Compute the thermal displacements and diffraction patterns of a phonon run.
@@ -34,13 +35,13 @@ def compute_debye_waller(
     phonon_output: PhononDoc
         Output document of a phonon flow, run with store_force_constants=True.
     temperatures: Sequence[float]
-        Temperatures in K.
+        Temperatures in K, not negative.
     mesh: tuple[int, int, int] | float
         q-point mesh, or a q-point density used as kppa in pymatgen's
         Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out. The three acoustic
-        modes at Gamma are always left out.
+        Modes with abs(f) below this frequency in THz are left out. The three
+        acoustic modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.

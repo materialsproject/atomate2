@@ -20,6 +20,8 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
 
+from atomate2 import SETTINGS
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
@@ -28,7 +30,20 @@ if TYPE_CHECKING:
     from atomate2.common.jobs.gruneisen import PhononDoc
 
 
-def get_thermal_displacement_matrices(
+def check_pymatgen() -> None:
+    """Check that pymatgen applies the U11_cif, ..., U12_cif site properties.
+
+    Released pymatgen ignores them, so its patterns would have no Debye-Waller
+    factors.
+    """
+    if not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"):
+        raise ImportError(
+            "This pymatgen version has no anisotropic Debye-Waller factors. See the "
+            "Debye-Waller workflow section of the atomate2 docs to install one."
+        )
+
+
+def _get_thermal_displacement_matrices(
     phonon: Phonopy,
     temperatures: Sequence[float],
     freq_min: float = 0.01,
@@ -46,8 +61,8 @@ def get_thermal_displacement_matrices(
     temperatures: Sequence[float]
         Temperatures in K.
     freq_min: float
-        Modes below this frequency in THz are left out. The three acoustic
-        modes at Gamma are always left out.
+        Modes with abs(f) below this frequency in THz are left out. The three
+        acoustic modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes with frequencies below -freq_min, as if their
         frequency were real with the same magnitude. Each term of phonopy's sum
@@ -86,7 +101,8 @@ class DebyeWallerDocument(StructureMetadata):
     structure: Structure | None = Field(
         None,
         description="Primitive cell of the phonon calculation. The sites are in the "
-        "order of the thermal displacement matrices.",
+        "order of the thermal displacement matrices. The hkl indices of the patterns "
+        "and the TEM beam direction refer to this cell.",
     )
     mesh: tuple[int, int, int] | None = Field(
         None,
@@ -148,7 +164,7 @@ class DebyeWallerDocument(StructureMetadata):
         xrd_kwargs: dict | None = None,
         nd_kwargs: dict | None = None,
         tem_kwargs: dict | None = None,
-        symprec: float = 1e-4,
+        symprec: float = SETTINGS.PHONON_SYMPREC,
     ) -> Self:
         """
         Compute the thermal displacements and diffraction patterns of a phonon run.
@@ -158,13 +174,13 @@ class DebyeWallerDocument(StructureMetadata):
         phonon_doc: PhononDoc
             Output of a phonon flow, with the force constants stored.
         temperatures: Sequence[float]
-            Temperatures in K.
+            Temperatures in K, not negative.
         mesh: tuple[int, int, int] | float
             q-point mesh, or a q-point density used as kppa in pymatgen's
             Kpoints.automatic_density for the primitive cell.
         freq_min: float
-            Modes below this frequency in THz are left out. The three acoustic
-            modes at Gamma are always left out.
+            Modes with abs(f) below this frequency in THz are left out. The three
+            acoustic modes at Gamma are always left out.
         include_imaginary_modes: bool
             Also include the modes below -freq_min, as if their frequency were
             real with the same magnitude.
@@ -181,12 +197,9 @@ class DebyeWallerDocument(StructureMetadata):
         -------
         DebyeWallerDocument
         """
-        # released pymatgen ignores the U11_cif, ..., U12_cif site properties
-        if not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"):
-            raise ImportError(
-                "This pymatgen version has no anisotropic Debye-Waller factors. "
-                "Install the debye-waller dependency group of atomate2."
-            )
+        check_pymatgen()
+        if min(temperatures) < 0:
+            raise ValueError("The temperatures must not be negative.")
         if phonon_doc.force_constants is None:
             raise ValueError(
                 "The phonon document has no force constants. Run the phonon flow "
@@ -203,11 +216,16 @@ class DebyeWallerDocument(StructureMetadata):
         phonon.force_constants = np.array(
             getattr(force_constants, "force_constants", force_constants)
         )
-        # the phonon document stores the symmetrized Born charges of the
-        # primitive cell. As in _set_nac_params, there is no NAC for zero
+        # _set_nac_params needs the Born charges of the unit cell. The phonon
+        # document stores those of the primitive cell, in phonopy's atom order,
+        # so NAC is set here. As in _set_nac_params, there is no NAC for zero
         # charges or FHI-aims.
         born = phonon_doc.born
-        if born is not None and np.any(born) and phonon_doc.code != "aims":
+        if (
+            born is not None
+            and not np.allclose(born, 0.0)
+            and phonon_doc.code != "aims"
+        ):
             phonon.nac_params = {
                 "born": np.array(born),
                 "dielectric": np.array(phonon_doc.epsilon_static),
@@ -228,35 +246,27 @@ class DebyeWallerDocument(StructureMetadata):
             is_mesh_symmetry=False,
             is_gamma_center=True,
         )
-        matrices = get_thermal_displacement_matrices(
+        matrices = _get_thermal_displacement_matrices(
             phonon, temperatures, freq_min, include_imaginary_modes
         )
 
-        calculators = {
-            "xrd": XRDCalculator(**(xrd_kwargs or {})),
-            "nd": NDCalculator(**(nd_kwargs or {})),
-            "tem": TEMCalculator(**(tem_kwargs or {})),
-        }
-        patterns: dict[str, list] = {name: [] for name in calculators}
+        # the first structure has no U, for the patterns without the factors
+        structures = [structure]
         matrices_cif = []
-        for u in [None, *matrices]:
-            displaced = structure
-            if u is not None:
-                tdm = ThermalDisplacementMatrices(
-                    ThermalDisplacementMatrices.get_reduced_matrix(u),
-                    structure,
-                    temperature=None,
-                )
-                matrices_cif.append(tdm.Ucif.tolist())
-                displaced = tdm.to_structure_with_site_properties_Ucif()
-            for name, calculator in calculators.items():
-                if name == "tem":
-                    pattern = calculator.get_pattern(displaced)
-                    patterns[name].append(_tem_rows(pattern))
-                else:
-                    patterns[name].append(
-                        calculator.get_pattern(displaced, scaled=False)
-                    )
+        for u in matrices:
+            tdm = ThermalDisplacementMatrices(
+                ThermalDisplacementMatrices.get_reduced_matrix(u),
+                structure,
+                temperature=None,
+            )
+            matrices_cif.append(tdm.Ucif.tolist())
+            structures.append(tdm.to_structure_with_site_properties_Ucif())
+        xrd = XRDCalculator(**(xrd_kwargs or {}))
+        nd = NDCalculator(**(nd_kwargs or {}))
+        tem = TEMCalculator(**(tem_kwargs or {}))
+        xrd_patterns = [xrd.get_pattern(s, scaled=False) for s in structures]
+        nd_patterns = [nd.get_pattern(s, scaled=False) for s in structures]
+        tem_patterns = [_tem_rows(tem.get_pattern(s)) for s in structures]
 
         return cls.from_structure(
             meta_structure=structure,
@@ -269,12 +279,12 @@ class DebyeWallerDocument(StructureMetadata):
                 thermal_displacement_matrix_cif=matrices_cif,
                 temperatures_thermal_displacements=list(temperatures),
             ),
-            xrd_pattern_static=patterns["xrd"][0],
-            xrd_patterns=patterns["xrd"][1:],
-            nd_pattern_static=patterns["nd"][0],
-            nd_patterns=patterns["nd"][1:],
-            tem_pattern_static=patterns["tem"][0],
-            tem_patterns=patterns["tem"][1:],
+            xrd_pattern_static=xrd_patterns[0],
+            xrd_patterns=xrd_patterns[1:],
+            nd_pattern_static=nd_patterns[0],
+            nd_patterns=nd_patterns[1:],
+            tem_pattern_static=tem_patterns[0],
+            tem_patterns=tem_patterns[1:],
         )
 
 

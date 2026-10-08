@@ -8,6 +8,10 @@ from atomate2.vasp.flows.debye_waller import DebyeWallerMaker
 from atomate2.vasp.flows.phonons import PhononMaker
 
 
+@pytest.mark.skipif(
+    not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"),
+    reason="pymatgen has no anisotropic Debye-Waller factors",
+)
 def test_debye_waller_maker_vasp_flow(si_structure: Structure):
     """The phonon flow output and the settings go to compute_debye_waller."""
     maker = DebyeWallerMaker(
@@ -86,6 +90,7 @@ def test_debye_waller_maker_vasp_na_cl(mock_vasp, clean_dir):
     doc = responses[flow.output.uuid][1].output
 
     assert doc.mesh == (15, 15, 15)
+    assert doc.include_imaginary_modes
     assert [site.specie.symbol for site in doc.structure] == ["Na", "Cl"]
     u = np.array(doc.thermal_displacement_data.thermal_displacement_matrix)
     assert u[1, :, 0, 0] == pytest.approx([0.026007, 0.020425], rel=1e-3)

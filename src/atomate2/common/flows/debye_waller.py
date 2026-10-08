@@ -9,6 +9,7 @@ from jobflow import Flow, Maker
 from pymatgen.util.due import Doi, due
 
 from atomate2.common.jobs.debye_waller import compute_debye_waller
+from atomate2.common.schemas.debye_waller import check_pymatgen
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -38,12 +39,12 @@ class BaseDebyeWallerMaker(Maker):
     diffraction patterns are computed with pymatgen with these factors at each
     temperature, and once without them.
 
-    The frequencies are not renormalized with temperature. At high
-    temperature, U converges slowly with the q-point mesh, so check its
-    convergence. Imaginary modes are left out by default. With
-    include_imaginary_modes=True, they are included as if their frequency were
-    real with the same magnitude. This only makes sense for small imaginary
-    frequencies.
+    The frequencies are not renormalized with temperature. On a coarse q-point
+    mesh, U is too small. At finite temperature the error falls only as one
+    over the mesh size, so check its convergence. Imaginary modes are left out
+    by default. With include_imaginary_modes=True, they are included as if
+    their frequency were real with the same magnitude. This only makes sense
+    for small imaginary frequencies.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
@@ -55,13 +56,13 @@ class BaseDebyeWallerMaker(Maker):
     phonon_maker: .BasePhononMaker
         The phonon maker. It must have store_force_constants=True.
     temperatures: list[float]
-        Temperatures in K.
+        Temperatures in K, not negative.
     mesh: tuple[int, int, int] | float
         q-point mesh for the thermal displacements, or a q-point density used
         as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
     freq_min: float
-        Modes below this frequency in THz are left out. The three acoustic
-        modes at Gamma are always left out.
+        Modes with abs(f) below this frequency in THz are left out. The three
+        acoustic modes at Gamma are always left out.
     include_imaginary_modes: bool
         Also include the modes below -freq_min, as if their frequency were real
         with the same magnitude.
@@ -84,12 +85,13 @@ class BaseDebyeWallerMaker(Maker):
     tem_kwargs: dict | None = None
 
     def __post_init__(self) -> None:
-        """Check that the phonon maker stores the force constants."""
+        """Check the phonon maker and pymatgen before any calculation runs."""
         if not self.phonon_maker.store_force_constants:
             raise ValueError(
                 "The phonon maker needs store_force_constants=True, since the "
                 "thermal displacements are computed from the force constants."
             )
+        check_pymatgen()
 
     def make(
         self,
