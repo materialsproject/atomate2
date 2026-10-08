@@ -17,6 +17,7 @@ from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Kpoints
+from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
 
 from atomate2.common.schemas.phonons import _set_nac_params
 
@@ -174,7 +175,7 @@ class DebyeWallerDocument(StructureMetadata):
         -------
         DebyeWallerDocument
         """
-        # released pymatgen ignores the thermal_displacement_matrix site property
+        # released pymatgen ignores the U11_cif, ..., U12_cif site properties
         if not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"):
             raise ImportError(
                 "This pymatgen version has no anisotropic Debye-Waller factors. "
@@ -229,9 +230,13 @@ class DebyeWallerDocument(StructureMetadata):
         }
         patterns: dict[str, list] = {name: [] for name in calculators}
         for u in [None, *matrices]:
-            displaced = structure.copy()
+            displaced = structure
             if u is not None:
-                displaced.add_site_property("thermal_displacement_matrix", list(u))
+                displaced = ThermalDisplacementMatrices(
+                    ThermalDisplacementMatrices.get_reduced_matrix(u),
+                    structure,
+                    temperature=None,
+                ).to_structure_with_site_properties_Ucif()
             for name, calculator in calculators.items():
                 if name == "tem":
                     pattern = calculator.get_pattern(displaced)

@@ -167,7 +167,7 @@ mace-field = [
 # anisotropic Debye-Waller factors, not yet in a pymatgen release.
 # Remove it once they are released.
 debye-waller = [
-    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@f854ebe13a42c23270d964f09e81dda7a1ec865e",
+    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@e51cd72054c66173d92434eb0a391d9a6d52d369",
 ]
 tests = [
     "fireworks==2.1.4",

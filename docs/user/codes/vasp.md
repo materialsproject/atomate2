@@ -507,7 +507,7 @@ The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-med
 `DebyeWallerMaker` calculates anisotropic Debye-Waller factors from the harmonic phonons.
 The X-ray, neutron and electron diffraction patterns are then computed with them.
 It needs a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
-Install it with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@f854ebe13a42c23270d964f09e81dda7a1ec865e`, or with the `debye-waller` dependency group.
+Install it with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@e51cd72054c66173d92434eb0a391d9a6d52d369`, or with the `debye-waller` dependency group.
 
 ```{warning}
 This workflow is new and has not been tested widely.
