@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from atomate2.common.files import gunzip_files, gzip_files, gzip_output_folder
+from atomate2.common.files import (
+    copy_files,
+    gunzip_files,
+    gzip_files,
+    gzip_output_folder,
+)
 
 
 def test_gunzip_force_overwrites(tmp_path):
@@ -31,6 +36,31 @@ def test_gunzip_force_overwrites(tmp_path):
     for fname in files:
         f = tmp_path / fname
         assert f.read_text() == f"{fname} overwritten"
+
+
+def test_gunzip_missing_file_keeps_existing(tmp_path):
+    existing = tmp_path / "file1"
+    existing.write_text("file1")
+
+    gunzip_files(
+        tmp_path, include_files=["file1.gz", "file2.gz"], allow_missing=True, force=True
+    )
+
+    assert existing.read_text() == "file1"
+    assert not (tmp_path / "file2").exists()
+
+
+def test_copy_files_glob_chars_in_directory(tmp_path, monkeypatch):
+    src_dir = tmp_path / "prev[1]"
+    src_dir.mkdir()
+    (src_dir / "a.dat").write_text("a")
+    dst_dir = tmp_path / "dst"
+    dst_dir.mkdir()
+    monkeypatch.chdir(dst_dir)
+
+    copy_files(src_dir, include_files=["*.dat"])
+
+    assert (dst_dir / "a.dat").read_text() == "a"
 
 
 def test_zip_outputs(tmp_dir):

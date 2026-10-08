@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import glob
 from fnmatch import fnmatch
 from pathlib import Path
 
@@ -312,8 +313,11 @@ def find_and_filter_files(
     else:
         files = []
         for file in include_files:
-            # expand any glob matches
-            globbed_files = file_client.glob(directory / file, host=host)
+            # expand any glob matches; the directory is escaped so that characters
+            # like "[" in its name are not interpreted as glob patterns
+            globbed_files = file_client.glob(
+                Path(glob.escape(str(directory))) / file, host=host
+            )
 
             if len(globbed_files) > 0:
                 # Need to get the path relative to directory
