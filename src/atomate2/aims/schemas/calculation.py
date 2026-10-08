@@ -338,14 +338,14 @@ class Calculation(BaseModel):
 
         dos = _parse_dos(parse_dos, aims_output)
         if dos is not None:
-            aims_objects[AimsObject.DOS] = dos
+            aims_objects[AimsObject.DOS] = dos  # type: ignore  # noqa: PGH003
 
         bandstructure = _parse_bandstructure(parse_bandstructure, aims_output)
         if bandstructure is not None:
             aims_objects[AimsObject.BANDSTRUCTURE] = bandstructure  # type: ignore  # noqa: PGH003
 
         if store_trajectory:
-            aims_objects[AimsObject.TRAJECTORY] = aims_output.structures
+            aims_objects[AimsObject.TRAJECTORY] = aims_output.structures  # type: ignore  # noqa: PGH003
 
         output_doc = CalculationOutput.from_aims_output(aims_output)
 
@@ -382,7 +382,7 @@ def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]
         A mapping between the Aims object type and the file path.
     """
     output_file_paths = {}
-    for aims_object in AimsObject:
+    for aims_object in AimsObject:  # type: ignore  # noqa: PGH003
         for volumetric_file in volumetric_files:
             if aims_object.name in str(volumetric_file):
                 output_file_paths[aims_object] = str(volumetric_file)

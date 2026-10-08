@@ -685,5 +685,5 @@ def _get_state(calc_docs: list[Calculation], analysis: AnalysisDoc) -> TaskState
         c.has_aims_completed == TaskState.SUCCESS for c in calc_docs
     )
     if not analysis.errors and all_calcs_completed:
-        return TaskState.SUCCESS
-    return TaskState.FAILED
+        return TaskState.SUCCESS  # type: ignore  # noqa: PGH003
+    return TaskState.FAILED  # type: ignore  # noqa: PGH003
