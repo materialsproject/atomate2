@@ -69,7 +69,8 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           # the MACE-Field fork is the mace-field dependency group, not an extra
-          # the debye-waller group uses the generic forcefield extras
+          # the forcefield conftest imports torch, so the debye-waller group also
+          # installs the generic forcefield extras
           uv pip install .[strict,abinit,approxneb,aims${{ matrix.dep-group != 'mace-field' && format(',strict-forcefields-{0}', matrix.dep-group == 'debye-waller' && 'generic' || matrix.dep-group) || '' }}] \
             --group tests ${{ matrix.dep-group == 'mace-field' && '--group mace-field' || '' }}
 

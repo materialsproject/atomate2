@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 @job(
     output_schema=DebyeWallerDocument,
-    data=["xrd_patterns", "nd_patterns", "tem_patterns"],
+    data=["xrd_patterns", "nd_patterns", "tem_pattern_static", "tem_patterns"],
 )
 def compute_debye_waller(
     phonon_output: PhononDoc,

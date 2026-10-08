@@ -19,12 +19,14 @@ from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
+from typing_extensions import TypedDict
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    import pandas as pd
     from typing_extensions import Self
 
     from atomate2.common.jobs.gruneisen import PhononDoc
@@ -42,6 +44,14 @@ def check_pymatgen() -> None:
             "Debye-Waller workflow section of the VASP page in the atomate2 docs to "
             "install one."
         )
+
+
+class TEMSpot(TypedDict):
+    """Spot of an electron diffraction pattern from pymatgen's TEMCalculator."""
+
+    position: list[float]
+    hkl: list[int]
+    intensity: float
 
 
 def _get_thermal_displacement_matrices(
@@ -114,6 +124,15 @@ class DebyeWallerDocument(StructureMetadata):
         description="Whether the modes below -freq_min are included, as if their "
         "frequency were real with the same magnitude.",
     )
+    xrd_kwargs: dict[str, Any] | None = Field(
+        None, description="Keyword arguments of pymatgen's XRDCalculator."
+    )
+    nd_kwargs: dict[str, Any] | None = Field(
+        None, description="Keyword arguments of pymatgen's NDCalculator."
+    )
+    tem_kwargs: dict[str, Any] | None = Field(
+        None, description="Keyword arguments of pymatgen's TEMCalculator."
+    )
     thermal_displacement_data: ThermalDisplacementData | None = Field(
         None,
         description="Cartesian and CIF thermal displacement matrices U of each "
@@ -121,8 +140,8 @@ class DebyeWallerDocument(StructureMetadata):
     )
     xrd_pattern_static: DiffractionPattern | None = Field(
         None,
-        description="X-ray diffraction pattern without Debye-Waller factors. The "
-        "intensities are not scaled.",
+        description="X-ray diffraction pattern without Debye-Waller factors, with "
+        "x in degrees 2 theta. The intensities are not scaled.",
     )
     xrd_patterns: list[DiffractionPattern] | None = Field(
         None,
@@ -132,22 +151,22 @@ class DebyeWallerDocument(StructureMetadata):
     )
     nd_pattern_static: DiffractionPattern | None = Field(
         None,
-        description="Neutron diffraction pattern without Debye-Waller factors. The "
-        "intensities are not scaled.",
+        description="Neutron diffraction pattern without Debye-Waller factors, with "
+        "x in degrees 2 theta. The intensities are not scaled.",
     )
     nd_patterns: list[DiffractionPattern] | None = Field(
         None,
         description="Neutron diffraction pattern at each temperature, with the "
         "Debye-Waller factor of each site. The intensities are not scaled.",
     )
-    tem_pattern_static: list[dict[str, Any]] | None = Field(
+    tem_pattern_static: list[TEMSpot] | None = Field(
         None,
         description="Electron diffraction spots without Debye-Waller factors, with "
         "the position, hkl and intensity of each spot from pymatgen's "
         "TEMCalculator.get_pattern. The intensities are normalized to the "
         "strongest spot.",
     )
-    tem_patterns: list[list[dict[str, Any]]] | None = Field(
+    tem_patterns: list[list[TEMSpot]] | None = Field(
         None,
         description="Electron diffraction spots at each temperature, with the "
         "Debye-Waller factor of each site. The intensities are normalized to the "
@@ -274,6 +293,9 @@ class DebyeWallerDocument(StructureMetadata):
             structure=structure,
             mesh=mesh_numbers,
             include_imaginary_modes=include_imaginary_modes,
+            xrd_kwargs=xrd_kwargs,
+            nd_kwargs=nd_kwargs,
+            tem_kwargs=tem_kwargs,
             thermal_displacement_data=ThermalDisplacementData(
                 freq_min_thermal_displacements=freq_min,
                 thermal_displacement_matrix=matrices.tolist(),
@@ -289,7 +311,7 @@ class DebyeWallerDocument(StructureMetadata):
         )
 
 
-def _tem_rows(pattern: Any) -> list[dict[str, Any]]:
+def _tem_rows(pattern: pd.DataFrame) -> list[TEMSpot]:
     """Convert pymatgen's TEM data frame into rows of plain values."""
     return [
         {

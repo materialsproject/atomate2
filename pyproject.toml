@@ -165,12 +165,15 @@ mace-field = [
     "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
 ]
 # pymatgen with anisotropic Debye-Waller factors, which is not released yet.
+# It is a dependency group, since PyPI does not accept git URLs in extras.
+# CI installs it after the strict extras, which pin a released pymatgen.
 # phonopy 4.7.1 added exclude_gamma_acoustic to the thermal displacements.
-# Once a pymatgen release has these factors, remove this group and move the
-# phonopy pin to the phonons extra.
+# Once a pymatgen release has these factors, remove this group and its CI
+# entry, raise the pymatgen lower bound and move the phonopy pin to the
+# phonons extra.
 debye-waller = [
     "phonopy>=4.7.1",
-    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@3f79488cb5994da6b2127848b3bd8046f01dfb51",
+    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@b3dd415ca4e1649fe8771b2e2ae44019ed1a816e",
 ]
 tests = [
     "fireworks==2.1.4",

@@ -20,6 +20,14 @@ if TYPE_CHECKING:
 
 
 @due.dcite(
+    Doi("10.1107/S0108767396005697"),
+    description="Atomic displacement parameter nomenclature.",
+)
+@due.dcite(
+    Doi("10.1039/C5CE01219H"),
+    description="Anisotropic displacement parameters from phonon calculations.",
+)
+@due.dcite(
     Doi("10.1088/1361-648X/acd831"),
     description="Implementation strategies in phonopy and phono3py.",
 )

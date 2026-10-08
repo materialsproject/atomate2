@@ -21,8 +21,9 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     with temperature.
 
     By default, the phonon flow is the atomate2 VASP phonon flow with
-    store_force_constants=True and create_thermal_displacements=False, since
-    this workflow computes the thermal displacements itself. The phonon flow
+    store_force_constants=True and create_thermal_displacements=False. This
+    workflow computes the thermal displacements itself, on a Gamma-centered
+    mesh and without the acoustic modes at Gamma. The phonon flow
     computes the Born charges and the dielectric tensor for the non-analytical
     correction.
 

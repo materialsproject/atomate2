@@ -345,6 +345,9 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 
+The phonon workflow can also compute thermal displacement matrices with `create_thermal_displacements=True`.
+For diffraction patterns with Debye-Waller factors, see the [Debye-Waller workflow](debye_waller_workflow).
+
 #### Pheasy
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
@@ -502,12 +505,13 @@ The same workflow runs with a force field via `from atomate2.forcefields.flows.c
 `CTEMaker.from_force_field_name` sets one force field for the relaxation, the phonons and the elastic tensor.
 The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-medium.
 
+(debye_waller_workflow)=
 ### Debye-Waller workflow
 
 `DebyeWallerMaker` calculates the thermal displacement matrices from the harmonic phonons with [phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
 It needs phonopy 4.7.1 or newer and a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
-Install them after atomate2 with `pip install "phonopy>=4.7.1" git+https://github.com/hrushikesh-s/pymatgen.git@3f79488cb5994da6b2127848b3bd8046f01dfb51`.
+Install them after atomate2 with `pip install "phonopy>=4.7.1" git+https://github.com/hrushikesh-s/pymatgen.git@b3dd415ca4e1649fe8771b2e2ae44019ed1a816e`.
 This is the pymatgen commit atomate2 is tested with.
 In the root of an atomate2 clone, `pip install --group debye-waller` installs the same with pip 25.1 or newer.
 
@@ -529,6 +533,10 @@ For some lattices these mesh numbers break the lattice symmetry, and $U$ then lo
 Pass a mesh tuple with the same number along each axis to avoid this.
 On a coarse mesh, $U$ is too small.
 At finite temperature the error falls only as 1/N for an N x N x N mesh, so check its convergence.
+The workflow does not use `create_thermal_displacements` of the phonon workflow.
+That option runs phonopy's mesh without Gamma centering and with `freq_min_thermal_displacements=0` by default.
+For even mesh numbers this mesh is shifted off Gamma, which breaks the site symmetry of $U$.
+For odd mesh numbers it contains Gamma, and the acoustic modes there can make $U$ far too large.
 The Debye-Waller factor of a site for the reciprocal lattice vector $g$, with $|g| = 1/d_{hkl}$, is $\exp(-2\pi^2 g^T U g)$.
 For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
 pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator` compute the patterns with these factors.
