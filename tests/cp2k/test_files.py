@@ -50,6 +50,21 @@ def test_copy_cp2k_outputs_static(
         assert Path(file).exists()
 
 
+def test_copy_cp2k_outputs_warns_on_wildcards(tmp_dir: Path) -> None:
+    from atomate2.cp2k.files import copy_cp2k_outputs
+
+    test_dir = Path("test_outputs")
+    test_dir.mkdir()
+    (test_dir / "cp2k.out").write_text("CP2K| Output file names:\n")
+    (test_dir / "cp2k.inp").touch()
+    (test_dir / "extra.cube").touch()
+
+    with pytest.warns(UserWarning, match="Wildcards are not supported"):
+        copy_cp2k_outputs(src_dir=test_dir, additional_cp2k_files=["*.cube"])
+
+    assert not Path("extra.cube").exists()
+
+
 @pytest.mark.parametrize(
     "directory, expected_extension",
     [

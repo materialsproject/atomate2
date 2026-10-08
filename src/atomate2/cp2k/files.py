@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import re
+import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -51,7 +52,7 @@ def copy_cp2k_outputs(
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
     additional_cp2k_files : list of str
-        Additional files to copy
+        Additional files to copy. Wildcards are not supported.
     restart_to_input : bool
         Move the cp2k restart file to by the cp2k input in the new directory
     file_client : .FileClient
@@ -82,6 +83,12 @@ def copy_cp2k_outputs(
             else:
                 files.append(Path(cp2k_output.filenames[file][-1]).name)
         else:
+            if any(char in file for char in "*?["):
+                warnings.warn(
+                    f"Wildcards are not supported in additional_cp2k_files: {file!r} "
+                    "will only match a file with exactly that name.",
+                    stacklevel=3,  # skip the auto_fileclient wrapper
+                )
             files.append(Path(file).name)
     all_files = [
         get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files
