@@ -99,7 +99,7 @@ def test_phonon_flow(clean_dir, mock_aims, species_dir):
     assert not output.has_imaginary_modes
 
     assert output.heat_capacity(0.0) == 0.0
-    assert output.heat_capacity(400.0) == pytest.approx(21.95, abs=1e-2)
+    assert output.heat_capacity(400.0) == pytest.approx(21.90, abs=1e-2)
     assert output.post_process_settings.schema() == phonopy_settings_schema
     assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.1
 
@@ -208,7 +208,7 @@ def test_phonon_default_flow(si, clean_dir, mock_aims, species_dir):
     assert not output.has_imaginary_modes
 
     assert output.heat_capacity(0.0) == 0.0
-    assert output.heat_capacity(490.0) == pytest.approx(22.85, abs=1e-2)
+    assert output.heat_capacity(490.0) == pytest.approx(22.86, abs=1e-2)
     assert output.post_process_settings.schema() == phonopy_settings_schema
     assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.02
 
