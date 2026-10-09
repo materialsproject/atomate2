@@ -56,7 +56,8 @@ class BaseDebyeWallerMaker(Maker):
     The phonon flow stores no U if its mesh has imaginary modes, and this
     workflow then fails. With exclude_imaginary_modes_thermal_displacements=True
     in the generate_frequencies_eigenvectors_kwargs of the phonon maker, U is
-    computed from the real modes only. It is then only an estimate.
+    computed from the real modes above freq_min_thermal_displacements, which
+    must then be positive. It is then only an estimate.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.

@@ -153,14 +153,13 @@ def test_get_thermal_displacement_data(clean_dir):
             phonon,
             kpoint_density_thermal_displacements=343,
             exclude_imaginary_modes_thermal_displacements=True,
+            freq_min_thermal_displacements=0.1,
         )
     assert data["imaginary_modes_excluded"] is True
     assert np.array(data["thermal_displacement_matrix"]) == pytest.approx(0)
-    with pytest.raises(ValueError, match="must not be negative"):
+    with pytest.raises(ValueError, match="must be positive"):
         _get_thermal_displacement_data(
-            phonon,
-            exclude_imaginary_modes_thermal_displacements=True,
-            freq_min_thermal_displacements=-0.1,
+            phonon, exclude_imaginary_modes_thermal_displacements=True
         )
 
 
