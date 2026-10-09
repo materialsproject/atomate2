@@ -132,6 +132,14 @@ def test_get_thermal_displacement_data(clean_dir):
     assert data["freq_min_thermal_displacements"] == 0.0
     assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 501, 100))
 
+    # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=1000
+        )
+    u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
+    assert u_300 == pytest.approx(np.trace(u_300) / 3 * np.eye(3), abs=1e-12)
+
 
 # schemas where all fields have default values
 @pytest.mark.parametrize("model_cls", [PhononJobDirs, PhononUUIDs])

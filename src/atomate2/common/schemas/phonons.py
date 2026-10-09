@@ -124,11 +124,11 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict:
     """
     Compute the thermal displacement matrices of the primitive cell.
 
-    The matrices are summed over a q-point mesh with phonopy's default shift,
-    which avoids Gamma for even mesh numbers. The three acoustic modes at
-    Gamma are left out, because their frequencies are zero up to numerical
-    noise and the term of a mode diverges as its frequency goes to zero. One
-    CIF file is written per temperature.
+    The mesh numbers are rounded up to odd numbers. Without mesh symmetry, a
+    shifted mesh breaks the site symmetry of the matrices. The three acoustic
+    modes at Gamma are left out, because their frequencies are zero up to
+    numerical noise and the term of a mode diverges as its frequency goes to
+    zero. One CIF file is written per temperature.
 
     Parameters
     ----------
@@ -156,7 +156,8 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict:
         kppa=kwargs.get("kpoint_density_thermal_displacements", 30_000),
         force_gamma=True,
     )
-    phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
+    mesh = [n + 1 - n % 2 for n in kpoint.kpts[0]]
+    phonon.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=False)
     freq_min = kwargs.get("freq_min_thermal_displacements", 0.0)
     t_step = kwargs.get("tstep_thermal_displacements", 100)
     # same temperatures as phonopy's t_min, t_max, t_step, which include t_max
