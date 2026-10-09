@@ -54,7 +54,9 @@ class BaseDebyeWallerMaker(Maker):
     The frequencies are not renormalized with temperature. U is too small on a
     finite q-point mesh, by an error that falls as 1/N for an N x N x N mesh.
     The phonon flow stores no U if its mesh has imaginary modes, and this
-    workflow then fails.
+    workflow then fails. With exclude_imaginary_modes_thermal_displacements=True
+    in the generate_frequencies_eigenvectors_kwargs of the phonon maker, U is
+    computed from the real modes only. It is then only an estimate.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
