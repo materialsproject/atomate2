@@ -17,17 +17,13 @@ import json
 
 import numpy as np
 from ase.build import bulk
-from ase.calculators import emt
 from emmet.core.phonon import PhononBSDOSDoc
 from jobflow import run_locally
 from monty.json import MontyDecoder, MontyEncoder
-from phonopy import Phonopy
-from phonopy.physical_units import get_physical_units
 from pymatgen.analysis.diffraction.neutron import NDCalculator
 from pymatgen.analysis.diffraction.tem import TEMCalculator
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 from atomate2.common.schemas.debye_waller import DebyeWallerDocument
 from atomate2.forcefields.flows.debye_waller import DebyeWallerMaker
@@ -40,21 +36,28 @@ def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
     structure = AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61))
     maker = DebyeWallerMaker.from_force_field_name(
         EMT,
-        temperatures=[0, 300, 600],
-        mesh=(8, 8, 8),
-        freq_min=0.1,
         xrd_kwargs={"wavelength": "MoKa"},
         nd_kwargs={"wavelength": 1.0},
         tem_kwargs={"voltage": 100},
     )
     maker.phonon_maker.min_length = 8.0
+    # a 7 x 7 x 7 mesh for the one-atom primitive cell
+    maker.phonon_maker.generate_frequencies_eigenvectors_kwargs = {
+        "kpoint_density_thermal_displacements": 343,
+        "tstep_thermal_displacements": 300,
+        "tmax_thermal_displacements": 600,
+        "freq_min_thermal_displacements": 0.1,
+    }
 
     flow = maker.make(structure)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     doc = responses[flow.output.uuid][1].output
     assert isinstance(doc, DebyeWallerDocument)
-    assert doc.mesh == (8, 8, 8)
-    assert not doc.include_imaginary_modes
+    # U is that of the phonon flow
+    phonon_doc = responses[flow.jobs[0].output.uuid][1].output
+    assert doc.thermal_displacement_data.model_dump() == (
+        phonon_doc.thermal_displacement_data.model_dump()
+    )
     assert doc.xrd_kwargs == {"wavelength": "MoKa"}
     assert len(doc.structure) == 1
 
@@ -77,7 +80,7 @@ def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
     for u_t in u[:, 0]:
         assert u_t == pytest.approx(u_t[0, 0] * np.eye(3), abs=1e-10)
     assert np.all(np.diff(u[:, 0, 0, 0]) > 0)
-    assert u[1, 0, 0, 0] == pytest.approx(0.0054614, rel=1e-4)
+    assert u[1, 0, 0, 0] == pytest.approx(0.0053691, rel=1e-4)
     # the reciprocal lattice vectors of the fcc primitive cell are at cos = -1/3
     u_cif = np.array(data.thermal_displacement_matrix_cif)[:, 0]
     assert u_cif == pytest.approx(u[:, 0, :1, :1] * (4 / 3 * np.eye(3) - 1 / 3))
@@ -119,9 +122,9 @@ def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
 
 
 def test_debye_waller_maker_defaults():
-    """The default phonon maker uses MACE-MP-0 and stores the force constants."""
+    """The default phonon maker uses MACE-MP-0 and stores the thermal displacements."""
     maker = DebyeWallerMaker()
-    assert maker.phonon_maker.store_force_constants
+    assert maker.phonon_maker.create_thermal_displacements
     assert (
         maker.phonon_maker.phonon_displacement_maker.force_field_name
         == "MLFF.MACE_MP_0"
@@ -143,88 +146,9 @@ def test_debye_waller_maker_from_force_field_name():
     assert maker.phonon_maker is phonon_maker
 
 
-@pytest.mark.parametrize("freq_min", [1e-6, 0.6, 1.7])
-def test_imaginary_modes(freq_min):
-    """Imaginary modes are included with the magnitude of their frequency."""
-    # bcc Cu is unstable with EMT
-    structure = AseAtomsAdaptor.get_structure(bulk("Cu", "bcc", a=2.87, cubic=True))
-    phonon = Phonopy(
-        get_phonopy_structure(structure),
-        supercell_matrix=3 * np.eye(3),
-        primitive_matrix=np.eye(3),
-    )
-    phonon.generate_displacements(distance=0.01)
-    forces = []
-    for supercell in phonon.supercells_with_displacements:
-        atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(supercell))
-        atoms.calc = emt.EMT()
-        forces.append(atoms.get_forces())
-    phonon.forces = forces
-    phonon.produce_force_constants()
-    phonon.run_mesh(
-        [6, 6, 6], with_eigenvectors=True, is_mesh_symmetry=False, is_gamma_center=True
-    )
-    frequencies = phonon.mesh.frequencies
-    # the acoustic modes at Gamma are at 4e-6 THz. freq_min=0.6 leaves out the
-    # imaginary modes at -0.53 THz, and 1.7 also the real modes at 1.6 THz.
-    assert frequencies.min() < -0.1
-
-    # an emmet document, which stores the force constants as a list
-    phonon_doc = PhononBSDOSDoc(
-        structure=structure,
-        force_constants=phonon.force_constants.tolist(),
-        supercell_matrix=phonon.supercell_matrix.tolist(),
-        primitive_matrix=np.eye(3).tolist(),
-        code="forcefields",
-    )
-    temperatures = [0.0, 1.0, 300.0]
-    real, both = (
-        np.array(
-            DebyeWallerDocument.from_phonon_doc(
-                phonon_doc,
-                temperatures,
-                mesh=(6, 6, 6),
-                freq_min=freq_min,
-                include_imaginary_modes=include,
-            ).thermal_displacement_data.thermal_displacement_matrix
-        )
-        for include in (False, True)
-    )
-
-    # sum over all modes with |f| above freq_min, as phonopy does for f > 0,
-    # without the acoustic modes at Gamma
-    units = get_physical_units()
-    abs_freq = np.abs(frequencies)
-    eigenvectors = phonon.mesh.eigenvectors
-    masses = phonon.primitive.masses
-    reference = np.zeros_like(both)
-    real_reference = np.zeros_like(both)
-    for i_t, temperature in enumerate(temperatures):
-        for i_q, i_band in zip(*np.nonzero(abs_freq > freq_min), strict=True):
-            if i_q == 0 and i_band < 3:
-                continue
-            freq = abs_freq[i_q, i_band]
-            occupation = 0.0
-            if temperature > 1:
-                x = freq * units.THzToEv / (units.KB * temperature)
-                occupation = 1 / np.expm1(x)
-            q2 = units.Hbar * (occupation + 0.5) / (freq * 2 * np.pi)
-            q2 *= units.EV / units.AMU * 1e8
-            vec = eigenvectors[i_q, :, i_band].reshape(-1, 3)
-            for i_site, mass in enumerate(masses):
-                term = q2 / mass * np.real(np.outer(vec[i_site], vec[i_site].conj()))
-                reference[i_t, i_site] += term
-                if frequencies[i_q, i_band] > 0:
-                    real_reference[i_t, i_site] += term
-    assert real == pytest.approx(real_reference / len(frequencies), rel=1e-6)
-    assert both == pytest.approx(reference / len(frequencies), rel=1e-6)
-
-
 def test_debye_waller_document_checks_input():
     phonon_doc = PhononBSDOSDoc(
         structure=AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61))
     )
-    with pytest.raises(ValueError, match="must not be negative"):
-        DebyeWallerDocument.from_phonon_doc(phonon_doc, [-1.0, 300.0], mesh=(1, 1, 1))
-    with pytest.raises(ValueError, match="no force constants"):
-        DebyeWallerDocument.from_phonon_doc(phonon_doc, [300.0], mesh=(1, 1, 1))
+    with pytest.raises(ValueError, match="no thermal displacement matrices"):
+        DebyeWallerDocument.from_phonon_doc(phonon_doc)

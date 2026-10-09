@@ -13,18 +13,14 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     """
     Maker to calculate Debye-Waller factors with VASP and phonopy.
 
-    The phonon flow gives the harmonic force constants. phonopy then gives the
-    Cartesian thermal displacement matrix U of each site of the primitive cell.
-    The X-ray, neutron and electron diffraction patterns are computed with
-    pymatgen with the Debye-Waller factors exp(-2 pi^2 g^T U g) at each
-    temperature, and once without them. The frequencies are not renormalized
-    with temperature.
+    The phonon flow gives the Cartesian thermal displacement matrix U of each
+    site of the primitive cell with phonopy. The X-ray, neutron and electron
+    diffraction patterns are computed with pymatgen with the Debye-Waller
+    factors exp(-2 pi^2 g^T U g) at each temperature, and once without them.
+    The frequencies are not renormalized with temperature.
 
-    By default, the phonon flow is the atomate2 VASP phonon flow with
-    store_force_constants=True and create_thermal_displacements=False. This
-    workflow computes the thermal displacements itself, on a Gamma-centered
-    mesh and without the acoustic modes at Gamma. The phonon flow
-    computes the Born charges and the dielectric tensor for the non-analytical
+    By default, the phonon flow is the atomate2 VASP phonon flow. It computes
+    the Born charges and the dielectric tensor for the non-analytical
     correction.
 
     This workflow is new and has not been tested widely. It might still change
@@ -35,18 +31,7 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     name: str
         Name of the flows produced by this maker.
     phonon_maker: .PhononMaker
-        The VASP phonon maker. It must have store_force_constants=True.
-    temperatures: list[float]
-        Temperatures in K, not negative.
-    mesh: tuple[int, int, int] | float
-        q-point mesh for the thermal displacements, or a q-point density used
-        as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
-    freq_min: float
-        Modes with a frequency of magnitude below this value in THz are left
-        out. The three acoustic modes at Gamma are always left out.
-    include_imaginary_modes: bool
-        Also include the modes below -freq_min, as if their frequency were real
-        with the same magnitude.
+        The VASP phonon maker. It must have create_thermal_displacements=True.
     xrd_kwargs: dict or None
         Keyword arguments of pymatgen's XRDCalculator.
     nd_kwargs: dict or None
@@ -55,8 +40,4 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
         Keyword arguments of pymatgen's TEMCalculator.
     """
 
-    phonon_maker: PhononMaker = field(
-        default_factory=lambda: PhononMaker(
-            store_force_constants=True, create_thermal_displacements=False
-        )
-    )
+    phonon_maker: PhononMaker = field(default_factory=PhononMaker)

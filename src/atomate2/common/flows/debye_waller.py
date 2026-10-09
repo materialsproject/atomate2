@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
@@ -40,19 +40,21 @@ class BaseDebyeWallerMaker(Maker):
     """
     Maker to calculate Debye-Waller factors from phonon thermal displacements.
 
-    The phonon flow gives the harmonic force constants. phonopy then gives the
-    Cartesian thermal displacement matrix U of each site of the primitive cell
-    on a q-point mesh. The Debye-Waller factor of a site for the reciprocal
-    lattice vector g is exp(-2 pi^2 g^T U g). The X-ray, neutron and electron
-    diffraction patterns are computed with pymatgen with these factors at each
-    temperature, and once without them.
+    The phonon flow gives the Cartesian thermal displacement matrix U of each
+    site of the primitive cell at each temperature, with
+    create_thermal_displacements=True. Its q-point mesh and temperatures are set
+    with kpoint_density_thermal_displacements and tmin_thermal_displacements,
+    tmax_thermal_displacements and tstep_thermal_displacements in the
+    generate_frequencies_eigenvectors_kwargs of the phonon maker. The
+    Debye-Waller factor of a site for the reciprocal lattice vector g is
+    exp(-2 pi^2 g^T U g). The X-ray, neutron and electron diffraction patterns
+    are computed with pymatgen with these factors at each temperature, and once
+    without them.
 
-    The frequencies are not renormalized with temperature. On a coarse q-point
-    mesh, U is too small. At finite temperature the error falls only as 1/N
-    for an N x N x N mesh, so check its convergence. Imaginary modes are left
-    out by default. With include_imaginary_modes=True, they are included as if
-    their frequency were real with the same magnitude. This only makes sense
-    for small imaginary frequencies.
+    The frequencies are not renormalized with temperature. U is too small on a
+    finite q-point mesh, by an error that falls as 1/N for an N x N x N mesh.
+    The phonon flow stores no U if its mesh has imaginary modes, and this
+    workflow then fails.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
@@ -62,18 +64,7 @@ class BaseDebyeWallerMaker(Maker):
     name: str
         Name of the flows produced by this maker.
     phonon_maker: .BasePhononMaker
-        The phonon maker. It must have store_force_constants=True.
-    temperatures: list[float]
-        Temperatures in K, not negative.
-    mesh: tuple[int, int, int] | float
-        q-point mesh for the thermal displacements, or a q-point density used
-        as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
-    freq_min: float
-        Modes with a frequency of magnitude below this value in THz are left
-        out. The three acoustic modes at Gamma are always left out.
-    include_imaginary_modes: bool
-        Also include the modes below -freq_min, as if their frequency were real
-        with the same magnitude.
+        The phonon maker. It must have create_thermal_displacements=True.
     xrd_kwargs: dict or None
         Keyword arguments of pymatgen's XRDCalculator.
     nd_kwargs: dict or None
@@ -84,20 +75,16 @@ class BaseDebyeWallerMaker(Maker):
 
     name: str = "debye waller"
     phonon_maker: BasePhononMaker = None
-    temperatures: list[float] = field(default_factory=lambda: list(range(0, 1001, 100)))
-    mesh: tuple[int, int, int] | float = 7000.0
-    freq_min: float = 0.01
-    include_imaginary_modes: bool = False
     xrd_kwargs: dict | None = None
     nd_kwargs: dict | None = None
     tem_kwargs: dict | None = None
 
     def __post_init__(self) -> None:
         """Check the phonon maker and pymatgen before any calculation runs."""
-        if not self.phonon_maker.store_force_constants:
+        if not self.phonon_maker.create_thermal_displacements:
             raise ValueError(
-                "The phonon maker needs store_force_constants=True, since the "
-                "thermal displacements are computed from the force constants."
+                "The phonon maker needs create_thermal_displacements=True, since the "
+                "Debye-Waller factors are computed from its thermal displacements."
             )
         check_pymatgen()
 
@@ -120,10 +107,6 @@ class BaseDebyeWallerMaker(Maker):
         phonon_flow = self.phonon_maker.make(structure, prev_dir=prev_dir)
         debye_waller = compute_debye_waller(
             phonon_output=phonon_flow.output,
-            temperatures=self.temperatures,
-            mesh=self.mesh,
-            freq_min=self.freq_min,
-            include_imaginary_modes=self.include_imaginary_modes,
             xrd_kwargs=self.xrd_kwargs,
             nd_kwargs=self.nd_kwargs,
             tem_kwargs=self.tem_kwargs,

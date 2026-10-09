@@ -19,15 +19,15 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     """
     Maker to calculate Debye-Waller factors with a force field and phonopy.
 
-    The phonon flow gives the harmonic force constants. phonopy then gives the
-    Cartesian thermal displacement matrix U of each site of the primitive cell.
-    The X-ray, neutron and electron diffraction patterns are computed with
-    pymatgen with the Debye-Waller factors exp(-2 pi^2 g^T U g) at each
-    temperature, and once without them. The frequencies are not renormalized
-    with temperature.
+    The phonon flow gives the Cartesian thermal displacement matrix U of each
+    site of the primitive cell with phonopy. The X-ray, neutron and electron
+    diffraction patterns are computed with pymatgen with the Debye-Waller
+    factors exp(-2 pi^2 g^T U g) at each temperature, and once without them.
+    The frequencies are not renormalized with temperature.
 
-    By default, the phonon flow uses MACE-MP-0. Use :obj:`from_force_field_name`
-    to run it with another force field.
+    By default, the phonon flow uses MACE-MP-0, with
+    create_thermal_displacements=True. Use :obj:`from_force_field_name` to run it
+    with another force field.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
@@ -37,18 +37,7 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     name: str
         Name of the flows produced by this maker.
     phonon_maker: .PhononMaker
-        The force field phonon maker. It must have store_force_constants=True.
-    temperatures: list[float]
-        Temperatures in K, not negative.
-    mesh: tuple[int, int, int] | float
-        q-point mesh for the thermal displacements, or a q-point density used
-        as kppa in pymatgen's Kpoints.automatic_density for the primitive cell.
-    freq_min: float
-        Modes with a frequency of magnitude below this value in THz are left
-        out. The three acoustic modes at Gamma are always left out.
-    include_imaginary_modes: bool
-        Also include the modes below -freq_min, as if their frequency were real
-        with the same magnitude.
+        The force field phonon maker. It must have create_thermal_displacements=True.
     xrd_kwargs: dict or None
         Keyword arguments of pymatgen's XRDCalculator.
     nd_kwargs: dict or None
@@ -58,7 +47,9 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
     """
 
     phonon_maker: PhononMaker = field(
-        default_factory=lambda: PhononMaker.from_force_field_name("MACE-MP-0")
+        default_factory=lambda: PhononMaker.from_force_field_name(
+            "MACE-MP-0", create_thermal_displacements=True
+        )
     )
 
     @classmethod
@@ -92,5 +83,6 @@ class DebyeWallerMaker(BaseDebyeWallerMaker):
             force_field_name,
             calculator_kwargs=calculator_kwargs,
             relax_initial_structure=relax_initial_structure,
+            create_thermal_displacements=True,
         )
         return cls(**{"phonon_maker": phonon_maker, **kwargs})
