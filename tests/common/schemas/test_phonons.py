@@ -130,6 +130,7 @@ def test_get_thermal_displacement_data(clean_dir):
     u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
     assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
     assert data["freq_min_thermal_displacements"] == 0.0
+    assert data["imaginary_modes_excluded"] is False
     assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 1001, 100))
 
     # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
@@ -145,6 +146,22 @@ def test_get_thermal_displacement_data(clean_dir):
     phonon.force_constants = -phonon.force_constants
     with pytest.warns(UserWarning, match="mesh has imaginary modes"):
         assert _get_thermal_displacement_data(phonon) is None
+
+    # without the imaginary modes no mode is left, so U is zero
+    with pytest.warns(UserWarning, match="computed from the real modes only"):
+        data = _get_thermal_displacement_data(
+            phonon,
+            kpoint_density_thermal_displacements=343,
+            exclude_imaginary_modes_thermal_displacements=True,
+        )
+    assert data["imaginary_modes_excluded"] is True
+    assert np.array(data["thermal_displacement_matrix"]) == pytest.approx(0)
+    with pytest.raises(ValueError, match="must not be negative"):
+        _get_thermal_displacement_data(
+            phonon,
+            exclude_imaginary_modes_thermal_displacements=True,
+            freq_min_thermal_displacements=-0.1,
+        )
 
 
 # schemas where all fields have default values
