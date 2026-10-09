@@ -1,12 +1,16 @@
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
+from ase.calculators.emt import EMT
 from monty.json import MontyEncoder
 from phonopy import Phonopy
 from pydantic import ValidationError
 from pymatgen.core import Lattice, Structure
-from pymatgen.io.phonopy import get_phonopy_structure
+from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
+from scipy.constants import R
 
 from atomate2.common.schemas.phonons import (
     PhononBSDOSDoc,
@@ -14,6 +18,7 @@ from atomate2.common.schemas.phonons import (
     PhononJobDirs,
     PhononUUIDs,
     ThermalDisplacementData,
+    _get_thermal_displacement_data,
     _set_nac_params,
 )
 
@@ -55,6 +60,91 @@ def test_phonon_bs_dos_doc():
     # test extra="allow" option
     doc = PhononBSDOSDoc(**kwargs | {"extra_field": "test"})
     assert doc.extra_field == "test"
+
+
+def test_from_forces_born_thermal_properties(clean_dir):
+    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit."""
+    structure = Structure(
+        Lattice.cubic(3.74),
+        ["Au", "Cu", "Cu", "Cu"],
+        [[0, 0, 0], [0.5, 0.5, 0], [0.5, 0, 0.5], [0, 0.5, 0.5]],
+    )
+    supercell_matrix = 3 * np.eye(3)
+    phonon = Phonopy(get_phonopy_structure(structure), supercell_matrix)
+    phonon.generate_displacements(distance=0.01)
+    forces = []
+    for cell in phonon.supercells_with_displacements:
+        atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(cell))
+        atoms.calc = EMT()
+        forces.append(atoms.get_forces().tolist())
+    doc = PhononBSDOSDoc.from_forces_born(
+        structure=structure,
+        supercell_matrix=supercell_matrix,
+        displacement=0.01,
+        sym_reduce=True,
+        symprec=1e-5,
+        use_symmetrized_structure=None,
+        kpath_scheme="seekpath",
+        code="forcefields",
+        displacement_data={"forces": forces, "dirs": [], "uuids": []},
+        total_dft_energy=None,
+        store_force_constants=False,
+        tmax=3000,
+        static_run_job_dir=None,
+        static_run_uuid=None,
+        born_run_job_dir=None,
+        born_run_uuid=None,
+        optimization_run_job_dir=None,
+        optimization_run_uuid=None,
+    )
+    assert doc.entropies[0] == 0
+    assert doc.heat_capacities[0] == 0
+    assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
+    assert doc.internal_energies[-1] == pytest.approx(12 * R * 3000, rel=1e-3)
+
+
+def test_get_thermal_displacement_data(clean_dir):
+    """Cu with EMT on a 7x7x7 mesh, which contains Gamma.
+
+    With freq_min=0 and the acoustic modes at Gamma included, U is about 8e6 A^2.
+    """
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(3.61), ["Cu"], [[0, 0, 0]]
+    ).get_primitive_structure()
+    phonon = Phonopy(get_phonopy_structure(structure), 6 * np.eye(3), "P")
+    phonon.generate_displacements(distance=0.01)
+    forces = []
+    for cell in phonon.supercells_with_displacements:
+        atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(cell))
+        atoms.calc = EMT()
+        forces.append(atoms.get_forces())
+    phonon.forces = forces
+    phonon.produce_force_constants()
+
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=343
+        )
+
+    assert data["temperatures_thermal_displacements"] == list(range(0, 1001, 100))
+    u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
+    assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
+    assert data["freq_min_thermal_displacements"] == 0.0
+    assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 1001, 100))
+
+    # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=1000
+        )
+    assert phonon.mesh.mesh_numbers.tolist() == [11, 11, 11]
+    u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
+    assert u_300 == pytest.approx(np.trace(u_300) / 3 * np.eye(3), abs=1e-12)
+
+    # with flipped force constants all modes are imaginary
+    phonon.force_constants = -phonon.force_constants
+    with pytest.warns(UserWarning, match="mesh has imaginary modes"):
+        assert _get_thermal_displacement_data(phonon) is None
 
 
 # schemas where all fields have default values

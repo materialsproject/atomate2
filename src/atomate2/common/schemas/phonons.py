@@ -2,6 +2,7 @@
 
 import copy
 import logging
+import warnings
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Union
@@ -117,6 +118,83 @@ def _set_nac_params(
             "factor": Hartree * Bohr,
         }
     return borns, epsilon
+
+
+def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
+    """
+    Compute the thermal displacement matrices of the primitive cell.
+
+    phonopy shifts meshes with even numbers by half a step, which breaks the
+    site symmetry of the matrices for face-centred and hexagonal cells. So the
+    mesh numbers are rounded up to odd numbers. An odd mesh contains Gamma. The
+    three acoustic modes at Gamma are left out, because their frequencies are
+    zero up to numerical noise and the term of a mode diverges as its frequency
+    goes to zero. One CIF file is written per temperature.
+
+    The matrices are not defined if the mesh has imaginary modes, so none are
+    returned then.
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        Phonopy object with force constants and, if available, the NAC set.
+    **kwargs:
+        kpoint_density_thermal_displacements (default 30000),
+        tmin_thermal_displacements (default 0), tmax_thermal_displacements
+        (default 1000), tstep_thermal_displacements (default 100),
+        freq_min_thermal_displacements (default 0.0) and tol_imaginary_modes
+        (default 1e-5).
+
+    Returns
+    -------
+    dict or None
+        Fields of ThermalDisplacementData, or None if the mesh has imaginary
+        modes.
+    """
+    warnings.warn(
+        "Thermal displacement matrices now leave out the acoustic modes at Gamma, "
+        "use their own q-point mesh with odd mesh numbers "
+        "(kpoint_density_thermal_displacements, default 30000) and run from 0 to "
+        "1000 K. They can differ from those of earlier atomate2 versions.",
+        stacklevel=2,
+    )
+    kpoint = Kpoints.automatic_density(
+        structure=get_pmg_structure(phonon.primitive),
+        kppa=kwargs.get("kpoint_density_thermal_displacements", 30_000),
+        force_gamma=True,
+    )
+    mesh = [n + 1 - n % 2 for n in kpoint.kpts[0]]
+    phonon.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=False)
+    # the first q-point is Gamma, where the acoustic modes are left out
+    if phonon.mesh.frequencies[1:].min() < -kwargs.get("tol_imaginary_modes", 1e-5):
+        warnings.warn(
+            "The q-point mesh has imaginary modes, so no thermal displacement "
+            "matrices are stored.",
+            stacklevel=2,
+        )
+        return None
+    freq_min = kwargs.get("freq_min_thermal_displacements", 0.0)
+    t_step = kwargs.get("tstep_thermal_displacements", 100)
+    # same temperatures as phonopy's t_min, t_max, t_step, which include t_max
+    temperatures = np.arange(
+        kwargs.get("tmin_thermal_displacements", 0),
+        kwargs.get("tmax_thermal_displacements", 1000) + t_step / 2,
+        t_step,
+    )
+    phonon.run_thermal_displacement_matrices(
+        temperatures=temperatures, freq_min=freq_min, exclude_gamma_acoustic=True
+    )
+    matrices = phonon.thermal_displacement_matrices
+    for idx, temp in enumerate(temperatures):
+        matrices.write_cif(phonon.primitive, idx, filename=f"tdispmat_{temp:g}K.cif")
+    return {
+        "temperatures_thermal_displacements": temperatures.tolist(),
+        "thermal_displacement_matrix_cif": (
+            matrices.thermal_displacement_matrices_cif.tolist()
+        ),
+        "thermal_displacement_matrix": matrices.thermal_displacement_matrices.tolist(),
+        "freq_min_thermal_displacements": freq_min,
+    }
 
 
 class PhononComputationalSettings(BaseModel):
@@ -549,64 +627,28 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         tstep = kwargs.get("tstep", 10)
         temperature_range = np.arange(tmin, tmax + tstep / 2, tstep)
 
-        free_energies = [
-            dos.helmholtz_free_energy(
-                temp=temp, structure=get_pmg_structure(phonon.primitive)
-            )
-            for temp in temperature_range
-        ]
+        # phonopy gives the values per primitive cell, the free energy in kJ/mol.
+        # The three acoustic modes at Gamma should have zero frequency, so they are
+        # left out.
+        phonon.run_thermal_properties(
+            temperatures=temperature_range, exclude_gamma_acoustic=True
+        )
+        _, free_energy, entropy, heat_capacity = (
+            phonon.thermal_properties.thermal_properties
+        )
+        formula_units_primitive = (
+            len(phonon.primitive) / structure.composition.reduced_composition.num_atoms
+        )
+        free_energies = 1000 * free_energy / formula_units_primitive
+        entropies = entropy / formula_units_primitive
+        internal_energies = free_energies + temperature_range * entropies
+        heat_capacities = heat_capacity / formula_units_primitive
 
-        entropies = [
-            dos.entropy(temp=temp, structure=get_pmg_structure(phonon.primitive))
-            for temp in temperature_range
-        ]
-
-        internal_energies = [
-            dos.internal_energy(
-                temp=temp, structure=get_pmg_structure(phonon.primitive)
-            )
-            for temp in temperature_range
-        ]
-
-        heat_capacities = [
-            dos.cv(temp=temp, structure=get_pmg_structure(phonon.primitive))
-            for temp in temperature_range
-        ]
-
-        # will compute thermal displacement matrices
-        # for the primitive cell (phonon.primitive!)
-        # only this is available in phonopy
-        if kwargs.get("create_thermal_displacements"):
-            phonon.run_mesh(
-                kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
-            )
-            freq_min_thermal_displacements = kwargs.get(
-                "freq_min_thermal_displacements", 0.0
-            )
-            phonon.run_thermal_displacement_matrices(
-                t_min=kwargs.get("tmin_thermal_displacements", 0),
-                t_max=kwargs.get("tmax_thermal_displacements", 500),
-                t_step=kwargs.get("tstep_thermal_displacements", 100),
-                freq_min=freq_min_thermal_displacements,
-            )
-
-            temperature_range_thermal_displacements = np.arange(
-                kwargs.get("tmin_thermal_displacements", 0),
-                kwargs.get("tmax_thermal_displacements", 500),
-                kwargs.get("tstep_thermal_displacements", 100),
-            )
-            for idx, temp in enumerate(temperature_range_thermal_displacements):
-                phonon.thermal_displacement_matrices.write_cif(
-                    phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-                )
-            _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-            tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-            tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-        else:
-            tdisp_mat = None
-            tdisp_mat_cif = None
+        thermal_displacement_data = (
+            _get_thermal_displacement_data(phonon, **kwargs)
+            if kwargs.get("create_thermal_displacements")
+            else None
+        )
 
         formula_units = (
             structure.composition.num_atoms
@@ -641,14 +683,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
             code=code,
-            thermal_displacement_data={
-                "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-                "thermal_displacement_matrix_cif": tdisp_mat_cif,
-                "thermal_displacement_matrix": tdisp_mat,
-                "freq_min_thermal_displacements": freq_min_thermal_displacements,
-            }
-            if kwargs.get("create_thermal_displacements")
-            else None,
+            thermal_displacement_data=thermal_displacement_data,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],
                 "static_run_job_dir": kwargs["static_run_job_dir"],
