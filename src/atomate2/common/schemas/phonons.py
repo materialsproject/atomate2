@@ -134,7 +134,9 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     The matrices are not defined if the mesh has imaginary modes, so none are
     returned then. With exclude_imaginary_modes_thermal_displacements=True they
     are computed from the real modes only, since phonopy leaves out all modes
-    below freq_min_thermal_displacements. These matrices are only an estimate,
+    below freq_min_thermal_displacements. freq_min_thermal_displacements must
+    then be positive, because the term of a real mode next to an imaginary one
+    diverges as its frequency goes to zero. These matrices are only an estimate,
     because the unstable modes carry no displacement.
 
     Parameters
@@ -185,10 +187,10 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         )
         return None
     if has_imaginary:
-        if freq_min < 0:
+        if freq_min <= 0:
             raise ValueError(
-                "freq_min_thermal_displacements must not be negative to leave out "
-                "the imaginary modes."
+                "freq_min_thermal_displacements must be positive to leave out the "
+                "imaginary modes."
             )
         warnings.warn(
             "The q-point mesh has imaginary modes. The thermal displacement "
