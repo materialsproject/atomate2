@@ -18,21 +18,21 @@
    "lattice": "BCC_A2",
    "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
    "energy": -445.60852692,
-   "vibrational_entropy": 462.42912,
+   "vibrational_entropy": 462.42932,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
    "energy": -291.84111358,
-   "vibrational_entropy": 318.33984,
+   "vibrational_entropy": 318.33416,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
    "energy": -301.38132061,
-   "vibrational_entropy": 302.8736,
+   "vibrational_entropy": 302.86847,
    "imaginary_fraction": 0.0
   },
   {
@@ -80,21 +80,21 @@
    "lattice": "BCC_A2",
    "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
    "energy": -445.82524968,
-   "vibrational_entropy": 454.86432,
+   "vibrational_entropy": 454.86412,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
    "energy": -292.56814245,
-   "vibrational_entropy": 310.82656,
+   "vibrational_entropy": 310.82118,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
    "energy": -300.85504483,
-   "vibrational_entropy": 301.592,
+   "vibrational_entropy": 301.58678,
    "imaginary_fraction": 0.0
   },
   {
@@ -142,21 +142,21 @@
    "lattice": "BCC_A2",
    "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
    "energy": -698.60739066,
-   "vibrational_entropy": 453.53856,
+   "vibrational_entropy": 453.53838,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
    "energy": -459.3324902,
-   "vibrational_entropy": 308.55808,
+   "vibrational_entropy": 308.55813,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
    "energy": -470.93048823,
-   "vibrational_entropy": 300.73088,
+   "vibrational_entropy": 300.72571,
    "imaginary_fraction": 0.0
   },
   {
@@ -204,21 +204,21 @@
    "lattice": "BCC_A2",
    "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
    "energy": -445.97904016,
-   "vibrational_entropy": 465.24336,
+   "vibrational_entropy": 465.24357,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
    "energy": -292.2449195,
-   "vibrational_entropy": 321.84512,
+   "vibrational_entropy": 321.83934,
    "imaginary_fraction": 0.0
   },
   {
    "lattice": "BCC_A2",
    "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
    "energy": -301.38182849,
-   "vibrational_entropy": 304.41152,
+   "vibrational_entropy": 304.4062,
    "imaginary_fraction": 0.0
   },
   {

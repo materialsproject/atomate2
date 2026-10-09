@@ -281,10 +281,10 @@ def test_fit_tdb_missing_stable_lattice():
 @pytest.mark.parametrize(
     ("model", "l0", "l0_per_k"),
     [
-        ("MACE-OMAT-0-medium", (7168.0, 15938.0, 366.0), (0.414, -0.357)),
-        ("MACE-MATPES-PBE-0", (-2722.8, 2480.6, -17578.7), (2.853, 2.893)),
-        ("MACE-MATPES-r2SCAN-0", (3980.0, 14099.9, -13919.9), (-0.116, -0.031)),
-        ("GRACE-2L-OMAT", (1357.5, 891.5, -3860.4), (-1.906, 3.358)),
+        ("MACE-OMAT-0-medium", (7168.0, 15938.0, 366.0), (0.421, -0.354)),
+        ("MACE-MATPES-PBE-0", (-2722.8, 2480.6, -17578.7), (2.860, 2.897)),
+        ("MACE-MATPES-r2SCAN-0", (3980.0, 14099.9, -13919.9), (-0.109, -0.027)),
+        ("GRACE-2L-OMAT", (1357.5, 891.5, -3860.4), (-1.900, 3.362)),
     ],
 )
 def test_fit_tdb_ni_re(test_dir, model, l0, l0_per_k):
