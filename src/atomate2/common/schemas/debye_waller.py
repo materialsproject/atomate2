@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from emmet.core.phonon import ThermalDisplacementData
 from emmet.core.structure import StructureMetadata
 from phonopy import Phonopy
 from pydantic import Field
@@ -20,6 +19,7 @@ from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
 from typing_extensions import TypedDict
 
 from atomate2 import SETTINGS
+from atomate2.common.schemas.phonons import ThermalDisplacementData
 
 if TYPE_CHECKING:
     import pandas as pd
