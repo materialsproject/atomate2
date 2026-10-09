@@ -574,6 +574,7 @@ debye_waller_flow = DebyeWallerMaker().make(structure=structure)
 The same workflow runs with a force field via `from atomate2.forcefields.flows.debye_waller import DebyeWallerMaker`.
 By default it uses MACE-MP-0.
 `DebyeWallerMaker.from_force_field_name` sets another force field for the phonon workflow.
+The notebook `tutorials/debye_waller_workflow.ipynb` runs it for six materials with MACE-OMAT-0-medium and compares the thermal displacements with DFT and experiment.
 
 ### Quasi-harmonic Workflow
 
