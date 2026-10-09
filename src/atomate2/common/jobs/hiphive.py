@@ -42,7 +42,10 @@ from atomate2.common.jobs.phonons import (
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
 )
-from atomate2.common.schemas.phonons import _set_nac_params
+from atomate2.common.schemas.phonons import (
+    _get_thermal_displacement_data,
+    _set_nac_params,
+)
 
 if TYPE_CHECKING:
     from ase.atoms import Atoms
@@ -678,38 +681,11 @@ def generate_frequencies_eigenvectors(
         units=kwargs.get("units", "THz"),
     )
 
-    # will compute thermal displacement matrices
-    # for the primitive cell (phonon.primitive!)
-    # only this is available in phonopy
-    if kwargs.get("create_thermal_displacements"):
-        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
-        freq_min_thermal_displacements = kwargs.get(
-            "freq_min_thermal_displacements", 0.0
-        )
-        phonon.run_thermal_displacement_matrices(
-            t_min=kwargs.get("tmin_thermal_displacements", 0),
-            t_max=kwargs.get("tmax_thermal_displacements", 500),
-            t_step=kwargs.get("tstep_thermal_displacements", 100),
-            freq_min=freq_min_thermal_displacements,
-        )
-
-        temperature_range_thermal_displacements = np.arange(
-            kwargs.get("tmin_thermal_displacements", 0),
-            kwargs.get("tmax_thermal_displacements", 500),
-            kwargs.get("tstep_thermal_displacements", 100),
-        )
-        for idx, temp in enumerate(temperature_range_thermal_displacements):
-            phonon.thermal_displacement_matrices.write_cif(
-                phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-            )
-        _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-        tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-        tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-    else:
-        tdisp_mat = None
-        tdisp_mat_cif = None
+    thermal_displacement_data = (
+        _get_thermal_displacement_data(phonon, **kwargs)
+        if kwargs.get("create_thermal_displacements")
+        else None
+    )
 
     formula_units = (
         structure.composition.num_atoms
@@ -742,14 +718,7 @@ def generate_frequencies_eigenvectors(
         supercell_matrix=phonon.supercell_matrix.tolist(),
         primitive_matrix=phonon.primitive_matrix.tolist(),
         code=code,
-        thermal_displacement_data={
-            "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-            "thermal_displacement_matrix_cif": tdisp_mat_cif,
-            "thermal_displacement_matrix": tdisp_mat,
-            "freq_min_thermal_displacements": freq_min_thermal_displacements,
-        }
-        if kwargs.get("create_thermal_displacements")
-        else None,
+        thermal_displacement_data=thermal_displacement_data,
         jobdirs={
             "displacements_job_dirs": displacement_data["dirs"],
             "static_run_job_dir": kwargs["static_run_job_dir"],

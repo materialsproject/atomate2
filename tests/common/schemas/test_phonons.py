@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -17,6 +18,7 @@ from atomate2.common.schemas.phonons import (
     PhononJobDirs,
     PhononUUIDs,
     ThermalDisplacementData,
+    _get_thermal_displacement_data,
     _set_nac_params,
 )
 
@@ -99,6 +101,36 @@ def test_from_forces_born_thermal_properties(clean_dir):
     assert doc.heat_capacities[0] == 0
     assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
     assert doc.internal_energies[-1] == pytest.approx(12 * R * 3000, rel=1e-3)
+
+
+def test_get_thermal_displacement_data(clean_dir):
+    """Cu with EMT on a 7x7x7 mesh, which contains Gamma.
+
+    With freq_min=0 and the acoustic modes at Gamma included, U is about 8e6 A^2.
+    """
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(3.61), ["Cu"], [[0, 0, 0]]
+    ).get_primitive_structure()
+    phonon = Phonopy(get_phonopy_structure(structure), 6 * np.eye(3), "P")
+    phonon.generate_displacements(distance=0.01)
+    forces = []
+    for cell in phonon.supercells_with_displacements:
+        atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(cell))
+        atoms.calc = EMT()
+        forces.append(atoms.get_forces())
+    phonon.forces = forces
+    phonon.produce_force_constants()
+
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=343
+        )
+
+    assert data["temperatures_thermal_displacements"] == [0, 100, 200, 300, 400, 500]
+    u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
+    assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
+    assert data["freq_min_thermal_displacements"] == 0.0
+    assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 501, 100))
 
 
 # schemas where all fields have default values
