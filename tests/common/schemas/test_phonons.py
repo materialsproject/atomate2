@@ -137,8 +137,14 @@ def test_get_thermal_displacement_data(clean_dir):
         data = _get_thermal_displacement_data(
             phonon, kpoint_density_thermal_displacements=1000
         )
+    assert phonon.mesh.mesh_numbers.tolist() == [11, 11, 11]
     u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
     assert u_300 == pytest.approx(np.trace(u_300) / 3 * np.eye(3), abs=1e-12)
+
+    # with flipped force constants all modes are imaginary
+    phonon.force_constants = -phonon.force_constants
+    with pytest.warns(UserWarning, match="mesh has imaginary modes"):
+        assert _get_thermal_displacement_data(phonon) is None
 
 
 # schemas where all fields have default values
@@ -184,16 +190,3 @@ def test_set_nac_params_without_born():
     assert phonon.nac_params is None
     with pytest.raises(ValueError, match="Number of Born charges"):
         _set_nac_params(phonon, [np.eye(3).tolist()], np.eye(3).tolist(), 1e-4, "vasp")
-
-
-def test_get_thermal_displacement_data_not_real(monkeypatch):
-    """phonopy's check that the matrices are real fails, so no data is returned."""
-
-    def fail_check(**_kwargs):
-        raise AssertionError
-
-    phonon = get_nacl_phonon()
-    monkeypatch.setattr(phonon, "run_thermal_displacement_matrices", fail_check)
-    monkeypatch.setattr(phonon, "run_mesh", lambda *_args, **_kwargs: None)
-    with pytest.warns(UserWarning, match="not real, so none are stored"):
-        assert _get_thermal_displacement_data(phonon) is None

@@ -640,12 +640,6 @@ def generate_frequencies_eigenvectors(
         use_tetrahedron_method=kwargs.get("dos_use_tetrahedron_method", True),
     )
 
-    thermal_displacement_data = (
-        _get_thermal_displacement_data(phonon, **kwargs)
-        if kwargs.get("create_thermal_displacements")
-        else None
-    )
-
     formula_units = (
         structure.composition.num_atoms
         / structure.composition.reduced_composition.num_atoms
@@ -673,6 +667,12 @@ def generate_frequencies_eigenvectors(
             born=born,
             **kwargs,
         )
+
+    thermal_displacement_data = (
+        _get_thermal_displacement_data(phonon, **kwargs)
+        if kwargs.get("create_thermal_displacements")
+        else None
+    )
 
     cls_constructor = (
         "migrate_fields"

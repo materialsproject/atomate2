@@ -344,9 +344,11 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 
 With `create_thermal_displacements=True` (the default of `PhononMaker`), the workflow also computes the thermal displacement matrices of the primitive cell from 0 to 1000 K in steps of 100 K.
 They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by `kpoint_density_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
-The mesh numbers are rounded up to odd numbers, because an even mesh breaks the symmetry of the matrices.
+phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
 An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
-For 34 dynamically stable materials from the Materials Project, this density gives an average error of 1.4% (at most 3.0%) in the isotropic displacement at 300 K, compared with a density of 120000.
+This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
+For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
+If the mesh has imaginary modes, no thermal displacement matrices are stored.
 
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).
