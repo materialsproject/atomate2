@@ -126,11 +126,11 @@ def test_get_thermal_displacement_data(clean_dir):
             phonon, kpoint_density_thermal_displacements=343
         )
 
-    assert data["temperatures_thermal_displacements"] == [0, 100, 200, 300, 400, 500]
+    assert data["temperatures_thermal_displacements"] == list(range(0, 1001, 100))
     u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
     assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
     assert data["freq_min_thermal_displacements"] == 0.0
-    assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 501, 100))
+    assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 1001, 100))
 
     # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
     with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
@@ -184,3 +184,16 @@ def test_set_nac_params_without_born():
     assert phonon.nac_params is None
     with pytest.raises(ValueError, match="Number of Born charges"):
         _set_nac_params(phonon, [np.eye(3).tolist()], np.eye(3).tolist(), 1e-4, "vasp")
+
+
+def test_get_thermal_displacement_data_not_real(monkeypatch):
+    """phonopy's check that the matrices are real fails, so no data is returned."""
+
+    def fail_check(**_kwargs):
+        raise AssertionError
+
+    phonon = get_nacl_phonon()
+    monkeypatch.setattr(phonon, "run_thermal_displacement_matrices", fail_check)
+    monkeypatch.setattr(phonon, "run_mesh", lambda *_args, **_kwargs: None)
+    with pytest.warns(UserWarning, match="not real, so none are stored"):
+        assert _get_thermal_displacement_data(phonon) is None

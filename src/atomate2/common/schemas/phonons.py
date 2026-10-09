@@ -120,7 +120,7 @@ def _set_nac_params(
     return borns, epsilon
 
 
-def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict:
+def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     """
     Compute the thermal displacement matrices of the primitive cell.
 
@@ -130,6 +130,10 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict:
     numerical noise and the term of a mode diverges as its frequency goes to
     zero. One CIF file is written per temperature.
 
+    With the NAC, modes near zero frequency in a material with imaginary modes
+    can make the matrices slightly complex. phonopy then stops with an error, and
+    no matrices are returned, so that the rest of the phonon job still finishes.
+
     Parameters
     ----------
     phonon: Phonopy
@@ -137,13 +141,14 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict:
     **kwargs:
         kpoint_density_thermal_displacements (default 30000),
         tmin_thermal_displacements (default 0), tmax_thermal_displacements
-        (default 500), tstep_thermal_displacements (default 100) and
+        (default 1000), tstep_thermal_displacements (default 100) and
         freq_min_thermal_displacements (default 0.0).
 
     Returns
     -------
-    dict
-        Fields of ThermalDisplacementData.
+    dict or None
+        Fields of ThermalDisplacementData, or None if phonopy finds that the
+        matrices are not real.
     """
     warnings.warn(
         "Thermal displacement matrices now leave out the acoustic modes at Gamma "
@@ -163,12 +168,21 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict:
     # same temperatures as phonopy's t_min, t_max, t_step, which include t_max
     temperatures = np.arange(
         kwargs.get("tmin_thermal_displacements", 0),
-        kwargs.get("tmax_thermal_displacements", 500) + t_step / 2,
+        kwargs.get("tmax_thermal_displacements", 1000) + t_step / 2,
         t_step,
     )
-    phonon.run_thermal_displacement_matrices(
-        temperatures=temperatures, freq_min=freq_min, exclude_gamma_acoustic=True
-    )
+    try:
+        phonon.run_thermal_displacement_matrices(
+            temperatures=temperatures, freq_min=freq_min, exclude_gamma_acoustic=True
+        )
+    except AssertionError:  # phonopy asserts that the matrices are real
+        warnings.warn(
+            "phonopy found that the thermal displacement matrices are not real, "
+            "so none are stored. This happens with the NAC in materials with "
+            "imaginary modes.",
+            stacklevel=2,
+        )
+        return None
     matrices = phonon.thermal_displacement_matrices
     for idx, temp in enumerate(temperatures):
         matrices.write_cif(phonon.primitive, idx, filename=f"tdispmat_{temp:g}K.cif")
