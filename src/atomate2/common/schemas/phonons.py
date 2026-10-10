@@ -5,13 +5,14 @@ import logging
 import warnings
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Union
+from typing import Literal, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
 from monty.json import MSONable
 from phonopy import Phonopy
+from phonopy.interface.cif import write_cif_P1
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import Bohr, Hartree, VaspToTHz
@@ -131,13 +132,13 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     zero up to numerical noise and the term of a mode diverges as its frequency
     goes to zero. One CIF file is written per temperature.
 
-    The matrices are not defined if the mesh has imaginary modes, so none are
-    returned then. With exclude_imaginary_modes_thermal_displacements=True they
-    are computed from the real modes only, since phonopy leaves out all modes
-    below freq_min_thermal_displacements. freq_min_thermal_displacements must
-    then be positive, because the term of a real mode next to an imaginary one
-    diverges as its frequency goes to zero. These matrices are only an estimate,
-    because the unstable modes carry no displacement.
+    The matrices are not defined if the mesh has imaginary modes, so by default
+    none are returned then. imaginary_modes_thermal_displacements="exclude"
+    computes them from the real modes above freq_min_thermal_displacements.
+    "absolute" also counts each imaginary mode as a real mode of the same absolute
+    frequency, above freq_min_thermal_displacements. freq_min_thermal_displacements
+    must then be positive, because the term of a mode diverges as its frequency
+    goes to zero. These matrices are only an estimate.
 
     Parameters
     ----------
@@ -148,14 +149,14 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         tmin_thermal_displacements (default 0), tmax_thermal_displacements
         (default 1000), tstep_thermal_displacements (default 100),
         freq_min_thermal_displacements (default 0.0), tol_imaginary_modes
-        (default 1e-5) and exclude_imaginary_modes_thermal_displacements
-        (default False).
+        (default 1e-5) and imaginary_modes_thermal_displacements (default None,
+        "exclude" or "absolute").
 
     Returns
     -------
     dict or None
         Fields of ThermalDisplacementData, or None if the mesh has imaginary
-        modes and exclude_imaginary_modes_thermal_displacements is False.
+        modes and imaginary_modes_thermal_displacements is None.
     """
     warnings.warn(
         "Thermal displacement matrices now leave out the acoustic modes at Gamma, "
@@ -172,14 +173,17 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     mesh = [n + 1 - n % 2 for n in kpoint.kpts[0]]
     phonon.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=False)
     freq_min = kwargs.get("freq_min_thermal_displacements", 0.0)
-    exclude_imaginary = kwargs.get(
-        "exclude_imaginary_modes_thermal_displacements", False
-    )
+    imaginary_modes = kwargs.get("imaginary_modes_thermal_displacements")
+    if imaginary_modes not in (None, "exclude", "absolute"):
+        raise ValueError(
+            'imaginary_modes_thermal_displacements must be None, "exclude" or '
+            f'"absolute", not {imaginary_modes!r}.'
+        )
     # the first q-point is Gamma, where the acoustic modes are left out
     has_imaginary = phonon.mesh.frequencies[1:].min() < -kwargs.get(
         "tol_imaginary_modes", 1e-5
     )
-    if has_imaginary and not exclude_imaginary:
+    if has_imaginary and imaginary_modes is None:
         warnings.warn(
             "The q-point mesh has imaginary modes, so no thermal displacement "
             "matrices are stored.",
@@ -189,12 +193,12 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     if has_imaginary:
         if freq_min <= 0:
             raise ValueError(
-                "freq_min_thermal_displacements must be positive to leave out the "
+                "freq_min_thermal_displacements must be positive when the mesh has "
                 "imaginary modes."
             )
         warnings.warn(
             "The q-point mesh has imaginary modes. The thermal displacement "
-            "matrices are computed from the real modes only.",
+            f'matrices are computed with imaginary_modes="{imaginary_modes}".',
             stacklevel=2,
         )
     t_step = kwargs.get("tstep_thermal_displacements", 100)
@@ -208,16 +212,32 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         temperatures=temperatures, freq_min=freq_min, exclude_gamma_acoustic=True
     )
     matrices = phonon.thermal_displacement_matrices
+    u = matrices.thermal_displacement_matrices
+    u_cif = matrices.thermal_displacement_matrices_cif
+    if has_imaginary and imaginary_modes == "absolute":
+        # phonopy gives an imaginary mode as a negative frequency, and its term
+        # equals that of the absolute frequency, except at T <= 1 K, where phonopy
+        # sets the population to zero and the term changes sign
+        phonon.run_thermal_displacement_matrices(
+            temperatures=temperatures,
+            freq_min=-np.inf,
+            freq_max=-freq_min,
+            exclude_gamma_acoustic=True,
+        )
+        imaginary = phonon.thermal_displacement_matrices
+        sign = np.where(temperatures > 1, 1, -1)[:, None, None, None]
+        u = u + sign * imaginary.thermal_displacement_matrices
+        u_cif = u_cif + sign * imaginary.thermal_displacement_matrices_cif
     for idx, temp in enumerate(temperatures):
-        matrices.write_cif(phonon.primitive, idx, filename=f"tdispmat_{temp:g}K.cif")
+        write_cif_P1(
+            phonon.primitive, U_cif=u_cif[idx], filename=f"tdispmat_{temp:g}K.cif"
+        )
     return {
         "temperatures_thermal_displacements": temperatures.tolist(),
-        "thermal_displacement_matrix_cif": (
-            matrices.thermal_displacement_matrices_cif.tolist()
-        ),
-        "thermal_displacement_matrix": matrices.thermal_displacement_matrices.tolist(),
+        "thermal_displacement_matrix_cif": u_cif.tolist(),
+        "thermal_displacement_matrix": u.tolist(),
         "freq_min_thermal_displacements": freq_min,
-        "imaginary_modes_excluded": bool(has_imaginary),
+        "imaginary_modes": imaginary_modes if has_imaginary else None,
     }
 
 
@@ -256,10 +276,11 @@ class ThermalDisplacementData(BaseModel):
         description="temperatures at which the thermal displacement matrices"
         "have been computed",
     )
-    imaginary_modes_excluded: bool = Field(
-        default=False,
-        description="whether the q-point mesh had imaginary modes that were left "
-        "out of the thermal displacement matrices",
+    imaginary_modes: Literal["exclude", "absolute"] | None = Field(
+        None,
+        description="how the imaginary modes of the q-point mesh entered the "
+        "thermal displacement matrices: left out (exclude) or as real modes of the "
+        "same absolute frequency (absolute). None if the mesh had none.",
     )
 
 
