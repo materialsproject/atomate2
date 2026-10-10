@@ -130,7 +130,7 @@ def test_get_thermal_displacement_data(clean_dir):
     u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
     assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
     assert data["freq_min_thermal_displacements"] == 0.0
-    assert data["imaginary_modes_excluded"] is False
+    assert data["imaginary_modes"] is None
     assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 1001, 100))
 
     # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
@@ -142,24 +142,43 @@ def test_get_thermal_displacement_data(clean_dir):
     u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
     assert u_300 == pytest.approx(np.trace(u_300) / 3 * np.eye(3), abs=1e-12)
 
+    settings = {
+        "kpoint_density_thermal_displacements": 343,
+        "freq_min_thermal_displacements": 0.1,
+    }
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        reference = _get_thermal_displacement_data(phonon, **settings)
+
     # with flipped force constants all modes are imaginary
     phonon.force_constants = -phonon.force_constants
     with pytest.warns(UserWarning, match="mesh has imaginary modes"):
         assert _get_thermal_displacement_data(phonon) is None
 
     # without the imaginary modes no mode is left, so U is zero
-    with pytest.warns(UserWarning, match="computed from the real modes only"):
+    with pytest.warns(UserWarning, match='imaginary_modes="exclude"'):
         data = _get_thermal_displacement_data(
-            phonon,
-            kpoint_density_thermal_displacements=343,
-            exclude_imaginary_modes_thermal_displacements=True,
-            freq_min_thermal_displacements=0.1,
+            phonon, imaginary_modes_thermal_displacements="exclude", **settings
         )
-    assert data["imaginary_modes_excluded"] is True
+    assert data["imaginary_modes"] == "exclude"
     assert np.array(data["thermal_displacement_matrix"]) == pytest.approx(0)
+
+    # the flipped force constants have the same absolute frequencies and the same
+    # eigenvectors, so U is that of the original force constants, also at 0 K
+    with pytest.warns(UserWarning, match='imaginary_modes="absolute"'):
+        data = _get_thermal_displacement_data(
+            phonon, imaginary_modes_thermal_displacements="absolute", **settings
+        )
+    assert data["imaginary_modes"] == "absolute"
+    for key in ("thermal_displacement_matrix", "thermal_displacement_matrix_cif"):
+        assert np.array(data[key]) == pytest.approx(np.array(reference[key]), rel=1e-8)
+
     with pytest.raises(ValueError, match="must be positive"):
         _get_thermal_displacement_data(
-            phonon, exclude_imaginary_modes_thermal_displacements=True
+            phonon, imaginary_modes_thermal_displacements="exclude"
+        )
+    with pytest.raises(ValueError, match="must be None"):
+        _get_thermal_displacement_data(
+            phonon, imaginary_modes_thermal_displacements="include"
         )
 
 
