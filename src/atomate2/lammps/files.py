@@ -14,6 +14,8 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.lammps.data import CombinedData, LammpsBox, LammpsData
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 
+from atomate2.common.files import copy_files, gunzip_files
+
 
 def write_lammps_input_set(
     data: Structure | Molecule | LammpsData | CombinedData,
@@ -27,6 +29,41 @@ def write_lammps_input_set(
         data=data, additional_data=additional_data, box_or_lattice=box_or_lattice
     )
     input_set.write_input(directory)
+
+
+def copy_lammps_restart_file(prev_dir: str | Path) -> str:
+    """Copy the restart file of a previous LAMMPS run to the current directory.
+
+    The copied file is gunzipped if needed; the previous directory is left untouched.
+
+    Parameters
+    ----------
+    prev_dir : str or Path
+        The directory of the previous LAMMPS run.
+
+    Returns
+    -------
+    str
+        The name of the (gunzipped) restart file in the current directory.
+    """
+    prev_dir = Path(prev_dir)
+    # the plain and gzipped versions of a restart file count as a single file
+    restart_files = {
+        file.name.removesuffix(".gz"): file
+        for file in prev_dir.iterdir()
+        if "restart" in file.name
+    }
+    if len(restart_files) != 1:
+        raise FileNotFoundError(
+            f"Expected exactly one restart file in {prev_dir}, found "
+            f"{len(restart_files)}. It should have the extension '.restart'."
+        )
+
+    ((restart_name, restart_file),) = restart_files.items()
+    copy_files(prev_dir, include_files=[restart_file.name])
+    if restart_file.suffix == ".gz":
+        gunzip_files(include_files=[restart_file.name], force=True)
+    return restart_name
 
 
 class DumpConvertor:
