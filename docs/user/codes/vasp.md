@@ -342,8 +342,18 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 )
 ```
 
+With `create_thermal_displacements=True` (the default of `PhononMaker`), the workflow also computes the thermal displacement matrices of the primitive cell from 0 to 1000 K in steps of 100 K.
+They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by `kpoint_density_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
+phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
+An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
+This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
+For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
+If the mesh has imaginary modes, no thermal displacement matrices are stored.
+
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).
+
+The [Debye-Waller workflow](debye_waller_workflow) computes diffraction patterns from these matrices.
 
 #### Pheasy
 
@@ -517,6 +527,53 @@ Check that your VASP version runs DFPT with r2SCAN before you use this setting.
 The same workflow runs with a force field via `from atomate2.forcefields.flows.cte import CTEMaker`.
 `CTEMaker.from_force_field_name` sets one force field for the relaxation, the phonons and the elastic tensor.
 The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-medium.
+
+(debye_waller_workflow)=
+### Debye-Waller workflow
+
+`DebyeWallerMaker` takes the thermal displacement matrices of the phonon workflow, computed with [phonopy](https://doi.org/10.7566/JPSJ.92.012001).
+pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
+It needs a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
+Install it after atomate2 with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@c6de1930577320a8ba12a8910893e2343d9e8465`.
+This is the pymatgen commit atomate2 is tested with.
+In the root of an atomate2 clone, `pip install --group debye-waller` installs the same with pip 25.1 or newer.
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
+First, the phonon workflow computes the Cartesian thermal displacement matrix $U$ of each site of the primitive cell, as described in the Phonons section above.
+The phonon maker needs `create_thermal_displacements=True`.
+The default phonon makers of `DebyeWallerMaker` set it, but the force field `PhononMaker` does not by default.
+The q-point mesh and the temperatures are set with `kpoint_density_thermal_displacements` and `tmin_thermal_displacements`, `tmax_thermal_displacements` and `tstep_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs` of the phonon maker.
+If the mesh has imaginary modes, the phonon workflow stores no $U$, and the Debye-Waller workflow fails.
+The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
+For metals, set `born_maker=None` in the phonon maker to skip the Born charge calculation.
+The hkl indices of the patterns and the TEM beam direction refer to the primitive cell.
+The Debye-Waller factor of a site for the reciprocal lattice vector $g$, with $|g| = 1/d_{hkl}$, is $\exp(-2\pi^2 g^T U g)$.
+For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
+pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator` compute the patterns with these factors.
+This is done at each temperature of $U$, from 0 K to 1000 K in steps of 100 K by default, and once without the factors.
+The phonon frequencies are not renormalized with temperature.
+
+A Debye-Waller workflow for VASP can be started as follows:
+```python
+from atomate2.vasp.flows.debye_waller import DebyeWallerMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+debye_waller_flow = DebyeWallerMaker().make(structure=structure)
+```
+
+The same workflow runs with a force field via `from atomate2.forcefields.flows.debye_waller import DebyeWallerMaker`.
+By default it uses MACE-MP-0.
+`DebyeWallerMaker.from_force_field_name` sets another force field for the phonon workflow.
 
 ### Quasi-harmonic Workflow
 

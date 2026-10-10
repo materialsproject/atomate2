@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -17,6 +18,7 @@ from atomate2.common.schemas.phonons import (
     PhononJobDirs,
     PhononUUIDs,
     ThermalDisplacementData,
+    _get_thermal_displacement_data,
     _set_nac_params,
 )
 
@@ -99,6 +101,85 @@ def test_from_forces_born_thermal_properties(clean_dir):
     assert doc.heat_capacities[0] == 0
     assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
     assert doc.internal_energies[-1] == pytest.approx(12 * R * 3000, rel=1e-3)
+
+
+def test_get_thermal_displacement_data(clean_dir):
+    """Cu with EMT on a 7x7x7 mesh, which contains Gamma.
+
+    With freq_min=0 and the acoustic modes at Gamma included, U is about 8e6 A^2.
+    """
+    structure = Structure.from_spacegroup(
+        "Fm-3m", Lattice.cubic(3.61), ["Cu"], [[0, 0, 0]]
+    ).get_primitive_structure()
+    phonon = Phonopy(get_phonopy_structure(structure), 6 * np.eye(3), "P")
+    phonon.generate_displacements(distance=0.01)
+    forces = []
+    for cell in phonon.supercells_with_displacements:
+        atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(cell))
+        atoms.calc = EMT()
+        forces.append(atoms.get_forces())
+    phonon.forces = forces
+    phonon.produce_force_constants()
+
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=343
+        )
+
+    assert data["temperatures_thermal_displacements"] == list(range(0, 1001, 100))
+    u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
+    assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
+    assert data["freq_min_thermal_displacements"] == 0.0
+    assert data["imaginary_modes"] is None
+    assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 1001, 100))
+
+    # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=1000
+        )
+    assert phonon.mesh.mesh_numbers.tolist() == [11, 11, 11]
+    u_300 = np.array(data["thermal_displacement_matrix"])[3, 0]
+    assert u_300 == pytest.approx(np.trace(u_300) / 3 * np.eye(3), abs=1e-12)
+
+    settings = {
+        "kpoint_density_thermal_displacements": 343,
+        "freq_min_thermal_displacements": 0.1,
+    }
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        reference = _get_thermal_displacement_data(phonon, **settings)
+
+    # with flipped force constants all modes are imaginary
+    phonon.force_constants = -phonon.force_constants
+    with pytest.warns(UserWarning, match="mesh has imaginary modes"):
+        assert _get_thermal_displacement_data(phonon) is None
+
+    # without the imaginary modes no mode is left, so U is zero
+    with pytest.warns(UserWarning, match='imaginary_modes="exclude"'):
+        data = _get_thermal_displacement_data(
+            phonon, imaginary_modes_thermal_displacements="exclude", **settings
+        )
+    assert data["imaginary_modes"] == "exclude"
+    assert np.array(data["thermal_displacement_matrix"]) == pytest.approx(0)
+
+    # the flipped force constants have the same absolute frequencies and the same
+    # eigenvectors, so U is that of the original force constants, also at 0 K
+    with pytest.warns(UserWarning, match='imaginary_modes="absolute"'):
+        data = _get_thermal_displacement_data(
+            phonon, imaginary_modes_thermal_displacements="absolute", **settings
+        )
+    assert data["imaginary_modes"] == "absolute"
+    for key in ("thermal_displacement_matrix", "thermal_displacement_matrix_cif"):
+        assert np.array(data[key]) == pytest.approx(np.array(reference[key]), rel=1e-8)
+
+    with pytest.raises(ValueError, match="must be positive"):
+        _get_thermal_displacement_data(
+            phonon, imaginary_modes_thermal_displacements="exclude"
+        )
+    with pytest.raises(ValueError, match="must be None"):
+        _get_thermal_displacement_data(
+            phonon, imaginary_modes_thermal_displacements="include"
+        )
 
 
 # schemas where all fields have default values
