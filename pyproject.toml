@@ -51,7 +51,7 @@ mp = ["mp-api>=0.37.5"]
 # phonopy 4.x changed force-constants/primitive-axis handling, breaking the
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
-phonons = ["phonopy>=4.6,<5", "seekpath>=2.0.0"]
+phonons = ["phonopy>=4.7.1,<5", "seekpath>=2.0.0"]
 # pheasy itself and ALM are in the pheasy dependency group
 pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
@@ -170,6 +170,14 @@ dev = ["pre-commit>=4.5.1"]
 # Remove it once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
 mace-field = [
     "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
+]
+# pymatgen with anisotropic Debye-Waller factors, which is not released yet.
+# It is a dependency group, since PyPI does not accept git URLs in extras.
+# CI installs it after the strict extras, which pin a released pymatgen.
+# Once a pymatgen release has these factors, remove this group and its CI
+# entry and raise the pymatgen lower bound.
+debye-waller = [
+    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@c6de1930577320a8ba12a8910893e2343d9e8465",
 ]
 # The pheasy fork adds the --disp_matrix_file and --force_matrix_file options
 # and fixes the --scell option. It is a dependency group, since PyPI does not
