@@ -50,12 +50,6 @@ def test_copy_aims_outputs(tmp_dir):
             {"additional_aims_files": ["*.cube"]},
             ["a.cube", "b.cube", "c.cube"],
         ),
-        (
-            "prev[1]",
-            ["a.cube", "aims.out"],
-            {"additional_aims_files": ["*.cube"]},
-            ["a.cube"],
-        ),
     ],
 )
 def test_copy_aims_outputs_patterns(

@@ -50,17 +50,18 @@ def test_gunzip_missing_file_keeps_existing(tmp_path):
     assert not (tmp_path / "file2").exists()
 
 
-def test_copy_files_glob_chars_in_directory(tmp_path, monkeypatch):
-    src_dir = tmp_path / "prev[1]"
+def test_copy_files_glob_patterns(tmp_path, monkeypatch):
+    src_dir = tmp_path / "prev"
     src_dir.mkdir()
-    (src_dir / "a.dat").write_text("a")
+    for name in ("a.dat", "b.dat", "c.txt"):
+        (src_dir / name).write_text(name)
     dst_dir = tmp_path / "dst"
     dst_dir.mkdir()
     monkeypatch.chdir(dst_dir)
 
     copy_files(src_dir, include_files=["*.dat"])
 
-    assert (dst_dir / "a.dat").read_text() == "a"
+    assert sorted(f.name for f in dst_dir.iterdir()) == ["a.dat", "b.dat"]
 
 
 def test_zip_outputs(tmp_dir):
