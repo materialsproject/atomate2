@@ -22,8 +22,9 @@ from atomate2 import SETTINGS
 from atomate2.common.schemas.phonons import ThermalDisplacementData
 
 if TYPE_CHECKING:
+    from typing import Self
+
     import pandas as pd
-    from typing_extensions import Self
 
     from atomate2.common.jobs.gruneisen import PhononDoc
 
