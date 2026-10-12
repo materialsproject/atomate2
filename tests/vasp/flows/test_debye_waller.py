@@ -1,11 +1,10 @@
 import numpy as np
 import pytest
-from jobflow import Flow, run_locally
+from jobflow import run_locally
 from pymatgen.analysis.diffraction import core as diffraction_core
 from pymatgen.core.structure import Structure
 
 from atomate2.common.schemas.debye_waller import DebyeWallerDocument
-from atomate2.vasp.flows.debye_waller import DebyeWallerMaker
 from atomate2.vasp.flows.phonons import PhononMaker
 
 requires_dwf = pytest.mark.skipif(
@@ -15,44 +14,48 @@ requires_dwf = pytest.mark.skipif(
 
 
 @requires_dwf
-def test_debye_waller_maker_vasp_flow(si_structure: Structure):
-    """The phonon flow output and the settings go to compute_debye_waller."""
-    maker = DebyeWallerMaker(
-        xrd_kwargs={"wavelength": "MoKa"},
-        nd_kwargs={"wavelength": 1.0},
-        tem_kwargs={"voltage": 300},
+def test_debye_waller_vasp_flow(si_structure: Structure):
+    """The phonon output and the settings go to compute_debye_waller."""
+    debye_waller_kwargs = {
+        "xrd_kwargs": {"wavelength": "MoKa"},
+        "nd_kwargs": {"wavelength": 1.0},
+        "tem_kwargs": {"voltage": 300},
+    }
+    maker = PhononMaker(
+        create_debye_waller=True, debye_waller_kwargs=debye_waller_kwargs
     )
-    assert maker.phonon_maker.create_thermal_displacements
     flow = maker.make(si_structure)
-    phonon_flow, debye_waller = flow.jobs
-    assert isinstance(phonon_flow, Flow)
+    debye_waller = flow.jobs[-1]
     assert debye_waller.name == "compute_debye_waller"
-    assert flow.output.uuid == debye_waller.uuid
 
     kwargs = debye_waller.function_kwargs
-    assert kwargs["phonon_output"].uuid == phonon_flow.output.uuid
-    for key in ("xrd_kwargs", "nd_kwargs", "tem_kwargs"):
-        assert kwargs[key] == getattr(maker, key)
-    assert kwargs["symprec"] == maker.phonon_maker.symprec
+    assert kwargs["phonon_output"].uuid == flow.output.uuid
+    for key, value in debye_waller_kwargs.items():
+        assert kwargs[key] == value
+    assert kwargs["symprec"] == maker.symprec
+
+    jobs = PhononMaker().make(si_structure).jobs
+    assert "compute_debye_waller" not in [job.name for job in jobs]
 
 
-def test_debye_waller_maker_checks_phonon_maker():
+def test_debye_waller_checks_phonon_maker(si_structure: Structure):
+    maker = PhononMaker(create_thermal_displacements=False, create_debye_waller=True)
     with pytest.raises(ValueError, match="create_thermal_displacements=True"):
-        DebyeWallerMaker(phonon_maker=PhononMaker(create_thermal_displacements=False))
+        maker.make(si_structure)
 
 
-def test_debye_waller_checks_pymatgen(monkeypatch):
+def test_debye_waller_checks_pymatgen(monkeypatch, si_structure: Structure):
     monkeypatch.delattr(
         diffraction_core, "get_anisotropic_debye_waller_factors", raising=False
     )
     with pytest.raises(ImportError, match="no anisotropic Debye-Waller factors"):
-        DebyeWallerMaker()
+        PhononMaker(create_debye_waller=True).make(si_structure)
     with pytest.raises(ImportError, match="no anisotropic Debye-Waller factors"):
         DebyeWallerDocument.from_phonon_doc(None)
 
 
 @requires_dwf
-def test_debye_waller_maker_vasp_na_cl(mock_vasp, clean_dir):
+def test_debye_waller_vasp_na_cl(mock_vasp, clean_dir):
     """NaCl from the conventional cell, with the non-analytical correction."""
     structure = Structure(
         lattice=5.691694 * np.eye(3),
@@ -78,16 +81,16 @@ def test_debye_waller_maker_vasp_na_cl(mock_vasp, clean_dir):
         ref_paths, {name: {"incar_settings": ["NSW", "ISMEAR"]} for name in ref_paths}
     )
 
-    maker = DebyeWallerMaker()
-    maker.phonon_maker.generate_frequencies_eigenvectors_kwargs = {
+    maker = PhononMaker(create_debye_waller=True)
+    maker.generate_frequencies_eigenvectors_kwargs = {
         "tstep_thermal_displacements": 300,
         "tmax_thermal_displacements": 300,
     }
-    maker.phonon_maker.min_length = 3.0
-    maker.phonon_maker.bulk_relax_maker = None
+    maker.min_length = 3.0
+    maker.bulk_relax_maker = None
     flow = maker.make(structure)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    doc = responses[flow.output.uuid][1].output
+    doc = responses[flow.jobs[-1].uuid][1].output
 
     assert [site.specie.symbol for site in doc.structure] == ["Na", "Cl"]
     u = np.array(doc.thermal_displacement_data.thermal_displacement_matrix)

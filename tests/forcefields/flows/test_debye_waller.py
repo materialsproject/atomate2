@@ -1,4 +1,4 @@
-"""Tests for the force field Debye-Waller workflow.
+"""Tests for the Debye-Waller option of the force field phonon workflow.
 
 The tests use ASE's EMT potential. They need a pymatgen with anisotropic
 Debye-Waller factors, which is installed by the debye-waller dependency group,
@@ -26,23 +26,27 @@ from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.common.schemas.debye_waller import DebyeWallerDocument
-from atomate2.forcefields.flows.debye_waller import DebyeWallerMaker
+from atomate2.forcefields.flows.phonons import PhononMaker
 
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 
 
-def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
-    """Run the whole force field workflow with EMT forces on fcc Cu."""
+def test_debye_waller_emt(clean_dir, memory_jobstore):
+    """Run the whole force field phonon workflow with EMT forces on fcc Cu."""
     structure = AseAtomsAdaptor.get_structure(bulk("Cu", "fcc", a=3.61))
-    maker = DebyeWallerMaker.from_force_field_name(
+    maker = PhononMaker.from_force_field_name(
         EMT,
-        xrd_kwargs={"wavelength": "MoKa"},
-        nd_kwargs={"wavelength": 1.0},
-        tem_kwargs={"voltage": 100},
+        create_thermal_displacements=True,
+        create_debye_waller=True,
+        debye_waller_kwargs={
+            "xrd_kwargs": {"wavelength": "MoKa"},
+            "nd_kwargs": {"wavelength": 1.0},
+            "tem_kwargs": {"voltage": 100},
+        },
     )
-    maker.phonon_maker.min_length = 8.0
+    maker.min_length = 8.0
     # a 7 x 7 x 7 mesh for the one-atom primitive cell
-    maker.phonon_maker.generate_frequencies_eigenvectors_kwargs = {
+    maker.generate_frequencies_eigenvectors_kwargs = {
         "kpoint_density_thermal_displacements": 343,
         "tstep_thermal_displacements": 300,
         "tmax_thermal_displacements": 600,
@@ -50,11 +54,12 @@ def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
     }
 
     flow = maker.make(structure)
+    debye_waller = flow.jobs[-1]
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    doc = responses[flow.output.uuid][1].output
+    doc = responses[debye_waller.uuid][1].output
     assert isinstance(doc, DebyeWallerDocument)
-    # U is that of the phonon flow
-    phonon_doc = responses[flow.jobs[0].output.uuid][1].output
+    # U is that of the phonon flow, whose output stays the phonon document
+    phonon_doc = responses[flow.output.uuid][1].output
     assert doc.thermal_displacement_data.model_dump() == (
         phonon_doc.thermal_displacement_data.model_dump()
     )
@@ -62,11 +67,11 @@ def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
     assert len(doc.structure) == 1
 
     # the patterns are in the data store, and the document reloads from the store
-    stored = memory_jobstore.get_output(flow.output.uuid)
+    stored = memory_jobstore.get_output(debye_waller.uuid)
     for key in ("xrd_patterns", "nd_patterns", "tem_pattern_static", "tem_patterns"):
         assert stored[key]["store"] == "data"
     stored = MontyDecoder().process_decoded(
-        memory_jobstore.get_output(flow.output.uuid, load=True)
+        memory_jobstore.get_output(debye_waller.uuid, load=True)
     )
     assert isinstance(stored, DebyeWallerDocument)
     assert json.dumps(stored, cls=MontyEncoder) == json.dumps(doc, cls=MontyEncoder)
@@ -119,31 +124,6 @@ def test_debye_waller_maker_emt(clean_dir, memory_jobstore):
         ratio = np.array([row["intensity"] for row in pattern]) / static
         ratio *= np.exp(4 * np.pi**2 * u_t / d_hkl**2)
         assert ratio == pytest.approx(ratio[0])
-
-
-def test_debye_waller_maker_defaults():
-    """The default phonon maker uses MACE-MP-0 and stores the thermal displacements."""
-    maker = DebyeWallerMaker()
-    assert maker.phonon_maker.create_thermal_displacements
-    assert (
-        maker.phonon_maker.phonon_displacement_maker.force_field_name
-        == "MLFF.MACE_MP_0"
-    )
-
-
-def test_debye_waller_maker_from_force_field_name():
-    """The settings go to the phonon maker, and a given phonon maker is kept."""
-    maker = DebyeWallerMaker.from_force_field_name(
-        EMT, calculator_kwargs={"asap_cutoff": True}, relax_initial_structure=False
-    )
-    assert maker.phonon_maker.bulk_relax_maker is None
-    calculator_kwargs = maker.phonon_maker.phonon_displacement_maker.calculator_kwargs
-    assert calculator_kwargs == {"asap_cutoff": True}
-    roundtrip = MontyDecoder().decode(json.dumps(maker, cls=MontyEncoder))
-    assert roundtrip.as_dict() == maker.as_dict()
-    phonon_maker = maker.phonon_maker
-    maker = DebyeWallerMaker.from_force_field_name(EMT, phonon_maker=phonon_maker)
-    assert maker.phonon_maker is phonon_maker
 
 
 def test_debye_waller_document_checks_input():

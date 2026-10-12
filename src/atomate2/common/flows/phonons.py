@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2 import SETTINGS
+from atomate2.common.jobs.debye_waller import compute_debye_waller
 from atomate2.common.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -18,6 +19,7 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.common.schemas.debye_waller import check_pymatgen
 from atomate2.common.utils import check_class_name
 
 if TYPE_CHECKING:
@@ -127,6 +129,13 @@ class BasePhononMaker(Maker, ABC):
             If True, the projected phonon density of states will be calculated
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
+    create_debye_waller: bool
+        If True, a last job computes the X-ray, neutron and electron diffraction
+        patterns with the Debye-Waller factors from the thermal displacement
+        matrices. It needs create_thermal_displacements=True.
+    debye_waller_kwargs: dict
+        Keyword arguments passed to :obj:`compute_debye_waller`: xrd_kwargs,
+        nd_kwargs and tem_kwargs.
     kpath_scheme: str
         scheme to generate kpoints. Please be aware that
         you can only use seekpath with any kind of cell
@@ -178,6 +187,8 @@ class BasePhononMaker(Maker, ABC):
     ) = None
     phonon_doc_schema: Literal["atomate2", "emmet"] = "atomate2"
     create_thermal_displacements: bool = True
+    create_debye_waller: bool = False
+    debye_waller_kwargs: dict = field(default_factory=dict)
     generate_frequencies_eigenvectors_kwargs: dict = field(
         default_factory=lambda: {
             "create_force_constants_file": False,
@@ -230,6 +241,15 @@ class BasePhononMaker(Maker, ABC):
             Instead of min_length, also a supercell_matrix can be given, e.g.
             [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         """
+        if self.create_debye_waller:
+            if not self.create_thermal_displacements:
+                raise ValueError(
+                    "create_debye_waller=True needs create_thermal_displacements=True, "
+                    "since the Debye-Waller factors are computed from the thermal "
+                    "displacements."
+                )
+            check_pymatgen()
+
         use_symmetrized_structure = self.use_symmetrized_structure
         kpath_scheme = self.kpath_scheme
         valid_structs = (None, "primitive", "conventional")
@@ -367,6 +387,15 @@ class BasePhononMaker(Maker, ABC):
         )
 
         jobs.append(phonon_collect)
+
+        if self.create_debye_waller:
+            jobs.append(
+                compute_debye_waller(
+                    phonon_output=phonon_collect.output,
+                    symprec=self.symprec,
+                    **self.debye_waller_kwargs,
+                )
+            )
 
         # create a flow including all jobs for a phonon computation
         return Flow(jobs, phonon_collect.output)
