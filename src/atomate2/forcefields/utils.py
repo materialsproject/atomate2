@@ -12,12 +12,12 @@ from importlib import import_module
 from importlib.metadata import PackageNotFoundError, version
 from importlib.util import find_spec
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, assert_never
 
 from ase.calculators.calculator import Calculator
 from ase.units import Bohr
 from monty.json import MontyDecoder
-from typing_extensions import assert_never, deprecated
+from typing_extensions import deprecated
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator

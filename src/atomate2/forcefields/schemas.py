@@ -22,7 +22,7 @@ from atomate2.forcefields import MLFF
 from atomate2.forcefields.utils import _get_pkg_version, _get_standardized_mlff
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
 
 class ForceFieldMeta(BaseModel):

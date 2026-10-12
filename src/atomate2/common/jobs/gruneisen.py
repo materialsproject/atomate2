@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING
 
 from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
     from atomate2.common.flows.phonons import BasePhononMaker
 
-PhononDoc: TypeAlias = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
+type PhononDoc = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
