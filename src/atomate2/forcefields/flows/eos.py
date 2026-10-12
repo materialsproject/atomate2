@@ -9,8 +9,9 @@ from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
+    from typing import Self
+
     from jobflow import Maker
-    from typing_extensions import Self
 
     from atomate2.forcefields import MLFF
 

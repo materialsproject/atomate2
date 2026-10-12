@@ -22,6 +22,7 @@ import atomate2.common.jobs.pheasy as pheasy_jobs
 from atomate2.common.jobs.pheasy import (
     _check_lasso_alpha,
     _get_num_anharmonic_supercells,
+    _run_harmonic_fit,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
 )
@@ -121,7 +122,8 @@ def test_harmonic_and_anharmonic_split(tmp_dir, num_displaced_supercells):
         **FIT_KWARGS,
         **kwargs,
     )
-    run_locally(job, create_folders=True, ensure_success=True)
+    with pytest.warns(UserWarning, match="harmonic LASSO fit now runs with --tol 1e-8"):
+        run_locally(job, create_folders=True, ensure_success=True)
 
     (fit_dir,) = (path.parent for path in Path.cwd().glob("job_*/disp_matrix.npy"))
     harmonic = np.load(fit_dir / "disp_matrix.npy")
@@ -265,6 +267,39 @@ def test_get_num_irreducible_fcs_without_alm(monkeypatch):
     monkeypatch.setitem(sys.modules, "alm", None)
     with pytest.raises(ImportError, match="ALM could not be imported"):
         _get_num_irreducible_fcs(None, 2)
+
+
+def test_run_harmonic_fit(monkeypatch):
+    """The pheasy commands of the harmonic fit and of the short-cutoff refit."""
+    calls = []
+
+    def fake_run(args, cwd, check):
+        calls.append((args, cwd, check))
+
+    monkeypatch.setattr(pheasy_jobs.subprocess, "run", fake_run)
+    matrix = np.diag([2, 3, 4])
+
+    _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103)
+    assert [args[11] for args, _, _ in calls] == ["-s", "-c", "-d", "-f"]
+    assert all(cwd is None and check for _, cwd, check in calls)
+    fit = " ".join(calls[-1][0])
+    assert "-l LASSO --std --tol 1e-8 --seed 103 --rasr BHH --ndata 5" in fit
+
+    calls.clear()
+    refit_dir = Path("short_cutoff_refit")
+    _run_harmonic_fit(
+        matrix, 1e-3, 3, use_lasso=False, random_seed=103, work_dir=refit_dir, cutoff=10
+    )
+    assert all(cwd == refit_dir for _, cwd, _ in calls)
+    assert all("--c2 10.0" in " ".join(args) for args, _, _ in calls)
+    fit = " ".join(calls[-1][0])
+    assert "-f --full_ifc --rasr BHH --ndata 3" in fit
+    assert "LASSO" not in fit
+
+    calls.clear()
+    monkeypatch.setattr(pheasy_jobs.SETTINGS, "PHEASY_CMD", "srun -n 1 pheasy")
+    _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103)
+    assert all(args[:4] == ["srun", "-n", "1", "pheasy"] for args, _, _ in calls)
 
 
 def test_check_lasso_alpha(tmp_dir):
