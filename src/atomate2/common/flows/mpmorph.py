@@ -24,11 +24,10 @@ from atomate2.common.jobs.eos import MPMorphPVPostProcess, _apply_strain_to_stru
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any
+    from typing import Any, Self
 
     from jobflow import Job
     from pymatgen.core import Structure
-    from typing_extensions import Self
 
     from atomate2.common.jobs.eos import EOSPostProcessor
 
