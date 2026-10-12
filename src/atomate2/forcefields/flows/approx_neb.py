@@ -3,10 +3,10 @@
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Self
 
 from pymatgen.io.common import VolumetricData
 from pymatgen.io.vasp.outputs import Chgcar
-from typing_extensions import Self
 
 from atomate2.common.flows.approx_neb import ApproxNebFromEndpointsMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
