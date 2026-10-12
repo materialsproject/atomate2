@@ -9,7 +9,7 @@ from atomate2.common.flows.debye_waller import BaseDebyeWallerMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from atomate2.forcefields import MLFF
 
