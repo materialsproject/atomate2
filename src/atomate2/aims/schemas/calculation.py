@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
@@ -454,11 +455,15 @@ def _parse_dos(
     NotImplementedError
         If parse_dos is True, as parsing the DOS is not yet supported.
     """
-    if parse_dos == "auto":
-        # DOS parsing is not supported yet, so "auto" never parses it
-        return None
+    # TODO: Enable DOS parsing when implemented in pymatgen.io.aims
     if parse_dos:
-        raise NotImplementedError("Parsing DOS is not yet implemented.")
+        if hasattr(aims_output, "dos"):
+            return aims_output.dos
+        warnings.warn(
+            "DOS parsing is not yet implemented and will return None.",
+            category=UserWarning,
+            stacklevel=2,
+        )
     return None
 
 
@@ -486,6 +491,13 @@ def _parse_bandstructure(
         If parse_bandstructure is set, as parsing the band structure is not yet
         supported.
     """
+    # TODO: Enable BS parsing when implemented in pymatgen.io.aims
     if parse_bandstructure:
-        raise NotImplementedError("Parsing bandstructure is not yet implemented.")
+        if hasattr(aims_output, "band_structure"):
+            return aims_output.band_structure
+        warnings.warn(
+            "Band structure parsing is not yet implemented and will return None.",
+            category=UserWarning,
+            stacklevel=2,
+        )
     return None
