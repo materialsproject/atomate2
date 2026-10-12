@@ -11,9 +11,7 @@ from atomate2.common.flows.elastic import BaseElasticMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
-    from typing import Any
-
-    from typing_extensions import Self
+    from typing import Any, Self
 
     from atomate2.forcefields import MLFF
 
