@@ -98,6 +98,19 @@ def test_nvt_nose_hoover_chain(si_structure, clean_dir):
         maker.run_ase(si_structure)
 
 
+def get_positions_from_seed_and_dyn(structure, seed, dynamics, ase_md_kwargs):
+    """Final positions of a 5-step NVT run at 300 K with the Lennard-Jones potential."""
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics=dynamics,
+        temperature=300,
+        n_steps=5,
+        mb_velocity_seed=seed,
+        ase_md_kwargs=dict(ase_md_kwargs),
+    )
+    return maker.run_ase(structure).final_mol_or_struct.cart_coords
+
+
 @pytest.mark.parametrize(
     ("dynamics", "ase_md_kwargs"),
     [("langevin", {}), ("andersen", {"andersen_prob": 0.5})],
@@ -105,20 +118,12 @@ def test_nvt_nose_hoover_chain(si_structure, clean_dir):
 def test_random_dynamics_seed(si_structure, clean_dir, dynamics, ase_md_kwargs):
     """mb_velocity_seed also seeds the random numbers of Langevin and Andersen."""
     si_structure.add_site_property("velocities", [[0.0, 0.0, 0.0]] * len(si_structure))
-
-    def positions(seed):
-        maker = LennardJonesMDMaker(
-            ensemble="nvt",
-            dynamics=dynamics,
-            temperature=300,
-            n_steps=5,
-            mb_velocity_seed=seed,
-            ase_md_kwargs=dict(ase_md_kwargs),
-        )
-        return maker.run_ase(si_structure).final_mol_or_struct.cart_coords
-
-    assert positions(1) == pytest.approx(positions(1))
-    assert positions(1) != pytest.approx(positions(2))
+    positions = [
+        get_positions_from_seed_and_dyn(si_structure, seed, dynamics, ase_md_kwargs)
+        for seed in (1, 1, 2)
+    ]
+    assert positions[0] == pytest.approx(positions[1])
+    assert positions[0] != pytest.approx(positions[2])
 
 
 def test_md_seed_defaults(si_structure, clean_dir):
@@ -134,19 +139,13 @@ def test_md_seed_defaults(si_structure, clean_dir):
     assert len(maker.run_ase(si_structure).trajectory) == 6
 
     si_structure.add_site_property("velocities", [[0.0, 0.0, 0.0]] * len(si_structure))
-
-    def positions(seed):
-        maker = LennardJonesMDMaker(
-            ensemble="nvt",
-            dynamics="langevin",
-            temperature=300,
-            n_steps=5,
-            mb_velocity_seed=seed,
-            ase_md_kwargs={"rng": np.random.default_rng(7)},
+    positions = [
+        get_positions_from_seed_and_dyn(
+            si_structure, seed, "langevin", {"rng": np.random.default_rng(7)}
         )
-        return maker.run_ase(si_structure).final_mol_or_struct.cart_coords
-
-    assert positions(1) == pytest.approx(positions(2))
+        for seed in (1, 2)
+    ]
+    assert positions[0] == pytest.approx(positions[1])
 
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
