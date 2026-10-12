@@ -145,7 +145,7 @@ strict = [
     # pydantic 2.14 breaks the serializers of emmet-core 0.87.2
     # (materialsproject/emmet#1530). Remove this pin once an emmet-core release
     # with the fix supports all Python versions atomate2 is tested with.
-    "pydantic<2.14",
+    "pydantic<2.15",
 ]
 
 [project.scripts]
