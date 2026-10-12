@@ -141,7 +141,7 @@ strict = [
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
     "pymatgen==2026.9.24",
-    "pymatgen-core==2026.9.23",
+    "pymatgen-core==2026.10.2",
     # pydantic 2.14 breaks the serializers of emmet-core 0.87.2
     # (materialsproject/emmet#1530). Remove this pin once an emmet-core release
     # with the fix supports all Python versions atomate2 is tested with.
