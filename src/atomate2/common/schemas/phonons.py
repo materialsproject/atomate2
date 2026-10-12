@@ -5,7 +5,7 @@ import logging
 import warnings
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Literal, Union
+from typing import Literal, Self, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
@@ -31,7 +31,6 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 from ruamel.yaml import YAML
-from typing_extensions import Self
 
 from atomate2.aims.utils.units import omegaToTHz
 
