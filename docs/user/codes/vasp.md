@@ -357,6 +357,7 @@ pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04
 ```
 From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra, pheasy and ALM in one step. This needs pip 25.1 or newer.
 The pheasy release on PyPI lacks options this workflow uses, so do not install it with `pip install pheasy`.
+The workflows run pheasy with the command in the `PHEASY_CMD` setting, `pheasy` by default.
 The `alm` package on PyPI is an unrelated project, so do not install ALM with `pip install alm`.
 ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
@@ -406,6 +407,8 @@ Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 t
 Both can be requested in one run.
 If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
 The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
+Both LASSO fits run with `--tol 1e-8`, since pheasy's default of `1e-4` leaves the fit unconverged, and refits on different machines then differ.
+Harmonic force constants from earlier atomate2 versions can therefore differ, mostly in soft low-frequency modes.
 The anharmonic force constants are written to files in the job folder and are not stored in the output document.
 
 #### hiPhive
