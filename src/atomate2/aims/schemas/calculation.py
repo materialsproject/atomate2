@@ -432,7 +432,7 @@ def _get_volumetric_data(
 
 def _parse_dos(
     parse_dos: str | bool,
-    aims_output: AimsOutput,  # noqa: ARG001
+    aims_output: AimsOutput,
 ) -> Dos | None:
     """Parse DOS outputs from FHI-aims calculation.
 
@@ -469,7 +469,7 @@ def _parse_dos(
 
 def _parse_bandstructure(
     parse_bandstructure: str | bool,
-    aims_output: AimsOutput,  # noqa: ARG001
+    aims_output: AimsOutput,
 ) -> BandStructure | None:
     """
     Get the band structure.
