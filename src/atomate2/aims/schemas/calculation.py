@@ -128,7 +128,7 @@ class CalculationOutput(BaseModel):
         "(if system is not metallic)",
     )
     atomic_steps: list[Structure | Molecule] = Field(
-        ..., description="Structures for each ionic step"
+        default_factory=list, description="Structures for each ionic step"
     )
 
     @classmethod
