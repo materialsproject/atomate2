@@ -548,6 +548,7 @@ The phonon maker needs `create_thermal_displacements=True`.
 The default phonon makers of `DebyeWallerMaker` set it, but the force field `PhononMaker` does not by default.
 The q-point mesh and the temperatures are set with `kpoint_density_thermal_displacements` and `tmin_thermal_displacements`, `tmax_thermal_displacements` and `tstep_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs` of the phonon maker.
 If the mesh has imaginary modes, the phonon workflow stores no $U$, and the Debye-Waller workflow fails.
+Set `imaginary_modes_thermal_displacements` to `"exclude"` or `"absolute"` to get an estimate of $U$ and of the patterns instead.
 The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
 For metals, set `born_maker=None` in the phonon maker to skip the Born charge calculation.
 The hkl indices of the patterns and the TEM beam direction refer to the primitive cell.

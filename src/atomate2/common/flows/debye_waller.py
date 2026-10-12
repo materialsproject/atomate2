@@ -54,7 +54,10 @@ class BaseDebyeWallerMaker(Maker):
     The frequencies are not renormalized with temperature. U is too small on a
     finite q-point mesh, by an error that falls as 1/N for an N x N x N mesh.
     The phonon flow stores no U if its mesh has imaginary modes, and this
-    workflow then fails. imaginary_modes_thermal_displacements="exclude" in the
+    workflow then fails. At the default q-point density, 18 of 51 materials
+    from the Materials Project's Harmonic Phonon Database have imaginary modes.
+    For such a material, two options give an estimate of U and so of the
+    patterns. imaginary_modes_thermal_displacements="exclude" in the
     generate_frequencies_eigenvectors_kwargs of the phonon maker computes U from
     the real modes above freq_min_thermal_displacements, which must then be
     positive. "absolute" also counts each imaginary mode as a real mode of the
