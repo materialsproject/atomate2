@@ -214,6 +214,9 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     u = matrices.thermal_displacement_matrices
     u_cif = matrices.thermal_displacement_matrices_cif
     if has_imaginary and imaginary_modes == "absolute":
+        # An imaginary mode has no harmonic U, because the energy falls along it.
+        # Leaving it out ("exclude") lowers U. "absolute" keeps it as a real mode
+        # of the same absolute frequency, which gives an estimate of U.
         # phonopy only sums the modes above freq_min. This second run adds the
         # imaginary modes below -freq_min, which phonopy stores as negative
         # frequencies. Their term equals that of the absolute frequency, except
