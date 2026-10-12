@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Self
 
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
@@ -14,7 +15,6 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
-from typing_extensions import Self
 
 from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, get_event_report
 
@@ -236,7 +236,7 @@ class Calculation(BaseModel):
         abinit_gsr = GsrFile.from_file(abinit_gsr_file)
 
         completed_at = str(
-            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=timezone.utc)
+            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=UTC)
         )
 
         output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)

@@ -11,7 +11,7 @@ from atomate2.forcefields.flows.pheasy import PhononMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from atomate2.forcefields import MLFF
 
