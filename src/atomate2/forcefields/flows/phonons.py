@@ -15,7 +15,7 @@ from atomate2.forcefields.jobs import (
 from atomate2.forcefields.utils import MLFF
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from atomate2.forcefields import MLFF
 

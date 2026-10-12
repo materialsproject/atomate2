@@ -1,6 +1,7 @@
 """Schemas for electron-phonon renormalisation documents."""
 
 import logging
+from typing import Self
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -8,7 +9,6 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.bandstructure import BandStructure
 from pymatgen.electronic_structure.core import Spin
-from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

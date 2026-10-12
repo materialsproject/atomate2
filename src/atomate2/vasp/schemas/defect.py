@@ -2,11 +2,10 @@
 
 import logging
 from pathlib import Path
-from typing import Union
+from typing import Self, Union
 
 from pydantic import BaseModel, Field
 from pymatgen.io.vasp.outputs import WSWQ
-from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 
