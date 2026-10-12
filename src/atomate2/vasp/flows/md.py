@@ -12,9 +12,9 @@ from atomate2.vasp.sets.core import MDSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Self
 
     from pymatgen.core import Structure
-    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 

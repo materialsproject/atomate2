@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from enum import Enum
+from typing import Self
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -17,7 +18,6 @@ from pymatgen.analysis.elasticity import (
 from pymatgen.core import Structure
 from pymatgen.core.tensors import TensorMapping
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from typing_extensions import Self
 
 from atomate2 import SETTINGS
 from atomate2.common.utils import _recursive_to_list

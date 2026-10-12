@@ -17,9 +17,9 @@ from scipy.constants import Boltzmann, Planck
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
+    from typing import Self
 
     from phonopy import Phonopy
-    from typing_extensions import Self
 
 # Voigt order of the symmetric 3x3 tensor components, as in pymatgen
 _VOIGT_INDICES = ((0, 0), (1, 1), (2, 2), (1, 2), (0, 2), (0, 1))

@@ -2,10 +2,10 @@
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from shutil import which
-from typing import Any, Union
+from typing import Any, Self, Union
 
 from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field, field_validator
@@ -18,7 +18,6 @@ from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.common import VolumetricData
 from pymatgen.io.cp2k.inputs import BasisFile, Cp2kInput, DataFile, PotentialFile
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
-from typing_extensions import Self
 
 from atomate2 import SETTINGS
 from atomate2.cp2k.schemas.calc_types import (
@@ -365,7 +364,7 @@ class Calculation(BaseModel):
         volumetric_files = [] if volumetric_files is None else volumetric_files
         cp2k_output = Cp2kOutput(cp2k_output_file, auto_load=True)
         completed_at = str(
-            datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime, tz=timezone.utc)
+            datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime, tz=UTC)
         )
 
         output_file_paths = _get_output_file_paths(volumetric_files)
