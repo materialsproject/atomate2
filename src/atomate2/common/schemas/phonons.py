@@ -132,8 +132,10 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     goes to zero. One CIF file is written per temperature.
 
     The matrices are not defined if the mesh has imaginary modes, so by default
-    none are returned then. imaginary_modes_thermal_displacements="exclude"
-    computes them from the real modes above freq_min_thermal_displacements.
+    none are returned then. A material with imaginary modes then gets no
+    Debye-Waller factors either. The two options below give an estimate of U
+    for such a material. imaginary_modes_thermal_displacements="exclude"
+    computes U from the real modes above freq_min_thermal_displacements.
     "absolute" also counts each imaginary mode as a real mode of the same absolute
     frequency, above freq_min_thermal_displacements. freq_min_thermal_displacements
     must then be positive, because the term of a mode diverges as its frequency
@@ -214,9 +216,15 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     u = matrices.thermal_displacement_matrices
     u_cif = matrices.thermal_displacement_matrices_cif
     if has_imaginary and imaginary_modes == "absolute":
-        # phonopy gives an imaginary mode as a negative frequency, and its term
-        # equals that of the absolute frequency, except at T <= 1 K, where phonopy
-        # sets the population to zero and the term changes sign
+        # An imaginary mode has no harmonic U, because the energy falls along it.
+        # Without U, the material gets no Debye-Waller factors. Leaving the mode
+        # out ("exclude") lowers U. "absolute" keeps it as a real mode of the same
+        # absolute frequency, which gives an estimate of U.
+        # phonopy only sums the modes above freq_min. This second run adds the
+        # imaginary modes below -freq_min, which phonopy stores as negative
+        # frequencies. Their term equals that of the absolute frequency, except
+        # at T <= 1 K, where phonopy sets the population to zero and the term
+        # changes sign.
         phonon.run_thermal_displacement_matrices(
             temperatures=temperatures,
             freq_min=-np.inf,

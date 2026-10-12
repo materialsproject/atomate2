@@ -38,7 +38,7 @@ def check_pymatgen() -> None:
     if not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"):
         raise ImportError(
             "This pymatgen version has no anisotropic Debye-Waller factors. See the "
-            "Debye-Waller workflow section of the VASP page in the atomate2 docs to "
+            "Debye-Waller factors section of the VASP page in the atomate2 docs to "
             "install one."
         )
 
