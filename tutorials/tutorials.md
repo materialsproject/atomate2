@@ -19,6 +19,7 @@ hiphive_workflow
 force_fields/phonon_workflow
 grueneisen_workflow
 cte_workflow
+debye_waller_workflow
 qha_workflow
 torchsim_tutorial
 ```
