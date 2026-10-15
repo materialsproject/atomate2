@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -428,6 +429,14 @@ class BasePhononMaker(Maker, ABC):
         -------
         Job | Flow
         """
+        if self.phonon_doc_schema == "atomate2":
+            warnings.warn(
+                "The phonon free energies, entropies, heat capacities and internal "
+                "energies are now computed with phonopy's sum over the q-point mesh, "
+                "without the three acoustic modes at Gamma. They differ from those of "
+                "earlier atomate2 versions, which integrated the phonon DOS.",
+                stacklevel=2,
+            )
         return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,

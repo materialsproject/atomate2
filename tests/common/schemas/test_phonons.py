@@ -2,11 +2,14 @@ import json
 
 import numpy as np
 import pytest
+from ase.calculators.emt import EMT
 from monty.json import MontyEncoder
 from phonopy import Phonopy
 from pydantic import ValidationError
 from pymatgen.core import Lattice, Structure
-from pymatgen.io.phonopy import get_phonopy_structure
+from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
+from scipy.constants import R
 
 from atomate2.common.schemas.phonons import (
     PhononBSDOSDoc,
@@ -55,6 +58,47 @@ def test_phonon_bs_dos_doc():
     # test extra="allow" option
     doc = PhononBSDOSDoc(**kwargs | {"extra_field": "test"})
     assert doc.extra_field == "test"
+
+
+def test_from_forces_born_thermal_properties(clean_dir):
+    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit."""
+    structure = Structure(
+        Lattice.cubic(3.74),
+        ["Au", "Cu", "Cu", "Cu"],
+        [[0, 0, 0], [0.5, 0.5, 0], [0.5, 0, 0.5], [0, 0.5, 0.5]],
+    )
+    supercell_matrix = 3 * np.eye(3)
+    phonon = Phonopy(get_phonopy_structure(structure), supercell_matrix)
+    phonon.generate_displacements(distance=0.01)
+    forces = []
+    for cell in phonon.supercells_with_displacements:
+        atoms = AseAtomsAdaptor.get_atoms(get_pmg_structure(cell))
+        atoms.calc = EMT()
+        forces.append(atoms.get_forces().tolist())
+    doc = PhononBSDOSDoc.from_forces_born(
+        structure=structure,
+        supercell_matrix=supercell_matrix,
+        displacement=0.01,
+        sym_reduce=True,
+        symprec=1e-5,
+        use_symmetrized_structure=None,
+        kpath_scheme="seekpath",
+        code="forcefields",
+        displacement_data={"forces": forces, "dirs": [], "uuids": []},
+        total_dft_energy=None,
+        store_force_constants=False,
+        tmax=3000,
+        static_run_job_dir=None,
+        static_run_uuid=None,
+        born_run_job_dir=None,
+        born_run_uuid=None,
+        optimization_run_job_dir=None,
+        optimization_run_uuid=None,
+    )
+    assert doc.entropies[0] == 0
+    assert doc.heat_capacities[0] == 0
+    assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
+    assert doc.internal_energies[-1] == pytest.approx(12 * R * 3000, rel=1e-3)
 
 
 # schemas where all fields have default values

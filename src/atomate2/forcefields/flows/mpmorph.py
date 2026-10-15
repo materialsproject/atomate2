@@ -22,10 +22,10 @@ from atomate2.forcefields.md import ForceFieldMDMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Self
 
     from jobflow import Flow, Job
     from pymatgen.core import Structure
-    from typing_extensions import Self
 
     from atomate2.forcefields import MLFF
 
