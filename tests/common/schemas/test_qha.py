@@ -1,3 +1,4 @@
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -244,3 +245,23 @@ def test_analyze_free_energy_small(tmp_dir, test_dir):
     )
     assert_allclose(qha_doc.helmholtz_volume[2][2], -14.631379092600538, atol=1e-3)
     assert_allclose(qha_doc.t_max, 100)
+
+
+def test_analyze_free_energy_all_imaginary(test_dir):
+    """The error says that no volume is left when all have imaginary modes."""
+    structure = Structure.from_file(f"{test_dir}/qha/POSCAR")
+    phonon_docs = [
+        PhononSummaryData(
+            free_energies=[0.0],
+            heat_capacities=[0.0],
+            entropies=[0.0],
+            temperatures=[0.0],
+            total_dft_energy=-10.0,
+            volume_per_formula_unit=volume,
+            formula_units=1,
+            has_imaginary_modes=True,
+        )
+        for volume in (10.0, 11.0, 12.0)
+    ]
+    with pytest.raises(ValueError, match="All 3 volumes have imaginary modes"):
+        analyze_free_energy.original(phonon_docs, structure, t_max=300)
