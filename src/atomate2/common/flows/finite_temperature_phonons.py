@@ -329,7 +329,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             )
             npt_job.append_name(" NPT")
             npt_cell_job = get_npt_structure(
-                npt_job.output.dir_name,
+                [npt_job.output.dir_name],
                 self.md_code,
                 structure,
                 supercell_matrix,
@@ -344,8 +344,8 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 "pressure": self.pressure,
                 "npt_time": self.npt_time,
                 "npt_equilibration_time": self.npt_equilibration_time,
-                "npt_uuid": npt_job.uuid,
-                "npt_job_dir": npt_job.output.dir_name,
+                "npt_uuids": [npt_job.uuid],
+                "npt_job_dirs": [npt_job.output.dir_name],
             }
             structure = npt_cell_job.output
             if self.fixed_cell_relax_maker is not None:

@@ -220,7 +220,7 @@ def test_npt_maker(si_structure, nio_supercell):
     reference = flow.jobs[len(names) - 1 - names[::-1].index("get_md_supercell")]
     assert reference.function_args[0].uuid == npt_cell.uuid
     fit_kwargs = flow.jobs[-1].function_kwargs
-    assert fit_kwargs["npt_uuid"] == npt_job.uuid
+    assert fit_kwargs["npt_uuids"] == [npt_job.uuid]
     assert fit_kwargs["pressure"] == 5.0
     assert fit_kwargs["structure"].uuid == npt_cell.uuid
 
