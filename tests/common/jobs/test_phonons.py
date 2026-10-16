@@ -1,3 +1,5 @@
+import numpy as np
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core import Structure
@@ -79,3 +81,38 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
     assert_allclose(
         responses[job2.uuid][1].output, [[2, -1, 0], [0, 2, 0], [-1, -1, 2]]
     )
+
+
+def test_generate_frequencies_eigenvectors_atomate2_schema(si_structure, monkeypatch):
+    """The atomate2 document computes the phonons, once and without magmoms."""
+    from atomate2.common.jobs import phonons
+
+    kwargs = {}
+
+    def from_forces_born(**doc_kwargs):
+        kwargs.update(doc_kwargs)
+        return "doc"
+
+    def generate_phonon_object(*args, **kwargs):
+        pytest.fail("The phonons are computed outside of the document.")
+
+    monkeypatch.setattr(
+        phonons.Atomate2PhononBSDOSDoc, "from_forces_born", from_forces_born
+    )
+    monkeypatch.setattr(phonons, "_generate_phonon_object", generate_phonon_object)
+    structure = si_structure.copy(site_properties={"magmom": [1, -1]})
+    doc = phonons.generate_frequencies_eigenvectors.original(
+        structure=structure,
+        supercell_matrix=np.eye(3) * 2,
+        displacement=0.01,
+        sym_reduce=True,
+        symprec=1e-4,
+        use_symmetrized_structure=None,
+        kpath_scheme="seekpath",
+        code="vasp",
+        displacement_data={"forces": [], "uuids": [], "dirs": []},
+        total_dft_energy=-10.0,
+    )
+
+    assert doc == "doc"
+    assert "magmom" not in kwargs["structure"].site_properties
