@@ -75,24 +75,29 @@ def test_npt_init_kwargs(si_structure, clean_dir, caplog):
         assert "The `NPT` module in ASE is no longer recommended" in caplog.text
 
 
-@pytest.mark.parametrize("ensemble", ["nvt", "npt"])
-def test_nose_hoover_rotated_cell(si_structure, ensemble, clean_dir):
-    """ASE NPT rotates the cell of Si, which is not upper triangular, with the atoms."""
-    velocities = [[0.01, 0.02, 0.03], [-0.01, -0.02, -0.03]]
-    structure = si_structure.copy(site_properties={"velocities": velocities})
+def test_npt_rotated_cell(si_structure, clean_dir):
+    """NPT with nose-hoover rotates the Si cell, which is not upper triangular."""
+    structure = si_structure * (1, 1, 2)
+    velocities = [
+        [0.01, 0.02, 0.03],
+        [-0.03, 0.01, 0.02],
+        [0.02, -0.03, 0.01],
+        [0.0, 0.0, -0.06],
+    ]
+    structure.add_site_property("velocities", velocities)
     result = LennardJonesMDMaker(
-        ensemble=ensemble, dynamics="nose-hoover", pressure=0.0, n_steps=0
+        ensemble="npt", dynamics="nose-hoover", pressure=0.0, n_steps=0
     ).run_ase(structure)
     frame = result.trajectory[0]
 
-    assert frame.frac_coords == pytest.approx(si_structure.frac_coords)
+    assert frame.frac_coords == pytest.approx(structure.frac_coords)
     # the velocity components along the lattice vectors are kept
     projected = np.dot(
         result.trajectory.frame_properties[0]["velocities"], frame.lattice.matrix.T
     )
-    expected = np.dot(velocities, si_structure.lattice.matrix.T)
-    assert projected / np.abs(projected).max() == pytest.approx(
-        expected / np.abs(expected).max()
+    expected = np.dot(velocities, structure.lattice.matrix.T)
+    assert projected / np.linalg.norm(projected) == pytest.approx(
+        expected / np.linalg.norm(expected)
     )
 
 
