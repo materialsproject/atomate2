@@ -262,6 +262,14 @@ limitations on MongoDB collection sizes.
 Perform a relaxation and then run the Band Structure workflow. By default, a
 Double Relax relaxation is performed.
 
+### Relax and Dielectric
+
+Perform a relaxation and then run a Dielectric calculation to obtain the high-frequency
+and ionic contributions to the dielectric tensor, as well as the Born effective charges.
+By default, a Double Relax relaxation with tight convergence parameters is performed, as
+density functional perturbation theory is sensitive to residual forces. The relaxation
+can be skipped by setting `relax_maker=None`.
+
 ### Elastic Constant
 
 Calculate the elastic constant of a material. Initially, a tight structural relaxation
