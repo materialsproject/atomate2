@@ -47,9 +47,10 @@ def _get_force_field_md_maker(
     maker: BaseFiniteTemperaturePhononMaker,
     n_steps: int,
     npt: bool = False,
+    index: int = 0,
 ) -> ForceFieldMDMaker:
     """
-    Get the force field MD maker of the NVT or NPT MD of a finite-temperature flow.
+    Get a force field MD maker of the NVT or NPT MD of a finite-temperature flow.
 
     See :obj:`ForceFieldFiniteTemperaturePhononMaker` for the MD settings.
 
@@ -62,6 +63,8 @@ def _get_force_field_md_maker(
     npt: bool
         If True, get the NPT MD maker from maker.npt_maker. If False, get the
         NVT MD maker from maker.md_maker.
+    index: int
+        Index of the MD job in the MD, from 0. It sets the seed.
 
     Returns
     -------
@@ -104,9 +107,12 @@ def _get_force_field_md_maker(
         traj_interval=1,
         store_trajectory="no",
         mb_velocity_seed=(
-            None if maker.random_seed is None else maker.random_seed + int(npt)
+            None
+            if maker.random_seed is None
+            else maker.random_seed + 2 * index + int(npt)
         ),
         zero_linear_momentum=True,
+        store_velocities=maker.n_md_jobs > 1,
     )
 
 
@@ -129,8 +135,11 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     that change the whole cell, whatever the thermostat setting (Martyna et
     al., J. Chem. Phys. 101, 4177 (1994)). Its thermostat time constant is
     that of the Nose-Hoover thermostat above, and its barostat time constant
-    is 1000 time steps. The NVT MD seeds its initial velocities and its Langevin
-    random forces with random_seed, and the NPT MD uses random_seed + 1.
+    is 1000 time steps. MD job i of the NVT MD uses the seed random_seed + 2i,
+    and MD job i of the NPT MD uses random_seed + 2i + 1. The first job of each
+    MD seeds the initial velocities with it, and every job seeds its Langevin
+    random forces with it. With n_md_jobs above 1, each MD job passes its final
+    velocities to the next one.
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
 
@@ -159,8 +168,8 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     md_maker: .ForceFieldMDMaker
         Maker for the MD. The flow sets its ensemble, temperature, n_steps,
         time_step, dynamics, ase_md_kwargs, traj_file, traj_file_fmt,
-        traj_interval, store_trajectory, mb_velocity_seed and
-        zero_linear_momentum. It must not set dynamics or ase_md_kwargs.
+        traj_interval, store_trajectory, mb_velocity_seed, zero_linear_momentum
+        and store_velocities. It must not set dynamics or ase_md_kwargs.
     phonon_displacement_maker: .ForceFieldStaticMaker
         Maker for the static calculations on the snapshots and the undisplaced
         supercell.
@@ -198,35 +207,39 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         """
         return
 
-    def get_md_maker(self, n_steps: int) -> ForceFieldMDMaker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> ForceFieldMDMaker:
         """
-        Get the force field maker of the NVT MD job.
+        Get the force field maker of an NVT MD job.
 
         Parameters
         ----------
         n_steps: int
             Number of MD steps.
+        index: int
+            Index of the MD job in the NVT MD, from 0.
 
         Returns
         -------
         ForceFieldMDMaker
         """
-        return _get_force_field_md_maker(self, n_steps)
+        return _get_force_field_md_maker(self, n_steps, index=index)
 
-    def get_npt_maker(self, n_steps: int) -> ForceFieldMDMaker:
+    def get_npt_maker(self, n_steps: int, index: int = 0) -> ForceFieldMDMaker:
         """
-        Get the force field maker of the NPT MD job.
+        Get the force field maker of an NPT MD job.
 
         Parameters
         ----------
         n_steps: int
             Number of MD steps.
+        index: int
+            Index of the MD job in the NPT MD, from 0.
 
         Returns
         -------
         ForceFieldMDMaker
         """
-        return _get_force_field_md_maker(self, n_steps, npt=True)
+        return _get_force_field_md_maker(self, n_steps, npt=True, index=index)
 
     @classmethod
     def from_force_field_name(

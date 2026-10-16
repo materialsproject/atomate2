@@ -10,18 +10,23 @@ import pytest
 
 pytest.importorskip("pheasy")
 
+from pathlib import Path
+
 import numpy as np
 from ase import units
+from ase.io import read
 from jobflow import run_locally
 from pymatgen.core import Lattice, Structure
 
 from atomate2.ase.md import MDEnsemble
+from atomate2.common.jobs.finite_temperature_phonons import ASE_TRAJECTORY_FILE
 from atomate2.forcefields.flows.finite_temperature_phonons import (
     ForceFieldFiniteTemperaturePhononMaker,
     _get_force_field_md_maker,
 )
 from atomate2.forcefields.jobs import ForceFieldDielectricMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.core import DielectricMaker
 
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
@@ -53,6 +58,13 @@ def run_emt_flow(structure, **kwargs):
         ({"alpha_min": -2}, "alpha_min must be an integer below -2"),
         ({"alpha_min": -6.5}, "alpha_min must be an integer below -2"),
         ({"md_time_step": 0}, "must be positive"),
+        ({"n_md_jobs": 0}, "n_md_jobs must be a positive integer"),
+        ({"n_md_jobs": True}, "n_md_jobs must be a positive integer"),
+        ({"n_md_jobs": 2.5}, "n_md_jobs must be a positive integer"),
+        (
+            {"md_time": 1.0, "equilibration_time": 0.5, "n_md_jobs": 600},
+            "needs at least 2 steps",
+        ),
         ({"equilibration_time": 8.0}, "fewer than the 50 snapshots"),
         ({"equilibration_time": -1.0}, "fewer than the 50 snapshots"),
         ({"md_maker": None}, "md_maker and phonon_displacement_maker must be set"),
@@ -82,6 +94,7 @@ def test_force_field_md_maker(cu3au):
     assert md_maker.time_step == 2.0
     assert md_maker.temperature == 300
     assert md_maker.mb_velocity_seed == 5
+    assert not md_maker.store_velocities
     assert md_maker.store_trajectory == "no"
     # Langevin by default, with the default friction of AseMDMaker
     assert md_maker.dynamics == "langevin"
@@ -151,6 +164,39 @@ def test_force_field_npt_maker(cu3au):
     assert maker.fixed_cell_relax_maker is None
     flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
     assert not any("NPT" in job.name for job in flow.jobs)
+
+
+def test_force_field_n_md_jobs(cu3au):
+    """The NVT and the NPT MD run as several jobs, each with its own seed."""
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
+        EMT,
+        run_npt=True,
+        md_time=1.0,
+        npt_time=1.0,
+        npt_equilibration_time=0.5,
+        md_time_step=2.0,
+        equilibration_time=0.5,
+        n_md_jobs=3,
+    )
+    flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
+    md_jobs = [job for job, _ in flow.iterflow() if job.name.startswith("ASE MD ")]
+    nvt = [job for job in md_jobs if not job.name.endswith("NPT")]
+    npt = [job for job in md_jobs if job.name.endswith("NPT")]
+
+    # 500 steps of 2 fs in three jobs
+    for chain, offset in ((nvt, 0), (npt, 1)):
+        assert [job.maker.n_steps for job in chain] == [167, 167, 166]
+        assert [job.maker.mb_velocity_seed for job in chain] == [
+            maker.random_seed + 2 * idx + offset for idx in range(3)
+        ]
+        assert all(job.maker.store_velocities for job in chain)
+    # the trajectories of all jobs are read, in order
+    for name, chain in (("select_md_snapshots", nvt), ("get_npt_structure", npt)):
+        job = next(job for job, _ in flow.iterflow() if job.name == name)
+        assert [ref.uuid for ref in job.function_args[0]] == [j.uuid for j in chain]
+    fit_kwargs = flow.jobs[-1].function_kwargs
+    assert fit_kwargs["md_uuids"] == [job.uuid for job in nvt]
+    assert fit_kwargs["npt_uuids"] == [job.uuid for job in npt]
 
 
 def test_force_field_with_vasp_born_charges(cu3au):
@@ -226,6 +272,34 @@ def test_finite_temperature_phonon_maker_emt_npt(clean_dir, cu3au):
     assert doc.structure.lattice.a == pytest.approx(3.7328, rel=2e-3)
     assert not doc.has_imaginary_modes
     assert np.max(doc.phonon_bandstructure.bands) == pytest.approx(6.554, rel=0.05)
+
+
+def test_finite_temperature_phonon_maker_emt_n_md_jobs(clean_dir, cu3au):
+    """Run the workflow with the NPT and the NVT MD each split into two jobs."""
+    doc = run_emt_flow(
+        cu3au,
+        run_npt=True,
+        npt_time=2.0,
+        npt_equilibration_time=0.5,
+        md_time=1.0,
+        equilibration_time=0.2,
+        n_snapshots=10,
+        n_md_jobs=2,
+    )
+
+    assert len(set(doc.npt_job_dirs)) == len(doc.npt_uuids) == 2
+    assert len(set(doc.md_job_dirs)) == len(doc.md_uuids) == 2
+    # the second NVT MD job starts from the last frame of the first one
+    first, second = (
+        read(Path(strip_hostname(md_dir)) / ASE_TRAJECTORY_FILE, index=":")
+        for md_dir in doc.md_job_dirs
+    )
+    assert second[0].positions == pytest.approx(first[-1].positions)
+    assert second[0].get_velocities() == pytest.approx(first[-1].get_velocities())
+    # the first frame after 0.2 ps and the last frame of the second job
+    assert doc.snapshot_times[0] == pytest.approx(0.202)
+    assert doc.snapshot_times[-1] == pytest.approx(1.0)
+    assert not doc.has_imaginary_modes
 
 
 def test_finite_temperature_phonon_maker_emt_born_charges(

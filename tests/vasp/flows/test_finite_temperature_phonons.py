@@ -236,3 +236,18 @@ def test_npt_maker(si_structure, nio_supercell):
     )
     with pytest.raises(TypeError, match="VASP MDMaker with an MDSetGenerator"):
         maker.get_npt_maker(10)
+
+
+def test_n_md_jobs(si_structure):
+    """The NVT and the NPT MD run as two VASP MD jobs each."""
+    maker = FiniteTemperaturePhononMaker(npt_maker=MDMaker(), n_md_jobs=2)
+    flow = maker.make(si_structure)
+    jobs = [job for job, _ in flow.iterflow()]
+    names = [job.name for job in jobs]
+    nvt = [jobs[names.index(f"molecular dynamics {idx}")] for idx in (1, 2)]
+    npt = [jobs[names.index(f"molecular dynamics {idx} NPT")] for idx in (1, 2)]
+    for chain in (nvt, npt):
+        assert [job.maker.input_set_generator.nsteps for job in chain] == [4000] * 2
+    assert flow.jobs[-1].function_kwargs["md_uuids"] == [job.uuid for job in nvt]
+    npt_cell = jobs[names.index("get_npt_structure")]
+    assert [ref.uuid for ref in npt_cell.function_args[0]] == [j.uuid for j in npt]

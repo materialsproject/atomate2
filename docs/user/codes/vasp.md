@@ -469,6 +469,11 @@ The relaxation, the MD and the statics use the same functional, +U, smearing and
 The MD and the statics start from the magnetic moments of the relaxed structure, if it has any.
 Both set ISPIN from the relaxation directory with `auto_ispin`.
 Later jobs read the files of the MD runs, so the MD run directories must be on a file system that these jobs can read.
+A long MD can run as several jobs with `n_md_jobs`, for example `n_md_jobs=4` for four jobs of 2 ps each with the default `md_time` of 8 ps.
+Each job starts from the final positions and velocities of the previous one, and the trajectories are joined in order.
+A later MD job takes its magnetic moments and ISPIN from the previous MD job.
+The thermostat and barostat variables start again from zero in each job.
+This applies to the NVT and to the NPT MD.
 
 An NPT MD can be run first to include thermal expansion.
 Set `npt_maker` to a VASP `MDMaker` with an `MDSetGenerator`, and use a larger ENCUT than for the NVT MD, since the cell changes.
@@ -524,7 +529,7 @@ Known limitations:
 - pheasy needs a diagonal supercell matrix.
 - The MD is classical, so there is no zero-point motion.
 - Each result comes from one MD trajectory, so it carries the noise of that trajectory.
-- The MD runs as one job, so it has to fit within the walltime of one job.
+- Each MD job has to finish within the walltime of a job. `n_md_jobs` splits a long MD into several jobs.
 
 ### Grüneisen parameter workflow
 

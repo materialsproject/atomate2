@@ -22,6 +22,7 @@ from atomate2.common.jobs.finite_temperature_phonons import (
 from atomate2.common.jobs.pheasy import get_supercell_size
 from atomate2.common.jobs.phonons import run_phonon_displacements
 from atomate2.common.utils import check_class_name
+from atomate2.vasp.flows.md import MultiMDMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -97,6 +98,12 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     the trajectory. The residual forces of the undisplaced supercell always come
     from the phonon displacement maker.
 
+    If n_md_jobs is above 1, the NVT MD and the NPT MD each run as n_md_jobs
+    consecutive jobs of a :obj:`.MultiMDMaker`, so that a long MD fits in the
+    walltime of a job. Each job starts from the final positions and velocities
+    of the previous one, and the trajectories are joined in order. The
+    thermostat and barostat variables start again from zero in each job.
+
     This workflow is new and has not been tested widely. It might still change
     in future versions.
 
@@ -119,6 +126,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         Length of the MD trajectory in ps.
     md_time_step: float
         MD time step in fs.
+    n_md_jobs: int
+        Number of jobs that the NVT MD and the NPT MD are each split into. The
+        steps are split as evenly as possible.
     equilibration_time: float
         Time at the start of the trajectory that is left out, in ps.
     n_snapshots: int
@@ -151,8 +161,10 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         the search.
     random_seed: int | None
         Seed of the LASSO fit. It also seeds the initial velocities and the
-        Langevin random forces of a force field MD. The NVT MD uses random_seed
-        and the NPT MD uses random_seed + 1.
+        Langevin random forces of a force field MD. MD job i of the NVT MD uses
+        the seed random_seed + 2i, and MD job i of the NPT MD uses random_seed +
+        2i + 1. The first job of each MD seeds the initial velocities with it,
+        and every job seeds its Langevin random forces with it.
     tol_imaginary_modes: float
         Frequencies below -tol_imaginary_modes in THz are imaginary.
     store_force_constants: bool
@@ -189,6 +201,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
     temperature: float = 300.0
     md_time: float = 8.0
     md_time_step: float = 1.0
+    n_md_jobs: int = 1
     equilibration_time: float = 1.0
     n_snapshots: int = 50
     thermostat: Literal["nose-hoover", "langevin"] = "langevin"
@@ -230,6 +243,14 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             raise ValueError(
                 f"alpha_min must be an integer below -2, not {self.alpha_min!r}."
             )
+        if (
+            isinstance(self.n_md_jobs, bool)
+            or not isinstance(self.n_md_jobs, numbers.Integral)
+            or self.n_md_jobs < 1
+        ):
+            raise ValueError(
+                f"n_md_jobs must be a positive integer, not {self.n_md_jobs!r}."
+            )
         if min(self.temperature, self.md_time, self.md_time_step) <= 0:
             raise ValueError("temperature, md_time and md_time_step must be positive.")
         n_steps = round(self.md_time * 1000 / self.md_time_step)
@@ -245,6 +266,13 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             raise ValueError(
                 "npt_equilibration_time must be at least zero and shorter than "
                 "npt_time."
+            )
+        md_steps = [n_steps]
+        if self.npt_maker is not None:
+            md_steps.append(round(self.npt_time * 1000 / self.md_time_step))
+        if min(md_steps) < 2 * self.n_md_jobs:
+            raise ValueError(
+                f"Each of the {self.n_md_jobs} MD jobs needs at least 2 steps."
             )
 
     def make(
@@ -324,12 +352,12 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 structure, supercell_matrix, self.symprec, self.code
             )
             n_steps = round(self.npt_time * 1000 / self.md_time_step)
-            npt_job = self.get_npt_maker(n_steps).make(
-                start_job.output, prev_dir=prev_dir
+            npt_job, npt_dirs, npt_uuids = self._make_md(
+                n_steps, start_job.output, prev_dir, npt=True
             )
             npt_job.append_name(" NPT")
             npt_cell_job = get_npt_structure(
-                [npt_job.output.dir_name],
+                npt_dirs,
                 self.md_code,
                 structure,
                 supercell_matrix,
@@ -344,8 +372,8 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                 "pressure": self.pressure,
                 "npt_time": self.npt_time,
                 "npt_equilibration_time": self.npt_equilibration_time,
-                "npt_uuids": [npt_job.uuid],
-                "npt_job_dirs": [npt_job.output.dir_name],
+                "npt_uuids": npt_uuids,
+                "npt_job_dirs": npt_dirs,
             }
             structure = npt_cell_job.output
             if self.fixed_cell_relax_maker is not None:
@@ -379,9 +407,10 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         reference = reference_job.output
 
         n_steps = round(self.md_time * 1000 / self.md_time_step)
-        md_job = self.get_md_maker(n_steps).make(reference, prev_dir=prev_dir)
+        md_job, md_dirs, md_uuids = self._make_md(
+            n_steps, reference, prev_dir, npt=False
+        )
         jobs.append(md_job)
-        md_dirs = [md_job.output.dir_name]
 
         snapshot_job = select_md_snapshots(
             md_dirs,
@@ -427,7 +456,7 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             force_field_kwargs=force_field_kwargs,
             md_force_field_name=md_force_field_name,
             md_force_field_kwargs=md_force_field_kwargs,
-            md_uuids=[md_job.uuid],
+            md_uuids=md_uuids,
             md_job_dirs=md_dirs,
             optimization_run_uuid=optimization_run_uuid,
             optimization_run_job_dir=optimization_run_job_dir,
@@ -445,6 +474,38 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         jobs.append(fit_job)
         return Flow(jobs, fit_job.output, name=self.name)
 
+    def _make_md(
+        self,
+        n_steps: int,
+        structure: Structure | OutputReference,
+        prev_dir: str | Path | None,
+        npt: bool,
+    ) -> tuple[Job | Flow, list[OutputReference], list[str]]:
+        """
+        Make the NVT or the NPT MD as n_md_jobs consecutive MD jobs.
+
+        Returns the job or flow, and the directories and uuids of its MD jobs.
+        """
+        get_maker = self.get_npt_maker if npt else self.get_md_maker
+        n_jobs = self.n_md_jobs
+        makers = [
+            get_maker(n_steps // n_jobs + (idx < n_steps % n_jobs), idx)
+            for idx in range(n_jobs)
+        ]
+        md: Job | Flow
+        if n_jobs == 1:
+            md = makers[0].make(structure, prev_dir=prev_dir)
+            md_jobs = [md]
+        else:
+            md = MultiMDMaker(md_makers=makers).make(structure, prev_dir=prev_dir)
+            # the last job of the flow collects the outputs
+            md_jobs = md.jobs[:-1]
+        return (
+            md,
+            [job.output.dir_name for job in md_jobs],
+            [job.uuid for job in md_jobs],
+        )
+
     @property
     @abstractmethod
     def prev_calc_dir_argname(self) -> str | None:
@@ -454,14 +515,16 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def get_npt_maker(self, n_steps: int) -> Maker:
+    def get_npt_maker(self, n_steps: int, index: int = 0) -> Maker:
         """
-        Get the maker of the NPT MD job, with the settings of this flow.
+        Get the maker of an NPT MD job, with the settings of this flow.
 
         Parameters
         ----------
         n_steps: int
             Number of MD steps.
+        index: int
+            Index of the MD job in the NPT MD, from 0.
 
         Returns
         -------
@@ -469,14 +532,16 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         """
 
     @abstractmethod
-    def get_md_maker(self, n_steps: int) -> Maker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> Maker:
         """
-        Get the maker of the NVT MD job, with the settings of this flow.
+        Get the maker of an NVT MD job, with the settings of this flow.
 
         Parameters
         ----------
         n_steps: int
             Number of MD steps.
+        index: int
+            Index of the MD job in the NVT MD, from 0.
 
         Returns
         -------

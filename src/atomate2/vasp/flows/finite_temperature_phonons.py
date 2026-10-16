@@ -67,7 +67,9 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
     calculations start from the magnetic moments of the relaxed structure, if
     it has any. They all get the same prev_dir, the relaxation directory by
     default. auto_ispin of the MD and of the phonon displacement calculations
-    sets ISPIN from it.
+    sets ISPIN from it. With n_md_jobs above 1, each later MD job instead gets
+    the directory of the previous MD job, and starts from its structure,
+    velocities and magnetic moments.
 
     See :obj:`.BaseFiniteTemperaturePhononMaker` for the workflow.
 
@@ -180,14 +182,17 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         """
         return "prev_dir"
 
-    def get_md_maker(self, n_steps: int) -> MDMaker:
+    def get_md_maker(self, n_steps: int, index: int = 0) -> MDMaker:
         """
-        Get the VASP maker of the NVT MD job.
+        Get the VASP maker of an NVT MD job.
 
         Parameters
         ----------
         n_steps: int
             Number of MD steps.
+        index: int
+            Index of the MD job in the NVT MD, from 0. Not used by the VASP
+            makers.
 
         Returns
         -------
@@ -223,9 +228,9 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         )
         return replace(md_maker, input_set_generator=generator)
 
-    def get_npt_maker(self, n_steps: int) -> MDMaker:
+    def get_npt_maker(self, n_steps: int, index: int = 0) -> MDMaker:
         """
-        Get the VASP maker of the NPT MD job.
+        Get the VASP maker of an NPT MD job.
 
         The NPT MD uses the Langevin thermostat with the Parrinello-Rahman
         barostat of VASP, MDALGO = 3 with ISIF = 3, as MDSetGenerator sets them
@@ -235,6 +240,9 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         ----------
         n_steps: int
             Number of MD steps.
+        index: int
+            Index of the MD job in the NPT MD, from 0. Not used by the VASP
+            makers.
 
         Returns
         -------
