@@ -163,6 +163,13 @@ def analyze_free_energy(
 
     # potentially implement a space group check in the future
 
+    if not formula_units:
+        raise ValueError(
+            f"All {len(phonon_outputs)} volumes have imaginary modes, so no volume "
+            "is left for the fit. Raise tol_imaginary_modes (THz, default 1e-5) in "
+            "phonon_maker.generate_frequencies_eigenvectors_kwargs if they are "
+            "numerical noise, or set ignore_imaginary_modes=True to keep all volumes."
+        )
     if len(set(formula_units)) != 1:
         raise ValueError("There should be only one formula unit.")
 
