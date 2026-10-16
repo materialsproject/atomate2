@@ -240,8 +240,8 @@ def test_finite_temperature_phonon_maker_emt_born_charges(
         md_time=1.0,
         equilibration_time=0.2,
         n_snapshots=10,
+        born_maker=ForceFieldDielectricMaker(),
     )
-    maker.born_maker = ForceFieldDielectricMaker()
     flow = maker.make(cu3au)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     doc = responses[flow.output.uuid][1].output

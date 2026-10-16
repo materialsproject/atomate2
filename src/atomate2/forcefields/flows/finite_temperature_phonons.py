@@ -241,8 +241,8 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
         Create a finite-temperature phonon flow from a force field name.
 
         The relaxation, the MD and the phonon displacement calculations use the
-        force field, and born_maker is None. These makers replace any given in
-        kwargs.
+        force field. These makers replace any given in kwargs. born_maker is None
+        unless given in kwargs.
 
         Parameters
         ----------
@@ -293,7 +293,6 @@ class ForceFieldFiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
             ),
             md_maker=_get_md_maker(force_field_name, calculator_kwargs),
             phonon_displacement_maker=phonon_displacement_maker,
-            born_maker=None,
         )
         return cls(
             name=(
