@@ -94,7 +94,7 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.SevenNet: {"model": "7net-0"},
     MLFF.UPET: {
         "model": "pet-mad-s",
-        "version": "1.5.0",
+        "version": "1.6.0",
     },
 }
 
