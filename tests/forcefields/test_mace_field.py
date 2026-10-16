@@ -10,6 +10,7 @@ from emmet.core.utils import get_hash_blocked
 from jobflow import run_locally
 from pymatgen.core import Lattice, Structure
 
+from atomate2.forcefields.flows.dielectric import RelaxDielectricMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import ForceFieldDielectricMaker
 
@@ -78,3 +79,31 @@ def test_mace_field_phonon_nac(mace_field_model, nacl_structure):
 
     # 6.486 THz without the MACE-Field Born charges
     assert np.max(doc.phonon_bandstructure.bands) == pytest.approx(7.505, abs=1e-2)
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE_FIELD"), reason="MACE-Field is not installed"
+)
+def test_mace_field_relax_dielectric(mace_field_model, nacl_structure):
+    maker = RelaxDielectricMaker(
+        dielectric_maker=ForceFieldDielectricMaker(
+            calculator_kwargs={"model": str(mace_field_model)}
+        )
+    )
+    flow = maker.make(nacl_structure)
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    doc = responses[flow[-1].uuid][1].output
+
+    # MACE-OMAT expands the cell from 5.64 A, so the values differ from the
+    # unrelaxed ones in test_mace_field_dielectric_maker
+    conventional_a = doc.structure.lattice.a * np.sqrt(2)
+    assert conventional_a == pytest.approx(5.6806, abs=1e-3)
+    born = np.array(doc.born)
+    species = [str(site.specie) for site in doc.structure]
+    assert born[species.index("Na")] == pytest.approx(1.0960 * np.eye(3), abs=1e-3)
+    epsilon = np.array(doc.epsilon_electronic)
+    assert epsilon == pytest.approx(2.5328 * np.eye(3), abs=1e-3)
+    assert doc.refractive_index == pytest.approx(np.sqrt(2.5328), abs=1e-3)
+    assert doc.epsilon_ionic is None
+    assert doc.epsilon_total is None
+    assert doc.piezoelectric is None

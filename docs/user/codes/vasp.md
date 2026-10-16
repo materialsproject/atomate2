@@ -264,11 +264,16 @@ Double Relax relaxation is performed.
 
 ### Relax and Dielectric
 
-Perform a relaxation and then run a Dielectric calculation to obtain the high-frequency
-and ionic contributions to the dielectric tensor, as well as the Born effective charges.
-By default, a Double Relax relaxation with tight convergence parameters is performed, as
-density functional perturbation theory is sensitive to residual forces. The relaxation
-can be skipped by setting `relax_maker=None`.
+Perform a relaxation and then run a Dielectric calculation to obtain the static
+dielectric tensor, the piezoelectric tensor (for non-centrosymmetric structures), the
+refractive index, and the Born effective charges. The electronic, ionic and total
+tensors are collected in a `DielectricDocument`. By default, a Double Relax relaxation
+with tight convergence parameters is performed, as density functional perturbation
+theory is sensitive to residual forces. The relaxation can be skipped by setting
+`relax_maker=None`.
+A force field version using MACE-Field is available as `RelaxDielectricMaker` in
+`atomate2.forcefields.flows.dielectric`.
+See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 
 ### Elastic Constant
 

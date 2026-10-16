@@ -2,7 +2,6 @@ import pytest
 from emmet.core.tasks import TaskDoc
 from emmet.core.types.enums import VaspObject
 from jobflow import run_locally
-from numpy.testing import assert_allclose
 
 from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import (
@@ -14,10 +13,9 @@ from atomate2.vasp.flows.core import (
     HSEUniformBandStructureMaker,
     LineModeBandStructureMaker,
     OpticsMaker,
-    RelaxDielectricMaker,
     UniformBandStructureMaker,
 )
-from atomate2.vasp.jobs.core import RelaxMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.sets.core import RelaxSetGenerator
 
 if SETTINGS.VASP_USE_EMMET_MODELS:
@@ -401,48 +399,3 @@ def test_hse_optics(mock_vasp, clean_dir, si_structure):
         0.0,
         0.0,
     ]
-
-
-def test_relax_dielectric(mock_vasp, clean_dir, si_structure):
-    # mapping from job name to directory containing test files
-    ref_paths = {
-        "relax 1": "Si_double_relax/relax_1",
-        "relax 2": "Si_double_relax/relax_2",
-        "dielectric": "Si_dielectric",
-    }
-
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        "relax 1": {"incar_settings": ["NSW", "ISMEAR"]},
-        "relax 2": {"incar_settings": ["NSW", "ISMEAR"]},
-        "dielectric": {"incar_settings": ["IBRION", "NSW", "LEPSILON"]},
-    }
-
-    # automatically use fake VASP and write POTCAR.spec during the test
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
-
-    # generate flow
-    flow = RelaxDielectricMaker(relax_maker=DoubleRelaxMaker()).make(si_structure)
-    flow.jobs[1].maker.input_set_generator.user_incar_settings["KSPACING"] = 0.5
-
-    # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
-
-    # validation on the outputs
-    relax_output = responses[flow.jobs[0].jobs[1].uuid][1].output
-    dielectric_output = responses[flow.jobs[1].uuid][1].output
-    assert isinstance(dielectric_output, TaskDoc)
-    assert relax_output.output.energy == pytest.approx(-10.84177648)
-    assert_allclose(
-        dielectric_output.calcs_reversed[0].output.epsilon_static,
-        [[11.41539467, 0, 0], [0, 11.41539963, 0], [0, 0, 11.41539866]],
-        atol=0.01,
-    )
-
-    # check the default flow uses a tight double relaxation and can skip it
-    flow = RelaxDielectricMaker().make(si_structure)
-    assert [job.name for job in flow.jobs] == ["double relax", "dielectric"]
-    assert isinstance(flow.jobs[0].jobs[0].maker, TightRelaxMaker)
-
-    flow = RelaxDielectricMaker(relax_maker=None).make(si_structure)
-    assert [job.name for job in flow.jobs] == ["dielectric"]

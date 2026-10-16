@@ -109,6 +109,7 @@ The default in `atomate2` is the OMat24 model with `uma-s-1p1`.
 [MACE-Field](https://doi.org/10.1103/b116-xy8k) gives the Born effective charges and the high-frequency dielectric tensor of inorganic crystals.
 `ForceFieldDielectricMaker` computes them.
 The phonon workflows use them for the non-analytical correction when `ForceFieldDielectricMaker` is set as `born_maker`.
+`RelaxDielectricMaker` in `atomate2.forcefields.flows.dielectric` relaxes the structure with MACE-OMAT and then collects them in a `DielectricDocument`, like the VASP dielectric workflow.
 
 MACE-Field is a fork of MACE that installs as `mace_torch`, so it replaces MACE.
 Install it with `pip install git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64`, the commit atomate2 is tested with.
