@@ -12,10 +12,10 @@ from monty.serialization import dumpfn
 from pymatgen.io.aims.sets.base import AimsInputGenerator
 from pymatgen.util.due import Doi, due
 
-from atomate2 import SETTINGS
 from atomate2.aims.files import (
     cleanup_aims_outputs,
     copy_aims_outputs,
+    get_aims_zip_files_setting,
     write_aims_input_set,
 )
 from atomate2.aims.run import run_aims, should_stop_children
@@ -129,7 +129,7 @@ class BaseAimsMaker(Maker):
         # gzip folder
         gzip_output_folder(
             directory=Path.cwd(),
-            setting=SETTINGS.VASP_ZIP_FILES,
+            setting=get_aims_zip_files_setting(),
             files_list=_FILES_TO_ZIP,
         )
 
