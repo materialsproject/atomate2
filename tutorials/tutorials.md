@@ -16,6 +16,7 @@ phonon_workflow
 phonon_workflow_aims
 pheasy_workflow
 hiphive_workflow
+finite_temperature_phonons
 force_fields/phonon_workflow
 grueneisen_workflow
 cte_workflow
