@@ -15,6 +15,7 @@ Name,Type,Maker
 `HSE06 Uniform Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.HSEUniformBandStructureMaker`
 `HSE06 Line-Mode Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.HSELineModeBandStructureMaker`
 `Relax and Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.RelaxBandStructureMaker`
+`Relax and Dielectric`_,flow,:obj:`~atomate2.vasp.flows.dielectric.RelaxDielectricMaker`
 `Elastic Constant`_,flow,:obj:`~atomate2.vasp.flows.elastic.ElasticMaker`
 `Optics`_,flow,:obj:`~atomate2.vasp.flows.core.OpticsMaker`
 `HSE06 Optics`_,flow,:obj:`~atomate2.vasp.flows.core.HSEOpticsMaker`
