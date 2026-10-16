@@ -248,7 +248,6 @@ def test_analyze_free_energy_small(tmp_dir, test_dir):
 
 
 def test_analyze_free_energy_all_imaginary(test_dir):
-    """The error says that no volume is left when all have imaginary modes."""
     structure = Structure.from_file(f"{test_dir}/qha/POSCAR")
     phonon_docs = [
         PhononSummaryData(
