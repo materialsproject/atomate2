@@ -165,6 +165,9 @@ def test_md_velocities(si_structure, clean_dir):
     assert result.final_mol_or_struct.site_properties["velocities"] == pytest.approx(
         velocities
     )
+    # without store_velocities, the input velocities are not passed through
+    result = LennardJonesMDMaker(ensemble="nve", n_steps=0).run_ase(si_structure)
+    assert "velocities" not in result.final_mol_or_struct.site_properties
 
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))

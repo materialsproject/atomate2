@@ -166,7 +166,7 @@ class AseMDMaker(AseMaker, ABC):
     store_velocities : bool = False
         Whether to add the final velocities, in Angstrom/fs, to the "velocities"
         site property of the output structure, so that a following MD job
-        continues with them.
+        continues with them. If False, the output structure has no velocities.
     verbose : bool = False
         Whether to print stdout to screen during the MD run.
     use_emmet_models : bool = False
@@ -460,6 +460,9 @@ class AseMDMaker(AseMaker, ABC):
             mol_or_struct.add_site_property(
                 "velocities", (atoms.get_velocities() * units.fs).tolist()
             )
+        elif "velocities" in mol_or_struct.site_properties:
+            # AseAtomsAdaptor passes the input velocities through unchanged
+            mol_or_struct.remove_site_property("velocities")
 
         return AseResult(
             final_mol_or_struct=mol_or_struct,
