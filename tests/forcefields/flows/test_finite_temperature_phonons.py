@@ -215,8 +215,7 @@ def test_finite_temperature_phonon_maker_emt_npt(clean_dir, cu3au):
     assert doc.pressure == 0.0
     assert doc.npt_time == 2.0
     assert doc.npt_equilibration_time == 0.5
-    assert doc.npt_uuid is not None
-    assert doc.npt_job_dir is not None
+    assert len(doc.npt_uuids) == len(doc.npt_job_dirs) == 1
     assert doc.fixed_cell_relax_uuid is not None
     # the atoms are relaxed in the cell from the NPT MD
     assert doc.max_residual_force < 1e-3

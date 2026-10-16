@@ -116,8 +116,10 @@ class FiniteTemperaturePhononDoc(PhononBSDOSDoc):
         description="Time at the start of the NPT trajectory left out of the "
         "average cell, in ps.",
     )
-    npt_uuid: str | None = Field(None, description="UUID of the NPT MD job.")
-    npt_job_dir: str | None = Field(None, description="Directory of the NPT MD job.")
+    npt_uuids: list[str] | None = Field(None, description="UUIDs of the NPT MD jobs.")
+    npt_job_dirs: list[str] | None = Field(
+        None, description="Directories of the NPT MD jobs."
+    )
     fixed_cell_relax_uuid: str | None = Field(
         None,
         description="UUID of the relaxation of the atoms in the cell from the NPT MD.",
