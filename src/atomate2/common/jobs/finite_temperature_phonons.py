@@ -247,7 +247,7 @@ def average_npt_structure(
 
 @job
 def get_npt_structure(
-    npt_dir: str,
+    npt_dirs: Sequence[str],
     md_code: str,
     structure: Structure,
     supercell_matrix: Matrix3D,
@@ -257,15 +257,16 @@ def get_npt_structure(
     symprec: float,
 ) -> Structure:
     """
-    Get the unit cell at the temperature from an NPT MD run.
+    Get the unit cell at the temperature from an NPT MD.
 
-    The cells after equilibration_time are averaged with
-    :obj:`average_npt_structure`.
+    The trajectories of all NPT MD runs are joined in order, as in
+    :obj:`select_md_snapshots`. The cells after equilibration_time are averaged
+    with :obj:`average_npt_structure`.
 
     Parameters
     ----------
-    npt_dir: str
-        Directory of the NPT MD run.
+    npt_dirs: Sequence[str]
+        Directories of the NPT MD runs, in order.
     md_code: str
         Code of the MD, "vasp" or "forcefields".
     structure: Structure
@@ -286,7 +287,7 @@ def get_npt_structure(
     Structure
         The unit cell at the temperature.
     """
-    _, cells, time_step = _read_md([npt_dir], md_code, reference, md_time_step)
+    _, cells, time_step = _read_md(npt_dirs, md_code, reference, md_time_step)
     n_equil = round(equilibration_time * 1000 / time_step)
     if n_equil >= len(cells):
         raise ValueError(
@@ -434,8 +435,8 @@ def fit_finite_temperature_phonons(
     pressure: float | None = None,
     npt_time: float | None = None,
     npt_equilibration_time: float | None = None,
-    npt_uuid: str | None = None,
-    npt_job_dir: str | None = None,
+    npt_uuids: list[str] | None = None,
+    npt_job_dirs: list[str] | None = None,
     fixed_cell_relax_uuid: str | None = None,
     fixed_cell_relax_job_dir: str | None = None,
     rotational_sum_rule: str | None = "BHH",
@@ -514,10 +515,10 @@ def fit_finite_temperature_phonons(
         Length of the NPT MD in ps.
     npt_equilibration_time: float | None
         Time at the start of the NPT trajectory that was left out, in ps.
-    npt_uuid: str | None
-        UUID of the NPT MD job.
-    npt_job_dir: str | None
-        Directory of the NPT MD job.
+    npt_uuids: list[str] | None
+        UUIDs of the NPT MD jobs.
+    npt_job_dirs: list[str] | None
+        Directories of the NPT MD jobs.
     fixed_cell_relax_uuid: str | None
         UUID of the relaxation of the atoms in the cell from the NPT MD.
     fixed_cell_relax_job_dir: str | None
@@ -673,8 +674,8 @@ def fit_finite_temperature_phonons(
         pressure=pressure,
         npt_time=npt_time,
         npt_equilibration_time=npt_equilibration_time,
-        npt_uuid=npt_uuid,
-        npt_job_dir=npt_job_dir,
+        npt_uuids=npt_uuids,
+        npt_job_dirs=npt_job_dirs,
         fixed_cell_relax_uuid=fixed_cell_relax_uuid,
         fixed_cell_relax_job_dir=fixed_cell_relax_job_dir,
         uuids=PhononUUIDs(

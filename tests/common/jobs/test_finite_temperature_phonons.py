@@ -198,7 +198,7 @@ def test_get_npt_structure(cu_supercell):
 
     args = ("forcefields", unit_cell, (2 * np.eye(3)).tolist(), cu_supercell)
     structure = get_npt_structure.original(
-        str(Path("npt").resolve()), *args, 2.0, 0.02, 1e-4
+        [str(Path("npt").resolve())], *args, 2.0, 0.02, 1e-4
     )
     # the cell stays cubic and keeps the orientation of the unit cell
     assert np.allclose(
@@ -208,7 +208,7 @@ def test_get_npt_structure(cu_supercell):
     assert np.allclose(structure.frac_coords, unit_cell.frac_coords)
 
     with pytest.raises(ValueError, match="none of them after"):
-        get_npt_structure.original(str(Path("npt").resolve()), *args, 2.0, 1.0, 1e-4)
+        get_npt_structure.original([str(Path("npt").resolve())], *args, 2.0, 1.0, 1e-4)
 
 
 def test_get_md_supercell():
