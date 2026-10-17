@@ -86,6 +86,22 @@ jobs:
         if: matrix.dep-group == 'numpy-limited'
         run: micromamba run -n a2 python -c "from alm import ALM; import pheasy"
 
+      # the CALPHAD tests use EMT, so one group is enough to run them
+      - name: Build ATAT for the CALPHAD tests
+        if: matrix.dep-group == 'numpy-limited'
+        run: |
+          curl -fsSL --retry 3 https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
+          echo "8536fb078375b30096df780e02f4e0c97972f5ebaad9a84a94f22e00f50c7516  atat.tar.gz" | sha256sum -c
+          tar xzf atat.tar.gz -C ~
+          make -C ~/atat/src cellcvrt nntouch lsfit
+          echo "set atatdir=$HOME/atat" > ~/.atat.rc
+          echo "$HOME/atat/src" >> $GITHUB_PATH
+
+      # without ATAT on the PATH, the CALPHAD tests would be skipped
+      - name: Check that ATAT is on the PATH
+        if: matrix.dep-group == 'numpy-limited'
+        run: which sqs2tdb cellcvrt nntouch lsfit
+
       # without the fork, the MACE-Field tests would be skipped
       - name: Check that the MACE-Field fork is installed
         if: matrix.dep-group == 'mace-field'
@@ -174,6 +190,19 @@ jobs:
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
           
+      - name: Build ATAT for the CALPHAD tests
+        run: |
+          curl -fsSL --retry 3 https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz -o atat.tar.gz
+          echo "8536fb078375b30096df780e02f4e0c97972f5ebaad9a84a94f22e00f50c7516  atat.tar.gz" | sha256sum -c
+          tar xzf atat.tar.gz -C ~
+          make -C ~/atat/src cellcvrt nntouch lsfit
+          echo "set atatdir=$HOME/atat" > ~/.atat.rc
+          echo "$HOME/atat/src" >> $GITHUB_PATH
+
+      # without ATAT on the PATH, the CALPHAD tests would be skipped
+      - name: Check that ATAT is on the PATH
+        run: which sqs2tdb cellcvrt nntouch lsfit
+
       # without pheasy and ALM, the pheasy, hiPhive and thermal expansion tests would fail
       - name: Check that pheasy and ALM are installed
         run: micromamba run -n a2 python -c "from alm import ALM; import pheasy"
@@ -310,6 +339,8 @@ jobs:
           python -m pip install --upgrade pip
           uv pip install .[strict,aims] --group tests
           uv pip install tblite>=0.4.0
+          # pycalphad draws the phase diagrams of the CALPHAD tutorial
+          uv pip install pycalphad
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'

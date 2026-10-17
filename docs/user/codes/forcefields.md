@@ -74,6 +74,138 @@ However, this may not be preserved in future versions, and `calculator_meta` is 
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
 
+## CALPHAD workflow {#calphad}
+
+`CalphadMaker` fits a CALPHAD database for a binary system with a force field.
+It uses the `sqs2tdb` tool of [ATAT](https://axelvandewalle.github.io/www-avdw/atat/) ([van de Walle et al., 2017](https://doi.org/10.1016/j.calphad.2017.05.005)).
+The [CALPHAD tutorial](https://github.com/materialsproject/atomate2/blob/main/tutorials/calphad_workflow.ipynb) runs it for Ni-Re, Co-Ni and Cr-V with four force fields.
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
+The workflow needs the `phonons` extra, `pip install 'atomate2[phonons]'`.
+ATAT is not a Python package, so install it yourself.
+`make` and `make install` in the ATAT folder build all of ATAT, copy it to `~/bin` and write the `~/.atat.rc` file that `sqs2tdb` reads.
+This workflow only needs three of the ATAT programs, which build in a few seconds:
+
+```bash
+curl -sSLO https://axelvandewalle.github.io/www-avdw/atat/atat3_52.tar.gz
+tar xzf atat3_52.tar.gz
+make -C atat/src cellcvrt nntouch lsfit
+echo "set atatdir=$PWD/atat" > ~/.atat.rc
+export PATH=$PWD/atat/src:$PATH
+```
+
+`sqs2tdb` calls the other ATAT programs by name, so the ATAT `src` folder must be on your `PATH`.
+`SQS2TDB_CMD` in the atomate2 settings only sets how `sqs2tdb` itself is called.
+The workflow also runs `cellcvrt` and reads `atatdir` itself, so both must work in the Python process that runs the jobs.
+
+The special quasirandom structures (SQS) of each lattice come from the ATAT database.
+The default lattices are FCC_A1, HCP_A3 and LIQUID.
+Each solid SQS is relaxed, including the cell, with `fmax=0.01` eV/Å and at most 1000 steps.
+Each liquid SQS is repeated three times along each lattice vector, which gives 864 atoms for the 32-atom SQS of the database.
+With 256 atoms, the liquid mixing energy of Ni-Re with MACE-OMAT-0-medium differed by 2 kJ/mol from that with 864 atoms.
+It is melted for 10 ps at `melt_temperature`.
+It is then run for 20 ps at `liquid_temperature`, and the first 5 ps are left out of the mean potential energy.
+Both liquid runs are isotropic NPT at zero pressure, with no net momentum.
+The mean squared displacement leaves out the motion of the centre of mass.
+The phonons of each relaxed solid SQS give its harmonic vibrational entropy.
+For them the atoms are relaxed again at fixed cell to `fmax=0.001` eV/Å.
+The displacements are run in a diagonal supercell with all lattice vectors at least 20 Å long.
+The entropy is phonopy's sum over a q-point mesh at 3000 K.
+At this temperature the excess entropy of an SQS is close to its high temperature limit, which `sqs2tdb` expects.
+In our tests it changed by at most 0.014 k_B/atom between supercells of 20 and 25 Å.
+Finally, `sqs2tdb` fits the energies and vibrational entropies of each lattice and writes one TDB file.
+The vibrational entropy adds a term linear in T to the mixing terms of the solids.
+Set `phonon_maker=None` to fit the energies only.
+Set `short_range_order=True` to add the low-order CVM approximation of the short range order of `sqs2tdb -fit -sro`.
+It applies to FCC_A1, BCC_A2, HCP_A3 and DIAMOND_A4, the lattices with a coordination number in the ATAT database.
+
+```py
+from jobflow import run_locally
+
+from atomate2.forcefields.flows.calphad import CalphadMaker
+
+maker = CalphadMaker.from_force_field_name(
+    "MACE-MP-0", melt_temperature=4500, liquid_temperature=2800
+)
+maker.lattices = ["FCC_A1", "HCP_A3", "NI3SN_D019", "NI4MO_D1A", "LIQUID"]
+maker.terms = {
+    "FCC_A1": ["1,0", "2,0"],
+    "HCP_A3": ["1,0", "2,0"],
+    "NI3SN_D019": ["1,0:1,0", "2,0:1,0"],
+    "NI4MO_D1A": ["1,0:1,0", "2,0:1,0"],
+    "LIQUID": ["1,0", "2,0"],
+}
+flow = maker.make(["Ni", "Re"])
+responses = run_locally(flow, create_folders=True)
+tdb = responses[flow.output.uuid][1].output.tdb
+```
+
+The liquid temperatures depend on the system, so there are no defaults.
+Choose `melt_temperature` high enough that every composition melts with the force field.
+All compositions are then run at the same `liquid_temperature`.
+Energies taken at a different temperature for each composition would add the different heat capacities of the liquids to the mixing energy.
+The liquid mixing terms still depend on `liquid_temperature`.
+For Ni-Re with GRACE-2L-OMAT, L0 of the liquid changes by about −3.7 J/mol per K.
+Choose `liquid_temperature` as low as possible while every composition stays liquid during the run, which may be below the melting point of the pure elements.
+Check `mean_squared_displacement` of each liquid calculation in the output.
+In a liquid it grows with the length of the run.
+In a crystal it stays at the size of the thermal vibrations, well below 1 Å².
+A liquid that crystallizes during the run also drops in energy, which shows in the energies of the liquid MD job.
+`energy_standard_error` of each liquid calculation is the statistical error of its energy, from five blocks of the liquid MD.
+In our Co-Ni and Cr-V runs it was 0.4 to 2 meV/atom, about as large as the scatter between runs with different random seeds.
+If it is too large, run the liquid MD longer or average the energies of several runs.
+Check also `is_force_converged` and `relaxation_strain` of each solid calculation.
+The ATAT `checkrelax` help calls a `relaxation_strain` above 0.1 too large for a cluster expansion.
+The fit job gives a warning for each solid where one of these two checks fails.
+`imaginary_fraction` of each solid calculation is the part of its phonon frequencies on the q-point mesh that are imaginary.
+If it is above `max_imaginary_fraction`, 0.03 by default, for one SQS of a lattice, that lattice is fitted to the energies only and the fit job gives a warning.
+BCC_A2 is not in the default lattices.
+A BCC SQS of elements that are not stable in BCC can collapse during the relaxation, so check its `relaxation_strain` if you add it.
+
+`terms` sets the lines of the `sqs2tdb` `terms.in` file of each lattice.
+Each line has the form `order,level`, with one pair per sublattice separated by `:`.
+Order 1 gives the end members and order 2 the binary interactions.
+Level is the highest Redlich-Kister order.
+The default `["1,0", "2,1"]` fits L0 and L1, which needs SQS level 2 or higher.
+At level 2 the ordered lattices have too few SQS for L1, so they take L0 only.
+If ordered lattices are fitted, fit L0 only for the other lattices as well.
+In the Ni-Re tutorial, L1 for HCP_A3 with L0 for NI3SN_D019 made NI3SN_D019 stable up to about 3000 K.
+The ordered lattices need the lattices of their pure element end members.
+If an ordered lattice is fitted, the stable lattice of each element must be fitted too.
+The fit job stops with an error otherwise.
+
+For lattices in the SGTE database, such as FCC_A1, HCP_A3 and LIQUID, `sqs2tdb` takes the free energies of the pure elements from SGTE.
+Only the mixing terms come from the force field, so the melting points of the pure elements are those of SGTE.
+The liquid mixing terms are the excess energies at `liquid_temperature`, used at all temperatures.
+They change with `liquid_temperature`, so the liquid has an excess heat capacity.
+Its excess entropy then cannot be zero at all temperatures, and the fit leaves it out.
+The vibrational and short-range order options of `sqs2tdb` are not used.
+
+Known limitations:
+
+- An ordered lattice takes the energy of each pure element end member, relative to the stable lattice of the element, from the force field. FCC_A1 and HCP_A3 take the energy of a pure element from SGTE. So pure Re on FCC sites can have a different free energy in NI4MO_D1A than in FCC_A1.
+- GAMMA_L12 cannot be fitted. Its ATAT database links to FCC_A1 folders that `sqs2tdb` does not create.
+- The fit job must run in an empty folder, for example with `create_folders=True` in `run_locally`.
+- The liquid MD job stores the structure of every tenth step. With 864 atoms this is about 190 MB per liquid, so use a job store with a separate data store.
+
+The TDB file can be read with [pycalphad](https://pycalphad.org), which is installed separately:
+
+```py
+from pycalphad import Database, binplot, variables as v
+
+db = Database.from_string(tdb, fmt="tdb")
+binplot(
+    db,
+    ["NI", "RE"],
+    list(db.phases),
+    {v.X("RE"): (0, 1, 0.01), v.T: (300, 3600, 10), v.P: 101325, v.N: 1},
+)
+```
+
 ## Notes on FairChem (Meta) models {#fairchem-notes}
 
 The FAIRChem models provided by Meta require extra authentication via HuggingFace:
