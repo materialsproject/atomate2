@@ -392,7 +392,6 @@ class BasePhononMaker(Maker, ABC):
             jobs.append(
                 compute_debye_waller(
                     phonon_output=phonon_collect.output,
-                    symprec=self.symprec,
                     **self.debye_waller_kwargs,
                 )
             )

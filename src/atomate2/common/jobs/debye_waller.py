@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from jobflow import job
 from pymatgen.util.due import Doi, due
 
-from atomate2 import SETTINGS
 from atomate2.common.schemas.debye_waller import DebyeWallerDocument
 
 if TYPE_CHECKING:
@@ -39,7 +38,6 @@ def compute_debye_waller(
     xrd_kwargs: dict | None = None,
     nd_kwargs: dict | None = None,
     tem_kwargs: dict | None = None,
-    symprec: float = SETTINGS.PHONON_SYMPREC,
 ) -> DebyeWallerDocument:
     """
     Compute the diffraction patterns of a phonon run with Debye-Waller factors.
@@ -54,8 +52,6 @@ def compute_debye_waller(
         Keyword arguments of pymatgen's NDCalculator.
     tem_kwargs: dict or None
         Keyword arguments of pymatgen's TEMCalculator.
-    symprec: float
-        Symmetry precision of the phonon flow.
 
     Returns
     -------
@@ -66,5 +62,4 @@ def compute_debye_waller(
         xrd_kwargs=xrd_kwargs,
         nd_kwargs=nd_kwargs,
         tem_kwargs=tem_kwargs,
-        symprec=symprec,
     )

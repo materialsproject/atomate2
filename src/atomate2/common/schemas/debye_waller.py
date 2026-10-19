@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
-from phonopy import Phonopy
 from pydantic import Field
 from pymatgen.analysis.diffraction import core as diffraction_core
 from pymatgen.analysis.diffraction.core import DiffractionPattern
@@ -14,11 +13,9 @@ from pymatgen.analysis.diffraction.neutron import NDCalculator
 from pymatgen.analysis.diffraction.tem import TEMCalculator
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.core import Structure
-from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.thermal_displacements import ThermalDisplacementMatrices
 from typing_extensions import TypedDict
 
-from atomate2 import SETTINGS
 from atomate2.common.schemas.phonons import ThermalDisplacementData
 
 if TYPE_CHECKING:
@@ -116,7 +113,6 @@ class DebyeWallerDocument(StructureMetadata):
         xrd_kwargs: dict | None = None,
         nd_kwargs: dict | None = None,
         tem_kwargs: dict | None = None,
-        symprec: float = SETTINGS.PHONON_SYMPREC,
     ) -> Self:
         """
         Compute the diffraction patterns of a phonon run with Debye-Waller factors.
@@ -131,8 +127,6 @@ class DebyeWallerDocument(StructureMetadata):
             Keyword arguments of pymatgen's NDCalculator.
         tem_kwargs: dict or None
             Keyword arguments of pymatgen's TEMCalculator.
-        symprec: float
-            Symmetry precision of the phonon flow.
 
         Returns
         -------
@@ -140,20 +134,16 @@ class DebyeWallerDocument(StructureMetadata):
         """
         check_pymatgen()
         data = phonon_doc.thermal_displacement_data
-        if data is None:
+        if data is None or data.structure is None:
             raise ValueError(
-                "The phonon document has no thermal displacement matrices. Run the "
-                "phonon flow with create_thermal_displacements=True. No matrices are "
-                "stored if its q-point mesh has imaginary modes."
+                "The phonon document has no thermal displacement matrices or no "
+                "primitive cell for them. Run the phonon flow with "
+                "create_thermal_displacements=True. No matrices are stored if its "
+                "q-point mesh has imaginary modes and "
+                "imaginary_modes_thermal_displacements is not set."
             )
-        # the matrices are those of phonopy's primitive cell
-        phonon = Phonopy(
-            get_phonopy_structure(phonon_doc.structure),
-            supercell_matrix=phonon_doc.supercell_matrix,
-            primitive_matrix=phonon_doc.primitive_matrix,
-            symprec=symprec,
-        )
-        structure = get_pmg_structure(phonon.primitive)
+        # the primitive cell the matrices were computed on, with its site order
+        structure = data.structure
 
         # the first structure has no U, for the patterns without the factors
         structures = [structure]
