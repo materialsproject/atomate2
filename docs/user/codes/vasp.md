@@ -360,7 +360,7 @@ With `create_debye_waller=True`, the phonon workflow adds a last job, `compute_d
 It takes the thermal displacement matrices $U$ of the phonon workflow, computed with [phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
 It needs a pymatgen with anisotropic Debye-Waller factors, which is not released yet.
-Install it after atomate2 with `pip install git+https://github.com/hrushikesh-s/pymatgen.git@c6de1930577320a8ba12a8910893e2343d9e8465`.
+Install it after atomate2 with `pip install git+https://github.com/materialsproject/pymatgen.git@87d84f5083c2b52942e7bfad011718e6f15e70b8`.
 This is the pymatgen commit atomate2 is tested with.
 In the root of an atomate2 clone, `pip install --group debye-waller` installs the same with pip 25.1 or newer.
 
