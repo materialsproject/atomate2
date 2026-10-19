@@ -90,6 +90,14 @@ def test_multi_md_flow_restart_from_uuid():
     assert flow.jobs[0].function_kwargs["prev_dir"].uuid == ref_id
 
 
+def test_multi_md_flow_mixed_makers():
+    from atomate2.ase.md import LennardJonesMDMaker
+    from atomate2.vasp.jobs.md import MDMaker
+
+    with pytest.raises(ValueError, match="all VASP makers or all ASE makers"):
+        MultiMDMaker(md_makers=[MDMaker(), LennardJonesMDMaker()])
+
+
 def test_multi_md_flow_ase(si_structure, clean_dir):
     """Two chained NVE runs give the same final state as one run of both lengths."""
     from jobflow import run_locally

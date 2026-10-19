@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OutputReference
 
+from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.md import MDMaker, md_output
 from atomate2.vasp.sets.core import MDSetGenerator
 
@@ -39,6 +40,14 @@ class MultiMDMaker(Maker):
 
     name: str = "multi md"
     md_makers: list[Maker] = field(default_factory=lambda: [MDMaker()])
+
+    def __post_init__(self) -> None:
+        """Check that the makers are either all VASP or all ASE makers."""
+        is_vasp = [isinstance(maker, BaseVaspMaker) for maker in self.md_makers]
+        if any(is_vasp) and not all(is_vasp):
+            raise ValueError(
+                "md_makers must be either all VASP makers or all ASE makers."
+            )
 
     def make(
         self,
