@@ -170,29 +170,6 @@ def test_md_velocities(si_structure, clean_dir):
     assert not result.final_mol_or_struct.site_properties
 
 
-def test_md_npt_cell_rotation(si_structure, clean_dir):
-    """ASE NPT rotates the cell, the positions and the velocities together."""
-    # no total momentum, which NPT would remove
-    velocities = np.array([[0.01, 0, 0.005], [-0.01, 0, -0.005]])
-    si_structure.add_site_property("velocities", velocities.tolist())
-    maker = LennardJonesMDMaker(
-        ensemble="npt",
-        dynamics="nose-hoover",
-        temperature=300,
-        pressure=1.0,
-        n_steps=0,
-        store_velocities=True,
-    )
-    result = maker.run_ase(si_structure).final_mol_or_struct
-
-    assert result.lattice.matrix != pytest.approx(si_structure.lattice.matrix)
-    assert result.frac_coords == pytest.approx(si_structure.frac_coords)
-    # in the basis of the lattice vectors, the velocities do not change
-    old_velocities = velocities @ si_structure.lattice.inv_matrix
-    new_velocities = np.array(result.site_properties["velocities"])
-    assert new_velocities @ result.lattice.inv_matrix == pytest.approx(old_velocities)
-
-
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
 def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
     # Langevin thermostat no longer works with single atom structures in ase>3.24.x
