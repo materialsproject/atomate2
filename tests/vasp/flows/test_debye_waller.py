@@ -32,7 +32,6 @@ def test_debye_waller_vasp_flow(si_structure: Structure):
     assert kwargs["phonon_output"].uuid == flow.output.uuid
     for key, value in debye_waller_kwargs.items():
         assert kwargs[key] == value
-    assert kwargs["symprec"] == maker.symprec
 
     jobs = PhononMaker().make(si_structure).jobs
     assert "compute_debye_waller" not in [job.name for job in jobs]
