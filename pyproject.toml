@@ -170,13 +170,13 @@ dev = ["pre-commit>=4.5.1"]
 mace-field = [
     "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
 ]
-# pymatgen with anisotropic Debye-Waller factors, which is not released yet.
+# pymatgen main with anisotropic Debye-Waller factors (pymatgen #4715), which is not released yet.
 # It is a dependency group, since PyPI does not accept git URLs in extras.
 # CI installs it after the strict extras, which pin a released pymatgen.
 # Once a pymatgen release has these factors, remove this group and its CI
 # entry and raise the pymatgen lower bound.
 debye-waller = [
-    "pymatgen @ git+https://github.com/hrushikesh-s/pymatgen.git@c6de1930577320a8ba12a8910893e2343d9e8465",
+    "pymatgen @ git+https://github.com/materialsproject/pymatgen.git@87d84f5083c2b52942e7bfad011718e6f15e70b8",
 ]
 # The pheasy fork adds the --disp_matrix_file and --force_matrix_file options
 # and fixes the --scell option. It is a dependency group, since PyPI does not
