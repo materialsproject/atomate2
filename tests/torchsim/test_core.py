@@ -398,7 +398,8 @@ def test_pick_model_metatomic() -> None:
     # get_upet returns an instance of AtomisticModel and not a path
     # which will break the type checker but is actually supported by
     # MetatomicModel so its good enough for testing
-    model = get_upet(model="pet-mad", size="s")
+    # TODO: unpin version if newer version of UPET is used
+    model = get_upet(model="pet-mad", size="s", version="1.5.0")
     pick_model(TorchSimModelType.METATOMIC, model_path=model)
 
 
