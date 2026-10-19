@@ -287,8 +287,9 @@ class ThermalDisplacementData(BaseModel):
     imaginary_modes: Literal["exclude", "absolute"] | None = Field(
         None,
         description="how the imaginary modes of the q-point mesh entered the "
-        "thermal displacement matrices: left out (exclude) or as real modes of the "
-        "same absolute frequency (absolute). None if the mesh had none.",
+        "thermal displacement matrices, either left out (exclude) or as real modes "
+        "of the same absolute frequency (absolute). None if the mesh had none or if "
+        "this was not recorded.",
     )
     structure: Structure | None = Field(
         None,
