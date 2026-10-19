@@ -24,14 +24,14 @@ logger = logging.getLogger(__name__)
 
 
 def run_aims(
-    aims_cmd: str = None,
+    aims_cmd: str | None = None,
 ) -> None:
     """
     Run FHI-aims.
 
     Parameters
     ----------
-    aims_cmd : str
+    aims_cmd : str | None
         The command used to run FHI-aims (defaults to SETTINGS.AIMS_CMD).
     """
     if aims_cmd is None:
@@ -81,7 +81,7 @@ def should_stop_children(
 
 
 def run_aims_socket(
-    structures_to_calculate: list[Structure | Molecule], aims_cmd: str = None
+    structures_to_calculate: list[Structure | Molecule], aims_cmd: str | None = None
 ) -> None:
     """Use the ASE interface to run FHI-aims from the socket.
 
@@ -89,8 +89,8 @@ def run_aims_socket(
     ----------
     structures_to_calculate: list[Structure or Molecule]
         The list of structures to run scf calculations on
-    aims_cmd: str
-        The aims command to use (defaults to SETTINGS.AIMS_CMD).
+    aims_cmd: str | None
+        The command used to run FHI-aims (defaults to SETTINGS.AIMS_CMD).
     """
     if aims_cmd is None:
         aims_cmd = SETTINGS.AIMS_CMD
