@@ -41,6 +41,9 @@ def test_debye_waller_checks_phonon_maker(si_structure: Structure):
     maker = PhononMaker(create_thermal_displacements=False, create_debye_waller=True)
     with pytest.raises(ValueError, match="create_thermal_displacements=True"):
         maker.make(si_structure)
+    maker = PhononMaker(phonon_doc_schema="emmet", create_debye_waller=True)
+    with pytest.raises(ValueError, match="phonon_doc_schema='atomate2'"):
+        maker.make(si_structure)
 
 
 def test_debye_waller_checks_pymatgen(monkeypatch, si_structure: Structure):

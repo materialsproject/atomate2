@@ -132,7 +132,8 @@ class BasePhononMaker(Maker, ABC):
     create_debye_waller: bool
         If True, a last job computes the X-ray, neutron and electron diffraction
         patterns with the Debye-Waller factors from the thermal displacement
-        matrices. It needs create_thermal_displacements=True.
+        matrices. It needs create_thermal_displacements=True and
+        phonon_doc_schema="atomate2".
     debye_waller_kwargs: dict
         Keyword arguments passed to :obj:`compute_debye_waller`: xrd_kwargs,
         nd_kwargs and tem_kwargs.
@@ -247,6 +248,12 @@ class BasePhononMaker(Maker, ABC):
                     "create_debye_waller=True needs create_thermal_displacements=True, "
                     "since the Debye-Waller factors are computed from the thermal "
                     "displacements."
+                )
+            if self.phonon_doc_schema != "atomate2":
+                raise ValueError(
+                    "create_debye_waller=True needs phonon_doc_schema='atomate2', "
+                    "since the emmet schema does not store the primitive cell of the "
+                    "thermal displacements."
                 )
             check_pymatgen()
 
