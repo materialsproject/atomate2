@@ -24,8 +24,12 @@ class MultiMDMaker(Maker):
     Maker to perform an MD run split in several steps.
 
     Each MD job starts from the final structure of the previous one, including
-    its velocities if the ASE makers have store_velocities set to True. The
-    thermostat and barostat variables are not carried over. ASE makers with a
+    its velocities. ASE makers only pass the velocities on if store_velocities is
+    True. Without them, an NVE job starts at rest and an NVT or NPT job draws new
+    Maxwell-Boltzmann velocities. Between two VASP jobs, the POSCAR also keeps the
+    predictor-corrector block of the CONTCAR, and the VASP maker gets the
+    directory of the previous job as prev_dir. Otherwise the thermostat and
+    barostat variables are not carried over. ASE makers with a
     fixed mb_velocity_seed can repeat the same thermostat noise in every job, so
     give each maker its own seed.
 
@@ -34,20 +38,12 @@ class MultiMDMaker(Maker):
     name : str
         Name of the flows produced by this maker.
     md_makers : list of .Maker
-        Makers of the MD jobs, in order. These are either all VASP makers or all
-        ASE makers, such as the force field ones.
+        Makers of the MD jobs, in order. VASP makers and ASE makers, such as
+        ForceFieldMDMaker, can be mixed.
     """
 
     name: str = "multi md"
     md_makers: list[Maker] = field(default_factory=lambda: [MDMaker()])
-
-    def __post_init__(self) -> None:
-        """Check that the makers are either all VASP or all ASE makers."""
-        is_vasp = [isinstance(maker, BaseVaspMaker) for maker in self.md_makers]
-        if any(is_vasp) and not all(is_vasp):
-            raise ValueError(
-                "md_makers must be either all VASP makers or all ASE makers."
-            )
 
     def make(
         self,
@@ -79,7 +75,9 @@ class MultiMDMaker(Maker):
         for idx, maker in enumerate(self.md_makers, start=1):
             if md_job is not None:
                 md_structure = md_job.output.structure
-                md_prev_dir = md_job.output.dir_name
+                # only a VASP job writes the files that a VASP maker copies
+                prev_is_vasp = isinstance(md_job.maker, BaseVaspMaker)
+                md_prev_dir = md_job.output.dir_name if prev_is_vasp else None
             md_job = maker.make(md_structure, prev_dir=md_prev_dir)
             md_job.name += f" {idx}"
             md_jobs.append(md_job)

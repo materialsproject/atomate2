@@ -387,8 +387,14 @@ class AseMDMaker(AseMaker, ABC):
             # Note that until dynamics is instantiated,
             # `isinstance(dynamics,NPT)` is False
 
-            # ASE NPT implementation requires upper triangular cell
-            atoms.set_cell(atoms.cell.standard_form(form="upper")[0])
+            # ASE NPT implementation requires upper triangular cell, so the
+            # positions and the input velocities are rotated with the cell
+            cell, rotation = atoms.cell.standard_form(form="upper")
+            atoms.set_cell(cell, scale_atoms=True)
+            if initial_velocities:
+                initial_velocities = (
+                    np.array(initial_velocities) @ rotation.T
+                ).tolist()
 
         rng = np.random.default_rng(seed=self.mb_velocity_seed)
         if initial_velocities:
@@ -456,13 +462,18 @@ class AseMDMaker(AseMaker, ABC):
             atoms,
             cls=Structure if isinstance(mol_or_struct, Structure) else Molecule,
         )
+        # AseAtomsAdaptor keeps the input velocities and the VASP MD state of a
+        # CONTCAR, and adds the final momenta in ASE units. These are removed, so
+        # that a following job only gets the velocities stored below.
+        for prop in ("velocities", "momenta", "predictor_corrector"):
+            if prop in mol_or_struct.site_properties:
+                mol_or_struct.remove_site_property(prop)
+        for prop in ("predictor_corrector_preamble", "lattice_velocities"):
+            mol_or_struct.properties.pop(prop, None)
         if self.store_velocities:
             mol_or_struct.add_site_property(
                 "velocities", (atoms.get_velocities() * units.fs).tolist()
             )
-        elif "velocities" in mol_or_struct.site_properties:
-            # AseAtomsAdaptor passes the input velocities through unchanged
-            mol_or_struct.remove_site_property("velocities")
 
         return AseResult(
             final_mol_or_struct=mol_or_struct,

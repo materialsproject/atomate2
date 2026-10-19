@@ -90,12 +90,57 @@ def test_multi_md_flow_restart_from_uuid():
     assert flow.jobs[0].function_kwargs["prev_dir"].uuid == ref_id
 
 
-def test_multi_md_flow_mixed_makers():
+def test_multi_md_flow_vasp_then_ase(mock_vasp, clean_dir, si_structure, vasp_test_dir):
+    """An ASE job after a VASP job starts from the velocities of the CONTCAR."""
+    from ase import units
+    from jobflow import run_locally
+    from pymatgen.io.vasp import Poscar
+
+    from atomate2.ase.md import LennardJonesMDMaker
+
+    ref_path = "Si_multi_md/molecular_dynamics_1"
+    mock_vasp(
+        {"molecular dynamics 1": ref_path},
+        {"molecular dynamics 1": {"incar_settings": ["NSW", "ISMEAR"]}},
+    )
+    vasp_maker = MultiMDMaker.from_parameters(
+        nsteps=3, time_step=1, n_runs=1, ensemble="nvt", start_temp=300
+    ).md_makers[0]
+    ase_maker = LennardJonesMDMaker(ensemble="nve", n_steps=3, store_velocities=True)
+    flow = MultiMDMaker(md_makers=[vasp_maker, ase_maker]).make(si_structure)
+    flow = update_user_kpoints_settings(
+        flow, {"grid_density": 100}, name_filter="molecular dynamics"
+    )
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    contcar = Poscar.from_file(vasp_test_dir / ref_path / "outputs" / "CONTCAR.gz")
+    output = responses[flow.jobs[1].uuid][1].output
+    velocities = output.objects["trajectory"].frame_properties[0]["velocities"]
+    assert np.any(contcar.velocities)
+    assert contcar.predictor_corrector_preamble
+    assert np.array(velocities) == pytest.approx(
+        np.array(contcar.velocities) / units.fs
+    )
+    assert "predictor_corrector" not in output.structure.site_properties
+    assert "predictor_corrector_preamble" not in output.structure.properties
+
+
+def test_multi_md_flow_ase_then_vasp(si_structure):
+    """A VASP job after an ASE job gets no prev_dir and the ASE velocities."""
     from atomate2.ase.md import LennardJonesMDMaker
     from atomate2.vasp.jobs.md import MDMaker
 
-    with pytest.raises(ValueError, match="all VASP makers or all ASE makers"):
-        MultiMDMaker(md_makers=[MDMaker(), LennardJonesMDMaker()])
+    si_structure.add_site_property("velocities", [[0.01, 0, 0], [-0.01, 0, 0.005]])
+    ase_maker = LennardJonesMDMaker(ensemble="nve", n_steps=3, store_velocities=True)
+    flow = MultiMDMaker(md_makers=[ase_maker, MDMaker()]).make(si_structure)
+    assert flow.jobs[1].function_args[0] == flow.jobs[0].output.structure
+    assert flow.jobs[1].function_kwargs["prev_dir"] is None
+
+    structure = ase_maker.run_ase(si_structure).final_mol_or_struct
+    input_set = MDMaker().input_set_generator.get_input_set(structure, potcar_spec=True)
+    assert np.array(input_set.poscar.velocities) == pytest.approx(
+        np.array(structure.site_properties["velocities"])
+    )
 
 
 def test_multi_md_flow_ase(si_structure, clean_dir):
