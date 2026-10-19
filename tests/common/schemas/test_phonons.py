@@ -131,6 +131,7 @@ def test_get_thermal_displacement_data(clean_dir):
     assert np.trace(u_300) / 3 == pytest.approx(0.005751, rel=1e-3)
     assert data["freq_min_thermal_displacements"] == 0.0
     assert data["imaginary_modes"] is None
+    assert data["structure"] == get_pmg_structure(phonon.primitive)
     assert all(Path(f"tdispmat_{t}K.cif").is_file() for t in range(0, 1001, 100))
 
     # 10x10x10 is rounded up to 11x11x11, so U of the cubic site stays isotropic
