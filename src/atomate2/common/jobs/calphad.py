@@ -257,7 +257,8 @@ def run_sqs_calculations(
     -------
     Response
         Replaces this job with the calculations. The output is a list of dicts
-        with the fields of SqsCalculation.
+        with the fields of SqsCalculation. Each solid also has relax_state and
+        relax_input, the state and the input of its relaxation.
     """
     jobs = []
     outputs: list[Any] = []
@@ -287,6 +288,8 @@ def run_sqs_calculations(
                 "energy": relax.output.output.energy,
                 "structure": relax.output.structure,
                 "is_force_converged": relax.output.is_force_converged,
+                "relax_state": relax.output.state,
+                "relax_input": relax.output.input,
                 "dir_name": relax.output.dir_name,
             }
             if phonon_maker is not None:
@@ -546,12 +549,34 @@ def fit_tdb(
             calc["relaxation_strain"] = _get_relaxation_strain(
                 initial, calc["structure"]
             )
-            if calc.get("is_force_converged") is False or (
-                calc["relaxation_strain"] > 0.1
+            name = f"{calc['lattice']}/{calc['folder']}"
+            relax = dict(calc.get("relax_input") or {})
+            settings = ", ".join(
+                f"{key}={relax.get(key)}"
+                for key in (
+                    "optimizer_kwargs",
+                    "relax_kwargs",
+                    "steps",
+                    "relax_cell",
+                    "relax_shape",
+                )
+            )
+            # the state also covers the stress of a cell relaxation
+            if (
+                calc.get("relax_state") == "failed"
+                or calc.get("is_force_converged") is False
             ):
                 warnings.warn(
-                    f"The relaxation of {calc['lattice']}/{calc['folder']} did not "
-                    "converge or has a relaxation_strain above 0.1.",
+                    f"The relaxation of {name} ({settings}) did not converge within "
+                    "its steps.",
+                    stacklevel=1,
+                )
+            if calc["relaxation_strain"] > 0.1:
+                warnings.warn(
+                    f"The relaxation of {name} ({settings}) changed the cell shape "
+                    f"by a relaxation_strain of {calc['relaxation_strain']:.3f}, above "
+                    "0.1. It is dimensionless and leaves out the change of volume, as "
+                    "in ATAT checkrelax.",
                     stacklevel=1,
                 )
 

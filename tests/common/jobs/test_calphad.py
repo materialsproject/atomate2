@@ -245,7 +245,11 @@ def test_fit_tdb_warns_unconverged():
         {**calc, "energy": -1.0, "is_force_converged": True} for calc in sqs
     ]
     calculations[0]["is_force_converged"] = False
-    with pytest.warns(UserWarning, match="sqs_lev=0_a_Cu=1 did not converge"):
+    calculations[1]["structure"].apply_strain([0.15, 0, 0])
+    with (
+        pytest.warns(UserWarning, match="Cu=1 .* did not converge"),
+        pytest.warns(UserWarning, match=r"Ni=1 .* relaxation_strain of 0\.117"),
+    ):
         fit_tdb.original(("Cu", "Ni"), 1, {"FCC_A1": ["1,0", "2,0"]}, calculations)
 
 

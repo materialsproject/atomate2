@@ -57,7 +57,11 @@ def _get_makers(
     }
     makers: dict[str, Any] = {
         "relax_maker": ForceFieldRelaxMaker(
-            relax_cell=True, steps=1000, relax_kwargs={"fmax": 0.01}, **calculator
+            relax_cell=True,
+            steps=1000,
+            relax_kwargs={"fmax": 0.01},
+            optimizer_kwargs={"optimizer": "FIRE"},
+            **calculator,
         ),
         "phonon_maker": PhononMaker(
             min_length=20.0,
@@ -90,8 +94,8 @@ class CalphadMaker(BaseCalphadMaker):
     """
     Maker to fit a CALPHAD database for a binary system with a force field.
 
-    The solid SQS are relaxed, including the cell, with fmax = 0.01 eV/A and at
-    most 1000 steps. For the phonons, the atoms are relaxed again at fixed cell
+    The solid SQS are relaxed with FIRE, including the cell, to fmax = 0.01 eV/A
+    in at most 1000 steps. For the phonons, the atoms are relaxed again at fixed cell
     to fmax = 0.001 eV/A. The displacements of 0.01 A are run in one job, in a
     diagonal supercell with all lattice vectors at least 20 A long.
 

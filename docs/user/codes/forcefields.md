@@ -104,7 +104,7 @@ The workflow also runs `cellcvrt` and reads `atatdir` itself, so both must work 
 
 The special quasirandom structures (SQS) of each lattice come from the ATAT database.
 The default lattices are FCC_A1, HCP_A3 and LIQUID.
-Each solid SQS is relaxed, including the cell, with `fmax=0.01` eV/Å and at most 1000 steps.
+Each solid SQS is relaxed with FIRE, including the cell, to `fmax=0.01` eV/Å in at most 1000 steps.
 Each liquid SQS is repeated three times along each lattice vector, which gives 864 atoms for the 32-atom SQS of the database.
 With 256 atoms, the liquid mixing energy of Ni-Re with MACE-OMAT-0-medium differed by 2 kJ/mol from that with 864 atoms.
 It is melted for 10 ps at `melt_temperature`.
@@ -183,10 +183,10 @@ Only the mixing terms come from the force field, so the melting points of the pu
 The liquid mixing terms are the excess energies at `liquid_temperature`, used at all temperatures.
 They change with `liquid_temperature`, so the liquid has an excess heat capacity.
 Its excess entropy then cannot be zero at all temperatures, and the fit leaves it out.
-The vibrational and short-range order options of `sqs2tdb` are not used.
 
 Known limitations:
 
+- The workflow targets ambient pressure. The solid cells are relaxed and the liquid MD runs at zero pressure, and the SGTE free energies of the pure elements are for 1 bar. So the TDB file does not describe phase diagrams at high pressure.
 - An ordered lattice takes the energy of each pure element end member, relative to the stable lattice of the element, from the force field. FCC_A1 and HCP_A3 take the energy of a pure element from SGTE. So pure Re on FCC sites can have a different free energy in NI4MO_D1A than in FCC_A1.
 - GAMMA_L12 cannot be fitted. Its ATAT database links to FCC_A1 folders that `sqs2tdb` does not create.
 - The fit job must run in an empty folder, for example with `create_folders=True` in `run_locally`.

@@ -56,9 +56,9 @@ class BaseCalphadMaker(Maker):
 
     ATAT must be installed, with its programs on the PATH.
 
-    The jobs read the energy and is_force_converged of the relaxation outputs
-    and the ionic steps of the liquid MD output, as in the force field task
-    documents. So far only force field makers give these.
+    The jobs read the energy, is_force_converged, state and input of the
+    relaxation outputs and the ionic steps of the liquid MD output, as in the
+    force field task documents. So far only force field makers give these.
 
     This workflow is new and has not been tested widely. It might still change
     in future versions.
