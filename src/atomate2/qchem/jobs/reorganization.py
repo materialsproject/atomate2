@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+import numpy as np
 from emmet.core.molecules.thermo import get_free_energy
 from emmet.core.qc_tasks import TaskDoc
 from jobflow import job
@@ -97,6 +98,28 @@ def _free_energy(source: Any) -> float | None:
     return get_free_energy(energy, enthalpy, entropy)
 
 
+def _mulliken_spins(task_doc: TaskDoc) -> np.ndarray | None:
+    """Per-atom Mulliken spins of a task document (zeros if closed shell)."""
+    mulliken = task_doc.output.mulliken
+    if mulliken is None or len(mulliken) == 0:
+        return None
+    populations = np.asarray(mulliken[-1], dtype=float)
+    if populations.ndim == 1:  # restricted: charges only
+        return np.zeros(len(populations))
+    return populations[:, 1]
+
+
+def _max_spin_change(single_points: dict[str, TaskDoc]) -> dict[str, float] | None:
+    """Largest per-atom spin change of each state between the two geometries."""
+    changes = {}
+    for state in ("1", "2"):
+        spins = [_mulliken_spins(single_points[f"{state}@{g}"]) for g in ("1", "2")]
+        if any(s is None for s in spins):
+            return None
+        changes[state] = float(np.abs(spins[0] - spins[1]).max())
+    return changes
+
+
 @job(output_schema=InnerReorganizationDocument)
 def analyze_inner_reorganization(
     molecules: dict[str, Molecule],
@@ -104,6 +127,8 @@ def analyze_inner_reorganization(
     single_point_uuids: dict[str, str] | None = None,
     opt_1: TaskDoc | None = None,
     opt_2: TaskDoc | None = None,
+    unconstrained_points: dict[str, TaskDoc] | None = None,
+    cdft_settings: dict | None = None,
 ) -> InnerReorganizationDocument:
     """
     Compute the inner-sphere reorganization energies from the four single points.
@@ -119,6 +144,11 @@ def analyze_inner_reorganization(
     opt_1, opt_2 : .TaskDoc or None
         Task documents of the optimizations; used for the adiabatic free energy if
         they contain thermochemistry (e.g. frequency flattening optimizations).
+    unconstrained_points : dict of str to .TaskDoc or None
+        Unconstrained single points, when ``single_points`` are constrained DFT
+        (diabatic) ones.
+    cdft_settings : dict or None
+        Fragment and constraints of the diabatic single points.
 
     Returns
     -------
@@ -127,12 +157,27 @@ def analyze_inner_reorganization(
     """
     energies = {key: single_points[key].output.final_energy for key in STATE_KEYS}
     calc = single_points["1@1"].calcs_reversed[0]
+    unconstrained_energies = (
+        {key: unconstrained_points[key].output.final_energy for key in STATE_KEYS}
+        if unconstrained_points
+        else None
+    )
+    # the electronic-state check uses the unconstrained (ground-state) points
+    reference_points = unconstrained_points or (
+        None if cdft_settings else single_points
+    )
     return InnerReorganizationDocument.from_energies(
         molecule_1=molecules["1"],
         molecule_2=molecules["2"],
         energies=energies,
         free_energy_1=_free_energy(opt_1),
         free_energy_2=_free_energy(opt_2),
+        unconstrained_energies=unconstrained_energies,
+        max_spin_change=_max_spin_change(reference_points)
+        if reference_points
+        else None,
+        diabatic=cdft_settings is not None,
+        cdft_settings=cdft_settings,
         solvation_lot_info=getattr(calc, "solvation_lot_info", None),
         single_point_uuids=single_point_uuids,
         single_point_dirs={key: str(single_points[key].dir_name) for key in STATE_KEYS},

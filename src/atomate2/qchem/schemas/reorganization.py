@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -10,6 +11,10 @@ from pymatgen.core import Molecule
 from pymatgen.core.units import Ha_to_eV
 
 logger = logging.getLogger(__name__)
+
+# a per-atom Mulliken spin change larger than this between the two geometries of a
+# state means it is not the same electronic state at both geometries
+SPIN_CHANGE_THRESHOLD = 0.3
 
 
 class InnerReorganizationDocument(BaseModel):
@@ -26,6 +31,13 @@ class InnerReorganizationDocument(BaseModel):
     All energies of the two geometries are single points of the same input set, so
     they are directly comparable. Energies are in eV, except the raw single-point
     energies, which are in Hartree.
+
+    In the diabatic mode (``diabatic`` is True) the four energies, and hence the
+    reorganization energies, come from constrained DFT single points that keep each
+    state's excess charge (and spin) on a given fragment at both geometries. The
+    vertical and adiabatic energies then come from the unconstrained single points
+    when they were run, and ``diabatic_gaps`` gives how far each constrained state
+    lies above the unconstrained one.
     """
 
     charge_1: int = Field(description="Charge of state 1.")
@@ -85,6 +97,38 @@ class InnerReorganizationDocument(BaseModel):
         "not available.",
     )
 
+    diabatic: bool = Field(
+        default=False,
+        description="Whether the energies are constrained DFT (diabatic) ones.",
+    )
+    cdft_settings: dict[str, Any] | None = Field(
+        None, description="Fragment and constraints of the diabatic single points."
+    )
+    unconstrained_energies: dict[str, float] | None = Field(
+        None,
+        description="Unconstrained single-point energies (Ha) keyed 'i@j' (state i "
+        "at geometry j), in the diabatic mode.",
+    )
+    diabatic_gaps: dict[str, float] | None = Field(
+        None,
+        description="Constrained minus unconstrained energy (eV) for each 'i@j'. "
+        "Small gaps at a state's own geometry ('1@1', '2@2') show that the diabatic "
+        "state is close to the ground state there.",
+    )
+    max_spin_change: dict[str, float] | None = Field(
+        None,
+        description="Largest change of any atom's Mulliken spin between the two "
+        "geometries of each state ('1', '2'), from the unconstrained single points.",
+    )
+    electronic_state_change: bool | None = Field(
+        None,
+        description="True if the unconstrained single points of a state differ in "
+        f"spin by more than {SPIN_CHANGE_THRESHOLD} on some atom between the two "
+        "geometries, i.e. the state is not the same electronic state at both "
+        "geometries and the unconstrained reorganization energy mixes two states "
+        "(use the diabatic mode instead). None if not available.",
+    )
+
     solvation_lot_info: str | None = Field(
         None, description="Level of theory and solvation of the single points."
     )
@@ -103,6 +147,8 @@ class InnerReorganizationDocument(BaseModel):
         energies: dict[str, float],
         free_energy_1: float | None = None,
         free_energy_2: float | None = None,
+        unconstrained_energies: dict[str, float] | None = None,
+        max_spin_change: dict[str, float] | None = None,
         **kwargs,
     ) -> InnerReorganizationDocument:
         """
@@ -117,6 +163,12 @@ class InnerReorganizationDocument(BaseModel):
             "i@j" is state i at geometry j.
         free_energy_1, free_energy_2 : float or None
             Free energies of the two optimized states (eV), if available.
+        unconstrained_energies : dict or None
+            Unconstrained single-point energies (Ha), same keys as ``energies``, when
+            ``energies`` are constrained (diabatic) ones.
+        max_spin_change : dict or None
+            Largest per-atom Mulliken spin change of states "1" and "2" between the
+            two geometries.
         **kwargs
             Other fields of the document.
 
@@ -137,6 +189,23 @@ class InnerReorganizationDocument(BaseModel):
                 lambda_1,
                 lambda_2,
             )
+        # vertical and adiabatic energies refer to the true (unconstrained) states
+        reference = unconstrained_energies or energies
+        r11, r12 = reference["1@1"], reference["1@2"]
+        r22, r21 = reference["2@2"], reference["2@1"]
+        diabatic_gaps = (
+            {
+                key: (energies[key] - unconstrained_energies[key]) * Ha_to_eV
+                for key in energies
+            }
+            if unconstrained_energies
+            else None
+        )
+        electronic_state_change = (
+            max(max_spin_change.values()) > SPIN_CHANGE_THRESHOLD
+            if max_spin_change
+            else None
+        )
         adiabatic_free_energy = (
             free_energy_2 - free_energy_1
             if free_energy_1 is not None and free_energy_2 is not None
@@ -156,12 +225,16 @@ class InnerReorganizationDocument(BaseModel):
             lambda_1=lambda_1,
             lambda_2=lambda_2,
             lambda_mean=(lambda_1 + lambda_2) / 2,
-            vertical_energy_1_to_2=(e21 - e11) * Ha_to_eV,
-            vertical_energy_2_to_1=(e12 - e22) * Ha_to_eV,
-            adiabatic_energy=(e22 - e11) * Ha_to_eV,
+            vertical_energy_1_to_2=(r21 - r11) * Ha_to_eV,
+            vertical_energy_2_to_1=(r12 - r22) * Ha_to_eV,
+            adiabatic_energy=(r22 - r11) * Ha_to_eV,
             adiabatic_free_energy=adiabatic_free_energy,
             geometry_rmsd=kabsch_rmsd(molecule_1, molecule_2),
             connectivity_change=_connectivity_change(molecule_1, molecule_2),
+            unconstrained_energies=unconstrained_energies,
+            diabatic_gaps=diabatic_gaps,
+            max_spin_change=max_spin_change,
+            electronic_state_change=electronic_state_change,
             **kwargs,
         )
 
