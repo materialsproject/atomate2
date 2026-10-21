@@ -29,6 +29,9 @@ atomate2.forcefields.jobs
       
    
    
+      
+   
+   
    
    
    
@@ -44,6 +47,7 @@ atomate2.forcefields.jobs
       :toctree:
       :nosignatures:
    
+      ForceFieldDielectricMaker
       ForceFieldRelaxMaker
       ForceFieldStaticMaker
       TYPE_CHECKING

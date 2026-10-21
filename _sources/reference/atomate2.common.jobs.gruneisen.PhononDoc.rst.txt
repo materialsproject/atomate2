@@ -1,0 +1,6 @@
+PhononDoc
+=========
+
+.. currentmodule:: atomate2.common.jobs.gruneisen
+
+.. autotype:: PhononDoc

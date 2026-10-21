@@ -24,6 +24,9 @@ atomate2.forcefields.schemas
       
    
    
+      
+   
+   
    
    
    
@@ -38,6 +41,7 @@ atomate2.forcefields.schemas
       :toctree:
       :nosignatures:
    
+      ForceFieldDielectricDocument
       ForceFieldMeta
       ForceFieldMoleculeTaskDocument
       ForceFieldTaskDocument

@@ -28,10 +28,13 @@ atomate2.forcefields.flows
    :recursive:
 
    approx_neb
+   cte
    elastic
    eos
    gruneisen
+   hiphive
    mpmorph
+   pheasy
    phonons
    qha
    relax

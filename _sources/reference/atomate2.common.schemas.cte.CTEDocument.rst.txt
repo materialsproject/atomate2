@@ -1,0 +1,8 @@
+CTEDocument
+===========
+
+.. currentmodule:: atomate2.common.schemas.cte
+
+.. autoclass:: CTEDocument
+   :show-inheritance:
+   :members:

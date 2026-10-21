@@ -1,0 +1,6 @@
+Boltzmann
+=========
+
+.. currentmodule:: atomate2.common.schemas.cte
+
+.. autodata:: Boltzmann

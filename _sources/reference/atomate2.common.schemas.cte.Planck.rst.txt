@@ -1,0 +1,6 @@
+Planck
+======
+
+.. currentmodule:: atomate2.common.schemas.cte
+
+.. autodata:: Planck

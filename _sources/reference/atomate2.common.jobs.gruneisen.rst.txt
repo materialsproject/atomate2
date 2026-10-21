@@ -14,6 +14,7 @@ atomate2.common.jobs.gruneisen
       :nosignatures:
    
       compute_gruneisen_param
+      get_calc_meta
       run_phonon_jobs
       shrink_expand_structure
 
@@ -23,6 +24,11 @@ atomate2.common.jobs.gruneisen
 
    
       
+   
+   
+      
+   
+   
    
    
    
@@ -41,6 +47,7 @@ atomate2.common.jobs.gruneisen
       :toctree:
       :nosignatures:
    
+      PhononDoc
       TYPE_CHECKING
 
 

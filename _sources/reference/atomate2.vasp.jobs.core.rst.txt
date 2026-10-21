@@ -54,8 +54,6 @@ atomate2.vasp.jobs.core
       
    
    
-      
-   
    
    
    
@@ -81,7 +79,6 @@ atomate2.vasp.jobs.core
       RelaxMaker
       StaticMaker
       TYPE_CHECKING
-      TightConstVolRelaxMaker
       TightRelaxConstVolMaker
       TightRelaxMaker
       TransmuterMaker

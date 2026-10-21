@@ -29,14 +29,17 @@ atomate2.common.jobs
 
    anharmonicity
    approx_neb
+   cte
    defect
    elastic
    electrode
    eos
    gruneisen
+   hiphive
    magnetism
    mpmorph
    neb
+   pheasy
    phonons
    qha
    transform

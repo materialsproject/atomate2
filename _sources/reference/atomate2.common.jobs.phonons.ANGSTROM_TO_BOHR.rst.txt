@@ -1,0 +1,6 @@
+ANGSTROM\_TO\_BOHR
+==================
+
+.. currentmodule:: atomate2.common.jobs.phonons
+
+.. autodata:: ANGSTROM_TO_BOHR

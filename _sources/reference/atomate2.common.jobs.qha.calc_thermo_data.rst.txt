@@ -1,0 +1,6 @@
+calc\_thermo\_data
+==================
+
+.. currentmodule:: atomate2.common.jobs.qha
+
+.. autofunction:: calc_thermo_data

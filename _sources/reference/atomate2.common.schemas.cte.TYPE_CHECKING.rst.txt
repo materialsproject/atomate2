@@ -1,6 +1,6 @@
 TYPE\_CHECKING
 ==============
 
-.. currentmodule:: atomate2.amset.files
+.. currentmodule:: atomate2.common.schemas.cte
 
 .. autodata:: TYPE_CHECKING

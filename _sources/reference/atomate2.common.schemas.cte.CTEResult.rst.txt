@@ -1,0 +1,8 @@
+CTEResult
+=========
+
+.. currentmodule:: atomate2.common.schemas.cte
+
+.. autoclass:: CTEResult
+   :show-inheritance:
+   :members:

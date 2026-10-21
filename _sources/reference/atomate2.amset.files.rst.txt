@@ -21,7 +21,6 @@ atomate2.amset.files
 
 
    
-      
    
    
    
@@ -29,16 +28,5 @@ atomate2.amset.files
    
    
    
-   
-   
-
-
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :nosignatures:
-   
-      TYPE_CHECKING
 
 

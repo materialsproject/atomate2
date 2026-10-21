@@ -29,6 +29,7 @@ atomate2.common.schemas
 
    anharmonicity
    cclib
+   cte
    defects
    elastic
    gruneisen

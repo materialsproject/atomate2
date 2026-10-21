@@ -1,0 +1,8 @@
+PhononSummaryData
+=================
+
+.. currentmodule:: atomate2.common.schemas.qha
+
+.. autoclass:: PhononSummaryData
+   :show-inheritance:
+   :members:

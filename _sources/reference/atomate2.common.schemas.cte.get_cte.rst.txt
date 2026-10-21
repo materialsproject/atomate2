@@ -1,0 +1,6 @@
+get\_cte
+========
+
+.. currentmodule:: atomate2.common.schemas.cte
+
+.. autofunction:: get_cte

@@ -1,0 +1,8 @@
+ForceFieldDielectricDocument
+============================
+
+.. currentmodule:: atomate2.forcefields.schemas
+
+.. autoclass:: ForceFieldDielectricDocument
+   :show-inheritance:
+   :members:

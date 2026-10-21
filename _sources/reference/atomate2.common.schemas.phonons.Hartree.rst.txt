@@ -1,0 +1,6 @@
+Hartree
+=======
+
+.. currentmodule:: atomate2.common.schemas.phonons
+
+.. autodata:: Hartree

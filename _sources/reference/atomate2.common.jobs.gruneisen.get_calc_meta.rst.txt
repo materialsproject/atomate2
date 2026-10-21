@@ -1,0 +1,6 @@
+get\_calc\_meta
+===============
+
+.. currentmodule:: atomate2.common.jobs.gruneisen
+
+.. autofunction:: get_calc_meta

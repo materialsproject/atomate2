@@ -29,12 +29,15 @@ atomate2.common.flows
 
    anharmonicity
    approx_neb
+   cte
    defect
    elastic
    electrode
    eos
    gruneisen
+   hiphive
    magnetism
    mpmorph
+   pheasy
    phonons
    qha

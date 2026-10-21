@@ -1,0 +1,6 @@
+UTC
+===
+
+.. currentmodule:: atomate2.utils.datetime
+
+.. autodata:: UTC

@@ -14,6 +14,7 @@ atomate2.common.jobs.qha
       :nosignatures:
    
       analyze_free_energy
+      calc_thermo_data
       get_phonon_jobs
       get_supercell_size
 
@@ -23,6 +24,10 @@ atomate2.common.jobs.qha
 
    
       
+   
+   
+      
+   
    
    
    
@@ -41,6 +46,7 @@ atomate2.common.jobs.qha
       :toctree:
       :nosignatures:
    
+      PhononDoc
       TYPE_CHECKING
 
 
