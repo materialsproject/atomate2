@@ -724,6 +724,42 @@ class MDSetGenerator(VaspInputGenerator):
 
 
 @dataclass
+class LangevinMDSetGenerator(MDSetGenerator):
+    """
+    Class to generate VASP input sets for NVT MD with a Langevin thermostat.
+
+    Parameters
+    ----------
+    langevin_gamma
+        Friction coefficient in ps^-1, the same for each species. The VASP
+        ``LANGEVIN_GAMMA`` parameter.
+    **kwargs
+        Other keyword arguments that will be passed to :obj:`MDSetGenerator`.
+    """
+
+    langevin_gamma: float = 10.0
+
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for a Langevin NVT MD job.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        if self.ensemble.lower() != "nvt":
+            raise ValueError(f"Expect ensemble='nvt', not {self.ensemble!r}.")
+        updates = super().incar_updates
+        # the Nose mass is only used by the Nose-Hoover thermostat
+        updates.pop("SMASS", None)
+        # one value for each element, as for ensemble="npt"
+        n_elements = len(self.structure.composition)
+        updates.update(MDALGO=3, LANGEVIN_GAMMA=[self.langevin_gamma] * n_elements)
+        return updates
+
+
+@dataclass
 class LobsterTightStaticSetGenerator(LobsterSet):
     """
     Class to generate well-converged statics for LOBSTER analysis.
