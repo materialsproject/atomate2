@@ -69,7 +69,9 @@ class DebyeWallerDocument(StructureMetadata):
     thermal_displacement_data: ThermalDisplacementData | None = Field(
         None,
         description="Cartesian and CIF thermal displacement matrices U of each "
-        "site at each temperature, in Angstrom^2, from the phonon flow.",
+        "site at each temperature, in Angstrom^2. It is a copy of the phonon "
+        "flow's data, so that this document can be read on its own. The patterns "
+        "are listed in the order of its temperatures.",
     )
     xrd_pattern_static: DiffractionPattern | None = Field(
         None,
