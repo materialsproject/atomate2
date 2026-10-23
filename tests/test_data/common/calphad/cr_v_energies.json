@@ -1,0 +1,250 @@
+{
+ "MACE-OMAT-0-medium": [
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -9.52719354,
+   "vibrational_entropy": 9.4021,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -8.92720661,
+   "vibrational_entropy": 10.52707,
+   "imaginary_fraction": 0.0129
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -445.60852692,
+   "vibrational_entropy": 462.42932,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -291.84111358,
+   "vibrational_entropy": 318.33416,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -301.38132061,
+   "vibrational_entropy": 302.86847,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -281.3690367
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -267.02114099
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -275.02188706
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -271.1870979
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -278.27229497
+  }
+ ],
+ "MACE-MATPES-PBE-0": [
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -9.48083809,
+   "vibrational_entropy": 9.52024,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -8.96170601,
+   "vibrational_entropy": 10.23214,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -445.82524968,
+   "vibrational_entropy": 454.86412,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -292.56814245,
+   "vibrational_entropy": 310.82118,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -300.85504483,
+   "vibrational_entropy": 301.58678,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -280.9104139
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -267.11190423
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -274.51154596
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -271.01172033
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -277.95811645
+  }
+ ],
+ "MACE-MATPES-r2SCAN-0": [
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -14.846916,
+   "vibrational_entropy": 9.37626,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -14.13272322,
+   "vibrational_entropy": 9.98681,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -698.60739066,
+   "vibrational_entropy": 453.53838,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -459.3324902,
+   "vibrational_entropy": 308.55813,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -470.93048823,
+   "vibrational_entropy": 300.72571,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -450.28617016
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -431.26611469
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -440.71197398
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -436.07408046
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -445.4323163
+  }
+ ],
+ "GRACE-2L-OMAT": [
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -9.51227404,
+   "vibrational_entropy": 9.50073,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -8.94893291,
+   "vibrational_entropy": 10.70108,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -445.97904016,
+   "vibrational_entropy": 465.24357,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -292.2449195,
+   "vibrational_entropy": 321.83934,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "BCC_A2",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -301.38182849,
+   "vibrational_entropy": 304.4062,
+   "imaginary_fraction": 0.0
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_Cr=1",
+   "energy": -280.58880724
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=0_a_V=1",
+   "energy": -267.39790503
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=1_a_Cr=0.5,a_V=0.5",
+   "energy": -274.60074099
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.25,a_V=0.75",
+   "energy": -271.18181979
+  },
+  {
+   "lattice": "LIQUID",
+   "folder": "sqs_lev=2_a_Cr=0.75,a_V=0.25",
+   "energy": -277.74150176
+  }
+ ]
+}
