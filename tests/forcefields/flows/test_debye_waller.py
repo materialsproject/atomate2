@@ -1,8 +1,8 @@
 """Tests for the Debye-Waller option of the force field phonon workflow.
 
-The tests use ASE's EMT potential. They need a pymatgen with anisotropic
-Debye-Waller factors, which is installed by the debye-waller dependency group,
-so they are skipped in the other forcefield CI jobs.
+The tests use ASE's EMT potential. They need pymatgen 2026.10.24 or newer, which
+the debye-waller extra installs, so they are skipped in the other forcefield CI
+jobs.
 """
 
 import pytest
