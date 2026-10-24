@@ -336,8 +336,9 @@ def generate_phonon_displacements(
     # force constants (FCs) given a supercell. hiPhive's own cluster space
     # cannot supply this number: it counts only the parameters inside the pair
     # cutoff, while ALM counts them over the whole supercell, so ALM's tally is
-    # larger by a factor of two to three. Sizing the displacement set with ALM
-    # is also what pheasy does, which keeps the two workflows comparable.
+    # larger by a factor of two to three. pheasy's count of the free
+    # second-order force constants is the same, which keeps the two workflows
+    # comparable.
     # 2. Based on the number of free parameters, we can determine how many
     # displaced supercells we need to use to extract the second order force
     # constants. Generally, the number of free parameters should be less than

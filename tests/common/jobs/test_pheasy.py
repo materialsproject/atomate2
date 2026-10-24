@@ -22,6 +22,7 @@ import atomate2.common.jobs.pheasy as pheasy_jobs
 from atomate2.common.jobs.pheasy import (
     _check_lasso_alpha,
     _get_num_anharmonic_supercells,
+    _get_num_free_fcs,
     _run_harmonic_fit,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -81,12 +82,14 @@ def _cu_structure() -> Structure:
 
 
 @pytest.mark.parametrize("num_displaced_supercells", [0, 3])
-def test_harmonic_and_anharmonic_split(tmp_dir, num_displaced_supercells):
+def test_harmonic_and_anharmonic_split(tmp_dir, monkeypatch, num_displaced_supercells):
     """The fit job must split the forces where the displacement job did.
 
     Before this was fixed, the fit job used one harmonic supercell fewer than
     the displacement job made, and it ignored num_displaced_supercells.
     """
+    # pheasy counts the free force constants, so ALM is not needed
+    monkeypatch.setitem(sys.modules, "alm", None)
     # a distorted Cu cell needs more than three finite displacements, so the
     # random-displacement path is used for the harmonic force constants
     structure = Structure(
@@ -222,9 +225,14 @@ def test_atom_on_cell_face(tmp_dir):
 
 
 def test_get_num_anharmonic_supercells(monkeypatch):
+    # pheasy counts the free force constants, so ALM is not needed
+    monkeypatch.setitem(sys.modules, "alm", None)
     phonon = _generate_phonon_object(_cu_structure(), **COMMON_KWARGS)
     kwargs = {
+        "structure": _cu_structure(),
         "supercell": phonon.supercell,
+        "supercell_matrix": COMMON_KWARGS["supercell_matrix"],
+        "symprec": COMMON_KWARGS["symprec"],
         "anhar_max_order": 3,
         "fcs_cutoff_radius": [-1, 12, 10],
         "anhar_fit_methods": ["one-shot"],
@@ -234,7 +242,14 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     assert _get_num_anharmonic_supercells(num_disp_anhar=7, **kwargs) == 7
 
     # sized from the free force constants, above the floor of 20
-    assert _get_num_irreducible_fcs(phonon.supercell, 3, [-1, 12]) == [25, 324]
+    assert _get_num_free_fcs(
+        _cu_structure(),
+        phonon.supercell,
+        COMMON_KWARGS["supercell_matrix"],
+        COMMON_KWARGS["symprec"],
+        3,
+        [-1, 12],
+    ) == (25, 349)
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **kwargs) == 108
 
     # the first cutoff is not used, since pheasy fits fc2 without a cutoff
@@ -245,7 +260,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     order_4 = {**kwargs, "anhar_max_order": 4, "anhar_fit_methods": ["cocktail"]}
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **order_4) == 224
 
-    # a binary compound, L1_2 Cu3Au, needs one cutoff per pair of elements
+    # a binary compound, L1_2 Cu3Au
     cu3au = Structure(
         Lattice.cubic(3.75),
         ["Au", "Cu", "Cu", "Cu"],
@@ -253,6 +268,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     )
     binary = {
         **kwargs,
+        "structure": cu3au,
         "supercell": _generate_phonon_object(cu3au, **COMMON_KWARGS).supercell,
     }
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **binary) == 337
