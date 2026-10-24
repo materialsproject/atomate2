@@ -43,7 +43,7 @@ from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
     from emmet.core.math import Matrix3D
     from phonopy.structure.atoms import PhonopyAtoms
@@ -67,7 +67,7 @@ def _get_num_irreducible_fcs(
     """
     Count the symmetry-irreducible force constants of each order with ALM.
 
-    Used by the pheasy and hiPhive workflows to size their displacement sets.
+    Used by the hiPhive workflow to size its displacement set.
 
     Parameters
     ----------
@@ -93,7 +93,7 @@ def _get_num_irreducible_fcs(
     except ImportError as exc:
         raise ImportError(
             "ALM could not be imported. Install it from git as described in the "
-            "Pheasy section of the atomate2 VASP docs. The alm package on PyPI "
+            "hiPhive section of the atomate2 VASP docs. The alm package on PyPI "
             "is an unrelated project."
         ) from exc
 
@@ -125,7 +125,10 @@ def _get_num_irreducible_fcs(
 
 
 def _get_num_harmonic_supercells(
-    phonon: Phonopy, num_displaced_supercells: int, multiplier: float = 1.8
+    phonon: Phonopy,
+    num_displaced_supercells: int,
+    multiplier: float = 1.8,
+    count_free_fcs: Callable[[], int] | None = None,
 ) -> int:
     """
     Get the number of displaced supercells used for the harmonic force constants.
@@ -149,6 +152,9 @@ def _get_num_harmonic_supercells(
         Number of random displacements requested by the user, 0 for automatic.
     multiplier: float
         Number of configurations per minimum configuration set.
+    count_free_fcs: Callable[[], int] | None
+        Function that returns n_fp. It is only called when n_fp is needed. None
+        counts n_fp with ALM.
 
     Returns
     -------
@@ -159,7 +165,10 @@ def _get_num_harmonic_supercells(
         return len(phonon.displacements)
     if num_displaced_supercells != 0:
         return num_displaced_supercells
-    (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+    if count_free_fcs is None:
+        (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+    else:
+        n_fp = count_free_fcs()
     natom = len(phonon.supercell.numbers)
     num_disp_sc = int(np.ceil(n_fp / (3.0 * natom)))
     return int(np.ceil(num_disp_sc * multiplier)) + 1
