@@ -1,5 +1,84 @@
 # Change log
 
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+## v0.1.6
+### Bug Fixes 🐛
+* Breaking: Use phonopy's sum over the q-point mesh for the phonon thermal properties by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1576
+### Other Changes
+* Bump calorine from 3.4 to 3.5 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1513
+* Bump wandb from 0.28.0 to 0.28.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1516
+* Bump nequip from 0.18.0 to 0.19.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1514
+* Bump monty from 2026.5.18 to 2026.7.16 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1515
+* Mention commit option in readme by @JaGeo in https://github.com/materialsproject/atomate2/pull/1519
+* Bump jupyterlab from 4.6.1 to 4.6.3 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1524
+* Update setuptools requirement from <84,>=42 to >=42,<85 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1522
+* Bump ipython from 9.15.0 to 9.16.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1521
+* Bump fireworks from 2.1.3 to 2.1.4 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1525
+* Bump wandb from 0.28.1 to 0.28.2 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1526
+* Bump pymatgen-core from 2026.5.18 to 2026.8.13 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1523
+* Update pymongo requirement from <=4.16.0 to <=4.17.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1465
+* Auto-update pre-commit hooks by @github-actions[bot] in https://github.com/materialsproject/atomate2/pull/1467
+* Bump openmm from 8.5.2 to 8.6.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1531
+* Bump deepmd-kit from 3.1.3 to 3.2.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1532
+* Replace duplicate vasp set with temporary getattr by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1535
+* Fix `structure` field shadowing `sort_structure` in `VaspInputGenerator` by @ThomasWarford in https://github.com/materialsproject/atomate2/pull/1530
+* Update phonopy requirement from <4,>=2.43.6 to >=2.43.6,<5 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1500
+* Auto-update pre-commit hooks by @github-actions[bot] in https://github.com/materialsproject/atomate2/pull/1538
+* Bump wandb from 0.28.2 to 0.29.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1539
+* Bump nequip from 0.19.0 to 0.19.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1541
+* Bump ipython from 9.16.1 to 9.17.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1540
+* Update pymongo requirement from <=4.17.0 to <=4.18.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1542
+* Bump pymatgen-core from 2026.8.13 to 2026.8.30 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1543
+* Bump wandb from 0.29.0 to 0.30.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1548
+* Update pymongo requirement from <=4.18.0 to <=4.18.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1546
+* Lattice dynamics workflow using Pheasy by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1063
+* Run TorchSim model backend tests in CI by @akwarii in https://github.com/materialsproject/atomate2/pull/1549
+* Re-attach structure properties and support D3 dispersion in TorchSim by @akwarii in https://github.com/materialsproject/atomate2/pull/1544
+* Harmonic lattice dynamics workflow using hiPhive by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1062
+* Cite the phonon database preprint in the pheasy docs by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1551
+* Enhance dev tutorial with Maker example and link missing tutorials by @akwarii in https://github.com/materialsproject/atomate2/pull/1550
+* Enhance add-ons documentation for atomate2 by @JaGeo in https://github.com/materialsproject/atomate2/pull/1552
+* Revise README for clarity and consistency by @JaGeo in https://github.com/materialsproject/atomate2/pull/1553
+* Bump numpydoc from 1.10.0 to 1.11.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1556
+* Bump openmm from 8.6.0 to 8.6.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1555
+* Update phonopy requirement from <4,>=2.43 to >=2.43,<5 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1554
+* Amset interpolation convergence by @Jackbt21 in https://github.com/materialsproject/atomate2/pull/1537
+* Bump hiphive from 1.3.1 to 1.5 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1557
+* Bump calorine from 3.5 to 4.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1561
+* Update pymongo requirement from <=4.18.1 to <=4.18.2 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1564
+* Bump jupyterlab from 4.6.3 to 4.6.4 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1563
+* Bump pymatgen-core from 2026.8.30 to 2026.9.23 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1565
+* Bump pymatgen from 2026.5.4 to 2026.9.24 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1562
+* Fix numerical residues in symmetry-expanded elastic strains by @xhuang-lila in https://github.com/materialsproject/atomate2/pull/1534
+* Download the MPMorph average volume file through the figshare API by @guillaumegay13 in https://github.com/materialsproject/atomate2/pull/1566
+* Fix pheasy anharmonic fitting and add fit options by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1558
+* Add thermal expansion workflow (CTEMaker) by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1559
+* Include tmax in the phonon temperature grid and default to 1000 K, matching phonopy by @computron in https://github.com/materialsproject/atomate2/pull/1568
+* Bump pytest-mock from 3.15.1 to 3.16.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1569
+* Add force field Born charges and dielectric tensors with MACE-Field by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1573
+* Title: Fix FrequencyOptFlatteningMaker output and prev_dir; test the flattening loop by @rohithsrinivaas in https://github.com/materialsproject/atomate2/pull/1579
+* Move the pheasy and ALM git pins from extras to dependency groups by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1575
+* Pin pydantic below 2.14 in the strict extras by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1584
+* Breaking: Converge the pheasy harmonic LASSO fit with --tol 1e-8 by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1586
+* Require python>=3.12 by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1593
+* Bump pymatgen-core from 2026.9.23 to 2026.10.2 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1594
+* Bump sphinx from 9.0.4 to 9.1.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1595
+* Update pydantic requirement from <2.14 to <2.15 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1596
+* Update pymongo requirement from <=4.18.2 to <=4.18.3 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1597
+* Bump torch-sim-atomistic from 0.6.1 to 0.6.2 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1598
+* Seed the Langevin forces and add a Nose-Hoover chain NVT preset to AseMDMaker by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1587
+* fix torchsim upet tests by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1599
+* Remove the pydantic pin and require emmet-core>=0.87.3 by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1589
+* Update pymongo requirement from <=4.18.3 to <=4.19.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1612
+
+## New Contributors
+* @ThomasWarford made their first contribution in https://github.com/materialsproject/atomate2/pull/1530
+* @Jackbt21 made their first contribution in https://github.com/materialsproject/atomate2/pull/1537
+* @xhuang-lila made their first contribution in https://github.com/materialsproject/atomate2/pull/1534
+* @guillaumegay13 made their first contribution in https://github.com/materialsproject/atomate2/pull/1566
+* @computron made their first contribution in https://github.com/materialsproject/atomate2/pull/1568
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.1.5...v0.1.6
 
 ## v0.1.5
 
