@@ -29,14 +29,14 @@ if TYPE_CHECKING:
 def check_pymatgen() -> None:
     """Check that pymatgen has anisotropic Debye-Waller factors.
 
-    Released pymatgen ignores the U11_cif, ..., U12_cif site properties, so its
-    patterns would have no Debye-Waller factors.
+    pymatgen before 2026.10.24 ignores the U11_cif, ..., U12_cif site properties, so
+    its patterns would have no Debye-Waller factors.
     """
     if not hasattr(diffraction_core, "get_anisotropic_debye_waller_factors"):
         raise ImportError(
-            "This pymatgen version has no anisotropic Debye-Waller factors. See the "
-            "Debye-Waller factors section of the VASP page in the atomate2 docs to "
-            "install one."
+            "This pymatgen version has no anisotropic Debye-Waller factors. Install "
+            "pymatgen 2026.10.24 or newer, for example with "
+            'pip install "atomate2[debye-waller]".'
         )
 
 

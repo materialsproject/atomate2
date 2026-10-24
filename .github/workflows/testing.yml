@@ -74,12 +74,12 @@ jobs:
           uv pip install .[strict,abinit,approxneb,aims${{ matrix.dep-group != 'mace-field' && format(',strict-forcefields-{0}', matrix.dep-group == 'debye-waller' && 'generic' || matrix.dep-group) || '' }}] \
             --group tests ${{ matrix.dep-group == 'mace-field' && '--group mace-field' || '' }}
 
-      # installed after the strict extras, which pin a released pymatgen
+      # installed after the strict extras, which pin an older pymatgen
       - name: Install pymatgen with anisotropic Debye-Waller factors
         if: matrix.dep-group == 'debye-waller'
         run: |
           micromamba activate a2
-          uv pip install --group debye-waller
+          uv pip install ".[debye-waller]"
           python -c "from pymatgen.analysis.diffraction.core import get_anisotropic_debye_waller_factors"
 
       # the thermal expansion tests use EMT, so one group is enough to run them
@@ -102,7 +102,7 @@ jobs:
         run: micromamba run -n a2 python -c "from mace.modules.extensions import MACEField"
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
-        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger' && matrix.dep-group != 'debye-waller'
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |
           micromamba activate a2
           uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
