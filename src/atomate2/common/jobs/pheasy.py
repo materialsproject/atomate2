@@ -124,9 +124,7 @@ def _run_cluster_and_null_space(
 
 
 def _get_num_free_fcs(
-    structure: Structure,
     supercell: PhonopyAtoms,
-    supercell_matrix: np.ndarray,
     symprec: float,
     max_order: int = 2,
     fcs_cutoff_radius: Sequence[float] | None = None,
@@ -136,20 +134,22 @@ def _get_num_free_fcs(
 
     pheasy builds the clusters (-s) and the null space of the space group,
     permutation and translational invariance constraints (-c) in a temporary
-    folder inside the current folder, with the options of the harmonic and
-    anharmonic fits. Each column of the null space is one free force constant.
-    ns_harm.npz holds those of second order, and ns.npz those of all orders up
-    to max_order. The second-order force constants have no cutoff, as in these
-    fits.
+    folder inside the current folder, with the cluster options of the harmonic
+    and anharmonic fits. Each column of the null space is one free force
+    constant. ns_harm.npz holds those of second order, and ns.npz those of all
+    orders up to max_order. The second-order force constants have no cutoff, as
+    in these fits.
+
+    The supercell is also given as the unit cell, so the count uses the symmetry
+    of the supercell, which can be lower than that of the crystal. With
+    --cry_basis the constraints use the integer rotation matrices of the
+    lattice, so they stay exact for a structure that is symmetric only within
+    symprec.
 
     Parameters
     ----------
-    structure: Structure
-        Structure used for the force constant fit.
     supercell: PhonopyAtoms
-        Supercell written to SPOSCAR.
-    supercell_matrix: np.ndarray
-        Diagonal supercell matrix.
+        Supercell used for the force constant fit.
     symprec: float
         Symmetry precision.
     max_order: int
@@ -164,14 +164,14 @@ def _get_num_free_fcs(
         Number of free second-order force constants, and of free force constants
         of all orders up to max_order.
     """
-    base = _get_pheasy_command(supercell_matrix, symprec, max_order)
+    base = _get_pheasy_command(np.eye(3), symprec, max_order) + " --cry_basis"
     clusters = (
         "--nbody 2"
         if max_order == 2
         else _get_anharmonic_cluster_options(max_order, fcs_cutoff_radius)
     )
     with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp:
-        write_vasp(f"{tmp}/POSCAR", get_phonopy_structure(structure))
+        write_vasp(f"{tmp}/POSCAR", supercell)
         write_vasp(f"{tmp}/SPOSCAR", supercell)
         _run_cluster_and_null_space(base, clusters, tmp)
         return (
@@ -181,9 +181,7 @@ def _get_num_free_fcs(
 
 
 def _get_num_anharmonic_supercells(
-    structure: Structure,
     supercell: PhonopyAtoms,
-    supercell_matrix: np.ndarray,
     symprec: float,
     num_disp_anhar: int,
     anhar_max_order: int,
@@ -200,16 +198,12 @@ def _get_num_anharmonic_supercells(
     ValueError is raised. The free force constants are those of third (and
     fourth) order, plus those of second order when the one-shot fit is
     requested, since it fits all orders together. pheasy counts them with the
-    options of the fit, see _get_num_free_fcs.
+    cluster options of the fit, see _get_num_free_fcs.
 
     Parameters
     ----------
-    structure: Structure
-        Structure used for the force constant fit.
     supercell: PhonopyAtoms
         Supercell used for the force constant fit.
-    supercell_matrix: np.ndarray
-        Diagonal supercell matrix.
     symprec: float
         Symmetry precision.
     num_disp_anhar: int
@@ -229,12 +223,7 @@ def _get_num_anharmonic_supercells(
     if num_disp_anhar != 0:
         return num_disp_anhar
     n_fc2, n_all = _get_num_free_fcs(
-        structure,
-        supercell,
-        supercell_matrix,
-        symprec,
-        anhar_max_order,
-        fcs_cutoff_radius,
+        supercell, symprec, anhar_max_order, fcs_cutoff_radius
     )
     n_free = n_all if "one-shot" in anhar_fit_methods else n_all - n_fc2
     natom = len(supercell.numbers)
@@ -630,13 +619,11 @@ def generate_phonon_displacements(
     num_har = _get_num_harmonic_supercells(
         phonon,
         num_displaced_supercells,
-        count_free_fcs=lambda: _get_num_free_fcs(
-            structure, supercell_ph, supercell_matrix, symprec
-        )[0],
+        count_free_fcs=lambda: _get_num_free_fcs(supercell_ph, symprec)[0],
     )
 
     if verbose:
-        n_fp, _ = _get_num_free_fcs(structure, supercell_ph, supercell_matrix, symprec)
+        n_fp, _ = _get_num_free_fcs(supercell_ph, symprec)
         logger.info(
             f"There are {n_fp} free parameters for the second-order force "
             f"constants (FCs), and {num_har} displaced supercells are used to "
@@ -667,9 +654,7 @@ def generate_phonon_displacements(
             num_disp_anhar=num_disp_anhar,
         )
         num_dis_cells_anhar = _get_num_anharmonic_supercells(
-            structure,
             supercell_ph,
-            supercell_matrix,
             symprec,
             num_disp_anhar,
             anhar_max_order,
@@ -864,9 +849,7 @@ def generate_frequencies_eigenvectors(
         num_har = _get_num_harmonic_supercells(
             phonon,
             num_displaced_supercells,
-            count_free_fcs=lambda: _get_num_free_fcs(
-                structure, supercell, supercell_matrix, symprec
-            )[0],
+            count_free_fcs=lambda: _get_num_free_fcs(supercell, symprec)[0],
         )
 
     np.save(

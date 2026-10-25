@@ -229,9 +229,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     monkeypatch.setitem(sys.modules, "alm", None)
     phonon = _generate_phonon_object(_cu_structure(), **COMMON_KWARGS)
     kwargs = {
-        "structure": _cu_structure(),
         "supercell": phonon.supercell,
-        "supercell_matrix": COMMON_KWARGS["supercell_matrix"],
         "symprec": COMMON_KWARGS["symprec"],
         "anhar_max_order": 3,
         "fcs_cutoff_radius": [-1, 12, 10],
@@ -243,12 +241,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
 
     # sized from the free force constants, above the floor of 20
     assert _get_num_free_fcs(
-        _cu_structure(),
-        phonon.supercell,
-        COMMON_KWARGS["supercell_matrix"],
-        COMMON_KWARGS["symprec"],
-        3,
-        [-1, 12],
+        phonon.supercell, COMMON_KWARGS["symprec"], 3, [-1, 12]
     ) == (25, 349)
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **kwargs) == 108
 
@@ -268,7 +261,6 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     )
     binary = {
         **kwargs,
-        "structure": cu3au,
         "supercell": _generate_phonon_object(cu3au, **COMMON_KWARGS).supercell,
     }
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **binary) == 337

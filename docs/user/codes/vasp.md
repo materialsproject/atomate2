@@ -370,7 +370,7 @@ The anharmonic part of this workflow has not been tested as widely as the harmon
 It might still change in future versions.
 ```
 
-pheasy counts the free force constants used to size the random displacement sets, with the same options as its fits.
+pheasy counts the free force constants used to size the random displacement sets, with the cluster options of its fits and the symmetry of the supercell.
 The displacement job runs this count with `PHEASY_CMD`.
 For third- and fourth-order force constants of large, low-symmetry supercells, it can take hours.
 
