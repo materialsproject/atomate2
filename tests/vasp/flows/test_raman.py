@@ -213,7 +213,7 @@ def test_bandgap_reference():
     assert jobs[disp.function_kwargs["bandgap"].uuid] == "tight relax 2"
 
 
-@pytest.mark.parametrize(("gap", "rk"), [(0.5, 40.0), (1.5, 30.0), (3.0, 20.0)])
+@pytest.mark.parametrize(("gap", "rk"), [(0.5, 40), (1.5, 30), (3.0, 20)])
 def test_rk_applied_to_dielectric_jobs(gap, rk):
     from atomate2.vasp.jobs.raman import run_raman_displacements
 
@@ -228,5 +228,9 @@ def test_rk_applied_to_dielectric_jobs(gap, rk):
     jobs = response.replace.jobs
     assert all(j.maker.input_set_generator.kpoints_length == rk for j in jobs)
     assert response.replace.output["kpoints_length"] == rk
-    kpts = jobs[0].maker.input_set_generator.get_input_set(rutile(), potcar_spec=True)
-    assert kpts.kpoints.kpts[0][0] == rk
+    vis = jobs[0].maker.input_set_generator.get_input_set(rutile(), potcar_spec=True)
+    assert vis.kpoints.kpts[0][0] == rk
+
+    from pymatgen.io.vasp import Kpoints
+
+    assert Kpoints.from_str(str(vis.kpoints)).kpts[0][0] == rk

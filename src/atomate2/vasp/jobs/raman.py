@@ -159,7 +159,7 @@ def run_raman_displacements(
     prev_dir: str | Path | None = None,
     bandgap: float | None = None,
     bandgap_thresholds: Sequence[float] | None = (1.0, 2.0),
-    kpoints_lengths: Sequence[float] = (40.0, 30.0, 20.0),
+    kpoints_lengths: Sequence[int] = (40, 30, 20),
 ) -> Response:
     """
     Run one dielectric calculation per mode and displacement.

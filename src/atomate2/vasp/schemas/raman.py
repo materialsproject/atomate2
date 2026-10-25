@@ -36,7 +36,7 @@ class RamanDoc(BaseModel):
     formula_pretty: str = Field(description="Reduced formula")
     mp_id: str | None = Field(None, description="Materials Project id, if given")
     bandgap: float | None = Field(None, description="Band gap used for Rk (eV)")
-    kpoints_length: float | None = Field(
+    kpoints_length: int | None = Field(
         None, description="Rk of the k-mesh of the dielectric runs"
     )
     pointgroup: str | None = Field(None, description="Point group of the structure")

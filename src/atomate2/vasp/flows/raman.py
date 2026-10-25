@@ -73,7 +73,7 @@ class RamanMaker(Maker):
     lorentzian_width: float | None = 4.0
     encut_enmax_factor: float | None = 1.3
     bandgap_thresholds: tuple[float, float] | None = (1.0, 2.0)
-    kpoints_lengths: tuple[float, float, float] = (40.0, 30.0, 20.0)
+    kpoints_lengths: tuple[int, int, int] = (40, 30, 20)
 
     def __post_init__(self) -> None:
         """Ensure the phonon flow stores force constants."""

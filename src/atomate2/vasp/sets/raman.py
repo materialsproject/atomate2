@@ -28,7 +28,7 @@ class RamanDielectricSetGenerator(StaticSetGenerator):
     """
 
     lepsilon: bool = True
-    kpoints_length: float | None = 40.0
+    kpoints_length: int | None = 40
     lpead: bool = False
     ediff: float = 1e-8
     auto_ismear: bool = False
@@ -63,4 +63,6 @@ class RamanDielectricSetGenerator(StaticSetGenerator):
     @property
     def kpoints_updates(self) -> dict:
         """Get updates to the KPOINTS for a Raman dielectric job."""
-        return {} if self.kpoints_length is None else {"length": self.kpoints_length}
+        if self.kpoints_length is None:
+            return {}
+        return {"length": round(self.kpoints_length)}

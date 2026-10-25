@@ -34,14 +34,14 @@ def get_encut_from_potcar(
 def kpoints_length_from_bandgap(
     bandgap: float | None,
     thresholds: Sequence[float] = (1.0, 2.0),
-    lengths: Sequence[float] = (40.0, 30.0, 20.0),
-) -> float:
+    lengths: Sequence[int] = (40, 30, 20),
+) -> int:
     """Return Rk: lengths[2] above thresholds[1], lengths[1] in between, else [0]."""
     if bandgap is None or bandgap < thresholds[0]:
-        return float(lengths[0])
+        return round(lengths[0])
     if bandgap <= thresholds[1]:
-        return float(lengths[1])
-    return float(lengths[2])
+        return round(lengths[1])
+    return round(lengths[2])
 
 
 def build_phonopy(
