@@ -19,4 +19,5 @@ Name,Type,Maker
 `Optics`_,flow,:obj:`~atomate2.vasp.flows.core.OpticsMaker`
 `HSE06 Optics`_,flow,:obj:`~atomate2.vasp.flows.core.HSEOpticsMaker`
 `Phonons`_,flow,:obj:`~atomate2.vasp.flows.phonons.PhononMaker`
+`Raman Spectra`_,flow,:obj:`~atomate2.vasp.flows.raman.RamanMaker`
 `Lobster`_,flow,:obj:`~atomate2.vasp.flows.lobster.VaspLobsterMaker`
