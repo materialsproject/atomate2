@@ -348,7 +348,10 @@ phonopy shifts meshes with even numbers by half a step, which breaks the site sy
 An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
 This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
 For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
-If the mesh has imaginary modes, no thermal displacement matrices are stored.
+If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
+With `imaginary_modes_thermal_displacements="exclude"` in `generate_frequencies_eigenvectors_kwargs`, the imaginary modes are left out, and with `"absolute"`, each one counts as a real mode of the same absolute frequency.
+Both give only an estimate of the matrices.
+Both also need a positive `freq_min_thermal_displacements` (in THz), since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.
 
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).

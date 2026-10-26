@@ -195,7 +195,9 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         if freq_min <= 0:
             raise ValueError(
                 "freq_min_thermal_displacements must be positive when the mesh has "
-                "imaginary modes."
+                "imaginary modes. Where a branch crosses zero, the mesh has modes "
+                "with frequencies near zero, and the term of such a mode diverges. "
+                "freq_min_thermal_displacements leaves these modes out."
             )
         warnings.warn(
             "The q-point mesh has imaginary modes. The thermal displacement "
@@ -220,11 +222,12 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         # Without U, the material gets no Debye-Waller factors. Leaving the mode
         # out ("exclude") lowers U. "absolute" keeps it as a real mode of the same
         # absolute frequency, which gives an estimate of U.
-        # phonopy only sums the modes above freq_min. This second run adds the
-        # imaginary modes below -freq_min, which phonopy stores as negative
-        # frequencies. Their term equals that of the absolute frequency, except
-        # at T <= 1 K, where phonopy sets the population to zero and the term
-        # changes sign.
+        # phonopy only sums the modes above freq_min, which keeps the modes near
+        # zero frequency out for numerical stability, since their term diverges.
+        # This second run adds the imaginary modes below -freq_min, which phonopy
+        # stores as negative frequencies. Their term equals that of the absolute
+        # frequency, except at T <= 1 K, where phonopy sets the population to zero
+        # and the term changes sign.
         phonon.run_thermal_displacement_matrices(
             temperatures=temperatures,
             freq_min=-np.inf,
