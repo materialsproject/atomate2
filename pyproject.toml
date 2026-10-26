@@ -17,18 +17,17 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=0.86.1",
+    "emmet-core>=0.87.3",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
@@ -36,13 +35,13 @@ dependencies = [
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
     "pymatgen-core>=2026.5.18",
-    "pymongo<=4.18.2",
+    "pymongo<=4.19.0",
 ]
 
 [project.optional-dependencies]
 abinit = [
     "abipy>=0.9.3",
-    "netCDF4<1.7.5", # TODO: latest NetCDF missing 3.12 support: https://github.com/Unidata/netcdf4-python/issues/1461
+    "netCDF4>=1.7.4"
 ]
 aims = ["pymatgen-io-aims>=0.0.5", "pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
@@ -51,15 +50,13 @@ mp = ["mp-api>=0.37.5"]
 # phonopy 4.x changed force-constants/primitive-axis handling, breaking the
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
-phonons = ["phonopy>=2.43,<5", "seekpath>=2.0.0"]
-# the pheasy fork adds the --disp_matrix_file and --force_matrix_file options
-# and fixes the --scell option
-pheasy = ["atomate2[phonons,alamode]", "hiphive==1.5", "numpy<=2.2", "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"]
+phonons = ["phonopy>=4.6,<5", "seekpath>=2.0.0"]
+# pheasy itself and ALM are in the pheasy dependency group
+pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
-# phonors 0.5 breaks the Grueneisen q-point mesh of phonopy and phono3py 4.5
-phono3py = ["atomate2[phonons]", "phono3py==4.5.0", "phonors<0.5"]
-alamode = ["alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"]
-hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons,alamode]"]
+phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
+# ALM is in the alamode dependency group
+hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -72,7 +69,7 @@ ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 
 torchsim = [
-    "torch-sim-atomistic[symmetry]==0.6.1; python_version >= '3.12'"
+    "torch-sim-atomistic[symmetry]==0.6.2; python_version >= '3.12'"
 ]
 
 # TorchSim's optional model backends pin to minimum versions to avoid the backend
@@ -83,11 +80,11 @@ torchsim = [
 # ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the
 # current set of torchsim dependency groups.
 torchsim-mace = [
-    "torch-sim-atomistic[mace,symmetry]==0.6.1; python_version >= '3.12'"
+    "torch-sim-atomistic[mace,symmetry]==0.6.2; python_version >= '3.12'"
 ]
 # mattersim can be added to torchsim-generic once they clean their dependencies
 torchsim-generic = [
-    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.1; python_version >= '3.12'"
+    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.2; python_version >= '3.12'"
 ]
 jdftx = ["pymatgen==2026.9.24"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
@@ -98,8 +95,8 @@ openmm = [
 ]
 fireworks = ["fireworks==2.1.4"]
 strict-openff = [
-    "mdanalysis==2.10.0",
-    "monty==2026.7.16",
+    "mdanalysis==2.11.0",
+    "monty==2026.10.21",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.6.1",
     "pymatgen==2026.9.24", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
@@ -123,7 +120,7 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 #     "mattersim>=1.2.3", # need to be activated again
-    "wandb==0.30.0", # required for mattersim
+    "wandb==0.31.0", # required for mattersim
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
@@ -144,7 +141,7 @@ strict = [
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
     "pymatgen==2026.9.24",
-    "pymatgen-core==2026.9.23",
+    "pymatgen-core==2026.10.16",
 ]
 
 [project.scripts]
@@ -157,12 +154,31 @@ documentation = "https://materialsproject.github.io/atomate2/"
 changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [dependency-groups]
+# ALM is a dependency group, since PyPI does not accept git URLs in extras.
+# The alm package on PyPI is an unrelated project.
+alamode = [
+    "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python",
+]
 dev = ["pre-commit>=4.5.1"]
+# MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
+# It is a dependency group, since PyPI does not accept git URLs in extras.
+# Remove it once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
+mace-field = [
+    "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
+]
+# The pheasy fork adds the --disp_matrix_file and --force_matrix_file options
+# and fixes the --scell option. It is a dependency group, since PyPI does not
+# accept git URLs in extras. Move it back to the pheasy extra once a pheasy
+# release on PyPI has these changes.
+pheasy = [
+    {include-group = "alamode"},
+    "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d",
+]
 tests = [
     "fireworks==2.1.4",
     "nbmake==1.5.5",
     "pytest-cov==7.1.0",
-    "pytest-mock==3.15.1",
+    "pytest-mock==3.17.0",
     "pytest-split==0.11.0",
     "pytest-xdist==3.8.0",
     "pytest==9.1.1",
@@ -176,7 +192,7 @@ docs = [
     "myst_parser==5.1.0",
     "numpydoc==1.11.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==9.0.4",
+    "sphinx==9.1.1",
     "sphinx_design==0.7.0",
     "jupyterlab==4.6.4",
 ]
@@ -239,7 +255,7 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 output-format = "concise"
 # vampire_caller.py is vendored verbatim from pymatgen (removed there in 2026.3.23);
 # exclude it from lint/format so it stays a faithful copy of the upstream source.

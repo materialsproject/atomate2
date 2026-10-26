@@ -26,7 +26,11 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+    from atomate2.forcefields.jobs import (
+        ForceFieldDielectricMaker,
+        ForceFieldRelaxMaker,
+        ForceFieldStaticMaker,
+    )
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
@@ -138,9 +142,10 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         cutoff distance in Bohr for each FC order, starting at second order. The
         default value is [-1, 12, 10]. The first entry is not used, since pheasy
         fits the second-order FCs without a cutoff. The second and third entries
-        are the cutoffs for third- and fourth-order FCs. The cutoff of each fitted
-        order, up to anhar_max_order, must be positive. Longer cutoffs increase
-        the number of free FCs, and with it the number of displaced supercells.
+        are the cutoffs for third- and fourth-order FCs. The defaults of 12 and 10
+        Bohr are 6.35 and 5.29 Å. The cutoff of each fitted order, up to
+        anhar_max_order, must be positive. Longer cutoffs increase the number of
+        free FCs, and with it the number of displaced supercells.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 8.0 A. It can be increased for larger supercells.
@@ -180,7 +185,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker, or None
+    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
         Maker to compute the BORN charges.
     phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker
         Maker used to compute the forces for a supercell.
@@ -231,7 +236,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
     static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = (
         None
     )
-    born_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
     phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
         None
     )

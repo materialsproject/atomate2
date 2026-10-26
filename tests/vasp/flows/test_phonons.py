@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pytest
 from emmet.core.base import CalcMeta
@@ -849,3 +851,13 @@ def test_phonon_wf_vasp_all_steps_na_cl(mock_vasp, clean_dir):
         assert isinstance(
             responses[phonon_flow.jobs[-1].uuid][1].output, PhononBSDOSDoc
         )
+
+
+def test_phonon_wf_vasp_thermal_properties_warning(si_structure: Structure):
+    """Only the atomate2 phonon document warns about the new thermal properties."""
+    with pytest.warns(UserWarning, match="phonopy's sum over the q-point mesh"):
+        PhononMaker().make(si_structure)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        PhononMaker(phonon_doc_schema="emmet").make(si_structure)
+    assert not any("q-point mesh" in str(w.message) for w in caught)

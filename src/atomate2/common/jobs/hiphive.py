@@ -22,7 +22,6 @@ from jobflow import job
 from packaging.version import parse as parse_version
 from phonopy.file_IO import parse_FORCE_CONSTANTS
 from phonopy.interface.vasp import write_vasp
-from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
@@ -43,6 +42,7 @@ from atomate2.common.jobs.phonons import (
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
 )
+from atomate2.common.schemas.phonons import _set_nac_params
 
 if TYPE_CHECKING:
     from ase.atoms import Atoms
@@ -524,33 +524,14 @@ def generate_frequencies_eigenvectors(
     )
 
     # get the born charges and dielectric constant
-    if born is not None and epsilon_static is not None:
-        if len(structure) == len(born):
-            borns, epsilon = symmetrize_borns_and_epsilon(
-                ucell=phonon.unitcell,
-                borns=np.array(born),
-                epsilon=np.array(epsilon_static),
-                symprec=symprec,
-                primitive_matrix=phonon.primitive_matrix,
-                supercell_matrix=phonon.supercell_matrix,
-                is_symmetry=kwargs.get("symmetrize_born", True),
-            )
-        else:
-            raise ValueError(
-                "Number of born charges does not agree with number of atoms"
-            )
-
-        if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
-            phonon.nac_params = {
-                "born": borns,
-                "dielectric": epsilon,
-                "factor": 14.399652,
-            }
-        # Other codes could be added here
-
-    else:
-        borns = None
-        epsilon = None
+    borns, epsilon = _set_nac_params(
+        phonon,
+        born,
+        epsilon_static,
+        symprec,
+        code,
+        is_symmetry=kwargs.get("symmetrize_born", True),
+    )
 
     prim = ase_read("POSCAR")
     supercell = ase_read("SPOSCAR")
