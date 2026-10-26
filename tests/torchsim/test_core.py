@@ -484,7 +484,7 @@ def test_pick_model_dispersion_missing_params() -> None:
 
 @pytest.mark.parametrize(
     ("optimizer", "cell_filter"),
-    [("fire", "frechet"), (ts.Optimizer.fire, ts.CellFilter.frechet)],
+    [("Fire", "frechet"), (ts.Optimizer.fire, ts.CellFilter.frechet)],
 )
 def test_relax_job_str_or_enum(
     ar_structure: Structure, tmp_path, optimizer, cell_filter
