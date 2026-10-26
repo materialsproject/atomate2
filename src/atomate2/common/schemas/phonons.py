@@ -180,10 +180,11 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
             'imaginary_modes_thermal_displacements must be None, "exclude" or '
             f'"absolute", not {imaginary_modes!r}.'
         )
-    # the first q-point is Gamma, where the acoustic modes are left out
-    has_imaginary = phonon.mesh.frequencies[1:].min() < -kwargs.get(
-        "tol_imaginary_modes", 1e-5
-    )
+    # The first q-point is Gamma. Only its three acoustic modes are left out, the
+    # modes of smallest absolute frequency, as in phonopy's exclude_gamma_acoustic.
+    freqs = phonon.mesh.frequencies.copy()
+    freqs[0, np.argsort(np.abs(freqs[0]))[:3]] = np.inf
+    has_imaginary = freqs.min() < -kwargs.get("tol_imaginary_modes", 1e-5)
     if has_imaginary and imaginary_modes is None:
         warnings.warn(
             "The q-point mesh has imaginary modes, so no thermal displacement "
@@ -191,6 +192,8 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
             stacklevel=2,
         )
         return None
+    # With an option, U is computed below. "exclude" sums only the real modes above
+    # freq_min. "absolute" also adds the imaginary modes in a second sum.
     if has_imaginary:
         if freq_min <= 0:
             raise ValueError(
@@ -231,7 +234,7 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         phonon.run_thermal_displacement_matrices(
             temperatures=temperatures,
             freq_min=-np.inf,
-            freq_max=-freq_min,
+            freq_max=-freq_min,  # the imaginary modes, below -freq_min
             exclude_gamma_acoustic=True,
         )
         imaginary = phonon.thermal_displacement_matrices
