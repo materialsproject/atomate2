@@ -141,10 +141,7 @@ def _get_num_free_fcs(
     in these fits.
 
     The supercell is also given as the unit cell, so the count uses the symmetry
-    of the supercell, which can be lower than that of the crystal. With
-    --cry_basis the constraints use the integer rotation matrices of the
-    lattice, so they stay exact for a structure that is symmetric only within
-    symprec.
+    of the supercell, which can be lower than that of the crystal.
 
     Parameters
     ----------
@@ -164,7 +161,7 @@ def _get_num_free_fcs(
         Number of free second-order force constants, and of free force constants
         of all orders up to max_order.
     """
-    base = _get_pheasy_command(np.eye(3), symprec, max_order) + " --cry_basis"
+    base = _get_pheasy_command(np.eye(3), symprec, max_order)
     clusters = (
         "--nbody 2"
         if max_order == 2
