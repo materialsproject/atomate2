@@ -180,10 +180,11 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
             'imaginary_modes_thermal_displacements must be None, "exclude" or '
             f'"absolute", not {imaginary_modes!r}.'
         )
-    # The first q-point is Gamma. Only its three acoustic modes are left out, the
-    # modes of smallest absolute frequency, as in phonopy's exclude_gamma_acoustic.
+    # Only the three acoustic modes at Gamma are left out, the modes of smallest
+    # absolute frequency, as in phonopy's exclude_gamma_acoustic.
     freqs = phonon.mesh.frequencies.copy()
-    freqs[0, np.argsort(np.abs(freqs[0]))[:3]] = np.inf
+    gamma = phonon.mesh.gamma_index
+    freqs[gamma, np.argsort(np.abs(freqs[gamma]))[:3]] = np.inf
     has_imaginary = freqs.min() < -kwargs.get("tol_imaginary_modes", 1e-5)
     if has_imaginary and imaginary_modes is None:
         warnings.warn(
@@ -274,8 +275,9 @@ class ThermalDisplacementData(BaseModel):
     """Collection to store information on the thermal displacement matrices."""
 
     freq_min_thermal_displacements: float = Field(
-        "cutoff frequency in THz to avoid numerical issues in the "
-        "computation of the thermal displacement parameters"
+        0.0,
+        description="cutoff frequency in THz to avoid numerical issues in the "
+        "computation of the thermal displacement parameters",
     )
     thermal_displacement_matrix_cif: list[list[Matrix3D]] | None = Field(
         None, description="field including thermal displacement matrices in CIF format"
