@@ -2,15 +2,17 @@
 
 import copy
 import logging
+import warnings
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Self, Union
+from typing import Literal, Self, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
 from monty.json import MSONable
 from phonopy import Phonopy
+from phonopy.interface.cif import write_cif_P1
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import Bohr, Hartree, VaspToTHz
@@ -118,6 +120,163 @@ def _set_nac_params(
     return borns, epsilon
 
 
+def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
+    """
+    Compute the thermal displacement matrices of the primitive cell.
+
+    phonopy shifts meshes with even numbers by half a step, which breaks the
+    site symmetry of the matrices for face-centred and hexagonal cells. So the
+    mesh numbers are rounded up to odd numbers. An odd mesh contains Gamma. The
+    three acoustic modes at Gamma are left out, because their frequencies are
+    zero up to numerical noise and the term of a mode diverges as its frequency
+    goes to zero. The acoustic modes are the three modes at Gamma whose
+    eigenvectors are closest to the rigid translations of the cell. phonopy's
+    exclude_gamma_acoustic takes the three modes of smallest absolute frequency,
+    which are not the acoustic modes if an optical mode at Gamma is closer to
+    zero. One CIF file is written per temperature.
+
+    Modes with a frequency below freq_min_thermal_displacements are left out.
+    Without imaginary modes, the default of 0 leaves out no mode, since apart
+    from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+
+    The matrices are not defined if the mesh has imaginary modes, so by default
+    none are returned then. A material with imaginary modes then gets no
+    Debye-Waller factors either. The two options below give an estimate of U
+    for such a material. imaginary_modes_thermal_displacements="exclude"
+    computes U from the real modes above freq_min_thermal_displacements.
+    "absolute" also counts each imaginary mode as a real mode of the same absolute
+    frequency, above freq_min_thermal_displacements. freq_min_thermal_displacements
+    must then be positive, because the term of a mode diverges as its frequency
+    goes to zero. These matrices are only an estimate.
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        Phonopy object with force constants and, if available, the NAC set.
+    **kwargs:
+        kpoint_density_thermal_displacements (default 30000),
+        tmin_thermal_displacements (default 0), tmax_thermal_displacements
+        (default 1000), tstep_thermal_displacements (default 100),
+        freq_min_thermal_displacements (default 0.0), tol_imaginary_modes
+        (default 1e-5) and imaginary_modes_thermal_displacements (default None,
+        "exclude" or "absolute").
+
+    Returns
+    -------
+    dict or None
+        Fields of ThermalDisplacementData, or None if the mesh has imaginary
+        modes and imaginary_modes_thermal_displacements is None.
+    """
+    warnings.warn(
+        "Thermal displacement matrices now leave out the acoustic modes at Gamma, "
+        "use their own q-point mesh with odd mesh numbers "
+        "(kpoint_density_thermal_displacements, default 30000) and run from 0 to "
+        "1000 K. They can differ from those of earlier atomate2 versions.",
+        stacklevel=2,
+    )
+    kpoint = Kpoints.automatic_density(
+        structure=get_pmg_structure(phonon.primitive),
+        kppa=kwargs.get("kpoint_density_thermal_displacements", 30_000),
+        force_gamma=True,
+    )
+    mesh = [n + 1 - n % 2 for n in kpoint.kpts[0]]
+    phonon.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=False)
+    freq_min = kwargs.get("freq_min_thermal_displacements", 0.0)
+    imaginary_modes = kwargs.get("imaginary_modes_thermal_displacements")
+    if imaginary_modes not in (None, "exclude", "absolute"):
+        raise ValueError(
+            'imaginary_modes_thermal_displacements must be None, "exclude" or '
+            f'"absolute", not {imaginary_modes!r}.'
+        )
+    if freq_min < 0:
+        raise ValueError(
+            "freq_min_thermal_displacements must not be negative. Modes below it "
+            "are left out, and a negative value would let imaginary modes in."
+        )
+    # The acoustic modes at Gamma are the rigid translations of the cell, with
+    # weight sqrt(mass) on each atom. They are the three modes whose eigenvectors
+    # (the columns) overlap most with the translations. Their frequencies on this
+    # mesh are set to zero, so phonopy's exclude_gamma_acoustic, which leaves out
+    # the three modes of smallest absolute frequency, leaves out these modes.
+    gamma = phonon.mesh.gamma_index
+    sqrt_mass = np.sqrt(phonon.primitive.masses)
+    translations = np.kron(sqrt_mass / np.linalg.norm(sqrt_mass), np.eye(3))
+    eigvecs = phonon.mesh.eigenvectors[gamma]
+    acoustic = np.argsort((np.abs(translations @ eigvecs) ** 2).sum(axis=0))[-3:]
+    phonon.mesh.frequencies[gamma, acoustic] = 0.0
+    freqs = phonon.mesh.frequencies.copy()
+    freqs[gamma, acoustic] = np.inf
+    has_imaginary = freqs.min() < -kwargs.get("tol_imaginary_modes", 1e-5)
+    if has_imaginary and imaginary_modes is None:
+        warnings.warn(
+            "The q-point mesh has imaginary modes, so no thermal displacement "
+            "matrices are stored.",
+            stacklevel=2,
+        )
+        return None
+    # With an option, U is computed below. "exclude" sums only the real modes above
+    # freq_min. "absolute" also adds the imaginary modes in a second sum.
+    if has_imaginary:
+        if freq_min <= 0:
+            raise ValueError(
+                "freq_min_thermal_displacements must be positive when the mesh has "
+                "imaginary modes. Where a branch crosses zero, the mesh has modes "
+                "with frequencies near zero, and the term of such a mode diverges. "
+                "freq_min_thermal_displacements leaves these modes out."
+            )
+        warnings.warn(
+            "The q-point mesh has imaginary modes. The thermal displacement "
+            f'matrices are computed with imaginary_modes="{imaginary_modes}".',
+            stacklevel=2,
+        )
+    t_step = kwargs.get("tstep_thermal_displacements", 100)
+    # same temperatures as phonopy's t_min, t_max, t_step, which include t_max
+    temperatures = np.arange(
+        kwargs.get("tmin_thermal_displacements", 0),
+        kwargs.get("tmax_thermal_displacements", 1000) + t_step / 2,
+        t_step,
+    )
+    phonon.run_thermal_displacement_matrices(
+        temperatures=temperatures, freq_min=freq_min, exclude_gamma_acoustic=True
+    )
+    matrices = phonon.thermal_displacement_matrices
+    u = matrices.thermal_displacement_matrices
+    u_cif = matrices.thermal_displacement_matrices_cif
+    if has_imaginary and imaginary_modes == "absolute":
+        # An imaginary mode has no harmonic U, because the energy falls along it.
+        # Without U, the material gets no Debye-Waller factors. Leaving the mode
+        # out ("exclude") lowers U. "absolute" keeps it as a real mode of the same
+        # absolute frequency, which gives an estimate of U.
+        # phonopy only sums the modes above freq_min, which keeps the modes near
+        # zero frequency out for numerical stability, since their term diverges.
+        # This second run adds the imaginary modes below -freq_min, which phonopy
+        # stores as negative frequencies. Their term equals that of the absolute
+        # frequency, except at T <= 1 K, where phonopy sets the population to zero
+        # and the term changes sign.
+        phonon.run_thermal_displacement_matrices(
+            temperatures=temperatures,
+            freq_min=-np.inf,
+            freq_max=-freq_min,  # the imaginary modes, below -freq_min
+            exclude_gamma_acoustic=True,
+        )
+        imaginary = phonon.thermal_displacement_matrices
+        sign = np.where(temperatures > 1, 1, -1)[:, None, None, None]
+        u = u + sign * imaginary.thermal_displacement_matrices
+        u_cif = u_cif + sign * imaginary.thermal_displacement_matrices_cif
+    for idx, temp in enumerate(temperatures):
+        write_cif_P1(
+            phonon.primitive, U_cif=u_cif[idx], filename=f"tdispmat_{temp:g}K.cif"
+        )
+    return {
+        "temperatures_thermal_displacements": temperatures.tolist(),
+        "thermal_displacement_matrix_cif": u_cif.tolist(),
+        "thermal_displacement_matrix": u.tolist(),
+        "freq_min_thermal_displacements": freq_min,
+        "imaginary_modes": imaginary_modes if has_imaginary else None,
+        "structure": get_pmg_structure(phonon.primitive),
+    }
+
+
 class PhononComputationalSettings(BaseModel):
     """Collection to store computational settings for the phonon computation."""
 
@@ -137,8 +296,11 @@ class ThermalDisplacementData(BaseModel):
     """Collection to store information on the thermal displacement matrices."""
 
     freq_min_thermal_displacements: float = Field(
-        "cutoff frequency in THz to avoid numerical issues in the "
-        "computation of the thermal displacement parameters"
+        0.0,
+        description="cutoff frequency in THz. Modes with a frequency below it are "
+        "left out of the thermal displacement matrices, with "
+        'imaginary_modes="absolute" also the imaginary modes of an absolute '
+        "frequency below it.",
     )
     thermal_displacement_matrix_cif: list[list[Matrix3D]] | None = Field(
         None, description="field including thermal displacement matrices in CIF format"
@@ -152,6 +314,18 @@ class ThermalDisplacementData(BaseModel):
         None,
         description="temperatures at which the thermal displacement matrices"
         "have been computed",
+    )
+    imaginary_modes: Literal["exclude", "absolute"] | None = Field(
+        None,
+        description="how the imaginary modes of the q-point mesh entered the "
+        "thermal displacement matrices, either left out (exclude) or as real modes "
+        "of the same absolute frequency (absolute). None if the mesh had none or if "
+        "this was not recorded.",
+    )
+    structure: Structure | None = Field(
+        None,
+        description="primitive cell of phonopy, whose sites the thermal displacement "
+        "matrices refer to, in the same order",
     )
 
 
@@ -424,8 +598,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             is_symmetry=kwargs.get("symmetrize_born", True),
         )
 
-        # Produces all force constants
+        # Produces all force constants and imposes the translational, permutation
+        # and space group symmetry with the symfc projector, as phonopy.load does
         phonon.produce_force_constants(forces=set_of_forces)
+        phonon.symmetrize_force_constants(use_symfc_projector=True)
 
         filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
         create_force_constants_file = kwargs.get("create_force_constants_file", False)
@@ -492,9 +668,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             units=kwargs.get("units", "THz"),
         )
 
-        # will determine if imaginary modes are present in the structure
+        # will determine if imaginary modes are present in the structure.
+        # The default of 1e-3 THz is above the numerical noise of the acoustic
+        # modes at Gamma. 1e-5 THz flagged this noise as imaginary modes.
         imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=kwargs.get("tol_imaginary_modes", 1e-5)
+            tol=kwargs.get("tol_imaginary_modes", 1e-3)
         )
 
         # gets data for visualization on website - yaml is also enough
@@ -565,40 +743,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         internal_energies = free_energies + temperature_range * entropies
         heat_capacities = heat_capacity / formula_units_primitive
 
-        # will compute thermal displacement matrices
-        # for the primitive cell (phonon.primitive!)
-        # only this is available in phonopy
-        if kwargs.get("create_thermal_displacements"):
-            phonon.run_mesh(
-                kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
-            )
-            freq_min_thermal_displacements = kwargs.get(
-                "freq_min_thermal_displacements", 0.0
-            )
-            phonon.run_thermal_displacement_matrices(
-                t_min=kwargs.get("tmin_thermal_displacements", 0),
-                t_max=kwargs.get("tmax_thermal_displacements", 500),
-                t_step=kwargs.get("tstep_thermal_displacements", 100),
-                freq_min=freq_min_thermal_displacements,
-            )
-
-            temperature_range_thermal_displacements = np.arange(
-                kwargs.get("tmin_thermal_displacements", 0),
-                kwargs.get("tmax_thermal_displacements", 500),
-                kwargs.get("tstep_thermal_displacements", 100),
-            )
-            for idx, temp in enumerate(temperature_range_thermal_displacements):
-                phonon.thermal_displacement_matrices.write_cif(
-                    phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-                )
-            _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-            tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-            tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-        else:
-            tdisp_mat = None
-            tdisp_mat_cif = None
+        thermal_displacement_data = (
+            _get_thermal_displacement_data(phonon, **kwargs)
+            if kwargs.get("create_thermal_displacements")
+            else None
+        )
 
         formula_units = (
             structure.composition.num_atoms
@@ -633,14 +782,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
             code=code,
-            thermal_displacement_data={
-                "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-                "thermal_displacement_matrix_cif": tdisp_mat_cif,
-                "thermal_displacement_matrix": tdisp_mat,
-                "freq_min_thermal_displacements": freq_min_thermal_displacements,
-            }
-            if kwargs.get("create_thermal_displacements")
-            else None,
+            thermal_displacement_data=thermal_displacement_data,
             jobdirs={
                 "displacements_job_dirs": displacement_data["dirs"],
                 "static_run_job_dir": kwargs["static_run_job_dir"],
