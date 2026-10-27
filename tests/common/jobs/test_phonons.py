@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pytest
 from jobflow import run_locally
@@ -133,10 +135,13 @@ def test_generate_frequencies_eigenvectors_magmom(clean_dir, si_structure, monke
     assert_allclose(docs[1].free_energies, docs[0].free_energies)
 
 
-def test_get_displacements_warns_magmom(clean_dir, si_structure):
+@pytest.mark.parametrize("verbose", [True, False])
+def test_get_displacements_warns_magmom(clean_dir, si_structure, verbose):
     from atomate2.vasp.flows.phonons import PhononMaker
 
     magnetic = si_structure.copy(site_properties={"magmom": [1, -1]})
-    job = PhononMaker().get_displacements(magnetic, np.eye(3) * 2)
-    with pytest.warns(UserWarning, match="magnetic moments"):
+    job = PhononMaker(verbose=verbose).get_displacements(magnetic, np.eye(3) * 2)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
         run_locally(job, create_folders=True, ensure_success=True)
+    assert any("magnetic moments" in str(w.message) for w in caught) == verbose
