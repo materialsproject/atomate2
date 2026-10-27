@@ -364,17 +364,14 @@ See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
 The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy and hiPhive.
-The pheasy and ALM packages are not in the extra, since PyPI does not accept git URLs in extras.
-Install them from git, at the commits atomate2 is tested with:
+The pheasy package is not in the extra, since PyPI does not accept git URLs in extras.
+Install it from git, at the commit atomate2 is tested with:
 ```
 pip install "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"
-pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"
 ```
-From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra, pheasy and ALM in one step. This needs pip 25.1 or newer.
+From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra and pheasy in one step. This needs pip 25.1 or newer.
 The pheasy release on PyPI lacks options this workflow uses, so do not install it with `pip install pheasy`.
 The workflows run pheasy with the command in the `PHEASY_CMD` setting, `pheasy` by default.
-The `alm` package on PyPI is an unrelated project, so do not install ALM with `pip install alm`.
-ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
 This workflow was used to build the [Materials Project's Harmonic Phonon Database](https://next-gen.materialsproject.org/materials?has_props=phonon), described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
@@ -388,7 +385,48 @@ The anharmonic part of this workflow has not been tested as widely as the harmon
 It might still change in future versions.
 ```
 
-ALM, from the ALAMODE package, counts the free force constants used to size the random displacement sets.
+pheasy counts the free force constants used to size the random displacement sets, with the cluster options of its fits and the symmetry of the supercell.
+The displacement job runs this count with `PHEASY_CMD`.
+For third- and fourth-order force constants of large, low-symmetry supercells, it can take hours.
+The Materials Project's Harmonic Phonon Database was built with ALM for this count.
+For the harmonic force constants, pheasy gives the same number of displaced supercells as ALM for 26,410 of the 26,413 materials of the database.
+The other 3 were not counted.
+For third- and fourth-order force constants, pheasy and ALM build the clusters differently, and the count follows the force constants that pheasy fits.
+For a sample of 101 materials at third order and 70 at fourth order, pheasy gives the same count as ALM for 97 and 46 of them.
+
+With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
+The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
+Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 the job stops and asks for a shorter cutoff, a larger supercell or an explicit `num_disp_anhar`. An explicit `num_disp_anhar` is used as given.
+`anhar_max_order` selects third-order force constants (3, the default) or third- and fourth-order force constants (4).
+`anhar_fit_methods` selects how the second-order force constants are treated.
+`"cocktail"` (the default) keeps them fixed to the harmonic fit, and `"one-shot"` fits them together with the higher orders and writes the results to a `one_shot` folder.
+Both can be requested in one run.
+If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
+The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
+Both LASSO fits run with `--tol 1e-8`, since pheasy's default of `1e-4` leaves the fit unconverged, and refits on different machines then differ.
+Harmonic force constants from earlier atomate2 versions can therefore differ, mostly in soft low-frequency modes.
+The anharmonic force constants are written to files in the job folder and are not stored in the output document.
+
+#### hiPhive
+
+The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
+The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
+The workflow also needs ALM, from the ALAMODE package, which counts the free force constants used to size the random displacement set.
+Install it from git, at the commit atomate2 is tested with:
+```
+pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"
+```
+From a clone of atomate2, `pip install ".[hiphive]" --group alamode` installs both in one step. This needs pip 25.1 or newer.
+The `alm` package on PyPI is an unrelated project, so do not install ALM with `pip install alm`.
+ALM is compiled from source. If that build fails, see the ALM instructions below.
+
+To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
+
+This workflow has only been tested on a small set of materials so far, not at high-throughput scale.
+The test set is 14 Materials Project entries, two per crystal system, with forces from a machine-learned potential rather than DFT.
+The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
+Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
+The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
 
 To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
 Linux and MacOS x86-64 users can try to install using conda forge:
@@ -412,34 +450,6 @@ For example, using `gcc-15` from `homebrew`, one might set:
 ```
 export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
 ```
-
-With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
-The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
-Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 the job stops and asks for a shorter cutoff, a larger supercell or an explicit `num_disp_anhar`. An explicit `num_disp_anhar` is used as given.
-`anhar_max_order` selects third-order force constants (3, the default) or third- and fourth-order force constants (4).
-`anhar_fit_methods` selects how the second-order force constants are treated.
-`"cocktail"` (the default) keeps them fixed to the harmonic fit, and `"one-shot"` fits them together with the higher orders and writes the results to a `one_shot` folder.
-Both can be requested in one run.
-If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
-The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
-Both LASSO fits run with `--tol 1e-8`, since pheasy's default of `1e-4` leaves the fit unconverged, and refits on different machines then differ.
-Harmonic force constants from earlier atomate2 versions can therefore differ, mostly in soft low-frequency modes.
-The anharmonic force constants are written to files in the job folder and are not stored in the output document.
-
-#### hiPhive
-
-The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
-The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
-The workflow also needs ALM from git, installed as in the Pheasy section above.
-From a clone of atomate2, `pip install ".[hiphive]" --group alamode` installs both in one step. This needs pip 25.1 or newer.
-
-To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
-
-This workflow has only been tested on a small set of materials so far, not at high-throughput scale.
-The test set is 14 Materials Project entries, two per crystal system, with forces from a machine-learned potential rather than DFT.
-The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
-Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
-The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
 
 ### Grüneisen parameter workflow
 
@@ -474,8 +484,8 @@ gruneisen_flow = GruneisenMaker(
 
 `CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
 It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
-It also needs pheasy and ALM from git, installed as in the Pheasy section above.
-From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs the extras, pheasy and ALM in one step. This needs pip 25.1 or newer.
+It also needs pheasy from git, installed as in the Pheasy section above.
+From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs the extras and pheasy in one step. This needs pip 25.1 or newer.
 
 ```{warning}
 This workflow is new and has not been tested widely.

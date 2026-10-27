@@ -4,9 +4,13 @@ import numpy as np
 import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
-from pymatgen.core import Structure
+from pymatgen.core import Lattice, Structure
 
-from atomate2.common.jobs.phonons import get_supercell_size
+from atomate2.common.jobs.phonons import (
+    _generate_phonon_object,
+    _get_num_harmonic_supercells,
+    get_supercell_size,
+)
 
 
 def test_supercell(si_structure, tmp_dir):
@@ -83,6 +87,31 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
     assert_allclose(
         responses[job2.uuid][1].output, [[2, -1, 0], [0, 2, 0], [-1, -1, 2]]
     )
+
+
+def test_get_num_harmonic_supercells():
+    # a distorted Cu cell needs more than three finite displacements
+    structure = Structure(
+        Lattice.orthorhombic(3.6, 3.7, 3.8),
+        ["Cu"] * 4,
+        [[0, 0, 0], [0.5, 0.5, 0.02], [0.5, 0.03, 0.5], [0.01, 0.5, 0.5]],
+    )
+    phonon = _generate_phonon_object(
+        structure,
+        supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
+        displacement=0.01,
+        sym_reduce=True,
+        symprec=1e-3,
+        use_symmetrized_structure=None,
+        kpath_scheme="seekpath",
+        code="vasp",
+    )
+    # the hiPhive flow counts the free force constants with ALM
+    assert _get_num_harmonic_supercells(phonon, 0) == 14
+    # the pheasy flow passes its own count, 96 free force constants for 32 atoms
+    assert _get_num_harmonic_supercells(phonon, 0, count_free_fcs=lambda: 96) == 3
+    # a number set by the user is used as it is
+    assert _get_num_harmonic_supercells(phonon, 5) == 5
 
 
 def test_generate_frequencies_eigenvectors_magmom(clean_dir, si_structure, monkeypatch):
