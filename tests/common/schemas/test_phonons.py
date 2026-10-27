@@ -190,7 +190,7 @@ def test_get_thermal_displacement_data_gamma_modes(clean_dir):
     """Two Cu atoms whose out-of-phase motion is softer than their in-phase motion.
 
     At Gamma, the three modes of smallest absolute frequency are then the out-of-phase
-    modes, not the rigid translations, so no U is returned.
+    modes. The in-phase modes, the rigid translations, must be left out instead.
     """
     cell = PhonopyAtoms(
         symbols=["Cu", "Cu"],
@@ -202,14 +202,18 @@ def test_get_thermal_displacement_data_gamma_modes(clean_dir):
     force_constants[0, 0] = force_constants[1, 1] = np.eye(3)
     force_constants[0, 1] = force_constants[1, 0] = 0.9 * np.eye(3)
     phonon.force_constants = force_constants
+    phonon.run_qpoints([[0, 0, 0]])
+    out_of_phase = np.sort(phonon.qpoints.frequencies[0])[:3]
 
-    with pytest.warns(UserWarning, match="not the acoustic modes"):
-        assert (
-            _get_thermal_displacement_data(
-                phonon, kpoint_density_thermal_displacements=54
-            )
-            is None
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=54
         )
+    assert data is not None
+    # the in-phase modes were set to zero and left out, the out-of-phase modes kept
+    freqs_gamma = np.sort(phonon.mesh.frequencies[phonon.mesh.gamma_index])
+    assert freqs_gamma[:3].tolist() == [0, 0, 0]
+    assert freqs_gamma[3:] == pytest.approx(out_of_phase)
 
 
 # schemas where all fields have default values

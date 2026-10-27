@@ -346,8 +346,8 @@ With `create_thermal_displacements=True` (the default of `PhononMaker`), the wor
 They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by `kpoint_density_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
 phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
 An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
-As in phonopy, these are the three modes of smallest absolute frequency at Gamma, and their eigenvectors are checked to be the rigid translations of the cell.
-If they are not, for example because an optical mode at Gamma is closer to zero, no thermal displacement matrices are stored.
+These are the three modes at Gamma whose eigenvectors are closest to the rigid translations of the cell.
+phonopy's `exclude_gamma_acoustic` takes the three modes of smallest absolute frequency, which are not the acoustic modes if an optical mode at Gamma is closer to zero.
 This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
 For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
 If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
