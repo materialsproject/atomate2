@@ -133,10 +133,17 @@ def analyze_free_energy(
         out. Their vibrational free energies, heat capacities and entropies come
         from a linear fit in the volume to the volumes without imaginary modes, at
         each temperature, as in Deringer et al., Phys. Rev. B 89, 094303 (2014).
-        Their electronic energies stay those of the calculations.
+        Their electronic energies stay those of the calculations. Cannot be
+        combined with ignore_imaginary_modes.
     kwargs: dict
         Additional keywords to pass to this job
     """
+    if ignore_imaginary_modes and fit_imaginary_volumes:
+        raise ValueError(
+            "ignore_imaginary_modes and fit_imaginary_volumes cannot both be True. "
+            "ignore_imaginary_modes keeps the free energies of all volumes, so no "
+            "volume would be fitted."
+        )
     # only use the free energies of volumes without imaginary modes, unless they
     # are fitted below
     electronic_energies: list[list[float]] = []

@@ -320,3 +320,10 @@ def test_analyze_free_energy_fit_imaginary_volumes(tmp_dir, test_dir, n_kept):
                 t_max=300,
                 fit_imaginary_volumes=True,
             )
+
+
+def test_analyze_free_energy_ignore_and_fit():
+    with pytest.raises(ValueError, match="cannot both be True"):
+        analyze_free_energy.original(
+            [], None, ignore_imaginary_modes=True, fit_imaginary_volumes=True
+        )

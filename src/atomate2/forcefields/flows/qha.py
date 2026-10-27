@@ -54,7 +54,8 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         If True, the volumes with imaginary modes are kept instead of left out, and
         their vibrational free energies come from a linear fit in the volume to the
         volumes without imaginary modes. Needs at least 2 volumes without imaginary
-        modes. See analyze_free_energy.
+        modes, and cannot be combined with ignore_imaginary_modes. See
+        analyze_free_energy.
     eos_type: supported_eos
         Equation of State type used for the fitting. Defaults to vinet.
     min_length: float
@@ -202,7 +203,8 @@ class CHGNetQhaMaker(ForceFieldQhaMaker):
         If True, the volumes with imaginary modes are kept instead of left out, and
         their vibrational free energies come from a linear fit in the volume to the
         volumes without imaginary modes. Needs at least 2 volumes without imaginary
-        modes. See analyze_free_energy.
+        modes, and cannot be combined with ignore_imaginary_modes. See
+        analyze_free_energy.
     eos_type: supported_eos
         Equation of State type used for the fitting. Defaults to vinet.
     min_length: float
