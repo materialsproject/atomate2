@@ -82,14 +82,12 @@ def _cu_structure() -> Structure:
 
 
 @pytest.mark.parametrize("num_displaced_supercells", [0, 3])
-def test_harmonic_and_anharmonic_split(tmp_dir, monkeypatch, num_displaced_supercells):
+def test_harmonic_and_anharmonic_split(tmp_dir, num_displaced_supercells):
     """The fit job must split the forces where the displacement job did.
 
     Before this was fixed, the fit job used one harmonic supercell fewer than
     the displacement job made, and it ignored num_displaced_supercells.
     """
-    # pheasy counts the free force constants, so ALM is not needed
-    monkeypatch.setitem(sys.modules, "alm", None)
     # a distorted Cu cell needs more than three finite displacements, so the
     # random-displacement path is used for the harmonic force constants
     structure = Structure(
@@ -225,8 +223,6 @@ def test_atom_on_cell_face(tmp_dir):
 
 
 def test_get_num_anharmonic_supercells(monkeypatch):
-    # pheasy counts the free force constants, so ALM is not needed
-    monkeypatch.setitem(sys.modules, "alm", None)
     phonon = _generate_phonon_object(_cu_structure(), **COMMON_KWARGS)
     kwargs = {
         "supercell": phonon.supercell,
