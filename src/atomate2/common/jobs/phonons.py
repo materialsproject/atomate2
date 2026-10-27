@@ -38,7 +38,11 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
-from atomate2.common.schemas.phonons import _set_nac_params, get_factor
+from atomate2.common.schemas.phonons import (
+    _get_thermal_displacement_data,
+    _set_nac_params,
+    get_factor,
+)
 from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -211,7 +215,7 @@ def _run_band_structure_and_plot(
     is_band_connection: bool = False,
     filename_bs: str = "phonon_band_structure.pdf",
     units: str = "THz",
-    tol_imaginary_modes: float = 1e-5,
+    tol_imaginary_modes: float = 1e-3,
 ) -> tuple[PhononBandStructureSymmLine, bool]:
     """Compute, save, and plot a phonon band structure on a Phonopy object.
 
@@ -572,8 +576,10 @@ def generate_frequencies_eigenvectors(
         is_symmetry=kwargs.get("symmetrize_born", True),
     )
 
-    # Produces all force constants
+    # Produces all force constants and imposes the translational, permutation
+    # and space group symmetry with the symfc projector, as phonopy.load does
     phonon.produce_force_constants(forces=set_of_forces)
+    phonon.symmetrize_force_constants(use_symfc_projector=True)
 
     filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
     create_force_constants_file = kwargs.get("create_force_constants_file", False)
@@ -616,7 +622,7 @@ def generate_frequencies_eigenvectors(
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         filename_bs=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
         units=kwargs.get("units", "THz"),
-        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-3),
     )
 
     # gets data for visualization on website - yaml is also enough
@@ -655,39 +661,6 @@ def generate_frequencies_eigenvectors(
         use_tetrahedron_method=kwargs.get("dos_use_tetrahedron_method", True),
     )
 
-    # will compute thermal displacement matrices
-    # for the primitive cell (phonon.primitive!)
-    # only this is available in phonopy
-    if kwargs.get("create_thermal_displacements"):
-        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
-        freq_min_thermal_displacements = kwargs.get(
-            "freq_min_thermal_displacements", 0.0
-        )
-        phonon.run_thermal_displacement_matrices(
-            t_min=kwargs.get("tmin_thermal_displacements", 0),
-            t_max=kwargs.get("tmax_thermal_displacements", 500),
-            t_step=kwargs.get("tstep_thermal_displacements", 100),
-            freq_min=freq_min_thermal_displacements,
-        )
-
-        temperature_range_thermal_displacements = np.arange(
-            kwargs.get("tmin_thermal_displacements", 0),
-            kwargs.get("tmax_thermal_displacements", 500),
-            kwargs.get("tstep_thermal_displacements", 100),
-        )
-        for idx, temp in enumerate(temperature_range_thermal_displacements):
-            phonon.thermal_displacement_matrices.write_cif(
-                phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-            )
-        _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-        tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-        tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-    else:
-        tdisp_mat = None
-        tdisp_mat_cif = None
-
     formula_units = (
         structure.composition.num_atoms
         / structure.composition.reduced_composition.num_atoms
@@ -698,6 +671,12 @@ def generate_frequencies_eigenvectors(
     )
 
     volume_per_formula_unit = structure.volume / formula_units
+
+    thermal_displacement_data = (
+        _get_thermal_displacement_data(phonon, **kwargs)
+        if kwargs.get("create_thermal_displacements")
+        else None
+    )
 
     cls_constructor = (
         "migrate_fields"
@@ -722,14 +701,7 @@ def generate_frequencies_eigenvectors(
         supercell_matrix=phonon.supercell_matrix.tolist(),
         primitive_matrix=phonon.primitive_matrix.tolist(),
         code=code,
-        thermal_displacement_data={
-            "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-            "thermal_displacement_matrix_cif": tdisp_mat_cif,
-            "thermal_displacement_matrix": tdisp_mat,
-            "freq_min_thermal_displacements": freq_min_thermal_displacements,
-        }
-        if kwargs.get("create_thermal_displacements")
-        else None,
+        thermal_displacement_data=thermal_displacement_data,
         jobdirs={
             "displacements_job_dirs": displacement_data["dirs"],
             "static_run_job_dir": kwargs["static_run_job_dir"],
