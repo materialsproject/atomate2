@@ -106,7 +106,7 @@ def test_get_num_harmonic_supercells():
         kpath_scheme="seekpath",
         code="vasp",
     )
-    # the hiPhive flow counts the free force constants with ALM
+    # the hiPhive flow counts the free force constants with symfc
     assert _get_num_harmonic_supercells(phonon, 0) == 14
     # the pheasy flow passes its own count, 96 free force constants for 32 atoms
     assert _get_num_harmonic_supercells(phonon, 0, count_free_fcs=lambda: 96) == 3

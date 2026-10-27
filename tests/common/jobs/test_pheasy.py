@@ -4,7 +4,6 @@ Forces come from ASE's EMT potential, so the jobs run end to end without any
 DFT reference data.
 """
 
-import sys
 import warnings
 from pathlib import Path
 
@@ -29,7 +28,6 @@ from atomate2.common.jobs.pheasy import (
 )
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
-    _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
 )
 
@@ -265,12 +263,6 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     monkeypatch.setattr(pheasy_jobs, "_MAX_NUM_DISP_ANHAR", 30)
     with pytest.raises(ValueError, match="more than the limit of 30"):
         _get_num_anharmonic_supercells(num_disp_anhar=0, **kwargs)
-
-
-def test_get_num_irreducible_fcs_without_alm(monkeypatch):
-    monkeypatch.setitem(sys.modules, "alm", None)
-    with pytest.raises(ImportError, match="ALM could not be imported"):
-        _get_num_irreducible_fcs(None, 2)
 
 
 def test_run_harmonic_fit(monkeypatch):
