@@ -554,7 +554,8 @@ With `fit_imaginary_volumes=True`, they are kept instead, if at least 2 volumes 
 Their vibrational free energy, heat capacity and entropy then come from a linear fit in the volume to the volumes without imaginary modes, at each temperature, as in [Deringer et al.](https://doi.org/10.1103/PhysRevB.89.094303).
 This helps, for example, when a material is stable at extended volumes but changes phase under compression.
 Their electronic energies stay those of the calculations, and a warning lists the fitted volumes.
-This gives only an estimate. For 40 force field QHAs with 7 volumes, keeping 2 or 3 of them and fitting the others changed the thermal expansion at 300 K by 4% to 14% in the median, and by up to 67%.
+This gives only an estimate. We tested it on 40 force field QHAs with 7 volumes, keeping only 2 to 4 of them and fitting the others.
+Compared with using all 7 volumes, the thermal expansion at 300 K typically changed by 4% to 14%, and by up to 67%.
 
 The following script allows you to start the default workflow for VASP with some adjusted parameters:
 ```python
