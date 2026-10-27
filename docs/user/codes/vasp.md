@@ -388,6 +388,11 @@ It might still change in future versions.
 pheasy counts the free force constants used to size the random displacement sets, with the cluster options of its fits and the symmetry of the supercell.
 The displacement job runs this count with `PHEASY_CMD`.
 For third- and fourth-order force constants of large, low-symmetry supercells, it can take hours.
+The Materials Project's Harmonic Phonon Database was built with ALM for this count.
+For the harmonic force constants, pheasy gives the same number of displaced supercells as ALM for 26,410 of the 26,413 materials of the database.
+The other 3 were not counted.
+For third- and fourth-order force constants, pheasy and ALM build the clusters differently, and the count follows the force constants that pheasy fits.
+For a sample of 101 materials at third order and 70 at fourth order, pheasy gives the same count as ALM for 97 and 46 of them.
 
 With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
 The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
