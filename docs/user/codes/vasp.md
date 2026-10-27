@@ -379,7 +379,7 @@ This is the default of the VASP and FHI-aims `PhononMaker`, but it has to be set
 `debye_waller_kwargs` passes `xrd_kwargs`, `nd_kwargs` and `tem_kwargs` to pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator`.
 The q-point mesh and the temperatures are set with `kpoint_density_thermal_displacements` and `tmin_thermal_displacements`, `tmax_thermal_displacements` and `tstep_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
 If the mesh has imaginary modes, the phonon workflow stores no $U$, and the `compute_debye_waller` job fails.
-Set `imaginary_modes_thermal_displacements` to `"exclude"` or `"absolute"` to get an estimate of $U$ and of the patterns instead.
+Set `imaginary_modes_thermal_displacements` to `"exclude"` or `"absolute"`, with a positive `freq_min_thermal_displacements`, to get an estimate of $U$ and of the patterns instead.
 The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
 For metals, set `born_maker=None` to skip the Born charge calculation.
 The hkl indices of the patterns and the TEM beam direction refer to the primitive cell.
