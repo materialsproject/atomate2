@@ -61,7 +61,11 @@ def test_phonon_bs_dos_doc():
 
 
 def test_from_forces_born_thermal_properties(clean_dir):
-    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit."""
+    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit.
+
+    Without the sum rules, the noise of the acoustic modes at Gamma was flagged as
+    imaginary modes.
+    """
     structure = Structure(
         Lattice.cubic(3.74),
         ["Au", "Cu", "Cu", "Cu"],
@@ -95,6 +99,7 @@ def test_from_forces_born_thermal_properties(clean_dir):
         optimization_run_job_dir=None,
         optimization_run_uuid=None,
     )
+    assert doc.has_imaginary_modes is False
     assert doc.entropies[0] == 0
     assert doc.heat_capacities[0] == 0
     assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
