@@ -51,13 +51,12 @@ mp = ["mp-api>=0.37.5"]
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
 phonons = ["phonopy>=4.7.1,<5", "seekpath>=2.0.0"]
-# pheasy itself and ALM are in the pheasy dependency group
+# pheasy itself is in the pheasy dependency group
 pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
 # pymatgen 2026.10.24 is the first release with anisotropic Debye-Waller factors
 debye-waller = ["pymatgen>=2026.10.24"]
-# ALM is in the alamode dependency group
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
@@ -156,11 +155,6 @@ documentation = "https://materialsproject.github.io/atomate2/"
 changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [dependency-groups]
-# ALM is a dependency group, since PyPI does not accept git URLs in extras.
-# The alm package on PyPI is an unrelated project.
-alamode = [
-    "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python",
-]
 dev = ["pre-commit>=4.5.1"]
 # MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
 # It is a dependency group, since PyPI does not accept git URLs in extras.
@@ -173,7 +167,6 @@ mace-field = [
 # accept git URLs in extras. Move it back to the pheasy extra once a pheasy
 # release on PyPI has these changes.
 pheasy = [
-    {include-group = "alamode"},
     "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d",
 ]
 tests = [
