@@ -156,6 +156,9 @@ class BasePhononMaker(Maker, ABC):
         job, reducing overhead. In the specific case of TorchSim, this enables batching
         of all static structure evaluations.
         Note: socket=True is not supported for BaseVaspMaker.
+    verbose: bool
+        If True, the displacement job warns that the initial magnetic moments
+        are removed from the structure.
     """
 
     name: str = "phonon"
@@ -202,6 +205,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
+    verbose: bool = True
 
     def make(
         self,
@@ -552,6 +556,7 @@ class BasePhononMaker(Maker, ABC):
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
+            verbose=self.verbose,
         )
 
     @property

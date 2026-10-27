@@ -37,8 +37,8 @@ from trainstation import Optimizer
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
     _get_kpath,
+    _get_num_free_fc2,
     _get_num_harmonic_supercells,
-    _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
 )
@@ -54,10 +54,11 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # Configurations per suggested displacement set. The minimum set is sized from
-# ALM's free-parameter tally so the equation count reaches it (see
-# _get_num_harmonic_supercells), and this scales from there. pheasy uses the
-# same 1.8. hiPhive's own cluster space has a smaller parameter count than
-# ALM's tally, and the ratio between the two differs between materials.
+# the free second-order force constants of the supercell so the equation count
+# reaches it (see _get_num_harmonic_supercells), and this scales from there.
+# pheasy uses the same 1.8. hiPhive's own cluster space has a smaller parameter
+# count than the supercell count, and the ratio between the two differs between
+# materials.
 _N_CONFIG_MULTIPLIER = 1.8
 
 # Safety margin below hiPhive's maximum allowed cutoff, in Angstrom.
@@ -334,13 +335,13 @@ def generate_phonon_displacements(
         verbose=verbose,
     )
 
-    # 1. the ALM module is used to determine the number of free parameters
-    # (irreducible force constants) corresponding to the second order
-    # force constants (FCs) given a supercell. hiPhive's own cluster space
-    # cannot supply this number: it counts only the parameters inside the pair
-    # cutoff, while ALM counts them over the whole supercell, so ALM's tally is
-    # larger by a factor of two to three. Sizing the displacement set with ALM
-    # is also what pheasy does, which keeps the two workflows comparable.
+    # 1. symfc counts the number of free parameters of the second order force
+    # constants (FCs) of the supercell. hiPhive's own cluster space cannot
+    # supply this number: it counts only the parameters inside the pair
+    # cutoff, while symfc counts them over the whole supercell, so symfc's count
+    # is larger by a factor of two to three. pheasy's count of the free
+    # second-order force constants is the same, which keeps the two workflows
+    # comparable.
     # 2. Based on the number of free parameters, we can determine how many
     # displaced supercells we need to use to extract the second order force
     # constants. Generally, the number of free parameters should be less than
@@ -353,7 +354,7 @@ def generate_phonon_displacements(
     )
 
     if verbose:
-        (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+        n_fp = _get_num_free_fc2(phonon.supercell, symprec)
         logger.info(
             f"There are {n_fp} free parameters for the second-order force "
             f"constants (FCs), and {num_har} displaced supercells are used to "
@@ -576,8 +577,8 @@ def generate_frequencies_eigenvectors(
         _DEFAULT_FILE_PATHS["force_constants"],
         symprec,
     )
-    # The displacement count is sized by ALM's tally of irreducible force
-    # constant elements, which is not hiPhive's parameter count, so log how
+    # The displacement count is sized by the free force constants of the whole
+    # supercell, which is not hiPhive's parameter count, so log how
     # much data each parameter actually gets. A low ratio is the signature of
     # a regularized fit that has too little data and softens the modes.
     n_forces = len(atoms_list) * len(supercell) * 3

@@ -410,17 +410,14 @@ With a force field, use `PhononMaker.from_force_field_name` from `atomate2.force
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
 The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy and hiPhive.
-The pheasy and ALM packages are not in the extra, since PyPI does not accept git URLs in extras.
-Install them from git, at the commits atomate2 is tested with:
+The pheasy package is not in the extra, since PyPI does not accept git URLs in extras.
+Install it from git, at the commit atomate2 is tested with:
 ```
 pip install "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"
-pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"
 ```
-From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra, pheasy and ALM in one step. This needs pip 25.1 or newer.
+From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra and pheasy in one step. This needs pip 25.1 or newer.
 The pheasy release on PyPI lacks options this workflow uses, so do not install it with `pip install pheasy`.
 The workflows run pheasy with the command in the `PHEASY_CMD` setting, `pheasy` by default.
-The `alm` package on PyPI is an unrelated project, so do not install ALM with `pip install alm`.
-ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
 This workflow was used to build the [Materials Project's Harmonic Phonon Database](https://next-gen.materialsproject.org/materials?has_props=phonon), described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
@@ -434,30 +431,14 @@ The anharmonic part of this workflow has not been tested as widely as the harmon
 It might still change in future versions.
 ```
 
-ALM, from the ALAMODE package, counts the free force constants used to size the random displacement sets.
-
-To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
-Linux and MacOS x86-64 users can try to install using conda forge:
-```
-conda install -c conda-forge alm
-```
-This conda-forge `alm` is the ALAMODE one.
-
-Windows and MacOS ARM users cannot use the pre-built wheels on conda forge at this time, and should instead try the following installation using `conda`:
-```
-conda install -c conda-forge "numpy<=2.2" scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes
-git clone https://github.com/ttadano/ALM.git
-cd ALM/python
-python setup.py build
-pip install -e .
-```
-atomate2 is tested with ALM commit `f1d668f`. When building ALM by hand, check out that commit.
-NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
-Note also that `boost` and `eigen` can be installed via `homebrew`.
-For example, using `gcc-15` from `homebrew`, one might set:
-```
-export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
-```
+pheasy counts the free force constants used to size the random displacement sets, with the cluster options of its fits and the symmetry of the supercell.
+The displacement job runs this count with `PHEASY_CMD`.
+For third- and fourth-order force constants of large, low-symmetry supercells, it can take hours.
+The Materials Project's Harmonic Phonon Database was built with ALM for this count.
+For the harmonic force constants, pheasy gives the same number of displaced supercells as ALM for 26,410 of the 26,413 materials of the database.
+The other 3 were not counted.
+For third- and fourth-order force constants, pheasy and ALM build the clusters differently, and the count follows the force constants that pheasy fits.
+For a sample of 101 materials at third order and 70 at fourth order, pheasy gives the same count as ALM for 97 and 46 of them.
 
 With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
 The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
@@ -476,8 +457,11 @@ The anharmonic force constants are written to files in the job folder and are no
 
 The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
 The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
-The workflow also needs ALM from git, installed as in the Pheasy section above.
-From a clone of atomate2, `pip install ".[hiphive]" --group alamode` installs both in one step. This needs pip 25.1 or newer.
+[symfc](https://doi.org/10.1103/PhysRevB.110.214302), which phonopy installs, counts the free second-order force constants used to size the random displacement set.
+symfc finds the symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped onto its symmetry at `symprec`.
+This workflow used ALM for this count before.
+For all 26,413 materials of the Materials Project's Harmonic Phonon Database, symfc gives the same number of displaced supercells as ALM.
+For the 17,998 of them that need the count, the number of free force constants is also the same.
 
 To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
 
@@ -520,8 +504,8 @@ gruneisen_flow = GruneisenMaker(
 
 `CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
 It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
-It also needs pheasy and ALM from git, installed as in the Pheasy section above.
-From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs the extras, pheasy and ALM in one step. This needs pip 25.1 or newer.
+It also needs pheasy from git, installed as in the Pheasy section above.
+From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs the extras and pheasy in one step. This needs pip 25.1 or newer.
 
 ```{warning}
 This workflow is new and has not been tested widely.
