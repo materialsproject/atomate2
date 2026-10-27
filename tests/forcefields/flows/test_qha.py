@@ -182,6 +182,7 @@ def test_instantiation(mlff: str, relax_initial_structure: bool, run_eos_flow: b
     maker = ForceFieldQhaMaker.from_force_field_name(
         mlff, relax_initial_structure=relax_initial_structure, run_eos_flow=run_eos_flow
     )
+    assert maker.phonon_maker.store_force_constants is False
 
     for attr, test_has_attr in tests.items():
         sub_maker = deepcopy(maker)

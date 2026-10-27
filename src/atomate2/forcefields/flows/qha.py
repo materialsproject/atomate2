@@ -101,6 +101,9 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         """
         Create a QHA flow from a forcefield name.
 
+        The phonon maker does not store the force constants, since storing them
+        for every volume makes the QHA about 1.5 times slower.
+
         Parameters
         ----------
         force_field_name : str or .MLFF or dict
@@ -146,6 +149,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             force_field_name=force_field_name,
             calculator_kwargs=calculator_kwargs,
             relax_initial_structure=False,
+            store_force_constants=False,
         )
         return cls(
             phonon_maker=phonon_maker,
@@ -205,7 +209,9 @@ class CHGNetQhaMaker(ForceFieldQhaMaker):
 
     name: str = "CHGNet QHA Maker"
     phonon_maker: PhononMaker = field(
-        default_factory=lambda: PhononMaker(bulk_relax_maker=None)
+        default_factory=lambda: PhononMaker(
+            bulk_relax_maker=None, store_force_constants=False
+        )
     )
     initial_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet")
