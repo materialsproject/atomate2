@@ -22,7 +22,9 @@ from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
 from packaging.version import parse as parse_version
 from phonopy import Phonopy
+from phonopy.interface.symfc import SymfcFCSolver
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
+from phonopy.structure.atoms import PhonopyAtoms
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
     get_ph_bs_symm_line,
@@ -38,15 +40,18 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
-from atomate2.common.schemas.phonons import _set_nac_params, get_factor
+from atomate2.common.schemas.phonons import (
+    _get_thermal_displacement_data,
+    _set_nac_params,
+    get_factor,
+)
 from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable
 
     from emmet.core.math import Matrix3D
-    from phonopy.structure.atoms import PhonopyAtoms
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.ase.jobs import AseRelaxMaker
@@ -58,74 +63,51 @@ logger = logging.getLogger(__name__)
 ANGSTROM_TO_BOHR = 1.8897261246257702
 
 
-def _get_num_irreducible_fcs(
-    supercell: PhonopyAtoms,
-    max_order: int,
-    fcs_cutoff_radius: Sequence[float] | None = None,
-    nbody: Sequence[int] | None = None,
-) -> list[int]:
+def _get_num_free_fc2(supercell: PhonopyAtoms, symprec: float) -> int:
     """
-    Count the symmetry-irreducible force constants of each order with ALM.
+    Count the free second-order force constants of a supercell with symfc.
 
-    Used by the pheasy and hiPhive workflows to size their displacement sets.
+    Used by the hiPhive workflow to size its displacement set. symfc finds the
+    symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped
+    onto its symmetry at symprec.
 
     Parameters
     ----------
     supercell: PhonopyAtoms
         Supercell used for the force constant fit.
-    max_order: int
-        Highest force constant order to count, 2, 3 or 4.
-    fcs_cutoff_radius: Sequence[float] | None
-        Cutoff radius in Bohr for each order, starting at second order.
-        Only needed when max_order is larger than 2.
-    nbody: Sequence[int] | None
-        Largest number of atoms in a cluster for each order, starting at second
-        order, as in ALM's define. None keeps all clusters.
+    symprec: float
+        Symmetry tolerance.
 
     Returns
     -------
-    list[int]
-        Number of irreducible force constants for each order, starting at
-        second order.
+    int
+        Number of free second-order force constants.
     """
-    try:
-        from alm import ALM
-    except ImportError as exc:
-        raise ImportError(
-            "ALM could not be imported. Install it from git as described in the "
-            "Pheasy section of the atomate2 VASP docs. The alm package on PyPI "
-            "is an unrelated project."
-        ) from exc
+    # ASE is not a core dependency of atomate2. It comes with hiPhive.
+    from ase import Atoms
+    from ase.spacegroup.symmetrize import refine_symmetry
 
-    positions = supercell.scaled_positions
-    numbers = supercell.numbers
-
-    if max_order == 2:
-        # TODO: remove ALMODE dependence for 2nd order force constants
-        # the harmonic count uses no cutoff, so the lattice stays in Angstrom
-        with ALM(supercell.cell, positions, numbers) as alm:
-            alm.define(1)
-            alm.suggest()
-            return [alm._get_number_of_irred_fc_elements(1)]  # noqa: SLF001
-
-    # ALM expects the lattice in Bohr when cutoff radii in Bohr are given, and
-    # one cutoff per order and per pair of elements
-    n_elements = len(set(numbers))
-    cutoff_radii = [
-        np.full((n_elements, n_elements), radius)
-        for radius in fcs_cutoff_radius[: max_order - 1]
-    ]
-    with ALM(supercell.cell * ANGSTROM_TO_BOHR, positions, numbers) as alm:
-        alm.define(max_order - 1, cutoff_radii=cutoff_radii, nbody=nbody)
-        alm.suggest()
-        return [
-            alm._get_number_of_irred_fc_elements(order)  # noqa: SLF001
-            for order in range(1, max_order)
-        ]
+    atoms = Atoms(
+        numbers=supercell.numbers,
+        cell=supercell.cell,
+        scaled_positions=supercell.scaled_positions,
+        pbc=True,
+    )
+    refine_symmetry(atoms, symprec=symprec)
+    ideal = PhonopyAtoms(
+        numbers=atoms.numbers,
+        cell=atoms.cell[:],
+        scaled_positions=atoms.get_scaled_positions(),
+    )
+    basis_sets = SymfcFCSolver(ideal).compute_basis_set(orders=[2])
+    return basis_sets[2].basis_set.shape[1]
 
 
 def _get_num_harmonic_supercells(
-    phonon: Phonopy, num_displaced_supercells: int, multiplier: float = 1.8
+    phonon: Phonopy,
+    num_displaced_supercells: int,
+    multiplier: float = 1.8,
+    count_free_fcs: Callable[[], int] | None = None,
 ) -> int:
     """
     Get the number of displaced supercells used for the harmonic force constants.
@@ -149,6 +131,9 @@ def _get_num_harmonic_supercells(
         Number of random displacements requested by the user, 0 for automatic.
     multiplier: float
         Number of configurations per minimum configuration set.
+    count_free_fcs: Callable[[], int] | None
+        Function that returns n_fp. It is only called when n_fp is needed. None
+        counts n_fp with symfc.
 
     Returns
     -------
@@ -159,7 +144,10 @@ def _get_num_harmonic_supercells(
         return len(phonon.displacements)
     if num_displaced_supercells != 0:
         return num_displaced_supercells
-    (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+    if count_free_fcs is None:
+        n_fp = _get_num_free_fc2(phonon.supercell, phonon.symmetry.tolerance)
+    else:
+        n_fp = count_free_fcs()
     natom = len(phonon.supercell.numbers)
     num_disp_sc = int(np.ceil(n_fp / (3.0 * natom)))
     return int(np.ceil(num_disp_sc * multiplier)) + 1
@@ -211,7 +199,7 @@ def _run_band_structure_and_plot(
     is_band_connection: bool = False,
     filename_bs: str = "phonon_band_structure.pdf",
     units: str = "THz",
-    tol_imaginary_modes: float = 1e-5,
+    tol_imaginary_modes: float = 1e-3,
 ) -> tuple[PhononBandStructureSymmLine, bool]:
     """Compute, save, and plot a phonon band structure on a Phonopy object.
 
@@ -360,10 +348,6 @@ def _generate_phonon_object(
         scheme to generate kpath
     code:
         code to perform the computations
-    use_min_dof : bool = False
-        Whether to use the minimal number of degrees of freedom
-        in calculating randomly-displaced structures.
-        Requires ALAMODE.
     verbose : bool = False
         Whether to log error messages.
 
@@ -447,10 +431,6 @@ def generate_phonon_displacements(
         scheme to generate kpath
     code:
         code to perform the computations
-    use_min_dof : bool = False
-        Whether to use the minimal number of degrees of freedom
-        in calculating randomly-displaced structures.
-        Requires ALAMODE.
     verbose : bool = False
         Whether to log error messages.
 
@@ -531,6 +511,25 @@ def generate_frequencies_eigenvectors(
             f"Invalid phonon_doc_schema={phonon_doc_schema!r}. "
             "Expected one of {'atomate2', 'emmet'}."
         )
+    if phonon_doc_schema == "atomate2":
+        return Atomate2PhononBSDOSDoc.from_forces_born(
+            structure=structure.copy().remove_site_property(property_name="magmom")
+            if "magmom" in structure.site_properties
+            else structure,
+            supercell_matrix=supercell_matrix,
+            displacement=displacement,
+            sym_reduce=sym_reduce,
+            symprec=symprec,
+            use_symmetrized_structure=use_symmetrized_structure,
+            kpath_scheme=kpath_scheme,
+            code=code,
+            displacement_data=displacement_data,
+            total_dft_energy=total_dft_energy,
+            epsilon_static=epsilon_static,
+            born=born,
+            **kwargs,
+        )
+
     phonon = _generate_phonon_object(
         structure,
         supercell_matrix,
@@ -553,8 +552,10 @@ def generate_frequencies_eigenvectors(
         is_symmetry=kwargs.get("symmetrize_born", True),
     )
 
-    # Produces all force constants
+    # Produces all force constants and imposes the translational, permutation
+    # and space group symmetry with the symfc projector, as phonopy.load does
     phonon.produce_force_constants(forces=set_of_forces)
+    phonon.symmetrize_force_constants(use_symfc_projector=True)
 
     filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
     create_force_constants_file = kwargs.get("create_force_constants_file", False)
@@ -597,7 +598,7 @@ def generate_frequencies_eigenvectors(
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         filename_bs=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
         units=kwargs.get("units", "THz"),
-        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-3),
     )
 
     # gets data for visualization on website - yaml is also enough
@@ -636,39 +637,6 @@ def generate_frequencies_eigenvectors(
         use_tetrahedron_method=kwargs.get("dos_use_tetrahedron_method", True),
     )
 
-    # will compute thermal displacement matrices
-    # for the primitive cell (phonon.primitive!)
-    # only this is available in phonopy
-    if kwargs.get("create_thermal_displacements"):
-        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
-        freq_min_thermal_displacements = kwargs.get(
-            "freq_min_thermal_displacements", 0.0
-        )
-        phonon.run_thermal_displacement_matrices(
-            t_min=kwargs.get("tmin_thermal_displacements", 0),
-            t_max=kwargs.get("tmax_thermal_displacements", 500),
-            t_step=kwargs.get("tstep_thermal_displacements", 100),
-            freq_min=freq_min_thermal_displacements,
-        )
-
-        temperature_range_thermal_displacements = np.arange(
-            kwargs.get("tmin_thermal_displacements", 0),
-            kwargs.get("tmax_thermal_displacements", 500),
-            kwargs.get("tstep_thermal_displacements", 100),
-        )
-        for idx, temp in enumerate(temperature_range_thermal_displacements):
-            phonon.thermal_displacement_matrices.write_cif(
-                phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-            )
-        _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-        tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-        tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-    else:
-        tdisp_mat = None
-        tdisp_mat_cif = None
-
     formula_units = (
         structure.composition.num_atoms
         / structure.composition.reduced_composition.num_atoms
@@ -680,22 +648,11 @@ def generate_frequencies_eigenvectors(
 
     volume_per_formula_unit = structure.volume / formula_units
 
-    if phonon_doc_schema == "atomate2":
-        return Atomate2PhononBSDOSDoc.from_forces_born(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            displacement=displacement,
-            sym_reduce=sym_reduce,
-            symprec=symprec,
-            use_symmetrized_structure=use_symmetrized_structure,
-            kpath_scheme=kpath_scheme,
-            code=code,
-            displacement_data=displacement_data,
-            total_dft_energy=total_dft_energy,
-            epsilon_static=epsilon_static,
-            born=born,
-            **kwargs,
-        )
+    thermal_displacement_data = (
+        _get_thermal_displacement_data(phonon, **kwargs)
+        if kwargs.get("create_thermal_displacements")
+        else None
+    )
 
     cls_constructor = (
         "migrate_fields"
@@ -720,14 +677,7 @@ def generate_frequencies_eigenvectors(
         supercell_matrix=phonon.supercell_matrix.tolist(),
         primitive_matrix=phonon.primitive_matrix.tolist(),
         code=code,
-        thermal_displacement_data={
-            "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-            "thermal_displacement_matrix_cif": tdisp_mat_cif,
-            "thermal_displacement_matrix": tdisp_mat,
-            "freq_min_thermal_displacements": freq_min_thermal_displacements,
-        }
-        if kwargs.get("create_thermal_displacements")
-        else None,
+        thermal_displacement_data=thermal_displacement_data,
         jobdirs={
             "displacements_job_dirs": displacement_data["dirs"],
             "static_run_job_dir": kwargs["static_run_job_dir"],
