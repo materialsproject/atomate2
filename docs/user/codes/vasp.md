@@ -414,8 +414,8 @@ The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
 [symfc](https://doi.org/10.1103/PhysRevB.110.214302), which phonopy installs, counts the free second-order force constants used to size the random displacement set.
 symfc finds the symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped onto its symmetry at `symprec`.
 This workflow used ALM for this count before.
-For all 26,237 phonon documents of the Materials Project's Harmonic Phonon Database that we checked, symfc gives the same number of displaced supercells as ALM.
-For the 17,860 of them that need the count, the number of free force constants is also the same.
+For all 26,413 materials of the Materials Project's Harmonic Phonon Database, symfc gives the same number of displaced supercells as ALM.
+For the 17,998 of them that need the count, the number of free force constants is also the same.
 
 To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
 
