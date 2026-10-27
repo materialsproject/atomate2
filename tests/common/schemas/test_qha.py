@@ -247,7 +247,8 @@ def test_analyze_free_energy_small(tmp_dir, test_dir):
     assert_allclose(qha_doc.t_max, 100)
 
 
-def test_analyze_free_energy_all_imaginary(test_dir):
+@pytest.mark.parametrize("n_imaginary", [5, 2])
+def test_analyze_free_energy_too_few_volumes(test_dir, n_imaginary):
     structure = Structure.from_file(f"{test_dir}/qha/POSCAR")
     phonon_docs = [
         PhononSummaryData(
@@ -256,11 +257,12 @@ def test_analyze_free_energy_all_imaginary(test_dir):
             entropies=[0.0],
             temperatures=[0.0],
             total_dft_energy=-10.0,
-            volume_per_formula_unit=volume,
+            volume_per_formula_unit=10.0 + idx,
             formula_units=1,
-            has_imaginary_modes=True,
+            has_imaginary_modes=idx < n_imaginary,
         )
-        for volume in (10.0, 11.0, 12.0)
+        for idx in range(5)
     ]
-    with pytest.raises(ValueError, match="All 3 volumes have imaginary modes"):
+    match = f"{5 - n_imaginary} of the 5 volumes have no imaginary modes"
+    with pytest.raises(ValueError, match=match):
         analyze_free_energy.original(phonon_docs, structure, t_max=300)

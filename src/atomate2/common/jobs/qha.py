@@ -163,10 +163,12 @@ def analyze_free_energy(
 
     # potentially implement a space group check in the future
 
-    if not formula_units:
+    # the vinet, birch_murnaghan and murnaghan equations of state have 4 parameters
+    if len(sorted_volume) < 4:
         raise ValueError(
-            f"All {len(phonon_outputs)} volumes have imaginary modes, so no volume "
-            "is left for the fit. Raise tol_imaginary_modes (THz, default 1e-5) in "
+            f"{len(sorted_volume)} of the {len(phonon_outputs)} volumes have no "
+            f"imaginary modes, but the {eos_type} fit needs at least 4. Raise "
+            "tol_imaginary_modes (THz) in "
             "phonon_maker.generate_frequencies_eigenvectors_kwargs if they are "
             "numerical noise, or set ignore_imaginary_modes=True to keep all volumes."
         )
