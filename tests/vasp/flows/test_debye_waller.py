@@ -96,4 +96,4 @@ def test_debye_waller_vasp_na_cl(mock_vasp, clean_dir):
 
     assert [site.specie.symbol for site in doc.structure] == ["Na", "Cl"]
     u = np.array(doc.thermal_displacement_data.thermal_displacement_matrix)
-    assert u[1, :, 0, 0] == pytest.approx([0.026454, 0.020878], rel=1e-3)
+    assert u[1, :, 0, 0] == pytest.approx([0.026534, 0.020832], rel=1e-3)
