@@ -22,7 +22,9 @@ from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
 from packaging.version import parse as parse_version
 from phonopy import Phonopy
+from phonopy.interface.symfc import SymfcFCSolver
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
+from phonopy.structure.atoms import PhonopyAtoms
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
     get_ph_bs_symm_line,
@@ -47,10 +49,9 @@ from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+    from collections.abc import Callable
 
     from emmet.core.math import Matrix3D
-    from phonopy.structure.atoms import PhonopyAtoms
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.ase.jobs import AseRelaxMaker
@@ -62,70 +63,44 @@ logger = logging.getLogger(__name__)
 ANGSTROM_TO_BOHR = 1.8897261246257702
 
 
-def _get_num_irreducible_fcs(
-    supercell: PhonopyAtoms,
-    max_order: int,
-    fcs_cutoff_radius: Sequence[float] | None = None,
-    nbody: Sequence[int] | None = None,
-) -> list[int]:
+def _get_num_free_fc2(supercell: PhonopyAtoms, symprec: float) -> int:
     """
-    Count the symmetry-irreducible force constants of each order with ALM.
+    Count the free second-order force constants of a supercell with symfc.
 
-    Used by the hiPhive workflow to size its displacement set.
+    Used by the hiPhive workflow to size its displacement set. symfc finds the
+    symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped
+    onto its symmetry at symprec.
 
     Parameters
     ----------
     supercell: PhonopyAtoms
         Supercell used for the force constant fit.
-    max_order: int
-        Highest force constant order to count, 2, 3 or 4.
-    fcs_cutoff_radius: Sequence[float] | None
-        Cutoff radius in Bohr for each order, starting at second order.
-        Only needed when max_order is larger than 2.
-    nbody: Sequence[int] | None
-        Largest number of atoms in a cluster for each order, starting at second
-        order, as in ALM's define. None keeps all clusters.
+    symprec: float
+        Symmetry tolerance.
 
     Returns
     -------
-    list[int]
-        Number of irreducible force constants for each order, starting at
-        second order.
+    int
+        Number of free second-order force constants.
     """
-    try:
-        from alm import ALM
-    except ImportError as exc:
-        raise ImportError(
-            "ALM could not be imported. Install it from git as described in the "
-            "hiPhive section of the atomate2 VASP docs. The alm package on PyPI "
-            "is an unrelated project."
-        ) from exc
+    # ASE is not a core dependency of atomate2. It comes with hiPhive.
+    from ase import Atoms
+    from ase.spacegroup.symmetrize import refine_symmetry
 
-    positions = supercell.scaled_positions
-    numbers = supercell.numbers
-
-    if max_order == 2:
-        # TODO: remove ALMODE dependence for 2nd order force constants
-        # the harmonic count uses no cutoff, so the lattice stays in Angstrom
-        with ALM(supercell.cell, positions, numbers) as alm:
-            alm.define(1)
-            alm.suggest()
-            return [alm._get_number_of_irred_fc_elements(1)]  # noqa: SLF001
-
-    # ALM expects the lattice in Bohr when cutoff radii in Bohr are given, and
-    # one cutoff per order and per pair of elements
-    n_elements = len(set(numbers))
-    cutoff_radii = [
-        np.full((n_elements, n_elements), radius)
-        for radius in fcs_cutoff_radius[: max_order - 1]
-    ]
-    with ALM(supercell.cell * ANGSTROM_TO_BOHR, positions, numbers) as alm:
-        alm.define(max_order - 1, cutoff_radii=cutoff_radii, nbody=nbody)
-        alm.suggest()
-        return [
-            alm._get_number_of_irred_fc_elements(order)  # noqa: SLF001
-            for order in range(1, max_order)
-        ]
+    atoms = Atoms(
+        numbers=supercell.numbers,
+        cell=supercell.cell,
+        scaled_positions=supercell.scaled_positions,
+        pbc=True,
+    )
+    refine_symmetry(atoms, symprec=symprec)
+    ideal = PhonopyAtoms(
+        numbers=atoms.numbers,
+        cell=atoms.cell[:],
+        scaled_positions=atoms.get_scaled_positions(),
+    )
+    basis_sets = SymfcFCSolver(ideal).compute_basis_set(orders=[2])
+    return basis_sets[2].basis_set.shape[1]
 
 
 def _get_num_harmonic_supercells(
@@ -158,7 +133,7 @@ def _get_num_harmonic_supercells(
         Number of configurations per minimum configuration set.
     count_free_fcs: Callable[[], int] | None
         Function that returns n_fp. It is only called when n_fp is needed. None
-        counts n_fp with ALM.
+        counts n_fp with symfc.
 
     Returns
     -------
@@ -170,7 +145,7 @@ def _get_num_harmonic_supercells(
     if num_displaced_supercells != 0:
         return num_displaced_supercells
     if count_free_fcs is None:
-        (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+        n_fp = _get_num_free_fc2(phonon.supercell, phonon.symmetry.tolerance)
     else:
         n_fp = count_free_fcs()
     natom = len(phonon.supercell.numbers)
@@ -373,10 +348,6 @@ def _generate_phonon_object(
         scheme to generate kpath
     code:
         code to perform the computations
-    use_min_dof : bool = False
-        Whether to use the minimal number of degrees of freedom
-        in calculating randomly-displaced structures.
-        Requires ALAMODE.
     verbose : bool = False
         Whether to log error messages.
 
@@ -460,10 +431,6 @@ def generate_phonon_displacements(
         scheme to generate kpath
     code:
         code to perform the computations
-    use_min_dof : bool = False
-        Whether to use the minimal number of degrees of freedom
-        in calculating randomly-displaced structures.
-        Requires ALAMODE.
     verbose : bool = False
         Whether to log error messages.
 
