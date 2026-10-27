@@ -7,7 +7,6 @@ rather than a MongoDB collection.
 
 from __future__ import annotations
 
-import logging
 from typing import TYPE_CHECKING
 
 from jobflow import job
@@ -21,8 +20,6 @@ if TYPE_CHECKING:
 
     from atomate2.vampire.schemas.vampire_output import VampireOutput
 
-logger = logging.getLogger(__name__)
-
 
 @job(name="heisenberg mapping")
 def heisenberg_mapping(
@@ -33,19 +30,22 @@ def heisenberg_mapping(
 ) -> HeisenbergModel:
     """Fit a classical Heisenberg Hamiltonian to magnetic structures and energies.
 
-    This wraps pymatgen's ``HeisenbergMapper`` to extract shell-resolved exchange
-    parameters ``J_ij``, fit by least squares over all supplied orderings.
+    This wraps pymatgen's ``HeisenbergMapper``. Each exchange parameter ``J_ij`` is
+    one symmetry orbit of bonds in the parent cell, fit by least squares over all
+    supplied orderings.
 
     Parameters
     ----------
     structures : list[Structure]
-        Magnetic structures, each carrying a "magmom" site property. These should be
-        ordered with the ground state first (index 0).
+        Magnetic structures, each carrying a "magmom" site property, in any order.
     energies : list[float]
         Energies **per atom** (eV) corresponding to each structure. These are
         converted to total energies internally, as required by HeisenbergMapper.
+    parent : Structure or None
+        The paramagnetic parent cell. If None, HeisenbergMapper infers it from the
+        lowest-energy ordering and warns.
     heisenberg_settings : dict or None
-        Keyword arguments for HeisenbergMapper, e.g. ``{"cutoff": 3.0, "tol": 0.04}``.
+        Keyword arguments for HeisenbergMapper, e.g. ``{"cutoff": 3.0}``.
 
     Returns
     -------
@@ -74,9 +74,7 @@ def build_exchange_doc(
     heisenberg_model : HeisenbergModel
         The fitted Heisenberg model from :func:`heisenberg_mapping`.
     parent_structure : Structure or None
-        The full parent structure from which the magnetic structures were derived.
-        This is used to store the final fitted exchange parameters in the context
-        of the original structure.
+        The paramagnetic parent cell the model was fitted on.
     vampire_output : VampireOutput or None
         The Vampire Monte-Carlo result, if the critical-temperature step was run.
     vampire_settings : dict or None

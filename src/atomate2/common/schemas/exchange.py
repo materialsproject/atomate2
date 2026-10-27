@@ -31,11 +31,12 @@ class ExchangeDocument(BaseModel):
     )
     parent_structure: Structure | None = Field(
         None,
-        description="The ground-state (lowest-energy) structure used for the fit.",
+        description="The paramagnetic parent cell the orderings were mapped onto. "
+        "Falls back to the lowest-energy ordering only when no parent was given.",
     )
     heisenberg_settings: dict | None = Field(
         None,
-        description="The {cutoff, tol} settings used by the HeisenbergMapper.",
+        description="The {cutoff, symprec} the HeisenbergMapper fitted the model with.",
     )
     vampire_settings: dict | None = Field(
         None,
@@ -46,8 +47,9 @@ class ExchangeDocument(BaseModel):
     residual: float | None = Field(
         None,
         description="Root-mean-square residual of the least-squares fit that "
-        "produced ex_params, in meV per magnetic ion. Intensive in both the cell "
-        "size and the number of orderings, so it is comparable between materials.",
+        "produced ex_params, in meV per magnetic ion. Only meaningful with many "
+        "more orderings than fitted parameters; otherwise the fit overfits and the "
+        "residual is low without the fit being good.",
     )
     ex_params: dict | None = Field(
         None,
@@ -85,9 +87,9 @@ class ExchangeDocument(BaseModel):
         heisenberg_model : HeisenbergModel
             The fitted Heisenberg model from pymatgen's HeisenbergMapper.
         parent_structure : Structure or None
-            The full ground-state structure (used for the parent_structure/formula
-            fields). If None, falls back to ``heisenberg_model.structures[0]``, the
-            full cell of the ground-state ordering (all ions retained).
+            The paramagnetic parent cell the model was fitted on. If None, falls back
+            to ``heisenberg_model.structures[0]``, the full cell of the lowest-energy
+            ordering (all ions retained).
         vampire_output : VampireOutput or None
             The Vampire Monte-Carlo result, if the critical-temperature step was run.
         vampire_settings : dict or None
@@ -102,7 +104,7 @@ class ExchangeDocument(BaseModel):
             parent_structure=parent_structure,
             heisenberg_settings={
                 "cutoff": heisenberg_model.cutoff,
-                "tol": heisenberg_model.tol,
+                "symprec": heisenberg_model.symprec,
             },
             vampire_settings=vampire_settings if vampire_output else None,
             residual=heisenberg_model.residual,

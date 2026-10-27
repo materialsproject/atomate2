@@ -8,6 +8,7 @@ Vampire Monte-Carlo for the critical temperature.
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -30,13 +31,16 @@ class ExchangeMaker(Maker):
     """Maker to fit Heisenberg exchange parameters from magnetic structures.
 
     Given a set of magnetic structures and their energies (per atom), this fits a
-    classical Heisenberg Hamiltonian via pymatgen's ``HeisenbergMapper`` to extract
-    shell-resolved exchange parameters ``J_ij``, fit by least squares over all
-    supplied orderings.
+    classical Heisenberg Hamiltonian via pymatgen's ``HeisenbergMapper``. Each
+    exchange parameter ``J_ij`` is one symmetry orbit of bonds in the paramagnetic
+    parent cell, fit by least squares over all supplied orderings.
 
     This is a post-processing workflow and runs no DFT. It is code-agnostic: the
     inputs are plain pymatgen structures and energies, typically taken from the
-    magnetic-orderings workflow (see :meth:`make_from_ordering_doc`).
+    magnetic-orderings workflow (see :meth:`make_from_ordering_doc`). Compute the
+    orderings as static calculations in the parent geometry, i.e. run the
+    ``MagneticOrderingsMaker`` with ``relax_maker=None``: relaxing each ordering on
+    its own puts lattice energy into the fitted J's.
 
     Originally implemented in atomate (v1) for VASP as the ``ExchangeWF``.
 
@@ -45,8 +49,21 @@ class ExchangeMaker(Maker):
     name : str
         Name of the flows produced by this Maker.
     heisenberg_settings : dict
-        Keyword arguments for pymatgen's HeisenbergMapper, i.e. the nearest-neighbour
-        ``cutoff`` (Angstrom) and the distance-grouping ``tol``.
+        Keyword arguments for pymatgen's HeisenbergMapper. The empty default keeps
+        only the nearest bonds of each sublattice pair. Keys:
+
+        - ``cutoff``: every bond shorter than this (Angstrom) couples, plus the
+          nearest bonds of each sublattice pair.
+        - ``symprec``: symmetry tolerance (Angstrom) for the parent's sublattices
+          and interactions.
+        - ``matcher``: ``StructureMatcher`` that maps each ordering onto the parent;
+          loosen it if relaxation distorted the orderings.
+
+        ``tol`` is deprecated in pymatgen and ignored.
+    default_magmoms : dict | None
+        The elements that can carry a moment; moments on all other elements are
+        zeroed in the fit. Pass the same dict the MagneticOrderingsMaker ran with.
+        If None, pymatgen's ``default_magmoms.yaml`` is used.
     run_vampire : bool
         Whether to run the Vampire Monte-Carlo step to estimate the critical
         temperature. Requires a VAMPIRE binary on PATH - ``vampire-serial`` unless
@@ -59,9 +76,8 @@ class ExchangeMaker(Maker):
     """
 
     name: str = "exchange"
-    heisenberg_settings: dict = field(
-        default_factory=lambda: {"cutoff": 3.0, "tol": 0.04}
-    )
+    heisenberg_settings: dict = field(default_factory=dict)
+    default_magmoms: dict[str, float] | None = None
     run_vampire: bool = True
     mc_settings: dict | None = None
 
@@ -79,6 +95,9 @@ class ExchangeMaker(Maker):
             Magnetic structures, each carrying a "magmom" site property.
         energies : list[float]
             Energies **per atom** (eV) corresponding to each structure.
+        parent : Structure or None
+            The paramagnetic parent cell the orderings were enumerated from. If None,
+            pymatgen infers it from the lowest-energy ordering and warns.
 
         Returns
         -------
@@ -90,22 +109,17 @@ class ExchangeMaker(Maker):
                 f"Got {len(structures)} structures but {len(energies)} energies; "
                 "these must be equal."
             )
-
-        # sort so the ground state (lowest energy) is index 0
-        order = sorted(range(len(energies)), key=lambda i: energies[i])
-        structures = [structures[i] for i in order]
-        energies = [energies[i] for i in order]
-
-        # HeisenbergMapper requires a 'magmom' site property on every structure
-        for idx, structure in enumerate(structures):
-            if not structure.site_properties.get("magmom"):
-                raise ValueError(
-                    f"Structure {idx} is missing a 'magmom' site property, which is "
-                    "required to fit a Heisenberg model."
-                )
+        if any(not structure.site_properties.get("magmom") for structure in structures):
+            raise ValueError(
+                "Every structure needs a 'magmom' site property to fit a Heisenberg "
+                "model."
+            )
 
         hmap = heisenberg_mapping(
-            structures, energies, parent, self.heisenberg_settings
+            structures,
+            energies,
+            parent,
+            {**self.heisenberg_settings, "default_magmoms": self.default_magmoms},
         )
         jobs = [hmap]
 
@@ -136,21 +150,30 @@ class ExchangeMaker(Maker):
         This is a convenience constructor for chaining onto the magnetic-orderings
         workflow: it pulls the structures and per-atom energies out of an
         already-computed ``MagneticOrderingsDocument`` and forwards them to
-        :meth:`make`. Because the structures must be inspected (sorted, validated)
-        when the flow is built, ``doc`` must be a resolved document, not a jobflow
-        output reference.
+        :meth:`make`. Because the structures must be inspected (validated) when the
+        flow is built, ``doc`` must be a resolved document, not a jobflow output
+        reference.
 
         Parameters
         ----------
         doc : MagneticOrderingsDocument
             A computed magnetic-orderings document (e.g. from a finished
-            MagneticOrderingsMaker run).
+            MagneticOrderingsMaker run). It does not store the ``default_magmoms``
+            the orderings ran with; set them on this maker.
 
         Returns
         -------
         Flow
             The exchange-parameter fitting workflow.
         """
+        if any(output.relax_output for output in doc.outputs):
+            warnings.warn(
+                "The orderings were relaxed. The fit assumes static calculations in "
+                "the parent geometry, so lattice energy ends up in the J's. Run the "
+                "MagneticOrderingsMaker with relax_maker=None.",
+                stacklevel=2,
+            )
+
         structures, energies = [], []
 
         for output in doc.outputs:
