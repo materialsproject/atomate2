@@ -424,8 +424,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             is_symmetry=kwargs.get("symmetrize_born", True),
         )
 
-        # Produces all force constants
+        # Produces all force constants and imposes the translational, permutation
+        # and space group symmetry with the symfc projector, as phonopy.load does
         phonon.produce_force_constants(forces=set_of_forces)
+        phonon.symmetrize_force_constants(use_symfc_projector=True)
 
         filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
         create_force_constants_file = kwargs.get("create_force_constants_file", False)
@@ -492,9 +494,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             units=kwargs.get("units", "THz"),
         )
 
-        # will determine if imaginary modes are present in the structure
+        # will determine if imaginary modes are present in the structure.
+        # The default of 1e-3 THz is above the numerical noise of the acoustic
+        # modes at Gamma. 1e-5 THz flagged this noise as imaginary modes.
         imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=kwargs.get("tol_imaginary_modes", 1e-5)
+            tol=kwargs.get("tol_imaginary_modes", 1e-3)
         )
 
         # gets data for visualization on website - yaml is also enough
