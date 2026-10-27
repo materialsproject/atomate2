@@ -517,6 +517,7 @@ class BasePhononMaker(Maker, ABC):
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
+            verbose=True,
         )
 
     @property

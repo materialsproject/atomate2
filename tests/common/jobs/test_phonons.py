@@ -131,3 +131,12 @@ def test_generate_frequencies_eigenvectors_magmom(clean_dir, si_structure, monke
     assert "magmom" not in docs[1].structure.site_properties
     assert docs[1].structure == docs[0].structure
     assert_allclose(docs[1].free_energies, docs[0].free_energies)
+
+
+def test_get_displacements_warns_magmom(clean_dir, si_structure):
+    from atomate2.vasp.flows.phonons import PhononMaker
+
+    magnetic = si_structure.copy(site_properties={"magmom": [1, -1]})
+    job = PhononMaker().get_displacements(magnetic, np.eye(3) * 2)
+    with pytest.warns(UserWarning, match="magnetic moments"):
+        run_locally(job, create_folders=True, ensure_success=True)
