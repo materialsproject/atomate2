@@ -411,14 +411,11 @@ The anharmonic force constants are written to files in the job folder and are no
 
 The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
 The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
-The workflow also needs ALM, from the ALAMODE package, which counts the free force constants used to size the random displacement set.
-Install it from git, at the commit atomate2 is tested with:
-```
-pip install "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"
-```
-From a clone of atomate2, `pip install ".[hiphive]" --group alamode` installs both in one step. This needs pip 25.1 or newer.
-The `alm` package on PyPI is an unrelated project, so do not install ALM with `pip install alm`.
-ALM is compiled from source. If that build fails, see the ALM instructions below.
+[symfc](https://doi.org/10.1103/PhysRevB.110.214302), which phonopy installs, counts the free second-order force constants used to size the random displacement set.
+symfc finds the symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped onto its symmetry at `symprec`.
+This workflow used ALM for this count before.
+For all 26,413 materials of the Materials Project's Harmonic Phonon Database, symfc gives the same number of displaced supercells as ALM.
+For the 17,998 of them that need the count, the number of free force constants is also the same.
 
 To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
 
@@ -427,29 +424,6 @@ The test set is 14 Materials Project entries, two per crystal system, with force
 The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
 Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
 The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
-
-To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
-Linux and MacOS x86-64 users can try to install using conda forge:
-```
-conda install -c conda-forge alm
-```
-This conda-forge `alm` is the ALAMODE one.
-
-Windows and MacOS ARM users cannot use the pre-built wheels on conda forge at this time, and should instead try the following installation using `conda`:
-```
-conda install -c conda-forge "numpy<=2.2" scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes
-git clone https://github.com/ttadano/ALM.git
-cd ALM/python
-python setup.py build
-pip install -e .
-```
-atomate2 is tested with ALM commit `f1d668f`. When building ALM by hand, check out that commit.
-NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
-Note also that `boost` and `eigen` can be installed via `homebrew`.
-For example, using `gcc-15` from `homebrew`, one might set:
-```
-export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
-```
 
 ### Grüneisen parameter workflow
 
