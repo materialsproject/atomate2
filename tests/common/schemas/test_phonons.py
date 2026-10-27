@@ -6,6 +6,7 @@ import pytest
 from ase.calculators.emt import EMT
 from monty.json import MontyEncoder
 from phonopy import Phonopy
+from phonopy.structure.atoms import PhonopyAtoms
 from pydantic import ValidationError
 from pymatgen.core import Lattice, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -63,7 +64,11 @@ def test_phonon_bs_dos_doc():
 
 
 def test_from_forces_born_thermal_properties(clean_dir):
-    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit."""
+    """Cu3Au with EMT reaches the classical limit of 4 x 3R per formula unit.
+
+    Without the sum rules, the noise of the acoustic modes at Gamma was flagged as
+    imaginary modes.
+    """
     structure = Structure(
         Lattice.cubic(3.74),
         ["Au", "Cu", "Cu", "Cu"],
@@ -97,6 +102,7 @@ def test_from_forces_born_thermal_properties(clean_dir):
         optimization_run_job_dir=None,
         optimization_run_uuid=None,
     )
+    assert doc.has_imaginary_modes is False
     assert doc.entropies[0] == 0
     assert doc.heat_capacities[0] == 0
     assert doc.heat_capacities[-1] == pytest.approx(12 * R, rel=1e-3)
@@ -181,6 +187,38 @@ def test_get_thermal_displacement_data(clean_dir):
         _get_thermal_displacement_data(
             phonon, imaginary_modes_thermal_displacements="include"
         )
+    with pytest.raises(ValueError, match="must not be negative"):
+        _get_thermal_displacement_data(phonon, freq_min_thermal_displacements=-0.1)
+
+
+def test_get_thermal_displacement_data_gamma_modes(clean_dir):
+    """Two Cu atoms whose out-of-phase motion is softer than their in-phase motion.
+
+    At Gamma, the three modes of smallest absolute frequency are then the out-of-phase
+    modes. The in-phase modes, the rigid translations, must be left out instead.
+    """
+    cell = PhonopyAtoms(
+        symbols=["Cu", "Cu"],
+        cell=4 * np.eye(3),
+        scaled_positions=[[0, 0, 0], [0.5, 0.5, 0.25]],
+    )
+    phonon = Phonopy(cell, np.eye(3, dtype=int), "P")
+    force_constants = np.zeros((2, 2, 3, 3))
+    force_constants[0, 0] = force_constants[1, 1] = np.eye(3)
+    force_constants[0, 1] = force_constants[1, 0] = 0.9 * np.eye(3)
+    phonon.force_constants = force_constants
+    phonon.run_qpoints([[0, 0, 0]])
+    out_of_phase = np.sort(phonon.qpoints.frequencies[0])[:3]
+
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=54
+        )
+    assert data is not None
+    # the in-phase modes were set to zero and left out, the out-of-phase modes kept
+    freqs_gamma = np.sort(phonon.mesh.frequencies[phonon.mesh.gamma_index])
+    assert freqs_gamma[:3].tolist() == [0, 0, 0]
+    assert freqs_gamma[3:] == pytest.approx(out_of_phase)
 
 
 # schemas where all fields have default values
