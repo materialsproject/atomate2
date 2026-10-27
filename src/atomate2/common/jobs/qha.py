@@ -128,17 +128,17 @@ def analyze_free_energy(
         If True, all free energies will be used
         for EOS fit
     fit_imaginary_volumes: bool
-        If True and fewer than 4 volumes have no imaginary modes, but at least 2,
-        the vibrational free energies, heat capacities and entropies of the
-        volumes with imaginary modes come from a linear fit in the volume to the
-        volumes without imaginary modes, at each temperature, as in Deringer et
-        al., Phys. Rev. B 89, 094303 (2014). Their electronic energies stay those
-        of the calculations.
+        If True, at least 4 volumes were computed and at least 2 of them have no
+        imaginary modes, the volumes with imaginary modes are kept instead of left
+        out. Their vibrational free energies, heat capacities and entropies come
+        from a linear fit in the volume to the volumes without imaginary modes, at
+        each temperature, as in Deringer et al., Phys. Rev. B 89, 094303 (2014).
+        Their electronic energies stay those of the calculations.
     kwargs: dict
         Additional keywords to pass to this job
     """
-    # only add free energies if there are no imaginary modes
-    # tolerance has to be tested
+    # only use the free energies of volumes without imaginary modes, unless they
+    # are fitted below
     electronic_energies: list[list[float]] = []
     free_energies: list[list[float]] = []
     heat_capacities: list[list[float]] = []
@@ -154,7 +154,7 @@ def analyze_free_energy(
     outputs = [output for _, output in sorted(zip(volume, phonon_outputs, strict=True))]
     kept = [o for o in outputs if not o.has_imaginary_modes or ignore_imaginary_modes]
     thermo = {id(o): (o.free_energies, o.heat_capacities, o.entropies) for o in kept}
-    if fit_imaginary_volumes and 2 <= len(kept) < 4:
+    if fit_imaginary_volumes and len(outputs) >= 4 and 2 <= len(kept) < len(outputs):
         fitted = [o for o in outputs if id(o) not in thermo]
         lines = [
             np.polyfit(

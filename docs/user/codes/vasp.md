@@ -550,7 +550,9 @@ First, a tight relaxation is performed. Subsequently, several optimizations at d
 volumes are performed. At each of the volumes, an additional phonon run is performed as well.
 Afterwards, equation of state fits are performed with phonopy.
 Volumes with imaginary modes are left out of these fits, which need at least 4 volumes.
-With `fit_imaginary_volumes=True`, if fewer than 4 volumes have no imaginary modes but at least 2, the vibrational free energy, heat capacity and entropy of the other volumes come from a linear fit in the volume to the volumes without imaginary modes, at each temperature, as in [Deringer et al.](https://doi.org/10.1103/PhysRevB.89.094303)
+With `fit_imaginary_volumes=True`, they are kept instead, if at least 2 volumes have no imaginary modes.
+Their vibrational free energy, heat capacity and entropy then come from a linear fit in the volume to the volumes without imaginary modes, at each temperature, as in [Deringer et al.](https://doi.org/10.1103/PhysRevB.89.094303).
+This helps, for example, when a material is stable at extended volumes but changes phase under compression.
 Their electronic energies stay those of the calculations, and a warning lists the fitted volumes.
 This gives only an estimate. For 40 force field QHAs with 7 volumes, keeping 2 or 3 of them and fitting the others changed the thermal expansion at 300 K by 4% to 14% in the median, and by up to 67%.
 

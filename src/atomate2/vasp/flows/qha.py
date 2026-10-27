@@ -47,6 +47,11 @@ class QhaMaker(CommonQhaMaker):
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
+    fit_imaginary_volumes: bool
+        If True, the volumes with imaginary modes are kept instead of left out, and
+        their vibrational free energies come from a linear fit in the volume to the
+        volumes without imaginary modes. Needs at least 2 volumes without imaginary
+        modes. See analyze_free_energy.
     eos_type: supported_eos
         Equation of State type used for the fitting. Defaults to vinet.
     min_length: float
