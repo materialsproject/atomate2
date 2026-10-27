@@ -20,6 +20,7 @@ from pymatgen.io.vasp import Incar, Kpoints, Xdatcar
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatgen.util.coord import pbc_diff
 
 from atomate2.common.jobs.pheasy import (
     _DEFAULT_FILE_PATHS,
@@ -58,9 +59,9 @@ _KPATH_SCHEME = "seekpath"
 def _get_phonopy(
     structure: Structure, supercell_matrix: Matrix3D, symprec: float, code: str
 ) -> Phonopy:
-    """Get the phonopy object of the sorted structure and the supercell."""
+    """Get the phonopy object of the structure and the supercell."""
     return _generate_phonon_object(
-        structure.get_sorted_structure(),
+        structure,
         supercell_matrix,
         displacement=0.01,
         sym_reduce=True,
@@ -158,9 +159,10 @@ def _read_md(
     For VASP, XDATCAR, OSZICAR and the POTIM of INCAR are read from each run
     directory. For force fields, the ASE trajectory file is read, and
     md_time_step is the time step. Returns the fractional coordinates and the
-    cell of each frame, and the time step in fs.
+    cell of each frame, and the time step in fs. Raises an error if the runs have
+    different time steps.
     """
-    frac_coords, cells = [], []
+    frac_coords, cells, time_steps = [], [], set()
     for md_dir in md_dirs:
         directory = Path(strip_hostname(md_dir))
         if md_code == "vasp":
@@ -174,14 +176,19 @@ def _read_md(
             )
         frac_coords.append(coords)
         cells.append(cell)
+        time_steps.add(time_step)
+    if len(time_steps) > 1:
+        raise ValueError(
+            f"The MD runs have different time steps: {sorted(time_steps)} fs."
+        )
     return np.concatenate(frac_coords), np.concatenate(cells), time_step
 
 
 def _get_displacements(frac_coords: np.ndarray, reference: Structure) -> np.ndarray:
     """Cartesian displacements from the reference with the minimum image."""
-    diff = frac_coords - reference.frac_coords
-    diff -= np.round(diff)
-    return diff @ reference.lattice.matrix
+    return reference.lattice.get_cartesian_coords(
+        pbc_diff(frac_coords, reference.frac_coords)
+    )
 
 
 def _remove_center_of_mass(disps: np.ndarray, reference: Structure) -> np.ndarray:
@@ -338,8 +345,8 @@ def select_md_snapshots(
         The structures for the phonon displacement calculations, the
         snapshots followed by the undisplaced supercell. The MD time of each
         snapshot in ps. The number of frames times the time step in ps. The
-        root mean square displacement of the snapshots in Angstrom, with the
-        displacement of the center of mass removed.
+        time step in fs. The root mean square displacement of the snapshots in
+        Angstrom, with the displacement of the center of mass removed.
     """
     all_coords, _, time_step = _read_md(md_dirs, md_code, reference, md_time_step)
     n_frames = len(all_coords)
@@ -374,6 +381,7 @@ def select_md_snapshots(
         "structures": [*snapshots, reference],
         "snapshot_times": [(idx + 1) * time_step / 1000 for idx in indices],
         "md_time": n_frames * time_step / 1000,
+        "time_step": time_step,
         "rms_displacement": float(np.sqrt(np.mean(np.sum(disps**2, axis=2)))),
     }
 
@@ -416,7 +424,6 @@ def fit_finite_temperature_phonons(
     displacement_data: dict,
     temperature: float,
     thermostat: str,
-    md_time_step: float,
     equilibration_time: float,
     code: str,
     md_code: str,
@@ -476,8 +483,6 @@ def fit_finite_temperature_phonons(
         MD temperature in K.
     thermostat: str
         Thermostat of the MD.
-    md_time_step: float
-        MD time step in fs.
     equilibration_time: float
         Time at the start of the trajectory that was left out, in ps.
     code: str
@@ -570,6 +575,9 @@ def fit_finite_temperature_phonons(
 
     log_file = Path(_DEFAULT_FILE_PATHS["harmonic_fit_log"])
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
+    # pheasy appends to its log, so remove the files of an earlier fit
+    log_file.unlink(missing_ok=True)
+    fc_file.unlink(missing_ok=True)
     _run_harmonic_fit(
         supercell_matrix,
         symprec,
@@ -637,7 +645,7 @@ def fit_finite_temperature_phonons(
         md_force_field_name=md_force_field_name,
         md_force_field_kwargs=md_force_field_kwargs,
         thermostat=thermostat,
-        md_time_step=md_time_step,
+        md_time_step=snapshot_data["time_step"],
         md_time=snapshot_data["md_time"],
         equilibration_time=equilibration_time,
         n_snapshots=n_data,
