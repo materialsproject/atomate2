@@ -215,7 +215,7 @@ def _run_band_structure_and_plot(
     is_band_connection: bool = False,
     filename_bs: str = "phonon_band_structure.pdf",
     units: str = "THz",
-    tol_imaginary_modes: float = 1e-5,
+    tol_imaginary_modes: float = 1e-3,
 ) -> tuple[PhononBandStructureSymmLine, bool]:
     """Compute, save, and plot a phonon band structure on a Phonopy object.
 
@@ -557,8 +557,10 @@ def generate_frequencies_eigenvectors(
         is_symmetry=kwargs.get("symmetrize_born", True),
     )
 
-    # Produces all force constants
+    # Produces all force constants and imposes the translational, permutation
+    # and space group symmetry with the symfc projector, as phonopy.load does
     phonon.produce_force_constants(forces=set_of_forces)
+    phonon.symmetrize_force_constants(use_symfc_projector=True)
 
     filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
     create_force_constants_file = kwargs.get("create_force_constants_file", False)
@@ -601,7 +603,7 @@ def generate_frequencies_eigenvectors(
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         filename_bs=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
         units=kwargs.get("units", "THz"),
-        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-3),
     )
 
     # gets data for visualization on website - yaml is also enough

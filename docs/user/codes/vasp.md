@@ -346,9 +346,16 @@ With `create_thermal_displacements=True` (the default of `PhononMaker`), the wor
 They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by `kpoint_density_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
 phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
 An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
+These are the three modes at Gamma whose eigenvectors are closest to the rigid translations of the cell.
+phonopy's `exclude_gamma_acoustic` takes the three modes of smallest absolute frequency, which are not the acoustic modes if an optical mode at Gamma is closer to zero.
 This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
 For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
-If the mesh has imaginary modes, no thermal displacement matrices are stored.
+If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
+With `imaginary_modes_thermal_displacements="exclude"` in `generate_frequencies_eigenvectors_kwargs`, the imaginary modes are left out, and with `"absolute"`, each one counts as a real mode of the same absolute frequency.
+Both give only an estimate of the matrices.
+`freq_min_thermal_displacements` (in THz) is the cutoff: modes with a frequency below it are left out, and with `"absolute"` also the imaginary modes of an absolute frequency below it.
+Without imaginary modes, the default of 0 leaves out no mode, since apart from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+With imaginary modes, both options need a positive `freq_min_thermal_displacements`, since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.
 
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).
@@ -372,7 +379,7 @@ This is the default of the VASP and FHI-aims `PhononMaker`, but it has to be set
 `debye_waller_kwargs` passes `xrd_kwargs`, `nd_kwargs` and `tem_kwargs` to pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator`.
 The q-point mesh and the temperatures are set with `kpoint_density_thermal_displacements` and `tmin_thermal_displacements`, `tmax_thermal_displacements` and `tstep_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
 If the mesh has imaginary modes, the phonon workflow stores no $U$, and the `compute_debye_waller` job fails.
-Set `imaginary_modes_thermal_displacements` to `"exclude"` or `"absolute"` to get an estimate of $U$ and of the patterns instead.
+Set `imaginary_modes_thermal_displacements` to `"exclude"` or `"absolute"`, with a positive `freq_min_thermal_displacements`, to get an estimate of $U$ and of the patterns instead.
 The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
 For metals, set `born_maker=None` to skip the Born charge calculation.
 The hkl indices of the patterns and the TEM beam direction refer to the primitive cell.
