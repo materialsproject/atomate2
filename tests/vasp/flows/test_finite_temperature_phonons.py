@@ -78,8 +78,13 @@ def test_flow_from_output_reference():
     """The structure can be the output of an earlier job."""
     structure = OutputReference("1234", attributes=(("a", "structure"),))
     flow = FiniteTemperaturePhononMaker().make(structure)
-    assert flow.jobs[0].name == "double relax"
-    assert [job.name for job in flow.jobs][4] == "molecular dynamics"
+    names = [job.name for job in flow.jobs]
+    # a job sorts the atoms, and the relaxation starts from its output
+    assert names[:2] == ["sort_structure", "double relax"]
+    assert names[5] == "molecular dynamics"
+    sort_job, relax = flow.jobs[:2]
+    assert sort_job.function_args[0] == structure
+    assert relax.jobs[0].function_args[0].uuid == sort_job.uuid
 
 
 def test_non_diagonal_supercell_matrix(si_structure):

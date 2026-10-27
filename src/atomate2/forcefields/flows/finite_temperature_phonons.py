@@ -38,7 +38,6 @@ def _get_md_maker(
     return ForceFieldMDMaker(
         force_field_name=force_field_name,
         calculator_kwargs=calculator_kwargs or {},
-        store_trajectory="no",
         ionic_step_data=("energy",),
     )
 

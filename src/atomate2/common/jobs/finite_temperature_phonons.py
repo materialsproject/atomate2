@@ -73,6 +73,12 @@ def _get_phonopy(
 
 
 @job
+def sort_structure(structure: Structure) -> Structure:
+    """Sort the atoms by electronegativity, as the VASP input sets do."""
+    return structure.get_sorted_structure()
+
+
+@job
 def get_md_supercell(
     structure: Structure, supercell_matrix: Matrix3D, symprec: float, code: str
 ) -> Structure:

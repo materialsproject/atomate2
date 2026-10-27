@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field, fields, replace
 from typing import TYPE_CHECKING
 
+from emmet.core.types.enums import StoreTrajectoryOption
+
 from atomate2.common.flows.finite_temperature_phonons import (
     BaseFiniteTemperaturePhononMaker,
 )
@@ -12,10 +14,10 @@ from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import DielectricMaker, TightRelaxMaker
 from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
+from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.core import (
     LangevinMDSetGenerator,
     MDSetGenerator,
-    StaticSetGenerator,
     TightRelaxSetGenerator,
 )
 
@@ -138,33 +140,24 @@ class FiniteTemperaturePhononMaker(BaseFiniteTemperaturePhononMaker):
                     "SIGMA": 0.05,
                 },
                 user_kpoints_settings={"reciprocal_density": 100},
-            )
+            ),
+            # the snapshots are read from XDATCAR
+            task_document_kwargs={"store_trajectory": StoreTrajectoryOption.NO},
         )
     )
     phonon_displacement_maker: Maker = field(
-        default_factory=lambda: PhononDisplacementMaker(
-            input_set_generator=StaticSetGenerator(
-                user_incar_settings={
-                    "IBRION": 2,
-                    "ISIF": 3,
-                    "NSW": 0,
-                    "ENCUT": 600,
-                    "ENAUG": 1360,
-                    "EDIFF": 1e-7,
-                    "PREC": "Accurate",
-                    "ALGO": "Normal",
-                    "LASPH": True,
-                    "NELM": 200,
-                    "LREAL": False,
-                    "LAECHG": False,
-                    "LCHARG": False,
-                    "LWAVE": False,
-                    "ISMEAR": 0,
-                    "SIGMA": 0.05,
-                },
-                user_kpoints_settings={"reciprocal_density": 100},
-                auto_ispin=True,
-            )
+        default_factory=lambda: update_user_incar_settings(
+            PhononDisplacementMaker(),
+            {
+                "ENCUT": 600,
+                "ENAUG": 1360,
+                "PREC": "Accurate",
+                "LASPH": True,
+                "NELM": 200,
+                "LWAVE": False,
+                "ISMEAR": 0,
+                "SIGMA": 0.05,
+            },
         )
     )
     code: str = "vasp"
