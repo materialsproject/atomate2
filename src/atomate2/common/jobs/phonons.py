@@ -535,25 +535,6 @@ def generate_frequencies_eigenvectors(
             f"Invalid phonon_doc_schema={phonon_doc_schema!r}. "
             "Expected one of {'atomate2', 'emmet'}."
         )
-    if phonon_doc_schema == "atomate2":
-        return Atomate2PhononBSDOSDoc.from_forces_born(
-            structure=structure.copy().remove_site_property(property_name="magmom")
-            if "magmom" in structure.site_properties
-            else structure,
-            supercell_matrix=supercell_matrix,
-            displacement=displacement,
-            sym_reduce=sym_reduce,
-            symprec=symprec,
-            use_symmetrized_structure=use_symmetrized_structure,
-            kpath_scheme=kpath_scheme,
-            code=code,
-            displacement_data=displacement_data,
-            total_dft_energy=total_dft_energy,
-            epsilon_static=epsilon_static,
-            born=born,
-            **kwargs,
-        )
-
     phonon = _generate_phonon_object(
         structure,
         supercell_matrix,
@@ -671,6 +652,23 @@ def generate_frequencies_eigenvectors(
     )
 
     volume_per_formula_unit = structure.volume / formula_units
+
+    if phonon_doc_schema == "atomate2":
+        return Atomate2PhononBSDOSDoc.from_forces_born(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            displacement=displacement,
+            sym_reduce=sym_reduce,
+            symprec=symprec,
+            use_symmetrized_structure=use_symmetrized_structure,
+            kpath_scheme=kpath_scheme,
+            code=code,
+            displacement_data=displacement_data,
+            total_dft_energy=total_dft_energy,
+            epsilon_static=epsilon_static,
+            born=born,
+            **kwargs,
+        )
 
     thermal_displacement_data = (
         _get_thermal_displacement_data(phonon, **kwargs)
