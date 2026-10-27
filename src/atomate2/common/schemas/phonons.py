@@ -129,7 +129,15 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     mesh numbers are rounded up to odd numbers. An odd mesh contains Gamma. The
     three acoustic modes at Gamma are left out, because their frequencies are
     zero up to numerical noise and the term of a mode diverges as its frequency
-    goes to zero. One CIF file is written per temperature.
+    goes to zero. As in phonopy's exclude_gamma_acoustic, these are the three
+    modes of smallest absolute frequency at Gamma. Their eigenvectors are checked
+    to be the rigid translations of the cell. If they are not, for example because
+    an optical mode at Gamma is closer to zero, no matrices are returned.
+    One CIF file is written per temperature.
+
+    Modes with a frequency below freq_min_thermal_displacements are left out.
+    Without imaginary modes, the default of 0 leaves out no mode, since apart
+    from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
 
     The matrices are not defined if the mesh has imaginary modes, so by default
     none are returned then. A material with imaginary modes then gets no
@@ -157,7 +165,8 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     -------
     dict or None
         Fields of ThermalDisplacementData, or None if the mesh has imaginary
-        modes and imaginary_modes_thermal_displacements is None.
+        modes and imaginary_modes_thermal_displacements is None, or if the three
+        modes of smallest absolute frequency at Gamma are not the acoustic modes.
     """
     warnings.warn(
         "Thermal displacement matrices now leave out the acoustic modes at Gamma, "
@@ -180,11 +189,30 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
             'imaginary_modes_thermal_displacements must be None, "exclude" or '
             f'"absolute", not {imaginary_modes!r}.'
         )
-    # Only the three acoustic modes at Gamma are left out, the modes of smallest
-    # absolute frequency, as in phonopy's exclude_gamma_acoustic.
-    freqs = phonon.mesh.frequencies.copy()
+    if freq_min < 0:
+        raise ValueError(
+            "freq_min_thermal_displacements must not be negative. Modes below it "
+            "are left out, and a negative value would let imaginary modes in."
+        )
+    # phonopy's exclude_gamma_acoustic leaves out the three modes of smallest
+    # absolute frequency at Gamma. Their eigenvectors must be the rigid
+    # translations of the cell (weight sqrt(mass) on each atom), or else other
+    # modes would be left out. The eigenvectors are the columns.
     gamma = phonon.mesh.gamma_index
-    freqs[gamma, np.argsort(np.abs(freqs[gamma]))[:3]] = np.inf
+    acoustic = np.argsort(np.abs(phonon.mesh.frequencies[gamma]))[:3]
+    sqrt_mass = np.sqrt(phonon.primitive.masses)
+    translations = np.kron(sqrt_mass / np.linalg.norm(sqrt_mass), np.eye(3))
+    eigvecs = phonon.mesh.eigenvectors[gamma][:, acoustic]
+    # 3 if the three modes span the translations, 0 if they are orthogonal to them
+    if (np.abs(translations @ eigvecs) ** 2).sum() < 2.9:
+        warnings.warn(
+            "The three modes of smallest absolute frequency at Gamma are not the "
+            "acoustic modes, so no thermal displacement matrices are stored.",
+            stacklevel=2,
+        )
+        return None
+    freqs = phonon.mesh.frequencies.copy()
+    freqs[gamma, acoustic] = np.inf
     has_imaginary = freqs.min() < -kwargs.get("tol_imaginary_modes", 1e-5)
     if has_imaginary and imaginary_modes is None:
         warnings.warn(
@@ -276,8 +304,10 @@ class ThermalDisplacementData(BaseModel):
 
     freq_min_thermal_displacements: float = Field(
         0.0,
-        description="cutoff frequency in THz to avoid numerical issues in the "
-        "computation of the thermal displacement parameters",
+        description="cutoff frequency in THz. Modes with a frequency below it are "
+        "left out of the thermal displacement matrices, with "
+        'imaginary_modes="absolute" also the imaginary modes of an absolute '
+        "frequency below it.",
     )
     thermal_displacement_matrix_cif: list[list[Matrix3D]] | None = Field(
         None, description="field including thermal displacement matrices in CIF format"

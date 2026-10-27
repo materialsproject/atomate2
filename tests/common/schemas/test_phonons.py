@@ -6,6 +6,7 @@ import pytest
 from ase.calculators.emt import EMT
 from monty.json import MontyEncoder
 from phonopy import Phonopy
+from phonopy.structure.atoms import PhonopyAtoms
 from pydantic import ValidationError
 from pymatgen.core import Lattice, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -180,6 +181,34 @@ def test_get_thermal_displacement_data(clean_dir):
     with pytest.raises(ValueError, match="must be None"):
         _get_thermal_displacement_data(
             phonon, imaginary_modes_thermal_displacements="include"
+        )
+    with pytest.raises(ValueError, match="must not be negative"):
+        _get_thermal_displacement_data(phonon, freq_min_thermal_displacements=-0.1)
+
+
+def test_get_thermal_displacement_data_gamma_modes(clean_dir):
+    """Two Cu atoms whose out-of-phase motion is softer than their in-phase motion.
+
+    At Gamma, the three modes of smallest absolute frequency are then the out-of-phase
+    modes, not the rigid translations, so no U is returned.
+    """
+    cell = PhonopyAtoms(
+        symbols=["Cu", "Cu"],
+        cell=4 * np.eye(3),
+        scaled_positions=[[0, 0, 0], [0.5, 0.5, 0.25]],
+    )
+    phonon = Phonopy(cell, np.eye(3, dtype=int), "P")
+    force_constants = np.zeros((2, 2, 3, 3))
+    force_constants[0, 0] = force_constants[1, 1] = np.eye(3)
+    force_constants[0, 1] = force_constants[1, 0] = 0.9 * np.eye(3)
+    phonon.force_constants = force_constants
+
+    with pytest.warns(UserWarning, match="not the acoustic modes"):
+        assert (
+            _get_thermal_displacement_data(
+                phonon, kpoint_density_thermal_displacements=54
+            )
+            is None
         )
 
 

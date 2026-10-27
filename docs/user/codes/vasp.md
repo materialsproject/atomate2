@@ -346,12 +346,16 @@ With `create_thermal_displacements=True` (the default of `PhononMaker`), the wor
 They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by `kpoint_density_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
 phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
 An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
+As in phonopy, these are the three modes of smallest absolute frequency at Gamma, and their eigenvectors are checked to be the rigid translations of the cell.
+If they are not, for example because an optical mode at Gamma is closer to zero, no thermal displacement matrices are stored.
 This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
 For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
 If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
 With `imaginary_modes_thermal_displacements="exclude"` in `generate_frequencies_eigenvectors_kwargs`, the imaginary modes are left out, and with `"absolute"`, each one counts as a real mode of the same absolute frequency.
 Both give only an estimate of the matrices.
-Both also need a positive `freq_min_thermal_displacements` (in THz), since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.
+`freq_min_thermal_displacements` (in THz) is the cutoff: modes with a frequency below it are left out, and with `"absolute"` also the imaginary modes of an absolute frequency below it.
+Without imaginary modes, the default of 0 leaves out no mode, since apart from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+With imaginary modes, both options need a positive `freq_min_thermal_displacements`, since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.
 
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).
