@@ -49,6 +49,7 @@ from atomate2.common.jobs.phonons import (
     _run_total_dos_and_plot,
 )
 from atomate2.common.schemas.phonons import (
+    TOL_IMAGINARY_MODES,
     _get_thermal_displacement_data,
     _set_nac_params,
 )
@@ -971,7 +972,7 @@ def generate_frequencies_eigenvectors(
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         filename_bs=bs_plot_file,
         units=kwargs.get("units", "THz"),
-        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", TOL_IMAGINARY_MODES),
     )
 
     # If imaginary modes are present, we first use the hiphive code to enforce
@@ -1019,7 +1020,7 @@ def generate_frequencies_eigenvectors(
             with_eigenvectors=True,
             filename_bs=bs_plot_file,
             units=kwargs.get("units", "THz"),
-            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", TOL_IMAGINARY_MODES),
         )
 
     # Using a shorter cutoff (10 A) to generate the force constants to
@@ -1074,7 +1075,7 @@ def generate_frequencies_eigenvectors(
             with_eigenvectors=True,
             filename_bs=bs_plot_file,
             units=kwargs.get("units", "THz"),
-            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
+            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", TOL_IMAGINARY_MODES),
         )
 
     # gets data for visualization on website - yaml is also enough
