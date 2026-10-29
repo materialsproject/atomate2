@@ -51,6 +51,39 @@ def test_copy_cp2k_outputs_static(
 
 
 @pytest.mark.parametrize(
+    ("src_files", "expected"),
+    [
+        (["a.cube", "b.cube.gz"], ["a.cube", "b.cube"]),
+        (["a.cube.relax1", "a.cube.relax2.gz"], ["a.cube"]),
+    ],
+)
+def test_copy_cp2k_outputs_wildcards(
+    tmp_dir: Path, src_files: list[str], expected: list[str]
+) -> None:
+    from atomate2.cp2k.files import copy_cp2k_outputs
+
+    test_dir = Path("test_outputs")
+    test_dir.mkdir()
+    # cp2k.out is always parsed without the relax extension
+    (test_dir / "cp2k.out").write_text("CP2K| Output file names:\n")
+    relax_ext = ".relax2" if any("relax" in f for f in src_files) else ""
+    for name in ("cp2k.out", "cp2k.inp"):
+        (test_dir / f"{name}{relax_ext}").write_text(name)
+    for name in src_files:
+        path = test_dir / name
+        if name.endswith(".gz"):
+            with gzip.open(path, "wt") as file:
+                file.write(name)
+        else:
+            path.write_text(name)
+
+    copy_cp2k_outputs(src_dir=test_dir, additional_cp2k_files=["*.cube"])
+
+    copied = sorted(p.name for p in Path().iterdir() if p.name != "test_outputs")
+    assert copied == sorted(["cp2k.inp", "cp2k.out", *expected])
+
+
+@pytest.mark.parametrize(
     "directory, expected_extension",
     [
         ("Si_band_structure/static/outputs", ""),

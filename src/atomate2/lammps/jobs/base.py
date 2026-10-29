@@ -1,6 +1,5 @@
 """Base job maker for LAMMPS calculations."""
 
-import glob
 import os
 import warnings
 from collections.abc import Callable
@@ -17,8 +16,8 @@ from pymatgen.io.lammps.generators import (
     LammpsForceField,
 )
 
-from atomate2.common.files import gunzip_files, gzip_files
-from atomate2.lammps.files import write_lammps_input_set
+from atomate2.common.files import gzip_files
+from atomate2.lammps.files import copy_lammps_restart_file, write_lammps_input_set
 from atomate2.lammps.run import run_lammps
 from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOption
 
@@ -99,19 +98,7 @@ class BaseLammpsMaker(Maker):
     ) -> Response:
         """Run a LAMMPS calculation."""
         if prev_dir:
-            restart_files = glob.glob(os.path.join(prev_dir, "*restart*"))
-            if len(restart_files) != 1:
-                raise FileNotFoundError(
-                    "No/More than one restart file found in the previous directory. \
-                        If present, it should have the extension '.restart'!"
-                )
-
-            restart_file = restart_files[0]
-            if restart_file.endswith(".restart.gz"):
-                gunzip_files(
-                    directory=prev_dir, include_files=[restart_file], force=True
-                )
-                restart_file = str(Path(restart_file).with_suffix(""))
+            restart_file = copy_lammps_restart_file(prev_dir)
             self.input_set_generator.update_settings({"read_restart": restart_file})
 
         if isinstance(input_structure, Path):
