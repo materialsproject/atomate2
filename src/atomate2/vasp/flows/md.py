@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker, OutputReference
 
+from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.md import MDMaker, md_output
 from atomate2.vasp.sets.core import MDSetGenerator
 
@@ -16,24 +17,33 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Structure
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-
 
 @dataclass
 class MultiMDMaker(Maker):
     """
     Maker to perform an MD run split in several steps.
 
+    Each MD job starts from the final structure of the previous one, including
+    its velocities. ASE makers only pass the velocities on if store_velocities is
+    True. Without them, an NVE job starts at rest and an NVT or NPT job draws new
+    Maxwell-Boltzmann velocities. Between two VASP jobs, the POSCAR also keeps the
+    predictor-corrector block of the CONTCAR, and the VASP maker gets the
+    directory of the previous job as prev_dir. Otherwise the thermostat and
+    barostat variables are not carried over. ASE makers with a
+    fixed mb_velocity_seed can repeat the same thermostat noise in every job, so
+    give each maker its own seed.
+
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    md_makers : .BaseVaspMaker
-        Maker to use to generate the first relaxation.
+    md_makers : list of .Maker
+        Makers of the MD jobs, in order. VASP makers and ASE makers, such as
+        ForceFieldMDMaker, can be mixed.
     """
 
     name: str = "multi md"
-    md_makers: list[BaseVaspMaker] = field(default_factory=lambda: [MDMaker()])
+    md_makers: list[Maker] = field(default_factory=lambda: [MDMaker()])
 
     def make(
         self,
@@ -48,7 +58,7 @@ class MultiMDMaker(Maker):
         structure : .Structure
             A pymatgen structure object.
         prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
+            A previous calculation directory to copy output files from.
         prev_traj_ids: a list of ids of job identifying previous steps of the
             MD trajectory.
 
@@ -65,7 +75,9 @@ class MultiMDMaker(Maker):
         for idx, maker in enumerate(self.md_makers, start=1):
             if md_job is not None:
                 md_structure = md_job.output.structure
-                md_prev_dir = md_job.output.dir_name
+                # only a VASP job writes the files that a VASP maker copies
+                prev_is_vasp = isinstance(md_job.maker, BaseVaspMaker)
+                md_prev_dir = md_job.output.dir_name if prev_is_vasp else None
             md_job = maker.make(md_structure, prev_dir=md_prev_dir)
             md_job.name += f" {idx}"
             md_jobs.append(md_job)
