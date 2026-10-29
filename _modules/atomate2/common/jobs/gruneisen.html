@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html"><link rel="search" title="Search" href="../../../../search.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>atomate2.common.jobs.gruneisen - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1531,8 +1531,7 @@
 
         <span class="n">processed</span> <span class="o">=</span> <span class="n">get_calc_meta</span><span class="p">(</span><span class="n">_for_post_process</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
-            <span class="n">replace</span><span class="o">=</span><span class="n">Flow</span><span class="p">([</span><span class="o">*</span><span class="n">jobs</span><span class="p">,</span> <span class="n">processed</span><span class="p">]),</span>
-            <span class="n">output</span><span class="o">=</span><span class="n">processed</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+            <span class="n">replace</span><span class="o">=</span><span class="n">Flow</span><span class="p">([</span><span class="o">*</span><span class="n">jobs</span><span class="p">,</span> <span class="n">processed</span><span class="p">],</span> <span class="n">output</span><span class="o">=</span><span class="n">processed</span><span class="o">.</span><span class="n">output</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
         <span class="n">msg</span><span class="o">=</span><span class="s2">"Different space groups were detected for the optimized structures."</span>
@@ -1681,7 +1680,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

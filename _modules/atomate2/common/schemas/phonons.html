@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html"><link rel="search" title="Search" href="../../../../search.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>atomate2.common.schemas.phonons - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1415,15 +1415,17 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">emmet.core.math</span><span class="w"> </span><span class="kn">import</span> <span class="n">Matrix3D</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">emmet.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructureMetadata</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">monty.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">MSONable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Phonopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.interface.cif</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_cif_P1</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.phonon.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_band_qpoints_and_path_connections</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.structure.symmetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">symmetrize_borns_and_epsilon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohr</span><span class="p">,</span> <span class="n">Hartree</span><span class="p">,</span> <span class="n">VaspToTHz</span>
@@ -1534,6 +1536,163 @@
     <span class="k">return</span> <span class="n">borns</span><span class="p">,</span> <span class="n">epsilon</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_thermal_displacement_data</span><span class="p">(</span><span class="n">phonon</span><span class="p">:</span> <span class="n">Phonopy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute the thermal displacement matrices of the primitive cell.</span>
+
+<span class="sd">    phonopy shifts meshes with even numbers by half a step, which breaks the</span>
+<span class="sd">    site symmetry of the matrices for face-centred and hexagonal cells. So the</span>
+<span class="sd">    mesh numbers are rounded up to odd numbers. An odd mesh contains Gamma. The</span>
+<span class="sd">    three acoustic modes at Gamma are left out, because their frequencies are</span>
+<span class="sd">    zero up to numerical noise and the term of a mode diverges as its frequency</span>
+<span class="sd">    goes to zero. The acoustic modes are the three modes at Gamma whose</span>
+<span class="sd">    eigenvectors are closest to the rigid translations of the cell. phonopy's</span>
+<span class="sd">    exclude_gamma_acoustic takes the three modes of smallest absolute frequency,</span>
+<span class="sd">    which are not the acoustic modes if an optical mode at Gamma is closer to</span>
+<span class="sd">    zero. One CIF file is written per temperature.</span>
+
+<span class="sd">    Modes with a frequency below freq_min_thermal_displacements are left out.</span>
+<span class="sd">    Without imaginary modes, the default of 0 leaves out no mode, since apart</span>
+<span class="sd">    from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.</span>
+
+<span class="sd">    The matrices are not defined if the mesh has imaginary modes, so by default</span>
+<span class="sd">    none are returned then. A material with imaginary modes then gets no</span>
+<span class="sd">    Debye-Waller factors either. The two options below give an estimate of U</span>
+<span class="sd">    for such a material. imaginary_modes_thermal_displacements="exclude"</span>
+<span class="sd">    computes U from the real modes above freq_min_thermal_displacements.</span>
+<span class="sd">    "absolute" also counts each imaginary mode as a real mode of the same absolute</span>
+<span class="sd">    frequency, above freq_min_thermal_displacements. freq_min_thermal_displacements</span>
+<span class="sd">    must then be positive, because the term of a mode diverges as its frequency</span>
+<span class="sd">    goes to zero. These matrices are only an estimate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phonon: Phonopy</span>
+<span class="sd">        Phonopy object with force constants and, if available, the NAC set.</span>
+<span class="sd">    **kwargs:</span>
+<span class="sd">        kpoint_density_thermal_displacements (default 30000),</span>
+<span class="sd">        tmin_thermal_displacements (default 0), tmax_thermal_displacements</span>
+<span class="sd">        (default 1000), tstep_thermal_displacements (default 100),</span>
+<span class="sd">        freq_min_thermal_displacements (default 0.0), tol_imaginary_modes</span>
+<span class="sd">        (default 1e-5) and imaginary_modes_thermal_displacements (default None,</span>
+<span class="sd">        "exclude" or "absolute").</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict or None</span>
+<span class="sd">        Fields of ThermalDisplacementData, or None if the mesh has imaginary</span>
+<span class="sd">        modes and imaginary_modes_thermal_displacements is None.</span>
+<span class="sd">    """</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">"Thermal displacement matrices now leave out the acoustic modes at Gamma, "</span>
+        <span class="s2">"use their own q-point mesh with odd mesh numbers "</span>
+        <span class="s2">"(kpoint_density_thermal_displacements, default 30000) and run from 0 to "</span>
+        <span class="s2">"1000 K. They can differ from those of earlier atomate2 versions."</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">kpoint</span> <span class="o">=</span> <span class="n">Kpoints</span><span class="o">.</span><span class="n">automatic_density</span><span class="p">(</span>
+        <span class="n">structure</span><span class="o">=</span><span class="n">get_pmg_structure</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">primitive</span><span class="p">),</span>
+        <span class="n">kppa</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"kpoint_density_thermal_displacements"</span><span class="p">,</span> <span class="mi">30_000</span><span class="p">),</span>
+        <span class="n">force_gamma</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">kpoint</span><span class="o">.</span><span class="n">kpts</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">phonon</span><span class="o">.</span><span class="n">run_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">with_eigenvectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_mesh_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">freq_min</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"freq_min_thermal_displacements"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">imaginary_modes</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"imaginary_modes_thermal_displacements"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">imaginary_modes</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"exclude"</span><span class="p">,</span> <span class="s2">"absolute"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">'imaginary_modes_thermal_displacements must be None, "exclude" or '</span>
+            <span class="sa">f</span><span class="s1">'"absolute", not </span><span class="si">{</span><span class="n">imaginary_modes</span><span class="si">!r}</span><span class="s1">.'</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">freq_min</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"freq_min_thermal_displacements must not be negative. Modes below it "</span>
+            <span class="s2">"are left out, and a negative value would let imaginary modes in."</span>
+        <span class="p">)</span>
+    <span class="c1"># The acoustic modes at Gamma are the rigid translations of the cell, with</span>
+    <span class="c1"># weight sqrt(mass) on each atom. They are the three modes whose eigenvectors</span>
+    <span class="c1"># (the columns) overlap most with the translations. Their frequencies on this</span>
+    <span class="c1"># mesh are set to zero, so phonopy's exclude_gamma_acoustic, which leaves out</span>
+    <span class="c1"># the three modes of smallest absolute frequency, leaves out these modes.</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">gamma_index</span>
+    <span class="n">sqrt_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">primitive</span><span class="o">.</span><span class="n">masses</span><span class="p">)</span>
+    <span class="n">translations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">sqrt_mass</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sqrt_mass</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">eigvecs</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">eigenvectors</span><span class="p">[</span><span class="n">gamma</span><span class="p">]</span>
+    <span class="n">acoustic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">translations</span> <span class="o">@</span> <span class="n">eigvecs</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="n">phonon</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">frequencies</span><span class="p">[</span><span class="n">gamma</span><span class="p">,</span> <span class="n">acoustic</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">freqs</span><span class="p">[</span><span class="n">gamma</span><span class="p">,</span> <span class="n">acoustic</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">has_imaginary</span> <span class="o">=</span> <span class="n">freqs</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tol_imaginary_modes"</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_imaginary</span> <span class="ow">and</span> <span class="n">imaginary_modes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">"The q-point mesh has imaginary modes, so no thermal displacement "</span>
+            <span class="s2">"matrices are stored."</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># With an option, U is computed below. "exclude" sums only the real modes above</span>
+    <span class="c1"># freq_min. "absolute" also adds the imaginary modes in a second sum.</span>
+    <span class="k">if</span> <span class="n">has_imaginary</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">freq_min</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"freq_min_thermal_displacements must be positive when the mesh has "</span>
+                <span class="s2">"imaginary modes. Where a branch crosses zero, the mesh has modes "</span>
+                <span class="s2">"with frequencies near zero, and the term of such a mode diverges. "</span>
+                <span class="s2">"freq_min_thermal_displacements leaves these modes out."</span>
+            <span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">"The q-point mesh has imaginary modes. The thermal displacement "</span>
+            <span class="sa">f</span><span class="s1">'matrices are computed with imaginary_modes="</span><span class="si">{</span><span class="n">imaginary_modes</span><span class="si">}</span><span class="s1">".'</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">t_step</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tstep_thermal_displacements"</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="c1"># same temperatures as phonopy's t_min, t_max, t_step, which include t_max</span>
+    <span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmin_thermal_displacements"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmax_thermal_displacements"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_step</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">t_step</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">phonon</span><span class="o">.</span><span class="n">run_thermal_displacement_matrices</span><span class="p">(</span>
+        <span class="n">temperatures</span><span class="o">=</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">freq_min</span><span class="o">=</span><span class="n">freq_min</span><span class="p">,</span> <span class="n">exclude_gamma_acoustic</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">matrices</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">matrices</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span>
+    <span class="n">u_cif</span> <span class="o">=</span> <span class="n">matrices</span><span class="o">.</span><span class="n">thermal_displacement_matrices_cif</span>
+    <span class="k">if</span> <span class="n">has_imaginary</span> <span class="ow">and</span> <span class="n">imaginary_modes</span> <span class="o">==</span> <span class="s2">"absolute"</span><span class="p">:</span>
+        <span class="c1"># An imaginary mode has no harmonic U, because the energy falls along it.</span>
+        <span class="c1"># Without U, the material gets no Debye-Waller factors. Leaving the mode</span>
+        <span class="c1"># out ("exclude") lowers U. "absolute" keeps it as a real mode of the same</span>
+        <span class="c1"># absolute frequency, which gives an estimate of U.</span>
+        <span class="c1"># phonopy only sums the modes above freq_min, which keeps the modes near</span>
+        <span class="c1"># zero frequency out for numerical stability, since their term diverges.</span>
+        <span class="c1"># This second run adds the imaginary modes below -freq_min, which phonopy</span>
+        <span class="c1"># stores as negative frequencies. Their term equals that of the absolute</span>
+        <span class="c1"># frequency, except at T &lt;= 1 K, where phonopy sets the population to zero</span>
+        <span class="c1"># and the term changes sign.</span>
+        <span class="n">phonon</span><span class="o">.</span><span class="n">run_thermal_displacement_matrices</span><span class="p">(</span>
+            <span class="n">temperatures</span><span class="o">=</span><span class="n">temperatures</span><span class="p">,</span>
+            <span class="n">freq_min</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+            <span class="n">freq_max</span><span class="o">=-</span><span class="n">freq_min</span><span class="p">,</span>  <span class="c1"># the imaginary modes, below -freq_min</span>
+            <span class="n">exclude_gamma_acoustic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">imaginary</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">temperatures</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">imaginary</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span>
+        <span class="n">u_cif</span> <span class="o">=</span> <span class="n">u_cif</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">imaginary</span><span class="o">.</span><span class="n">thermal_displacement_matrices_cif</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperatures</span><span class="p">):</span>
+        <span class="n">write_cif_P1</span><span class="p">(</span>
+            <span class="n">phonon</span><span class="o">.</span><span class="n">primitive</span><span class="p">,</span> <span class="n">U_cif</span><span class="o">=</span><span class="n">u_cif</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">"tdispmat_</span><span class="si">{</span><span class="n">temp</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">K.cif"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"temperatures_thermal_displacements"</span><span class="p">:</span> <span class="n">temperatures</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="s2">"thermal_displacement_matrix_cif"</span><span class="p">:</span> <span class="n">u_cif</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="s2">"thermal_displacement_matrix"</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="s2">"freq_min_thermal_displacements"</span><span class="p">:</span> <span class="n">freq_min</span><span class="p">,</span>
+        <span class="s2">"imaginary_modes"</span><span class="p">:</span> <span class="n">imaginary_modes</span> <span class="k">if</span> <span class="n">has_imaginary</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"structure"</span><span class="p">:</span> <span class="n">get_pmg_structure</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">primitive</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
 <div class="viewcode-block" id="PhononComputationalSettings">
 <a class="viewcode-back" href="../../../../reference/atomate2.common.schemas.phonons.PhononComputationalSettings.html#atomate2.common.schemas.phonons.PhononComputationalSettings">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PhononComputationalSettings</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -1558,8 +1717,11 @@
 <span class="w">    </span><span class="sd">"""Collection to store information on the thermal displacement matrices."""</span>
 
     <span class="n">freq_min_thermal_displacements</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">"cutoff frequency in THz to avoid numerical issues in the "</span>
-        <span class="s2">"computation of the thermal displacement parameters"</span>
+        <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"cutoff frequency in THz. Modes with a frequency below it are "</span>
+        <span class="s2">"left out of the thermal displacement matrices, with "</span>
+        <span class="s1">'imaginary_modes="absolute" also the imaginary modes of an absolute '</span>
+        <span class="s2">"frequency below it."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">thermal_displacement_matrix_cif</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Matrix3D</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"field including thermal displacement matrices in CIF format"</span>
@@ -1573,6 +1735,18 @@
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">"temperatures at which the thermal displacement matrices"</span>
         <span class="s2">"have been computed"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">imaginary_modes</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"exclude"</span><span class="p">,</span> <span class="s2">"absolute"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"how the imaginary modes of the q-point mesh entered the "</span>
+        <span class="s2">"thermal displacement matrices, either left out (exclude) or as real modes "</span>
+        <span class="s2">"of the same absolute frequency (absolute). None if the mesh had none or if "</span>
+        <span class="s2">"this was not recorded."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">structure</span><span class="p">:</span> <span class="n">Structure</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"primitive cell of phonopy, whose sites the thermal displacement "</span>
+        <span class="s2">"matrices refer to, in the same order"</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -1871,8 +2045,10 @@
             <span class="n">is_symmetry</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"symmetrize_born"</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
         <span class="p">)</span>
 
-        <span class="c1"># Produces all force constants</span>
+        <span class="c1"># Produces all force constants and imposes the translational, permutation</span>
+        <span class="c1"># and space group symmetry with the symfc projector, as phonopy.load does</span>
         <span class="n">phonon</span><span class="o">.</span><span class="n">produce_force_constants</span><span class="p">(</span><span class="n">forces</span><span class="o">=</span><span class="n">set_of_forces</span><span class="p">)</span>
+        <span class="n">phonon</span><span class="o">.</span><span class="n">symmetrize_force_constants</span><span class="p">(</span><span class="n">use_symfc_projector</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">filename_phonopy_yaml</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"filename_phonopy_yaml"</span><span class="p">,</span> <span class="s2">"phonopy.yaml"</span><span class="p">)</span>
         <span class="n">create_force_constants_file</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_force_constants_file"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -1939,9 +2115,11 @@
             <span class="n">units</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span> <span class="s2">"THz"</span><span class="p">),</span>
         <span class="p">)</span>
 
-        <span class="c1"># will determine if imaginary modes are present in the structure</span>
+        <span class="c1"># will determine if imaginary modes are present in the structure.</span>
+        <span class="c1"># The default of 1e-3 THz is above the numerical noise of the acoustic</span>
+        <span class="c1"># modes at Gamma. 1e-5 THz flagged this noise as imaginary modes.</span>
         <span class="n">imaginary_modes</span> <span class="o">=</span> <span class="n">bs_symm_line</span><span class="o">.</span><span class="n">has_imaginary_freq</span><span class="p">(</span>
-            <span class="n">tol</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tol_imaginary_modes"</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tol_imaginary_modes"</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># gets data for visualization on website - yaml is also enough</span>
@@ -2012,40 +2190,11 @@
         <span class="n">internal_energies</span> <span class="o">=</span> <span class="n">free_energies</span> <span class="o">+</span> <span class="n">temperature_range</span> <span class="o">*</span> <span class="n">entropies</span>
         <span class="n">heat_capacities</span> <span class="o">=</span> <span class="n">heat_capacity</span> <span class="o">/</span> <span class="n">formula_units_primitive</span>
 
-        <span class="c1"># will compute thermal displacement matrices</span>
-        <span class="c1"># for the primitive cell (phonon.primitive!)</span>
-        <span class="c1"># only this is available in phonopy</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_thermal_displacements"</span><span class="p">):</span>
-            <span class="n">phonon</span><span class="o">.</span><span class="n">run_mesh</span><span class="p">(</span>
-                <span class="n">kpoint</span><span class="o">.</span><span class="n">kpts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">with_eigenvectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_mesh_symmetry</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-            <span class="n">freq_min_thermal_displacements</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s2">"freq_min_thermal_displacements"</span><span class="p">,</span> <span class="mf">0.0</span>
-            <span class="p">)</span>
-            <span class="n">phonon</span><span class="o">.</span><span class="n">run_thermal_displacement_matrices</span><span class="p">(</span>
-                <span class="n">t_min</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmin_thermal_displacements"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="n">t_max</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmax_thermal_displacements"</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
-                <span class="n">t_step</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tstep_thermal_displacements"</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-                <span class="n">freq_min</span><span class="o">=</span><span class="n">freq_min_thermal_displacements</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="n">temperature_range_thermal_displacements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmin_thermal_displacements"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmax_thermal_displacements"</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
-                <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tstep_thermal_displacements"</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperature_range_thermal_displacements</span><span class="p">):</span>
-                <span class="n">phonon</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span><span class="o">.</span><span class="n">write_cif</span><span class="p">(</span>
-                    <span class="n">phonon</span><span class="o">.</span><span class="n">primitive</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">"tdispmat_</span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">K.cif"</span>
-                <span class="p">)</span>
-            <span class="n">_disp_mat</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">_thermal_displacement_matrices</span>  <span class="c1"># noqa: SLF001</span>
-            <span class="n">tdisp_mat</span> <span class="o">=</span> <span class="n">_disp_mat</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
-            <span class="n">tdisp_mat_cif</span> <span class="o">=</span> <span class="n">_disp_mat</span><span class="o">.</span><span class="n">thermal_displacement_matrices_cif</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">tdisp_mat</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">tdisp_mat_cif</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">thermal_displacement_data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">_get_thermal_displacement_data</span><span class="p">(</span><span class="n">phonon</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_thermal_displacements"</span><span class="p">)</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
 
         <span class="n">formula_units</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">structure</span><span class="o">.</span><span class="n">composition</span><span class="o">.</span><span class="n">num_atoms</span>
@@ -2080,14 +2229,7 @@
             <span class="n">supercell_matrix</span><span class="o">=</span><span class="n">phonon</span><span class="o">.</span><span class="n">supercell_matrix</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
             <span class="n">primitive_matrix</span><span class="o">=</span><span class="n">phonon</span><span class="o">.</span><span class="n">primitive_matrix</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
             <span class="n">code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
-            <span class="n">thermal_displacement_data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">"temperatures_thermal_displacements"</span><span class="p">:</span> <span class="n">temperature_range_thermal_displacements</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>  <span class="c1"># noqa: E501</span>
-                <span class="s2">"thermal_displacement_matrix_cif"</span><span class="p">:</span> <span class="n">tdisp_mat_cif</span><span class="p">,</span>
-                <span class="s2">"thermal_displacement_matrix"</span><span class="p">:</span> <span class="n">tdisp_mat</span><span class="p">,</span>
-                <span class="s2">"freq_min_thermal_displacements"</span><span class="p">:</span> <span class="n">freq_min_thermal_displacements</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_thermal_displacements"</span><span class="p">)</span>
-            <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">thermal_displacement_data</span><span class="o">=</span><span class="n">thermal_displacement_data</span><span class="p">,</span>
             <span class="n">jobdirs</span><span class="o">=</span><span class="p">{</span>
                 <span class="s2">"displacements_job_dirs"</span><span class="p">:</span> <span class="n">displacement_data</span><span class="p">[</span><span class="s2">"dirs"</span><span class="p">],</span>
                 <span class="s2">"static_run_job_dir"</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"static_run_job_dir"</span><span class="p">],</span>
@@ -2189,7 +2331,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

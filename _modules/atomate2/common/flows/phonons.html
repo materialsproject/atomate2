@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html"><link rel="search" title="Search" href="../../../../search.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>atomate2.common.flows.phonons - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1561,6 +1561,9 @@
 <span class="sd">        job, reducing overhead. In the specific case of TorchSim, this enables batching</span>
 <span class="sd">        of all static structure evaluations.</span>
 <span class="sd">        Note: socket=True is not supported for BaseVaspMaker.</span>
+<span class="sd">    verbose: bool</span>
+<span class="sd">        If True, the displacement job warns that the initial magnetic moments</span>
+<span class="sd">        are removed from the structure.</span>
 <span class="sd">    """</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"phonon"</span>
@@ -1605,6 +1608,7 @@
     <span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">store_force_constants</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">socket</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="BasePhononMaker.make">
 <a class="viewcode-back" href="../../../../reference/atomate2.common.flows.phonons.BasePhononMaker.html#atomate2.common.flows.phonons.BasePhononMaker.make">[docs]</a>
@@ -1946,6 +1950,7 @@
             <span class="n">use_symmetrized_structure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_symmetrized_structure</span><span class="p">,</span>
             <span class="n">kpath_scheme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kpath_scheme</span><span class="p">,</span>
             <span class="n">code</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -1999,7 +2004,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

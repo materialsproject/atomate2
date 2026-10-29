@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="Add-ons for atomate2 and the software ecosystem" href="../addons.html"><link rel="prev" title="Installing Atomate2 from source with OpenMM" href="openmm.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>Machine Learning forcefields / interatomic potentials - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1641,6 +1641,20 @@ The 50 materials have no Materials Project dielectric data, so they are likely n
 The Born charges are off by 0.26 e on average, about 11%.
 The high-frequency dielectric constants are off by 8% on average, and by more than 20% for 2 of the 50 materials.</p>
 </section>
+<section id="phonons-with-forcefields-that-are-not-equivariant-phonon-equivariance-notes">
+<h2>Phonons with forcefields that are not equivariant {#phonon-equivariance-notes}<a class="headerlink" href="#phonons-with-forcefields-that-are-not-equivariant-phonon-equivariance-notes" title="Link to this heading">¶</a></h2>
+<p>The phonopy-based phonon workflows displace one atom by 0.01 Å and compute the force constants from the forces of the displaced supercells.
+This assumes that the forces in the undisplaced supercell are zero.
+An equivariant model such as MACE gives zero forces in a symmetric structure.
+For MgO, MACE-OMAT-0-medium gives forces below 1e-13 eV/Å.
+UPET is not equivariant.
+In six structures relaxed with <code class="docutils literal notranslate"><span class="pre">fix_symmetry=True</span></code>, UPET leaves forces of 4e-3 to 4e-2 eV/Å in the undisplaced supercell.
+The displacement turns these forces into large imaginary modes at Gamma.
+UPET can average its predictions over rotations with <code class="docutils literal notranslate"><span class="pre">rotational_average_order</span></code> in <code class="docutils literal notranslate"><span class="pre">calculator_kwargs</span></code>.
+This makes each force call 30 to 100 times slower for orders 1 and 3.</p>
+<p>Before using a new forcefield for phonons, compute the forces in the undisplaced supercell of a relaxed symmetric structure.
+If they are not close to zero, use the symmetrization of the model if it has one, or a model that is equivariant.</p>
+</section>
 </section>
 <hr class="footnotes docutils" />
 <aside class="footnote-list brackets">
@@ -1716,6 +1730,7 @@ The high-frequency dielectric constants are off by 8% on average, and by more th
 <li><a class="reference internal" href="#using-custom-forcefields-by-dictionary">Using custom forcefields by dictionary</a></li>
 <li><a class="reference internal" href="#notes-on-fairchem-meta-models-fairchem-notes">Notes on FairChem (Meta) models {#fairchem-notes}</a></li>
 <li><a class="reference internal" href="#notes-on-mace-field-mace-field-notes">Notes on MACE-Field {#mace-field-notes}</a></li>
+<li><a class="reference internal" href="#phonons-with-forcefields-that-are-not-equivariant-phonon-equivariance-notes">Phonons with forcefields that are not equivariant {#phonon-equivariance-notes}</a></li>
 </ul>
 </li>
 </ul>
@@ -1727,7 +1742,7 @@ The high-frequency dielectric constants are off by 8% on average, and by more th
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="Installing Atomate2 from source with OpenMM" href="openmm.html"><link rel="prev" title="Codes" href="index.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>VASP - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1844,23 +1844,34 @@ for your specific case.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
+<p>With <code class="docutils literal notranslate"><span class="pre">create_thermal_displacements=True</span></code> (the default of <code class="docutils literal notranslate"><span class="pre">PhononMaker</span></code>), the workflow also computes the thermal displacement matrices of the primitive cell from 0 to 1000 K in steps of 100 K.
+They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by <code class="docutils literal notranslate"><span class="pre">kpoint_density_thermal_displacements</span></code> in <code class="docutils literal notranslate"><span class="pre">generate_frequencies_eigenvectors_kwargs</span></code>.
+phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
+An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
+These are the three modes at Gamma whose eigenvectors are closest to the rigid translations of the cell.
+phonopy’s <code class="docutils literal notranslate"><span class="pre">exclude_gamma_acoustic</span></code> takes the three modes of smallest absolute frequency, which are not the acoustic modes if an optical mode at Gamma is closer to zero.
+This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
+For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
+If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
+With <code class="docutils literal notranslate"><span class="pre">imaginary_modes_thermal_displacements=&quot;exclude&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">generate_frequencies_eigenvectors_kwargs</span></code>, the imaginary modes are left out, and with <code class="docutils literal notranslate"><span class="pre">&quot;absolute&quot;</span></code>, each one counts as a real mode of the same absolute frequency.
+Both give only an estimate of the matrices.
+<code class="docutils literal notranslate"><span class="pre">freq_min_thermal_displacements</span></code> (in THz) is the cutoff: modes with a frequency below it are left out, and with <code class="docutils literal notranslate"><span class="pre">&quot;absolute&quot;</span></code> also the imaginary modes of an absolute frequency below it.
+Without imaginary modes, the default of 0 leaves out no mode, since apart from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+With imaginary modes, both options need a positive <code class="docutils literal notranslate"><span class="pre">freq_min_thermal_displacements</span></code>, since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.</p>
 <p>The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with <code class="docutils literal notranslate"><span class="pre">ForceFieldDielectricMaker</span></code> as <code class="docutils literal notranslate"><span class="pre">born_maker</span></code>.
 See the <a class="reference internal" href="forcefields.html#mace-field-notes"><span class="std std-ref">notes on MACE-Field</span></a>.</p>
 <section id="pheasy">
 <h4>Pheasy<a class="headerlink" href="#pheasy" title="Link to this heading">¶</a></h4>
 <p>Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based <a class="reference external" href="https://doi.org/10.48550/arXiv.2508.01020">Pheasy code</a>.
 The <code class="docutils literal notranslate"><span class="pre">pheasy</span></code> extra, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;atomate2[pheasy]&quot;</span></code>, installs phonopy and hiPhive.
-The pheasy and ALM packages are not in the extra, since PyPI does not accept git URLs in extras.
-Install them from git, at the commits atomate2 is tested with:</p>
+The pheasy package is not in the extra, since PyPI does not accept git URLs in extras.
+Install it from git, at the commit atomate2 is tested with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s2">"pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="s2">"alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python"</span>
 </pre></div>
 </div>
-<p>From a clone of atomate2, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;.[pheasy]&quot;</span> <span class="pre">--group</span> <span class="pre">pheasy</span></code> installs the extra, pheasy and ALM in one step. This needs pip 25.1 or newer.
+<p>From a clone of atomate2, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;.[pheasy]&quot;</span> <span class="pre">--group</span> <span class="pre">pheasy</span></code> installs the extra and pheasy in one step. This needs pip 25.1 or newer.
 The pheasy release on PyPI lacks options this workflow uses, so do not install it with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pheasy</span></code>.
 The workflows run pheasy with the command in the <code class="docutils literal notranslate"><span class="pre">PHEASY_CMD</span></code> setting, <code class="docutils literal notranslate"><span class="pre">pheasy</span></code> by default.
-The <code class="docutils literal notranslate"><span class="pre">alm</span></code> package on PyPI is an unrelated project, so do not install ALM with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">alm</span></code>.
-ALM is compiled from source. If that build fails, see the ALM instructions below.
 By design, these workflows have the same basic structure as the harmonic forcefield workflows and use <a class="reference external" href="https://doi.org/10.7566/JPSJ.92.012001">Phonopy</a> in part to compute the phonon spectrum.
 To use <code class="docutils literal notranslate"><span class="pre">Pheasy</span></code> in the previous example, we would replace the import string to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">atomate2.vasp.flows.pheasy</span> <span class="pre">import</span> <span class="pre">PhononMaker</span></code>.
 This workflow was used to build the <a class="reference external" href="https://next-gen.materialsproject.org/materials?has_props=phonon">Materials Project’s Harmonic Phonon Database</a>, described in <a class="reference external" href="https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1">this preprint</a>.
@@ -1872,28 +1883,14 @@ For such a structure, set <code class="docutils literal notranslate"><span class
 <p>The anharmonic part of this workflow has not been tested as widely as the harmonic part.
 It might still change in future versions.</p>
 </div>
-<p>ALM, from the ALAMODE package, counts the free force constants used to size the random displacement sets.</p>
-<p>To install ALAMODE, see their <a class="reference external" href="https://alamode.readthedocs.io/en/latest/install.html#">installation guidelines</a>.
-Linux and MacOS x86-64 users can try to install using conda forge:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">alm</span>
-</pre></div>
-</div>
-<p>This conda-forge <code class="docutils literal notranslate"><span class="pre">alm</span></code> is the ALAMODE one.</p>
-<p>Windows and MacOS ARM users cannot use the pre-built wheels on conda forge at this time, and should instead try the following installation using <code class="docutils literal notranslate"><span class="pre">conda</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge "numpy&lt;=2.2" scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes
-git clone https://github.com/ttadano/ALM.git
-cd ALM/python
-python setup.py build
-pip install -e .
-</pre></div>
-</div>
-<p>atomate2 is tested with ALM commit <code class="docutils literal notranslate"><span class="pre">f1d668f</span></code>. When building ALM by hand, check out that commit.
-NB: MacOS users will need to ensure that <code class="docutils literal notranslate"><span class="pre">gcc</span></code> and <code class="docutils literal notranslate"><span class="pre">g++</span></code> are used rather than <code class="docutils literal notranslate"><span class="pre">clang</span></code> - both can be installed with <code class="docutils literal notranslate"><span class="pre">homebrew</span></code>.
-Note also that <code class="docutils literal notranslate"><span class="pre">boost</span></code> and <code class="docutils literal notranslate"><span class="pre">eigen</span></code> can be installed via <code class="docutils literal notranslate"><span class="pre">homebrew</span></code>.
-For example, using <code class="docutils literal notranslate"><span class="pre">gcc-15</span></code> from <code class="docutils literal notranslate"><span class="pre">homebrew</span></code>, one might set:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">CC</span><span class="o">=</span><span class="n">gcc</span><span class="o">-</span><span class="mi">15</span> <span class="p">;</span> <span class="n">CXX</span><span class="o">=</span><span class="n">g</span><span class="o">++-</span><span class="mi">15</span> <span class="p">;</span> <span class="n">CXX_FLAGS</span><span class="o">=-</span><span class="n">DOPENMP</span>
-</pre></div>
-</div>
+<p>pheasy counts the free force constants used to size the random displacement sets, with the cluster options of its fits and the symmetry of the supercell.
+The displacement job runs this count with <code class="docutils literal notranslate"><span class="pre">PHEASY_CMD</span></code>.
+For third- and fourth-order force constants of large, low-symmetry supercells, it can take hours.
+The Materials Project’s Harmonic Phonon Database was built with ALM for this count.
+For the harmonic force constants, pheasy gives the same number of displaced supercells as ALM for 26,410 of the 26,413 materials of the database.
+The other 3 were not counted.
+For third- and fourth-order force constants, pheasy and ALM build the clusters differently, and the count follows the force constants that pheasy fits.
+For a sample of 101 materials at third order and 70 at fourth order, pheasy gives the same count as ALM for 97 and 46 of them.</p>
 <p>With <code class="docutils literal notranslate"><span class="pre">cal_anhar_fcs=True</span></code>, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
 The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
 Unless <code class="docutils literal notranslate"><span class="pre">num_disp_anhar</span></code> is set, at least 20 supercells are used, and above 600 the job stops and asks for a shorter cutoff, a larger supercell or an explicit <code class="docutils literal notranslate"><span class="pre">num_disp_anhar</span></code>. An explicit <code class="docutils literal notranslate"><span class="pre">num_disp_anhar</span></code> is used as given.
@@ -1911,8 +1908,11 @@ The anharmonic force constants are written to files in the job folder and are no
 <h4>hiPhive<a class="headerlink" href="#hiphive" title="Link to this heading">¶</a></h4>
 <p>The same force constants can instead be fitted with <a class="reference external" href="https://hiphive.materialsmodeling.org/">hiPhive</a>, which builds a cluster expansion of the force constant potential and fits it by regression.
 The <code class="docutils literal notranslate"><span class="pre">hiphive</span></code> extra, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;atomate2[hiphive]&quot;</span></code>, installs hiPhive.
-The workflow also needs ALM from git, installed as in the Pheasy section above.
-From a clone of atomate2, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;.[hiphive]&quot;</span> <span class="pre">--group</span> <span class="pre">alamode</span></code> installs both in one step. This needs pip 25.1 or newer.</p>
+<a class="reference external" href="https://doi.org/10.1103/PhysRevB.110.214302">symfc</a>, which phonopy installs, counts the free second-order force constants used to size the random displacement set.
+symfc finds the symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped onto its symmetry at <code class="docutils literal notranslate"><span class="pre">symprec</span></code>.
+This workflow used ALM for this count before.
+For all 26,413 materials of the Materials Project’s Harmonic Phonon Database, symfc gives the same number of displaced supercells as ALM.
+For the 17,998 of them that need the count, the number of free force constants is also the same.</p>
 <p>To use <code class="docutils literal notranslate"><span class="pre">hiPhive</span></code> in the previous example, we would replace the import string to <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">atomate2.vasp.flows.hiphive</span> <span class="pre">import</span> <span class="pre">PhononMaker</span></code>.</p>
 <p>This workflow has only been tested on a small set of materials so far, not at high-throughput scale.
 The test set is 14 Materials Project entries, two per crystal system, with forces from a machine-learned potential rather than DFT.
@@ -1952,8 +1952,8 @@ to compute mode-dependent Grüneisen parameters.</p>
 <h3>Thermal expansion workflow<a class="headerlink" href="#thermal-expansion-workflow" title="Link to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">CTEMaker</span></code> calculates the thermal expansion tensor from third-order force constants, with the help of <a class="reference external" href="https://doi.org/10.48550/arXiv.2508.01020">Pheasy</a> and <a class="reference external" href="https://doi.org/10.1088/1361-648X/acd831">phono3py</a>.
 It needs the <code class="docutils literal notranslate"><span class="pre">pheasy</span></code> and <code class="docutils literal notranslate"><span class="pre">phono3py</span></code> extras, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;atomate2[pheasy,phono3py]&quot;</span></code>.
-It also needs pheasy and ALM from git, installed as in the Pheasy section above.
-From a clone of atomate2, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;.[pheasy,phono3py]&quot;</span> <span class="pre">--group</span> <span class="pre">pheasy</span></code> installs the extras, pheasy and ALM in one step. This needs pip 25.1 or newer.</p>
+It also needs pheasy from git, installed as in the Pheasy section above.
+From a clone of atomate2, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;.[pheasy,phono3py]&quot;</span> <span class="pre">--group</span> <span class="pre">pheasy</span></code> installs the extras and pheasy in one step. This needs pip 25.1 or newer.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This workflow is new and has not been tested widely.
@@ -2551,7 +2551,7 @@ calculation and a static calculation.</p>
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

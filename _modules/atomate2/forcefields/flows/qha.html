@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html"><link rel="search" title="Search" href="../../../../search.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>atomate2.forcefields.flows.qha - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1518,6 +1518,9 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a QHA flow from a forcefield name.</span>
 
+<span class="sd">        The phonon maker does not store the force constants, since storing them</span>
+<span class="sd">        for every volume makes the QHA about 1.5 times slower.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        force_field_name : str or .MLFF or dict</span>
@@ -1563,6 +1566,7 @@
             <span class="n">force_field_name</span><span class="o">=</span><span class="n">force_field_name</span><span class="p">,</span>
             <span class="n">calculator_kwargs</span><span class="o">=</span><span class="n">calculator_kwargs</span><span class="p">,</span>
             <span class="n">relax_initial_structure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">store_force_constants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">phonon_maker</span><span class="o">=</span><span class="n">phonon_maker</span><span class="p">,</span>
@@ -1626,7 +1630,9 @@
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"CHGNet QHA Maker"</span>
     <span class="n">phonon_maker</span><span class="p">:</span> <span class="n">PhononMaker</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">PhononMaker</span><span class="p">(</span><span class="n">bulk_relax_maker</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">PhononMaker</span><span class="p">(</span>
+            <span class="n">bulk_relax_maker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_force_constants</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
     <span class="p">)</span>
     <span class="n">initial_relax_maker</span><span class="p">:</span> <span class="n">ForceFieldRelaxMaker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">(</span><span class="n">force_field_name</span><span class="o">=</span><span class="s2">"CHGNet"</span><span class="p">)</span>
@@ -1675,7 +1681,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

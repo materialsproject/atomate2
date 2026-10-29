@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html"><link rel="search" title="Search" href="../../../../search.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>atomate2.common.jobs.phonons - atomate2</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=7bdb33bb" />
@@ -1435,7 +1435,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flow</span><span class="p">,</span> <span class="n">Response</span><span class="p">,</span> <span class="n">job</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">parse_version</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Phonopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.interface.symfc</span><span class="w"> </span><span class="kn">import</span> <span class="n">SymfcFCSolver</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.phonon.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_band_qpoints_and_path_connections</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.structure.atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhonopyAtoms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.io.phonopy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_ph_bs_symm_line</span><span class="p">,</span>
@@ -1451,15 +1453,18 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.symmetry.kpath</span><span class="w"> </span><span class="kn">import</span> <span class="n">KPathSeek</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.schemas.phonons</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhononBSDOSDoc</span> <span class="k">as</span> <span class="n">Atomate2PhononBSDOSDoc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.schemas.phonons</span><span class="w"> </span><span class="kn">import</span> <span class="n">_set_nac_params</span><span class="p">,</span> <span class="n">get_factor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.schemas.phonons</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_get_thermal_displacement_data</span><span class="p">,</span>
+    <span class="n">_set_nac_params</span><span class="p">,</span>
+    <span class="n">get_factor</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_class_name</span><span class="p">,</span> <span class="n">get_supercell_matrix</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">emmet.core.math</span><span class="w"> </span><span class="kn">import</span> <span class="n">Matrix3D</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.structure.atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhonopyAtoms</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.aims.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAimsMaker</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.ase.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">AseRelaxMaker</span>
@@ -1471,74 +1476,51 @@
 <span class="n">ANGSTROM_TO_BOHR</span> <span class="o">=</span> <span class="mf">1.8897261246257702</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_num_irreducible_fcs</span><span class="p">(</span>
-    <span class="n">supercell</span><span class="p">:</span> <span class="n">PhonopyAtoms</span><span class="p">,</span>
-    <span class="n">max_order</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">fcs_cutoff_radius</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">nbody</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_num_free_fc2</span><span class="p">(</span><span class="n">supercell</span><span class="p">:</span> <span class="n">PhonopyAtoms</span><span class="p">,</span> <span class="n">symprec</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Count the symmetry-irreducible force constants of each order with ALM.</span>
+<span class="sd">    Count the free second-order force constants of a supercell with symfc.</span>
 
-<span class="sd">    Used by the pheasy and hiPhive workflows to size their displacement sets.</span>
+<span class="sd">    Used by the hiPhive workflow to size its displacement set. symfc finds the</span>
+<span class="sd">    symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped</span>
+<span class="sd">    onto its symmetry at symprec.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    supercell: PhonopyAtoms</span>
 <span class="sd">        Supercell used for the force constant fit.</span>
-<span class="sd">    max_order: int</span>
-<span class="sd">        Highest force constant order to count, 2, 3 or 4.</span>
-<span class="sd">    fcs_cutoff_radius: Sequence[float] | None</span>
-<span class="sd">        Cutoff radius in Bohr for each order, starting at second order.</span>
-<span class="sd">        Only needed when max_order is larger than 2.</span>
-<span class="sd">    nbody: Sequence[int] | None</span>
-<span class="sd">        Largest number of atoms in a cluster for each order, starting at second</span>
-<span class="sd">        order, as in ALM's define. None keeps all clusters.</span>
+<span class="sd">    symprec: float</span>
+<span class="sd">        Symmetry tolerance.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[int]</span>
-<span class="sd">        Number of irreducible force constants for each order, starting at</span>
-<span class="sd">        second order.</span>
+<span class="sd">    int</span>
+<span class="sd">        Number of free second-order force constants.</span>
 <span class="sd">    """</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">alm</span><span class="w"> </span><span class="kn">import</span> <span class="n">ALM</span>
-    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">"ALM could not be imported. Install it from git as described in the "</span>
-            <span class="s2">"Pheasy section of the atomate2 VASP docs. The alm package on PyPI "</span>
-            <span class="s2">"is an unrelated project."</span>
-        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="c1"># ASE is not a core dependency of atomate2. It comes with hiPhive.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.spacegroup.symmetrize</span><span class="w"> </span><span class="kn">import</span> <span class="n">refine_symmetry</span>
 
-    <span class="n">positions</span> <span class="o">=</span> <span class="n">supercell</span><span class="o">.</span><span class="n">scaled_positions</span>
-    <span class="n">numbers</span> <span class="o">=</span> <span class="n">supercell</span><span class="o">.</span><span class="n">numbers</span>
-
-    <span class="k">if</span> <span class="n">max_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="c1"># TODO: remove ALMODE dependence for 2nd order force constants</span>
-        <span class="c1"># the harmonic count uses no cutoff, so the lattice stays in Angstrom</span>
-        <span class="k">with</span> <span class="n">ALM</span><span class="p">(</span><span class="n">supercell</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span> <span class="k">as</span> <span class="n">alm</span><span class="p">:</span>
-            <span class="n">alm</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">alm</span><span class="o">.</span><span class="n">suggest</span><span class="p">()</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">alm</span><span class="o">.</span><span class="n">_get_number_of_irred_fc_elements</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>  <span class="c1"># noqa: SLF001</span>
-
-    <span class="c1"># ALM expects the lattice in Bohr when cutoff radii in Bohr are given, and</span>
-    <span class="c1"># one cutoff per order and per pair of elements</span>
-    <span class="n">n_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">numbers</span><span class="p">))</span>
-    <span class="n">cutoff_radii</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_elements</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">fcs_cutoff_radius</span><span class="p">[:</span> <span class="n">max_order</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="p">]</span>
-    <span class="k">with</span> <span class="n">ALM</span><span class="p">(</span><span class="n">supercell</span><span class="o">.</span><span class="n">cell</span> <span class="o">*</span> <span class="n">ANGSTROM_TO_BOHR</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span> <span class="k">as</span> <span class="n">alm</span><span class="p">:</span>
-        <span class="n">alm</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">max_order</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cutoff_radii</span><span class="o">=</span><span class="n">cutoff_radii</span><span class="p">,</span> <span class="n">nbody</span><span class="o">=</span><span class="n">nbody</span><span class="p">)</span>
-        <span class="n">alm</span><span class="o">.</span><span class="n">suggest</span><span class="p">()</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="n">alm</span><span class="o">.</span><span class="n">_get_number_of_irred_fc_elements</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>  <span class="c1"># noqa: SLF001</span>
-            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_order</span><span class="p">)</span>
-        <span class="p">]</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span>
+        <span class="n">numbers</span><span class="o">=</span><span class="n">supercell</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+        <span class="n">cell</span><span class="o">=</span><span class="n">supercell</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span>
+        <span class="n">scaled_positions</span><span class="o">=</span><span class="n">supercell</span><span class="o">.</span><span class="n">scaled_positions</span><span class="p">,</span>
+        <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">refine_symmetry</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">)</span>
+    <span class="n">ideal</span> <span class="o">=</span> <span class="n">PhonopyAtoms</span><span class="p">(</span>
+        <span class="n">numbers</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span>
+        <span class="n">cell</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[:],</span>
+        <span class="n">scaled_positions</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">basis_sets</span> <span class="o">=</span> <span class="n">SymfcFCSolver</span><span class="p">(</span><span class="n">ideal</span><span class="p">)</span><span class="o">.</span><span class="n">compute_basis_set</span><span class="p">(</span><span class="n">orders</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">basis_sets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">basis_set</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_num_harmonic_supercells</span><span class="p">(</span>
-    <span class="n">phonon</span><span class="p">:</span> <span class="n">Phonopy</span><span class="p">,</span> <span class="n">num_displaced_supercells</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.8</span>
+    <span class="n">phonon</span><span class="p">:</span> <span class="n">Phonopy</span><span class="p">,</span>
+    <span class="n">num_displaced_supercells</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.8</span><span class="p">,</span>
+    <span class="n">count_free_fcs</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the number of displaced supercells used for the harmonic force constants.</span>
@@ -1562,6 +1544,9 @@
 <span class="sd">        Number of random displacements requested by the user, 0 for automatic.</span>
 <span class="sd">    multiplier: float</span>
 <span class="sd">        Number of configurations per minimum configuration set.</span>
+<span class="sd">    count_free_fcs: Callable[[], int] | None</span>
+<span class="sd">        Function that returns n_fp. It is only called when n_fp is needed. None</span>
+<span class="sd">        counts n_fp with symfc.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1572,7 +1557,10 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">displacements</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num_displaced_supercells</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">num_displaced_supercells</span>
-    <span class="p">(</span><span class="n">n_fp</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_get_num_irreducible_fcs</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">supercell</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">count_free_fcs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_fp</span> <span class="o">=</span> <span class="n">_get_num_free_fc2</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">supercell</span><span class="p">,</span> <span class="n">phonon</span><span class="o">.</span><span class="n">symmetry</span><span class="o">.</span><span class="n">tolerance</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_fp</span> <span class="o">=</span> <span class="n">count_free_fcs</span><span class="p">()</span>
     <span class="n">natom</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">phonon</span><span class="o">.</span><span class="n">supercell</span><span class="o">.</span><span class="n">numbers</span><span class="p">)</span>
     <span class="n">num_disp_sc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_fp</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">natom</span><span class="p">)))</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_disp_sc</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
@@ -1624,7 +1612,7 @@
     <span class="n">is_band_connection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">filename_bs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"phonon_band_structure.pdf"</span><span class="p">,</span>
     <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"THz"</span><span class="p">,</span>
-    <span class="n">tol_imaginary_modes</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
+    <span class="n">tol_imaginary_modes</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">PhononBandStructureSymmLine</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Compute, save, and plot a phonon band structure on a Phonopy object.</span>
 
@@ -1779,10 +1767,6 @@
 <span class="sd">        scheme to generate kpath</span>
 <span class="sd">    code:</span>
 <span class="sd">        code to perform the computations</span>
-<span class="sd">    use_min_dof : bool = False</span>
-<span class="sd">        Whether to use the minimal number of degrees of freedom</span>
-<span class="sd">        in calculating randomly-displaced structures.</span>
-<span class="sd">        Requires ALAMODE.</span>
 <span class="sd">    verbose : bool = False</span>
 <span class="sd">        Whether to log error messages.</span>
 
@@ -1868,10 +1852,6 @@
 <span class="sd">        scheme to generate kpath</span>
 <span class="sd">    code:</span>
 <span class="sd">        code to perform the computations</span>
-<span class="sd">    use_min_dof : bool = False</span>
-<span class="sd">        Whether to use the minimal number of degrees of freedom</span>
-<span class="sd">        in calculating randomly-displaced structures.</span>
-<span class="sd">        Requires ALAMODE.</span>
 <span class="sd">    verbose : bool = False</span>
 <span class="sd">        Whether to log error messages.</span>
 
@@ -1955,6 +1935,25 @@
             <span class="sa">f</span><span class="s2">"Invalid phonon_doc_schema=</span><span class="si">{</span><span class="n">phonon_doc_schema</span><span class="si">!r}</span><span class="s2">. "</span>
             <span class="s2">"Expected one of {'atomate2', 'emmet'}."</span>
         <span class="p">)</span>
+    <span class="k">if</span> <span class="n">phonon_doc_schema</span> <span class="o">==</span> <span class="s2">"atomate2"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Atomate2PhononBSDOSDoc</span><span class="o">.</span><span class="n">from_forces_born</span><span class="p">(</span>
+            <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">remove_site_property</span><span class="p">(</span><span class="n">property_name</span><span class="o">=</span><span class="s2">"magmom"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">"magmom"</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">site_properties</span>
+            <span class="k">else</span> <span class="n">structure</span><span class="p">,</span>
+            <span class="n">supercell_matrix</span><span class="o">=</span><span class="n">supercell_matrix</span><span class="p">,</span>
+            <span class="n">displacement</span><span class="o">=</span><span class="n">displacement</span><span class="p">,</span>
+            <span class="n">sym_reduce</span><span class="o">=</span><span class="n">sym_reduce</span><span class="p">,</span>
+            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span>
+            <span class="n">use_symmetrized_structure</span><span class="o">=</span><span class="n">use_symmetrized_structure</span><span class="p">,</span>
+            <span class="n">kpath_scheme</span><span class="o">=</span><span class="n">kpath_scheme</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
+            <span class="n">displacement_data</span><span class="o">=</span><span class="n">displacement_data</span><span class="p">,</span>
+            <span class="n">total_dft_energy</span><span class="o">=</span><span class="n">total_dft_energy</span><span class="p">,</span>
+            <span class="n">epsilon_static</span><span class="o">=</span><span class="n">epsilon_static</span><span class="p">,</span>
+            <span class="n">born</span><span class="o">=</span><span class="n">born</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="n">phonon</span> <span class="o">=</span> <span class="n">_generate_phonon_object</span><span class="p">(</span>
         <span class="n">structure</span><span class="p">,</span>
         <span class="n">supercell_matrix</span><span class="p">,</span>
@@ -1977,8 +1976,10 @@
         <span class="n">is_symmetry</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"symmetrize_born"</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="c1"># Produces all force constants</span>
+    <span class="c1"># Produces all force constants and imposes the translational, permutation</span>
+    <span class="c1"># and space group symmetry with the symfc projector, as phonopy.load does</span>
     <span class="n">phonon</span><span class="o">.</span><span class="n">produce_force_constants</span><span class="p">(</span><span class="n">forces</span><span class="o">=</span><span class="n">set_of_forces</span><span class="p">)</span>
+    <span class="n">phonon</span><span class="o">.</span><span class="n">symmetrize_force_constants</span><span class="p">(</span><span class="n">use_symfc_projector</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">filename_phonopy_yaml</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"filename_phonopy_yaml"</span><span class="p">,</span> <span class="s2">"phonopy.yaml"</span><span class="p">)</span>
     <span class="n">create_force_constants_file</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_force_constants_file"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -2021,7 +2022,7 @@
         <span class="n">is_band_connection</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"band_structure_eigenvectors"</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
         <span class="n">filename_bs</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"filename_bs"</span><span class="p">,</span> <span class="s2">"phonon_band_structure.pdf"</span><span class="p">),</span>
         <span class="n">units</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span> <span class="s2">"THz"</span><span class="p">),</span>
-        <span class="n">tol_imaginary_modes</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tol_imaginary_modes"</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">),</span>
+        <span class="n">tol_imaginary_modes</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tol_imaginary_modes"</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="c1"># gets data for visualization on website - yaml is also enough</span>
@@ -2060,39 +2061,6 @@
         <span class="n">use_tetrahedron_method</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dos_use_tetrahedron_method"</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="c1"># will compute thermal displacement matrices</span>
-    <span class="c1"># for the primitive cell (phonon.primitive!)</span>
-    <span class="c1"># only this is available in phonopy</span>
-    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_thermal_displacements"</span><span class="p">):</span>
-        <span class="n">phonon</span><span class="o">.</span><span class="n">run_mesh</span><span class="p">(</span><span class="n">kpoint</span><span class="o">.</span><span class="n">kpts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">with_eigenvectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_mesh_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">freq_min_thermal_displacements</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s2">"freq_min_thermal_displacements"</span><span class="p">,</span> <span class="mf">0.0</span>
-        <span class="p">)</span>
-        <span class="n">phonon</span><span class="o">.</span><span class="n">run_thermal_displacement_matrices</span><span class="p">(</span>
-            <span class="n">t_min</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmin_thermal_displacements"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="n">t_max</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmax_thermal_displacements"</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
-            <span class="n">t_step</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tstep_thermal_displacements"</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-            <span class="n">freq_min</span><span class="o">=</span><span class="n">freq_min_thermal_displacements</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">temperature_range_thermal_displacements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmin_thermal_displacements"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tmax_thermal_displacements"</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tstep_thermal_displacements"</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperature_range_thermal_displacements</span><span class="p">):</span>
-            <span class="n">phonon</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span><span class="o">.</span><span class="n">write_cif</span><span class="p">(</span>
-                <span class="n">phonon</span><span class="o">.</span><span class="n">primitive</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">"tdispmat_</span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">K.cif"</span>
-            <span class="p">)</span>
-        <span class="n">_disp_mat</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">_thermal_displacement_matrices</span>  <span class="c1"># noqa: SLF001</span>
-        <span class="n">tdisp_mat</span> <span class="o">=</span> <span class="n">_disp_mat</span><span class="o">.</span><span class="n">thermal_displacement_matrices</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
-        <span class="n">tdisp_mat_cif</span> <span class="o">=</span> <span class="n">_disp_mat</span><span class="o">.</span><span class="n">thermal_displacement_matrices_cif</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">tdisp_mat</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">tdisp_mat_cif</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="n">formula_units</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">structure</span><span class="o">.</span><span class="n">composition</span><span class="o">.</span><span class="n">num_atoms</span>
         <span class="o">/</span> <span class="n">structure</span><span class="o">.</span><span class="n">composition</span><span class="o">.</span><span class="n">reduced_composition</span><span class="o">.</span><span class="n">num_atoms</span>
@@ -2104,22 +2072,11 @@
 
     <span class="n">volume_per_formula_unit</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="n">formula_units</span>
 
-    <span class="k">if</span> <span class="n">phonon_doc_schema</span> <span class="o">==</span> <span class="s2">"atomate2"</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Atomate2PhononBSDOSDoc</span><span class="o">.</span><span class="n">from_forces_born</span><span class="p">(</span>
-            <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span>
-            <span class="n">supercell_matrix</span><span class="o">=</span><span class="n">supercell_matrix</span><span class="p">,</span>
-            <span class="n">displacement</span><span class="o">=</span><span class="n">displacement</span><span class="p">,</span>
-            <span class="n">sym_reduce</span><span class="o">=</span><span class="n">sym_reduce</span><span class="p">,</span>
-            <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">,</span>
-            <span class="n">use_symmetrized_structure</span><span class="o">=</span><span class="n">use_symmetrized_structure</span><span class="p">,</span>
-            <span class="n">kpath_scheme</span><span class="o">=</span><span class="n">kpath_scheme</span><span class="p">,</span>
-            <span class="n">code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
-            <span class="n">displacement_data</span><span class="o">=</span><span class="n">displacement_data</span><span class="p">,</span>
-            <span class="n">total_dft_energy</span><span class="o">=</span><span class="n">total_dft_energy</span><span class="p">,</span>
-            <span class="n">epsilon_static</span><span class="o">=</span><span class="n">epsilon_static</span><span class="p">,</span>
-            <span class="n">born</span><span class="o">=</span><span class="n">born</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="n">thermal_displacement_data</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">_get_thermal_displacement_data</span><span class="p">(</span><span class="n">phonon</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_thermal_displacements"</span><span class="p">)</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
 
     <span class="n">cls_constructor</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">"migrate_fields"</span>
@@ -2144,14 +2101,7 @@
         <span class="n">supercell_matrix</span><span class="o">=</span><span class="n">phonon</span><span class="o">.</span><span class="n">supercell_matrix</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
         <span class="n">primitive_matrix</span><span class="o">=</span><span class="n">phonon</span><span class="o">.</span><span class="n">primitive_matrix</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
         <span class="n">code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
-        <span class="n">thermal_displacement_data</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">"temperatures_thermal_displacements"</span><span class="p">:</span> <span class="n">temperature_range_thermal_displacements</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>  <span class="c1"># noqa: E501</span>
-            <span class="s2">"thermal_displacement_matrix_cif"</span><span class="p">:</span> <span class="n">tdisp_mat_cif</span><span class="p">,</span>
-            <span class="s2">"thermal_displacement_matrix"</span><span class="p">:</span> <span class="n">tdisp_mat</span><span class="p">,</span>
-            <span class="s2">"freq_min_thermal_displacements"</span><span class="p">:</span> <span class="n">freq_min_thermal_displacements</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"create_thermal_displacements"</span><span class="p">)</span>
-        <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">thermal_displacement_data</span><span class="o">=</span><span class="n">thermal_displacement_data</span><span class="p">,</span>
         <span class="n">jobdirs</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">"displacements_job_dirs"</span><span class="p">:</span> <span class="n">displacement_data</span><span class="p">[</span><span class="s2">"dirs"</span><span class="p">],</span>
             <span class="s2">"static_run_job_dir"</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"static_run_job_dir"</span><span class="p">],</span>
@@ -2349,7 +2299,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=6e0256f3"></script>
+</div><script src="../../../../_static/documentation_options.js?v=ca7ad2ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
