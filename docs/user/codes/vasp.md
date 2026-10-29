@@ -360,6 +360,52 @@ With imaginary modes, both options need a positive `freq_min_thermal_displacemen
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
 See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 
+(debye_waller_workflow)=
+#### Debye-Waller factors
+
+With `create_debye_waller=True`, the phonon workflow adds a last job, `compute_debye_waller`.
+It takes the thermal displacement matrices $U$ of the phonon workflow, computed with [phonopy](https://doi.org/10.7566/JPSJ.92.012001).
+pymatgen then computes the X-ray, neutron and electron diffraction patterns with the anisotropic Debye-Waller factors from them.
+It needs pymatgen 2026.10.24 or newer, the first release with anisotropic Debye-Waller factors.
+The `debye-waller` extra installs it: `pip install "atomate2[debye-waller]"`.
+
+```{warning}
+This option is new and has not been tested widely.
+It might still change in future versions.
+```
+
+The phonon maker needs `create_thermal_displacements=True`.
+This is the default of the VASP and FHI-aims `PhononMaker`, but it has to be set for the other phonon makers, such as the force field `PhononMaker`.
+`debye_waller_kwargs` passes `xrd_kwargs`, `nd_kwargs` and `tem_kwargs` to pymatgen's `XRDCalculator`, `NDCalculator` and `TEMCalculator`.
+The q-point mesh and the temperatures are set with `kpoint_density_thermal_displacements` and `tmin_thermal_displacements`, `tmax_thermal_displacements` and `tstep_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
+If the mesh has imaginary modes, the phonon workflow stores no $U$, and the `compute_debye_waller` job fails.
+Set `imaginary_modes_thermal_displacements` to `"exclude"` or `"absolute"`, with a positive `freq_min_thermal_displacements`, to get an estimate of $U$ and of the patterns instead.
+The VASP phonon workflow also computes the Born charges and the dielectric tensor for the non-analytical correction.
+For metals, set `born_maker=None` to skip the Born charge calculation.
+The hkl indices of the patterns and the TEM beam direction refer to the primitive cell.
+The Debye-Waller factor of a site for the reciprocal lattice vector $g$, with $|g| = 1/d_{hkl}$, is $\exp(-2\pi^2 g^T U g)$.
+For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
+The patterns are computed at each temperature of $U$, from 0 K to 1000 K in steps of 100 K by default, and once without the factors.
+$U$ at every temperature comes from the same harmonic phonons, so the change of the phonon frequencies with temperature is not included.
+The output of the flow is still the phonon document.
+The patterns are in the output document of the `compute_debye_waller` job.
+
+A VASP phonon workflow with the Debye-Waller factors can be started as follows:
+```python
+from atomate2.vasp.flows.phonons import PhononMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+phonon_flow = PhononMaker(create_debye_waller=True).make(structure=structure)
+```
+
+With a force field, use `PhononMaker.from_force_field_name` from `atomate2.forcefields.flows.phonons` with `create_thermal_displacements=True` and `create_debye_waller=True`.
+
 #### Pheasy
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
