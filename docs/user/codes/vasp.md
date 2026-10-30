@@ -35,7 +35,8 @@ The most important settings to consider are:
 - `VASP_CMD`: The command used to run the standard version of VASP. I.e., something like
   `mpi_run -n 16 vasp_std > vasp.out`.
 - `VASP_GAMMA_CMD`: The command used to run the gamma-only version of VASP.
-- `VASP_NCL_CMD`: The command used to run the non-collinear version of VASP.
+- `VASP_NCL_CMD`: The command used to run the non-collinear version of VASP. It is used
+  automatically when the INCAR sets `LSORBIT` or `LNONCOLLINEAR`.
 - `VASP_INCAR_UPDATES`: Updates to apply to VASP INCAR files. This allows you to
   customise input sets on different machines, without having to change the submitted
   workflows. For example, you can set certain parallelization parameters, such as
