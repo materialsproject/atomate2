@@ -480,3 +480,58 @@ def test_pick_model_dispersion_missing_params() -> None:
             s8=0.7875,
             d3_params=_dummy_d3_params(),
         )
+
+
+@pytest.mark.parametrize(
+    ("optimizer", "cell_filter"),
+    [("Fire", "frechet"), (ts.Optimizer.fire, ts.CellFilter.frechet)],
+)
+def test_relax_job_str_or_enum(
+    ar_structure: Structure, tmp_path, optimizer, cell_filter
+) -> None:
+    """Optimizer and cell filter work as strings and as enum members."""
+    maker = TorchSimOptimizeMaker(
+        model_type=TorchSimModelType.LENNARD_JONES,
+        model_path="",
+        optimizer=optimizer,
+        max_steps=10,
+        init_kwargs={"cell_filter": cell_filter},
+        model_kwargs={"sigma": 3.405, "epsilon": 0.0104, "compute_stress": True},
+    )
+    response_dict = run_locally(
+        maker.make(ar_structure), ensure_success=True, root_dir=tmp_path
+    )
+    calc = list(response_dict.values())[-1][1].output.calcs_reversed[0]
+    assert calc.optimizer == ts.Optimizer.fire
+    assert calc.init_kwargs["cell_filter"] == "frechet"
+
+
+@pytest.mark.parametrize("integrator", ["nve", ts.Integrator.nve])
+def test_md_job_str_or_enum(ar_structure: Structure, tmp_path, integrator) -> None:
+    """Integrator works as a string and as an enum member."""
+    maker = TorchSimIntegrateMaker(
+        model_type=TorchSimModelType.LENNARD_JONES,
+        model_path="",
+        integrator=integrator,
+        n_steps=5,
+        temperature=300.0,
+        timestep=0.001,
+        model_kwargs={"sigma": 3.405, "epsilon": 0.0104, "compute_stress": True},
+    )
+    response_dict = run_locally(
+        maker.make(ar_structure), ensure_success=True, root_dir=tmp_path
+    )
+    calc = list(response_dict.values())[-1][1].output.calcs_reversed[0]
+    assert calc.integrator == ts.Integrator.nve
+
+
+def test_relax_job_invalid_optimizer(ar_structure: Structure) -> None:
+    maker = TorchSimOptimizeMaker(
+        model_type=TorchSimModelType.LENNARD_JONES,
+        model_path="",
+        optimizer="not_an_optimizer",
+        model_kwargs={"sigma": 3.405, "epsilon": 0.0104},
+    )
+    # Call the undecorated make so the error surfaces instead of failing the job
+    with pytest.raises(ValueError, match="Unknown Optimizer 'not_an_optimizer'"):
+        TorchSimOptimizeMaker.make.original(maker, ar_structure)

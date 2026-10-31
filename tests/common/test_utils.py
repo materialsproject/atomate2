@@ -4,9 +4,12 @@ TODO: there should be tests for the other utility functions.
 Not high priority but good for long term.
 """
 
-import numpy as np
+from enum import StrEnum
 
-from atomate2.common.utils import _recursive_to_list
+import numpy as np
+import pytest
+
+from atomate2.common.utils import _recursive_to_list, to_enum_member
 
 try:
     import torch
@@ -23,3 +26,29 @@ def test_to_list():
         assert _recursive_to_list(torch.from_numpy(arr)) == as_list
     for obj in (None, 1, 1.5):
         assert _recursive_to_list(obj) == obj
+
+
+class Color(StrEnum):
+    red = "red"
+    dark_blue = "dark_blue"
+    Mixed = "Mixed"
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("red", Color.red),
+        ("DARK_BLUE", Color.dark_blue),
+        ("Mixed", Color.Mixed),
+        ("mixed", Color.Mixed),
+        (Color.red, Color.red),
+    ],
+)
+def test_to_enum_member(value, expected) -> None:
+    assert to_enum_member(Color, value) is expected
+
+
+def test_to_enum_member_invalid() -> None:
+    match = r"Unknown Color 'green'\. Valid values: \['red', 'dark_blue', 'Mixed'\]"
+    with pytest.raises(ValueError, match=match):
+        to_enum_member(Color, "green")
