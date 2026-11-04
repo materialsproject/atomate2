@@ -1,3 +1,6 @@
+import warnings
+
+import numpy as np
 import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
@@ -266,3 +269,61 @@ def test_analyze_free_energy_too_few_volumes(test_dir, n_imaginary):
     match = f"{5 - n_imaginary} of the 5 volumes have no imaginary modes"
     with pytest.raises(ValueError, match=match):
         analyze_free_energy.original(phonon_docs, structure, t_max=300)
+
+
+@pytest.mark.parametrize("n_kept", [3, 6])
+def test_analyze_free_energy_fit_imaginary_volumes(tmp_dir, test_dir, n_kept):
+    """Only the n_kept smallest of phonopy's 11 example volumes keep their phonons."""
+    structure = Structure.from_file(f"{test_dir}/qha/POSCAR")
+    with open(f"{test_dir}/qha/e-v.dat") as f:
+        energies_volumes = [[float(x) for x in line.split()] for line in f]
+    phonon_docs = []
+    for index, (volume, energy) in zip(range(-5, 6), energies_volumes, strict=True):
+        with open(f"{test_dir}/qha/thermal_properties.yaml-{index}") as f:
+            thermal_properties = YAML().load(f)["thermal_properties"]
+        phonon_docs.append(
+            PhononSummaryData(
+                free_energies=[v["free_energy"] * 1000 for v in thermal_properties],
+                heat_capacities=[v["heat_capacity"] for v in thermal_properties],
+                entropies=[v["entropy"] for v in thermal_properties],
+                temperatures=[v["temperature"] for v in thermal_properties],
+                total_dft_energy=energy,
+                volume_per_formula_unit=volume,
+                formula_units=1,
+                has_imaginary_modes=index >= n_kept - 5,
+            )
+        )
+
+    match = f"{11 - n_kept} of the 11 volumes have imaginary modes"
+    with pytest.warns(UserWarning, match=match):
+        qha_doc = analyze_free_energy.original(
+            phonon_docs, structure, t_max=300, fit_imaginary_volumes=True
+        )
+
+    # the fitted free energies lie on the line through the volumes that kept theirs
+    volumes = [doc.volume_per_formula_unit for doc in phonon_docs]
+    kept = np.array([doc.free_energies for doc in phonon_docs[:n_kept]])
+    slope, offset = np.polyfit(volumes[:n_kept], kept, 1)
+    assert qha_doc.volumes == volumes
+    assert_allclose(
+        np.array(qha_doc.free_energies)[:, n_kept:],
+        np.outer(slope, volumes[n_kept:]) + offset[:, None],
+    )
+
+    # with 3 volumes in total, the fit would not reach the 4 volumes the EOS fit needs
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        with pytest.raises(ValueError, match="2 of the 3 volumes"):
+            analyze_free_energy.original(
+                phonon_docs[:2] + phonon_docs[-1:],
+                structure,
+                t_max=300,
+                fit_imaginary_volumes=True,
+            )
+
+
+def test_analyze_free_energy_ignore_and_fit():
+    with pytest.raises(ValueError, match="cannot both be True"):
+        analyze_free_energy.original(
+            [], None, ignore_imaginary_modes=True, fit_imaginary_volumes=True
+        )

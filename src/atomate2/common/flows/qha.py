@@ -69,6 +69,12 @@ class CommonQhaMaker(Maker, ABC):
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
+    fit_imaginary_volumes: bool
+        If True, the volumes with imaginary modes are kept instead of left out, and
+        their vibrational free energies come from a linear fit in the volume to the
+        volumes without imaginary modes. Needs at least 2 volumes without imaginary
+        modes, and cannot be combined with ignore_imaginary_modes. See
+        analyze_free_energy.
     eos_type: str
         Equation of State type used for the fitting. Defaults to vinet.
     min_length: float
@@ -93,6 +99,7 @@ class CommonQhaMaker(Maker, ABC):
     t_max: float | None = None
     pressure: float | None = None
     ignore_imaginary_modes: bool = False
+    fit_imaginary_volumes: bool = False
     skip_analysis: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     analyze_free_energy_kwargs: dict = field(default_factory=dict)
@@ -169,6 +176,7 @@ class CommonQhaMaker(Maker, ABC):
                 t_max=self.t_max,
                 pressure=self.pressure,
                 ignore_imaginary_modes=self.ignore_imaginary_modes,
+                fit_imaginary_volumes=self.fit_imaginary_volumes,
                 eos_type=self.eos_type,
                 **self.analyze_free_energy_kwargs,
             )
@@ -178,6 +186,12 @@ class CommonQhaMaker(Maker, ABC):
 
     def __post_init__(self) -> None:
         """Test settings during the initialisation."""
+        if self.ignore_imaginary_modes and self.fit_imaginary_volumes:
+            raise ValueError(
+                "ignore_imaginary_modes and fit_imaginary_volumes cannot both be True. "
+                "ignore_imaginary_modes keeps the free energies of all volumes, so no "
+                "volume would be fitted."
+            )
         if self.phonon_maker.bulk_relax_maker is not None:
             warnings.warn(
                 "An additional bulk_relax_maker has been added "
