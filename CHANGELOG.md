@@ -1,6 +1,32 @@
 # Change log
 
-<!-- Release notes generated using configuration in .github/release.yml at main -->
+## v0.1.7
+
+### Bug Fixes 🐛
+* move response output inside flow by @HannaTuerk in https://github.com/materialsproject/atomate2/pull/1617
+* Take the anharmonicity displacements to the nearest periodic image by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1629
+* Raise a clear error when too few QHA volumes are left for the fit by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1609
+* Fix duplicate phonon computation and magmom error in generate_frequencies_eigenvectors by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1610
+### Enhancements 🛠
+* Impose the sum rules on phonopy force constants and do not store them in the forcefield QHA by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1628
+* Breaking: Leave out the acoustic modes at Gamma in the thermal displacement matrices by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1590
+* Count the free force constants of the pheasy workflow with pheasy instead of ALM by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1620
+* Count the free force constants of the hiPhive workflow with symfc instead of ALM by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1631
+### Documentation 📖
+* Update CHANGELOG for v0.1.6 by @JaGeo in https://github.com/materialsproject/atomate2/pull/1616
+### Other Changes
+* Bump wandb from 0.30.0 to 0.31.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1623
+* Bump pymatgen-core from 2026.10.2 to 2026.10.16 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1622
+* Bump mdanalysis from 2.10.0 to 2.11.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1626
+* Bump pytest-mock from 3.16.0 to 3.17.0 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1624
+* Bump sphinx from 9.1.0 to 9.1.1 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1625
+* Bump monty from 2026.7.16 to 2026.10.21 by @dependabot[bot] in https://github.com/materialsproject/atomate2/pull/1627
+
+## New Contributors
+* @HannaTuerk made their first contribution in https://github.com/materialsproject/atomate2/pull/1617
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.1.6...v0.1.17
+
 ## v0.1.6
 ### Bug Fixes 🐛
 * Breaking: Use phonopy's sum over the q-point mesh for the phonon thermal properties by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1576

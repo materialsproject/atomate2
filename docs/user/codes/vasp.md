@@ -386,7 +386,7 @@ The hkl indices of the patterns and the TEM beam direction refer to the primitiv
 The Debye-Waller factor of a site for the reciprocal lattice vector $g$, with $|g| = 1/d_{hkl}$, is $\exp(-2\pi^2 g^T U g)$.
 For an isotropic $U = U_\mathrm{iso} I$, this is $\exp(-B s^2)$ with $B = 8\pi^2 U_\mathrm{iso}$ and $s = |g|/2$.
 The patterns are computed at each temperature of $U$, from 0 K to 1000 K in steps of 100 K by default, and once without the factors.
-The phonon frequencies are not renormalized with temperature.
+$U$ at every temperature comes from the same harmonic phonons, so the change of the phonon frequencies with temperature is not included.
 The output of the flow is still the phonon document.
 The patterns are in the output document of the `compute_debye_waller` job.
 
