@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from ase import units
 from ase.md.md import MolecularDynamics
+from ase.md.nose_hoover_chain import MTKNPT, IsotropicMTKNPT
 from ase.md.npt import NPT
 from ase.md.velocitydistribution import (
     MaxwellBoltzmannDistribution,
@@ -118,11 +119,13 @@ class AseMDMaker(AseMaker, ABC):
     temperature: float | Sequence | np.ndarray | None.
         The temperature in Kelvin. If a sequence or 1D array, the temperature
         schedule will be interpolated linearly between the given values. If a
-        float, the temperature will be constant throughout the run.
+        float, the temperature will be constant throughout the run. Some
+        dynamics, e.g. MTKNPT, cannot follow a schedule and raise a ValueError.
     pressure: float | Sequence | None = None
         The pressure in kilobar. If a sequence or 1D array, the pressure
         schedule will be interpolated linearly between the given values. If a
-        float, the pressure will be constant throughout the run.
+        float, the pressure will be constant throughout the run. MTKNPT and
+        IsotropicMTKNPT cannot follow a schedule and raise a ValueError.
     dynamics : str | ASE .MolecularDynamics | None = None
         The dynamical thermostat to use. If dynamics is an ASE .MolecularDynamics
         object, this uses the option specified explicitly by the user.
@@ -360,7 +363,7 @@ class AseMDMaker(AseMaker, ABC):
                     f"{self.dynamics} thermostat not available for "
                     f"{self.ensemble.value}. "
                     f"Available {self.ensemble.value} thermostats are: "
-                    " ".join(_valid_dynamics[self.ensemble])
+                    + ", ".join(sorted(_valid_dynamics[self.ensemble]))
                 )
 
             _dyn_mod_path = DynamicsPresets[
@@ -411,12 +414,22 @@ class AseMDMaker(AseMaker, ABC):
 
         md_runner.attach(md_observer, interval=self.traj_interval)
 
-        can_set_temperature = hasattr(md_runner, "_temperature_K") or hasattr(
-            md_runner, "set_temperature"
+        # MTKNPT and IsotropicMTKNPT set the temperature of their thermostat and
+        # barostat in __init__, and _callback does not set their _pressure_au
+        fixed_targets = isinstance(md_runner, (MTKNPT, IsotropicMTKNPT))
+        can_set_temperature = not fixed_targets and (
+            hasattr(md_runner, "_temperature_K")
+            or hasattr(md_runner, "set_temperature")
         )
         if not can_set_temperature and np.ptp(self.t_schedule) > 0:
             raise ValueError(
-                f"{type(md_runner).__name__} cannot follow a temperature schedule."
+                f"{type(md_runner).__name__} cannot follow a temperature schedule. "
+                "Use a constant temperature or other dynamics."
+            )
+        if fixed_targets and np.ptp(self.p_schedule) > 0:
+            raise ValueError(
+                f"{type(md_runner).__name__} cannot follow a pressure schedule. "
+                "Use a constant pressure or other dynamics."
             )
 
         def _callback(dyn: MolecularDynamics = md_runner) -> None:
