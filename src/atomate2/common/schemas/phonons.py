@@ -273,7 +273,7 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         "thermal_displacement_matrix": u.tolist(),
         "freq_min_thermal_displacements": freq_min,
         "imaginary_modes": imaginary_modes if has_imaginary else None,
-        "structure": get_pmg_structure(phonon.primitive),
+        "primitive_structure": get_pmg_structure(phonon.primitive),
     }
 
 
@@ -322,7 +322,7 @@ class ThermalDisplacementData(BaseModel):
         "of the same absolute frequency (absolute). None if the mesh had none or if "
         "this was not recorded.",
     )
-    structure: Structure | None = Field(
+    primitive_structure: Structure | None = Field(
         None,
         description="primitive cell of phonopy, whose sites the thermal displacement "
         "matrices refer to, in the same order",
