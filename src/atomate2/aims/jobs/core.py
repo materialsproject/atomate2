@@ -17,8 +17,11 @@ from pymatgen.io.aims.sets.core import (
     StaticSetGenerator,
 )
 
-from atomate2 import SETTINGS
-from atomate2.aims.files import cleanup_aims_outputs, write_aims_input_set
+from atomate2.aims.files import (
+    cleanup_aims_outputs,
+    get_aims_zip_files_setting,
+    write_aims_input_set,
+)
 from atomate2.aims.jobs.base import _FILES_TO_ZIP, BaseAimsMaker
 from atomate2.aims.run import run_aims_socket, should_stop_children
 from atomate2.aims.schemas.task import AimsTaskDoc
@@ -172,7 +175,7 @@ class SocketIOStaticMaker(BaseAimsMaker):
         # gzip folder
         gzip_output_folder(
             directory=Path.cwd(),
-            setting=SETTINGS.VASP_ZIP_FILES,
+            setting=get_aims_zip_files_setting(),
             files_list=_FILES_TO_ZIP,
         )
 
