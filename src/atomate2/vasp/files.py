@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 def copy_vasp_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
-    additional_vasp_files: Sequence[str] = (),
+    additional_vasp_files: Sequence[str] | dict[str, str] = (),
     contcar_to_poscar: bool = True,
     force_overwrite: bool | str = False,
     file_client: FileClient | None = None,
@@ -49,8 +49,12 @@ def copy_vasp_outputs(
         either "username@remote_host" or just "remote_host" in which case the username
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
-    additional_vasp_files : list of str
-        Additional files to copy, e.g. ["CHGCAR", "WAVECAR"].
+    additional_vasp_files : list of str or dict
+        Additional files to copy, e.g. ["CHGCAR", "WAVECAR"]. If provided as a dict,
+        the key is the original file name in the src_dir, and the value is the name
+        of the file to which it should be renamed in the current directory, e.g.
+        {"ML_ABN": "ML_AB"} will copy the ML_ABN to the current directory and then
+        rename it to ML_AB.
     contcar_to_poscar : bool
         Move CONTCAR to POSCAR (original POSCAR is not copied).
     force_overwrite : bool or str
@@ -70,7 +74,11 @@ def copy_vasp_outputs(
     directory_listing = file_client.listdir(src_dir, host=src_host)
 
     # find required files
-    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml", *additional_vasp_files)
+    if isinstance(additional_vasp_files, dict):
+        additional_files = list(additional_vasp_files.keys())
+    else:
+        additional_files = list(additional_vasp_files)
+    files = ("INCAR", "OUTCAR", "CONTCAR", "vasprun.xml", *additional_files)
     required_files = [get_zfile(directory_listing, r + relax_ext) for r in files]
 
     # find optional files; do not fail if KPOINTS is missing, this might be KSPACING
@@ -112,6 +120,9 @@ def copy_vasp_outputs(
 
     if contcar_to_poscar:
         rename_files({"CONTCAR": "POSCAR"}, file_client=file_client)
+
+    if isinstance(additional_vasp_files, dict):
+        rename_files(additional_vasp_files, file_client=file_client)
 
     logger.info("Finished copying inputs")
 
@@ -187,7 +198,9 @@ def write_vasp_input_set(
     """
     prev_dir = "." if from_prev else None
     vis = input_set_generator.get_input_set(
-        structure, prev_dir=prev_dir, potcar_spec=potcar_spec
+        structure,
+        prev_dir=prev_dir,
+        potcar_spec=potcar_spec,
     )
 
     if apply_incar_updates:

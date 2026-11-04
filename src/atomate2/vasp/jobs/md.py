@@ -20,7 +20,7 @@ from jobflow import Response, job
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.schemas.md import MultiMDOutput
-from atomate2.vasp.sets.core import MDSetGenerator
+from atomate2.vasp.sets.core import MDSetGenerator, MLMDSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -85,8 +85,61 @@ class MDMaker(BaseVaspMaker):
     # Store ionic steps info in a pymatgen Trajectory object instead of in the output
     # document.
     task_document_kwargs: dict = field(
-        default_factory=lambda: {"store_trajectory": StoreTrajectoryOption.PARTIAL}
+        default_factory=lambda: {
+            "store_trajectory": StoreTrajectoryOption.PARTIAL,
+            "vasprun_kwargs": {"parse_dos": False, "parse_eigen": False},
+        }
     )
+    write_input_set_kwargs: dict = field(
+        default_factory=lambda: {"get_previous_bandgap": False}
+    )
+
+
+@dataclass
+class MLMDMaker(MDMaker):
+    """Maker to create VASP molecular dynamics jobs using MLFF feature."""
+
+    name: str = "MLFF molecular dynamics"
+
+    input_set_generator: VaspInputGenerator = field(default_factory=MLMDSetGenerator)
+
+    @classmethod
+    def train(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
+        """Train."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF MD train",
+            input_set_generator=MLMDSetGenerator(ml_mode="train", **generator_kwargs),
+            copy_vasp_kwargs={"additional_vasp_files": {"ML_ABN": "ML_AB"}},
+            **kwargs,
+        )
+
+    @classmethod
+    def select(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
+        """Select."""
+        raise NotImplementedError
+
+    @classmethod
+    def refit(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
+        """Refit."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF refit",
+            input_set_generator=MLMDSetGenerator(ml_mode="refit", **generator_kwargs),
+            copy_vasp_kwargs={"additional_vasp_files": {"ML_ABN": "ML_AB"}},
+            **kwargs,
+        )
+
+    @classmethod
+    def run(cls, generator_kwargs: dict | None = None, **kwargs) -> MLMDMaker:
+        """Run."""
+        generator_kwargs = generator_kwargs or {}
+        return cls(
+            name="MLFF MD run",
+            input_set_generator=MLMDSetGenerator(ml_mode="run", **generator_kwargs),
+            copy_vasp_kwargs={"additional_vasp_files": {"ML_FFN": "ML_FF"}},
+            **kwargs,
+        )
 
 
 @job(output_schema=MultiMDOutput)
