@@ -183,6 +183,29 @@ def test_get_thermal_displacement_data(clean_dir):
         _get_thermal_displacement_data(
             phonon, imaginary_modes_thermal_displacements="exclude"
         )
+
+    # scaled down, all modes lie between -0.1 THz and 0. They are not imaginary
+    # modes, but they are below 0.1 THz, so they are left out and U is zero
+    phonon.force_constants = 1e-4 * phonon.force_constants
+    with pytest.warns(UserWarning, match="leave out the acoustic modes at Gamma"):
+        data = _get_thermal_displacement_data(
+            phonon, kpoint_density_thermal_displacements=343
+        )
+    assert -0.1 < phonon.mesh.frequencies.min() < 0
+    assert data["freq_min_thermal_displacements"] == 0.1
+    assert data["imaginary_modes"] is None
+    assert np.array(data["thermal_displacement_matrix"]) == pytest.approx(0)
+
+    # with a tolerance below the dip, they are imaginary modes again
+    with pytest.warns(UserWarning, match="mesh has imaginary modes"):
+        assert (
+            _get_thermal_displacement_data(
+                phonon,
+                kpoint_density_thermal_displacements=343,
+                tol_imaginary_modes=1e-5,
+            )
+            is None
+        )
     with pytest.raises(ValueError, match="must be None"):
         _get_thermal_displacement_data(
             phonon, imaginary_modes_thermal_displacements="include"

@@ -39,12 +39,13 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
-from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 from atomate2.common.schemas.phonons import (
+    TOL_IMAGINARY_MODES,
     _get_thermal_displacement_data,
     _set_nac_params,
     get_factor,
 )
+from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 from atomate2.common.utils import check_class_name, get_supercell_matrix
 from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -199,7 +200,7 @@ def _run_band_structure_and_plot(
     is_band_connection: bool = False,
     filename_bs: str = "phonon_band_structure.pdf",
     units: str = "THz",
-    tol_imaginary_modes: float = 1e-3,
+    tol_imaginary_modes: float = TOL_IMAGINARY_MODES,
 ) -> tuple[PhononBandStructureSymmLine, bool]:
     """Compute, save, and plot a phonon band structure on a Phonopy object.
 
@@ -598,7 +599,7 @@ def generate_frequencies_eigenvectors(
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         filename_bs=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
         units=kwargs.get("units", "THz"),
-        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-3),
+        tol_imaginary_modes=kwargs.get("tol_imaginary_modes", TOL_IMAGINARY_MODES),
     )
 
     # gets data for visualization on website - yaml is also enough

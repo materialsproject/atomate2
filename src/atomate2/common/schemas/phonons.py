@@ -36,6 +36,11 @@ from atomate2.aims.utils.units import omegaToTHz
 
 logger = logging.getLogger(__name__)
 
+# Default tolerance in THz. A frequency below -TOL_IMAGINARY_MODES is an imaginary
+# mode. The Materials Project harmonic phonon database and the thermal expansion
+# workflow use the same value.
+TOL_IMAGINARY_MODES = 0.1
+
 
 def get_factor(code: str) -> float:
     """
@@ -136,8 +141,12 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     zero. One CIF file is written per temperature.
 
     Modes with a frequency below freq_min_thermal_displacements are left out.
-    Without imaginary modes, the default of 0 leaves out no mode, since apart
+    If no mode is below zero, the default of 0 leaves out no mode, since apart
     from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+    A frequency between -tol_imaginary_modes and 0 is not an imaginary mode. But
+    the branch that dips there also has modes just above zero on the mesh, and
+    their term diverges. So if the mesh has a frequency in this range,
+    freq_min_thermal_displacements is raised to tol_imaginary_modes.
 
     The matrices are not defined if the mesh has imaginary modes, so by default
     none are returned then. A material with imaginary modes then gets no
@@ -158,7 +167,7 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         tmin_thermal_displacements (default 0), tmax_thermal_displacements
         (default 1000), tstep_thermal_displacements (default 100),
         freq_min_thermal_displacements (default 0.0), tol_imaginary_modes
-        (default 1e-5) and imaginary_modes_thermal_displacements (default None,
+        (default 0.1 THz) and imaginary_modes_thermal_displacements (default None,
         "exclude" or "absolute").
 
     Returns
@@ -206,7 +215,8 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
     phonon.mesh.frequencies[gamma, acoustic] = 0.0
     freqs = phonon.mesh.frequencies.copy()
     freqs[gamma, acoustic] = np.inf
-    has_imaginary = freqs.min() < -kwargs.get("tol_imaginary_modes", 1e-5)
+    tol = kwargs.get("tol_imaginary_modes", TOL_IMAGINARY_MODES)
+    has_imaginary = freqs.min() < -tol
     if has_imaginary and imaginary_modes is None:
         warnings.warn(
             "The q-point mesh has imaginary modes, so no thermal displacement "
@@ -229,6 +239,10 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
             f'matrices are computed with imaginary_modes="{imaginary_modes}".',
             stacklevel=2,
         )
+    elif freqs.min() < 0:
+        # A dip above -tol is not an imaginary mode, but the modes just above zero
+        # next to it would make U diverge, so the modes below tol are left out.
+        freq_min = max(freq_min, tol)
     t_step = kwargs.get("tstep_thermal_displacements", 100)
     # same temperatures as phonopy's t_min, t_max, t_step, which include t_max
     temperatures = np.arange(
@@ -668,11 +682,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             units=kwargs.get("units", "THz"),
         )
 
-        # will determine if imaginary modes are present in the structure.
-        # The default of 1e-3 THz is above the numerical noise of the acoustic
-        # modes at Gamma. 1e-5 THz flagged this noise as imaginary modes.
+        # will determine if imaginary modes are present in the structure
         imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=kwargs.get("tol_imaginary_modes", 1e-3)
+            tol=kwargs.get("tol_imaginary_modes", TOL_IMAGINARY_MODES)
         )
 
         # gets data for visualization on website - yaml is also enough
