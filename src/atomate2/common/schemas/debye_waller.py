@@ -136,7 +136,7 @@ class DebyeWallerDocument(StructureMetadata):
         """
         check_pymatgen()
         data = phonon_doc.thermal_displacement_data
-        if data is None or data.structure is None:
+        if data is None or data.primitive_structure is None:
             raise ValueError(
                 "The phonon document has no thermal displacement matrices or no "
                 "primitive cell for them. Run the phonon flow with "
@@ -145,7 +145,7 @@ class DebyeWallerDocument(StructureMetadata):
                 "imaginary_modes_thermal_displacements is not set."
             )
         # the primitive cell the matrices were computed on, with its site order
-        structure = data.structure
+        structure = data.primitive_structure
 
         # the first structure has no U, for the patterns without the factors
         structures = [structure]
