@@ -16,24 +16,29 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Structure
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-
 
 @dataclass
 class MultiMDMaker(Maker):
     """
     Maker to perform an MD run split in several steps.
 
+    Each MD job starts from the final structure of the previous one, including
+    its velocities if the ASE makers have store_velocities set to True. The
+    thermostat and barostat variables are not carried over. ASE makers with a
+    fixed mb_velocity_seed can repeat the same thermostat noise in every job, so
+    give each maker its own seed.
+
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    md_makers : .BaseVaspMaker
-        Maker to use to generate the first relaxation.
+    md_makers : list of .Maker
+        Makers of the MD jobs, in order. These are either all VASP makers or all
+        ASE makers, such as the force field ones.
     """
 
     name: str = "multi md"
-    md_makers: list[BaseVaspMaker] = field(default_factory=lambda: [MDMaker()])
+    md_makers: list[Maker] = field(default_factory=lambda: [MDMaker()])
 
     def make(
         self,
@@ -48,7 +53,7 @@ class MultiMDMaker(Maker):
         structure : .Structure
             A pymatgen structure object.
         prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
+            A previous calculation directory to copy output files from.
         prev_traj_ids: a list of ids of job identifying previous steps of the
             MD trajectory.
 

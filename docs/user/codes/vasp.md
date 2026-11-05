@@ -425,6 +425,111 @@ The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
 Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
 The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
 
+#### Finite-temperature phonons
+
+`FiniteTemperaturePhononMaker` fits effective harmonic force constants at a finite temperature, as in the temperature-dependent effective potential ([TDEP](https://doi.org/10.1103/PhysRevB.84.180301)) method.
+They include the effect of the anharmonic forces on the frequencies at that temperature.
+They give no phonon lifetimes.
+By default, the MD runs at the volume of the relaxed structure, so thermal expansion is not included.
+It can be switched on with an NPT MD before the NVT MD, see below.
+The structure is relaxed first.
+An NVT MD run then samples the displacements at the temperature.
+By default, it runs for 8 ps at 300 K with a time step of 1 fs and a Langevin thermostat.
+The first 1 ps is left out, and 50 snapshots are picked evenly spread over the rest.
+Static calculations give the forces on the snapshots and on the undisplaced supercell.
+The displacements are measured from the undisplaced supercell.
+Pheasy then fits the second-order force constants to them with LASSO.
+As in the pheasy phonon workflow, a `DielectricMaker` computes the Born charges and the dielectric tensor for the non-analytical correction.
+It needs the `pheasy` extra, and pheasy and ALM from git, installed as in the Pheasy section above.
+The notebook `tutorials/finite_temperature_phonons.ipynb` runs the force field version for seven materials with three MACE potentials.
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
+```python
+from atomate2.vasp.flows.finite_temperature_phonons import (
+    FiniteTemperaturePhononMaker,
+)
+
+flow = FiniteTemperaturePhononMaker(temperature=300).make(structure)
+```
+
+The fit only uses the positions of the MD, not its dynamics.
+The MD has to sample the canonical ensemble.
+A Langevin thermostat does this for every mode ([Bussi and Parrinello](https://doi.org/10.1103/PhysRevE.75.056707)).
+For a harmonic oscillator weakly coupled to a Nosé-Hoover thermostat, the dynamics is not ergodic ([Legoll et al.](https://doi.org/10.1007/s00205-006-0029-1)).
+`thermostat="nose-hoover"` switches the NVT MD to a Nosé-Hoover thermostat with one thermostat variable.
+
+The MD uses looser settings than the statics, for example ENCUT = 500 eV instead of 600 eV.
+Only the forces of the statics enter the fit.
+The relaxation, the MD and the statics use the same functional, +U, smearing and k-point settings.
+The MD and the statics start from the magnetic moments of the relaxed structure, if it has any.
+Both set ISPIN from the relaxation directory with `auto_ispin`.
+Later jobs read the files of the MD runs, so the MD run directories must be on a file system that these jobs can read.
+A long MD can run as several jobs with `n_md_jobs`, for example `n_md_jobs=4` for four jobs of 2 ps each with the default `md_time` of 8 ps.
+Each job starts from the final positions and velocities of the previous one, and the trajectories are joined in order.
+A later MD job takes its magnetic moments and ISPIN from the previous MD job.
+The thermostat and barostat variables start again from zero in each job.
+This applies to the NVT and to the NPT MD.
+
+An NPT MD can be run first to include thermal expansion.
+Set `npt_maker` to a VASP `MDMaker` with an `MDSetGenerator`, and use a larger ENCUT than for the NVT MD, since the cell changes.
+Give it the ISMEAR, SIGMA and k-point settings of `md_maker`, since the defaults of `MDSetGenerator` differ.
+The flow runs it at the temperature and at `pressure`, 0 kbar by default, with MDALGO = 3 and ISIF = 3.
+The VASP NPT MD uses the Langevin thermostat, whatever `thermostat` is.
+The cell is averaged over the frames after `npt_equilibration_time`, given the symmetry of the relaxed structure, and used for the NVT MD, the statics and the fit.
+`fixed_cell_relax_maker` can relax the atoms in this cell, for example with ISIF = 2.
+
+`has_imaginary_modes` of the output `FiniteTemperaturePhononDoc` checks the band path.
+`n_imaginary_modes` and `lowest_frequency` use the q-points commensurate with the supercell.
+Imaginary modes are reported and not removed.
+
+`ForceFieldFiniteTemperaturePhononMaker` in `atomate2.forcefields.flows.finite_temperature_phonons` uses a force field for all steps.
+Its `from_force_field_name` method chooses the force field.
+It needs the package of the force field, for example `mace-torch` for MACE.
+The fit is the same.
+A force field NPT MD uses ASE's `MTKNPT`, a Nosé-Hoover thermostat with one thermostat variable and the barostat of [Martyna et al.](https://doi.org/10.1063/1.467468).
+
+```python
+from atomate2.forcefields.flows.finite_temperature_phonons import (
+    ForceFieldFiniteTemperaturePhononMaker,
+)
+
+maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(
+    "MACE-MP-0", temperature=600, run_npt=True
+)
+flow = maker.make(structure)
+```
+
+`run_npt=True` sets the NPT MD and the relaxation of the atoms in its cell.
+
+Most force fields give no Born charges, so `ForceFieldFiniteTemperaturePhononMaker` skips the non-analytical correction by default.
+The Born charges and the dielectric tensor can come from MACE-Field, see the [force field notes](forcefields.md#mace-field-notes), or from VASP.
+Either pass `born` and `epsilon_static` to `make`, or set a `born_maker`.
+`born` must be for the cell of the NVT MD, with its atoms sorted by electronegativity, as `structure.get_sorted_structure()` sorts them.
+With an NPT MD this cell is not known in advance, so use a `born_maker`:
+
+```python
+from atomate2.forcefields.jobs import ForceFieldDielectricMaker
+from atomate2.vasp.jobs.core import DielectricMaker
+
+# with MACE-Field
+maker.born_maker = ForceFieldDielectricMaker(
+    calculator_kwargs={"model": "/path/to/MACEField-MH-0-omat-dielectric.model"}
+)
+# or with VASP
+maker.born_maker = DielectricMaker()
+```
+
+Known limitations:
+
+- pheasy needs a diagonal supercell matrix.
+- The MD is classical, so there is no zero-point motion.
+- Each result comes from one MD trajectory, so it carries the noise of that trajectory.
+- Each MD job has to finish within the walltime of a job. `n_md_jobs` splits a long MD into several jobs.
+
 ### Grüneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of [Phonopy](https://doi.org/10.7566/JPSJ.92.012001).
