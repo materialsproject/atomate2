@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from jobflow import run_locally
@@ -52,7 +52,7 @@ def test_retrieve_structure_from_materials_project():
     # test stored data is in expected format
     # Note that patches use `.post` suffix in MP DB versions
     db_version = stored_data["database_version"].split(".post")[0]
-    datetime.strptime(db_version, "%Y.%m.%d").replace(tzinfo=timezone.utc)
+    datetime.strptime(db_version, "%Y.%m.%d").replace(tzinfo=UTC)
 
     assert AlphaID(stored_data["task_id"], prefix="mp").startswith("mp-")
 

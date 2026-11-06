@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -121,9 +121,7 @@ class MrgdvdbTaskDoc(StructureMetadata):
         )
 
         completed_at = str(
-            datetime.fromtimestamp(
-                os.stat(abinit_mrgdvdb_file).st_mtime, tz=timezone.utc
-            )
+            datetime.fromtimestamp(os.stat(abinit_mrgdvdb_file).st_mtime, tz=UTC)
         )
 
         report = get_mrgdv_report(logfile=std_task_files["abinit_mrglog_file"])

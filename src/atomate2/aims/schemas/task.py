@@ -6,7 +6,7 @@ import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -17,7 +17,6 @@ from emmet.core.vasp.calc_types.enums import TaskType
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
-from typing_extensions import Self
 
 from atomate2.aims.schemas.calculation import AimsObject, Calculation, TaskState
 from atomate2.aims.utils import datetime_str

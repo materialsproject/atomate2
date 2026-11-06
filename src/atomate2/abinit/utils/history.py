@@ -14,12 +14,12 @@ from atomate2.abinit.utils.common import OUTDIR_NAME
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Self
 
     from abipy.abio.inputs import AbinitInput
     from abipy.flowtk.events import AbinitEvent
     from abipy.flowtk.utils import Directory
     from jobflow import Flow, Job
-    from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

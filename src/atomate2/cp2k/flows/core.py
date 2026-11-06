@@ -21,9 +21,9 @@ from atomate2.cp2k.sets.base import recursive_update
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Self
 
     from pymatgen.core.structure import Structure
-    from typing_extensions import Self
 
     from atomate2.cp2k.jobs.base import BaseCp2kMaker
 

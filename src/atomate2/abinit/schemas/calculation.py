@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from abipy.abio.outputs import AbinitOutputFile
 from abipy.electrons.gsr import GsrFile
@@ -16,7 +16,6 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
-from typing_extensions import Self
 
 from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.utils.common import (
@@ -356,7 +355,7 @@ class Calculation(BaseModel):
             )
 
         completed_at = str(
-            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=timezone.utc)
+            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=UTC)
         )
 
         report = None

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -393,9 +393,7 @@ class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
                 filepath=phdos_filepath, data_type=bytes
             )
         completed_at = str(
-            datetime.fromtimestamp(
-                os.stat(abinit_analog_file).st_mtime, tz=timezone.utc
-            )
+            datetime.fromtimestamp(os.stat(abinit_analog_file).st_mtime, tz=UTC)
         )
 
         tags = additional_fields.pop("tags", None)

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Sequence
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -22,7 +22,7 @@ from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.common import VolumetricData
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
 
 STORE_VOLUMETRIC_DATA = ("total_density",)
@@ -328,7 +328,7 @@ class Calculation(BaseModel):
         aims_output = AimsOutput.from_outfile(aims_output_file)
 
         completed_at = str(
-            datetime.fromtimestamp(os.stat(aims_output_file).st_mtime, tz=timezone.utc)
+            datetime.fromtimestamp(os.stat(aims_output_file).st_mtime, tz=UTC)
         )
 
         output_file_paths = _get_output_file_paths(volumetric_files)

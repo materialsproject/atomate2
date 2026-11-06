@@ -21,6 +21,8 @@ from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
 from atomate2.torchsim.flows.phonons import PhononMaker
 from atomate2.torchsim.schema import TorchSimModelType
 
+from ..conftest import _SKIP_MACE  # noqa: TID252
+
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
@@ -142,6 +144,7 @@ def test_torchsim_output_schema_compatibility(si_diamond: Structure, tmp_path) -
             assert len(row) == 3
 
 
+@pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")
 @pytest.mark.parametrize("socket", [True, False])
 def test_torchsim_phonon_maker_integration(
     si_structure: Structure, tmp_path, test_dir, socket: bool
@@ -175,7 +178,7 @@ def test_torchsim_phonon_maker_integration(
         phonon_displacement_maker=static_maker,
         create_thermal_displacements=False,
         store_force_constants=False,
-        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100, "tmax": 400},
         socket=socket,
     )
 
@@ -209,21 +212,21 @@ def test_torchsim_phonon_maker_integration(
     assert_allclose(ph_bs_dos_doc.temperatures, [0, 100, 200, 300, 400])
     assert_allclose(
         ph_bs_dos_doc.free_energies,
-        [658.667573, -2745.918517, -8014.387019, -14157.326384, -20879.141527],
+        [1604.033672, -1694.713366, -7233.93597, -13995.521418, -21582.722268],
         atol=0.1,
     )
     assert_allclose(
         ph_bs_dos_doc.entropies,
-        [0.0, 46.424251, 57.7688424, 64.642411, 69.562367],
+        [0.0, 46.918321, 62.434163, 72.186296, 79.23234],
         atol=0.1,
     )
     assert_allclose(
         ph_bs_dos_doc.heat_capacities,
-        [0.0, 15.704769, 16.819223, 17.055503, 17.140707],
+        [0.0, 20.567711, 23.66324, 24.354723, 24.607057],
         atol=0.1,
     )
     assert_allclose(
         ph_bs_dos_doc.internal_energies,
-        [658.667573, 1896.506663, 3539.381508, 5235.397079, 6945.805332],
+        [1604.033672, 2997.118773, 5252.896592, 7660.367506, 10110.213867],
         atol=0.1,
     )

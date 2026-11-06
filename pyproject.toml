@@ -17,18 +17,17 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=0.86.1",
+    "emmet-core>=0.87.3",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
@@ -36,7 +35,7 @@ dependencies = [
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
     "pymatgen-core>=2026.5.18",
-    "pymongo<=4.17.0",
+    "pymongo<=4.19.0",
 ]
 
 [project.optional-dependencies]
@@ -51,7 +50,12 @@ mp = ["mp-api>=0.37.5"]
 # phonopy 4.x changed force-constants/primitive-axis handling, breaking the
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
-phonons = ["phonopy>=2.43.6,<5", "seekpath>=2.0.0"]
+phonons = ["phonopy>=4.7.1,<5", "seekpath>=2.0.0"]
+# pheasy itself is in the pheasy dependency group
+pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
+# phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
+phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
+hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -64,9 +68,24 @@ ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
 
 torchsim = [
-    "torch-sim-atomistic[symmetry]==0.6.0; python_version >= '3.12'"
+    "torch-sim-atomistic[symmetry]==0.6.2; python_version >= '3.12'"
 ]
-jdftx = ["pymatgen==2026.5.4"]
+
+# TorchSim's optional model backends pin to minimum versions to avoid the backend
+# from being absent. We also have to keep mace separate from the generic group
+# to avoid conflicts with e3nn versions. Note that the groups are different
+# from the ones used for the forcefields backend.
+
+# ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the
+# current set of torchsim dependency groups.
+torchsim-mace = [
+    "torch-sim-atomistic[mace,symmetry]==0.6.2; python_version >= '3.12'"
+]
+# mattersim can be added to torchsim-generic once they clean their dependencies
+torchsim-generic = [
+    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.2; python_version >= '3.12'"
+]
+jdftx = ["pymatgen==2026.10.24"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 openmm = [
     "mdanalysis>=2.8.0",
@@ -75,11 +94,11 @@ openmm = [
 ]
 fireworks = ["fireworks==2.1.4"]
 strict-openff = [
-    "mdanalysis==2.10.0",
-    "monty==2026.7.16",
+    "mdanalysis==2.11.0",
+    "monty==2026.10.21",
     "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.6.0",
-    "pymatgen==2026.5.4", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "openmm==8.6.1",
+    "pymatgen==2026.10.24", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
 # Forcefields have separate strict groupings because of conflicting dependencies.
@@ -91,7 +110,7 @@ strict-openff = [
 # ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the current set of
 # forcefield dependency groups.
 strict-forcefields-generic = [
-    "calorine==3.5; python_version >= '3.12'",
+    "calorine==4.1; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
     "chgnet==0.4.2",
     "quippy-ase==0.10.3",
@@ -100,16 +119,16 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 #     "mattersim>=1.2.3", # need to be activated again
-    "wandb==0.28.2", # required for mattersim
+    "wandb==0.31.0", # required for mattersim
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
     "matgl==4.0.3",
-    "nequip==0.19.0", # requires numpy<2 because of matscipy
+    "nequip==0.19.1", # requires numpy<2 because of matscipy
 ]
 
 strict-forcefields-e3nn-limited = [
-    "mace-torch==0.3.16",
+    "mace-torch==0.3.17",
     "torch-dftd==0.5.3",
 ]
 strict-forcefields-numpy-limited = [
@@ -120,8 +139,8 @@ strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
-    "pymatgen==2026.5.4",
-    "pymatgen-core==2026.8.13",
+    "pymatgen==2026.10.24",
+    "pymatgen-core==2026.10.16",
 ]
 
 [project.scripts]
@@ -135,11 +154,24 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
+# MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
+# It is a dependency group, since PyPI does not accept git URLs in extras.
+# Remove it once MACE-Field is in a mace-torch release (ACEsuit/mace#1177).
+mace-field = [
+    "mace-torch @ git+https://github.com/mdi-group/mace-field.git@45d5c5fa7b40a155855b3d155df1760e36849e64",
+]
+# The pheasy fork adds the --disp_matrix_file and --force_matrix_file options
+# and fixes the --scell option. It is a dependency group, since PyPI does not
+# accept git URLs in extras. Move it back to the pheasy extra once a pheasy
+# release on PyPI has these changes.
+pheasy = [
+    "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d",
+]
 tests = [
     "fireworks==2.1.4",
     "nbmake==1.5.5",
     "pytest-cov==7.1.0",
-    "pytest-mock==3.15.1",
+    "pytest-mock==3.17.0",
     "pytest-split==0.11.0",
     "pytest-xdist==3.8.0",
     "pytest==9.1.1",
@@ -148,14 +180,14 @@ docs = [
     "fireworks==2.1.4",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.16.1",
+    "ipython==9.17.1",
     "jsonschema[format]",
     "myst_parser==5.1.0",
-    "numpydoc==1.10.0",
+    "numpydoc==1.11.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==9.0.4",
+    "sphinx==9.1.1",
     "sphinx_design==0.7.0",
-    "jupyterlab==4.6.3",
+    "jupyterlab==4.6.5",
 ]
 
 [tool.setuptools.package-data]
@@ -202,7 +234,7 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 output-format = "concise"
 
 [tool.ruff.lint]

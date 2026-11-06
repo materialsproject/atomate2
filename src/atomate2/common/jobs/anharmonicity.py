@@ -13,6 +13,7 @@ from pymatgen.core import Structure
 from pymatgen.core.units import kb
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatgen.util.coord import pbc_diff
 
 from atomate2.aims.schemas.calculation import Calculation
 from atomate2.aims.utils.units import omegaToTHz
@@ -21,6 +22,8 @@ from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
+
+    from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
@@ -338,7 +341,7 @@ def displace_structure(
 
 
 def build_dynmat(
-    force_constants: ForceConstants,
+    force_constants: ForceConstants | list[list[Matrix3D]],
     structure: Structure,
 ) -> np.ndarray:
     """Build the dynamical matrix.
@@ -356,7 +359,7 @@ def build_dynmat(
         The dynamical matrix
     """
     force_constants_2d = (
-        np.array(force_constants.force_constants)
+        np.array(getattr(force_constants, "force_constants", force_constants))
         .swapaxes(1, 2)
         .reshape(2 * (len(structure) * 3,))
     )
@@ -449,7 +452,7 @@ def get_sigma_a_per_mode(
 
 @job
 def get_forces(
-    force_constants: ForceConstants,
+    force_constants: ForceConstants | list[list[Matrix3D]],
     phonon_supercell: Structure,
     displaced_structures: dict[str, list],
 ) -> list[np.ndarray]:
@@ -470,20 +473,26 @@ def get_forces(
         List of forces in the form [DFT forces, harmonic forces]
     """
     force_constants_2d = np.swapaxes(
-        force_constants.force_constants,
+        getattr(force_constants, "force_constants", force_constants),
         1,
         2,
     ).reshape(2 * (len(phonon_supercell) * 3,))
     if isinstance(displaced_structures["coords"][0], Calculation):
-        displacements = [
-            disp_data.output.structure.cart_coords - phonon_supercell.cart_coords
+        coords = [
+            disp_data.output.structure.cart_coords
             for disp_data in displaced_structures["coords"]
         ]
     else:
-        displacements = [
-            np.array(disp_data) - phonon_supercell.cart_coords
-            for disp_data in displaced_structures["coords"]
-        ]
+        coords = [np.array(disp_data) for disp_data in displaced_structures["coords"]]
+    # displacement to the nearest periodic image, since the force calculation can
+    # return a displaced atom wrapped back into the cell
+    lattice = phonon_supercell.lattice
+    displacements = [
+        lattice.get_cartesian_coords(
+            pbc_diff(lattice.get_fractional_coords(c), phonon_supercell.frac_coords)
+        )
+        for c in coords
+    ]
 
     harmonic_forces = [
         (-force_constants_2d @ displacement.flatten()).reshape((-1, 3))
