@@ -28,6 +28,7 @@ from custodian.vasp.handlers import (
 from custodian.vasp.jobs import VaspJob, VaspNEBJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from emmet.core.types.enums import ValueEnum
+from pymatgen.io.vasp import Incar
 
 from atomate2 import SETTINGS
 
@@ -84,6 +85,7 @@ def run_vasp(
     job_type: JobType | str = JobType.NORMAL,
     vasp_cmd: str = SETTINGS.VASP_CMD,
     vasp_gamma_cmd: str = SETTINGS.VASP_GAMMA_CMD,
+    vasp_ncl_cmd: str = SETTINGS.VASP_NCL_CMD,
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
     handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
@@ -105,6 +107,10 @@ def run_vasp(
         The command used to run the standard version of vasp.
     vasp_gamma_cmd : str
         The command used to run the gamma version of vasp.
+    vasp_ncl_cmd : str
+        The command used to run the non-collinear version of vasp. It is used in
+        place of vasp_cmd, and the gamma version is not used, when the INCAR sets
+        LSORBIT or LNONCOLLINEAR.
     max_errors : int
         The maximum number of errors allowed by custodian.
     scratch_dir : str
@@ -127,6 +133,11 @@ def run_vasp(
         _DEFAULT_VALIDATORS if job_type != JobType.NEB else (VaspNebFilesValidator(),)
     )
 
+    incar = Incar.from_file("INCAR") if exists("INCAR") else {}
+    noncollinear = bool(incar.get("LSORBIT") or incar.get("LNONCOLLINEAR"))
+    if noncollinear:
+        vasp_cmd = vasp_ncl_cmd
+
     vasp_cmd = expandvars(vasp_cmd)
     vasp_gamma_cmd = expandvars(vasp_gamma_cmd)
     split_vasp_cmd = shlex.split(vasp_cmd)
@@ -134,7 +145,7 @@ def run_vasp(
 
     vasp_job_kwargs.setdefault("auto_npar", False)
 
-    if job_type != JobType.DOUBLE_RELAXATION:
+    if job_type != JobType.DOUBLE_RELAXATION and not noncollinear:
         vasp_job_kwargs.update(gamma_vasp_cmd=split_vasp_gamma_cmd)
 
     if job_type == JobType.DIRECT:
