@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
@@ -14,7 +14,6 @@ from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.io.abinit.pseudos import AbinitPseudo
-from typing_extensions import Self
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState

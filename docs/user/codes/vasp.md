@@ -342,9 +342,92 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 )
 ```
 
+With `create_thermal_displacements=True` (the default of `PhononMaker`), the workflow also computes the thermal displacement matrices of the primitive cell from 0 to 1000 K in steps of 100 K.
+They are summed on their own q-point mesh with 30000 q-points per reciprocal atom, set by `kpoint_density_thermal_displacements` in `generate_frequencies_eigenvectors_kwargs`.
+phonopy shifts meshes with even numbers by half a step, which breaks the site symmetry of the matrices for face-centred and hexagonal cells, so the mesh numbers are rounded up to odd numbers.
+An odd mesh contains Gamma, so the three acoustic modes at Gamma are left out.
+These are the three modes at Gamma whose eigenvectors are closest to the rigid translations of the cell.
+phonopy's `exclude_gamma_acoustic` takes the three modes of smallest absolute frequency, which are not the acoustic modes if an optical mode at Gamma is closer to zero.
+This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
+For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
+If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
+With `imaginary_modes_thermal_displacements="exclude"` in `generate_frequencies_eigenvectors_kwargs`, the imaginary modes are left out, and with `"absolute"`, each one counts as a real mode of the same absolute frequency.
+Both give only an estimate of the matrices.
+`freq_min_thermal_displacements` (in THz) is the cutoff: modes with a frequency below it are left out, and with `"absolute"` also the imaginary modes of an absolute frequency below it.
+Without imaginary modes, the default of 0 leaves out no mode, since apart from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+With imaginary modes, both options need a positive `freq_min_thermal_displacements`, since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.
+
+The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
+See the [notes on MACE-Field](forcefields.md#mace-field-notes).
+
+#### Pheasy
+
+Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
+The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy and hiPhive.
+The pheasy package is not in the extra, since PyPI does not accept git URLs in extras.
+Install it from git, at the commit atomate2 is tested with:
+```
+pip install "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d"
+```
+From a clone of atomate2, `pip install ".[pheasy]" --group pheasy` installs the extra and pheasy in one step. This needs pip 25.1 or newer.
+The pheasy release on PyPI lacks options this workflow uses, so do not install it with `pip install pheasy`.
+The workflows run pheasy with the command in the `PHEASY_CMD` setting, `pheasy` by default.
+By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
+To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
+This workflow was used to build the [Materials Project's Harmonic Phonon Database](https://next-gen.materialsproject.org/materials?has_props=phonon), described in [this preprint](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15004632/v1).
+The pheasy fits can fail for a cell that is not in a standard setting, for example the primitive cell of MgO (mp-1265) as the Materials Project serves it.
+For such a structure, set `use_symmetrized_structure="primitive"`, as was done for the database.
+
+By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg.
+
+```{warning}
+The anharmonic part of this workflow has not been tested as widely as the harmonic part.
+It might still change in future versions.
+```
+
+pheasy counts the free force constants used to size the random displacement sets, with the cluster options of its fits and the symmetry of the supercell.
+The displacement job runs this count with `PHEASY_CMD`.
+For third- and fourth-order force constants of large, low-symmetry supercells, it can take hours.
+The Materials Project's Harmonic Phonon Database was built with ALM for this count.
+For the harmonic force constants, pheasy gives the same number of displaced supercells as ALM for 26,410 of the 26,413 materials of the database.
+The other 3 were not counted.
+For third- and fourth-order force constants, pheasy and ALM build the clusters differently, and the count follows the force constants that pheasy fits.
+For a sample of 101 materials at third order and 70 at fourth order, pheasy gives the same count as ALM for 97 and 46 of them.
+
+With `cal_anhar_fcs=True`, the anharmonic force constants are fitted with LASSO to a second set of randomly displaced supercells.
+The number of these supercells is set from the number of free force constants, so that the fit has 100 force equations per free force constant.
+Unless `num_disp_anhar` is set, at least 20 supercells are used, and above 600 the job stops and asks for a shorter cutoff, a larger supercell or an explicit `num_disp_anhar`. An explicit `num_disp_anhar` is used as given.
+`anhar_max_order` selects third-order force constants (3, the default) or third- and fourth-order force constants (4).
+`anhar_fit_methods` selects how the second-order force constants are treated.
+`"cocktail"` (the default) keeps them fixed to the harmonic fit, and `"one-shot"` fits them together with the higher orders and writes the results to a `one_shot` folder.
+Both can be requested in one run.
+If the cross-validated LASSO penalty lands on either end of the search, `10**anhar_alpha_min` or pheasy's `1e-2`, a warning is raised.
+The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
+Both LASSO fits run with `--tol 1e-8`, since pheasy's default of `1e-4` leaves the fit unconverged, and refits on different machines then differ.
+Harmonic force constants from earlier atomate2 versions can therefore differ, mostly in soft low-frequency modes.
+The anharmonic force constants are written to files in the job folder and are not stored in the output document.
+
+#### hiPhive
+
+The same force constants can instead be fitted with [hiPhive](https://hiphive.materialsmodeling.org/), which builds a cluster expansion of the force constant potential and fits it by regression.
+The `hiphive` extra, `pip install "atomate2[hiphive]"`, installs hiPhive.
+[symfc](https://doi.org/10.1103/PhysRevB.110.214302), which phonopy installs, counts the free second-order force constants used to size the random displacement set.
+symfc finds the symmetry with a fixed tolerance of 1e-5, so the supercell is first snapped onto its symmetry at `symprec`.
+This workflow used ALM for this count before.
+For all 26,413 materials of the Materials Project's Harmonic Phonon Database, symfc gives the same number of displaced supercells as ALM.
+For the 17,998 of them that need the count, the number of free force constants is also the same.
+
+To use `hiPhive` in the previous example, we would replace the import string to `from atomate2.vasp.flows.hiphive import PhononMaker`.
+
+This workflow has only been tested on a small set of materials so far, not at high-throughput scale.
+The test set is 14 Materials Project entries, two per crystal system, with forces from a machine-learned potential rather than DFT.
+The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
+Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
+The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
+
 ### Grüneisen parameter workflow
 
-Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
+Calculates mode-dependent Grüneisen parameters with the help of [Phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 
 Initially, a tight structural relaxation is performed to obtain a structure without
 forces on the atoms. The optimized structure (ground state) is further expanded and
@@ -370,6 +453,69 @@ gruneisen_flow = GruneisenMaker(
     kpath_scheme="seekpath", vol=0.01, mesh=(15, 15, 15)
 ).make(structure=structure)
 ```
+
+### Thermal expansion workflow
+
+`CTEMaker` calculates the thermal expansion tensor from third-order force constants, with the help of [Pheasy](https://doi.org/10.48550/arXiv.2508.01020) and [phono3py](https://doi.org/10.1088/1361-648X/acd831).
+It needs the `pheasy` and `phono3py` extras, `pip install "atomate2[pheasy,phono3py]"`.
+It also needs pheasy from git, installed as in the Pheasy section above.
+From a clone of atomate2, `pip install ".[pheasy,phono3py]" --group pheasy` installs the extras and pheasy in one step. This needs pip 25.1 or newer.
+
+```{warning}
+This workflow is new and has not been tested widely.
+It might still change in future versions.
+```
+
+First, the structure is converted to the standard primitive cell, and a tight structural relaxation is performed.
+The pheasy fits can fail for cells that are not in a standard setting.
+Set `use_symmetrized_structure="conventional"` to use the standard conventional cell instead.
+The relaxed structure is then passed to the pheasy phonon workflow and to the elastic constant workflow.
+The two do not depend on each other, so a workflow manager can run them at the same time.
+Neither of them relaxes the structure again, so both use the same structure.
+The phonon workflow fits the third-order force constants with LASSO, on randomly displaced supercells with 0.03 Å displacements.
+The phonon maker builds its supercells with `min_length=12.0`.
+By default, it uses the one-shot fit, which fits the second-order force constants together with them.
+The cocktail fit keeps the second-order force constants of the harmonic fit.
+The thermal expansion of each fit uses the second-order force constants of that fit.
+phono3py then gives the mode Grüneisen tensors on a 12x12x12 q-point mesh.
+The thermal expansion tensor follows from the mode heat capacities, the Grüneisen tensors and the elastic compliance.
+It is computed for each fit in `anhar_fit_methods` of the phonon maker, from 0 K to 1000 K in steps of 10 K by default.
+If a frequency on the mesh is below -0.1 THz, a warning is raised and the thermal expansion of that fit is not computed.
+
+The mode Grüneisen tensors come from the third-order force constants at the relaxed structure.
+The phonon frequencies are not renormalized with temperature.
+The workflow uses PBEsol by default.
+The stress is more sensitive to ENCUT than the forces are, so check the ENCUT convergence of the elastic tensor for your material.
+For metals, set `born_maker=None` in the phonon maker to skip the Born charge calculation.
+The `compute_cte` job reads the force constant files from the folder of the pheasy fit, so it must run where that folder can be read.
+
+A thermal expansion workflow for VASP can be started as follows:
+```python
+from atomate2.vasp.flows.cte import CTEMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+cte_flow = CTEMaker().make(structure=structure)
+```
+
+`update_user_incar_settings` changes the INCAR of every VASP job in the flow.
+For example, this switches all of them to r2SCAN:
+```python
+from atomate2.vasp.powerups import update_user_incar_settings
+
+cte_flow = update_user_incar_settings(cte_flow, {"GGA": None, "METAGGA": "R2SCAN"})
+```
+The Born charge job uses DFPT with `LEPSILON = True`.
+Check that your VASP version runs DFPT with r2SCAN before you use this setting.
+
+The same workflow runs with a force field via `from atomate2.forcefields.flows.cte import CTEMaker`.
+`CTEMaker.from_force_field_name` sets one force field for the relaxation, the phonons and the elastic tensor.
+The notebook `tutorials/cte_workflow.ipynb` runs it for MgO with MACE-OMAT-0-medium.
 
 ### Quasi-harmonic Workflow
 

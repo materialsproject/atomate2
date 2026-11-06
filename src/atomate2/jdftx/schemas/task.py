@@ -2,13 +2,12 @@
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from custodian.jdftx.jobs import JDFTxJob
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.io.jdftx.sets import FILE_NAMES
-from typing_extensions import Self
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,

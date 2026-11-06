@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from datetime import UTC
 from typing import TYPE_CHECKING, Any
 
 import click
@@ -642,7 +643,7 @@ def save_abinit_maker(maker: Maker) -> None:
     import shutil
     import subprocess
     import warnings
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     caller_frame = inspect.stack()[1]
     caller_filename_full = caller_frame.filename
@@ -685,7 +686,7 @@ def save_abinit_maker(maker: Maker) -> None:
             {
                 "author": author,
                 "author_mail": author_mail,
-                "created_on": str(datetime.now(tz=timezone.utc)),
+                "created_on": str(datetime.now(tz=UTC)),
                 "maker": jsanitize(maker.as_dict()),
                 "script": script_str,
             },

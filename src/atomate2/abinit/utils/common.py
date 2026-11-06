@@ -18,11 +18,13 @@ from monty.serialization import MontyDecoder
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
+    from typing import Self
+
+if TYPE_CHECKING:
     from abipy.abio.inputs import AbinitInput
     from abipy.core.structure import Structure
     from abipy.flowtk.events import EventReport
     from jobflow import Flow, Job
-    from typing_extensions import Self
 
     from atomate2.abinit.utils.history import JobHistory
 

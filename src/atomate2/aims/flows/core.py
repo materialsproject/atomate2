@@ -13,8 +13,9 @@ from pymatgen.io.aims.sets.core import RelaxSetGenerator
 from atomate2.aims.jobs.core import RelaxMaker
 
 if TYPE_CHECKING:
+    from typing import Self
+
     from pymatgen.core import Molecule, Structure
-    from typing_extensions import Self
 
     from atomate2.aims.jobs.base import BaseAimsMaker
 

@@ -3,9 +3,9 @@
 import base64
 import os
 from pathlib import Path
+from typing import Self
 
 from monty.json import MSONable
-from typing_extensions import Self
 
 __all__ = ["AbinitStoredFile"]
 

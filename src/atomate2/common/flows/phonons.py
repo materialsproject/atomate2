@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -17,16 +18,22 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.common.utils import check_class_name
 
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Literal
 
     from emmet.core.math import Matrix3D
+    from jobflow import Job
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+    from atomate2.forcefields.jobs import (
+        ForceFieldDielectricMaker,
+        ForceFieldRelaxMaker,
+        ForceFieldStaticMaker,
+    )
     from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -105,8 +112,7 @@ class BasePhononMaker(Maker, ABC):
         A maker to perform the computation of the DFT energy on the bulk.
         Set to ``None`` to skip the
         static energy computation
-    born_maker: .ForceFieldStaticMaker, .BaseAsimsMaker, .BaseVaspMaker,
-        .TorchSimStaticMaker, or None
+    born_maker: .ForceFieldDielectricMaker, .BaseVaspMaker, or None
         Maker to compute the BORN charges.
     phonon_displacement_maker: .ForceFieldStaticMaker, .BaseAimsMaker, .BaseVaspMaker,
         .TorchSimStaticMaker
@@ -140,6 +146,9 @@ class BasePhononMaker(Maker, ABC):
         job, reducing overhead. In the specific case of TorchSim, this enables batching
         of all static structure evaluations.
         Note: socket=True is not supported for BaseVaspMaker.
+    verbose: bool
+        If True, the displacement job warns that the initial magnetic moments
+        are removed from the structure.
     """
 
     name: str = "phonon"
@@ -166,12 +175,11 @@ class BasePhononMaker(Maker, ABC):
         | TorchSimStaticMaker
         | None
     ) = None
-    born_maker: ForceFieldStaticMaker | BaseVaspMaker | TorchSimStaticMaker | None = (
-        None
-    )
+    born_maker: ForceFieldDielectricMaker | BaseVaspMaker | None = None
     phonon_displacement_maker: (
         ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker | TorchSimStaticMaker
     ) = None
+    phonon_doc_schema: Literal["atomate2", "emmet"] = "atomate2"
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(
         default_factory=lambda: {
@@ -185,6 +193,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
+    verbose: bool = True
 
     def make(
         self,
@@ -287,14 +296,7 @@ class BasePhononMaker(Maker, ABC):
         # if supercell_matrix is None, supercell size will be determined after relax
         # maker to ensure that cell lengths are really larger than threshold
         if supercell_matrix is None:
-            supercell_job = get_supercell_size(
-                structure=structure,
-                min_length=self.min_length,
-                max_length=self.max_length,
-                prefer_90_degrees=self.prefer_90_degrees,
-                allow_orthorhombic=self.allow_orthorhombic,
-                **self.get_supercell_size_kwargs,
-            )
+            supercell_job = self.get_supercell_matrix(structure)
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output
 
@@ -325,27 +327,12 @@ class BasePhononMaker(Maker, ABC):
             total_dft_energy = compute_total_energy_job.output
 
         # get a phonon object from phonopy
-        displacements = generate_phonon_displacements(
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            displacement=self.displacement,
-            sym_reduce=self.sym_reduce,
-            symprec=self.symprec,
-            use_symmetrized_structure=self.use_symmetrized_structure,
-            kpath_scheme=self.kpath_scheme,
-            code=self.code,
-        )
+        displacements = self.get_displacements(structure, supercell_matrix)
         jobs.append(displacements)
 
         # perform the phonon displacement calculations
-        displacement_calcs = run_phonon_displacements(
-            displacements=displacements.output,
-            structure=structure,
-            supercell_matrix=supercell_matrix,
-            phonon_maker=self.phonon_displacement_maker,
-            socket=self.socket,
-            prev_dir_argname=self.prev_calc_dir_argname,
-            prev_dir=prev_dir,
+        displacement_calcs = self.run_displacements(
+            displacements, prev_dir, structure, supercell_matrix
         )
         jobs.append(displacement_calcs)
 
@@ -359,16 +346,102 @@ class BasePhononMaker(Maker, ABC):
             born_job = self.born_maker.make(structure, **born_kwargs)
             jobs.append(born_job)
 
-            # I am not happy how we currently access "born" charges
-            # This is very vasp specific code aims and forcefields
-            # do not support this at the moment, if this changes we have
-            # to update this section
-            epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
-            born = born_job.output.calcs_reversed[0].output.outcar["born"]
+            if check_class_name(self.born_maker, "ForceFieldDielectricMaker"):
+                epsilon_static = born_job.output.epsilon_static
+                born = born_job.output.born
+            else:
+                epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
+                born = born_job.output.calcs_reversed[0].output.outcar["born"]
             born_run_job_dir = born_job.output.dir_name
             born_run_uuid = born_job.output.uuid
 
-        phonon_collect = generate_frequencies_eigenvectors(
+        phonon_collect = self.get_results(
+            born,
+            born_run_job_dir,
+            born_run_uuid,
+            displacement_calcs,
+            epsilon_static,
+            optimization_run_job_dir,
+            optimization_run_uuid,
+            static_run_job_dir,
+            static_run_uuid,
+            structure,
+            supercell_matrix,
+            total_dft_energy,
+        )
+
+        jobs.append(phonon_collect)
+
+        # create a flow including all jobs for a phonon computation
+        return Flow(jobs, phonon_collect.output)
+
+    def get_supercell_matrix(self, structure: Structure) -> Job | Flow:
+        """
+        Get supercell matrix.
+
+        Parameters
+        ----------
+        structure: Structure
+
+        Returns
+        -------
+        Job|Flow
+        """
+        return get_supercell_size(
+            structure=structure,
+            min_length=self.min_length,
+            max_length=self.max_length,
+            prefer_90_degrees=self.prefer_90_degrees,
+            allow_orthorhombic=self.allow_orthorhombic,
+            **self.get_supercell_size_kwargs,
+        )
+
+    def get_results(
+        self,
+        born: Matrix3D,
+        born_run_job_dir: str,
+        born_run_uuid: str,
+        displacement_calcs: Job | Flow,
+        epsilon_static: Matrix3D,
+        optimization_run_job_dir: str,
+        optimization_run_uuid: str,
+        static_run_job_dir: str,
+        static_run_uuid: str,
+        structure: Structure,
+        supercell_matrix: Matrix3D | None,
+        total_dft_energy: float,
+    ) -> Job | Flow:
+        """
+        Calculate the harmonic phonons etc.
+
+        Parameters
+        ----------
+        born: Matrix3D
+        born_run_job_dir:  str
+        born_run_uuid: str
+        displacement_calcs: Job | Flow
+        epsilon_static: Matrix3D
+        optimization_run_job_dir:str
+        optimization_run_uuid:str
+        static_run_job_dir:str
+        static_run_uuid:str
+        structure: Structure
+        supercell_matrix: Matrix3D
+        total_dft_energy: float
+
+        Returns
+        -------
+        Job | Flow
+        """
+        if self.phonon_doc_schema == "atomate2":
+            warnings.warn(
+                "The phonon free energies, entropies, heat capacities and internal "
+                "energies are now computed with phonopy's sum over the q-point mesh, "
+                "without the three acoustic modes at Gamma. They differ from those of "
+                "earlier atomate2 versions, which integrated the phonon DOS.",
+                stacklevel=2,
+            )
+        return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
@@ -378,6 +451,7 @@ class BasePhononMaker(Maker, ABC):
             code=self.code,
             structure=structure,
             displacement_data=displacement_calcs.output,
+            phonon_doc_schema=self.phonon_doc_schema,
             epsilon_static=epsilon_static,
             born=born,
             total_dft_energy=total_dft_energy,
@@ -392,10 +466,63 @@ class BasePhononMaker(Maker, ABC):
             **self.generate_frequencies_eigenvectors_kwargs,
         )
 
-        jobs.append(phonon_collect)
+    def run_displacements(
+        self,
+        displacements: Job | Flow,
+        prev_dir: str | Path | None,
+        structure: Structure,
+        supercell_matrix: Matrix3D,
+    ) -> Job | Flow:
+        """
+        Perform displacement calculations.
 
-        # create a flow including all jobs for a phonon computation
-        return Flow(jobs, phonon_collect.output)
+        Parameters
+        ----------
+        displacements: Job | Flow
+        prev_dir: str | Path | None
+        structure: Structure
+        supercell_matrix:  Matrix3D
+
+        Returns
+        -------
+        Job | Flow
+        """
+        return run_phonon_displacements(
+            displacements=displacements.output,
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            phonon_maker=self.phonon_displacement_maker,
+            socket=self.socket,
+            prev_dir_argname=self.prev_calc_dir_argname,
+            prev_dir=prev_dir,
+        )
+
+    def get_displacements(
+        self, structure: Structure, supercell_matrix: Matrix3D
+    ) -> Job | Flow:
+        """
+        Get displaced supercells.
+
+        Parameters
+        ----------
+        structure: Structure
+        supercell_matrix: Matrix3D
+
+        Returns
+        -------
+        Job|Flow
+        """
+        return generate_phonon_displacements(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            displacement=self.displacement,
+            sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
+            use_symmetrized_structure=self.use_symmetrized_structure,
+            kpath_scheme=self.kpath_scheme,
+            code=self.code,
+            verbose=self.verbose,
+        )
 
     @property
     @abstractmethod

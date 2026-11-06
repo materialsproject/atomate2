@@ -20,10 +20,10 @@ from atomate2.vasp.sets.core import HSEBSSetGenerator, NonSCFSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Self
 
     from jobflow import Job
     from pymatgen.core.structure import Structure
-    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
