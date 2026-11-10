@@ -363,9 +363,13 @@ class Calculation(BaseModel):
         # converged is None if unknown (e.g. outputs serialized by older versions)
         converged = getattr(aims_output, "converged", None)
 
-        # As for VASP, the calculation is only successful if it converged
+        # As for VASP, the calculation is only successful if it converged. If the
+        # convergence is unknown (None), only the completion is considered. This avoid
+        # breaking existing workflows that rely on the completion status only.
         has_aims_completed = (
-            TaskState.SUCCESS if completed and converged else TaskState.FAILED
+            TaskState.SUCCESS
+            if completed and converged is not False
+            else TaskState.FAILED
         )
 
         if store_trajectory:

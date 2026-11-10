@@ -4,6 +4,7 @@ import os
 
 import pytest
 from jobflow import run_locally
+from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.aims.sets.core import StaticSetGenerator
 
 from atomate2.aims.jobs.core import StaticMaker
@@ -70,3 +71,21 @@ def test_unconverged_calculation(si, tmp_path, mock_aims, species_dir):
     assert not should_stop_children(doc, handle_unsuccessful=False)
     with pytest.raises(RuntimeError, match="not converged"):
         should_stop_children(doc, handle_unsuccessful="error")
+
+
+def test_unknown_convergence(si, tmp_path, mock_aims, species_dir, monkeypatch):
+    # convergence unknown (e.g. output serialized by an older pymatgen version):
+    # the state only depends on whether the calculation completed
+    monkeypatch.setattr(
+        AimsOutput, "converged", property(lambda _: None), raising=False
+    )
+    response = _run_static(si, tmp_path, mock_aims, species_dir, "static-si")
+    doc = response.output
+    calc = doc.calcs_reversed[-1]
+
+    assert calc.completed
+    assert calc.converged is None
+    assert calc.has_aims_completed == TaskState.SUCCESS
+    assert doc.converged is None
+    assert doc.state == TaskState.SUCCESS
+    assert not response.stop_children
