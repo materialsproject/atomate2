@@ -13,6 +13,12 @@ from atomate2.aims.schemas.calculation import TaskState
 
 cwd = os.getcwd()
 
+# AimsOutput.converged is not available in older pymatgen-io-aims releases
+requires_converged = pytest.mark.skipif(
+    not hasattr(AimsOutput, "converged"),
+    reason="AimsOutput.converged requires a newer pymatgen-io-aims",
+)
+
 
 def _run_static(si, tmp_path, mock_aims, species_dir, ref_dir):
     """Run a mocked static calculation using the outputs in the given reference dir."""
@@ -34,6 +40,7 @@ def _run_static(si, tmp_path, mock_aims, species_dir, ref_dir):
     return responses[job.uuid][1]
 
 
+@requires_converged
 def test_converged_calculation(si, tmp_path, mock_aims, species_dir):
     response = _run_static(si, tmp_path, mock_aims, species_dir, "static-si")
     doc = response.output
@@ -49,6 +56,7 @@ def test_converged_calculation(si, tmp_path, mock_aims, species_dir):
     assert not should_stop_children(doc)
 
 
+@requires_converged
 def test_unconverged_calculation(si, tmp_path, mock_aims, species_dir):
     # same calculation as static-si, without the "SCF cycle converged" line
     response = _run_static(
