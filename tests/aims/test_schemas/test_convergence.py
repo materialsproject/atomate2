@@ -4,7 +4,6 @@ import os
 
 import pytest
 from jobflow import run_locally
-from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.aims.sets.core import StaticSetGenerator
 
 from atomate2.aims.jobs.core import StaticMaker
@@ -14,12 +13,9 @@ from atomate2.aims.schemas.calculation import TaskState
 cwd = os.getcwd()
 
 
-def _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, converged):
-    """Run a mocked static calculation with a patched AimsOutput.converged."""
-    monkeypatch.setattr(
-        AimsOutput, "converged", property(lambda _: converged), raising=False
-    )
-    mock_aims({"base": "static-si"}, {})
+def _run_static(si, tmp_path, mock_aims, species_dir, ref_dir):
+    """Run a mocked static calculation using the outputs in the given reference dir."""
+    mock_aims({"base": ref_dir}, {})
 
     parameters = {
         "k_grid": [2, 2, 2],
@@ -37,8 +33,8 @@ def _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, converged):
     return responses[job.uuid][1]
 
 
-def test_converged_calculation(si, tmp_path, mock_aims, species_dir, monkeypatch):
-    response = _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, True)
+def test_converged_calculation(si, tmp_path, mock_aims, species_dir):
+    response = _run_static(si, tmp_path, mock_aims, species_dir, "static-si")
     doc = response.output
     calc = doc.calcs_reversed[-1]
 
@@ -52,8 +48,11 @@ def test_converged_calculation(si, tmp_path, mock_aims, species_dir, monkeypatch
     assert not should_stop_children(doc)
 
 
-def test_unconverged_calculation(si, tmp_path, mock_aims, species_dir, monkeypatch):
-    response = _run_static(si, tmp_path, mock_aims, species_dir, monkeypatch, False)
+def test_unconverged_calculation(si, tmp_path, mock_aims, species_dir):
+    # same calculation as static-si, without the "SCF cycle converged" line
+    response = _run_static(
+        si, tmp_path, mock_aims, species_dir, "static-si-unconverged"
+    )
     doc = response.output
     calc = doc.calcs_reversed[-1]
 

@@ -248,9 +248,10 @@ class Calculation(BaseModel):
     completed: bool = Field(
         None, description="Whether FHI-aims ran to completion and produced results"
     )
-    converged: bool = Field(
+    converged: bool | None = Field(
         None,
-        description="Whether the SCF cycle (and geometry, for relaxations) converged",
+        description="Whether the SCF cycle (and geometry, for relaxations) converged. "
+        "None if unknown (e.g. outputs serialized by older versions)",
     )
     input: CalculationInput = Field(None, description="The FHI-aims calculation input")
     output: CalculationOutput = Field(
@@ -358,8 +359,10 @@ class Calculation(BaseModel):
         output_doc = CalculationOutput.from_aims_output(aims_output)
 
         completed = aims_output.completed
-        # Older pymatgen versions do not expose AimsOutput.converged
-        converged = bool(getattr(aims_output, "converged", completed))
+
+        # converged is None if unknown (e.g. outputs serialized by older versions)
+        converged = getattr(aims_output, "converged", None)
+
         # As for VASP, the calculation is only successful if it converged
         has_aims_completed = (
             TaskState.SUCCESS if completed and converged else TaskState.FAILED
