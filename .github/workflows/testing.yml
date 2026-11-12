@@ -356,7 +356,7 @@ jobs:
         # TorchSim model backends have conflicting dependencies (chiefly e3nn
         # pins), so they are split into separate dep-groups, mirroring the
         # forcefields dep-groups above.
-        dep-group: ["grace", "mace", "generic"]
+        dep-group: ["mace", "generic"]
 
     steps:
       - name: Check out repo
