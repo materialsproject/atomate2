@@ -21,6 +21,7 @@ class TorchSimModelType(StrEnum):  # type: ignore[attr-defined]
     """Enum for model types."""
 
     FAIRCHEM = "FairChemModel"
+    GRACE = "GraceModel"
     MACE = "MaceModel"
     MATTERSIM = "MatterSimModel"
     METATOMIC = "MetatomicModel"

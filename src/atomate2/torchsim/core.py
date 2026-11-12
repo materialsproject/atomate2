@@ -366,6 +366,11 @@ def pick_model(
         )
 
     match model_type:
+        case TorchSimModelType.GRACE:
+            from grace_runtime.torchsim import GRACERuntimeModel
+
+            base_model = GRACERuntimeModel(model=model_path, **model_kwargs)
+
         case TorchSimModelType.FAIRCHEM:
             from torch_sim.models.fairchem import FairChemModel
 
