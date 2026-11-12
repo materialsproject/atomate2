@@ -81,9 +81,12 @@ torchsim = [
 torchsim-mace = [
     "torch-sim-atomistic[mace,symmetry]==0.6.2; python_version >= '3.12'"
 ]
+torchsim-grace = [
+    "grace-runtime[torchsim]>=0.1.4; python_version >= '3.12'",
+]
 # mattersim can be added to torchsim-generic once they clean their dependencies
 torchsim-generic = [
-    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.2; python_version >= '3.12'"
+    "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.2; python_version >= '3.12'",
 ]
 jdftx = ["pymatgen==2026.10.24"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
