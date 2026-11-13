@@ -9,6 +9,7 @@ from atomate2.vasp.sets.core import (
     HSERelaxSetGenerator,
     HSEStaticSetGenerator,
     HSETightRelaxSetGenerator,
+    LangevinMDSetGenerator,
     LobsterTightStaticSetGenerator,
     MDSetGenerator,
     NonSCFSetGenerator,
@@ -337,3 +338,24 @@ def test_md_set_generator_sorts_structure():
     n_types_in_poscar = len(vasp_input["POSCAR"].natoms)
     n_langevin_gamma = len(vasp_input["INCAR"]["LANGEVIN_GAMMA"])
     assert n_types_in_poscar == n_langevin_gamma
+
+
+def test_langevin_md_set_generator():
+    """LANGEVIN_GAMMA has one value for each species block of the POSCAR."""
+    structure = Structure(
+        lattice=Lattice.cubic(10),
+        species=["Al", "Cl", "Al", "Cl", "O", "Li"],
+        coords=[[0.1 * i, 0.1 * i, 0.1 * i] for i in range(6)],
+    )
+    input_gen = LangevinMDSetGenerator(start_temp=600, end_temp=600, langevin_gamma=5)
+    vasp_input = input_gen.get_input_set(structure, potcar_spec=True)
+    incar = vasp_input["INCAR"]
+    assert incar["MDALGO"] == 3
+    assert incar["LANGEVIN_GAMMA"] == [5] * len(vasp_input["POSCAR"].natoms)
+    assert incar["TEBEG"] == incar["TEEND"] == 600
+    assert "SMASS" not in incar
+
+    with pytest.raises(ValueError, match="Expect ensemble='nvt'"):
+        LangevinMDSetGenerator(ensemble="npt").get_input_set(
+            structure, potcar_spec=True
+        )
