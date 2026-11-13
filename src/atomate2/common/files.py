@@ -312,7 +312,6 @@ def find_and_filter_files(
     else:
         files = []
         for file in include_files:
-            # expand any glob matches
             globbed_files = file_client.glob(directory / file, host=host)
 
             if len(globbed_files) > 0:
