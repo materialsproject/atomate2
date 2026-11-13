@@ -15,6 +15,11 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMake
 from ..conftest import mlff_is_installed  # noqa: TID252
 
 
+def test_ignore_and_fit_imaginary_volumes():
+    with pytest.raises(ValueError, match="cannot both be True"):
+        ForceFieldQhaMaker(ignore_imaginary_modes=True, fit_imaginary_volumes=True)
+
+
 @pytest.mark.skipif(
     not mlff_is_installed("MACE_MP_0B3"), reason="mace_torch is not installed"
 )
