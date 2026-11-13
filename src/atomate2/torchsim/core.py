@@ -15,8 +15,11 @@ from jobflow import Maker, Response, job
 from pymatgen.core import Structure
 from pymatgen.util.due import Doi, due
 from torch_sim.autobatching import BinningAutoBatcher, InFlightAutoBatcher
+from torch_sim.integrators import Integrator
 from torch_sim.optimizers import Optimizer
+from torch_sim.optimizers.cell_filters import CellFilter
 
+from atomate2.common.utils import to_enum_member
 from atomate2.torchsim.schema import (
     CONVERGENCE_FN_REGISTRY,
     PROPERTY_FN_REGISTRY,
@@ -575,15 +578,13 @@ class TorchSimOptimizeMaker(Maker):
 
         optimizer_kwargs = self.optimizer_kwargs or {}
 
-        # When a TorchSimOptimizer is passed to a job, the optimizer is converted
-        # to a string to be serialized but we need the actual Enum member
-        if isinstance(self.optimizer, str):
-            try:
-                self.optimizer = Optimizer[self.optimizer.lower()]
-            except (KeyError, ValueError) as e:
-                raise ValueError(
-                    f"Could not convert string '{self.optimizer}' to an Optimizer."
-                ) from e
+        # TorchSim needs enum members, but the maker may hold plain strings
+        # due to serialization
+        optimizer = to_enum_member(Optimizer, self.optimizer)
+        init_kwargs = self.init_kwargs or {}
+        cell_filter = init_kwargs.get("cell_filter")
+        if isinstance(cell_filter, str):
+            init_kwargs["cell_filter"] = to_enum_member(CellFilter, cell_filter)
 
         init_state = ts.io.structures_to_state(structures)
         if self.fix_symmetry:
@@ -596,13 +597,13 @@ class TorchSimOptimizeMaker(Maker):
         state = ts.optimize(
             system=init_state,
             model=model,
-            optimizer=self.optimizer,
+            optimizer=optimizer,
             convergence_fn=convergence_fn_obj,
             trajectory_reporter=trajectory_reporter,
             autobatcher=autobatcher,
             max_steps=self.max_steps,
             steps_between_swaps=self.steps_between_swaps,
-            init_kwargs=self.init_kwargs,
+            init_kwargs=init_kwargs,
             **optimizer_kwargs,
         )
         elapsed_time = time.time() - start_time
@@ -628,7 +629,7 @@ class TorchSimOptimizeMaker(Maker):
             model=self.model_type,
             model_path=str(Path(self.model_path).resolve()),
             task_type=TaskType.STRUCTURE_OPTIMIZATION,
-            optimizer=self.optimizer,
+            optimizer=optimizer,
             max_steps=self.max_steps,
             steps_between_swaps=self.steps_between_swaps,
             init_kwargs=self.init_kwargs or {},
@@ -709,7 +710,7 @@ class TorchSimIntegrateMaker(Maker):
         Tags for the job.
     """
 
-    integrator: Any  # Integrator type from torch_sim
+    integrator: Integrator
     model_type: TorchSimModelType
     model_path: str | Path
     n_steps: int
@@ -762,11 +763,14 @@ class TorchSimIntegrateMaker(Maker):
 
         integrator_kwargs = self.integrator_kwargs or {}
 
+        # TorchSim needs an enum member, but the maker may hold a plain string
+        integrator = to_enum_member(Integrator, self.integrator)
+
         start_time = time.time()
         state = ts.integrate(
             system=structures,
             model=model,
-            integrator=self.integrator,
+            integrator=integrator,
             n_steps=self.n_steps,
             temperature=self.temperature,
             timestep=self.timestep,
@@ -797,7 +801,7 @@ class TorchSimIntegrateMaker(Maker):
             model=self.model_type,
             model_path=str(Path(self.model_path).resolve()),
             task_type=TaskType.MOLECULAR_DYNAMICS,
-            integrator=self.integrator,
+            integrator=integrator,
             n_steps=self.n_steps,
             temperature=self.temperature,
             timestep=self.timestep,
