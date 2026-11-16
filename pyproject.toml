@@ -55,6 +55,8 @@ phonons = ["phonopy>=4.7.1,<5", "seekpath>=2.0.0"]
 pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
+# pymatgen 2026.10.24 is the first release with anisotropic Debye-Waller factors
+debye-waller = ["pymatgen>=2026.10.24"]
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
