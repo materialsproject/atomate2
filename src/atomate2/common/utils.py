@@ -12,6 +12,7 @@ from pymatgen.transformations.advanced_transformations import (
 )
 
 if TYPE_CHECKING:
+    from enum import StrEnum
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
@@ -234,3 +235,38 @@ def check_class_name(obj: object, class_names: str | list[str]) -> bool:
     if isinstance(class_names, str):
         class_names = [class_names]
     return type(obj).__name__ in class_names
+
+
+def to_enum_member[E: StrEnum](enum_cls: type[E], value: E | str) -> E:
+    """
+    Convert a string into a member of a string enum.
+
+    Useful for settings stored as plain strings so that they serialize cleanly,
+    but that a library only accepts as enum members (e.g., Torch-Sim).
+
+    Parameters
+    ----------
+    enum_cls : type[E]
+        The enum to convert to.
+    value : E | str
+        An enum member, returned unchanged, or a member's value, matched
+        case-insensitively if there is no exact match.
+
+    Returns
+    -------
+    E
+        The matching enum member.
+
+    Raises
+    ------
+    ValueError
+        If no member matches, listing the valid values.
+    """
+    try:
+        return enum_cls(value)
+    except ValueError:
+        for member in enum_cls:
+            if member.value.lower() == value.lower():
+                return member
+    valid = [member.value for member in enum_cls]
+    raise ValueError(f"Unknown {enum_cls.__name__} {value!r}. Valid values: {valid}")
