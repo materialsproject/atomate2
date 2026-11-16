@@ -266,6 +266,7 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
         AbigetRecorder,
         abiget_call_key,
         dump_abiget_result,
+        patch_abiget_methods,
     )
 
     # get the structure
@@ -295,10 +296,6 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     # written.
     from abipy.abio.inputs import AbinitInput
 
-    orig_abiget_methods = {
-        method_name: getattr(AbinitInput, method_name)
-        for method_name in ABIGET_METHOD_NAMES
-    }
     abiget_recorder = AbigetRecorder()
 
     def _make_abiget_capture(
@@ -321,20 +318,26 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
 
         return _capture
 
-    for method_name, orig_method in orig_abiget_methods.items():
-        setattr(
-            AbinitInput,
-            method_name,
-            _make_abiget_capture(method_name, orig_method),
+    # Any abiget_* call outside the registry aborts the reference run before it
+    # can produce incomplete reference data: patch_abiget_methods installs the
+    # capture wrapper for the registered methods and a raising stub for the rest.
+    unregistered_abiget_hint = (
+        "The abinit-generate-reference run is aborted so that no incomplete "
+        "reference data is produced. Add the method to ABIGET_METHOD_NAMES, "
+        "add a serialization case to dump_abiget_result and load_abiget_result, "
+        "and re-record the reference data."
+    )
+    wrappers = {
+        method_name: _make_abiget_capture(
+            method_name, getattr(AbinitInput, method_name)
         )
+        for method_name in ABIGET_METHOD_NAMES
+    }
 
     # run the workflow using a custom store so that we can easily compile test data
     store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
-    try:
+    with patch_abiget_methods(wrappers, unregistered_abiget_hint):
         run_locally(flow_or_job, store=store, create_folders=True)
-    finally:
-        for method_name, orig_method in orig_abiget_methods.items():
-            setattr(AbinitInput, method_name, orig_method)
 
     # dump all of the job outputs to the outputs.json file in the current directory
     outputs = list(store.query(load=True))

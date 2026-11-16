@@ -17,6 +17,7 @@ from atomate2.utils.testing.abinit import (
     abiget_call_key,
     dump_abiget_result,
     load_abiget_result,
+    patch_abiget_methods,
 )
 
 if TYPE_CHECKING:
@@ -173,6 +174,8 @@ def mock_abinit(
     The primary idea is that instead of running ABINIT to generate the output files,
     reference files will be copied into the directory instead.
     """
+    from contextlib import ExitStack
+
     import atomate2.abinit.files
     import atomate2.abinit.jobs.base
     import atomate2.abinit.run
@@ -194,91 +197,104 @@ def mock_abinit(
         wrapped_write_abinit_input_set,
     )
 
-    if not abinit_integration_tests:
-        # Mock ABINIT run by copying reference output files
-        def mock_run_abinit(
-            wall_time: float | None = None, start_time: float | None = None
-        ) -> None:
-            from jobflow import CURRENT_JOB
-
-            name = CURRENT_JOB.job.name
-            index = CURRENT_JOB.job.index
-            ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
-            check_abinit_inputs(ref_path)
-            fake_run_abinit(ref_path)
-
-        monkeypatch.setattr(atomate2.abinit.run, "run_abinit", mock_run_abinit)
-        monkeypatch.setattr(atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit)
-
-        # Mock the abipy abiget helpers used by jobs like generate_perts in
-        # order to prevent them from running the real abinit binary: their
-        # results are replayed from the abiget.json.gz reference file, resolved
-        # through _REF_PATHS. Passing --abinit-record-abiget activates record
-        # mode: the real abipy methods are then called (this requires a working
-        # `abinit` binary on PATH) and their results are recorded to the
-        # abiget.json.gz reference file.
-        from abipy.abio.inputs import AbinitInput
-        from monty.serialization import loadfn
-
-        record_abiget = abinit_record_abiget
-        if record_abiget:
-            _ABIGET_RECORDER.reset()
-
-        def _make_fake_abiget_method(method_name, orig_method, record=False):
-            def _fake(self, *args, workdir=None, **kwargs):
-                from jobflow import CURRENT_JOB
-
-                name = CURRENT_JOB.job.name  # expected: "generate_perts"
-                index = CURRENT_JOB.job.index
-                if name not in _REF_PATHS or str(index) not in _REF_PATHS[name]:
-                    raise ValueError(
-                        f"No reference path registered for job {name} - {index}."
-                    )
-                ref_dir = abinit_test_dir / _REF_PATHS[name][str(index)]
-                ref_file = ref_dir / "abiget.json.gz"
-                # Canonical key of the call arguments that distinguish the
-                # call. workdir and manager never take part in the key as
-                # they only define where the real abinit task runs.
-                key = abiget_call_key(method_name, args, kwargs)
-                if record:
-                    result = orig_method(self, *args, workdir=workdir, **kwargs)
-                    _ABIGET_RECORDER.record(
-                        ref_file,
-                        method_name,
-                        key,
-                        dump_abiget_result(method_name, result),
-                    )
-                    return result
-                data = loadfn(ref_file)
-                if key not in data.get(method_name, {}):
-                    raise ValueError(
-                        f"No recorded result for {method_name} with key "
-                        f"{key!r}; recorded keys: "
-                        f"{sorted(data.get(method_name, {}))}. "
-                        "Re-record with --abinit-record-abiget."
-                    )
-                return load_abiget_result(method_name, data[method_name][key])
-
-            return _fake
-
-        for method_name in ABIGET_METHOD_NAMES:
-            monkeypatch.setattr(
-                AbinitInput,
-                method_name,
-                _make_fake_abiget_method(
-                    method_name,
-                    getattr(AbinitInput, method_name),
-                    record=record_abiget,
-                ),
-            )
-
     def _run(ref_paths: dict, fake_run_abinit_kwargs: dict | None = None) -> None:
         if fake_run_abinit_kwargs is None:
             fake_run_abinit_kwargs = {}
         _REF_PATHS.update(ref_paths)
         _FAKE_RUN_ABINIT_KWARGS.update(fake_run_abinit_kwargs)
 
-    yield _run
+    with ExitStack() as stack:
+        if not abinit_integration_tests:
+            # Mock ABINIT run by copying reference output files
+            def mock_run_abinit(
+                wall_time: float | None = None, start_time: float | None = None
+            ) -> None:
+                from jobflow import CURRENT_JOB
+
+                name = CURRENT_JOB.job.name
+                index = CURRENT_JOB.job.index
+                ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
+                check_abinit_inputs(ref_path)
+                fake_run_abinit(ref_path)
+
+            monkeypatch.setattr(atomate2.abinit.run, "run_abinit", mock_run_abinit)
+            monkeypatch.setattr(
+                atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit
+            )
+
+            # Mock the abipy abiget helpers used by jobs like generate_perts in
+            # order to prevent them from running the real abinit binary: their
+            # results are replayed from the abiget.json.gz reference file,
+            # resolved through _REF_PATHS. Passing --abinit-record-abiget
+            # activates record mode: the real abipy methods are then called
+            # (this requires a working `abinit` binary on PATH) and their
+            # results are recorded to the abiget.json.gz reference file.
+            # Any other abiget_* method of AbinitInput gets a raising stub from
+            # patch_abiget_methods: an unregistered call would otherwise run
+            # real abinit inside mock mode.
+            from abipy.abio.inputs import AbinitInput
+            from monty.serialization import loadfn
+
+            record_abiget = abinit_record_abiget
+            if record_abiget:
+                _ABIGET_RECORDER.reset()
+
+            def _make_fake_abiget_method(method_name, orig_method, record=False):
+                def _fake(self, *args, workdir=None, **kwargs):
+                    from jobflow import CURRENT_JOB
+
+                    name = CURRENT_JOB.job.name  # expected: "generate_perts"
+                    index = CURRENT_JOB.job.index
+                    if name not in _REF_PATHS or str(index) not in _REF_PATHS[name]:
+                        raise ValueError(
+                            f"No reference path registered for job {name} - {index}."
+                        )
+                    ref_dir = abinit_test_dir / _REF_PATHS[name][str(index)]
+                    ref_file = ref_dir / "abiget.json.gz"
+                    # Canonical key of the call arguments that distinguish the
+                    # call. workdir and manager never take part in the key as
+                    # they only define where the real abinit task runs.
+                    key = abiget_call_key(method_name, args, kwargs)
+                    if record:
+                        result = orig_method(self, *args, workdir=workdir, **kwargs)
+                        _ABIGET_RECORDER.record(
+                            ref_file,
+                            method_name,
+                            key,
+                            dump_abiget_result(method_name, result),
+                        )
+                        return result
+                    data = loadfn(ref_file)
+                    if key not in data.get(method_name, {}):
+                        raise ValueError(
+                            f"No recorded result for {method_name} with key "
+                            f"{key!r}; recorded keys: "
+                            f"{sorted(data.get(method_name, {}))}. "
+                            "Re-record with --abinit-record-abiget."
+                        )
+                    return load_abiget_result(method_name, data[method_name][key])
+
+                return _fake
+
+            unregistered_abiget_hint = (
+                "The test data does not cover this call: re-record the "
+                "reference data with --abinit-record-abiget."
+            )
+            stack.enter_context(
+                patch_abiget_methods(
+                    {
+                        method_name: _make_fake_abiget_method(
+                            method_name,
+                            getattr(AbinitInput, method_name),
+                            record=record_abiget,
+                        )
+                        for method_name in ABIGET_METHOD_NAMES
+                    },
+                    unregistered_abiget_hint,
+                )
+            )
+
+        yield _run
 
     monkeypatch.undo()
     _REF_PATHS.clear()

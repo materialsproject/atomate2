@@ -17,10 +17,15 @@ from __future__ import annotations
 import gzip
 import json
 import logging
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator, Mapping
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +38,86 @@ ABIGET_METHOD_NAMES = (
     "abiget_irred_phperts",
     "abiget_ibz",
 )
+
+
+def iter_abiget_methods() -> list[str]:
+    """
+    List the abiget_* methods of abipy's AbinitInput.
+
+    Class-level introspection (inherited methods included): the abiget_ prefix
+    defines the namespace of the AbinitInput methods that build and run their
+    own abinit task, and is the contract for what is recorded and mocked.
+    """
+    from abipy.abio.inputs import AbinitInput
+
+    return [
+        name
+        for name in dir(AbinitInput)
+        if name.startswith("abiget_") and callable(getattr(AbinitInput, name))
+    ]
+
+
+def _make_unregistered_abiget_stub(method_name: str, hint: str) -> Callable[..., Any]:
+    """
+    Create the stub installed for an abiget method outside ABIGET_METHOD_NAMES.
+
+    Parameters
+    ----------
+    method_name
+        Name of the unregistered method.
+    hint
+        Consumer-specific remediation hint included in the error message.
+    """
+
+    def _unregistered_stub(*args: Any, **kwargs: Any) -> Any:
+        raise NotImplementedError(
+            f"AbinitInput.{method_name} is not registered in ABIGET_METHOD_NAMES "
+            f"and is therefore neither recorded nor mocked. {hint}"
+        )
+
+    return _unregistered_stub
+
+
+@contextmanager
+def patch_abiget_methods(
+    wrappers: Mapping[str, Callable[..., Any]], unregistered_hint: str
+) -> Iterator[None]:
+    """
+    Patch all abiget_* methods of abipy's AbinitInput for the duration of the context.
+
+    Methods registered in ABIGET_METHOD_NAMES get the caller-supplied wrapper;
+    any other abiget_* method gets a stub that raises, so that an unregistered
+    call fails loudly instead of running the real abinit inside a recorded or
+    mocked run. All original methods are restored on exit.
+
+    Parameters
+    ----------
+    wrappers
+        Wrapper to install, keyed by method name, for each method in
+        ABIGET_METHOD_NAMES.
+    unregistered_hint
+        Remediation hint embedded in the error raised by the stub installed
+        for unregistered abiget_* methods.
+    """
+    from abipy.abio.inputs import AbinitInput
+
+    original_methods = {
+        name: getattr(AbinitInput, name) for name in iter_abiget_methods()
+    }
+    try:
+        for name in original_methods:
+            if name in ABIGET_METHOD_NAMES:
+                setattr(AbinitInput, name, wrappers[name])
+            else:
+                setattr(
+                    AbinitInput,
+                    name,
+                    _make_unregistered_abiget_stub(name, unregistered_hint),
+                )
+        yield
+    finally:
+        for name, original in original_methods.items():
+            setattr(AbinitInput, name, original)
 
 
 def canon_value(value: Any) -> Any:
