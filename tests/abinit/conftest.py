@@ -12,12 +12,11 @@ from abipy.abio.abivars import is_anaddb_var
 from pymatgen.util.coord import find_in_coord_list_pbc
 
 from atomate2.utils.testing.abinit import (
-    PERT_METHOD_NAMES,
-    PertRecorder,
-    dump_pert_result,
-    load_pert_result,
-    load_perts_gz,
-    pert_call_key,
+    ABIGET_METHOD_NAMES,
+    AbigetRecorder,
+    abiget_call_key,
+    dump_abiget_result,
+    load_abiget_result,
 )
 
 if TYPE_CHECKING:
@@ -32,15 +31,15 @@ logger = logging.getLogger("atomate2")
 _REF_PATHS = {}
 _ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
-# Reference paths for the abipy perturbation helpers mocked by mock_abinit,
+# Reference paths for the abipy abiget helpers mocked by mock_abinit,
 # resolved through the standard _REF_PATHS registry: the reference of the
-# generate_perts job is the perts.json.gz file inside its reference directory.
+# generate_perts job is the abiget.json.gz file inside its reference directory.
 # Results are stored under a canonical string of the distinguishing call
-# arguments (see pert_call_key in atomate2.utils.testing.abinit, which also
+# arguments (see abiget_call_key in atomate2.utils.testing.abinit, which also
 # defines the reference file format shared with the abinit CLI commands).
-# The recorder resets each perts.json.gz file on its first record-mode call
+# The recorder resets each abiget.json.gz file on its first record-mode call
 # per fixture, so re-recording a test replaces rather than appends.
-_PERT_RECORDER = PertRecorder()
+_ABIGET_RECORDER = AbigetRecorder()
 _MRGDDB_FILES = "mrgddb.in"
 _FAKE_RUN_MRGDDB_KWARGS = {}
 _MRGDV_FILES = "mrgdv.in"
@@ -144,9 +143,9 @@ def abinit_integration_tests(pytestconfig: pytest.Config) -> bool:
 
 
 @pytest.fixture(scope="session")
-def abinit_record_perts(pytestconfig: pytest.Config) -> bool:
+def abinit_record_abiget(pytestconfig: pytest.Config) -> bool:
     """
-    Get the record perturbations flag from pytest configuration.
+    Get the record abiget flag from pytest configuration.
 
     Parameters
     ----------
@@ -156,15 +155,15 @@ def abinit_record_perts(pytestconfig: pytest.Config) -> bool:
     Returns
     -------
     bool
-        True if abipy perturbation results should be recorded to the
-        perts.json.gz reference files, False otherwise.
+        True if abipy abiget results should be recorded to the
+        abiget.json.gz reference files, False otherwise.
     """
-    return pytestconfig.getoption("abinit_record_perts")
+    return pytestconfig.getoption("abinit_record_abiget")
 
 
 @pytest.fixture
 def mock_abinit(
-    monkeypatch, abinit_test_dir, abinit_integration_tests, abinit_record_perts
+    monkeypatch, abinit_test_dir, abinit_integration_tests, abinit_record_abiget
 ):
     """
     This fixture allows one to mock running ABINIT.
@@ -211,78 +210,65 @@ def mock_abinit(
         monkeypatch.setattr(atomate2.abinit.run, "run_abinit", mock_run_abinit)
         monkeypatch.setattr(atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit)
 
-        # Mock the abipy perturbation helpers used by the generate_perts job in
+        # Mock the abipy abiget helpers used by jobs like generate_perts in
         # order to prevent them from running the real abinit binary: their
-        # results are replayed from the perts.json.gz reference file of the
-        # generate_perts job, resolved through _REF_PATHS. Passing
-        # --abinit-record-perts activates record mode: the real abipy methods
-        # are then called (this requires a working `abinit` binary on PATH) and
-        # their results are recorded to the perts.json.gz reference file.
+        # results are replayed from the abiget.json.gz reference file, resolved
+        # through _REF_PATHS. Passing --abinit-record-abiget activates record
+        # mode: the real abipy methods are then called (this requires a working
+        # `abinit` binary on PATH) and their results are recorded to the
+        # abiget.json.gz reference file.
         from abipy.abio.inputs import AbinitInput
+        from monty.serialization import loadfn
 
-        record_perts = abinit_record_perts
-        if record_perts:
-            _PERT_RECORDER.reset()
+        record_abiget = abinit_record_abiget
+        if record_abiget:
+            _ABIGET_RECORDER.reset()
 
-        def _make_fake_pert_method(method_name, orig_method, record=False):
+        def _make_fake_abiget_method(method_name, orig_method, record=False):
             def _fake(self, *args, workdir=None, **kwargs):
                 from jobflow import CURRENT_JOB
 
                 name = CURRENT_JOB.job.name  # expected: "generate_perts"
                 index = CURRENT_JOB.job.index
-                if name not in _REF_PATHS or not _REF_PATHS[name]:
+                if name not in _REF_PATHS or str(index) not in _REF_PATHS[name]:
                     raise ValueError(
                         f"No reference path registered for job {name} - {index}."
                     )
-                ref_dirs = _REF_PATHS[name]
-                if str(index) in ref_dirs:
-                    ref_dir = abinit_test_dir / ref_dirs[str(index)]
-                elif len(ref_dirs) == 1:
-                    # The index under which the CLI registers generate_perts is
-                    # an artifact of jobflow's store_inputs mechanism: flow
-                    # outputs are stored at the replaced job's index + 1, while
-                    # the perturbation calls happen at the execution index. With
-                    # a single registered ref dir there is no ambiguity.
-                    ref_dir = abinit_test_dir / next(iter(ref_dirs.values()))
-                else:
-                    raise ValueError(
-                        f"Ambiguous reference paths registered for job "
-                        f"{name} - {index}: {sorted(ref_dirs)}."
-                    )
-                ref_file = ref_dir / "perts.json.gz"
+                ref_dir = abinit_test_dir / _REF_PATHS[name][str(index)]
+                ref_file = ref_dir / "abiget.json.gz"
                 # Canonical key of the call arguments that distinguish the
                 # call. workdir and manager never take part in the key as
                 # they only define where the real abinit task runs.
-                key = pert_call_key(method_name, args, kwargs)
+                key = abiget_call_key(method_name, args, kwargs)
                 if record:
                     result = orig_method(self, *args, workdir=workdir, **kwargs)
-                    _PERT_RECORDER.record(
+                    _ABIGET_RECORDER.record(
                         ref_file,
                         method_name,
                         key,
-                        dump_pert_result(method_name, result),
+                        dump_abiget_result(method_name, result),
                     )
                     return result
-                data = load_perts_gz(ref_file)
+                data = loadfn(ref_file)
                 if key not in data.get(method_name, {}):
                     raise ValueError(
                         f"No recorded result for {method_name} with key "
                         f"{key!r}; recorded keys: "
                         f"{sorted(data.get(method_name, {}))}. "
-                        "Re-record with --abinit-record-perts."
+                        "Re-record with --abinit-record-abiget."
                     )
-                return load_pert_result(method_name, data[method_name][key])
+                return load_abiget_result(method_name, data[method_name][key])
 
             return _fake
 
-        for method_name in PERT_METHOD_NAMES:
+        for method_name in ABIGET_METHOD_NAMES:
             monkeypatch.setattr(
                 AbinitInput,
                 method_name,
-                _make_fake_pert_method(
+                _make_fake_abiget_method(
                     method_name,
                     getattr(AbinitInput, method_name),
-                    record=record_perts,
+                    record=record_abiget,
                 ),
             )
 
@@ -297,7 +283,7 @@ def mock_abinit(
     monkeypatch.undo()
     _REF_PATHS.clear()
     _FAKE_RUN_ABINIT_KWARGS.clear()
-    _PERT_RECORDER.reset()
+    _ABIGET_RECORDER.reset()
 
 
 def check_abinit_indata(ref_path: str | Path) -> None:

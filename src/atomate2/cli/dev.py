@@ -245,10 +245,14 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     NB: note that all the files in the folder will be compressed, in light of a copy to
     the test folder, unless the --no-compress is selected.
 
-    NB: the run directory of a generate_perts job now contains a perts.json.gz
-    file with the recorded abipy perturbation results (see
+    NB: the run directory of a generate_perts job now contains an abiget.json.gz
+    file with the recorded abipy abiget_* results (see
     atomate2.utils.testing.abinit). It is consumed by abinit-test-data, which
     copies it into the generate_perts reference directory of the test data.
+
+    NB: generate_perts runs abinit through the abipy abiget_* helpers (each building
+    and running its own run.abi/run.abo in a scratch subdir, e.g. cwd/dte), but
+    has no atomate2 task of its own — no run.abi/abo at the job-dir root.
     """
     from pathlib import Path
 
@@ -258,10 +262,10 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     from pymatgen.core.structure import Structure
 
     from atomate2.utils.testing.abinit import (
-        PERT_METHOD_NAMES,
-        PertRecorder,
-        dump_pert_result,
-        pert_call_key,
+        ABIGET_METHOD_NAMES,
+        AbigetRecorder,
+        abiget_call_key,
+        dump_abiget_result,
     )
 
     # get the structure
@@ -282,22 +286,22 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     if make_kwargs:
         dumpfn({"make_kwargs": make_kwargs}, "make_info.json")
 
-    # Capture the abipy perturbation results of a generate_perts job during the
+    # Capture the abipy abiget results of a generate_perts job during the
     # run: the real abipy methods are called as usual (running real abinit), and
-    # their results are recorded to a perts.json.gz file in the run directory of
+    # their results are recorded to an abiget.json.gz file in the run directory of
     # the generate_perts job (jobflow cds into each job dir, so Path.cwd() is the
     # job's run dir when the methods are called). If the flow contains no
     # generate_perts job, the patched methods are never called and no file is
     # written.
     from abipy.abio.inputs import AbinitInput
 
-    orig_pert_methods = {
+    orig_abiget_methods = {
         method_name: getattr(AbinitInput, method_name)
-        for method_name in PERT_METHOD_NAMES
+        for method_name in ABIGET_METHOD_NAMES
     }
-    pert_recorder = PertRecorder()
+    abiget_recorder = AbigetRecorder()
 
-    def _make_pert_capture(
+    def _make_abiget_capture(
         method_name: str, orig_method: Callable[..., Any]
     ) -> Callable[..., Any]:
         def _capture(
@@ -307,25 +311,29 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
             **kwargs: Any,
         ) -> Any:
             result = orig_method(self, *args, workdir=workdir, **kwargs)
-            pert_recorder.record(
-                Path.cwd() / "perts.json.gz",
+            abiget_recorder.record(
+                Path.cwd() / "abiget.json.gz",
                 method_name,
-                pert_call_key(method_name, args, kwargs),
-                dump_pert_result(method_name, result),
+                abiget_call_key(method_name, args, kwargs),
+                dump_abiget_result(method_name, result),
             )
             return result
 
         return _capture
 
-    for method_name, orig_method in orig_pert_methods.items():
-        setattr(AbinitInput, method_name, _make_pert_capture(method_name, orig_method))
+    for method_name, orig_method in orig_abiget_methods.items():
+        setattr(
+            AbinitInput,
+            method_name,
+            _make_abiget_capture(method_name, orig_method),
+        )
 
     # run the workflow using a custom store so that we can easily compile test data
     store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
     try:
         run_locally(flow_or_job, store=store, create_folders=True)
     finally:
-        for method_name, orig_method in orig_pert_methods.items():
+        for method_name, orig_method in orig_abiget_methods.items():
             setattr(AbinitInput, method_name, orig_method)
 
     # dump all of the job outputs to the outputs.json file in the current directory
@@ -340,7 +348,9 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     "--force",
     is_flag=True,
     default=False,
-    help="Whether to force overwrite of existing folders/files.",
+    help="Remove the existing reference directory for this test (e.g. "
+    ".../flows/dfpt_core/ShgFlowMaker/silicon_carbide_shg) before regenerating "
+    "it. Other tests' reference data is untouched.",
 )
 def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> None:
     """Copy test data for ABINIT unit tests.
@@ -394,18 +404,18 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     # (i.e. "atomate2" and "abinit")
     module_path = maker.__module__.split(".")[2:]
     maker_dir = abinit_test_data_dir / Path(*module_path) / maker_name
-    if not maker_dir.exists():
-        maker_dir.mkdir(parents=True)
     test_dir = maker_dir / test_name
 
-    def _makedir(directory: Path, force_overwrite: bool) -> None:
-        if not directory.exists():
-            directory.mkdir()
-        elif not force_overwrite:
-            click.echo(f"folder ({directory}) already exists, refusing to overwrite it")
-            sys.exit()
-
-    _makedir(test_dir, force_overwrite=force)
+    # --force: remove the existing reference directory for this test
+    # (e.g. .../flows/dfpt_core/ShgFlowMaker/silicon_carbide_shg) before
+    # regenerating it. Other tests' reference data is untouched.
+    if test_dir.exists():
+        if not force:
+            click.echo(f"path ({test_dir}) already exists, refusing to overwrite it")
+            sys.exit(1)
+        click.echo(f"--force: removing existing test data directory {test_dir}")
+        shutil.rmtree(test_dir)
+    test_dir.mkdir(parents=True, exist_ok=True)
 
     outputs = loadfn("outputs.json")
 
@@ -416,10 +426,9 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     if len(task_labels) != len(set(task_labels)):
         raise ValueError("Not all jobs have unique names")
 
-    outputs_by_uuid_index = {(o.uuid, o.index): o.output for o in outputs}
-
     original_mapping = {}
     mapping: dict[Any, Any] = {}
+    has_abiget_mock = False
 
     def _add_to_mapping(
         job_name: str, index_job: str, job_index_dir: Path, orig_job_dir: Path | None
@@ -461,14 +470,13 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
         dirdata_name: str,
         include_files: list | None = None,
         include_fake_files: list | None = None,
-        force_overwrite: bool = False,
         allow_missing: bool = True,
     ) -> None:
         src_dirdata = src_dir / dirdata_name
         if not src_dirdata.exists():
             raise RuntimeError(f"Source directory {src_dirdata} does not exist")
         dest_dirdata = dest_dir / dirdata_name
-        _makedir(dest_dirdata, force_overwrite=force_overwrite)
+        dest_dirdata.mkdir(parents=True, exist_ok=True)
         if include_files:
             copy_files(
                 src_dirdata,
@@ -530,7 +538,6 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
         indata_fake_files: list | None = None,
         outdata_fake_files: list | None = None,
         tmpdata_fake_files: list | None = None,
-        force_overwrite: bool = False,
         allow_missing: bool = True,
     ) -> None:
         for dirdata_name, data_files, data_fake_files in zip(
@@ -545,41 +552,31 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                 dirdata_name=dirdata_name,
                 include_files=data_files,
                 include_fake_files=data_fake_files,
-                force_overwrite=force_overwrite,
                 allow_missing=allow_missing,
             )
 
     for output in outputs:
-        if isinstance(output.output, dict) and set(output.output) >= {"perts", "dirs"}:
-            # generate_perts job: runs no abinit/mrgddb/anaddb binary, so it has no
-            # inputs/outputs reference. Its reference is perts.json.gz (the recorded
-            # abipy perturbation results), captured by abinit-generate-reference in
-            # the job's run dir and copied here. If the run dir has no perts.json.gz
-            # (e.g. the reference run predates the capture), the test data dir is
-            # left without it: the generated test must then be run once with
-            # --abinit-record-perts to create it.
-            # NB: the mapping index for generate_perts is the index at which the flow
-            # output is stored by jobflow's store_inputs mechanism (execution index
-            # + 1), not the execution index at which the perturbation helpers run.
-            # The conftest pert mock resolves the reference directory
-            # index-agnostically, so this is fine.
-            job_name = "generate_perts"
-            index_job = str(output.index)
-            job_dir = test_dir / job_name
-            _makedir(job_dir, force_overwrite=force)
-            job_index_dir = job_dir / index_job
-            _makedir(job_index_dir, force_overwrite=force)
-            _add_to_mapping(job_name, index_job, job_index_dir, None)
-            # The store-index entry of the generate_perts job holds the flow output
-            # ({"perts", "dirs"}); the entry with the same uuid at execution index 1
-            # holds {"dir_name": cwd}, i.e. the run dir of the generate_perts job.
-            run_dir_output = outputs_by_uuid_index.get((output.uuid, 1))
-            if isinstance(run_dir_output, dict) and "dir_name" in run_dir_output:
-                run_dir = Path(strip_hostname(run_dir_output["dir_name"]))
-                run_perts_file = run_dir / "perts.json.gz"
-                if run_perts_file.exists():
-                    # copy verbatim: the file is already deterministic gzip JSON
-                    shutil.copyfile(run_perts_file, job_index_dir / "perts.json.gz")
+        if isinstance(output.output, dict) and "dir_name" in output.output:
+            # a dynamic job whose output records its run dir (currently generate_perts):
+            # such jobs run abinit through the abipy abiget_* helpers (each building
+            # and running its own run.abi/run.abo in a scratch subdir, e.g. cwd/dte)
+            # but have no atomate2 task of their own — no run.abi/abo at the job-dir
+            # root, no task outputs. Their reference is the recorded abiget results,
+            # captured into the job's run dir by abinit-generate-reference.
+            orig_job_dir = Path(strip_hostname(output.output["dir_name"]))
+            run_abiget_file = orig_job_dir / "abiget.json.gz"
+            if run_abiget_file.exists():
+                index_job = str(
+                    output.index
+                )  # execution index — matches CURRENT_JOB at mock time
+                job_name = "generate_perts"
+                job_dir = test_dir / job_name
+                job_index_dir = job_dir / index_job
+                job_index_dir.mkdir(parents=True, exist_ok=True)
+                _add_to_mapping(job_name, index_job, job_index_dir, orig_job_dir)
+                # copy verbatim: the file is already deterministic gzip JSON
+                shutil.copyfile(run_abiget_file, job_index_dir / "abiget.json.gz")
+                has_abiget_mock = True
             continue
 
         if (
@@ -597,9 +594,8 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
         index_job = str(output.index)
 
         job_dir = test_dir / folder_name
-        _makedir(job_dir, force_overwrite=force)
         job_index_dir = job_dir / index_job
-        _makedir(job_index_dir, force_overwrite=force)
+        job_index_dir.mkdir(parents=True, exist_ok=True)
 
         job_index_dir = _add_to_mapping(
             job_name, index_job, job_index_dir, orig_job_dir
@@ -607,7 +603,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
 
         # create input folder and copy across files
         input_dir = job_index_dir / "inputs"
-        _makedir(input_dir, force_overwrite=force)
+        input_dir.mkdir(parents=True, exist_ok=True)
 
         copy_files(
             orig_job_dir,
@@ -638,12 +634,11 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             ],
             outdata_fake_files=None,
             tmpdata_fake_files=None,
-            force_overwrite=force,
             allow_missing=True,
         )
         # create output folder and copy across files
         output_dir = job_index_dir / "outputs"
-        _makedir(output_dir, force_overwrite=force)
+        output_dir.mkdir(parents=True, exist_ok=True)
         copy_files(
             orig_job_dir,
             output_dir,
@@ -670,7 +665,6 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                 "out_dvdb",
             ],
             tmpdata_fake_files=None,
-            force_overwrite=force,
             allow_missing=True,
         )
 
@@ -737,13 +731,13 @@ class Test{maker_name}:
         assert output1.run_number == 1
     """
 
-    if "generate_perts" in mapping:
+    if has_abiget_mock:
         test_function_str += """
-This flow includes a generate_perts job. Its perturbation reference data
-(generate_perts/<index>/perts.json.gz) is copied automatically from the
-generate_perts run dir of the reference flow when present. If the file is
-missing, run the new test once with --abinit-record-perts (requires real abinit
-on PATH) to create it. The flag is also the fast way to refresh the perturbation
+This flow includes a generate_perts job. Its abiget reference data
+(generate_perts/<index>/abiget.json.gz) is copied automatically from the
+reference run's job dir by abinit-test-data when present. If the file is
+missing, run the new test once with --abinit-record-abiget (requires real abinit
+on PATH) to create it. The flag is also the fast way to refresh the abiget
 reference alone, without re-running the whole reference flow, when only abipy
 or the atomate2 input generation changed.
 """

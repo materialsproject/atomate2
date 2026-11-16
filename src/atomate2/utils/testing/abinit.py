@@ -1,11 +1,15 @@
 """Utilities for testing ABINIT calculations.
 
-This module defines the format of the perts.json.gz reference files that mock
-the abipy perturbation helpers called by the generate_perts job: while the
-abinit tests replay them from reference data (see tests/abinit/conftest.py),
-the abinit-generate-reference CLI command captures them during a real run
-(see atomate2.cli.dev.abinit_generate_reference). Both call sites share the
-helpers in this module, so the format has a single definition.
+This module defines the format of the abiget.json.gz reference files that mock
+the abipy abiget_* helpers: while the abinit tests replay them from reference
+data (see tests/abinit/conftest.py), the abinit-generate-reference CLI command
+captures them during a real run (see atomate2.cli.dev.abinit_generate_reference).
+Both call sites share the helpers in this module, so the format has a single
+definition.
+
+The reader uses monty's loadfn (which handles .gz transparently); the writer
+uses a deterministic gzip JSON format (mtime=0, sort_keys=True) to ensure
+byte-identical files across record runs.
 """
 
 from __future__ import annotations
@@ -20,10 +24,10 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-# The abipy AbinitInput methods whose results are recorded to the perts.json.gz
+# The abipy AbinitInput methods whose results are recorded to the abiget.json.gz
 # reference files. These helpers otherwise run the real abinit binary from
-# within the generate_perts job.
-PERT_METHOD_NAMES = (
+# within jobs that call them (e.g. generate_perts).
+ABIGET_METHOD_NAMES = (
     "abiget_irred_ddeperts",
     "abiget_irred_dteperts",
     "abiget_irred_phperts",
@@ -45,9 +49,9 @@ def canon_value(value: Any) -> Any:
     return value
 
 
-def pert_call_key(method_name: str, args: tuple, kwargs: dict) -> str:
+def abiget_call_key(method_name: str, args: tuple, kwargs: dict) -> str:
     """
-    Get the canonical key of the distinguishing call arguments of a perturbation.
+    Get the canonical key of the distinguishing call arguments for abiget methods.
 
     workdir and manager never take part in the key, as they only define where
     the real abinit task runs.
@@ -86,9 +90,9 @@ def pert_call_key(method_name: str, args: tuple, kwargs: dict) -> str:
     return "default"
 
 
-def pert_results_equal(method_name: str, a: Any, b: Any) -> bool:
+def abiget_results_equal(method_name: str, a: Any, b: Any) -> bool:
     """
-    Compare two canonically serialized perturbation results for equality.
+    Compare two canonically serialized abiget results for equality.
 
     Parameters
     ----------
@@ -104,11 +108,11 @@ def pert_results_equal(method_name: str, a: Any, b: Any) -> bool:
     return json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
 
 
-def dump_pert_result(method_name: str, result: Any) -> object:
+def dump_abiget_result(method_name: str, result: Any) -> object:
     """
-    Convert the return value of an abipy perturbation helper to JSON-safe data.
+    Convert the return value of an abipy abiget helper to JSON-safe data.
 
-    The load counterpart load_pert_result mirrors these transformations.
+    The load counterpart load_abiget_result mirrors these transformations.
 
     Parameters
     ----------
@@ -130,16 +134,16 @@ def dump_pert_result(method_name: str, result: Any) -> object:
     return [dict(pert) for pert in result]
 
 
-def load_pert_result(method_name: str, data: Any) -> Any:
+def load_abiget_result(method_name: str, data: Any) -> Any:
     """
-    Rebuild the return value of an abipy perturbation helper from reference data.
+    Rebuild the return value of an abipy abiget helper from reference data.
 
     Parameters
     ----------
     method_name
         Name of the abipy AbinitInput method that produced the result.
     data
-        JSON-safe data produced by dump_pert_result.
+        JSON-safe data produced by dump_abiget_result.
     """
     if method_name == "abiget_ibz":
         from typing import NamedTuple
@@ -154,9 +158,9 @@ def load_pert_result(method_name: str, data: Any) -> Any:
     return [AttrDict(**pert) for pert in data]
 
 
-def dump_perts_gz(data: dict, filename: Path) -> None:
+def dump_abiget_gz(data: dict, filename: Path) -> None:
     """
-    Write pert reference data as deterministic gzip JSON (zeroed header).
+    Write abiget reference data as deterministic gzip JSON (zeroed header).
 
     Python's gzip writer embeds the current mtime in the gzip header, so two
     record runs with identical data would otherwise produce different bytes.
@@ -168,14 +172,12 @@ def dump_perts_gz(data: dict, filename: Path) -> None:
     filename.write_bytes(gzip.compress(payload, mtime=0))
 
 
-def load_perts_gz(filename: Path) -> dict:
-    """Read pert reference data written by dump_perts_gz."""
-    return json.loads(gzip.decompress(Path(filename).read_bytes()))
+# No custom load_abiget_gz loader: use monty's loadfn, which handles .gz transparently.
 
 
-class PertRecorder:
+class AbigetRecorder:
     """
-    Record abipy perturbation results into deterministic perts.json.gz files.
+    Record abipy abiget_* results into deterministic abiget.json.gz files.
 
     The recorder tracks the reference files already (re-)written during the
     current run (a test fixture or a CLI reference run): the first record call
@@ -193,7 +195,7 @@ class PertRecorder:
         self, ref_file: Path, method_name: str, key: str, result_data: Any
     ) -> None:
         """
-        Merge the serialized result of a perturbation call into a reference file.
+        Merge the serialized result of an abiget call into a reference file.
 
         A duplicate call with the same method and key is legitimate only if
         the abipy method is deterministic: identical results are recorded once
@@ -203,23 +205,27 @@ class PertRecorder:
         Parameters
         ----------
         ref_file
-            Path to the perts.json.gz reference file.
+            Path to the abiget.json.gz reference file.
         method_name
             Name of the abipy AbinitInput method that was called.
         key
-            Canonical call key (see pert_call_key).
+            Canonical call key (see abiget_call_key).
         result_data
-            Serialized result (see dump_pert_result).
+            Serialized result (see dump_abiget_result).
         """
         ref_file = Path(ref_file)
         if str(ref_file) in self._recorded_files and ref_file.exists():
-            data = load_perts_gz(ref_file)
+            from monty.serialization import loadfn
+
+            data = loadfn(ref_file)
         else:
             # First record call for this file in the current run: reset it.
             data = {}
         if key in data.get(method_name, {}):
             # Duplicate call with the same distinguishing arguments.
-            if not pert_results_equal(method_name, result_data, data[method_name][key]):
+            if not abiget_results_equal(
+                method_name, result_data, data[method_name][key]
+            ):
                 raise ValueError(
                     f"Inconsistent duplicate call to {method_name} with key "
                     f"{key!r}: recorded {data[method_name][key]} differs "
@@ -231,5 +237,5 @@ class PertRecorder:
             )
             return
         data.setdefault(method_name, {})[key] = result_data
-        dump_perts_gz(data, ref_file)
+        dump_abiget_gz(data, ref_file)
         self._recorded_files.add(str(ref_file))

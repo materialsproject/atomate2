@@ -181,9 +181,9 @@ def pytest_addoption(parser):
         "This basically runs the same tests but without the mocking.",
     )
     parser.addoption(
-        "--abinit-record-perts",
+        "--abinit-record-abiget",
         action="store_true",
         default=False,
-        help="Record abipy perturbation results to the perts.json.gz reference files "
+        help="Record abipy abiget results to the abiget.json.gz reference files "
         "(mock mode only; requires a working abinit binary on PATH).",
     )
