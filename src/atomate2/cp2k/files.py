@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import re
+from fnmatch import fnmatch
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -51,7 +52,7 @@ def copy_cp2k_outputs(
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
     additional_cp2k_files : list of str
-        Additional files to copy
+        Additional files to copy. Glob patterns such are supported.
     restart_to_input : bool
         Move the cp2k restart file to by the cp2k input in the new directory
     file_client : .FileClient
@@ -83,10 +84,15 @@ def copy_cp2k_outputs(
                 files.append(Path(cp2k_output.filenames[file][-1]).name)
         else:
             files.append(Path(file).name)
+
+    # The .gz extension is stripped on both sides: listed files are gzipped if the
+    # outputs were compressed, and names taken from cp2k.out may already end in .gz
+    patterns = [file.removesuffix(".gz") + relax_ext for file in files]
     all_files = [
-        get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files
+        file
+        for file in directory_listing
+        if any(fnmatch(file.name.removesuffix(".gz"), pat) for pat in patterns)
     ]
-    all_files = [f for f in all_files if f]
 
     copy_files(
         src_dir,
@@ -95,9 +101,11 @@ def copy_cp2k_outputs(
         file_client=file_client,
     )
 
+    # if both the gzipped and the plain version were copied, keep the gzipped one
     gunzip_files(
         include_files=all_files,
         allow_missing=True,
+        force=True,
         file_client=file_client,
     )
 
