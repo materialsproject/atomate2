@@ -215,7 +215,8 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         )
         return None
     # With an option, U is computed below. "exclude" sums only the real modes above
-    # freq_min. "absolute" also adds the imaginary modes in a second sum.
+    # freq_min. "absolute" also counts the imaginary modes, as real modes of the same
+    # absolute frequency.
     if has_imaginary:
         if freq_min <= 0:
             raise ValueError(
@@ -236,33 +237,25 @@ def _get_thermal_displacement_data(phonon: Phonopy, **kwargs) -> dict | None:
         kwargs.get("tmax_thermal_displacements", 1000) + t_step / 2,
         t_step,
     )
+    if has_imaginary and imaginary_modes == "absolute":
+        # An imaginary mode has no harmonic U, because the energy falls along it.
+        # Without U, the material gets no Debye-Waller factors. Leaving the mode
+        # out ("exclude") lowers U. "absolute" keeps it as a real mode of the same
+        # absolute frequency, which gives an estimate of U.
+        # phonopy stores imaginary modes as negative frequencies and only sums the
+        # modes above freq_min, which keeps the modes near zero frequency out,
+        # since their term diverges. Flipping the sign of the modes below
+        # -freq_min makes phonopy count them as real modes. phonopy 4.10 no longer
+        # accepts a negative freq_min, which a second run over them would need.
+        freqs_mesh = phonon.mesh.frequencies
+        imaginary = freqs_mesh < -freq_min
+        freqs_mesh[imaginary] = -freqs_mesh[imaginary]
     phonon.run_thermal_displacement_matrices(
         temperatures=temperatures, freq_min=freq_min, exclude_gamma_acoustic=True
     )
     matrices = phonon.thermal_displacement_matrices
     u = matrices.thermal_displacement_matrices
     u_cif = matrices.thermal_displacement_matrices_cif
-    if has_imaginary and imaginary_modes == "absolute":
-        # An imaginary mode has no harmonic U, because the energy falls along it.
-        # Without U, the material gets no Debye-Waller factors. Leaving the mode
-        # out ("exclude") lowers U. "absolute" keeps it as a real mode of the same
-        # absolute frequency, which gives an estimate of U.
-        # phonopy only sums the modes above freq_min, which keeps the modes near
-        # zero frequency out for numerical stability, since their term diverges.
-        # This second run adds the imaginary modes below -freq_min, which phonopy
-        # stores as negative frequencies. Their term equals that of the absolute
-        # frequency, except at T <= 1 K, where phonopy sets the population to zero
-        # and the term changes sign.
-        phonon.run_thermal_displacement_matrices(
-            temperatures=temperatures,
-            freq_min=-np.inf,
-            freq_max=-freq_min,  # the imaginary modes, below -freq_min
-            exclude_gamma_acoustic=True,
-        )
-        imaginary = phonon.thermal_displacement_matrices
-        sign = np.where(temperatures > 1, 1, -1)[:, None, None, None]
-        u = u + sign * imaginary.thermal_displacement_matrices
-        u_cif = u_cif + sign * imaginary.thermal_displacement_matrices_cif
     for idx, temp in enumerate(temperatures):
         write_cif_P1(
             phonon.primitive, U_cif=u_cif[idx], filename=f"tdispmat_{temp:g}K.cif"
