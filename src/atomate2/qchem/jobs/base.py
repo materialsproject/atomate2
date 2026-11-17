@@ -12,10 +12,10 @@ from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.io.qchem.inputs import QCInput
+from pymatgen.io.qchem.sets import QCInputGenerator
 
 from atomate2.qchem.files import copy_qchem_outputs
 from atomate2.qchem.run import run_qchem, should_stop_children
-from atomate2.qchem.sets.base import QCInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -67,7 +67,7 @@ class BaseQCMaker(Maker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
@@ -139,8 +139,6 @@ class BaseQCMaker(Maker):
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
         # write qchem input files
-        # self.input_set_generator.get_input_set(molecule).write_inputs()
-        self.input_set_generator.get_input_set(molecule)
         self.input_set_generator.get_input_set(molecule).write_input(
             directory=Path.cwd()
         )

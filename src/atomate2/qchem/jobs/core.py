@@ -6,11 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from atomate2.qchem.sets.base import QCInputGenerator
-
-from atomate2.qchem.jobs.base import BaseQCMaker
-from atomate2.qchem.sets.core import (
+from pymatgen.io.qchem.sets import (
     ForceSetGenerator,
     FreqSetGenerator,
     OptSetGenerator,
@@ -18,6 +14,11 @@ from atomate2.qchem.sets.core import (
     SinglePointSetGenerator,
     TransitionStateSetGenerator,
 )
+
+from atomate2.qchem.jobs.base import BaseQCMaker
+
+if TYPE_CHECKING:
+    from pymatgen.io.qchem.sets import QCInputGenerator
 
 # from custodian.qchem.handlers import (
 #     QChemErrorHandler,
@@ -36,7 +37,7 @@ class SinglePointMaker(BaseQCMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
@@ -71,7 +72,7 @@ class OptMaker(BaseQCMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
@@ -108,7 +109,7 @@ class ForceMaker(BaseQCMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
@@ -141,7 +142,7 @@ class TransitionStateMaker(BaseQCMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
@@ -176,7 +177,7 @@ class FreqMaker(BaseQCMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
@@ -214,7 +215,7 @@ class PESScanMaker(BaseQCMaker):
     ----------
     name : str
         The job name.
-    input_set_generator : .QChemInputGenerator
+    input_set_generator : .QCInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_qchem_input_set`.
