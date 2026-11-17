@@ -59,3 +59,20 @@ def test_latticemin_maker(mock_jdftx, si_structure, mock_filenames, clean_dir):
     responses = run_locally(job, create_folders=True, ensure_success=True)
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
+
+
+def test_output_loads_from_store(
+    mock_jdftx, si_structure, mock_filenames, clean_dir, memory_jobstore
+):
+    """A later job gets this output through its reference, decoded by MontyDecoder."""
+    mock_jdftx({"single_point": "sp_test"}, {})
+
+    maker = SinglePointMaker(input_set_generator=SinglePointSetGenerator())
+    maker.input_set_generator.user_settings["coords-type"] = "Lattice"
+
+    job = maker.make(si_structure)
+    run_locally(job, store=memory_jobstore, create_folders=True, ensure_success=True)
+
+    output = job.output.resolve(memory_jobstore)
+    assert isinstance(output, TaskDoc)
+    assert isinstance(output.calc_outputs.parameters, dict)
