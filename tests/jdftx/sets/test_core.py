@@ -9,6 +9,11 @@ from atomate2.jdftx.sets.core import (
 )
 
 
+def _first(value):
+    """Newer pymatgen-core reads repeatable tags such as fluid-cation as a list."""
+    return value[0] if isinstance(value, list) else value
+
+
 @pytest.fixture
 def basis_and_potential():
     return {
@@ -21,7 +26,7 @@ def test_singlepoint_generator(si_structure, basis_and_potential):
     gen = SinglePointSetGenerator(user_settings=basis_and_potential)
     input_set = gen.get_input_set(si_structure)
     jdftx_input = input_set.jdftxinput
-    assert jdftx_input["fluid-cation"]["concentration"] == 1.0
+    assert _first(jdftx_input["fluid-cation"])["concentration"] == 1.0
     assert jdftx_input["lattice-minimize"]["nIterations"] == 0
 
 
@@ -29,7 +34,7 @@ def test_default_generator(si_structure, basis_and_potential):
     gen = JdftxInputGenerator(user_settings=basis_and_potential)
     input_set = gen.get_input_set(si_structure)
     jdftx_input = input_set.jdftxinput
-    assert jdftx_input["fluid-cation"]["concentration"] == 1.0
+    assert _first(jdftx_input["fluid-cation"])["concentration"] == 1.0
 
 
 def test_ionicmin_generator(si_structure, basis_and_potential):
