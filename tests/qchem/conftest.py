@@ -9,12 +9,12 @@ import pytest
 from jobflow import CURRENT_JOB
 from pymatgen.core import Molecule
 from pymatgen.io.qchem.inputs import QCInput
+from pymatgen.io.qchem.sets import QCInputGenerator
 from pytest import MonkeyPatch
 
 import atomate2.qchem.jobs.base
 import atomate2.qchem.jobs.core
 import atomate2.qchem.run
-from atomate2.qchem.sets.base import QCInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator, Sequence

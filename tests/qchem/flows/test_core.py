@@ -5,10 +5,10 @@ import pytest
 from jobflow import JobStore, run_locally
 from maggma.stores import MemoryStore
 from pymatgen.core import Molecule
+from pymatgen.io.qchem.sets import FreqSetGenerator, OptSetGenerator
 
 from atomate2.qchem.flows.core import FrequencyOptFlatteningMaker, FrequencyOptMaker
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker
-from atomate2.qchem.sets.core import FreqSetGenerator, OptSetGenerator
 
 fake_run_qchem_kwargs = {}
 
@@ -22,7 +22,16 @@ def test_frequency_opt_maker(mock_qchem, clean_dir, qchem_test_dir, h2o_molecule
     }
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
-    flow = FrequencyOptMaker().make(h2o_molecule)
+    # the reference calculations use def2-TZVPPD
+    maker = FrequencyOptMaker(
+        opt_maker=OptMaker(
+            input_set_generator=OptSetGenerator(basis_set="def2-tzvppd")
+        ),
+        freq_maker=FreqMaker(
+            input_set_generator=FreqSetGenerator(basis_set="def2-tzvppd")
+        ),
+    )
+    flow = maker.make(h2o_molecule)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
     output = {job.name: responses[job.uuid][1].output for job in flow}
