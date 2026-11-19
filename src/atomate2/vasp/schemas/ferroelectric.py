@@ -1,11 +1,12 @@
 """Schemas for Ferroelectric wflow."""
 
+from typing import Self
+
 import numpy as np
 from monty.serialization import dumpfn
 from pydantic import BaseModel, Field
 from pymatgen.analysis.ferroelectricity.polarization import EnergyTrend, Polarization
 from pymatgen.core import Structure
-from typing_extensions import Self
 
 __all__ = ["PolarizationDocument"]
 

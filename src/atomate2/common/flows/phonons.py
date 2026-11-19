@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -145,6 +146,9 @@ class BasePhononMaker(Maker, ABC):
         job, reducing overhead. In the specific case of TorchSim, this enables batching
         of all static structure evaluations.
         Note: socket=True is not supported for BaseVaspMaker.
+    verbose: bool
+        If True, the displacement job warns that the initial magnetic moments
+        are removed from the structure.
     """
 
     name: str = "phonon"
@@ -189,6 +193,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
+    verbose: bool = True
 
     def make(
         self,
@@ -428,6 +433,14 @@ class BasePhononMaker(Maker, ABC):
         -------
         Job | Flow
         """
+        if self.phonon_doc_schema == "atomate2":
+            warnings.warn(
+                "The phonon free energies, entropies, heat capacities and internal "
+                "energies are now computed with phonopy's sum over the q-point mesh, "
+                "without the three acoustic modes at Gamma. They differ from those of "
+                "earlier atomate2 versions, which integrated the phonon DOS.",
+                stacklevel=2,
+            )
         return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
@@ -508,6 +521,7 @@ class BasePhononMaker(Maker, ABC):
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
+            verbose=self.verbose,
         )
 
     @property

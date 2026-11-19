@@ -5,7 +5,7 @@
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
 [![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677080-blue?logo=Zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.15603088)
-[![This project supports Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
+[![This project supports Python 3.12+](https://img.shields.io/badge/Python-3.12+-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
 [![PyPI](https://img.shields.io/pypi/dm/atomate2.svg?maxAge=2592000)](https://pypi.python.org/pypi/atomate2)
 
 [Documentation][docs] | [PyPI][pypi] | [GitHub][github]
@@ -87,7 +87,7 @@ atomate2 workflows can be run using the [jobflow-remote] or [FireWorks] software
 
 ## Installation
 
-Atomate2 is a Python 3.10+ library and can be installed using pip. Full installation
+Atomate2 is a Python 3.12+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
 ## Tutorials

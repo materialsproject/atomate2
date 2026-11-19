@@ -3,7 +3,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Self, Union
 
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
@@ -11,7 +11,6 @@ from monty.json import jsanitize
 from pydantic import Field
 from pymatgen.core import Molecule
 from pymatgen.core.periodic_table import Element
-from typing_extensions import Self
 
 from atomate2 import __version__
 from atomate2.utils.datetime import datetime_str

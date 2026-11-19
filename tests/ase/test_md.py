@@ -8,6 +8,7 @@ Light tests here to validate that base classes work as intended
 import logging
 import os
 
+import numpy as np
 import pytest
 from jobflow import run_locally
 from pymatgen.io.vasp.outputs import Xdatcar
@@ -72,6 +73,79 @@ def test_npt_init_kwargs(si_structure, clean_dir, caplog):
         assert "externalstress" in npt_nh_str.ase_md_kwargs
         assert "pressure_au" not in npt_nh_str.ase_md_kwargs
         assert "The `NPT` module in ASE is no longer recommended" in caplog.text
+
+
+def test_nvt_nose_hoover_chain(si_structure, clean_dir):
+    """NoseHooverChainNVT runs at a constant temperature only."""
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics="nose-hoover-chain",
+        temperature=300,
+        n_steps=5,
+        ase_md_kwargs={"tdamp": 10, "tchain": 1},
+    )
+    result = maker.run_ase(si_structure)
+    assert len(result.trajectory) == 6
+
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics="nose-hoover-chain",
+        temperature=[300, 600],
+        n_steps=5,
+        ase_md_kwargs={"tdamp": 10},
+    )
+    with pytest.raises(ValueError, match="cannot follow a temperature schedule"):
+        maker.run_ase(si_structure)
+
+
+def get_positions_from_seed_and_dyn(structure, seed, dynamics, ase_md_kwargs):
+    """Final positions of a 5-step NVT run at 300 K with the Lennard-Jones potential."""
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics=dynamics,
+        temperature=300,
+        n_steps=5,
+        mb_velocity_seed=seed,
+        ase_md_kwargs=dict(ase_md_kwargs),
+    )
+    return maker.run_ase(structure).final_mol_or_struct.cart_coords
+
+
+@pytest.mark.parametrize(
+    ("dynamics", "ase_md_kwargs"),
+    [("langevin", {}), ("andersen", {"andersen_prob": 0.5})],
+)
+def test_random_dynamics_seed(si_structure, clean_dir, dynamics, ase_md_kwargs):
+    """mb_velocity_seed also seeds the random numbers of Langevin and Andersen."""
+    si_structure.add_site_property("velocities", [[0.0, 0.0, 0.0]] * len(si_structure))
+    positions = [
+        get_positions_from_seed_and_dyn(si_structure, seed, dynamics, ase_md_kwargs)
+        for seed in (1, 1, 2)
+    ]
+    assert positions[0] == pytest.approx(positions[1])
+    assert positions[0] != pytest.approx(positions[2])
+
+
+def test_md_seed_defaults(si_structure, clean_dir):
+    """Dynamics without an rng argument run as before, and a given rng is kept."""
+    maker = LennardJonesMDMaker(
+        ensemble="nvt",
+        dynamics="berendsen",
+        temperature=[300, 600],
+        n_steps=5,
+        mb_velocity_seed=1,
+        ase_md_kwargs={"taut": 100},
+    )
+    assert len(maker.run_ase(si_structure).trajectory) == 6
+
+    si_structure.add_site_property("velocities", [[0.0, 0.0, 0.0]] * len(si_structure))
+    positions = [
+        get_positions_from_seed_and_dyn(
+            si_structure, seed, "langevin", {"rng": np.random.default_rng(7)}
+        )
+        for seed in (1, 2)
+    ]
+    assert positions[0] == pytest.approx(positions[1])
 
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))

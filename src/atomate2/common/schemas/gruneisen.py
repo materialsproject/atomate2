@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import Union
+from typing import Self, Union
 
 import phonopy
 from emmet.core.structure import StructureMetadata
@@ -21,7 +21,6 @@ from pymatgen.phonon.gruneisen import (
     GruneisenPhononBandStructureSymmLine,
 )
 from pymatgen.phonon.plotter import GruneisenPhononBSPlotter, GruneisenPlotter
-from typing_extensions import Self
 
 from atomate2.common.jobs.phonons import _get_kpath
 

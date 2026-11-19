@@ -258,6 +258,8 @@ class Atomate2Settings(BaseSettings):
         "GBRV_v1.5", description="location of JDFTX pseudopotentials."
     )
 
+    PHEASY_CMD: str = Field("pheasy", description="The command to run pheasy.")
+
     LAMMPS_CMD: str = Field("lmp", description="The command to run LAMMPS.")
 
     LAMMPS_MPICMD: str | None = Field(

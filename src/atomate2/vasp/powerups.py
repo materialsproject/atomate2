@@ -25,7 +25,7 @@ JobType = TypeVar("JobType", Job, Flow, Maker)
 return the same type as their input."""
 
 
-def update_vasp_input_generators(
+def update_vasp_input_generators[JobType](
     flow: JobType,
     dict_mod_updates: dict[str, Any],
     name_filter: str | None = None,
@@ -67,13 +67,15 @@ def update_vasp_input_generators(
 
     if isinstance(updated_flow, Maker):
         updated_flow = updated_flow.update_kwargs(**tmp_dict)
-    else:
+    elif hasattr(updated_flow, "update_maker_kwargs"):
         updated_flow.update_maker_kwargs(**tmp_dict)
+    else:
+        raise TypeError("The provided flow must be an instance of Job, Flow, or Maker.")
 
     return updated_flow
 
 
-def update_user_incar_settings(
+def update_user_incar_settings[JobType](
     flow: JobType,
     incar_updates: dict[str, Any],
     name_filter: str | None = None,
@@ -118,7 +120,7 @@ def update_user_incar_settings(
     )
 
 
-def update_user_potcar_settings(
+def update_user_potcar_settings[JobType](
     flow: JobType,
     potcar_updates: dict[str, Any],
     name_filter: str | None = None,
@@ -163,7 +165,7 @@ def update_user_potcar_settings(
     )
 
 
-def update_user_potcar_functional(
+def update_user_potcar_functional[JobType](
     flow: JobType,
     potcar_functional: str,
     name_filter: str | None = None,
@@ -206,7 +208,7 @@ def update_user_potcar_functional(
     )
 
 
-def update_user_kpoints_settings(
+def update_user_kpoints_settings[JobType](
     flow: JobType,
     kpoints_updates: dict[str, Any] | Kpoints,
     name_filter: str | None = None,
@@ -261,7 +263,7 @@ def update_user_kpoints_settings(
     )
 
 
-def use_auto_ispin(
+def use_auto_ispin[JobType](
     flow: JobType,
     value: bool = True,
     name_filter: str | None = None,

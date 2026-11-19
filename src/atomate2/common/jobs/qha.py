@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING
 
 import numpy as np
 from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
     from atomate2.common.flows.phonons import BasePhononMaker
 
-PhononDoc: TypeAlias = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
+type PhononDoc = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
@@ -163,6 +163,15 @@ def analyze_free_energy(
 
     # potentially implement a space group check in the future
 
+    # the vinet, birch_murnaghan and murnaghan equations of state have 4 parameters
+    if len(sorted_volume) < 4:
+        raise ValueError(
+            f"{len(sorted_volume)} of the {len(phonon_outputs)} volumes have no "
+            f"imaginary modes, but the {eos_type} fit needs at least 4. Raise "
+            "tol_imaginary_modes (THz) in "
+            "phonon_maker.generate_frequencies_eigenvectors_kwargs if they are "
+            "numerical noise, or set ignore_imaginary_modes=True to keep all volumes."
+        )
     if len(set(formula_units)) != 1:
         raise ValueError("There should be only one formula unit.")
 

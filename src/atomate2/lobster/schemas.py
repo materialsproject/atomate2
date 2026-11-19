@@ -5,7 +5,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Self, Union
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -29,7 +29,6 @@ from pymatgen.io.lobster import (
     MadelungEnergies,
     SitePotential,
 )
-from typing_extensions import Self
 
 from atomate2 import __version__
 from atomate2.utils.datetime import datetime_str

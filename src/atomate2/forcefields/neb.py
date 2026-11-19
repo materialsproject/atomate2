@@ -14,9 +14,9 @@ from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, MLFF, ForceFiel
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Self
 
     from pymatgen.core import Structure
-    from typing_extensions import Self
 
 
 @dataclass

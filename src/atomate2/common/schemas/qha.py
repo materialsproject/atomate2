@@ -1,7 +1,7 @@
 """Schemas for QHA documents."""
 
 import logging
-from typing import Union
+from typing import Self, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
@@ -9,7 +9,6 @@ from emmet.core.structure import StructureMetadata
 from phonopy.api_qha import PhonopyQHA
 from pydantic import Field
 from pymatgen.core import Structure
-from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

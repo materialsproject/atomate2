@@ -3,7 +3,7 @@
 import logging
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Self, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -13,7 +13,6 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.entries.computed_entries import ComputedEntry
 from pymatgen.io.cp2k.inputs import Cp2kInput
 from pymatgen.io.cp2k.utils import natural_keys
-from typing_extensions import Self
 
 from atomate2 import SETTINGS, __version__
 from atomate2.common.utils import (

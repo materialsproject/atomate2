@@ -3,7 +3,7 @@
 import logging
 from collections.abc import Callable, Sequence
 from itertools import starmap
-from typing import Any, Union
+from typing import Any, Self, Union
 
 import numpy as np
 from emmet.core.tasks import TaskDoc
@@ -12,7 +12,6 @@ from pymatgen.analysis.defects.core import Defect
 from pymatgen.analysis.defects.thermo import DefectEntry, FormationEnergyDiagram
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
-from typing_extensions import Self
 
 logger = logging.getLogger(__name__)
 

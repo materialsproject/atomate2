@@ -78,9 +78,9 @@ class PhononMaker(BasePhononMaker):
         for anharmonic phonon calculations. A non-zero value is used as given. The
         default value is 0, and then the number is set so that the fit has 100 force
         equations per free force constant, with at least 20 displaced supercells.
-        Above 600 the job stops. The free force constants are counted with ALM, which
-        uses its own symmetry search, for this supercell and fcs_cutoff_radius. The
-        second-order FCs are included when "one-shot" is requested.
+        Above 600 the job stops. The free force constants are counted with pheasy, for
+        this supercell and fcs_cutoff_radius. The second-order FCs are included when
+        "one-shot" is requested.
     anhar_max_order: int
         highest order of the anharmonic FCs, 3 or 4. The default of 3 fits the
         third-order FCs. 4 also fits fourth-order FCs.
@@ -105,9 +105,10 @@ class PhononMaker(BasePhononMaker):
         cutoff distance in Bohr for each FC order, starting at second order. The
         default value is [-1, 12, 10]. The first entry is not used, since pheasy
         fits the second-order FCs without a cutoff. The second and third entries
-        are the cutoffs for third- and fourth-order FCs. The cutoff of each fitted
-        order, up to anhar_max_order, must be positive. Longer cutoffs increase
-        the number of free FCs, and with it the number of displaced supercells.
+        are the cutoffs for third- and fourth-order FCs. The defaults of 12 and 10
+        Bohr are 6.35 and 5.29 Å. The cutoff of each fitted order, up to
+        anhar_max_order, must be positive. Longer cutoffs increase the number of
+        free FCs, and with it the number of displaced supercells.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 8.0 A. It can be increased for larger supercells.

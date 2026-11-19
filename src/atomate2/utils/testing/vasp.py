@@ -33,10 +33,10 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator, Sequence
+    from typing import Self
 
     from pymatgen.io.vasp.inputs import VaspInput
     from pytest import MonkeyPatch
-    from typing_extensions import Self
 
 
 logger = logging.getLogger("atomate2")

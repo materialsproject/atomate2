@@ -1,6 +1,6 @@
 """Tests for the force field pheasy workflow.
 
-pheasy and ALM are only installed in the numpy-limited forcefield CI job, so the
+pheasy is only installed in the numpy-limited forcefield CI job, so the
 tests are skipped in the other forcefield jobs.
 """
 
