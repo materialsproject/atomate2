@@ -217,7 +217,12 @@ class Calculation(BaseModel):
     aims_version: str
         FHI-aims version used to perform the calculation
     has_aims_completed: .TaskState
-        Whether FHI-aims completed the calculation successfully
+        Whether FHI-aims completed the calculation successfully and converged
+        (SCF, and geometry for relaxations)
+    completed: bool
+        Whether FHI-aims ran to completion and produced results
+    converged: bool
+        Whether the SCF cycle (and geometry, for relaxations) converged
     output: .CalculationOutput
         The FHI-aims calculation output
     input: .CalculationInput
@@ -236,10 +241,17 @@ class Calculation(BaseModel):
         None, description="FHI-aims version used to perform the calculation"
     )
     has_aims_completed: TaskState = Field(
-        None, description="Whether FHI-aims completed the calculation successfully"
+        None,
+        description="Whether FHI-aims completed the calculation successfully and "
+        "converged",
     )
     completed: bool = Field(
-        None, description="Whether FHI-aims completed the calculation successfully"
+        None, description="Whether FHI-aims ran to completion and produced results"
+    )
+    converged: bool | None = Field(
+        None,
+        description="Whether the SCF cycle (and geometry, for relaxations) converged. "
+        "None if unknown (e.g. outputs serialized by older versions)",
     )
     input: CalculationInput = Field(None, description="The FHI-aims calculation input")
     output: CalculationOutput = Field(
@@ -346,8 +358,18 @@ class Calculation(BaseModel):
 
         output_doc = CalculationOutput.from_aims_output(aims_output)
 
+        completed = aims_output.completed
+
+        # converged is None if unknown (e.g. outputs serialized by older versions)
+        converged = getattr(aims_output, "converged", None)
+
+        # As for VASP, the calculation is only successful if it converged. If the
+        # convergence is unknown (None), only the completion is considered. This avoid
+        # breaking existing workflows that rely on the completion status only.
         has_aims_completed = (
-            TaskState.SUCCESS if aims_output.completed else TaskState.FAILED
+            TaskState.SUCCESS
+            if completed and converged is not False
+            else TaskState.FAILED
         )
 
         if store_trajectory:
@@ -359,7 +381,8 @@ class Calculation(BaseModel):
             task_name=task_name,
             aims_version=aims_output.aims_version,
             has_aims_completed=has_aims_completed,
-            completed=has_aims_completed == TaskState.SUCCESS,
+            completed=completed,
+            converged=converged,
             completed_at=completed_at,
             output=output_doc,
             input=input_doc,
