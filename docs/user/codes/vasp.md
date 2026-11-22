@@ -363,7 +363,7 @@ See the [notes on MACE-Field](forcefields.md#mace-field-notes).
 #### Pheasy
 
 Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
-The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy and hiPhive.
+The `pheasy` extra, `pip install "atomate2[pheasy]"`, installs phonopy.
 The pheasy package is not in the extra, since PyPI does not accept git URLs in extras.
 Install it from git, at the commit atomate2 is tested with:
 ```
