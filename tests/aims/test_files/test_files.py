@@ -4,6 +4,8 @@ from pathlib import Path
 
 import pytest
 
+from atomate2.aims.files import copy_aims_outputs
+
 TEST_DIR = Path(__file__).parent
 
 
@@ -23,7 +25,6 @@ def tmp_dir():
 
 
 def test_copy_aims_outputs(tmp_dir):
-    from atomate2.aims.files import copy_aims_outputs
 
     files = ["aims.out"]
     restart_files = ["geometry.in.next_step", "D_spin_01_kpt_000001.csc"]
@@ -55,7 +56,6 @@ def test_copy_aims_outputs(tmp_dir):
 def test_copy_aims_outputs_patterns(
     tmp_path, monkeypatch, src_dir_name, src_files, kwargs, expected
 ):
-    from atomate2.aims.files import copy_aims_outputs
 
     src_dir = tmp_path / src_dir_name
     src_dir.mkdir()
@@ -71,7 +71,6 @@ def test_copy_aims_outputs_patterns(
 
 
 def test_copy_aims_outputs_keeps_plain_content(tmp_path, monkeypatch):
-    from atomate2.aims.files import copy_aims_outputs
 
     src_dir = tmp_path / "prev"
     src_dir.mkdir()

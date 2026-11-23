@@ -52,7 +52,7 @@ def copy_cp2k_outputs(
         will be inferred from the current user. If ``None``, the local filesystem will
         be used as the source.
     additional_cp2k_files : list of str
-        Additional files to copy. Glob patterns such are supported.
+        Additional files to copy. Glob patterns are supported.
     restart_to_input : bool
         Move the cp2k restart file to by the cp2k input in the new directory
     file_client : .FileClient
