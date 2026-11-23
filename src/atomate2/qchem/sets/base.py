@@ -5,15 +5,13 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Literal
 
 from monty.io import zopen
+from pymatgen.core.structure import Molecule
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.qchem.inputs import QCInput
 from pymatgen.io.qchem.utils import lower_and_check_unique
-
-if TYPE_CHECKING:
-    from pymatgen.core.structure import Molecule
 
 __author__ = "Alex Ganose, Ryan Kingsbury, Rishabh D Guha"
 __copyright__ = "Copyright 2018-2022, The Materials Project"
@@ -222,6 +220,25 @@ class QCInputGenerator(InputGenerator):
         In "sequential" mode, dict keys represent the sequential position
         of a single specific atom in the input structure.
 
+    cdft_constraints : list of list of dict or None
+        Constraints of a constrained DFT calculation, in the format of
+        pymatgen's ``QCInput.cdft``: one list of constraints per state, each a dict
+        with "value", "coefficients", "first_atoms", "last_atoms" and "types"
+        (None for a charge constraint, "s" for a spin constraint). Atoms are numbered
+        from 1, and a charge constraint value is the number of excess electrons on
+        the atoms (1.0 means a charge of -1). Setting constraints also sets
+        ``cdft = true`` and ``gen_scfman = false``: Q-Chem 6.2 silently ignores
+        $cdft with the default GEN_SCFMAN SCF code. Constrained DFT requires DIIS
+        (or RCA) SCF convergence.
+
+    fragments : list of dict or None
+        Split the molecule into fragments in the $molecule section (needed e.g. for
+        fragment-based Hirshfeld CDFT, ``cdft_pop = fbh``, which is the default
+        when fragments are given). Each dict has "first_atom" and "last_atom"
+        (numbered from 1, inclusive), "charge" and "spin_multiplicity". The
+        fragments must cover all atoms in order, and their charges must add up to
+        the charge of the molecule.
+
     """
 
     job_type: str = field(default=None)
@@ -240,6 +257,8 @@ class QCInputGenerator(InputGenerator):
     new_geom_opt: dict[str, Any] = field(default_factory=dict)
     overwrite_inputs: dict[str, str] = field(default_factory=dict)
     vdw_mode: Literal["atomic", "sequential"] = field(default="atomic")
+    cdft_constraints: list[list[dict[str, Any]]] | None = field(default=None)
+    fragments: list[dict[str, Any]] | None = field(default=None)
     rem_dict: dict[str, Any] = field(default_factory=dict)
     vdw_dict: dict[str, float] = field(default_factory=dict)
     pcm_dict: dict[str, Any] = field(default_factory=dict)
@@ -409,9 +428,20 @@ class QCInputGenerator(InputGenerator):
                     for k, v in temp_opts.items():
                         self.opt_dict[k] = v
 
+        if self.cdft_constraints:
+            self.rem_dict["cdft"] = "true"
+            # Q-Chem 6.2 ignores $cdft without warning under GEN_SCFMAN
+            self.rem_dict["gen_scfman"] = "false"
+            self.rem_dict.setdefault("cdft_pop", "fbh" if self.fragments else "becke")
+        qc_molecule: Molecule | list[Molecule] = (
+            split_into_fragments(molecule, self.fragments)
+            if self.fragments
+            else molecule
+        )
+
         return QCInputSet(
             qcinput=QCInput(
-                molecule,
+                qc_molecule,
                 rem=self.rem_dict,
                 opt=self.opt_dict,
                 pcm=self.pcm_dict,
@@ -423,5 +453,56 @@ class QCInputGenerator(InputGenerator):
                 plots=self.plots_dict,
                 nbo=self.nbo_params,
                 geom_opt=self.new_geom_opt,
+                cdft=self.cdft_constraints or None,
             )
         )
+
+
+def split_into_fragments(
+    molecule: Molecule, fragments: list[dict[str, Any]]
+) -> list[Molecule]:
+    """
+    Split a molecule into fragments for the $molecule section.
+
+    Parameters
+    ----------
+    molecule : .Molecule
+        The molecule.
+    fragments : list of dict
+        Fragments with "first_atom" and "last_atom" (numbered from 1, inclusive),
+        "charge" and "spin_multiplicity", covering all atoms in order.
+
+    Returns
+    -------
+    list of .Molecule
+        The fragments.
+    """
+    expected_first = 1
+    for fragment in fragments:
+        if fragment["first_atom"] != expected_first:
+            raise ValueError("The fragments must cover all atoms in order.")
+        expected_first = fragment["last_atom"] + 1
+    if expected_first != len(molecule) + 1:
+        raise ValueError("The fragments must cover all atoms in order.")
+    if sum(fragment["charge"] for fragment in fragments) != molecule.charge:
+        raise ValueError("The fragment charges must add up to the molecule charge.")
+    # pymatgen writes the overall multiplicity of fragments as high-spin
+    unpaired = sum(fragment["spin_multiplicity"] - 1 for fragment in fragments)
+    if unpaired + 1 != molecule.spin_multiplicity:
+        raise ValueError(
+            "The fragment spin multiplicities must combine (high-spin) to the spin "
+            "multiplicity of the molecule."
+        )
+    return [
+        Molecule(
+            species=molecule.species[
+                fragment["first_atom"] - 1 : fragment["last_atom"]
+            ],
+            coords=molecule.cart_coords[
+                fragment["first_atom"] - 1 : fragment["last_atom"]
+            ],
+            charge=fragment["charge"],
+            spin_multiplicity=fragment["spin_multiplicity"],
+        )
+        for fragment in fragments
+    ]

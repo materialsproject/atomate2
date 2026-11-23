@@ -60,6 +60,7 @@ class SinglePointMaker(BaseQCMaker):
     input_set_generator: QCInputGenerator = field(
         default_factory=SinglePointSetGenerator
     )
+    task_type: str = "Single Point"
 
 
 @dataclass
@@ -130,6 +131,7 @@ class ForceMaker(BaseQCMaker):
 
     name: str = "force"
     input_set_generator: QCInputGenerator = field(default_factory=ForceSetGenerator)
+    task_type: str = "Force"
 
 
 @dataclass
@@ -165,6 +167,7 @@ class TransitionStateMaker(BaseQCMaker):
     input_set_generator: QCInputGenerator = field(
         default_factory=TransitionStateSetGenerator
     )
+    task_type: str = "Transition State Geometry Optimization"
 
 
 @dataclass
