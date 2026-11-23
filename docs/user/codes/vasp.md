@@ -405,7 +405,7 @@ If the cross-validated LASSO penalty lands on either end of the search, `10**anh
 The harmonic and anharmonic LASSO fits are seeded, so that repeated runs give the same force constants.
 Both LASSO fits run with `--tol 1e-8`, since pheasy's default of `1e-4` leaves the fit unconverged, and refits on different machines then differ.
 Harmonic force constants from earlier atomate2 versions can therefore differ, mostly in soft low-frequency modes.
-The harmonic fit enforces Born-Huang and Huang conditions (`--rasr BHH`) in both the null-space (`-c`) and fit (`-f`) steps, falling back to Born-Huang (`BH`) and then translational invariance only (`ASR`) if the relative force error exceeds `1.5` times the ASR baseline (`max_relative_error_ratio`) or the force RMSE reaches `0.01` eV/Å (`max_force_rmse`).
+The harmonic fit enforces Born-Huang and Huang conditions (`--rasr BHH`) in both the null-space (`-c`) and fit (`-f`) steps, falling back to Born-Huang (`BH`) and then translational invariance only (`ASR`) if the relative force error exceeds `max(1.5 * sigma_asr, 1e-4)` (`max_relative_error_ratio`) or, when the ASR baseline is below `0.01` eV/Å (`max_force_rmse`), if the force RMSE reaches `0.01` eV/Å.
 The anharmonic force constants are written to files in the job folder and are not stored in the output document.
 
 #### hiPhive

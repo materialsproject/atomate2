@@ -332,6 +332,16 @@ def test_run_harmonic_fit(monkeypatch):
             None,
             [None, "BHH", "BH"],
         ),
+        (
+            {None: (0.0, 0.0), "BHH": (1e-6, 1e-7), "BH": (1e-6, 1e-7)},
+            "BHH",
+            [None, "BHH"],
+        ),
+        (
+            {None: (0.05, 0.02), "BHH": (0.05, 0.02), "BH": (0.05, 0.02)},
+            "BHH",
+            [None, "BHH"],
+        ),
     ],
 )
 def test_fit_harmonic_force_constants_fallback(

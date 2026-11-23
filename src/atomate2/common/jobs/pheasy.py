@@ -465,10 +465,11 @@ def _fit_harmonic_force_constants(
 
     Fits an ASR baseline (translational invariance only), then tries BHH
     (Born-Huang and Huang) and BH (Born-Huang) in isolated temporary folders.
-    The first rotational-sum-rule fit whose relative force error is at most
-    max_relative_error_ratio times the ASR error and whose force RMSE is below
-    max_force_rmse is copied to FORCE_CONSTANTS in the current directory.
-    Otherwise, the ASR baseline is kept.
+    The first rotational-sum-rule fit whose relative force error is within
+    max(max_relative_error_ratio * sigma_asr, 1e-4) and (when the ASR baseline
+    itself is below max_force_rmse) whose force RMSE is below max_force_rmse
+    is copied to FORCE_CONSTANTS in the current directory. Otherwise, the ASR
+    baseline is kept.
 
     Parameters
     ----------
@@ -530,6 +531,7 @@ def _fit_harmonic_force_constants(
         kept_label, kept_dir = "ASR", asr_dir
         kept_rasr: str | None = None
         kept_sigma, kept_rmse = sigma_asr, rmse_asr
+        sigma_limit = max(max_relative_error_ratio * sigma_asr, 1e-4)
         for rasr in ("BHH", "BH"):
             cand_dir = tmp_path / rasr.lower()
             cand_dir.mkdir()
@@ -540,16 +542,18 @@ def _fit_harmonic_force_constants(
                     "Harmonic pheasy fit with --rasr %s failed: %s", rasr, exc
                 )
                 continue
-            if sigma <= max_relative_error_ratio * sigma_asr and rmse < max_force_rmse:
+            rmse_ok = rmse < max_force_rmse if rmse_asr < max_force_rmse else True
+            if sigma <= sigma_limit and rmse_ok:
                 kept_label, kept_rasr, kept_dir = rasr, rasr, cand_dir
                 kept_sigma, kept_rmse = sigma, rmse
                 break
 
-        if kept_rasr is None and rmse_asr >= max_force_rmse:
+        if kept_rmse >= max_force_rmse:
             logger.warning(
-                "Harmonic ASR baseline force RMSE (%.5f eV/Å) is at or above "
-                "max_force_rmse (%.5f eV/Å). Keeping ASR fit.",
-                rmse_asr,
+                "Kept harmonic %s fit has force RMSE (%.5f eV/Å) at or above "
+                "max_force_rmse (%.5f eV/Å).",
+                kept_label,
+                kept_rmse,
                 max_force_rmse,
             )
 
@@ -1109,9 +1113,6 @@ def generate_frequencies_eigenvectors(
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
         phonon.force_constants = force_constants
-        # symmetrize the force constants to make them physically correct based on
-        # the space group symmetry of the crystal structure.
-        phonon.symmetrize_force_constants()
 
     # with phonopy.load("phonopy.yaml") the phonopy API can be used
     phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
@@ -1174,7 +1175,6 @@ def generate_frequencies_eigenvectors(
 
         force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
         phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
 
         bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
             phonon,
@@ -1220,7 +1220,6 @@ def generate_frequencies_eigenvectors(
             filename=refit_dir / _DEFAULT_FILE_PATHS["force_constants"]
         )
         phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
 
         phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
 
