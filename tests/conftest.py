@@ -180,3 +180,10 @@ def pytest_addoption(parser):
         help="Run abinit integration tests. "
         "This basically runs the same tests but without the mocking.",
     )
+    parser.addoption(
+        "--abinit-record-abiget",
+        action="store_true",
+        default=False,
+        help="Record abipy abiget results to the abiget.json.gz reference files "
+        "(mock mode only; requires a working abinit binary on PATH).",
+    )

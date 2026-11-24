@@ -1,16 +1,10 @@
 import logging
 from collections.abc import Callable
 from pathlib import Path
-from shutil import which
-
-import pytest
 
 logger = logging.getLogger("atomate2")
 
 
-@pytest.mark.skipif(
-    which("abinit") is None, reason="abinit must be installed to run this test."
-)
 def test_run_silicon_carbide_shg(
     mock_abinit: Callable,
     mock_mrgddb: Callable,

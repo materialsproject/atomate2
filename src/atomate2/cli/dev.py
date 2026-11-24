@@ -10,8 +10,10 @@ import click
 from monty.json import jsanitize
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
 
+    from abipy.abio.inputs import AbinitInput
     from jobflow import Maker
 
 
@@ -242,11 +244,30 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
 
     NB: note that all the files in the folder will be compressed, in light of a copy to
     the test folder, unless the --no-compress is selected.
+
+    NB: the run directory of any job calling the abiget_* helpers now contains an
+    abiget.json.gz file with the recorded abipy abiget_* results (see
+    atomate2.utils.testing.abinit). It is consumed by abinit-test-data, which
+    copies it into the job's reference directory of the test data.
+
+    NB: such jobs run abinit through the abipy abiget_* helpers (each building
+    and running its own run.abi/run.abo in a scratch subdir, e.g. cwd/dte), but
+    have no atomate2 task of their own — no run.abi/abo at the job-dir root.
     """
+    from pathlib import Path
+
     from jobflow import JobStore, run_locally
     from maggma.stores.mongolike import MemoryStore
     from monty.serialization import dumpfn, loadfn
     from pymatgen.core.structure import Structure
+
+    from atomate2.utils.testing.abinit import (
+        ABIGET_METHOD_NAMES,
+        AbigetRecorder,
+        abiget_call_key,
+        dump_abiget_result,
+        patch_abiget_methods,
+    )
 
     # get the structure
     if structure_file:
@@ -266,9 +287,56 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     if make_kwargs:
         dumpfn({"make_kwargs": make_kwargs}, "make_info.json")
 
+    # Capture the abipy abiget results of any job calling the abiget_* helpers
+    # during the run: the real abipy methods are called as usual (running real
+    # abinit), and their results are recorded to an abiget.json.gz file in the
+    # run directory of the job (jobflow cds into each job dir, so Path.cwd() is
+    # the job's run dir when the methods are called). If the flow contains no
+    # such job, the patched methods are never called and no file is written.
+    from abipy.abio.inputs import AbinitInput
+
+    abiget_recorder = AbigetRecorder()
+
+    def _make_abiget_capture(
+        method_name: str, orig_method: Callable[..., Any]
+    ) -> Callable[..., Any]:
+        def _capture(
+            self: AbinitInput,
+            *args: Any,
+            workdir: str | Path | None = None,
+            **kwargs: Any,
+        ) -> Any:
+            result = orig_method(self, *args, workdir=workdir, **kwargs)
+            abiget_recorder.record(
+                Path.cwd() / "abiget.json.gz",
+                method_name,
+                abiget_call_key(method_name, args, kwargs),
+                dump_abiget_result(method_name, result),
+            )
+            return result
+
+        return _capture
+
+    # Any abiget_* call outside the registry aborts the reference run before it
+    # can produce incomplete reference data: patch_abiget_methods installs the
+    # capture wrapper for the registered methods and a raising stub for the rest.
+    unregistered_abiget_hint = (
+        "The abinit-generate-reference run is aborted so that no incomplete "
+        "reference data is produced. Add the method to ABIGET_METHOD_NAMES, "
+        "add a serialization case to dump_abiget_result and load_abiget_result, "
+        "and re-record the reference data."
+    )
+    wrappers = {
+        method_name: _make_abiget_capture(
+            method_name, getattr(AbinitInput, method_name)
+        )
+        for method_name in ABIGET_METHOD_NAMES
+    }
+
     # run the workflow using a custom store so that we can easily compile test data
     store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
-    run_locally(flow_or_job, store=store, create_folders=True)
+    with patch_abiget_methods(wrappers, unregistered_abiget_hint):
+        run_locally(flow_or_job, store=store, create_folders=True)
 
     # dump all of the job outputs to the outputs.json file in the current directory
     outputs = list(store.query(load=True))
@@ -282,7 +350,9 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     "--force",
     is_flag=True,
     default=False,
-    help="Whether to force overwrite of existing folders/files.",
+    help="Remove the existing reference directory for this test (e.g. "
+    ".../flows/dfpt_core/ShgFlowMaker/silicon_carbide_shg) before regenerating "
+    "it. Other tests' reference data is untouched.",
 )
 def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> None:
     """Copy test data for ABINIT unit tests.
@@ -291,6 +361,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     an outputs.json file and job folders in the current directory. Please refer to
     the atomate2 documentation on writing unit tests for more information.
     """
+    import shutil
     import sys
     import warnings
     from pathlib import Path
@@ -335,18 +406,18 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     # (i.e. "atomate2" and "abinit")
     module_path = maker.__module__.split(".")[2:]
     maker_dir = abinit_test_data_dir / Path(*module_path) / maker_name
-    if not maker_dir.exists():
-        maker_dir.mkdir(parents=True)
     test_dir = maker_dir / test_name
 
-    def _makedir(directory: Path, force_overwrite: bool) -> None:
-        if not directory.exists():
-            directory.mkdir()
-        elif not force_overwrite:
-            click.echo(f"folder ({directory}) already exists, refusing to overwrite it")
-            sys.exit()
-
-    _makedir(test_dir, force_overwrite=force)
+    # --force: remove the existing reference directory for this test
+    # (e.g. .../flows/dfpt_core/ShgFlowMaker/silicon_carbide_shg) before
+    # regenerating it. Other tests' reference data is untouched.
+    if test_dir.exists():
+        if not force:
+            click.echo(f"path ({test_dir}) already exists, refusing to overwrite it")
+            sys.exit(1)
+        click.echo(f"--force: removing existing test data directory {test_dir}")
+        shutil.rmtree(test_dir)
+    test_dir.mkdir(parents=True, exist_ok=True)
 
     outputs = loadfn("outputs.json")
 
@@ -359,120 +430,13 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
 
     original_mapping = {}
     mapping: dict[Any, Any] = {}
+    has_abiget_mock = False
+    abiget_job_names: list[str] = []
 
-    def _fake_dirdata(
-        src_dir: Path,
-        dest_dir: Path,
-        dirdata_name: str,
-        include_files: list | None = None,
-        include_fake_files: list | None = None,
-        force_overwrite: bool = False,
-        allow_missing: bool = True,
-    ) -> None:
-        src_dirdata = src_dir / dirdata_name
-        if not src_dirdata.exists():
-            raise RuntimeError(f"Source directory {src_dirdata} does not exist")
-        dest_dirdata = dest_dir / dirdata_name
-        _makedir(dest_dirdata, force_overwrite=force_overwrite)
-        if include_files:
-            copy_files(
-                src_dirdata,
-                dest_dirdata,
-                include_files=include_files,
-                allow_missing=allow_missing,
-            )
-        if include_fake_files:
-            for fn in include_fake_files:
-                # let's be sure to catch outputs of perturbation tasks
-                fname = check_file_ext_pert(filename=fn, dirname=src_dirdata)
-                src_fpath = src_dirdata / fname
-                dest_fpath = dest_dirdata / fname
-                # let's remove out_DDB that were copied but could be a fake file
-                remove_copied_out_ddb(
-                    filename=fn, dirname=dest_dirdata, src_dirname=src_dirdata
-                )
-                if dest_fpath.exists():
-                    return
-                if not src_fpath.exists():
-                    if allow_missing:
-                        continue
-                    raise RuntimeError(f"File {src_fpath} does not exist")
-                if src_fpath.is_symlink():
-                    dest_fpath.write_text(f"SYMBOLIC_LINK TO {src_fpath.resolve()}")
-                elif src_fpath.is_file():
-                    dest_fpath.write_text("REGULAR_FILE")
-                else:
-                    raise RuntimeError(
-                        "File is not a symbolic link nor a regular file."
-                    )
-
-    # can return out_DENxxx from the filename out_DEN and idem for out_1WFxxx
-    def check_file_ext_pert(filename: str | Path, dirname: str | Path) -> str | Path:
-        for file in os.listdir(dirname):
-            if str(filename) in file:
-                return file
-        return filename
-
-    # remove out_DDB from a given directory if the src out_DDB
-    # was not the output of a mrgddb task
-    def remove_copied_out_ddb(
-        filename: str | Path, dirname: Path, src_dirname: Path
-    ) -> None:
-        if str(filename) != "out_DDB":
-            return
-        path_mrgddb_in = src_dirname.parents[0] / "mrgddb.in"
-        path_out_ddb = dirname / filename
-        if not path_mrgddb_in.exists() and path_out_ddb.exists():
-            os.remove(path_out_ddb)
-
-    def _fake_dirs(
-        src_dir: Path,
-        dest_dir: Path,
-        indata_files: list | None = None,
-        outdata_files: list | None = None,
-        tmpdata_files: list | None = None,
-        indata_fake_files: list | None = None,
-        outdata_fake_files: list | None = None,
-        tmpdata_fake_files: list | None = None,
-        force_overwrite: bool = False,
-        allow_missing: bool = True,
-    ) -> None:
-        for dirdata_name, data_files, data_fake_files in zip(
-            ("indata", "outdata", "tmpdata"),
-            (indata_files, outdata_files, tmpdata_files),
-            (indata_fake_files, outdata_fake_files, tmpdata_fake_files),
-            strict=True,
-        ):
-            _fake_dirdata(
-                src_dir=src_dir,
-                dest_dir=dest_dir,
-                dirdata_name=dirdata_name,
-                include_files=data_files,
-                include_fake_files=data_fake_files,
-                force_overwrite=force_overwrite,
-                allow_missing=allow_missing,
-            )
-
-    for output in outputs:
-        if (
-            not isinstance(output.output, AbinitTaskDoc)
-            and not isinstance(output.output, MrgddbTaskDoc)
-            and not isinstance(output.output, MrgdvdbTaskDoc)
-            and not isinstance(output.output, AnaddbTaskDoc)
-        ):
-            # this is not an Abinit job
-            continue
-
-        job_name = output.output.task_label
-        orig_job_dir = Path(strip_hostname(output.output.dir_name))
-        folder_name = output.output.task_label.replace("/", "_").replace(" ", "_")
-        index_job = str(output.index)
-
-        job_dir = test_dir / folder_name
-        _makedir(job_dir, force_overwrite=force)
-        job_index_dir = job_dir / index_job
-        _makedir(job_index_dir, force_overwrite=force)
-
+    def _add_to_mapping(
+        job_name: str, index_job: str, job_index_dir: Path, orig_job_dir: Path | None
+    ) -> Path:
+        """Register a job reference directory in the ref_paths mapping."""
         job_index_dir = job_index_dir.resolve()
 
         job_index_dir_parts = job_index_dir.parts
@@ -499,11 +463,151 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                 f"{job_name} Job is already present in the mapping"
             )
         mapping[job_name][index_job] = str(job_index_dir_for_mapping)
-        original_mapping[str(job_index_dir)] = orig_job_dir
+        if orig_job_dir is not None:
+            original_mapping[str(job_index_dir)] = orig_job_dir
+        return job_index_dir
+
+    def _fake_dirdata(
+        src_dir: Path,
+        dest_dir: Path,
+        dirdata_name: str,
+        include_files: list | None = None,
+        include_fake_files: list | None = None,
+        allow_missing: bool = True,
+    ) -> None:
+        src_dirdata = src_dir / dirdata_name
+        if not src_dirdata.exists():
+            raise RuntimeError(f"Source directory {src_dirdata} does not exist")
+        dest_dirdata = dest_dir / dirdata_name
+        dest_dirdata.mkdir(parents=True, exist_ok=True)
+        if include_files:
+            copy_files(
+                src_dirdata,
+                dest_dirdata,
+                include_files=include_files,
+                allow_missing=allow_missing,
+            )
+        if include_fake_files:
+            for fn in include_fake_files:
+                # let's be sure to catch outputs of perturbation tasks:
+                # several files may match a single generic name (e.g. in_1WF
+                # for all the in_1WFx linked wavefunctions), so stub them all.
+                filenames = check_file_ext_pert(filename=fn, dirname=src_dirdata)
+                # let's remove out_DDB that were copied but could be a fake file
+                remove_copied_out_ddb(
+                    filename=fn, dirname=dest_dirdata, src_dirname=src_dirdata
+                )
+                for fname in filenames:
+                    src_fpath = src_dirdata / fname
+                    dest_fpath = dest_dirdata / fname
+                    if dest_fpath.exists():
+                        continue
+                    if not src_fpath.exists():
+                        if allow_missing:
+                            continue
+                        raise RuntimeError(f"File {src_fpath} does not exist")
+                    if src_fpath.is_symlink():
+                        dest_fpath.write_text(f"SYMBOLIC_LINK TO {src_fpath.resolve()}")
+                    elif src_fpath.is_file():
+                        dest_fpath.write_text("REGULAR_FILE")
+                    else:
+                        raise RuntimeError(
+                            "File is not a symbolic link nor a regular file."
+                        )
+
+    # can return out_DENxxx from the filename out_DEN and idem for out_1WFxxx
+    def check_file_ext_pert(filename: str | Path, dirname: str | Path) -> list[str]:
+        matches = [f for f in os.listdir(dirname) if str(filename) in f]
+        return matches or [str(filename)]
+
+    # remove out_DDB from a given directory if the src out_DDB
+    # was not the output of a mrgddb task
+    def remove_copied_out_ddb(
+        filename: str | Path, dirname: Path, src_dirname: Path
+    ) -> None:
+        if str(filename) != "out_DDB":
+            return
+        path_mrgddb_in = src_dirname.parents[0] / "mrgddb.in"
+        path_out_ddb = dirname / filename
+        if not path_mrgddb_in.exists() and path_out_ddb.exists():
+            os.remove(path_out_ddb)
+
+    def _fake_dirs(
+        src_dir: Path,
+        dest_dir: Path,
+        indata_files: list | None = None,
+        outdata_files: list | None = None,
+        tmpdata_files: list | None = None,
+        indata_fake_files: list | None = None,
+        outdata_fake_files: list | None = None,
+        tmpdata_fake_files: list | None = None,
+        allow_missing: bool = True,
+    ) -> None:
+        for dirdata_name, data_files, data_fake_files in zip(
+            ("indata", "outdata", "tmpdata"),
+            (indata_files, outdata_files, tmpdata_files),
+            (indata_fake_files, outdata_fake_files, tmpdata_fake_files),
+            strict=True,
+        ):
+            _fake_dirdata(
+                src_dir=src_dir,
+                dest_dir=dest_dir,
+                dirdata_name=dirdata_name,
+                include_files=data_files,
+                include_fake_files=data_fake_files,
+                allow_missing=allow_missing,
+            )
+
+    for output in outputs:
+        if isinstance(output.output, dict) and "dir_name" in output.output:
+            # a dynamic job whose output records its run dir (e.g. generate_perts):
+            # such jobs run abinit through the abipy abiget_* helpers (each building
+            # and running its own run.abi/run.abo in a scratch subdir, e.g. cwd/dte)
+            # but have no atomate2 task of their own — no run.abi/abo at the job-dir
+            # root, no task outputs. Their reference is the recorded abiget results,
+            # captured into the job's run dir by abinit-generate-reference.
+            orig_job_dir = Path(strip_hostname(output.output["dir_name"]))
+            run_abiget_file = orig_job_dir / "abiget.json.gz"
+            if run_abiget_file.exists():
+                index_job = str(
+                    output.index
+                )  # execution index — matches CURRENT_JOB at mock time
+                job_name = output.name
+                job_dir = test_dir / job_name
+                job_index_dir = job_dir / index_job
+                job_index_dir.mkdir(parents=True, exist_ok=True)
+                _add_to_mapping(job_name, index_job, job_index_dir, orig_job_dir)
+                # copy verbatim: the file is already deterministic gzip JSON
+                shutil.copyfile(run_abiget_file, job_index_dir / "abiget.json.gz")
+                has_abiget_mock = True
+                abiget_job_names.append(job_name)
+            continue
+
+        if (
+            not isinstance(output.output, AbinitTaskDoc)
+            and not isinstance(output.output, MrgddbTaskDoc)
+            and not isinstance(output.output, MrgdvdbTaskDoc)
+            and not isinstance(output.output, AnaddbTaskDoc)
+        ):
+            # this is not an Abinit job
+            continue
+
+        job_name = output.output.task_label
+        orig_job_dir = Path(strip_hostname(output.output.dir_name))
+        folder_name = output.output.task_label.replace("/", "_").replace(" ", "_")
+        index_job = str(output.index)
+
+        job_dir = test_dir / folder_name
+        job_index_dir = job_dir / index_job
+        job_index_dir.mkdir(parents=True, exist_ok=True)
+
+        job_index_dir = _add_to_mapping(
+            job_name, index_job, job_index_dir, orig_job_dir
+        )
 
         # create input folder and copy across files
         input_dir = job_index_dir / "inputs"
-        _makedir(input_dir, force_overwrite=force)
+        input_dir.mkdir(parents=True, exist_ok=True)
 
         copy_files(
             orig_job_dir,
@@ -534,12 +638,11 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             ],
             outdata_fake_files=None,
             tmpdata_fake_files=None,
-            force_overwrite=force,
             allow_missing=True,
         )
         # create output folder and copy across files
         output_dir = job_index_dir / "outputs"
-        _makedir(output_dir, force_overwrite=force)
+        output_dir.mkdir(parents=True, exist_ok=True)
         copy_files(
             orig_job_dir,
             output_dir,
@@ -566,7 +669,6 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                 "out_dvdb",
             ],
             tmpdata_fake_files=None,
-            force_overwrite=force,
             allow_missing=True,
         )
 
@@ -632,6 +734,19 @@ class Test{maker_name}:
         assert output1.structure == structure
         assert output1.run_number == 1
     """
+
+    if has_abiget_mock:
+        names = ", ".join(abiget_job_names)
+        test_function_str += f"""
+This flow includes job(s) calling the abipy abiget_* helpers ({names}).
+Their abiget reference data (<job>/<index>/abiget.json.gz) is copied
+automatically from the reference run's job dir by abinit-test-data when
+present. If the file is missing, run the new test once with
+--abinit-record-abiget (requires real abinit on PATH) to create it. The flag
+is also the fast way to refresh the abiget reference alone, without
+re-running the whole reference flow, when only abipy or the atomate2 input
+generation changed.
+"""
 
     print(test_function_str)  # noqa: T201
 

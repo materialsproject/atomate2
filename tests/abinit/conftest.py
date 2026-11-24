@@ -11,6 +11,15 @@ import pytest
 from abipy.abio.abivars import is_anaddb_var
 from pymatgen.util.coord import find_in_coord_list_pbc
 
+from atomate2.utils.testing.abinit import (
+    ABIGET_METHOD_NAMES,
+    AbigetRecorder,
+    abiget_call_key,
+    dump_abiget_result,
+    load_abiget_result,
+    patch_abiget_methods,
+)
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
@@ -23,6 +32,15 @@ logger = logging.getLogger("atomate2")
 _REF_PATHS = {}
 _ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
+# Reference paths for the abipy abiget helpers mocked by mock_abinit,
+# resolved through the standard _REF_PATHS registry: the reference of the
+# generate_perts job is the abiget.json.gz file inside its reference directory.
+# Results are stored under a canonical string of the distinguishing call
+# arguments (see abiget_call_key in atomate2.utils.testing.abinit, which also
+# defines the reference file format shared with the abinit CLI commands).
+# The recorder resets each abiget.json.gz file on its first record-mode call
+# per fixture, so re-recording a test replaces rather than appends.
+_ABIGET_RECORDER = AbigetRecorder()
 _MRGDDB_FILES = "mrgddb.in"
 _FAKE_RUN_MRGDDB_KWARGS = {}
 _MRGDV_FILES = "mrgdv.in"
@@ -125,8 +143,29 @@ def abinit_integration_tests(pytestconfig: pytest.Config) -> bool:
     return pytestconfig.getoption("abinit_integration")
 
 
+@pytest.fixture(scope="session")
+def abinit_record_abiget(pytestconfig: pytest.Config) -> bool:
+    """
+    Get the record abiget flag from pytest configuration.
+
+    Parameters
+    ----------
+    pytestconfig
+        The pytest configuration object.
+
+    Returns
+    -------
+    bool
+        True if abipy abiget results should be recorded to the
+        abiget.json.gz reference files, False otherwise.
+    """
+    return pytestconfig.getoption("abinit_record_abiget")
+
+
 @pytest.fixture
-def mock_abinit(monkeypatch, abinit_test_dir, abinit_integration_tests):
+def mock_abinit(
+    monkeypatch, abinit_test_dir, abinit_integration_tests, abinit_record_abiget
+):
     """
     This fixture allows one to mock running ABINIT.
 
@@ -135,6 +174,8 @@ def mock_abinit(monkeypatch, abinit_test_dir, abinit_integration_tests):
     The primary idea is that instead of running ABINIT to generate the output files,
     reference files will be copied into the directory instead.
     """
+    from contextlib import ExitStack
+
     import atomate2.abinit.files
     import atomate2.abinit.jobs.base
     import atomate2.abinit.run
@@ -156,33 +197,155 @@ def mock_abinit(monkeypatch, abinit_test_dir, abinit_integration_tests):
         wrapped_write_abinit_input_set,
     )
 
-    if not abinit_integration_tests:
-        # Mock ABINIT run by copying reference output files
-        def mock_run_abinit(
-            wall_time: float | None = None, start_time: float | None = None
-        ) -> None:
-            from jobflow import CURRENT_JOB
+    def _run(ref_paths: dict, fake_run_abinit_kwargs: dict | None = None) -> None:
+        if fake_run_abinit_kwargs is None:
+            fake_run_abinit_kwargs = {}
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_ABINIT_KWARGS.update(fake_run_abinit_kwargs)
 
-            name = CURRENT_JOB.job.name
-            index = CURRENT_JOB.job.index
-            ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
-            check_abinit_inputs(ref_path)
-            fake_run_abinit(ref_path)
+    with ExitStack() as stack:
+        if not abinit_integration_tests:
+            # Mock ABINIT run by copying reference output files
+            def mock_run_abinit(
+                wall_time: float | None = None, start_time: float | None = None
+            ) -> None:
+                from jobflow import CURRENT_JOB
 
-        monkeypatch.setattr(atomate2.abinit.run, "run_abinit", mock_run_abinit)
-        monkeypatch.setattr(atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit)
+                name = CURRENT_JOB.job.name
+                index = CURRENT_JOB.job.index
+                ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
+                check_abinit_inputs(ref_path)
+                fake_run_abinit(ref_path)
 
-        def _run(ref_paths: dict, fake_run_abinit_kwargs: dict | None = None) -> None:
-            if fake_run_abinit_kwargs is None:
-                fake_run_abinit_kwargs = {}
-            _REF_PATHS.update(ref_paths)
-            _FAKE_RUN_ABINIT_KWARGS.update(fake_run_abinit_kwargs)
+            monkeypatch.setattr(atomate2.abinit.run, "run_abinit", mock_run_abinit)
+            monkeypatch.setattr(
+                atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit
+            )
+
+            # Mock the abipy abiget helpers used by jobs like generate_perts in
+            # order to prevent them from running the real abinit binary: their
+            # results are replayed from the abiget.json.gz reference file,
+            # resolved through _REF_PATHS. Passing --abinit-record-abiget
+            # activates record mode: the real abipy methods are then called
+            # (this requires a working `abinit` binary on PATH) and their
+            # results are recorded to the abiget.json.gz reference file.
+            # Any other abiget_* method of AbinitInput gets a raising stub from
+            # patch_abiget_methods: an unregistered call would otherwise run
+            # real abinit inside mock mode.
+            from abipy.abio.inputs import AbinitInput
+            from monty.serialization import loadfn
+
+            record_abiget = abinit_record_abiget
+            if record_abiget:
+                _ABIGET_RECORDER.reset()
+
+            def _make_fake_abiget_method(method_name, orig_method, record=False):
+                def _fake(self, *args, workdir=None, **kwargs):
+                    from jobflow import CURRENT_JOB
+
+                    name = CURRENT_JOB.job.name  # expected: "generate_perts"
+                    index = CURRENT_JOB.job.index
+                    if name not in _REF_PATHS or str(index) not in _REF_PATHS[name]:
+                        raise ValueError(
+                            f"No reference path registered for job {name} - {index}."
+                        )
+                    ref_dir = abinit_test_dir / _REF_PATHS[name][str(index)]
+                    ref_file = ref_dir / "abiget.json.gz"
+                    # Canonical key of the call arguments that distinguish the
+                    # call. workdir and manager never take part in the key as
+                    # they only define where the real abinit task runs.
+                    key = abiget_call_key(method_name, args, kwargs)
+                    if record:
+                        result = orig_method(self, *args, workdir=workdir, **kwargs)
+                        _ABIGET_RECORDER.record(
+                            ref_file,
+                            method_name,
+                            key,
+                            dump_abiget_result(method_name, result),
+                        )
+                        return result
+                    data = loadfn(ref_file)
+                    if key not in data.get(method_name, {}):
+                        raise ValueError(
+                            f"No recorded result for {method_name} with key "
+                            f"{key!r}; recorded keys: "
+                            f"{sorted(data.get(method_name, {}))}. "
+                            "Re-record with --abinit-record-abiget."
+                        )
+                    return load_abiget_result(method_name, data[method_name][key])
+
+                return _fake
+
+            unregistered_abiget_hint = (
+                "The test data does not cover this call: re-record the "
+                "reference data with --abinit-record-abiget."
+            )
+            stack.enter_context(
+                patch_abiget_methods(
+                    {
+                        method_name: _make_fake_abiget_method(
+                            method_name,
+                            getattr(AbinitInput, method_name),
+                            record=record_abiget,
+                        )
+                        for method_name in ABIGET_METHOD_NAMES
+                    },
+                    unregistered_abiget_hint,
+                )
+            )
 
         yield _run
 
     monkeypatch.undo()
     _REF_PATHS.clear()
     _FAKE_RUN_ABINIT_KWARGS.clear()
+    _ABIGET_RECORDER.reset()
+
+
+def check_abinit_indata(ref_path: str | Path) -> None:
+    """Verify that the indata files linked by the input set writer match the
+    reference recording: same file names, same count.
+    """
+    from jobflow import CURRENT_JOB
+
+    def _indata_names(directory: Path) -> set[str]:
+        # A missing directory counts as the empty set: jobs with no inputs
+        # linked by the input set writer have no indata directory at all.
+        if not directory.is_dir():
+            return set()
+        return {
+            entry.name.removesuffix(".gz")
+            for entry in directory.iterdir()
+            if entry.is_file() or entry.is_symlink()
+        }
+
+    ref_path = Path(ref_path)
+    # Only names are compared: symlink targets are temp-dir specific.
+    ref_names = _indata_names(ref_path / "inputs" / "indata")
+    live_names = _indata_names(Path("indata"))
+
+    if live_names != ref_names:
+        in_ref_not_linked = sorted(ref_names - live_names)
+        linked_not_in_ref = sorted(live_names - ref_names)
+        msg = (
+            f"Job {CURRENT_JOB.job.name}: the indata files linked by the input "
+            f"set writer do not match the reference recording."
+        )
+        if in_ref_not_linked:
+            msg += (
+                f" Present in reference but not linked (wiring lost an input, "
+                f"or the reference is stale): {in_ref_not_linked}."
+            )
+        if linked_not_in_ref:
+            msg += (
+                f" Linked but absent from reference (new wiring, or an "
+                f"incomplete reference): {linked_not_in_ref}."
+            )
+        msg += (
+            " Regenerate the test data with `abinit-generate-reference` + "
+            "`abinit-test-data`."
+        )
+        raise AssertionError(msg)
 
 
 def fake_run_abinit(ref_path: str | Path) -> None:
@@ -199,6 +362,7 @@ def fake_run_abinit(ref_path: str | Path) -> None:
 
     ref_path = Path(ref_path)
 
+    check_abinit_indata(ref_path)
     copy_abinit_outputs(ref_path)
 
     # Pretend to run ABINIT by copying pre-generated outputs from reference directory
@@ -423,13 +587,13 @@ def mock_mrgddb(mocker, abinit_test_dir, abinit_integration_tests):
         mocker.patch.object(atomate2.abinit.run, "run_mrgddb", mock_run_mrgddb)
         mocker.patch.object(atomate2.abinit.jobs.mrgddb, "run_mrgddb", mock_run_mrgddb)
 
-        def _run(ref_paths: dict, fake_run_mrgddb_kwargs: dict | None = None) -> None:
-            if fake_run_mrgddb_kwargs is None:
-                fake_run_mrgddb_kwargs = {}
-            _REF_PATHS.update(ref_paths)
-            _FAKE_RUN_MRGDDB_KWARGS.update(fake_run_mrgddb_kwargs)
+    def _run(ref_paths: dict, fake_run_mrgddb_kwargs: dict | None = None) -> None:
+        if fake_run_mrgddb_kwargs is None:
+            fake_run_mrgddb_kwargs = {}
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_MRGDDB_KWARGS.update(fake_run_mrgddb_kwargs)
 
-        yield _run
+    yield _run
 
     mocker.stopall()
     _REF_PATHS.clear()
@@ -527,13 +691,13 @@ def mock_mrgdvdb(mocker, abinit_test_dir, abinit_integration_tests):
         mocker.patch.object(atomate2.abinit.run, "run_mrgdv", mock_run_mrgdv)
         mocker.patch.object(atomate2.abinit.jobs.mrgdv, "run_mrgdv", mock_run_mrgdv)
 
-        def _run(ref_paths: dict, fake_run_mrgdv_kwargs: dict | None = None) -> None:
-            if fake_run_mrgdv_kwargs is None:
-                fake_run_mrgdv_kwargs = {}
-            _REF_PATHS.update(ref_paths)
-            _FAKE_RUN_MRGDV_KWARGS.update(fake_run_mrgdv_kwargs)
+    def _run(ref_paths: dict, fake_run_mrgdv_kwargs: dict | None = None) -> None:
+        if fake_run_mrgdv_kwargs is None:
+            fake_run_mrgdv_kwargs = {}
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_MRGDV_KWARGS.update(fake_run_mrgdv_kwargs)
 
-        yield _run
+    yield _run
 
     mocker.stopall()
     _REF_PATHS.clear()
@@ -629,13 +793,13 @@ def mock_anaddb(mocker, abinit_test_dir, abinit_integration_tests):
         mocker.patch.object(atomate2.abinit.run, "run_anaddb", mock_run_anaddb)
         mocker.patch.object(atomate2.abinit.jobs.anaddb, "run_anaddb", mock_run_anaddb)
 
-        def _run(ref_paths: dict, fake_run_anaddb_kwargs: dict | None = None) -> None:
-            if fake_run_anaddb_kwargs is None:
-                fake_run_anaddb_kwargs = {}
-            _REF_PATHS.update(ref_paths)
-            _FAKE_RUN_ANADDB_KWARGS.update(fake_run_anaddb_kwargs)
+    def _run(ref_paths: dict, fake_run_anaddb_kwargs: dict | None = None) -> None:
+        if fake_run_anaddb_kwargs is None:
+            fake_run_anaddb_kwargs = {}
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_ANADDB_KWARGS.update(fake_run_anaddb_kwargs)
 
-        yield _run
+    yield _run
 
     mocker.stopall()
     _REF_PATHS.clear()

@@ -67,7 +67,7 @@ jobs:
           micromamba activate a2
           python -m pip install --upgrade pip
           # the MACE-Field fork is the mace-field dependency group, not an extra
-          uv pip install .[strict,abinit,approxneb,aims${{ matrix.dep-group != 'mace-field' && format(',strict-forcefields-{0}', matrix.dep-group) || '' }}] \
+          uv pip install .[strict,approxneb,aims${{ matrix.dep-group != 'mace-field' && format(',strict-forcefields-{0}', matrix.dep-group) || '' }}] \
             --group tests ${{ matrix.dep-group == 'mace-field' && '--group mace-field' || '' }}
 
       # the thermal expansion tests use EMT, so one group is enough to run them
@@ -76,7 +76,7 @@ jobs:
         run: |
           micromamba activate a2
           # pheasy is the pheasy dependency group, not an extra
-          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims,pheasy,phono3py] --group tests --group pheasy
+          uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},approxneb,aims,pheasy,phono3py] --group tests --group pheasy
 
       # without pheasy the pheasy and thermal expansion tests are skipped
       - name: Check that pheasy is installed
@@ -158,8 +158,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |
-          # abinit is needed to generate the perturbations (dte, phonons, dde)
-          micromamba install -n a2 -c conda-forge enumlib packmol bader abinit compilers boost eigen=3.3 cmake spglib scipy h5py --yes
+          micromamba install -n a2 -c conda-forge enumlib packmol bader compilers boost eigen=3.3 cmake spglib scipy h5py --yes
 
       - name: Install dependencies
         run: |
