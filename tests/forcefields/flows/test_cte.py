@@ -1,7 +1,7 @@
 """Tests for the force field thermal expansion workflow.
 
 The tests run the force field CTEMaker with ASE's EMT potential, so they need no
-DFT reference data and no machine-learned force field. pheasy, ALM and phono3py
+DFT reference data and no machine-learned force field. pheasy and phono3py
 are only installed in the numpy-limited forcefield CI job, so the tests are
 skipped in the other forcefield jobs.
 """

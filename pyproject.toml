@@ -35,7 +35,7 @@ dependencies = [
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
     "pymatgen-core>=2026.5.18",
-    "pymongo<=4.19.0",
+    "pymongo<=4.20.1",
 ]
 
 [project.optional-dependencies]
@@ -47,15 +47,15 @@ aims = ["pymatgen-io-aims>=0.0.5", "pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
+sqs = ["icet>=3.0"]
 # phonopy 4.x changed force-constants/primitive-axis handling, breaking the
 # phonon.save -> phonopy.load round-trip used by the Grüneisen workflow
 # ("Force constants shape disagrees with crystal structure setting").
-phonons = ["phonopy>=4.6,<5", "seekpath>=2.0.0"]
-# pheasy itself and ALM are in the pheasy dependency group
+phonons = ["phonopy>=4.7.1,<5", "seekpath>=2.0.0"]
+# pheasy itself is in the pheasy dependency group
 pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
-# ALM is in the alamode dependency group
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
@@ -86,7 +86,7 @@ torchsim-mace = [
 torchsim-generic = [
     "torch-sim-atomistic[fairchem,metatomic,nequip,orb,sevenn,symmetry]==0.6.2; python_version >= '3.12'"
 ]
-jdftx = ["pymatgen==2026.9.24"]
+jdftx = ["pymatgen==2026.10.24"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 openmm = [
     "mdanalysis>=2.8.0",
@@ -95,11 +95,11 @@ openmm = [
 ]
 fireworks = ["fireworks==2.1.4"]
 strict-openff = [
-    "mdanalysis==2.10.0",
-    "monty==2026.7.16",
+    "mdanalysis==2.11.0",
+    "monty==2026.10.21",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.6.1",
-    "pymatgen==2026.9.24", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "pymatgen==2026.10.24", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
 # Forcefields have separate strict groupings because of conflicting dependencies.
@@ -111,7 +111,7 @@ strict-openff = [
 # ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the current set of
 # forcefield dependency groups.
 strict-forcefields-generic = [
-    "calorine==4.0; python_version >= '3.12'",
+    "calorine==4.1; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
     "chgnet==0.4.2",
     "quippy-ase==0.10.3",
@@ -120,16 +120,16 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
 #     "mattersim>=1.2.3", # need to be activated again
-    "wandb==0.30.0", # required for mattersim
+    "wandb==0.31.1", # required for mattersim
     "upet==0.2.5",
 ]
 strict-forcefields-torch-limited = [
     "matgl==4.0.3",
-    "nequip==0.19.1", # requires numpy<2 because of matscipy
+    "nequip==0.19.2", # requires numpy<2 because of matscipy
 ]
 
 strict-forcefields-e3nn-limited = [
-    "mace-torch==0.3.16",
+    "mace-torch==0.3.17",
     "torch-dftd==0.5.3",
 ]
 strict-forcefields-numpy-limited = [
@@ -140,8 +140,8 @@ strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
     "numpy<3.0",
     "numba>=0.60.0", # needed to get numpy >2,<3 installed
-    "pymatgen==2026.9.24",
-    "pymatgen-core==2026.10.2",
+    "pymatgen==2026.10.24",
+    "pymatgen-core==2026.10.16",
 ]
 
 [project.scripts]
@@ -154,11 +154,6 @@ documentation = "https://materialsproject.github.io/atomate2/"
 changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md"
 
 [dependency-groups]
-# ALM is a dependency group, since PyPI does not accept git URLs in extras.
-# The alm package on PyPI is an unrelated project.
-alamode = [
-    "alm @ git+https://github.com/ttadano/ALM.git@f1d668fdee66e7e7218a04c88daf19d0e14fce0c#subdirectory=python",
-]
 dev = ["pre-commit>=4.5.1"]
 # MACE-Field installs as mace-torch, so it cannot share a group with mace-torch.
 # It is a dependency group, since PyPI does not accept git URLs in extras.
@@ -171,14 +166,13 @@ mace-field = [
 # accept git URLs in extras. Move it back to the pheasy extra once a pheasy
 # release on PyPI has these changes.
 pheasy = [
-    {include-group = "alamode"},
     "pheasy @ git+https://gitlab.com/hpsahasrabuddhe/pheasy.git@9f24162a4ed0f0ab8911d382fd2617944aade55d",
 ]
 tests = [
     "fireworks==2.1.4",
     "nbmake==1.5.5",
     "pytest-cov==7.1.0",
-    "pytest-mock==3.16.0",
+    "pytest-mock==3.17.0",
     "pytest-split==0.11.0",
     "pytest-xdist==3.8.0",
     "pytest==9.1.1",
@@ -187,14 +181,14 @@ docs = [
     "fireworks==2.1.4",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.17.1",
+    "ipython==9.18.1",
     "jsonschema[format]",
-    "myst_parser==5.1.0",
+    "myst_parser==5.2.0",
     "numpydoc==1.11.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==9.1.0",
-    "sphinx_design==0.7.0",
-    "jupyterlab==4.6.4",
+    "sphinx==9.1.1",
+    "sphinx_design==0.8.0",
+    "jupyterlab==4.6.6",
 ]
 
 [tool.setuptools.package-data]
