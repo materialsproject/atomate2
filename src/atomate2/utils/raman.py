@@ -44,14 +44,34 @@ def kpoints_length_from_bandgap(
     return round(lengths[2])
 
 
+def magnetic_order(magmoms: Sequence[float] | None, tol: float = 0.05) -> str:
+    """Return "NM", "FM", or "AFM" (moments of both signs, ferrimagnets included)."""
+    if magmoms is None:
+        return "NM"
+    moments = np.array(
+        [np.linalg.norm(m) * np.sign(np.sum(m)) for m in magmoms], dtype=float
+    )
+    moments = moments[np.abs(moments) > tol]
+    if len(moments) == 0:
+        return "NM"
+    if np.all(moments > 0) or np.all(moments < 0):
+        return "FM"
+    return "AFM"
+
+
 def build_phonopy(
     structure: Structure,
     force_constants: Any,
     supercell_matrix: Sequence[Sequence[float]],
     primitive_matrix: Sequence[Sequence[float]] | str | None = "auto",
     symprec: float = 1e-4,
+    magnetic: bool = False,
 ) -> Phonopy:
-    """Rebuild a Phonopy object from the outputs of the phonon flow."""
+    """Rebuild a Phonopy object from the outputs of the phonon flow.
+
+    With magnetic=True the magmom site property is kept, so the symmetry and the
+    automatic primitive cell are those of the magnetic structure.
+    """
     if force_constants is None:
         raise ValueError("Phonon document has no force constants.")
     if hasattr(force_constants, "force_constants"):
@@ -60,7 +80,11 @@ def build_phonopy(
         force_constants = force_constants["force_constants"]
 
     struct = structure.copy()
-    if "magmom" in struct.site_properties:
+    if magnetic:
+        if struct.site_properties.get("magmom") is None:
+            raise ValueError("magnetic=True needs a magmom site property.")
+        primitive_matrix = "auto"
+    elif "magmom" in struct.site_properties:
         struct.remove_site_property("magmom")
     if primitive_matrix is None:
         primitive_matrix = "auto"
@@ -77,12 +101,69 @@ def build_phonopy(
     return phonon
 
 
-def gamma_normal_modes(phonon: Phonopy) -> dict[str, Any]:
-    """Real eigenvectors and frequencies of the Gamma dynamical matrix."""
+def supercell_magmoms(
+    structure: Structure, supercell_matrix: Sequence[Sequence[float]]
+) -> list:
+    """Return the magmom of every atom of the phonopy supercell of structure."""
+    magmoms = structure.site_properties["magmom"]
+    struct = structure.copy()
+    struct.remove_site_property("magmom")
+    phonon = Phonopy(
+        get_phonopy_structure(struct),
+        supercell_matrix=np.asarray(supercell_matrix, dtype=int),
+        primitive_matrix="P",
+    )
+    supercell = phonon.supercell
+    return [magmoms[supercell.u2u_map[i]] for i in supercell.s2u_map]
+
+
+def _primitive_operations(phonon: Phonopy) -> list[np.ndarray]:
+    """Return the 3N x 3N Cartesian matrices of the primitive-cell point group."""
+    prim = phonon.primitive
+    lattice = np.array(prim.cell)
+    positions = np.array(prim.scaled_positions)
+    natoms = len(positions)
+    ops = phonon.primitive_symmetry.symmetry_operations
+    to_cart = lattice.T
+    to_frac = np.linalg.inv(lattice.T)
+
+    matrices = []
+    for rot, trans in zip(ops["rotations"], ops["translations"], strict=True):
+        rot_cart = to_cart @ rot @ to_frac
+        matrix = np.zeros((3 * natoms, 3 * natoms))
+        for i, pos in enumerate(positions):
+            diff = positions - (rot @ pos + trans)
+            diff -= np.rint(diff)
+            dist = np.linalg.norm(diff @ lattice, axis=1)
+            j = int(np.argmin(dist))
+            if dist[j] > 10 * phonon.primitive_symmetry.tolerance:
+                raise ValueError("Could not map atoms with a symmetry operation.")
+            matrix[3 * j : 3 * j + 3, 3 * i : 3 * i + 3] = rot_cart
+        matrices.append(matrix)
+    return matrices
+
+
+def symmetrize_gamma_dynamical_matrix(
+    phonon: Phonopy, dynamical_matrix: np.ndarray
+) -> np.ndarray:
+    """Average the Gamma dynamical matrix over the primitive-cell point group."""
+    matrices = _primitive_operations(phonon)
+    return sum(g @ dynamical_matrix @ g.T for g in matrices) / len(matrices)
+
+
+def gamma_normal_modes(phonon: Phonopy, symmetrize: bool = True) -> dict[str, Any]:
+    """Real eigenvectors and frequencies of the Gamma dynamical matrix.
+
+    With symmetrize=True the dynamical matrix is first averaged over the
+    point group of the primitive cell. This restores exact degeneracies when the
+    phonon supercell has a lower symmetry than the crystal.
+    """
     dm = phonon.dynamical_matrix
     dm.run([0.0, 0.0, 0.0])
     dyn = np.array(dm.dynamical_matrix)
     dyn = 0.5 * (dyn + dyn.conj().T).real
+    if symmetrize:
+        dyn = symmetrize_gamma_dynamical_matrix(phonon, dyn)
 
     eigvals, eigvecs = np.linalg.eigh(dyn)
     frequencies = np.sign(eigvals) * np.sqrt(np.abs(eigvals)) * VASP_TO_THZ
@@ -102,20 +183,52 @@ def gamma_normal_modes(phonon: Phonopy) -> dict[str, Any]:
     }
 
 
+def gamma_instabilities(
+    frequencies_thz: Sequence[float], max_imaginary: float | None
+) -> list[int]:
+    """Return the modes with a frequency below -max_imaginary (THz)."""
+    if max_imaginary is None:
+        return []
+    return [k for k, f in enumerate(frequencies_thz) if f < -abs(max_imaginary)]
+
+
 def acoustic_mode_indices(frequencies_thz: Sequence[float]) -> list[int]:
     """Return indices of the three modes with the smallest |frequency|."""
     return sorted(np.argsort(np.abs(np.asarray(frequencies_thz)))[:3].tolist())
 
 
-def gamma_selection_rules(
-    phonon: Phonopy, nmodes: int, degeneracy_tolerance: float = 1e-3
-) -> dict[str, Any]:
-    """Raman and IR activity of each mode from the Gamma irreps characters."""
-    if hasattr(phonon, "run_irreps"):
+def _run_gamma_irreps(phonon: Phonopy, degeneracy_tolerance: float) -> Any:
+    """Run phonopy irreps at Gamma, grouping degenerate modes by symmetry."""
+    try:
+        phonon.run_irreps([0, 0, 0], symmetry_adapted=True)
+    except TypeError:
         phonon.run_irreps([0, 0, 0], degeneracy_tolerance=degeneracy_tolerance)
-    else:
-        phonon.set_irreps([0, 0, 0], degeneracy_tolerance=degeneracy_tolerance)
-    irreps = phonon.irreps
+    return phonon.irreps
+
+
+def gamma_selection_rules(
+    phonon: Phonopy,
+    nmodes: int,
+    degeneracy_tolerance: float = 1e-3,
+    eigenvecs: np.ndarray | None = None,
+) -> dict[str, Any]:
+    """Irrep labels and Raman and IR activity of each mode at Gamma.
+
+    Parameters
+    ----------
+    phonon
+        Phonopy object with force constants.
+    nmodes
+        Number of modes (3N).
+    degeneracy_tolerance
+        Frequency tolerance in THz, only used if phonopy has no symmetry-adapted
+        irreps.
+    eigenvecs
+        Mass-weighted eigenvectors (3N, N, 3) of the modes to label. Each mode is
+        assigned to the phonopy degenerate set it overlaps most with. If None,
+        the phonopy band order is used.
+    """
+    irreps = _run_gamma_irreps(phonon, degeneracy_tolerance)
 
     rotations = np.array(irreps.conventional_rotations, dtype=float)
     tr = np.trace(rotations, axis1=1, axis2=2)
@@ -123,31 +236,43 @@ def gamma_selection_rules(
     chi_raman = 0.5 * (tr**2 + tr2)
     order = len(rotations)
     labels_per_set = getattr(irreps, "_ir_labels", None)
+    phonopy_sets = [list(map(int, s)) for s in irreps.band_indices]
+
+    if eigenvecs is None:
+        set_of_mode = {band: i for i, s in enumerate(phonopy_sets) for band in s}
+    else:
+        vecs = np.asarray(eigenvecs, dtype=float).reshape(nmodes, nmodes)
+        basis = np.asarray(irreps.eigenvectors)
+        weights = np.array(
+            [
+                np.sum(np.abs(basis[:, s].conj().T @ vecs.T) ** 2, axis=0)
+                for s in phonopy_sets
+            ]
+        )
+        set_of_mode = {k: int(np.argmax(weights[:, k])) for k in range(nmodes)}
 
     raman_active = [False] * nmodes
     ir_active = [False] * nmodes
     irrep_labels: list[str | None] = [None] * nmodes
-    degenerate_sets = [list(map(int, s)) for s in irreps.band_indices]
+    degenerate_sets: list[list[int]] = [[] for _ in phonopy_sets]
 
-    for i, (deg_set, chars) in enumerate(
-        zip(degenerate_sets, irreps.characters, strict=True)
-    ):
+    for k in range(nmodes):
+        i = set_of_mode[k]
+        chars = irreps.characters[i]
         n_raman = float(np.real(np.sum(np.conj(chars) * chi_raman)) / order)
         n_ir = float(np.real(np.sum(np.conj(chars) * tr)) / order)
-        label = None
+        raman_active[k] = n_raman > 0.25
+        ir_active[k] = n_ir > 0.25
         if labels_per_set is not None and labels_per_set[i] is not None:
-            label = str(labels_per_set[i])
-        for band in deg_set:
-            raman_active[band] = n_raman > 0.25
-            ir_active[band] = n_ir > 0.25
-            irrep_labels[band] = label
+            irrep_labels[k] = str(labels_per_set[i])
+        degenerate_sets[i].append(k)
 
     return {
         "raman_active": raman_active,
         "ir_active": ir_active,
         "irrep_labels": irrep_labels,
-        "degenerate_sets": degenerate_sets,
-        "pointgroup": str(phonon.symmetry.pointgroup_symbol),
+        "degenerate_sets": sorted(s for s in degenerate_sets if s),
+        "pointgroup": str(phonon.primitive_symmetry.pointgroup_symbol),
     }
 
 

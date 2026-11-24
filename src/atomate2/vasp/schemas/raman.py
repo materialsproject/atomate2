@@ -40,6 +40,10 @@ class RamanDoc(BaseModel):
         None, description="Rk of the k-mesh of the dielectric runs"
     )
     pointgroup: str | None = Field(None, description="Point group of the structure")
+    magnetic_order: str | None = Field(
+        None, description="NM, FM or AFM if run as magnetic, else None"
+    )
+    magmoms: list | None = Field(None, description="Magnetic moments of the cell")
     step_size: float = Field(description="Displacement along each mode (Angstrom)")
 
     frequencies: list[float] = Field(description="All Gamma frequencies (cm^-1)")
@@ -61,6 +65,13 @@ class RamanDoc(BaseModel):
     unstable_modes: list[int] = Field(
         default_factory=list, description="Computed modes with imaginary frequency"
     )
+    gamma_unstable_modes: list[int] = Field(
+        default_factory=list,
+        description="Gamma modes below -max_imaginary_freq that stopped the flow",
+    )
+    max_imaginary_freq: float | None = Field(
+        None, description="Imaginary-frequency limit at Gamma (THz)"
+    )
 
     spectrum_frequencies: list[float] | None = Field(
         None, description="Frequency grid of the broadened spectrum (cm^-1)"
@@ -69,4 +80,7 @@ class RamanDoc(BaseModel):
         None, description="Normalised broadened spectrum"
     )
     lorentzian_width: float | None = Field(None, description="Line width (cm^-1)")
-    state: str = "successful"
+    state: str = Field(
+        "successful", description="successful, or unstable if stopped at Gamma"
+    )
+    stop_reason: str | None = Field(None, description="Why no Raman runs were done")

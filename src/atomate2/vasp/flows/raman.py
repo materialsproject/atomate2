@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields, replace
 from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
-from atomate2.utils.raman import get_encut_from_potcar
+from atomate2.utils.raman import get_encut_from_potcar, magnetic_order
 from atomate2.vasp.flows.phonons import PhononMaker
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.raman import (
     RamanDielectricMaker,
     calculate_raman_tensors,
+    generate_magnetic_phonon_displacements,
     get_gamma_normal_modes,
     run_raman_displacements,
 )
@@ -25,6 +26,26 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from jobflow import Job, OutputReference
     from pymatgen.core import Structure
+
+
+@dataclass
+class MagneticPhononMaker(PhononMaker):
+    """PhononMaker whose displaced supercells keep the magnetic moments."""
+
+    def get_displacements(
+        self, structure: Structure, supercell_matrix: Matrix3D
+    ) -> Job | Flow:
+        """Get displaced supercells with the magmom site property."""
+        return generate_magnetic_phonon_displacements(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            displacement=self.displacement,
+            sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
+            use_symmetrized_structure=self.use_symmetrized_structure,
+            kpath_scheme=self.kpath_scheme,
+            code=self.code,
+        )
 
 
 @dataclass
@@ -60,6 +81,15 @@ class RamanMaker(Maker):
         None keeps the Rk of raman_maker.
     kpoints_lengths : tuple
         Rk for band gaps below, between and above the thresholds.
+    max_imaginary_freq : float or None
+        If any Gamma frequency is below -max_imaginary_freq (THz), the flow stops
+        after the phonons and stores a RamanDoc with state "unstable".
+        None disables the check.
+    magnetic : bool
+        Treat the structure as magnetic. Needs the magmom site property. The
+        moments are kept in all VASP jobs (ISPIN = 2), on the displaced phonon
+        supercells and in the Gamma analysis. For moments of both signs the
+        phonon displacements are generated without symmetry reduction.
     """
 
     name: str = "raman"
@@ -74,6 +104,8 @@ class RamanMaker(Maker):
     encut_enmax_factor: float | None = 1.3
     bandgap_thresholds: tuple[float, float] | None = (1.0, 2.0)
     kpoints_lengths: tuple[int, int, int] = (40, 30, 20)
+    max_imaginary_freq: float | None = 0.1
+    magnetic: bool = False
 
     def __post_init__(self) -> None:
         """Ensure the phonon flow stores force constants."""
@@ -97,7 +129,8 @@ class RamanMaker(Maker):
         Parameters
         ----------
         structure : Structure
-            Input structure.
+            Input structure. For magnetic=True it needs the magmom site property
+            and should be the magnetic primitive cell.
         prev_dir : str or Path or None
             Previous VASP directory for the relaxation.
         modes : list of int or None
@@ -113,7 +146,9 @@ class RamanMaker(Maker):
         supercell_matrix : optional
             Supercell matrix for the phonon flow.
         """
-        phonon_flow = self.phonon_maker.make(
+        phonon_maker, raman_maker = self._get_makers(structure)
+
+        phonon_flow = phonon_maker.make(
             structure,
             prev_dir=prev_dir,
             born=born,
@@ -127,19 +162,21 @@ class RamanMaker(Maker):
             force_constants=ph_out.force_constants,
             supercell_matrix=ph_out.supercell_matrix,
             primitive_matrix=ph_out.primitive_matrix,
-            symprec=self.phonon_maker.symprec,
+            symprec=phonon_maker.symprec,
             step_size=self.step_size,
             mode_selection=self.mode_selection,
             modes=modes,
             degeneracy_tolerance=self.degeneracy_tolerance,
+            magnetic=self.magnetic,
+            max_imaginary_freq=self.max_imaginary_freq,
         )
         modes_job.name = "raman normal modes"
 
         if bandgap is None and self.bandgap_thresholds is not None:
-            bandgap = self._get_bandgap_reference(phonon_flow)
+            bandgap = self._get_bandgap_reference(phonon_flow, phonon_maker)
         disp_job = run_raman_displacements(
             modes_data=modes_job.output,
-            raman_maker=self.raman_maker,
+            raman_maker=raman_maker,
             bandgap=bandgap,
             bandgap_thresholds=self.bandgap_thresholds,
             kpoints_lengths=self.kpoints_lengths,
@@ -163,14 +200,41 @@ class RamanMaker(Maker):
         if encut is None and self.encut_enmax_factor is not None:
             encut = get_encut_from_potcar(
                 structure,
-                self.raman_maker.input_set_generator,
+                raman_maker.input_set_generator,
                 self.encut_enmax_factor,
             )
         if encut is not None:
             flow = update_user_incar_settings(flow, {"ENCUT": encut})
         return flow
 
-    def _get_bandgap_reference(self, phonon_flow: Flow | Job) -> OutputReference | None:
+    def _get_makers(self, structure: Structure) -> tuple[PhononMaker, BaseVaspMaker]:
+        """Return the phonon and Raman makers, adapted for magnetic structures."""
+        if not self.magnetic:
+            return self.phonon_maker, self.raman_maker
+
+        magmoms = structure.site_properties.get("magmom")
+        if magmoms is None:
+            raise ValueError("magnetic=True needs a magmom site property.")
+        phonon_maker = self.phonon_maker
+        if not isinstance(phonon_maker, MagneticPhononMaker):
+            phonon_maker = MagneticPhononMaker(
+                **{f.name: getattr(phonon_maker, f.name) for f in fields(phonon_maker)}
+            )
+        if magnetic_order(magmoms) == "AFM":
+            phonon_maker = replace(phonon_maker, sym_reduce=False)
+
+        raman_maker = self.raman_maker
+        generator = getattr(raman_maker, "input_set_generator", None)
+        if hasattr(generator, "ispin"):
+            raman_maker = replace(
+                raman_maker, input_set_generator=replace(generator, ispin=2)
+            )
+        return phonon_maker, raman_maker
+
+    @staticmethod
+    def _get_bandgap_reference(
+        phonon_flow: Flow | Job, phonon_maker: PhononMaker
+    ) -> OutputReference | None:
         """Return the band gap of the static, Born or last relaxation job."""
         jobs = (
             [j for j, _ in phonon_flow.iterflow()]
@@ -179,7 +243,7 @@ class RamanMaker(Maker):
         )
         vasp_jobs = [j for j in jobs if isinstance(j.maker, BaseVaspMaker)]
         preferred = [
-            getattr(self.phonon_maker, attr, None)
+            getattr(phonon_maker, attr, None)
             for attr in ("static_energy_maker", "born_maker")
         ]
         for maker in preferred:

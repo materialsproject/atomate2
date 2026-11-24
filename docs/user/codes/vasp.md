@@ -435,9 +435,16 @@ and [Porezag and Pederson, Phys. Rev. B 54, 7830 (1996)](https://doi.org/10.1103
 
 The workflow first runs the Phonons workflow (tight relaxation, finite displacement
 phonons with phonopy and, by default, the Born charges). The force constants are used to
-obtain the Gamma-point normal modes of the primitive cell. The Raman-active modes are
-selected from the characters of the irreducible representations, so silent and purely
-IR-active modes are skipped. For every selected mode, two LEPSILON calculations are performed
+obtain the Gamma-point normal modes of the primitive cell. The Gamma dynamical matrix is
+averaged over the point group of the primitive cell, so degenerate modes stay exactly
+degenerate even if the phonon supercell has a lower symmetry than the crystal. The
+Raman-active modes are selected from the characters of the irreducible representations,
+so silent and purely IR-active modes are skipped.
+
+If any Gamma frequency is below `-max_imaginary_freq` (0.1 THz by default), the structure
+is considered dynamically unstable. No dielectric calculations are then performed and the
+`RamanDoc` is stored with `state = "unstable"`, the unstable modes and the reason
+(`stop_reason`). Set `max_imaginary_freq=None` to switch the check off. For every selected mode, two LEPSILON calculations are performed
 for structures displaced by `-step_size` and `+step_size` (0.005 Å by default) along the mode.
 The Raman tensor of mode $k$ is
 
@@ -477,6 +484,20 @@ structure = Structure(
 raman_flow = RamanMaker(step_size=0.005, mode_selection="raman_active").make(
     structure=structure, mp_id="mp-149"
 )
+```
+
+Magnetic materials are run with `RamanMaker(magnetic=True)`. The structure needs the
+`magmom` site property and should be the magnetic primitive cell. The moments are then
+used in all VASP calculations, kept on the displaced phonon supercells and used for the
+primitive cell and the symmetry of the Gamma analysis, and the dielectric calculations use
+`ISPIN = 2`. For moments of both signs (antiferro- and ferrimagnets), the phonon
+displacements are generated without symmetry reduction, and the modes are not labelled
+because phonopy does not support irreducible representations of magnetic space groups;
+all optical modes are then computed.
+
+```python
+structure.add_site_property("magmom", [4.0, -4.0, 0.0, 0.0])
+raman_flow = RamanMaker(magnetic=True).make(structure)
 ```
 
 All optical modes can be computed with `mode_selection="all"` or a list of mode indices

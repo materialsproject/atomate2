@@ -23,6 +23,8 @@ class RamanDielectricSetGenerator(StaticSetGenerator):
         LPEAD tag.
     ediff
         Electronic convergence criterion.
+    ispin
+        ISPIN tag; 2 for magnetic materials (MAGMOM from the magmom site property).
     **kwargs
         Other keyword arguments passed to :obj:`StaticSetGenerator`.
     """
@@ -31,6 +33,7 @@ class RamanDielectricSetGenerator(StaticSetGenerator):
     kpoints_length: int | None = 40
     lpead: bool = False
     ediff: float = 1e-8
+    ispin: int = 1
     auto_ismear: bool = False
     auto_ispin: bool = False
 
@@ -51,7 +54,7 @@ class RamanDielectricSetGenerator(StaticSetGenerator):
             "ADDGRID": True,
             "LEPSILON": True,
             "LPEAD": self.lpead,
-            "ISPIN": 1,
+            "ISPIN": self.ispin,
             "LWAVE": False,
             "LCHARG": False,
             "LAECHG": False,

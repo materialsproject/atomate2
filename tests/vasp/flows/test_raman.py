@@ -92,6 +92,30 @@ def test_selection_rules(make, n_active):
         assert np.abs(tensor).max() < 1e-6
 
 
+def test_labels_with_broken_symmetry():
+    s = rutile()
+    fc, scm, pm = toy_force_constants(s)
+    rng = np.random.default_rng(1)
+    noise = rng.normal(scale=1e-3 * np.abs(fc).max(), size=fc.shape)
+    noise = 0.5 * (noise + noise.transpose(1, 0, 3, 2))
+    ph = rm.build_phonopy(s, fc + noise, scm, pm)
+
+    unsym = rm.gamma_normal_modes(ph, symmetrize=False)["frequencies_thz"]
+    assert abs(unsym[2] - unsym[1]) > 1e-3
+
+    nm = rm.gamma_normal_modes(ph)
+    rules = rm.gamma_selection_rules(ph, len(unsym), eigenvecs=nm["eigenvecs"])
+    assert rules["pointgroup"] == "4/mmm"
+    assert None not in rules["irrep_labels"]
+    for deg_set in rules["degenerate_sets"]:
+        assert np.ptp(nm["frequencies_thz"][deg_set]) < 1e-6
+        assert len({rules["irrep_labels"][k] for k in deg_set}) == 1
+    active = {
+        rules["irrep_labels"][k] for k in range(len(unsym)) if rules["raman_active"][k]
+    }
+    assert active == {"A1g", "B1g", "B2g", "Eg"}
+
+
 def test_intensity_definitions():
     a = np.random.default_rng(0).normal(size=(3, 3))
     a = a + a.T
@@ -156,6 +180,7 @@ def test_raman_flow_end_to_end(tmp_path, monkeypatch):
         phonon_maker=FakePhononMaker(),
         raman_maker=FakeEpsMaker(),
         encut_enmax_factor=None,
+        max_imaginary_freq=None,
     )
     flow = maker.make(rutile(), mp_id="mp-2657")
     out = run_locally(flow, create_folders=True, ensure_success=True)
@@ -234,3 +259,163 @@ def test_rk_applied_to_dielectric_jobs(gap, rk):
     from pymatgen.io.vasp import Kpoints
 
     assert Kpoints.from_str(str(vis.kpoints)).kpts[0][0] == rk
+
+
+def afm_fe():
+    s = Structure(Lattice.cubic(2.87), ["Fe", "Fe"], [[0, 0, 0], [0.5, 0.5, 0.5]])
+    s.add_site_property("magmom", [2.2, -2.2])
+    return s
+
+
+def run_flow(tmp_path, monkeypatch, structure, **kwargs):
+    monkeypatch.chdir(tmp_path)
+    maker = RamanMaker(
+        phonon_maker=FakePhononMaker(),
+        raman_maker=FakeEpsMaker(),
+        encut_enmax_factor=None,
+        **kwargs,
+    )
+    flow = maker.make(structure)
+    out = run_locally(flow, create_folders=True, ensure_success=True)
+    doc = out[flow.output.uuid][1].output
+    return (RamanDoc(**doc) if isinstance(doc, dict) else doc), out
+
+
+def test_gamma_instabilities():
+    freqs = [-0.2, -0.05, 0.0, 3.0]
+    assert rm.gamma_instabilities(freqs, 0.1) == [0]
+    assert rm.gamma_instabilities(freqs, 0.01) == [0, 1]
+    assert rm.gamma_instabilities(freqs, None) == []
+
+
+def test_flow_stops_on_imaginary_gamma_modes(tmp_path, monkeypatch):
+    doc, out = run_flow(tmp_path, monkeypatch, rutile())
+    assert doc.state == "unstable"
+    assert doc.stop_reason
+    assert doc.gamma_unstable_modes
+    assert doc.computed_modes == []
+    assert doc.modes == []
+    assert len(out) == 4
+
+
+def test_flow_runs_for_stable_structure(tmp_path, monkeypatch):
+    doc, _ = run_flow(tmp_path, monkeypatch, diamond())
+    assert doc.state == "successful"
+    assert doc.stop_reason is None
+    assert {m.irrep for m in doc.modes} == {"T2g"}
+    assert len(doc.computed_modes) == 3
+
+
+def test_magnetic_order():
+    assert rm.magnetic_order(None) == "NM"
+    assert rm.magnetic_order([0.0, 0.01]) == "NM"
+    assert rm.magnetic_order([2.0, 2.0, 0.0]) == "FM"
+    assert rm.magnetic_order([2.0, -2.0]) == "AFM"
+    assert rm.magnetic_order([3.0, -1.0]) == "AFM"
+
+
+def test_magnetic_displacements_keep_magmoms():
+    from atomate2.vasp.jobs.raman import generate_magnetic_phonon_displacements
+
+    displaced = generate_magnetic_phonon_displacements.original(
+        afm_fe(),
+        np.diag([2, 2, 2]),
+        0.01,
+        sym_reduce=False,
+        symprec=1e-3,
+        use_symmetrized_structure=None,
+        kpath_scheme="seekpath",
+        code="vasp",
+    )
+    assert len(displaced) > 0
+    for supercell in displaced:
+        magmoms = np.array(supercell.site_properties["magmom"])
+        assert sorted(np.unique(magmoms)) == [-2.2, 2.2]
+        assert np.sum(magmoms > 0) == np.sum(magmoms < 0) == 8
+        for site, m in zip(supercell, magmoms, strict=True):
+            frac = np.round(site.frac_coords * 2, 1) % 1
+            expected = 2.2 if np.allclose(frac, 0, atol=0.1) else -2.2
+            assert m == expected
+
+
+def test_magnetic_gamma_modes_use_magnetic_cell():
+    from atomate2.vasp.jobs.raman import get_gamma_normal_modes
+
+    s = afm_fe()
+    fc, scm, _ = toy_force_constants(s)
+    data = get_gamma_normal_modes.original(
+        s, {"force_constants": fc.tolist()}, scm, "auto", 1e-3, magnetic=True
+    )
+    assert len(data["frequencies_thz"]) == 6
+    assert data["magnetic_order"] == "AFM"
+    assert data["magmoms"] == [2.2, -2.2]
+    assert len(data["displaced"]) == 6
+    for item in data["displaced"]:
+        assert item["structure"].site_properties["magmom"] == [2.2, -2.2]
+
+    stripped = s.copy()
+    stripped.remove_site_property("magmom")
+    data = get_gamma_normal_modes.original(
+        stripped, {"force_constants": fc.tolist()}, scm, "auto", 1e-3
+    )
+    assert len(data["frequencies_thz"]) == 3
+    assert data["magnetic_order"] is None
+
+
+def test_magnetic_ferromagnet_keeps_labels():
+    from atomate2.vasp.jobs.raman import get_gamma_normal_modes
+
+    s = rutile()
+    fc, scm, pm = toy_force_constants(s)
+    s.add_site_property(
+        "magmom", [1.0 if el.symbol == "Ti" else 0.0 for el in s.species]
+    )
+    data = get_gamma_normal_modes.original(
+        s,
+        {"force_constants": fc.tolist()},
+        scm,
+        pm,
+        1e-3,
+        magnetic=True,
+        max_imaginary_freq=None,
+    )
+    assert data["magnetic_order"] == "FM"
+    assert None not in data["irrep_labels"]
+    active = {data["irrep_labels"][k] for k in data["selected_modes"]}
+    assert active == {"A1g", "B1g", "B2g", "Eg"}
+
+
+def test_magnetic_flow_settings(monkeypatch):
+    from atomate2.vasp.flows.raman import MagneticPhononMaker
+
+    for structure, order in ((afm_fe(), "AFM"), (afm_fe(), "FM")):
+        if order == "FM":
+            structure.add_site_property("magmom", [2.2, 2.2])
+        flow = RamanMaker(magnetic=True).make(structure, encut=400)
+        jobs = {j.name: j for j, _ in flow.iterflow()}
+        assert "generate_magnetic_phonon_displacements" in jobs
+        disp = jobs["raman displacements"].function_kwargs["raman_maker"]
+        assert disp.input_set_generator.ispin == 2
+        modes = jobs["raman normal modes"].function_kwargs
+        assert modes["magnetic"] is True
+        gen = jobs["generate_magnetic_phonon_displacements"].function_kwargs
+        assert gen["sym_reduce"] is (order == "FM")
+
+    nonmag = afm_fe()
+    nonmag.remove_site_property("magmom")
+    with pytest.raises(ValueError, match="magmom"):
+        RamanMaker(magnetic=True).make(nonmag, encut=400)
+    flow = RamanMaker().make(afm_fe(), encut=400)
+    names = {j.name for j, _ in flow.iterflow()}
+    assert "generate_phonon_displacements" in names
+    assert not isinstance(RamanMaker().phonon_maker, MagneticPhononMaker)
+
+
+def test_magnetic_dielectric_input_set():
+    from atomate2.vasp.sets.raman import RamanDielectricSetGenerator
+
+    vis = RamanDielectricSetGenerator(ispin=2).get_input_set(afm_fe(), potcar_spec=True)
+    assert vis.incar["ISPIN"] == 2
+    assert list(vis.incar["MAGMOM"]) == [2.2, -2.2]
+    vis = RamanDielectricSetGenerator().get_input_set(afm_fe(), potcar_spec=True)
+    assert vis.incar["ISPIN"] == 1
