@@ -18,6 +18,7 @@ from atomate2.common.jobs.finite_temperature_phonons import (
     get_md_supercell,
     get_npt_structure,
     select_md_snapshots,
+    sort_structure,
 )
 from atomate2.common.jobs.pheasy import get_supercell_size
 from atomate2.common.jobs.phonons import run_phonon_displacements
@@ -222,6 +223,11 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
                     f"{key} must be one of {sorted(SUPPORTED_CODES)}, not "
                     f"{getattr(self, key)!r}."
                 )
+        if self.thermostat not in ("nose-hoover", "langevin"):
+            raise ValueError(
+                'thermostat must be "nose-hoover" or "langevin", not '
+                f"{self.thermostat!r}."
+            )
         if (
             isinstance(self.alpha_min, bool)
             or not isinstance(self.alpha_min, numbers.Integral)
@@ -264,8 +270,9 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             The unit cell.
         prev_dir: str | Path | None
             A previous calculation directory. It is passed to the relaxation.
-            All later jobs get the relaxation directory, or this directory if
-            there is no relaxation.
+            The later jobs get the relaxation directory, or this directory if
+            there is no relaxation. The Born and phonon displacement makers only
+            get it if prev_calc_dir_argname is set.
         born: list[Matrix3D] | None
             Born effective charges of the structure the NVT MD runs in, with its
             atoms sorted by electronegativity. This is the relaxed structure, or
@@ -290,10 +297,13 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
         # The VASP input sets sort the atoms by electronegativity. Sorting here as
         # well keeps the Born charges of a force field born_maker in the order of
         # the fit.
-        if not isinstance(structure, OutputReference):
-            structure = structure.get_sorted_structure()
-
         jobs: list[Job | Flow] = []
+        if isinstance(structure, OutputReference):
+            sort_job = sort_structure(structure)
+            jobs.append(sort_job)
+            structure = sort_job.output
+        else:
+            structure = structure.get_sorted_structure()
         optimization_run_job_dir = optimization_run_uuid = None
         born_run_job_dir = born_run_uuid = None
         npt_kwargs: dict = {}
@@ -400,7 +410,8 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             phonon_maker=self.phonon_displacement_maker,
             socket=self.socket,
             prev_dir_argname=self.prev_calc_dir_argname,
-            prev_dir=prev_dir,
+            # as for the born_maker
+            prev_dir=prev_dir if self.prev_calc_dir_argname is not None else None,
             store_displaced_structures=True,
         )
         jobs.append(displacement_calcs)
@@ -418,7 +429,6 @@ class BaseFiniteTemperaturePhononMaker(Maker, ABC):
             displacement_data=displacement_calcs.output,
             temperature=self.temperature,
             thermostat=self.thermostat,
-            md_time_step=self.md_time_step,
             equilibration_time=self.equilibration_time,
             code=self.code,
             md_code=self.md_code,

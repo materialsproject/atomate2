@@ -12,6 +12,7 @@ import re
 import shlex
 import shutil
 import subprocess
+import tempfile
 import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -27,6 +28,7 @@ from hiphive.utilities import extract_parameters
 from jobflow import job
 from packaging.version import parse as parse_version
 from phonopy.file_IO import parse_FORCE_CONSTANTS
+from phonopy.harmonic.force_constants import compact_fc_to_full_fc
 from phonopy.interface.vasp import write_vasp
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
@@ -36,6 +38,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
+from scipy.sparse import load_npz
 
 from atomate2 import SETTINGS
 from atomate2.common.jobs.phonons import (
@@ -43,16 +46,19 @@ from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
     _get_kpath,
     _get_num_harmonic_supercells,
-    _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
 )
-from atomate2.common.schemas.phonons import _set_nac_params
+from atomate2.common.schemas.phonons import (
+    _get_thermal_displacement_data,
+    _set_nac_params,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from emmet.core.math import Matrix3D
+    from phonopy import Phonopy
     from phonopy.structure.atoms import PhonopyAtoms
 
 logger = logging.getLogger(__name__)
@@ -89,12 +95,103 @@ _MAX_NUM_DISP_ANHAR = 600
 _ANHARMONIC_FIT_METHODS = ("cocktail", "one-shot")
 
 # many-body terms kept in the anharmonic fit for each maximum order, as passed
-# to pheasy with --nbody and to ALM when counting the free force constants
+# to pheasy with --nbody
 _NBODY = {3: [2, 3], 4: [2, 3, 3]}
+
+
+def _get_pheasy_command(
+    supercell_matrix: np.ndarray, symprec: float, max_order: int
+) -> str:
+    """Return the pheasy command with the options shared by all its steps."""
+    dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
+    return (
+        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w {max_order} "
+        f"--symprec {float(symprec)}"
+    )
+
+
+def _get_anharmonic_cluster_options(
+    anhar_max_order: int, fcs_cutoff_radius: Sequence[float]
+) -> str:
+    """Return the many-body and cutoff options of the anharmonic clusters."""
+    nbody = "--nbody " + " ".join(str(n) for n in _NBODY[anhar_max_order])
+    cutoffs = f"--c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)}"
+    if anhar_max_order == 4:
+        cutoffs += f" --c4 {float(fcs_cutoff_radius[2] / ANGSTROM_TO_BOHR)}"
+    return f"{nbody} {cutoffs}"
+
+
+def _run_cluster_and_null_space(
+    base: str,
+    clusters: str,
+    work_dir: Path | str | None,
+    rasr: str | None = None,
+) -> None:
+    """Build the clusters and orbits (-s) and the null space (-c) with pheasy."""
+    null_space = f"{base} -c"
+    if rasr is not None:
+        null_space += f" --rasr {rasr}"
+    for cmd in (f"{base} -s {clusters}", null_space):
+        subprocess.run(shlex.split(cmd), cwd=work_dir, check=True)
+
+
+def _get_num_free_fcs(
+    supercell: PhonopyAtoms,
+    symprec: float,
+    max_order: int = 2,
+    fcs_cutoff_radius: Sequence[float] | None = None,
+) -> tuple[int, int]:
+    """
+    Count the free force constants with pheasy.
+
+    pheasy builds the clusters (-s) and the null space of the space group,
+    permutation and translational invariance constraints (-c) in a temporary
+    folder inside the current folder, with the cluster options of the harmonic
+    and anharmonic fits. Each column of the null space is one free force
+    constant. ns_harm.npz holds those of second order, and ns.npz those of all
+    orders up to max_order. The second-order force constants have no cutoff, as
+    in these fits.
+
+    The supercell is also given as the unit cell, so the count uses the symmetry
+    of the supercell, which can be lower than that of the crystal.
+
+    Parameters
+    ----------
+    supercell: PhonopyAtoms
+        Supercell used for the force constant fit.
+    symprec: float
+        Symmetry precision.
+    max_order: int
+        Highest force constant order, 2, 3 or 4.
+    fcs_cutoff_radius: Sequence[float] | None
+        Cutoff radius in Bohr for each order, starting at second order. Only
+        used when max_order is larger than 2.
+
+    Returns
+    -------
+    tuple[int, int]
+        Number of free second-order force constants, and of free force constants
+        of all orders up to max_order.
+    """
+    base = _get_pheasy_command(np.eye(3), symprec, max_order)
+    clusters = (
+        "--nbody 2"
+        if max_order == 2
+        else _get_anharmonic_cluster_options(max_order, fcs_cutoff_radius)
+    )
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp:
+        write_vasp(f"{tmp}/POSCAR", supercell)
+        write_vasp(f"{tmp}/SPOSCAR", supercell)
+        _run_cluster_and_null_space(base, clusters, tmp)
+        return (
+            load_npz(f"{tmp}/ns_harm.npz").shape[1],
+            load_npz(f"{tmp}/ns.npz").shape[1],
+        )
 
 
 def _get_num_anharmonic_supercells(
     supercell: PhonopyAtoms,
+    symprec: float,
     num_disp_anhar: int,
     anhar_max_order: int,
     fcs_cutoff_radius: Sequence[float],
@@ -109,16 +206,15 @@ def _get_num_anharmonic_supercells(
     with at least _MIN_NUM_DISP_ANHAR supercells. Above _MAX_NUM_DISP_ANHAR a
     ValueError is raised. The free force constants are those of third (and
     fourth) order, plus those of second order when the one-shot fit is
-    requested, since it fits all orders together. Second-order force constants
-    are counted without a cutoff, as pheasy fits them. ALM counts the
-    irreducible force constants before the acoustic sum rules are applied, with
-    its own symmetry search, so the count is expected to be at least the number
-    pheasy fits.
+    requested, since it fits all orders together. pheasy counts them with the
+    cluster options of the fit, see _get_num_free_fcs.
 
     Parameters
     ----------
     supercell: PhonopyAtoms
         Supercell used for the force constant fit.
+    symprec: float
+        Symmetry precision.
     num_disp_anhar: int
         Number of displaced supercells requested by the user, 0 for automatic.
     anhar_max_order: int
@@ -135,14 +231,10 @@ def _get_num_anharmonic_supercells(
     """
     if num_disp_anhar != 0:
         return num_disp_anhar
-    # pheasy fits the second-order force constants without a cutoff
-    cutoffs = [-1, *fcs_cutoff_radius[1:]]
-    n_irred = _get_num_irreducible_fcs(
-        supercell, anhar_max_order, cutoffs, nbody=_NBODY[anhar_max_order]
+    n_fc2, n_all = _get_num_free_fcs(
+        supercell, symprec, anhar_max_order, fcs_cutoff_radius
     )
-    n_free = sum(n_irred[1:])
-    if "one-shot" in anhar_fit_methods:
-        n_free += n_irred[0]
+    n_free = n_all if "one-shot" in anhar_fit_methods else n_all - n_fc2
     natom = len(supercell.numbers)
     num = int(np.ceil(_EQUATIONS_PER_FREE_FC * n_free / (3.0 * natom)))
     num = max(num, _MIN_NUM_DISP_ANHAR)
@@ -206,7 +298,7 @@ def _check_anharmonic_settings(
     if cal_anhar_fcs and fcs_cutoff_radius is not None:
         # one cutoff per order from 3 to anhar_max_order, after the fc2 entry
         anhar_radii = list(fcs_cutoff_radius[1 : anhar_max_order - 1])
-        # pheasy reads a negative cutoff as a neighbour shell, ALM as no cutoff
+        # pheasy reads a negative cutoff as a neighbour shell
         if len(anhar_radii) != anhar_max_order - 2 or min(anhar_radii) <= 0:
             raise ValueError(
                 f"fcs_cutoff_radius needs a positive cutoff in Bohr for each order "
@@ -285,15 +377,17 @@ def _run_harmonic_fit(
     random_seed: int | None,
     work_dir: Path | None = None,
     cutoff: float | None = None,
-    rotational_sum_rule: str | None = "BHH",
+    rasr: str | None = "BHH",
     alpha_min: int | None = None,
     log_file: str | None = None,
 ) -> None:
     """
     Fit the second-order force constants with pheasy.
 
-    pheasy reads POSCAR, SPOSCAR and the harmonic displacement and force
-    matrices in work_dir, and writes FORCE_CONSTANTS there.
+    pheasy reads POSCAR, SPOSCAR, and the harmonic displacement and force
+    matrices in work_dir, and writes FORCE_CONSTANTS there. When rasr is set,
+    the rotational sum rule is enforced in both the null-space (-c) and fit (-f)
+    steps. When rasr is None, only translational invariance is enforced.
 
     Parameters
     ----------
@@ -312,19 +406,16 @@ def _run_harmonic_fit(
     cutoff: float or None
         Cutoff of the second-order force constants in Å. None fits them
         without a cutoff.
-    rotational_sum_rule: str or None
-        Rotational sum rule passed to pheasy with --rasr. None enforces none.
+    rasr: str or None
+        Rotational sum rule passed to pheasy via --rasr in -c and -f
+        ("BHH", "BH", or None for translational invariance only).
     alpha_min: int or None
         Base-10 exponent of the smallest LASSO penalty in the search. None keeps
         pheasy's default. Not used without LASSO.
     log_file: str or None
         Log file of the fit in work_dir. None keeps pheasy's default.
     """
-    dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
-    base = (
-        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w 2 "
-        f"--symprec {float(symprec)}"
-    )
+    base = _get_pheasy_command(supercell_matrix, symprec, 2)
     if cutoff is not None:
         base += f" --c2 {float(cutoff)}"
     fit = f"{base} -f --full_ifc"
@@ -336,8 +427,8 @@ def _run_harmonic_fit(
             fit += f" --alpha_min {int(alpha_min)}"
         if random_seed is not None:
             fit += f" --seed {int(random_seed)}"
-    if rotational_sum_rule is not None:
-        fit += f" --rasr {rotational_sum_rule}"
+    if rasr is not None:
+        fit += f" --rasr {rasr}"
     fit += (
         f" --ndata {int(num_har)} "
         f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
@@ -345,11 +436,8 @@ def _run_harmonic_fit(
     if log_file is not None:
         fit += f" -o {log_file}"
 
+    _run_cluster_and_null_space(base, "--nbody 2", work_dir, rasr=rasr)
     commands = [
-        # clusters and orbits
-        f"{base} -s --nbody 2",
-        # null space
-        f"{base} -c",
         # sensing matrix from the displacement matrix
         (
             f"{base} -d --ndata {int(num_har)} --disp_file "
@@ -359,6 +447,150 @@ def _run_harmonic_fit(
     ]
     for cmd in commands:
         subprocess.run(shlex.split(cmd), cwd=work_dir, check=True)
+
+
+def _force_fit_errors(
+    fc_file: Path,
+    phonon: Phonopy,
+    disps: np.ndarray,
+    forces: np.ndarray,
+) -> tuple[float, float]:
+    """Return the relative L2 force error and RMSE (eV/Å) for FORCE_CONSTANTS."""
+    fc = parse_FORCE_CONSTANTS(filename=fc_file)
+    if fc.shape[0] != fc.shape[1]:
+        fc = compact_fc_to_full_fc(phonon.primitive, fc)
+    residual = forces + np.einsum("ijab,njb->nia", fc, disps)
+    residual_norm = float(np.linalg.norm(residual))
+    force_norm = float(np.linalg.norm(forces))
+    if force_norm > 0:
+        sigma = residual_norm / force_norm
+    else:
+        sigma = 0.0 if residual_norm == 0 else float("inf")
+    rmse = float(np.sqrt(np.mean(residual**2)))
+    return sigma, rmse
+
+
+def _fit_harmonic_force_constants(
+    phonon: Phonopy,
+    supercell_matrix: np.ndarray,
+    symprec: float,
+    num_har: int,
+    use_lasso: bool,
+    random_seed: int | None,
+    disps: np.ndarray,
+    forces: np.ndarray,
+    max_relative_error_ratio: float = 1.5,
+    max_force_rmse: float = 0.01,
+) -> str | None:
+    """
+    Fit harmonic force constants with BHH, BH, or ASR and keep the strongest valid fit.
+
+    Fits an ASR baseline (translational invariance only), then tries BHH
+    (Born-Huang and Huang) and BH (Born-Huang) in isolated temporary folders.
+    The first rotational-sum-rule fit whose relative force error is within
+    max(max_relative_error_ratio * sigma_asr, 1e-4) and (when the ASR baseline
+    itself is below max_force_rmse) whose force RMSE is below max_force_rmse
+    is copied to FORCE_CONSTANTS in the current directory. Otherwise, the ASR
+    baseline is kept.
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        Phonopy object for the crystal structure.
+    supercell_matrix: np.ndarray
+        Diagonal supercell matrix.
+    symprec: float
+        Symmetry precision.
+    num_har: int
+        Number of displaced supercells in the fit.
+    use_lasso: bool
+        Fit with LASSO if True, and with least squares if False.
+    random_seed: int or None
+        Seed of the LASSO fit.
+    disps: np.ndarray
+        Harmonic displacement array of shape (num_har, n_atoms, 3).
+    forces: np.ndarray
+        Harmonic force array of shape (num_har, n_atoms, 3).
+    max_relative_error_ratio: float
+        Maximum allowed ratio of candidate to ASR relative force error.
+    max_force_rmse: float
+        Maximum allowed force RMSE in eV/Å.
+
+    Returns
+    -------
+    str or None
+        Rotational sum rule of the kept fit ("BHH", "BH", or None for ASR).
+    """
+    input_files = (
+        "POSCAR",
+        "SPOSCAR",
+        _DEFAULT_FILE_PATHS["harmonic_displacements"],
+        _DEFAULT_FILE_PATHS["harmonic_force_matrix"],
+    )
+    fc_name = _DEFAULT_FILE_PATHS["force_constants"]
+    dest_fc = Path(fc_name)
+
+    def _run_candidate(work_dir: Path, rasr: str | None) -> tuple[float, float]:
+        for filename in input_files:
+            shutil.copy(filename, work_dir / filename)
+        _run_harmonic_fit(
+            supercell_matrix,
+            symprec,
+            num_har,
+            use_lasso,
+            random_seed,
+            work_dir=work_dir,
+            rasr=rasr,
+        )
+        return _force_fit_errors(work_dir / fc_name, phonon, disps, forces)
+
+    with tempfile.TemporaryDirectory(dir=".") as tmp:
+        tmp_path = Path(tmp)
+        asr_dir = tmp_path / "asr"
+        asr_dir.mkdir()
+        sigma_asr, rmse_asr = _run_candidate(asr_dir, rasr=None)
+
+        kept_label, kept_dir = "ASR", asr_dir
+        kept_rasr: str | None = None
+        kept_sigma, kept_rmse = sigma_asr, rmse_asr
+        sigma_limit = max(max_relative_error_ratio * sigma_asr, 1e-4)
+        for rasr in ("BHH", "BH"):
+            cand_dir = tmp_path / rasr.lower()
+            cand_dir.mkdir()
+            try:
+                sigma, rmse = _run_candidate(cand_dir, rasr=rasr)
+            except (subprocess.CalledProcessError, FileNotFoundError) as exc:
+                logger.warning(
+                    "Harmonic pheasy fit with --rasr %s failed: %s", rasr, exc
+                )
+                continue
+            rmse_ok = rmse < max_force_rmse if rmse_asr < max_force_rmse else True
+            if sigma <= sigma_limit and rmse_ok:
+                kept_label, kept_rasr, kept_dir = rasr, rasr, cand_dir
+                kept_sigma, kept_rmse = sigma, rmse
+                break
+
+        if kept_rmse >= max_force_rmse:
+            logger.warning(
+                "Kept harmonic %s fit has force RMSE (%.5f eV/Å) at or above "
+                "max_force_rmse (%.5f eV/Å).",
+                kept_label,
+                kept_rmse,
+                max_force_rmse,
+            )
+
+        shutil.copy(kept_dir / fc_name, dest_fc)
+
+    logger.info(
+        "Kept harmonic %s fit (sigma=%.5f, RMSE=%.5f eV/Å, ASR sigma=%.5f, "
+        "RMSE=%.5f eV/Å).",
+        kept_label,
+        kept_sigma,
+        kept_rmse,
+        sigma_asr,
+        rmse_asr,
+    )
+    return kept_rasr
 
 
 def _run_anharmonic_fit(
@@ -409,24 +641,13 @@ def _run_anharmonic_fit(
         it, the cross-validated penalty and the fitted force constants change
         from run to run on the same forces.
     """
-    dim = " ".join(str(int(supercell_matrix[i][i])) for i in range(3))
-    base = (
-        f"{SETTINGS.PHEASY_CMD} --scell SPOSCAR --dim {dim} -w {anhar_max_order} "
-        f"--symprec {float(symprec)}"
-    )
-    cutoffs = f"--c3 {float(fcs_cutoff_radius[1] / ANGSTROM_TO_BOHR)}"
-    if anhar_max_order == 4:
-        cutoffs += f" --c4 {float(fcs_cutoff_radius[2] / ANGSTROM_TO_BOHR)}"
-    nbody = "--nbody " + " ".join(str(n) for n in _NBODY[anhar_max_order])
+    base = _get_pheasy_command(supercell_matrix, symprec, anhar_max_order)
+    clusters = _get_anharmonic_cluster_options(anhar_max_order, fcs_cutoff_radius)
     fix_fc2 = "--fix_fc2 --fc2_fmt PHONOPY " if method == "cocktail" else ""
     log_file = _DEFAULT_FILE_PATHS["anharmonic_fit_log"]
     seed = f"--seed {int(random_seed)} " if random_seed is not None else ""
 
     commands = [
-        # clusters and orbits
-        f"{base} -s {nbody} {cutoffs}",
-        # null space
-        f"{base} -c",
         # sensing matrix from the displacement matrix
         (
             f"{base} -d --ndata {int(num_anhar)} --disp_file "
@@ -445,6 +666,7 @@ def _run_anharmonic_fit(
     ]
     # pheasy appends to its log, so remove the log of an earlier fit
     (work_dir / log_file).unlink(missing_ok=True)
+    _run_cluster_and_null_space(base, clusters, work_dir)
     for cmd in commands:
         subprocess.run(shlex.split(cmd), cwd=work_dir, check=True)
 
@@ -575,10 +797,14 @@ def generate_phonon_displacements(
     )
 
     supercell_ph = phonon.supercell
-    num_har = _get_num_harmonic_supercells(phonon, num_displaced_supercells)
+    num_har = _get_num_harmonic_supercells(
+        phonon,
+        num_displaced_supercells,
+        count_free_fcs=lambda: _get_num_free_fcs(supercell_ph, symprec)[0],
+    )
 
     if verbose:
-        (n_fp,) = _get_num_irreducible_fcs(supercell_ph, 2)
+        n_fp, _ = _get_num_free_fcs(supercell_ph, symprec)
         logger.info(
             f"There are {n_fp} free parameters for the second-order force "
             f"constants (FCs), and {num_har} displaced supercells are used to "
@@ -610,6 +836,7 @@ def generate_phonon_displacements(
         )
         num_dis_cells_anhar = _get_num_anharmonic_supercells(
             supercell_ph,
+            symprec,
             num_disp_anhar,
             anhar_max_order,
             fcs_cutoff_radius,
@@ -715,7 +942,8 @@ def generate_frequencies_eigenvectors(
         reproducible.
     kwargs: dict
         Further options read by this job, such as npoints_band, filename_bs,
-        filename_dos, kpoint_density_dos and store_force_constants.
+        filename_dos, kpoint_density_dos, store_force_constants,
+        max_relative_error_ratio, and max_force_rmse.
     """
     _check_anharmonic_settings(
         anhar_max_order,
@@ -800,7 +1028,11 @@ def generate_frequencies_eigenvectors(
     # separate the dataset into harmonic and anharmonic parts
     num_har = dataset_disps_array_use.shape[0]
     if cal_anhar_fcs:
-        num_har = _get_num_harmonic_supercells(phonon, num_displaced_supercells)
+        num_har = _get_num_harmonic_supercells(
+            phonon,
+            num_displaced_supercells,
+            count_free_fcs=lambda: _get_num_free_fcs(supercell, symprec)[0],
+        )
 
     np.save(
         _DEFAULT_FILE_PATHS["harmonic_displacements"],
@@ -834,7 +1066,18 @@ def generate_frequencies_eigenvectors(
             stacklevel=2,
         )
     logger.info("Start running pheasy in cluster")
-    _run_harmonic_fit(supercell_matrix, symprec, num_har, use_lasso, random_seed)
+    kept_rasr = _fit_harmonic_force_constants(
+        phonon=phonon,
+        supercell_matrix=supercell_matrix,
+        symprec=symprec,
+        num_har=num_har,
+        use_lasso=use_lasso,
+        random_seed=random_seed,
+        disps=dataset_disps_array_use[:num_har, :, :],
+        forces=dataset_forces_array_disp[:num_har, :, :],
+        max_relative_error_ratio=kwargs.get("max_relative_error_ratio", 1.5),
+        max_force_rmse=kwargs.get("max_force_rmse", 0.01),
+    )
 
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
     if cal_anhar_fcs and not fc_file.exists():
@@ -892,9 +1135,6 @@ def generate_frequencies_eigenvectors(
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
         phonon.force_constants = force_constants
-        # symmetrize the force constants to make them physically correct based on
-        # the space group symmetry of the crystal structure.
-        phonon.symmetrize_force_constants()
 
     # with phonopy.load("phonopy.yaml") the phonopy API can be used
     phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
@@ -957,7 +1197,6 @@ def generate_frequencies_eigenvectors(
 
         force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
         phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
 
         bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
             phonon,
@@ -996,13 +1235,13 @@ def generate_frequencies_eigenvectors(
             random_seed,
             work_dir=refit_dir,
             cutoff=10.0,
+            rasr=kept_rasr,
         )
 
         force_constants = parse_FORCE_CONSTANTS(
             filename=refit_dir / _DEFAULT_FILE_PATHS["force_constants"]
         )
         phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
 
         phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
 
@@ -1046,38 +1285,11 @@ def generate_frequencies_eigenvectors(
         units=kwargs.get("units", "THz"),
     )
 
-    # will compute thermal displacement matrices
-    # for the primitive cell (phonon.primitive!)
-    # only this is available in phonopy
-    if kwargs.get("create_thermal_displacements"):
-        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
-        freq_min_thermal_displacements = kwargs.get(
-            "freq_min_thermal_displacements", 0.0
-        )
-        phonon.run_thermal_displacement_matrices(
-            t_min=kwargs.get("tmin_thermal_displacements", 0),
-            t_max=kwargs.get("tmax_thermal_displacements", 500),
-            t_step=kwargs.get("tstep_thermal_displacements", 100),
-            freq_min=freq_min_thermal_displacements,
-        )
-
-        temperature_range_thermal_displacements = np.arange(
-            kwargs.get("tmin_thermal_displacements", 0),
-            kwargs.get("tmax_thermal_displacements", 500),
-            kwargs.get("tstep_thermal_displacements", 100),
-        )
-        for idx, temp in enumerate(temperature_range_thermal_displacements):
-            phonon.thermal_displacement_matrices.write_cif(
-                phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-            )
-        _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-        tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-        tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-    else:
-        tdisp_mat = None
-        tdisp_mat_cif = None
+    thermal_displacement_data = (
+        _get_thermal_displacement_data(phonon, **kwargs)
+        if kwargs.get("create_thermal_displacements")
+        else None
+    )
 
     formula_units = (
         structure.composition.num_atoms
@@ -1110,14 +1322,7 @@ def generate_frequencies_eigenvectors(
         supercell_matrix=phonon.supercell_matrix.tolist(),
         primitive_matrix=phonon.primitive_matrix.tolist(),
         code=code,
-        thermal_displacement_data={
-            "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-            "thermal_displacement_matrix_cif": tdisp_mat_cif,
-            "thermal_displacement_matrix": tdisp_mat,
-            "freq_min_thermal_displacements": freq_min_thermal_displacements,
-        }
-        if kwargs.get("create_thermal_displacements")
-        else None,
+        thermal_displacement_data=thermal_displacement_data,
         jobdirs={
             "displacements_job_dirs": displacement_data["dirs"],
             "static_run_job_dir": kwargs["static_run_job_dir"],

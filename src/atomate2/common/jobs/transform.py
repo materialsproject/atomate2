@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import tarfile
 from dataclasses import dataclass, field
+from importlib.util import find_spec
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -83,6 +84,11 @@ class SQS(Transformer):
             best_only=True,
         )
     )
+
+    def __post_init__(self) -> None:
+        """Fail when the job is created, not when it runs, if icet is missing."""
+        if self.transformation.sqs_method.startswith("icet") and not find_spec("icet"):
+            raise ImportError("pip install atomate2[sqs] to use icet SQS methods")
 
     @staticmethod
     def check_structure(structure: Structure, scaling: Sequence[int]) -> Structure:

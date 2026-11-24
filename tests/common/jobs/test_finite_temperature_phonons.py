@@ -97,6 +97,7 @@ def test_select_md_snapshots_vasp(cu_supercell):
         [(idx + 1) * 0.002 for idx in indices]
     )
     assert output["md_time"] == pytest.approx(0.6)
+    assert output["time_step"] == 2.0
     assert output["rms_displacement"] == pytest.approx(np.sqrt(3) * 0.05, rel=0.1)
 
     with pytest.raises(ValueError, match="fewer than the 300 snapshots"):
@@ -115,6 +116,21 @@ def test_select_md_snapshots_vasp(cu_supercell):
     with pytest.raises(ValueError, match=r"0 MD steps in OSZICAR\..*NBLOCK = 1"):
         select_md_snapshots.original(
             [str(Path("md4").resolve())], "vasp", cu_supercell, 1, 0.1, 10
+        )
+
+    # a run with another POTIM
+    Path("md5").mkdir()
+    for name in ("XDATCAR", "OSZICAR"):
+        (Path("md5") / name).write_text((Path("md1") / name).read_text())
+    (Path("md5") / "INCAR").write_text("IBRION = 0\nPOTIM = 1.0\n")
+    with pytest.raises(ValueError, match=r"different time steps: \[1.0, 2.0\] fs"):
+        select_md_snapshots.original(
+            [str(Path(name).resolve()) for name in ("md1", "md5")],
+            "vasp",
+            cu_supercell,
+            1,
+            0.1,
+            10,
         )
 
 
@@ -335,6 +351,7 @@ def test_fit_recovers_harmonic_force_constants():
     snapshot_data = {
         "snapshot_times": [0.0] * 20,
         "md_time": 1.0,
+        "time_step": 1.0,
         "rms_displacement": 0.05,
     }
     born = [np.eye(3).tolist()] * 3 + [(-3 * np.eye(3)).tolist()]
@@ -345,7 +362,6 @@ def test_fit_recovers_harmonic_force_constants():
         "displacement_data": displacement_data,
         "temperature": TEMPERATURE,
         "thermostat": "langevin",
-        "md_time_step": 1.0,
         "equilibration_time": 0.5,
         "code": "forcefields",
         "md_code": "forcefields",

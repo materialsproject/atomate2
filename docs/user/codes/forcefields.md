@@ -155,3 +155,18 @@ We compared the "mp-dielectric" head with the DFPT results in the Materials Proj
 The 50 materials have no Materials Project dielectric data, so they are likely not in the training data of MACE-Field.
 The Born charges are off by 0.26 e on average, about 11%.
 The high-frequency dielectric constants are off by 8% on average, and by more than 20% for 2 of the 50 materials.
+
+## Phonons with forcefields that are not equivariant {#phonon-equivariance-notes}
+
+The phonopy-based phonon workflows displace one atom by 0.01 Å and compute the force constants from the forces of the displaced supercells.
+This assumes that the forces in the undisplaced supercell are zero.
+An equivariant model such as MACE gives zero forces in a symmetric structure.
+For MgO, MACE-OMAT-0-medium gives forces below 1e-13 eV/Å.
+UPET is not equivariant.
+In six structures relaxed with `fix_symmetry=True`, UPET leaves forces of 4e-3 to 4e-2 eV/Å in the undisplaced supercell.
+The displacement turns these forces into large imaginary modes at Gamma.
+UPET can average its predictions over rotations with `rotational_average_order` in `calculator_kwargs`.
+This makes each force call 30 to 100 times slower for orders 1 and 3.
+
+Before using a new forcefield for phonons, compute the forces in the undisplaced supercell of a relaxed symmetric structure.
+If they are not close to zero, use the symmetrization of the model if it has one, or a model that is equivariant.
