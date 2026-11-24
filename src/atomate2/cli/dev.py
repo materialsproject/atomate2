@@ -245,14 +245,14 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     NB: note that all the files in the folder will be compressed, in light of a copy to
     the test folder, unless the --no-compress is selected.
 
-    NB: the run directory of a generate_perts job now contains an abiget.json.gz
-    file with the recorded abipy abiget_* results (see
+    NB: the run directory of any job calling the abiget_* helpers now contains an
+    abiget.json.gz file with the recorded abipy abiget_* results (see
     atomate2.utils.testing.abinit). It is consumed by abinit-test-data, which
-    copies it into the generate_perts reference directory of the test data.
+    copies it into the job's reference directory of the test data.
 
-    NB: generate_perts runs abinit through the abipy abiget_* helpers (each building
+    NB: such jobs run abinit through the abipy abiget_* helpers (each building
     and running its own run.abi/run.abo in a scratch subdir, e.g. cwd/dte), but
-    has no atomate2 task of its own — no run.abi/abo at the job-dir root.
+    have no atomate2 task of their own — no run.abi/abo at the job-dir root.
     """
     from pathlib import Path
 
@@ -287,13 +287,12 @@ def abinit_generate_reference(structure_file: str, make_kwargs: dict) -> None:
     if make_kwargs:
         dumpfn({"make_kwargs": make_kwargs}, "make_info.json")
 
-    # Capture the abipy abiget results of a generate_perts job during the
-    # run: the real abipy methods are called as usual (running real abinit), and
-    # their results are recorded to an abiget.json.gz file in the run directory of
-    # the generate_perts job (jobflow cds into each job dir, so Path.cwd() is the
-    # job's run dir when the methods are called). If the flow contains no
-    # generate_perts job, the patched methods are never called and no file is
-    # written.
+    # Capture the abipy abiget results of any job calling the abiget_* helpers
+    # during the run: the real abipy methods are called as usual (running real
+    # abinit), and their results are recorded to an abiget.json.gz file in the
+    # run directory of the job (jobflow cds into each job dir, so Path.cwd() is
+    # the job's run dir when the methods are called). If the flow contains no
+    # such job, the patched methods are never called and no file is written.
     from abipy.abio.inputs import AbinitInput
 
     abiget_recorder = AbigetRecorder()
@@ -432,6 +431,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     original_mapping = {}
     mapping: dict[Any, Any] = {}
     has_abiget_mock = False
+    abiget_job_names: list[str] = []
 
     def _add_to_mapping(
         job_name: str, index_job: str, job_index_dir: Path, orig_job_dir: Path | None
@@ -560,7 +560,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
 
     for output in outputs:
         if isinstance(output.output, dict) and "dir_name" in output.output:
-            # a dynamic job whose output records its run dir (currently generate_perts):
+            # a dynamic job whose output records its run dir (e.g. generate_perts):
             # such jobs run abinit through the abipy abiget_* helpers (each building
             # and running its own run.abi/run.abo in a scratch subdir, e.g. cwd/dte)
             # but have no atomate2 task of their own — no run.abi/abo at the job-dir
@@ -572,7 +572,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                 index_job = str(
                     output.index
                 )  # execution index — matches CURRENT_JOB at mock time
-                job_name = "generate_perts"
+                job_name = output.name
                 job_dir = test_dir / job_name
                 job_index_dir = job_dir / index_job
                 job_index_dir.mkdir(parents=True, exist_ok=True)
@@ -580,6 +580,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                 # copy verbatim: the file is already deterministic gzip JSON
                 shutil.copyfile(run_abiget_file, job_index_dir / "abiget.json.gz")
                 has_abiget_mock = True
+                abiget_job_names.append(job_name)
             continue
 
         if (
@@ -735,14 +736,16 @@ class Test{maker_name}:
     """
 
     if has_abiget_mock:
-        test_function_str += """
-This flow includes a generate_perts job. Its abiget reference data
-(generate_perts/<index>/abiget.json.gz) is copied automatically from the
-reference run's job dir by abinit-test-data when present. If the file is
-missing, run the new test once with --abinit-record-abiget (requires real abinit
-on PATH) to create it. The flag is also the fast way to refresh the abiget
-reference alone, without re-running the whole reference flow, when only abipy
-or the atomate2 input generation changed.
+        names = ", ".join(abiget_job_names)
+        test_function_str += f"""
+This flow includes job(s) calling the abipy abiget_* helpers ({names}).
+Their abiget reference data (<job>/<index>/abiget.json.gz) is copied
+automatically from the reference run's job dir by abinit-test-data when
+present. If the file is missing, run the new test once with
+--abinit-record-abiget (requires real abinit on PATH) to create it. The flag
+is also the fast way to refresh the abiget reference alone, without
+re-running the whole reference flow, when only abipy or the atomate2 input
+generation changed.
 """
 
     print(test_function_str)  # noqa: T201
