@@ -4,7 +4,8 @@ Forces come from ASE's EMT potential, so the jobs run end to end without any
 DFT reference data.
 """
 
-import sys
+import math
+import subprocess
 import warnings
 from pathlib import Path
 
@@ -14,21 +15,24 @@ import pytest
 from ase.build import bulk
 from ase.calculators.emt import EMT
 from jobflow import run_locally
-from phonopy.file_IO import parse_FORCE_CONSTANTS
+from phonopy.file_IO import parse_FORCE_CONSTANTS, write_FORCE_CONSTANTS
+from phonopy.harmonic.force_constants import full_fc_to_compact_fc
 from pymatgen.core import Lattice, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
 import atomate2.common.jobs.pheasy as pheasy_jobs
 from atomate2.common.jobs.pheasy import (
     _check_lasso_alpha,
+    _fit_harmonic_force_constants,
+    _force_fit_errors,
     _get_num_anharmonic_supercells,
+    _get_num_free_fcs,
     _run_harmonic_fit,
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
 )
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
-    _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
 )
 
@@ -225,6 +229,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     phonon = _generate_phonon_object(_cu_structure(), **COMMON_KWARGS)
     kwargs = {
         "supercell": phonon.supercell,
+        "symprec": COMMON_KWARGS["symprec"],
         "anhar_max_order": 3,
         "fcs_cutoff_radius": [-1, 12, 10],
         "anhar_fit_methods": ["one-shot"],
@@ -234,7 +239,9 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     assert _get_num_anharmonic_supercells(num_disp_anhar=7, **kwargs) == 7
 
     # sized from the free force constants, above the floor of 20
-    assert _get_num_irreducible_fcs(phonon.supercell, 3, [-1, 12]) == [25, 324]
+    assert _get_num_free_fcs(
+        phonon.supercell, COMMON_KWARGS["symprec"], 3, [-1, 12]
+    ) == (25, 349)
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **kwargs) == 108
 
     # the first cutoff is not used, since pheasy fits fc2 without a cutoff
@@ -245,7 +252,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
     order_4 = {**kwargs, "anhar_max_order": 4, "anhar_fit_methods": ["cocktail"]}
     assert _get_num_anharmonic_supercells(num_disp_anhar=0, **order_4) == 224
 
-    # a binary compound, L1_2 Cu3Au, needs one cutoff per pair of elements
+    # a binary compound, L1_2 Cu3Au
     cu3au = Structure(
         Lattice.cubic(3.75),
         ["Au", "Cu", "Cu", "Cu"],
@@ -263,12 +270,6 @@ def test_get_num_anharmonic_supercells(monkeypatch):
         _get_num_anharmonic_supercells(num_disp_anhar=0, **kwargs)
 
 
-def test_get_num_irreducible_fcs_without_alm(monkeypatch):
-    monkeypatch.setitem(sys.modules, "alm", None)
-    with pytest.raises(ImportError, match="ALM could not be imported"):
-        _get_num_irreducible_fcs(None, 2)
-
-
 def test_run_harmonic_fit(monkeypatch):
     """The pheasy commands of the harmonic fit and of the short-cutoff refit."""
     calls = []
@@ -282,10 +283,16 @@ def test_run_harmonic_fit(monkeypatch):
     _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103)
     assert [args[11] for args, _, _ in calls] == ["-s", "-c", "-d", "-f"]
     assert all(cwd is None and check for _, cwd, check in calls)
+    assert "--rasr BHH" in " ".join(calls[1][0])
     fit = " ".join(calls[-1][0])
     assert "-l LASSO --std --tol 1e-8 --seed 103 --rasr BHH --ndata 5" in fit
     assert "--alpha_min" not in fit
     assert " -o " not in fit
+
+    calls.clear()
+    _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103, rasr=None)
+    assert "--rasr" not in " ".join(calls[1][0])
+    assert "--rasr" not in " ".join(calls[-1][0])
 
     calls.clear()
     refit_dir = Path("short_cutoff_refit")
@@ -306,10 +313,11 @@ def test_run_harmonic_fit(monkeypatch):
         20,
         use_lasso=True,
         random_seed=103,
-        rotational_sum_rule=None,
+        rasr=None,
         alpha_min=-6,
         log_file="fit.log",
     )
+    assert "--rasr" not in " ".join(calls[1][0])
     fit = " ".join(calls[-1][0])
     assert "-l LASSO --std --tol 1e-8 --alpha_min -6 --seed 103 --ndata 20" in fit
     assert fit.endswith(" -o fit.log")
@@ -319,6 +327,127 @@ def test_run_harmonic_fit(monkeypatch):
     monkeypatch.setattr(pheasy_jobs.SETTINGS, "PHEASY_CMD", "srun -n 1 pheasy")
     _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103)
     assert all(args[:4] == ["srun", "-n", "1", "pheasy"] for args, _, _ in calls)
+
+
+@pytest.mark.parametrize(
+    ("metrics", "expected_rasr", "expected_calls"),
+    [
+        (
+            {None: (0.01, 0.002), "BHH": (0.012, 0.003), "BH": (0.011, 0.002)},
+            "BHH",
+            [None, "BHH"],
+        ),
+        (
+            {None: (0.01, 0.002), "BHH": (0.02, 0.004), "BH": (0.012, 0.003)},
+            "BH",
+            [None, "BHH", "BH"],
+        ),
+        (
+            {None: (0.01, 0.002), "BHH": "error", "BH": (0.012, 0.003)},
+            "BH",
+            [None, "BHH", "BH"],
+        ),
+        (
+            {None: (0.01, 0.002), "BHH": (0.012, 0.02), "BH": (0.02, 0.004)},
+            None,
+            [None, "BHH", "BH"],
+        ),
+        (
+            {None: (0.0, 0.0), "BHH": (1e-6, 1e-7), "BH": (1e-6, 1e-7)},
+            "BHH",
+            [None, "BHH"],
+        ),
+        (
+            {None: (0.05, 0.02), "BHH": (0.05, 0.02), "BH": (0.05, 0.02)},
+            "BHH",
+            [None, "BHH"],
+        ),
+    ],
+)
+def test_fit_harmonic_force_constants_fallback(
+    tmp_dir, monkeypatch, metrics, expected_rasr, expected_calls
+):
+    """Select BHH, BH, or ASR based on relative error ratio and force RMSE."""
+    for name in ("POSCAR", "SPOSCAR", "disp_matrix.npy", "force_matrix.npy"):
+        Path(name).write_text("stub")
+
+    seen = []
+
+    def fake_fit(*_args, work_dir, rasr, **_kwargs):
+        seen.append(rasr)
+        if metrics[rasr] == "error":
+            raise subprocess.CalledProcessError(1, ["pheasy"])
+        (work_dir / "FORCE_CONSTANTS").write_text(f"fc_{rasr or 'ASR'}")
+
+    def fake_errors(fc_file, *_args):
+        tag = fc_file.read_text().removeprefix("fc_")
+        return metrics[None if tag == "ASR" else tag]
+
+    monkeypatch.setattr(pheasy_jobs, "_run_harmonic_fit", fake_fit)
+    monkeypatch.setattr(pheasy_jobs, "_force_fit_errors", fake_errors)
+
+    kept = _fit_harmonic_force_constants(
+        phonon=None,
+        supercell_matrix=np.eye(3, dtype=int),
+        symprec=1e-3,
+        num_har=5,
+        use_lasso=True,
+        random_seed=103,
+        disps=np.zeros((1, 1, 3)),
+        forces=np.zeros((1, 1, 3)),
+    )
+
+    assert kept == expected_rasr
+    assert seen == expected_calls
+    assert Path("FORCE_CONSTANTS").read_text() == f"fc_{expected_rasr or 'ASR'}"
+
+
+def test_force_fit_errors(tmp_dir):
+    """Compute relative L2 error and RMSE for full and compact force constants."""
+    kwargs = {**COMMON_KWARGS, "supercell_matrix": [[2, 0, 0], [0, 2, 0], [0, 0, 2]]}
+    phonon = _generate_phonon_object(_cu_structure(), **kwargs)
+    n_sc = len(phonon.supercell)
+
+    fc = np.zeros((n_sc, n_sc, 3, 3))
+    for idx in range(n_sc):
+        fc[idx, idx] = 2.0 * np.eye(3)
+
+    disps = np.zeros((2, n_sc, 3))
+    disps[0, 0, 0] = 0.01
+    disps[1, 1, 1] = -0.02
+    residual = np.zeros((2, n_sc, 3))
+    residual[0, 0, 0] = 0.004
+    forces = -np.einsum("ijab,njb->nia", fc, disps) + residual
+
+    expected_sigma = float(np.linalg.norm(residual) / np.linalg.norm(forces))
+    expected_rmse = float(np.sqrt(np.mean(residual**2)))
+
+    full_file = Path("FORCE_CONSTANTS_full")
+    write_FORCE_CONSTANTS(fc, filename=full_file)
+    sigma_full, rmse_full = _force_fit_errors(full_file, phonon, disps, forces)
+    assert sigma_full == pytest.approx(expected_sigma, rel=1e-6)
+    assert rmse_full == pytest.approx(expected_rmse, rel=1e-6)
+
+    compact_file = Path("FORCE_CONSTANTS_compact")
+    compact_fc = full_fc_to_compact_fc(phonon.primitive, fc)
+    write_FORCE_CONSTANTS(
+        compact_fc, filename=compact_file, p2s_map=phonon.primitive.p2s_map
+    )
+    sigma_compact, rmse_compact = _force_fit_errors(compact_file, phonon, disps, forces)
+    assert sigma_compact == pytest.approx(expected_sigma, rel=1e-6)
+    assert rmse_compact == pytest.approx(expected_rmse, rel=1e-6)
+
+    zero_sigma, zero_rmse = _force_fit_errors(
+        full_file, phonon, np.zeros_like(disps), np.zeros_like(forces)
+    )
+    assert zero_sigma == 0.0
+    assert zero_rmse == 0.0
+
+    inf_sigma, inf_rmse = _force_fit_errors(
+        full_file, phonon, disps, np.zeros_like(forces)
+    )
+    assert math.isinf(inf_sigma)
+    assert inf_rmse > 0.0
 
 
 def test_check_lasso_alpha(tmp_dir):
