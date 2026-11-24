@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import logging
-from glob import glob
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from atomate2.common.files import copy_files, get_zfile, gunzip_files
+from atomate2.common.files import copy_files, gunzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 from atomate2.utils.path import strip_hostname
 
@@ -49,40 +48,29 @@ def copy_aims_outputs(
     """
     src_dir = strip_hostname(src_dir)
     logger.info(f"Copying FHI-aims inputs from {src_dir}")
-    directory_listing = file_client.listdir(src_dir, host=src_host)
-    # additional files like bands, DOS, *.cube, whatever
-    additional_files = additional_aims_files or []
 
-    # copy files
     # (no need to copy aims.out by default; it can be added to additional_aims_files
     # explicitly if needed)
-    files: list[str] = (
+    patterns = (
         ["hessian.aims", "geometry.in.next_step", "*.csc"] if restart_to_input else []
     )
-
-    files += [
-        Path(f).name
-        for pattern in set(files + additional_files)
-        for f in glob((Path(src_dir) / pattern).as_posix())
-    ]
-
-    all_files = [
-        get_zfile(directory_listing, str(r), allow_missing=True) for r in files
-    ]
-    all_files = [f for f in all_files if f]
+    # additional files like bands, DOS, *.cube, whatever
+    patterns += additional_aims_files or []
+    gz_patterns = [f"{pattern}.gz" for pattern in patterns]
 
     copy_files(
         src_dir,
         src_host=src_host,
-        include_files=all_files,
+        include_files=patterns + gz_patterns,
+        allow_missing=True,
         file_client=file_client,
     )
 
-    zipped_files = [f for f in all_files if f.name.endswith("gz")]
-
+    # if both the gzipped and the plain version were copied, keep the gzipped one
     gunzip_files(
-        include_files=zipped_files,
+        include_files=gz_patterns,
         allow_missing=True,
+        force=True,
         file_client=file_client,
     )
 

@@ -166,7 +166,7 @@ jobs:
           micromamba activate a2
           python -m pip install --upgrade pip
           # pheasy is the pheasy dependency group, not an extra
-          uv pip install .[strict,abinit,approxneb,aims,pheasy,hiphive,phono3py] --group tests --group pheasy
+          uv pip install .[strict,abinit,approxneb,aims,pheasy,hiphive,phono3py,sqs] --group tests --group pheasy
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
 
