@@ -65,7 +65,7 @@ class FiniteTemperaturePhononDoc(PhononBSDOSDoc):
     )
     force_rmse: float | None = Field(
         None,
-        description="Root mean square error of the symmetrized force constants on "
+        description="Root mean square error of the fitted force constants on "
         "the snapshot forces used in the fit, in eV/Angstrom.",
     )
     max_residual_force: float | None = Field(
