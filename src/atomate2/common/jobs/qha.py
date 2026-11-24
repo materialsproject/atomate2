@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
 from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
+from pymatgen.util.due import Doi, due
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc, PhononSummaryData
@@ -107,6 +109,7 @@ def analyze_free_energy(
     t_max: float = None,
     pressure: float = None,
     ignore_imaginary_modes: bool = False,
+    fit_imaginary_volumes: bool = False,
     eos_type: str = "vinet",
     **kwargs,
 ) -> Flow:
@@ -125,11 +128,26 @@ def analyze_free_energy(
     ignore_imaginary_modes: bool
         If True, all free energies will be used
         for EOS fit
+    fit_imaginary_volumes: bool
+        If True, at least 4 volumes were computed and at least 2 of them have no
+        imaginary modes, the volumes with imaginary modes are kept instead of left
+        out. Their vibrational free energies, heat capacities and entropies come
+        from a linear fit in the volume to the volumes without imaginary modes, at
+        each temperature, as in Deringer et al., Phys. Rev. B 89, 094303 (2014)
+        and Bustamante et al., arXiv:2611.15767 (2026).
+        Their electronic energies stay those of the calculations. Cannot be
+        combined with ignore_imaginary_modes.
     kwargs: dict
         Additional keywords to pass to this job
     """
-    # only add free energies if there are no imaginary modes
-    # tolerance has to be tested
+    if ignore_imaginary_modes and fit_imaginary_volumes:
+        raise ValueError(
+            "ignore_imaginary_modes and fit_imaginary_volumes cannot both be True. "
+            "ignore_imaginary_modes keeps the free energies of all volumes, so no "
+            "volume would be fitted."
+        )
+    # only use the free energies of volumes without imaginary modes, unless they
+    # are fitted below
     electronic_energies: list[list[float]] = []
     free_energies: list[list[float]] = []
     heat_capacities: list[list[float]] = []
@@ -142,6 +160,44 @@ def analyze_free_energy(
     ]
     supercell_matrix: list[list[float]] = phonon_outputs[0].supercell_matrix
 
+    outputs = [output for _, output in sorted(zip(volume, phonon_outputs, strict=True))]
+    kept = [o for o in outputs if not o.has_imaginary_modes or ignore_imaginary_modes]
+    thermo = {id(o): (o.free_energies, o.heat_capacities, o.entropies) for o in kept}
+    if fit_imaginary_volumes and len(outputs) >= 4 and 2 <= len(kept) < len(outputs):
+        due.cite(
+            Doi("10.1103/PhysRevB.89.094303"),
+            description="Linear fit of vibrational free energy for QHA volumes with "
+            "imaginary modes.",
+            path="atomate2.common.jobs.qha.analyze_free_energy",
+        )
+        due.cite(
+            Doi("10.48550/arXiv.2611.15767"),
+            description="Linear fit of vibrational free energy for QHA volumes with "
+            "imaginary modes.",
+            path="atomate2.common.jobs.qha.analyze_free_energy",
+        )
+        fitted = [o for o in outputs if id(o) not in thermo]
+        lines = [
+            np.polyfit(
+                [o.volume_per_formula_unit for o in kept],
+                [getattr(o, key) for o in kept],
+                1,
+            )
+            for key in ("free_energies", "heat_capacities", "entropies")
+        ]
+        for output in fitted:
+            v = output.volume_per_formula_unit
+            thermo[id(output)] = tuple(slope * v + offset for slope, offset in lines)
+        warnings.warn(
+            f"{len(fitted)} of the {len(outputs)} volumes have imaginary modes. Their "
+            "vibrational free energies, heat capacities and entropies are fitted "
+            f"linearly in the volume to the {len(kept)} volumes without imaginary "
+            "modes. Volumes per formula unit of the fitted volumes: "
+            + ", ".join(f"{o.volume_per_formula_unit:.3f}" for o in fitted),
+            stacklevel=2,
+        )
+        kept = outputs
+
     for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         temperatures.append(float(temp))
         sorted_volume = []
@@ -150,16 +206,15 @@ def analyze_free_energy(
         heat_capacities.append([])
         entropies.append([])
 
-        for _, output in sorted(zip(volume, phonon_outputs, strict=True)):
-            # check if imaginary modes
-            if (not output.has_imaginary_modes) or ignore_imaginary_modes:
-                electronic_energies[itemp].append(output.total_dft_energy)
-                # convert from J/mol in kJ/mol
-                free_energies[itemp].append(output.free_energies[itemp] * 1e-3)
-                heat_capacities[itemp].append(output.heat_capacities[itemp])
-                entropies[itemp].append(output.entropies[itemp])
-                sorted_volume.append(output.volume_per_formula_unit)
-                formula_units.append(output.formula_units)
+        for output in kept:
+            free_energy, heat_capacity, entropy = thermo[id(output)]
+            electronic_energies[itemp].append(output.total_dft_energy)
+            # convert from J/mol in kJ/mol
+            free_energies[itemp].append(free_energy[itemp] * 1e-3)
+            heat_capacities[itemp].append(heat_capacity[itemp])
+            entropies[itemp].append(entropy[itemp])
+            sorted_volume.append(output.volume_per_formula_unit)
+            formula_units.append(output.formula_units)
 
     # potentially implement a space group check in the future
 
@@ -170,7 +225,10 @@ def analyze_free_energy(
             f"imaginary modes, but the {eos_type} fit needs at least 4. Raise "
             "tol_imaginary_modes (THz) in "
             "phonon_maker.generate_frequencies_eigenvectors_kwargs if they are "
-            "numerical noise, or set ignore_imaginary_modes=True to keep all volumes."
+            "numerical noise, or set ignore_imaginary_modes=True to keep all volumes. "
+            "With at least 2 volumes without imaginary modes, "
+            "fit_imaginary_volumes=True fits the vibrational free energies of the "
+            "others."
         )
     if len(set(formula_units)) != 1:
         raise ValueError("There should be only one formula unit.")
