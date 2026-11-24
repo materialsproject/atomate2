@@ -380,8 +380,12 @@ class AseMDMaker(AseMaker, ABC):
             # Note that until dynamics is instantiated,
             # `isinstance(dynamics,NPT)` is False
 
-            # ASE NPT implementation requires upper triangular cell
-            atoms.set_cell(atoms.cell.standard_form(form="upper")[0])
+            # ASE NPT implementation requires upper triangular cell. The atoms
+            # and the starting velocities are rotated with the cell.
+            cell, rotation = atoms.cell.standard_form(form="upper")
+            atoms.set_cell(cell, scale_atoms=True)
+            if initial_velocities:
+                initial_velocities = np.dot(initial_velocities, rotation.T).tolist()
 
         rng = np.random.default_rng(seed=self.mb_velocity_seed)
         if initial_velocities:
