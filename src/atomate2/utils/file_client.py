@@ -490,7 +490,8 @@ class FileClient:
                 )
 
         if host is None:
-            with open(path_nongz, "wb") as f_out, zopen(path, "rb") as f_in:
+            # open the input first so a missing file does not create/truncate output
+            with zopen(path, "rb") as f_in, open(path_nongz, "wb") as f_out:
                 f_out.writelines(f_in)
             path.unlink()
         else:

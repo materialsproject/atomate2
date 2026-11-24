@@ -37,12 +37,15 @@ from trainstation import Optimizer
 from atomate2.common.jobs.phonons import (
     _generate_phonon_object,
     _get_kpath,
+    _get_num_free_fc2,
     _get_num_harmonic_supercells,
-    _get_num_irreducible_fcs,
     _run_band_structure_and_plot,
     _run_total_dos_and_plot,
 )
-from atomate2.common.schemas.phonons import _set_nac_params
+from atomate2.common.schemas.phonons import (
+    _get_thermal_displacement_data,
+    _set_nac_params,
+)
 
 if TYPE_CHECKING:
     from ase.atoms import Atoms
@@ -51,10 +54,11 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # Configurations per suggested displacement set. The minimum set is sized from
-# ALM's free-parameter tally so the equation count reaches it (see
-# _get_num_harmonic_supercells), and this scales from there. pheasy uses the
-# same 1.8. hiPhive's own cluster space has a smaller parameter count than
-# ALM's tally, and the ratio between the two differs between materials.
+# the free second-order force constants of the supercell so the equation count
+# reaches it (see _get_num_harmonic_supercells), and this scales from there.
+# pheasy uses the same 1.8. hiPhive's own cluster space has a smaller parameter
+# count than the supercell count, and the ratio between the two differs between
+# materials.
 _N_CONFIG_MULTIPLIER = 1.8
 
 # Safety margin below hiPhive's maximum allowed cutoff, in Angstrom.
@@ -331,13 +335,13 @@ def generate_phonon_displacements(
         verbose=verbose,
     )
 
-    # 1. the ALM module is used to determine the number of free parameters
-    # (irreducible force constants) corresponding to the second order
-    # force constants (FCs) given a supercell. hiPhive's own cluster space
-    # cannot supply this number: it counts only the parameters inside the pair
-    # cutoff, while ALM counts them over the whole supercell, so ALM's tally is
-    # larger by a factor of two to three. Sizing the displacement set with ALM
-    # is also what pheasy does, which keeps the two workflows comparable.
+    # 1. symfc counts the number of free parameters of the second order force
+    # constants (FCs) of the supercell. hiPhive's own cluster space cannot
+    # supply this number: it counts only the parameters inside the pair
+    # cutoff, while symfc counts them over the whole supercell, so symfc's count
+    # is larger by a factor of two to three. pheasy's count of the free
+    # second-order force constants is the same, which keeps the two workflows
+    # comparable.
     # 2. Based on the number of free parameters, we can determine how many
     # displaced supercells we need to use to extract the second order force
     # constants. Generally, the number of free parameters should be less than
@@ -350,7 +354,7 @@ def generate_phonon_displacements(
     )
 
     if verbose:
-        (n_fp,) = _get_num_irreducible_fcs(phonon.supercell, 2)
+        n_fp = _get_num_free_fc2(phonon.supercell, symprec)
         logger.info(
             f"There are {n_fp} free parameters for the second-order force "
             f"constants (FCs), and {num_har} displaced supercells are used to "
@@ -573,8 +577,8 @@ def generate_frequencies_eigenvectors(
         _DEFAULT_FILE_PATHS["force_constants"],
         symprec,
     )
-    # The displacement count is sized by ALM's tally of irreducible force
-    # constant elements, which is not hiPhive's parameter count, so log how
+    # The displacement count is sized by the free force constants of the whole
+    # supercell, which is not hiPhive's parameter count, so log how
     # much data each parameter actually gets. A low ratio is the signature of
     # a regularized fit that has too little data and softens the modes.
     n_forces = len(atoms_list) * len(supercell) * 3
@@ -678,38 +682,11 @@ def generate_frequencies_eigenvectors(
         units=kwargs.get("units", "THz"),
     )
 
-    # will compute thermal displacement matrices
-    # for the primitive cell (phonon.primitive!)
-    # only this is available in phonopy
-    if kwargs.get("create_thermal_displacements"):
-        phonon.run_mesh(kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False)
-        freq_min_thermal_displacements = kwargs.get(
-            "freq_min_thermal_displacements", 0.0
-        )
-        phonon.run_thermal_displacement_matrices(
-            t_min=kwargs.get("tmin_thermal_displacements", 0),
-            t_max=kwargs.get("tmax_thermal_displacements", 500),
-            t_step=kwargs.get("tstep_thermal_displacements", 100),
-            freq_min=freq_min_thermal_displacements,
-        )
-
-        temperature_range_thermal_displacements = np.arange(
-            kwargs.get("tmin_thermal_displacements", 0),
-            kwargs.get("tmax_thermal_displacements", 500),
-            kwargs.get("tstep_thermal_displacements", 100),
-        )
-        for idx, temp in enumerate(temperature_range_thermal_displacements):
-            phonon.thermal_displacement_matrices.write_cif(
-                phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
-            )
-        _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
-        tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
-
-        tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
-
-    else:
-        tdisp_mat = None
-        tdisp_mat_cif = None
+    thermal_displacement_data = (
+        _get_thermal_displacement_data(phonon, **kwargs)
+        if kwargs.get("create_thermal_displacements")
+        else None
+    )
 
     formula_units = (
         structure.composition.num_atoms
@@ -742,14 +719,7 @@ def generate_frequencies_eigenvectors(
         supercell_matrix=phonon.supercell_matrix.tolist(),
         primitive_matrix=phonon.primitive_matrix.tolist(),
         code=code,
-        thermal_displacement_data={
-            "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
-            "thermal_displacement_matrix_cif": tdisp_mat_cif,
-            "thermal_displacement_matrix": tdisp_mat,
-            "freq_min_thermal_displacements": freq_min_thermal_displacements,
-        }
-        if kwargs.get("create_thermal_displacements")
-        else None,
+        thermal_displacement_data=thermal_displacement_data,
         jobdirs={
             "displacements_job_dirs": displacement_data["dirs"],
             "static_run_job_dir": kwargs["static_run_job_dir"],

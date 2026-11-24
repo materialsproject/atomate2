@@ -39,8 +39,8 @@ SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
     description="hiPhive, force constant potentials by regression.",
 )
 @due.dcite(
-    Doi("10.1088/0953-8984/26/22/225402"),
-    description="ALM, used to count the free force constants.",
+    Doi("10.1103/PhysRevB.110.214302"),
+    description="symfc, used to count the free force constants.",
 )
 @dataclass
 class BasePhononMaker(PurePhonopyMaker, ABC):

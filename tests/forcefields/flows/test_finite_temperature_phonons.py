@@ -23,6 +23,7 @@ from atomate2.forcefields.flows.finite_temperature_phonons import (
 from atomate2.forcefields.jobs import ForceFieldDielectricMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.vasp.jobs.core import DielectricMaker
+from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 
 EMT = {"@module": "ase.calculators.emt", "@callable": "EMT"}
 
@@ -57,6 +58,7 @@ def run_emt_flow(structure, **kwargs):
         ({"equilibration_time": -1.0}, "fewer than the 50 snapshots"),
         ({"md_maker": None}, "md_maker and phonon_displacement_maker must be set"),
         ({"code": "aims"}, "code must be one of"),
+        ({"thermostat": "nose_hoover"}, 'thermostat must be "nose-hoover" or'),
         ({"md_code": None}, "md_code must be one of"),
         (
             {"npt_maker": ForceFieldMDMaker(), "npt_equilibration_time": 8.0},
@@ -160,6 +162,16 @@ def test_force_field_with_vasp_born_charges(cu3au):
     flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
     born_job = next(job for job in flow.jobs if job.name == "dielectric")
     assert born_job.function_kwargs.get("prev_dir") is None
+
+
+def test_force_field_with_vasp_statics(cu3au):
+    """VASP statics after a force field relaxation get no prev_dir."""
+    maker = ForceFieldFiniteTemperaturePhononMaker.from_force_field_name(EMT)
+    maker.code = "vasp"
+    maker.phonon_displacement_maker = PhononDisplacementMaker()
+    flow = maker.make(cu3au, supercell_matrix=np.eye(3).tolist())
+    statics = next(job for job in flow.jobs if job.name == "run_phonon_displacements")
+    assert statics.function_kwargs["prev_dir"] is None
 
 
 def test_finite_temperature_phonon_maker_emt(clean_dir, cu3au):

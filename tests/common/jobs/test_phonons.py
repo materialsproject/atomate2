@@ -1,8 +1,16 @@
+import warnings
+
+import numpy as np
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
-from pymatgen.core import Structure
+from pymatgen.core import Lattice, Structure
 
-from atomate2.common.jobs.phonons import get_supercell_size
+from atomate2.common.jobs.phonons import (
+    _generate_phonon_object,
+    _get_num_harmonic_supercells,
+    get_supercell_size,
+)
 
 
 def test_supercell(si_structure, tmp_dir):
@@ -79,3 +87,90 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
     assert_allclose(
         responses[job2.uuid][1].output, [[2, -1, 0], [0, 2, 0], [-1, -1, 2]]
     )
+
+
+def test_get_num_harmonic_supercells():
+    # a distorted Cu cell needs more than three finite displacements
+    structure = Structure(
+        Lattice.orthorhombic(3.6, 3.7, 3.8),
+        ["Cu"] * 4,
+        [[0, 0, 0], [0.5, 0.5, 0.02], [0.5, 0.03, 0.5], [0.01, 0.5, 0.5]],
+    )
+    phonon = _generate_phonon_object(
+        structure,
+        supercell_matrix=[[2, 0, 0], [0, 2, 0], [0, 0, 2]],
+        displacement=0.01,
+        sym_reduce=True,
+        symprec=1e-3,
+        use_symmetrized_structure=None,
+        kpath_scheme="seekpath",
+        code="vasp",
+    )
+    # the hiPhive flow counts the free force constants with symfc
+    assert _get_num_harmonic_supercells(phonon, 0) == 14
+    # the pheasy flow passes its own count, 96 free force constants for 32 atoms
+    assert _get_num_harmonic_supercells(phonon, 0, count_free_fcs=lambda: 96) == 3
+    # a number set by the user is used as it is
+    assert _get_num_harmonic_supercells(phonon, 5) == 5
+
+
+def test_generate_frequencies_eigenvectors_magmom(clean_dir, si_structure, monkeypatch):
+    from phonopy import Phonopy
+    from pymatgen.io.phonopy import get_phonopy_structure
+
+    from atomate2.common.jobs import phonons
+
+    kwargs = {
+        "supercell_matrix": np.eye(3) * 2,
+        "displacement": 0.01,
+        "sym_reduce": True,
+        "symprec": 1e-4,
+        "use_symmetrized_structure": None,
+        "kpath_scheme": "seekpath",
+        "code": "vasp",
+    }
+    run_info = {
+        f"{run}_run_{key}": None
+        for run in ("static", "born", "optimization")
+        for key in ("job_dir", "uuid")
+    }
+    magnetic = si_structure.copy(site_properties={"magmom": [1, -1]})
+    supercells = phonons.generate_phonon_displacements.original(
+        structure=magnetic, **kwargs
+    )
+    ideal = Phonopy(get_phonopy_structure(si_structure), np.eye(3) * 2).supercell
+    forces = [-10 * (cell.cart_coords - ideal.positions) for cell in supercells]
+    data = {"forces": forces, "uuids": ["1"], "dirs": ["1"]}
+
+    # the atomate2 document computes the phonons, so the job must not
+    def generate_phonon_object(*_, **__):
+        pytest.fail("The phonons are computed twice.")
+
+    monkeypatch.setattr(phonons, "_generate_phonon_object", generate_phonon_object)
+    docs = [
+        phonons.generate_frequencies_eigenvectors.original(
+            structure=structure,
+            displacement_data=data,
+            total_dft_energy=-10.0,
+            store_force_constants=False,
+            **kwargs,
+            **run_info,
+        )
+        for structure in (si_structure, magnetic)
+    ]
+
+    assert "magmom" not in docs[1].structure.site_properties
+    assert docs[1].structure == docs[0].structure
+    assert_allclose(docs[1].free_energies, docs[0].free_energies)
+
+
+@pytest.mark.parametrize("verbose", [True, False])
+def test_get_displacements_warns_magmom(clean_dir, si_structure, verbose):
+    from atomate2.vasp.flows.phonons import PhononMaker
+
+    magnetic = si_structure.copy(site_properties={"magmom": [1, -1]})
+    job = PhononMaker(verbose=verbose).get_displacements(magnetic, np.eye(3) * 2)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        run_locally(job, create_folders=True, ensure_success=True)
+    assert any("magnetic moments" in str(w.message) for w in caught) == verbose

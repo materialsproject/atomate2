@@ -13,6 +13,7 @@ from pymatgen.core import Structure
 from pymatgen.core.units import kb
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatgen.util.coord import pbc_diff
 
 from atomate2.aims.schemas.calculation import Calculation
 from atomate2.aims.utils.units import omegaToTHz
@@ -477,15 +478,21 @@ def get_forces(
         2,
     ).reshape(2 * (len(phonon_supercell) * 3,))
     if isinstance(displaced_structures["coords"][0], Calculation):
-        displacements = [
-            disp_data.output.structure.cart_coords - phonon_supercell.cart_coords
+        coords = [
+            disp_data.output.structure.cart_coords
             for disp_data in displaced_structures["coords"]
         ]
     else:
-        displacements = [
-            np.array(disp_data) - phonon_supercell.cart_coords
-            for disp_data in displaced_structures["coords"]
-        ]
+        coords = [np.array(disp_data) for disp_data in displaced_structures["coords"]]
+    # displacement to the nearest periodic image, since the force calculation can
+    # return a displaced atom wrapped back into the cell
+    lattice = phonon_supercell.lattice
+    displacements = [
+        lattice.get_cartesian_coords(
+            pbc_diff(lattice.get_fractional_coords(c), phonon_supercell.frac_coords)
+        )
+        for c in coords
+    ]
 
     harmonic_forces = [
         (-force_constants_2d @ displacement.flatten()).reshape((-1, 3))

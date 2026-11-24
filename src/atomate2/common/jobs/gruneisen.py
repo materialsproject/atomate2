@@ -113,8 +113,7 @@ def run_phonon_jobs(
 
         processed = get_calc_meta(_for_post_process)
         return Response(
-            replace=Flow([*jobs, processed]),
-            output=processed.output,
+            replace=Flow([*jobs, processed], output=processed.output),
         )
     logger.warning(
         msg="Different space groups were detected for the optimized structures."
