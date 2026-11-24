@@ -10,6 +10,7 @@ import os
 
 import numpy as np
 import pytest
+from ase.md.nose_hoover_chain import IsotropicMTKNPT
 from jobflow import run_locally
 from pymatgen.io.vasp.outputs import Xdatcar
 
@@ -95,6 +96,43 @@ def test_nvt_nose_hoover_chain(si_structure, clean_dir):
         ase_md_kwargs={"tdamp": 10},
     )
     with pytest.raises(ValueError, match="cannot follow a temperature schedule"):
+        maker.run_ase(si_structure)
+
+
+@pytest.mark.parametrize("dynamics", ["nose-hoover-chain", IsotropicMTKNPT])
+def test_npt_mtk_schedules(si_structure, clean_dir, dynamics):
+    """MTKNPT and IsotropicMTKNPT run at a constant temperature and pressure only.
+
+    Their thermostat and barostat keep the temperature of __init__, and the
+    callback does not set their pressure, so a schedule would be silently ignored.
+    """
+    kwargs = {
+        "ensemble": "npt",
+        "dynamics": dynamics,
+        "n_steps": 5,
+        "ase_md_kwargs": {"tdamp": 10, "pdamp": 100},
+    }
+    result = LennardJonesMDMaker(temperature=300, pressure=1.0, **kwargs).run_ase(
+        si_structure
+    )
+    assert len(result.trajectory) == 6
+
+    maker = LennardJonesMDMaker(temperature=[300, 600], pressure=1.0, **kwargs)
+    with pytest.raises(ValueError, match="cannot follow a temperature schedule"):
+        maker.run_ase(si_structure)
+
+    maker = LennardJonesMDMaker(temperature=300, pressure=[1.0, 10.0], **kwargs)
+    with pytest.raises(ValueError, match="cannot follow a pressure schedule"):
+        maker.run_ase(si_structure)
+
+
+def test_unknown_dynamics(si_structure, clean_dir):
+    maker = LennardJonesMDMaker(ensemble="nvt", dynamics="verlet", n_steps=1)
+    with pytest.raises(
+        ValueError,
+        match=r"Available nvt thermostats are: andersen, berendsen, langevin, "
+        r"nose-hoover, nose-hoover-chain$",
+    ):
         maker.run_ase(si_structure)
 
 
