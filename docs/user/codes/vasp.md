@@ -441,7 +441,7 @@ Static calculations give the forces on the snapshots and on the undisplaced supe
 The displacements are measured from the undisplaced supercell.
 Pheasy then fits the second-order force constants to them with LASSO.
 As in the pheasy phonon workflow, a `DielectricMaker` computes the Born charges and the dielectric tensor for the non-analytical correction.
-It needs the `pheasy` extra, and pheasy and ALM from git, installed as in the Pheasy section above.
+It needs the `pheasy` extra, and pheasy from git, installed as in the Pheasy section above.
 
 ```{warning}
 This workflow is new and has not been tested widely.
