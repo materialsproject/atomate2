@@ -468,10 +468,10 @@ def fit_finite_temperature_phonons(
     The forces on the undisplaced supercell, the last phonon displacement
     calculation, are subtracted from the forces on the snapshots. pheasy then
     fits the second-order force constants with LASSO, with standardized data
-    and without a cutoff. phonopy imposes translational and permutation
-    symmetry on them. They give the phonon band structure along the seekpath
-    k-path and the density of states. Imaginary modes are reported, not
-    removed.
+    and without a cutoff, imposing space-group, permutation, translational, and
+    optionally rotational symmetry. They give the phonon band structure along
+    the seekpath k-path and the density of states. Imaginary modes are reported,
+    not removed.
 
     Parameters
     ----------
@@ -590,7 +590,7 @@ def fit_finite_temperature_phonons(
         n_data,
         use_lasso=True,
         random_seed=random_seed,
-        rotational_sum_rule=rotational_sum_rule,
+        rasr=rotational_sum_rule,
         alpha_min=alpha_min,
         log_file=str(log_file),
     )
@@ -599,7 +599,6 @@ def fit_finite_temperature_phonons(
         raise RuntimeError(f"pheasy did not write {fc_file}.")
     lasso_alpha = _check_lasso_alpha(log_file, alpha_min, alpha_min_name="alpha_min")
     phonon.force_constants = parse_FORCE_CONSTANTS(filename=str(fc_file))
-    phonon.symmetrize_force_constants()
 
     # the fitted forces are F = -Phi u
     predicted = -np.einsum("ijab,mjb->mia", phonon.force_constants, disps)

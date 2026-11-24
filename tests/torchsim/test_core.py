@@ -26,6 +26,7 @@ from atomate2.torchsim.schema import ConvergenceFn, TorchSimModelType
 
 from .conftest import (
     _SKIP_FAIRCHEM,
+    _SKIP_GRACE,
     _SKIP_MACE,
     _SKIP_MATTERSIM,
     _SKIP_METATOMIC,
@@ -376,6 +377,12 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
 @pytest.mark.skipif(_SKIP_FAIRCHEM, reason="fairchem-core is not installed.")
 def test_pick_model_fairchem() -> None:
     pick_model(TorchSimModelType.FAIRCHEM, model_path="uma-s-1p1")
+
+
+@pytest.mark.skipif(_SKIP_GRACE, reason="grace-runtime is not installed.")
+def test_pick_model_grace(test_dir) -> None:
+    path = f"{test_dir}/forcefields/grace/grace_1l_order3.npz"
+    pick_model(TorchSimModelType.GRACE, model_path=path)
 
 
 @pytest.mark.skipif(_SKIP_MACE, reason="mace-torch is not installed.")

@@ -28,6 +28,7 @@ from hiphive.utilities import extract_parameters
 from jobflow import job
 from packaging.version import parse as parse_version
 from phonopy.file_IO import parse_FORCE_CONSTANTS
+from phonopy.harmonic.force_constants import compact_fc_to_full_fc
 from phonopy.interface.vasp import write_vasp
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
@@ -57,6 +58,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from emmet.core.math import Matrix3D
+    from phonopy import Phonopy
     from phonopy.structure.atoms import PhonopyAtoms
 
 logger = logging.getLogger(__name__)
@@ -120,10 +122,16 @@ def _get_anharmonic_cluster_options(
 
 
 def _run_cluster_and_null_space(
-    base: str, clusters: str, work_dir: Path | str | None
+    base: str,
+    clusters: str,
+    work_dir: Path | str | None,
+    rasr: str | None = None,
 ) -> None:
     """Build the clusters and orbits (-s) and the null space (-c) with pheasy."""
-    for cmd in (f"{base} -s {clusters}", f"{base} -c"):
+    null_space = f"{base} -c"
+    if rasr is not None:
+        null_space += f" --rasr {rasr}"
+    for cmd in (f"{base} -s {clusters}", null_space):
         subprocess.run(shlex.split(cmd), cwd=work_dir, check=True)
 
 
@@ -369,15 +377,17 @@ def _run_harmonic_fit(
     random_seed: int | None,
     work_dir: Path | None = None,
     cutoff: float | None = None,
-    rotational_sum_rule: str | None = "BHH",
+    rasr: str | None = "BHH",
     alpha_min: int | None = None,
     log_file: str | None = None,
 ) -> None:
     """
     Fit the second-order force constants with pheasy.
 
-    pheasy reads POSCAR, SPOSCAR and the harmonic displacement and force
-    matrices in work_dir, and writes FORCE_CONSTANTS there.
+    pheasy reads POSCAR, SPOSCAR, and the harmonic displacement and force
+    matrices in work_dir, and writes FORCE_CONSTANTS there. When rasr is set,
+    the rotational sum rule is enforced in both the null-space (-c) and fit (-f)
+    steps. When rasr is None, only translational invariance is enforced.
 
     Parameters
     ----------
@@ -396,8 +406,9 @@ def _run_harmonic_fit(
     cutoff: float or None
         Cutoff of the second-order force constants in Å. None fits them
         without a cutoff.
-    rotational_sum_rule: str or None
-        Rotational sum rule passed to pheasy with --rasr. None enforces none.
+    rasr: str or None
+        Rotational sum rule passed to pheasy via --rasr in -c and -f
+        ("BHH", "BH", or None for translational invariance only).
     alpha_min: int or None
         Base-10 exponent of the smallest LASSO penalty in the search. None keeps
         pheasy's default. Not used without LASSO.
@@ -416,8 +427,8 @@ def _run_harmonic_fit(
             fit += f" --alpha_min {int(alpha_min)}"
         if random_seed is not None:
             fit += f" --seed {int(random_seed)}"
-    if rotational_sum_rule is not None:
-        fit += f" --rasr {rotational_sum_rule}"
+    if rasr is not None:
+        fit += f" --rasr {rasr}"
     fit += (
         f" --ndata {int(num_har)} "
         f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
@@ -425,7 +436,7 @@ def _run_harmonic_fit(
     if log_file is not None:
         fit += f" -o {log_file}"
 
-    _run_cluster_and_null_space(base, "--nbody 2", work_dir)
+    _run_cluster_and_null_space(base, "--nbody 2", work_dir, rasr=rasr)
     commands = [
         # sensing matrix from the displacement matrix
         (
@@ -436,6 +447,150 @@ def _run_harmonic_fit(
     ]
     for cmd in commands:
         subprocess.run(shlex.split(cmd), cwd=work_dir, check=True)
+
+
+def _force_fit_errors(
+    fc_file: Path,
+    phonon: Phonopy,
+    disps: np.ndarray,
+    forces: np.ndarray,
+) -> tuple[float, float]:
+    """Return the relative L2 force error and RMSE (eV/Å) for FORCE_CONSTANTS."""
+    fc = parse_FORCE_CONSTANTS(filename=fc_file)
+    if fc.shape[0] != fc.shape[1]:
+        fc = compact_fc_to_full_fc(phonon.primitive, fc)
+    residual = forces + np.einsum("ijab,njb->nia", fc, disps)
+    residual_norm = float(np.linalg.norm(residual))
+    force_norm = float(np.linalg.norm(forces))
+    if force_norm > 0:
+        sigma = residual_norm / force_norm
+    else:
+        sigma = 0.0 if residual_norm == 0 else float("inf")
+    rmse = float(np.sqrt(np.mean(residual**2)))
+    return sigma, rmse
+
+
+def _fit_harmonic_force_constants(
+    phonon: Phonopy,
+    supercell_matrix: np.ndarray,
+    symprec: float,
+    num_har: int,
+    use_lasso: bool,
+    random_seed: int | None,
+    disps: np.ndarray,
+    forces: np.ndarray,
+    max_relative_error_ratio: float = 1.5,
+    max_force_rmse: float = 0.01,
+) -> str | None:
+    """
+    Fit harmonic force constants with BHH, BH, or ASR and keep the strongest valid fit.
+
+    Fits an ASR baseline (translational invariance only), then tries BHH
+    (Born-Huang and Huang) and BH (Born-Huang) in isolated temporary folders.
+    The first rotational-sum-rule fit whose relative force error is within
+    max(max_relative_error_ratio * sigma_asr, 1e-4) and (when the ASR baseline
+    itself is below max_force_rmse) whose force RMSE is below max_force_rmse
+    is copied to FORCE_CONSTANTS in the current directory. Otherwise, the ASR
+    baseline is kept.
+
+    Parameters
+    ----------
+    phonon: Phonopy
+        Phonopy object for the crystal structure.
+    supercell_matrix: np.ndarray
+        Diagonal supercell matrix.
+    symprec: float
+        Symmetry precision.
+    num_har: int
+        Number of displaced supercells in the fit.
+    use_lasso: bool
+        Fit with LASSO if True, and with least squares if False.
+    random_seed: int or None
+        Seed of the LASSO fit.
+    disps: np.ndarray
+        Harmonic displacement array of shape (num_har, n_atoms, 3).
+    forces: np.ndarray
+        Harmonic force array of shape (num_har, n_atoms, 3).
+    max_relative_error_ratio: float
+        Maximum allowed ratio of candidate to ASR relative force error.
+    max_force_rmse: float
+        Maximum allowed force RMSE in eV/Å.
+
+    Returns
+    -------
+    str or None
+        Rotational sum rule of the kept fit ("BHH", "BH", or None for ASR).
+    """
+    input_files = (
+        "POSCAR",
+        "SPOSCAR",
+        _DEFAULT_FILE_PATHS["harmonic_displacements"],
+        _DEFAULT_FILE_PATHS["harmonic_force_matrix"],
+    )
+    fc_name = _DEFAULT_FILE_PATHS["force_constants"]
+    dest_fc = Path(fc_name)
+
+    def _run_candidate(work_dir: Path, rasr: str | None) -> tuple[float, float]:
+        for filename in input_files:
+            shutil.copy(filename, work_dir / filename)
+        _run_harmonic_fit(
+            supercell_matrix,
+            symprec,
+            num_har,
+            use_lasso,
+            random_seed,
+            work_dir=work_dir,
+            rasr=rasr,
+        )
+        return _force_fit_errors(work_dir / fc_name, phonon, disps, forces)
+
+    with tempfile.TemporaryDirectory(dir=".") as tmp:
+        tmp_path = Path(tmp)
+        asr_dir = tmp_path / "asr"
+        asr_dir.mkdir()
+        sigma_asr, rmse_asr = _run_candidate(asr_dir, rasr=None)
+
+        kept_label, kept_dir = "ASR", asr_dir
+        kept_rasr: str | None = None
+        kept_sigma, kept_rmse = sigma_asr, rmse_asr
+        sigma_limit = max(max_relative_error_ratio * sigma_asr, 1e-4)
+        for rasr in ("BHH", "BH"):
+            cand_dir = tmp_path / rasr.lower()
+            cand_dir.mkdir()
+            try:
+                sigma, rmse = _run_candidate(cand_dir, rasr=rasr)
+            except (subprocess.CalledProcessError, FileNotFoundError) as exc:
+                logger.warning(
+                    "Harmonic pheasy fit with --rasr %s failed: %s", rasr, exc
+                )
+                continue
+            rmse_ok = rmse < max_force_rmse if rmse_asr < max_force_rmse else True
+            if sigma <= sigma_limit and rmse_ok:
+                kept_label, kept_rasr, kept_dir = rasr, rasr, cand_dir
+                kept_sigma, kept_rmse = sigma, rmse
+                break
+
+        if kept_rmse >= max_force_rmse:
+            logger.warning(
+                "Kept harmonic %s fit has force RMSE (%.5f eV/Å) at or above "
+                "max_force_rmse (%.5f eV/Å).",
+                kept_label,
+                kept_rmse,
+                max_force_rmse,
+            )
+
+        shutil.copy(kept_dir / fc_name, dest_fc)
+
+    logger.info(
+        "Kept harmonic %s fit (sigma=%.5f, RMSE=%.5f eV/Å, ASR sigma=%.5f, "
+        "RMSE=%.5f eV/Å).",
+        kept_label,
+        kept_sigma,
+        kept_rmse,
+        sigma_asr,
+        rmse_asr,
+    )
+    return kept_rasr
 
 
 def _run_anharmonic_fit(
@@ -787,7 +942,8 @@ def generate_frequencies_eigenvectors(
         reproducible.
     kwargs: dict
         Further options read by this job, such as npoints_band, filename_bs,
-        filename_dos, kpoint_density_dos and store_force_constants.
+        filename_dos, kpoint_density_dos, store_force_constants,
+        max_relative_error_ratio, and max_force_rmse.
     """
     _check_anharmonic_settings(
         anhar_max_order,
@@ -910,7 +1066,18 @@ def generate_frequencies_eigenvectors(
             stacklevel=2,
         )
     logger.info("Start running pheasy in cluster")
-    _run_harmonic_fit(supercell_matrix, symprec, num_har, use_lasso, random_seed)
+    kept_rasr = _fit_harmonic_force_constants(
+        phonon=phonon,
+        supercell_matrix=supercell_matrix,
+        symprec=symprec,
+        num_har=num_har,
+        use_lasso=use_lasso,
+        random_seed=random_seed,
+        disps=dataset_disps_array_use[:num_har, :, :],
+        forces=dataset_forces_array_disp[:num_har, :, :],
+        max_relative_error_ratio=kwargs.get("max_relative_error_ratio", 1.5),
+        max_force_rmse=kwargs.get("max_force_rmse", 0.01),
+    )
 
     fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
     if cal_anhar_fcs and not fc_file.exists():
@@ -968,9 +1135,6 @@ def generate_frequencies_eigenvectors(
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
         phonon.force_constants = force_constants
-        # symmetrize the force constants to make them physically correct based on
-        # the space group symmetry of the crystal structure.
-        phonon.symmetrize_force_constants()
 
     # with phonopy.load("phonopy.yaml") the phonopy API can be used
     phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
@@ -1033,7 +1197,6 @@ def generate_frequencies_eigenvectors(
 
         force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
         phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
 
         bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
             phonon,
@@ -1072,13 +1235,13 @@ def generate_frequencies_eigenvectors(
             random_seed,
             work_dir=refit_dir,
             cutoff=10.0,
+            rasr=kept_rasr,
         )
 
         force_constants = parse_FORCE_CONSTANTS(
             filename=refit_dir / _DEFAULT_FILE_PATHS["force_constants"]
         )
         phonon.force_constants = force_constants
-        phonon.symmetrize_force_constants()
 
         phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
 

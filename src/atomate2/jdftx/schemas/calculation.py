@@ -189,7 +189,14 @@ class CalculationOutput(BaseModel):
                 if kwargs.get("store_trajectory", True)
                 else None
             ),
-            parameters=jdftxoutput.as_dict(),
+            # Without "@module"/"@class" (newer pymatgen-core has them in as_dict):
+            # when a later job takes this output as input, jobflow would decode
+            # this dict back into a JDFTXOutfile, which this dict field rejects.
+            parameters={
+                key: value
+                for key, value in jdftxoutput.as_dict().items()
+                if not key.startswith("@")
+            },
         )
 
 
