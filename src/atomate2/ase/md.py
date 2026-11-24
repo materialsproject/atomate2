@@ -163,6 +163,10 @@ class AseMDMaker(AseMaker, ABC):
         Whether to initialize the atomic velocities with zero linear momentum
     zero_angular_momentum : bool = False
         Whether to initialize the atomic velocities with zero angular momentum
+    store_velocities : bool = False
+        Whether to add the final velocities, in Angstrom/fs, to the "velocities"
+        site property of the output structure, so that a following MD job
+        continues with them. If False, the output structure has no velocities.
     verbose : bool = False
         Whether to print stdout to screen during the MD run.
     use_emmet_models : bool = False
@@ -187,6 +191,7 @@ class AseMDMaker(AseMaker, ABC):
     mb_velocity_seed: int | None = None
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
+    store_velocities: bool = False
     verbose: bool = False
     use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
 
@@ -304,7 +309,8 @@ class AseMDMaker(AseMaker, ABC):
         Parameters
         ----------
         mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+            pymatgen molecule or structure. Its "velocities" site property, in
+            Angstrom/fs as in a VASP POSCAR, gives the starting velocities.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
@@ -336,7 +342,8 @@ class AseMDMaker(AseMaker, ABC):
         Parameters
         ----------
         mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+            pymatgen molecule or structure. Its "velocities" site property, in
+            Angstrom/fs as in a VASP POSCAR, gives the starting velocities.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
@@ -385,7 +392,7 @@ class AseMDMaker(AseMaker, ABC):
 
         rng = np.random.default_rng(seed=self.mb_velocity_seed)
         if initial_velocities:
-            atoms.set_velocities(initial_velocities)
+            atoms.set_velocities(np.array(initial_velocities) / units.fs)
         elif not np.isnan(self.t_schedule).any():
             MaxwellBoltzmannDistribution(
                 atoms=atoms, temperature_K=self.t_schedule[0], rng=rng
@@ -449,6 +456,13 @@ class AseMDMaker(AseMaker, ABC):
             atoms,
             cls=Structure if isinstance(mol_or_struct, Structure) else Molecule,
         )
+        if self.store_velocities:
+            mol_or_struct.add_site_property(
+                "velocities", (atoms.get_velocities() * units.fs).tolist()
+            )
+        elif "velocities" in mol_or_struct.site_properties:
+            # AseAtomsAdaptor passes the input velocities through unchanged
+            mol_or_struct.remove_site_property("velocities")
 
         return AseResult(
             final_mol_or_struct=mol_or_struct,

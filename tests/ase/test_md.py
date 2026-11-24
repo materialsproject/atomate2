@@ -10,6 +10,7 @@ import os
 
 import numpy as np
 import pytest
+from ase import units
 from jobflow import run_locally
 from pymatgen.io.vasp.outputs import Xdatcar
 
@@ -146,6 +147,27 @@ def test_md_seed_defaults(si_structure, clean_dir):
         for seed in (1, 2)
     ]
     assert positions[0] == pytest.approx(positions[1])
+
+
+def test_md_velocities(si_structure, clean_dir):
+    """Velocities are read and written in Angstrom/fs."""
+    velocity = 0.002
+    velocities = np.full((len(si_structure), 3), velocity)
+    si_structure.add_site_property("velocities", velocities.tolist())
+    maker = LennardJonesMDMaker(ensemble="nve", n_steps=0, store_velocities=True)
+    result = maker.run_ase(si_structure)
+
+    mass = float(si_structure[0].specie.atomic_mass)
+    temperature = mass * (velocity / units.fs) ** 2 / units.kB
+    assert result.trajectory.frame_properties[0]["temperature"] == pytest.approx(
+        temperature, rel=1e-4
+    )
+    assert result.final_mol_or_struct.site_properties["velocities"] == pytest.approx(
+        velocities
+    )
+    # without store_velocities, the input velocities are not passed through
+    result = LennardJonesMDMaker(ensemble="nve", n_steps=0).run_ase(si_structure)
+    assert "velocities" not in result.final_mol_or_struct.site_properties
 
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))

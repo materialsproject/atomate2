@@ -1,3 +1,5 @@
+import numpy as np
+import pytest
 from emmet.core.types.enums import VaspObject
 from jobflow import Flow
 
@@ -86,3 +88,36 @@ def test_multi_md_flow_restart_from_uuid():
     flow = MultiMDMaker().restart_from_uuid(ref_id)
 
     assert flow.jobs[0].function_kwargs["prev_dir"].uuid == ref_id
+
+
+def test_multi_md_flow_ase(si_structure, clean_dir):
+    """Two chained NVE runs give the same final state as one run of both lengths."""
+    from jobflow import run_locally
+
+    from atomate2.ase.md import LennardJonesMDMaker
+
+    si_structure.translate_sites([0], [0.1, 0.05, 0], frac_coords=False)
+    si_structure.add_site_property("velocities", [[0.01, 0, 0], [-0.01, 0, 0.005]])
+    makers = [
+        LennardJonesMDMaker(ensemble="nve", n_steps=n, store_velocities=True)
+        for n in (5, 5, 10)
+    ]
+    flow = MultiMDMaker(md_makers=makers[:2]).make(si_structure)
+    restart = MultiMDMaker(md_makers=makers[:1]).restart_from_uuid(flow.output)
+    responses = run_locally(
+        Flow([flow, restart]), create_folders=True, ensure_success=True
+    )
+    first = responses[flow.jobs[0].uuid][1].output
+    chained = responses[flow.jobs[1].uuid][1].output
+    single = makers[2].run_ase(si_structure).final_mol_or_struct
+
+    assert first.structure.cart_coords != pytest.approx(single.cart_coords)
+    assert chained.structure.cart_coords == pytest.approx(single.cart_coords)
+    assert np.array(chained.structure.site_properties["velocities"]) == pytest.approx(
+        np.array(single.site_properties["velocities"])
+    )
+
+    output = responses[flow.jobs[-1].uuid][1].output
+    assert output.vasp_dir == chained.dir_name
+    assert output.traj_ids == [flow.jobs[0].uuid, flow.jobs[1].uuid]
+    assert len(responses[restart.jobs[-1].uuid][1].output.full_traj_ids) == 3
