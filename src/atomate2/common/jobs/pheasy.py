@@ -81,6 +81,7 @@ _DEFAULT_FILE_PATHS = {
     "one_shot_dir": "one_shot",
     "refit_dir": "short_cutoff_refit",
     "anharmonic_fit_log": "pheasy_anharmonic_fit.log",
+    "harmonic_fit_log": "pheasy_harmonic_fit.log",
 }
 
 # The anharmonic training set is sized so that the fit has this many force
@@ -313,7 +314,9 @@ def _check_anharmonic_settings(
         )
 
 
-def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
+def _check_lasso_alpha(
+    log_file: Path, alpha_min: int, alpha_min_name: str = "anhar_alpha_min"
+) -> float:
     """
     Warn if the cross-validated LASSO penalty is on either bound of the search.
 
@@ -328,11 +331,18 @@ def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
         Log file written by pheasy during the fit.
     alpha_min: int
         Base-10 exponent of the smallest penalty in the search.
+    alpha_min_name: str
+        Name of the setting that gives alpha_min, used in the warning.
+
+    Returns
+    -------
+    float
+        The penalty chosen by cross-validation.
     """
     if not log_file.exists():
         raise FileNotFoundError(
             f"pheasy exited without writing {log_file}, so the result of the "
-            "anharmonic fit is unknown."
+            "fit is unknown."
         )
     match = re.search(r"alpha_opt:\s*([-+0-9.eE]+)", log_file.read_text())
     if match is None:
@@ -351,11 +361,12 @@ def _check_lasso_alpha(log_file: Path, alpha_min: int) -> None:
     if alpha_opt <= 10.0**alpha_min * (1 + 1e-6):
         warnings.warn(
             f"The LASSO penalty chosen by cross-validation ({alpha_opt:e}) is on "
-            f"the lower bound 1e{alpha_min} in {log_file}. The anharmonic force "
-            "constants depend on this bound and may be wrong. Lower "
-            "anhar_alpha_min and refit.",
+            f"the lower bound 1e{alpha_min} in {log_file}. The force constants "
+            f"depend on this bound and may be wrong. Lower {alpha_min_name} and "
+            "refit.",
             stacklevel=2,
         )
+    return alpha_opt
 
 
 def _run_harmonic_fit(
@@ -367,6 +378,8 @@ def _run_harmonic_fit(
     work_dir: Path | None = None,
     cutoff: float | None = None,
     rasr: str | None = "BHH",
+    alpha_min: int | None = None,
+    log_file: str | None = None,
 ) -> None:
     """
     Fit the second-order force constants with pheasy.
@@ -396,6 +409,11 @@ def _run_harmonic_fit(
     rasr: str or None
         Rotational sum rule passed to pheasy via --rasr in -c and -f
         ("BHH", "BH", or None for translational invariance only).
+    alpha_min: int or None
+        Base-10 exponent of the smallest LASSO penalty in the search. None keeps
+        pheasy's default. Not used without LASSO.
+    log_file: str or None
+        Log file of the fit in work_dir. None keeps pheasy's default.
     """
     base = _get_pheasy_command(supercell_matrix, symprec, 2)
     if cutoff is not None:
@@ -405,6 +423,8 @@ def _run_harmonic_fit(
         # with pheasy's default --tol of 1e-4 the fit does not converge, and the
         # force constants change between machines and package versions
         fit += " -l LASSO --std --tol 1e-8"
+        if alpha_min is not None:
+            fit += f" --alpha_min {int(alpha_min)}"
         if random_seed is not None:
             fit += f" --seed {int(random_seed)}"
     if rasr is not None:
@@ -413,6 +433,8 @@ def _run_harmonic_fit(
         f" --ndata {int(num_har)} "
         f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
     )
+    if log_file is not None:
+        fit += f" -o {log_file}"
 
     _run_cluster_and_null_space(base, "--nbody 2", work_dir, rasr=rasr)
     commands = [
