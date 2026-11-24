@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
+from pymatgen.util.due import Doi, due
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc, PhononSummaryData
@@ -132,7 +133,8 @@ def analyze_free_energy(
         imaginary modes, the volumes with imaginary modes are kept instead of left
         out. Their vibrational free energies, heat capacities and entropies come
         from a linear fit in the volume to the volumes without imaginary modes, at
-        each temperature, as in Deringer et al., Phys. Rev. B 89, 094303 (2014).
+        each temperature, as in Deringer et al., Phys. Rev. B 89, 094303 (2014)
+        and Bustamante et al., arXiv:2611.15767 (2026).
         Their electronic energies stay those of the calculations. Cannot be
         combined with ignore_imaginary_modes.
     kwargs: dict
@@ -162,6 +164,18 @@ def analyze_free_energy(
     kept = [o for o in outputs if not o.has_imaginary_modes or ignore_imaginary_modes]
     thermo = {id(o): (o.free_energies, o.heat_capacities, o.entropies) for o in kept}
     if fit_imaginary_volumes and len(outputs) >= 4 and 2 <= len(kept) < len(outputs):
+        due.cite(
+            Doi("10.1103/PhysRevB.89.094303"),
+            description="Linear fit of vibrational free energy for QHA volumes with "
+            "imaginary modes.",
+            path="atomate2.common.jobs.qha.analyze_free_energy",
+        )
+        due.cite(
+            Doi("10.48550/arXiv.2611.15767"),
+            description="Linear fit of vibrational free energy for QHA volumes with "
+            "imaginary modes.",
+            path="atomate2.common.jobs.qha.analyze_free_energy",
+        )
         fitted = [o for o in outputs if id(o) not in thermo]
         lines = [
             np.polyfit(
