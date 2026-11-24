@@ -350,11 +350,13 @@ These are the three modes at Gamma whose eigenvectors are closest to the rigid t
 phonopy's `exclude_gamma_acoustic` takes the three modes of smallest absolute frequency, which are not the acoustic modes if an optical mode at Gamma is closer to zero.
 This makes the isotropic displacement too small by an error that falls as 1/N with the mesh number N.
 For 33 materials from the Materials Project without imaginary modes, the error at 300 K is 3.7% on average (at most 8.1%) with the default density.
+A frequency below `-tol_imaginary_modes` (default 0.1 THz) counts as an imaginary mode, both on the band structure and on this mesh.
 If the mesh has imaginary modes, no thermal displacement matrices are stored by default.
 With `imaginary_modes_thermal_displacements="exclude"` in `generate_frequencies_eigenvectors_kwargs`, the imaginary modes are left out, and with `"absolute"`, each one counts as a real mode of the same absolute frequency.
 Both give only an estimate of the matrices.
 `freq_min_thermal_displacements` (in THz) is the cutoff: modes with a frequency below it are left out, and with `"absolute"` also the imaginary modes of an absolute frequency below it.
-Without imaginary modes, the default of 0 leaves out no mode, since apart from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+If no mode is below zero, the default of 0 leaves out no mode, since apart from the acoustic modes at Gamma, the mesh then has no modes at zero frequency.
+If the mesh dips below zero but not below `-tol_imaginary_modes`, the cutoff is raised to `tol_imaginary_modes`, since the mesh then has modes just above zero whose term diverges.
 With imaginary modes, both options need a positive `freq_min_thermal_displacements`, since the mesh has modes with frequencies near zero where a branch crosses zero, and the term of such a mode diverges.
 
 The force field phonon, pheasy and hiPhive workflows can take the Born charges from MACE-Field, with `ForceFieldDielectricMaker` as `born_maker`.
