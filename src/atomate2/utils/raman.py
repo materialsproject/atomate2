@@ -101,6 +101,26 @@ def build_phonopy(
     return phonon
 
 
+def transfer_magmoms(target: Structure, source: Structure) -> Structure:
+    """Copy the magmom site property of source onto the matching sites of target."""
+    if len(target) != len(source):
+        raise ValueError("Structures for transferring magmoms differ in size.")
+    magmoms = source.site_properties["magmom"]
+    frac = np.array([site.frac_coords for site in source])
+    result = target.copy()
+    values = []
+    for site in target:
+        diff = frac - site.frac_coords
+        diff -= np.rint(diff)
+        dist = np.linalg.norm(diff @ target.lattice.matrix, axis=1)
+        j = int(np.argmin(dist))
+        if dist[j] > 0.5 or source[j].species != site.species:
+            raise ValueError("Could not match sites for transferring magmoms.")
+        values.append(magmoms[j])
+    result.add_site_property("magmom", values)
+    return result
+
+
 def supercell_magmoms(
     structure: Structure, supercell_matrix: Sequence[Sequence[float]]
 ) -> list:

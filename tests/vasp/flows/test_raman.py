@@ -419,3 +419,55 @@ def test_magnetic_dielectric_input_set():
     assert list(vis.incar["MAGMOM"]) == [2.2, -2.2]
     vis = RamanDielectricSetGenerator().get_input_set(afm_fe(), potcar_spec=True)
     assert vis.incar["ISPIN"] == 1
+
+
+def test_transfer_magmoms():
+    source = afm_fe()
+    target = Structure(source.lattice, ["Fe", "Fe"], [[0.5, 0.5, 0.5], [1.0, 0.0, 1.0]])
+    assert rm.transfer_magmoms(target, source).site_properties["magmom"] == [
+        -2.2,
+        2.2,
+    ]
+
+
+def test_magnetic_gamma_modes_from_magnetic_structure():
+    from atomate2.vasp.jobs.raman import get_gamma_normal_modes
+
+    s = afm_fe()
+    fc, scm, _ = toy_force_constants(s)
+    stripped = s.copy()
+    stripped.remove_site_property("magmom")
+    data = get_gamma_normal_modes.original(
+        stripped,
+        {"force_constants": fc.tolist()},
+        scm,
+        "auto",
+        1e-3,
+        magnetic=True,
+        magnetic_structure=s,
+    )
+    assert len(data["frequencies_thz"]) == 6
+    assert data["magnetic_order"] == "AFM"
+    assert data["magmoms"] == [2.2, -2.2]
+
+
+def test_magnetic_structure_reference():
+    from atomate2.vasp.flows.phonons import PhononMaker
+
+    flow = RamanMaker(magnetic=True).make(afm_fe(), encut=400)
+    jobs = {j.uuid: j for j, _ in flow.iterflow()}
+    modes = next(j for j in jobs.values() if j.name == "raman normal modes")
+    ref = modes.function_kwargs["magnetic_structure"]
+    assert jobs[ref.uuid].name == "tight relax 2"
+
+    maker = RamanMaker(magnetic=True, phonon_maker=PhononMaker(bulk_relax_maker=None))
+    flow = maker.make(afm_fe(), encut=400)
+    modes = next(j for j, _ in flow.iterflow() if j.name == "raman normal modes")
+    assert modes.function_kwargs["magnetic_structure"].site_properties["magmom"] == [
+        2.2,
+        -2.2,
+    ]
+
+    flow = RamanMaker().make(afm_fe(), encut=400)
+    modes = next(j for j, _ in flow.iterflow() if j.name == "raman normal modes")
+    assert modes.function_kwargs["magnetic_structure"] is None

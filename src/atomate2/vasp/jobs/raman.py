@@ -96,6 +96,7 @@ def get_gamma_normal_modes(
     degeneracy_tolerance: float = 1e-3,
     magnetic: bool = False,
     max_imaginary_freq: float | None = 0.1,
+    magnetic_structure: Structure | None = None,
 ) -> dict[str, Any]:
     """
     Get Gamma normal modes, select modes and build the displaced structures.
@@ -126,7 +127,20 @@ def get_gamma_normal_modes(
     max_imaginary_freq
         If any Gamma frequency is below -max_imaginary_freq (THz), no modes are
         selected and no dielectric runs follow. None disables the check.
+    magnetic_structure
+        Structure with the magmom site property, used if magnetic and structure
+        has no moments (the phonon document stores the structure without them).
     """
+    if isinstance(structure, dict):
+        structure = Structure.from_dict(structure)
+    if isinstance(magnetic_structure, dict):
+        magnetic_structure = Structure.from_dict(magnetic_structure)
+    if (
+        magnetic
+        and structure.site_properties.get("magmom") is None
+        and magnetic_structure is not None
+    ):
+        structure = rm.transfer_magmoms(structure, magnetic_structure)
     phonon = rm.build_phonopy(
         structure,
         force_constants,

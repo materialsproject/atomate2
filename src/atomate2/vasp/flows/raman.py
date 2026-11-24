@@ -169,6 +169,7 @@ class RamanMaker(Maker):
             degeneracy_tolerance=self.degeneracy_tolerance,
             magnetic=self.magnetic,
             max_imaginary_freq=self.max_imaginary_freq,
+            magnetic_structure=self._get_magnetic_structure(phonon_flow, structure),
         )
         modes_job.name = "raman normal modes"
 
@@ -230,6 +231,22 @@ class RamanMaker(Maker):
                 raman_maker, input_set_generator=replace(generator, ispin=2)
             )
         return phonon_maker, raman_maker
+
+    def _get_magnetic_structure(
+        self, phonon_flow: Flow | Job, structure: Structure
+    ) -> Structure | OutputReference | None:
+        """Return the relaxed structure with moments, or the input structure."""
+        if not self.magnetic:
+            return None
+        jobs = (
+            [j for j, _ in phonon_flow.iterflow()]
+            if isinstance(phonon_flow, Flow)
+            else [phonon_flow]
+        )
+        relax = [
+            j for j in jobs if isinstance(j.maker, BaseVaspMaker) and "relax" in j.name
+        ]
+        return relax[-1].output.structure if relax else structure
 
     @staticmethod
     def _get_bandgap_reference(
