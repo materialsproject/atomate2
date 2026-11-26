@@ -78,9 +78,12 @@ def test_add_metadata_to_flow(powerup, settings):
     # test flow
     drm = DoubleRelaxMaker()
     flow = drm.make(1)
-    flow = powerup_func(flow, settings)
+    orig_kwargs = dict(flow.jobs[0].function.__self__.task_document_kwargs)
+    updated_flow = powerup_func(flow, settings)
+    assert updated_flow is not flow
+    assert flow.jobs[0].function.__self__.task_document_kwargs == orig_kwargs
     assert (
-        flow.jobs[0].function.__self__.task_document_kwargs["additional_fields"]
+        updated_flow.jobs[0].function.__self__.task_document_kwargs["additional_fields"]
         == settings
     )
 
@@ -95,5 +98,10 @@ def test_update_vasp_custodian_handlers(powerup, settings):
     # test flow
     drm = DoubleRelaxMaker()
     flow = drm.make(1)
-    flow = powerup_func(flow, settings)
-    assert flow.jobs[0].function.__self__.run_vasp_kwargs["handlers"] == settings
+    orig_kwargs = dict(flow.jobs[0].function.__self__.run_vasp_kwargs)
+    updated_flow = powerup_func(flow, settings)
+    assert updated_flow is not flow
+    assert flow.jobs[0].function.__self__.run_vasp_kwargs == orig_kwargs
+    assert (
+        updated_flow.jobs[0].function.__self__.run_vasp_kwargs["handlers"] == settings
+    )
