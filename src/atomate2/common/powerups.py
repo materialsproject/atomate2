@@ -35,7 +35,7 @@ def add_metadata_to_flow(
     Returns
     -------
     Flow
-        A copy of the flow with added metadata in the task documents.
+        A deepcopy of the flow with added metadata in the task documents.
 
     Examples
     --------
@@ -82,7 +82,7 @@ def update_custodian_handlers(
     Returns
     -------
     Flow
-        A copy of the flow with updated custodian handlers.
+        A deepcopy of the flow with updated custodian handlers.
 
     Examples
     --------
