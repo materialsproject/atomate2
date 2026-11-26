@@ -3,9 +3,7 @@ import os
 import pytest
 from pymatgen.core.structure import Molecule
 from pymatgen.io.qchem.inputs import QCInput
-
-from atomate2.qchem.sets.base import QCInputSet
-from atomate2.qchem.sets.core import SinglePointSetGenerator
+from pymatgen.io.qchem.sets import QCInputSet, SinglePointSetGenerator
 
 
 @pytest.fixture(scope="module")
@@ -18,89 +16,76 @@ def water_mol() -> Molecule:
 
 
 @pytest.mark.parametrize(
-    "molecule,overwrite_inputs",
+    "overwrite_inputs, expected",
     [
-        ("water_mol", {"rem": {"ideriv": 1, "method": "B97-D3", "dft_d": "D3_BJ"}}),
-        ("water_mol", {"opt": {"CONSTRAINT": ["stre 1 2 0.96"]}}),
         (
-            "water_mol",
+            {"rem": {"ideriv": 1, "method": "B97-D3", "dft_d": "D3_BJ"}},
+            {"rem": {"ideriv": "1", "method": "b97-d3", "dft_d": "d3_bj"}},
+        ),
+        (
+            {"opt": {"CONSTRAINT": ["stre 1 2 0.96"]}},
+            {"opt": {"constraint": ["stre 1 2 0.96"]}},
+        ),
+        (
+            {
+                "rem": {"solvent_method": "pcm"},
+                "pcm": {"theory": "cpcm", "hpoints": "194"},
+                "solvent": {"dielectric": "78.39"},
+            },
             {
                 "rem": {"solvent_method": "pcm"},
                 "pcm": {"theory": "cpcm", "hpoints": "194"},
                 "solvent": {"dielectric": "78.39"},
             },
         ),
-        ("water_mol", {"rem": {"solvent_method": "smd"}, "smx": {"solvent": "water"}}),
-        ("water_mol", {"scan": {"stre": ["1 2 0.95 1.35 0.1"]}}),
+        (
+            {"rem": {"solvent_method": "smd"}, "smx": {"solvent": "water"}},
+            {"rem": {"solvent_method": "smd"}, "smx": {"solvent": "water"}},
+        ),
+        (
+            {"scan": {"stre": ["1 2 0.95 1.35 0.1"]}},
+            {"scan": {"stre": ["1 2 0.95 1.35 0.1"]}},
+        ),
     ],
 )
-def test_overwrite(molecule, overwrite_inputs, request) -> None:
+def test_overwrite(overwrite_inputs: dict, expected: dict, water_mol: Molecule) -> None:
     """
     Test for ensuring whether overwrite_inputs correctly
     changes the default input_set parameters.
 
-    Here, we use the StaticSetGenerator as an example,
+    Here, we use the SinglePointSetGenerator as an example,
     but any input generator that has a passed overwrite_inputs
     dict as an input argument could be used.
     """
-    molecule = request.getfixturevalue(molecule)
-
     input_gen = SinglePointSetGenerator()
+    default_rem = input_gen.get_input_set(water_mol).qcinput.rem
+
     input_gen.overwrite_inputs = overwrite_inputs
-    in_set = input_gen.get_input_set(molecule)
-    in_set_rem = {}
-    in_set_opt = {}
-    in_set_pcm = {}
-    in_set_smx = {}
-    in_set_solvent = {}
-    in_set_scan = {}
-    if overwrite_inputs.keys() == "rem":
-        in_set_rem = in_set.qcinput.as_dict()["rem"]
-    elif overwrite_inputs.keys() == "opt":
-        in_set_opt = in_set.qcinput.as_dict()["opt"]
-    elif overwrite_inputs.keys() == ["rem", "pcm", "solvent"]:
-        in_set_rem = in_set.qcinput.as_dict()["rem"]
-        in_set_pcm = in_set.qcinput.as_dict()["pcm"]
-        in_set_solvent = in_set.qcinput.as_dict()["solvent"]
-    elif overwrite_inputs.keys() == ["rem", "smx"]:
-        in_set_rem = in_set.qcinput.as_dict()["rem"]
-        in_set_smx = in_set.qcinput.as_dict()["smx"]
+    qcinput = input_gen.get_input_set(water_mol).qcinput
 
-    if in_set_rem:  # case 1
-        assert in_set_rem["method"] == "b97-d3"
-        assert in_set_rem["dft_d"] == "d3_bj"
-    elif in_set_opt:  # case 2
-        assert in_set_opt["constraint"] == ["stre 1 2 0.96"]
-    elif in_set_rem and in_set_pcm and in_set_solvent:
-        assert in_set_rem["solvent_method"] == "pcm"
-        assert in_set_pcm["theory"] == "cpcm"
-        assert in_set_pcm["hpoints"] == "194"
-        assert in_set_solvent["dielectric"] == "78.39"
-    elif in_set_rem and in_set_smx:
-        assert in_set_rem["solvent_method"] == "smd"
-        assert in_set_smx["solvent"] == "water"
-    elif in_set_scan:
-        assert in_set_scan["stre"] == ["1 2 0.95 1.35 0.1"]
+    for section, settings in expected.items():
+        section_dict = getattr(qcinput, section)
+        for key, val in settings.items():
+            assert section_dict[key] == val
+
+    # everything that was not overwritten keeps its default value
+    for key, val in default_rem.items():
+        if key not in expected.get("rem", {}):
+            assert qcinput.rem[key] == val
 
 
-@pytest.mark.parametrize(
-    "molecule",
-    [("water_mol")],
-)
-def test_write_set(molecule, clean_dir, request) -> None:
-    """
-    Test for ensuring whether overwrite_inputs correctly
-    changes the default input_set parameters.
-
-    Here, we use the StaticSetGenerator as an example,
-    but any input generator that has a passed overwrite_inputs
-    dict as an input argument could be used.
-    """
-    molecule = request.getfixturevalue(molecule)
-
+def test_write_set(water_mol: Molecule, clean_dir) -> None:
+    """Test writing an input set to a directory and reading it back."""
     input_gen = SinglePointSetGenerator()
-    in_set = input_gen.get_input_set(molecule)
+    in_set = input_gen.get_input_set(water_mol)
     in_set.write_input(directory="./inset_write", overwrite=True)
-    chk_input_set = QCInputSet.from_directory(directory="./inset_write")
     assert os.path.isdir("./inset_write")
+    assert os.listdir("./inset_write") == ["mol.qin"]
+
+    chk_input_set = QCInputSet.from_directory(directory="./inset_write")
+    assert isinstance(chk_input_set, QCInputSet)
     assert isinstance(chk_input_set.qcinput, QCInput)
+    assert str(chk_input_set.qcinput) == str(in_set.qcinput)
+
+    with pytest.raises(FileExistsError):
+        in_set.write_input(directory="./inset_write", overwrite=False)
