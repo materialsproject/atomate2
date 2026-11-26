@@ -327,12 +327,12 @@ def run_raman_displacements(
         outputs["uuids"].append(eps_job.output.uuid)
         outputs["dirs"].append(eps_job.output.dir_name)
 
-    outputs = dict(outputs)
-    outputs["bandgap"] = bandgap
-    outputs["kpoints_length"] = kpoints_length
+    result: dict[str, Any] = dict(outputs)
+    result["bandgap"] = bandgap
+    result["kpoints_length"] = kpoints_length
     if not jobs:
-        return Response(output=outputs)
-    return Response(replace=Flow(jobs, outputs, name="raman dielectric runs"))
+        return Response(output=result)
+    return Response(replace=Flow(jobs, result, name="raman dielectric runs"))
 
 
 @job(output_schema=RamanDoc)
