@@ -466,7 +466,7 @@ def _parse_bandstructure(
     ----------
     parse_bandstructure: str or bool
         Whether to parse. Does not support the auto/line distinction currently.
-    aims_ouput: .AimsOutput
+    aims_output: .AimsOutput
         The output object to parse
 
     Returns
@@ -483,7 +483,7 @@ def _parse_trajectory(aims_output: AimsOutput) -> Trajectory | None:
 
     Parameters
     ----------
-    aims_ouput: .AimsOutput
+    aims_output: .AimsOutput
         The output object to parse
 
     Returns
