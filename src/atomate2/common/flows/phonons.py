@@ -37,7 +37,9 @@ if TYPE_CHECKING:
     from atomate2.torchsim.core import TorchSimOptimizeMaker, TorchSimStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields", "ase", "torchsim"))
+SUPPORTED_CODES = frozenset(
+    ("vasp", "aims", "espresso", "forcefields", "ase", "torchsim")
+)
 
 
 @dataclass
@@ -349,6 +351,9 @@ class BasePhononMaker(Maker, ABC):
             if check_class_name(self.born_maker, "ForceFieldDielectricMaker"):
                 epsilon_static = born_job.output.epsilon_static
                 born = born_job.output.born
+            elif check_class_name(self.born_maker, "EspressoDielectricMaker"):
+                epsilon_static = born_job.output.output.epsilon_static
+                born = born_job.output.output.born
             else:
                 epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
                 born = born_job.output.calcs_reversed[0].output.outcar["born"]
