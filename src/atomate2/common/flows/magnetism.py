@@ -70,11 +70,12 @@ class MagneticOrderingsMaker(Maker, ABC):
         Maker used to perform relaxations of the enumerated structures. VASP is selected
         as the default DFT code (atomate2.vasp.jobs.RelaxMaker). If this field is None,
         relaxations will be skipped (i.e., only static calculations are performed).
-    default_magmoms : dict | None
+    default_magmoms : dict[str, float] | None
         Optional default mapping of magnetic elements to their initial magnetic moments
         in μB. Generally these are chosen to be high-spin, since they can relax to a
         low-spin configuration during a DFT electronic configuration. If None, will use
         the default values provided in pymatgen/analysis/magnetism/default_magmoms.yaml.
+        Keys are element symbols (e.g. ``{"Fe": 5}``), not ``Element`` objects.
     strategies : tuple[str]
         Different ordering strategies to use. Choose from ferromagnetic,
         antiferromagnetic, antiferromagnetic_by_motif, ferrimagnetic_by_motif,
@@ -97,7 +98,7 @@ class MagneticOrderingsMaker(Maker, ABC):
         )
     )
     relax_maker: Maker | None = field(default_factory=RelaxMaker)
-    default_magmoms: dict[Element, float] | None = None
+    default_magmoms: dict[str, float] | None = None
     strategies: Sequence[
         Literal[
             "ferromagnetic",
