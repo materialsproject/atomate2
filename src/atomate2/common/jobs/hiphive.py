@@ -385,7 +385,13 @@ def generate_phonon_displacements(
 
 @job(
     output_schema=PhononBSDOSDoc,
-    data=[PhononDos, PhononBandStructureSymmLine, "force_constants"],
+    data=[
+        PhononDos,
+        PhononBandStructureSymmLine,
+        "phonon_bandstructure",
+        "phonon_dos",
+        "force_constants",
+    ],
 )
 def generate_frequencies_eigenvectors(
     structure: Structure,
