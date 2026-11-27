@@ -2,6 +2,7 @@ import gzip
 import shutil
 
 import pytest
+from jobflow import CURRENT_JOB
 from pymatgen.core import Lattice, Structure
 
 import atomate2.espresso.jobs
@@ -26,10 +27,14 @@ def mock_espresso(monkeypatch, espresso_test_dir):
         SETTINGS, "ESPRESSO_PSEUDO_DIR", str(espresso_test_dir / "pseudo")
     )
 
-    def _mock(name: str) -> None:
-        ref_dir = espresso_test_dir / name
+    def _mock(ref_paths: str | dict[str, str]) -> None:
+        """Use the reference folder ``ref_paths``, or ``ref_paths[job name]``."""
 
         def fake_run_espresso(command: str, input_file: str, output_file: str):
+            name = ref_paths
+            if isinstance(ref_paths, dict):
+                name = ref_paths[CURRENT_JOB.job.name]
+            ref_dir = espresso_test_dir / name
             commands = {
                 "pw.in": SETTINGS.ESPRESSO_PW_CMD,
                 "ph.in": SETTINGS.ESPRESSO_PH_CMD,

@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
+from pymatgen.core.operations import SymmOp
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.util.due import Doi, due
 
 from atomate2 import SETTINGS
@@ -145,3 +147,34 @@ class EspressoDielectricMaker(BaseEspressoMaker):
     input_set_generator: EspressoDielectricInputGenerator = field(
         default_factory=EspressoDielectricInputGenerator
     )
+
+
+@job
+def rotate_to_standard_orientation(
+    structure: Structure, symprec: float = SETTINGS.SYMPREC
+) -> Structure:
+    """
+    Rotate a structure to the spglib standard orientation.
+
+    pw.x only tests rotations about fixed Cartesian axes, so it misses symmetry
+    operations of cells in other orientations, such as the Materials Project
+    primitive cells. The rotation keeps the cell, the fractional coordinates,
+    and the site properties.
+
+    Parameters
+    ----------
+    structure : .Structure
+        The structure to rotate.
+    symprec : float
+        The symmetry precision.
+
+    Returns
+    -------
+    .Structure
+        The rotated structure.
+    """
+    sga = SpacegroupAnalyzer(structure, symprec=symprec)
+    rotation = sga.get_symmetry_dataset().std_rotation_matrix
+    rotated = structure.copy()
+    rotated.apply_operation(SymmOp.from_rotation_and_translation(rotation))
+    return rotated

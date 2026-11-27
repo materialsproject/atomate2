@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 from jobflow import run_locally
 from pymatgen.core import Lattice, Structure
@@ -6,6 +7,7 @@ from atomate2.espresso.jobs import (
     EspressoDielectricMaker,
     EspressoRelaxMaker,
     EspressoStaticMaker,
+    rotate_to_standard_orientation,
 )
 from atomate2.espresso.schemas import EspressoTaskDoc
 
@@ -123,3 +125,15 @@ def test_dielectric_maker(mock_espresso, clean_dir):
     # ph.x applies the acoustic sum rule, so the charges of Si and C cancel
     assert doc.output.born[0][0][0] == pytest.approx(2.69267)
     assert doc.output.born[1][0][0] == pytest.approx(-2.69267)
+
+
+def test_rotate_to_standard_orientation(si_primitive):
+    si_primitive.add_site_property("magmom", [1, -1])
+    rotated = rotate_to_standard_orientation.original(si_primitive, symprec=1e-3)
+
+    # the standard primitive fcc cell has the cubic axes along x, y, and z
+    half = 3.867 / 2**0.5
+    expected = np.array([[half, 0, half], [half, half, 0], [0, half, half]])
+    assert rotated.lattice.matrix == pytest.approx(expected, abs=1e-6)
+    assert rotated.frac_coords == pytest.approx(si_primitive.frac_coords)
+    assert rotated.site_properties["magmom"] == [1, -1]

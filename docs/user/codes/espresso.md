@@ -54,3 +54,20 @@ maker = EspressoStaticMaker(
     )
 )
 ```
+
+## Phonons with pheasy
+
+`atomate2.espresso.flows.pheasy.PhononMaker` runs the pheasy phonon flow with these jobs.
+`pw.x` only finds the symmetry operations of cells in a standard orientation, so the flow first rotates the structure to the spglib standard orientation.
+`pw.x` then relaxes the structure and computes the forces of the displaced supercells, pheasy fits the force constants, and `ph.x` computes the dielectric tensor and the Born effective charges for the non-analytical term correction.
+The dielectric job needs a nonmagnetic insulator and does not check for one, so set `born_maker=None` for metals and magnetic materials.
+pheasy is installed as for the VASP flow, see the Pheasy section of the [VASP page](vasp.md).
+For single jobs on cells in other orientations, such as the Materials Project primitive cells, run `atomate2.espresso.jobs.rotate_to_standard_orientation` first.
+These jobs and this flow are new and less tested than the VASP ones.
+
+```python
+from atomate2.espresso.flows.pheasy import PhononMaker
+
+flow = PhononMaker(min_length=12).make(structure)  # nonmagnetic insulator
+flow = PhononMaker(min_length=12, born_maker=None).make(structure)  # metal or magnetic
+```
