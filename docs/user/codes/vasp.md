@@ -426,6 +426,85 @@ The notebook `tutorials/hiphive_workflow.ipynb` reproduces it.
 Results on low-symmetry cells should be checked against the phonopy workflow before being trusted.
 The cluster space grows faster there than the number of displacements the workflow generates, and the fit can return spurious soft modes.
 
+### Raman Spectra
+
+Calculates the Raman tensors, activities and spectrum of a material from finite
+differences of the high-frequency dielectric tensor along the Gamma-point normal modes,
+following [Bagheri and Komsa, Sci. Data 10, 80 (2023)](https://doi.org/10.1038/s41597-023-01988-5)
+and [Porezag and Pederson, Phys. Rev. B 54, 7830 (1996)](https://doi.org/10.1103/PhysRevB.54.7830).
+
+The workflow first runs the Phonons workflow (tight relaxation, finite displacement
+phonons with phonopy and, by default, the Born charges). The force constants are used to
+obtain the Gamma-point normal modes of the primitive cell. The Gamma dynamical matrix is
+averaged over the point group of the primitive cell, so degenerate modes stay exactly
+degenerate even if the phonon supercell has a lower symmetry than the crystal. The
+Raman-active modes are selected from the characters of the irreducible representations,
+so silent and purely IR-active modes are skipped.
+
+If any Gamma frequency is below `-max_imaginary_freq` (0.1 THz by default), the structure
+is considered dynamically unstable. No dielectric calculations are then performed and the
+`RamanDoc` is stored with `state = "unstable"`, the unstable modes and the reason
+(`stop_reason`). Set `max_imaginary_freq=None` to switch the check off. For every selected mode, two LEPSILON calculations are performed
+for structures displaced by `-step_size` and `+step_size` (0.005 Å by default) along the mode.
+The Raman tensor of mode $k$ is
+
+$$
+R_k = \frac{V}{4\pi} \frac{\varepsilon(+u) - \varepsilon(-u)}{2u} \left|\frac{\mathbf{e}_k}{\sqrt{m}}\right|,
+$$
+
+and the activity $45\alpha^2 + 7\beta^2$ and a Lorentzian-broadened spectrum are stored in a
+`RamanDoc`.
+
+By default, ENCUT is set to 1.3 times the largest ENMAX of the POTCARs for every VASP job
+in the flow (`encut_enmax_factor`). The dielectric calculations of the displaced structures use
+`RamanDielectricSetGenerator` (`IBRION = -1`, `LEPSILON = True`, `EDIFF = 1e-8`,
+`ADDGRID = True`) with a fully automatic Gamma-centred k-mesh. Its length parameter `Rk`
+is chosen from the band gap of the static calculation of the phonon workflow:
+`Rk = 20` for band gaps above 2 eV, `Rk = 30` for 1-2 eV and `Rk = 40` below 1 eV
+(`bandgap_thresholds`, `kpoints_lengths`). The band gap can also be given with
+`make(..., bandgap=...)`.
+
+```{note}
+Symmetrize the structure before passing it to this flow, as for the phonon workflow.
+The modes are evaluated at exactly q = 0 without the non-analytical term correction,
+i.e. LO-TO splitting is not included.
+```
+
+A Raman workflow for VASP can be started as follows:
+```python
+from atomate2.vasp.flows.raman import RamanMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.73, 2.73], [2.73, 0, 2.73], [2.73, 2.73, 0]],
+    species=["Si", "Si"],
+    coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
+)
+
+raman_flow = RamanMaker(step_size=0.005, mode_selection="raman_active").make(
+    structure=structure, mp_id="mp-149"
+)
+```
+
+Magnetic materials are run with `RamanMaker(magnetic=True)`. The structure needs the
+`magmom` site property and should be the magnetic primitive cell. The moments are then
+used in all VASP calculations, kept on the displaced phonon supercells and used for the
+primitive cell and the symmetry of the Gamma analysis, and the dielectric calculations use
+`ISPIN = 2`. For moments of both signs (antiferro- and ferrimagnets), the phonon
+displacements are generated without symmetry reduction, and the modes are not labelled
+because phonopy does not support irreducible representations of magnetic space groups;
+all optical modes are then computed.
+
+```python
+structure.add_site_property("magmom", [4.0, -4.0, 0.0, 0.0])
+raman_flow = RamanMaker(magnetic=True).make(structure)
+```
+
+All optical modes can be computed with `mode_selection="all"` or a list of mode indices
+can be given with `make(..., modes=[...])`. Settings of the displaced dielectric runs can be
+changed with the powerups, e.g.
+`update_user_incar_settings(raman_flow, {"KPAR": 4}, name_filter="raman dielectric")`.
+
 ### Grüneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of [Phonopy](https://doi.org/10.7566/JPSJ.92.012001).
