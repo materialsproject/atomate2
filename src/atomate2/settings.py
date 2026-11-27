@@ -260,6 +260,25 @@ class Atomate2Settings(BaseSettings):
 
     PHEASY_CMD: str = Field("pheasy", description="The command to run pheasy.")
 
+    # Quantum ESPRESSO settings
+    ESPRESSO_PW_CMD: str = Field(
+        "pw.x",
+        description="The command to run pw.x, including any MPI launcher, e.g. "
+        "'mpirun -n 16 pw.x'.",
+    )
+
+    ESPRESSO_PH_CMD: str = Field(
+        "ph.x",
+        description="The command to run ph.x, including any MPI launcher, e.g. "
+        "'mpirun -n 16 ph.x'.",
+    )
+
+    ESPRESSO_PSEUDO_DIR: str | None = Field(
+        None,
+        description="Directory with the pseudopotential files and the JSON file of "
+        "each pseudopotential family, e.g. SSSP_1.3.0_PBEsol_efficiency.json.",
+    )
+
     LAMMPS_CMD: str = Field("lmp", description="The command to run LAMMPS.")
 
     LAMMPS_MPICMD: str | None = Field(

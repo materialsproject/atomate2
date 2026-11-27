@@ -18,6 +18,7 @@ This section gives an overview of the API for atomate2.
     cli
     common
     cp2k
+    espresso
     forcefields
     lobster
     qchem
