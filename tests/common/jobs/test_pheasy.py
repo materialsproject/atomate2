@@ -286,6 +286,8 @@ def test_run_harmonic_fit(monkeypatch):
     assert "--rasr BHH" in " ".join(calls[1][0])
     fit = " ".join(calls[-1][0])
     assert "-l LASSO --std --tol 1e-8 --seed 103 --rasr BHH --ndata 5" in fit
+    assert "--alpha_min" not in fit
+    assert " -o " not in fit
 
     calls.clear()
     _run_harmonic_fit(matrix, 1e-3, 5, use_lasso=True, random_seed=103, rasr=None)
@@ -302,6 +304,24 @@ def test_run_harmonic_fit(monkeypatch):
     fit = " ".join(calls[-1][0])
     assert "-f --full_ifc --rasr BHH --ndata 3" in fit
     assert "LASSO" not in fit
+
+    # the options of the finite-temperature fit
+    calls.clear()
+    _run_harmonic_fit(
+        matrix,
+        1e-3,
+        20,
+        use_lasso=True,
+        random_seed=103,
+        rasr=None,
+        alpha_min=-6,
+        log_file="fit.log",
+    )
+    assert "--rasr" not in " ".join(calls[1][0])
+    fit = " ".join(calls[-1][0])
+    assert "-l LASSO --std --tol 1e-8 --alpha_min -6 --seed 103 --ndata 20" in fit
+    assert fit.endswith(" -o fit.log")
+    assert "--rasr" not in fit
 
     calls.clear()
     monkeypatch.setattr(pheasy_jobs.SETTINGS, "PHEASY_CMD", "srun -n 1 pheasy")
@@ -441,6 +461,9 @@ def test_check_lasso_alpha(tmp_dir):
     log_file.write_text("- alpha_min: 1e-12\n- alpha_opt: 1.000000e-12\n")
     with pytest.warns(UserWarning, match="on the lower bound"):
         _check_lasso_alpha(log_file, alpha_min=-12)
+    with pytest.warns(UserWarning, match="Lower alpha_min and refit"):
+        alpha = _check_lasso_alpha(log_file, alpha_min=-12, alpha_min_name="alpha_min")
+    assert alpha == 1e-12
 
     log_file.write_text("- alpha_max: 1e-2\n- alpha_opt: 1.000000e-02\n")
     with pytest.warns(UserWarning, match="on the upper bound"):
