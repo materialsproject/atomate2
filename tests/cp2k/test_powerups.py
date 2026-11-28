@@ -99,8 +99,14 @@ def test_update_user_kpoints_settings_input_types(
 def test_add_metadata_to_flow(metadata: dict[str, Any]) -> None:
     """Test adding metadata to flow."""
     flow = DoubleRelaxMaker().make(1)
+    orig_kwargs = [
+        dict(job.function.__self__.task_document_kwargs) for job in flow.jobs
+    ]
     updated_flow = powerups.add_metadata_to_flow(flow, metadata)
+    assert updated_flow is not flow
 
+    for job, orig in zip(flow.jobs, orig_kwargs, strict=True):
+        assert job.function.__self__.task_document_kwargs == orig
     for job in updated_flow.jobs:
         assert (
             job.function.__self__.task_document_kwargs["additional_fields"] == metadata
@@ -114,8 +120,12 @@ def test_add_metadata_to_flow(metadata: dict[str, Any]) -> None:
 def test_update_cp2k_custodian_handlers(handlers: tuple[str, ...]) -> None:
     """Test custodian handlers updates."""
     flow = DoubleRelaxMaker().make(1)
+    orig_kwargs = [dict(job.function.__self__.run_cp2k_kwargs) for job in flow.jobs]
     updated_flow = powerups.update_cp2k_custodian_handlers(flow, handlers)
+    assert updated_flow is not flow
 
+    for job, orig in zip(flow.jobs, orig_kwargs, strict=True):
+        assert job.function.__self__.run_cp2k_kwargs == orig
     for job in updated_flow.jobs:
         assert job.function.__self__.run_cp2k_kwargs["handlers"] == handlers
 

@@ -20,7 +20,7 @@ from atomate2.vasp.flows.phonons import PhononMaker
 
 
 def test_phonon_wf_vasp_only_displacements3(
-    mock_vasp, clean_dir, si_structure: Structure
+    mock_vasp, clean_dir, si_structure: Structure, memory_jobstore
 ):
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -55,6 +55,10 @@ def test_phonon_wf_vasp_only_displacements3(
     # validate the outputs
     ph_doc = responses[job.jobs[-1].uuid][1].output
     assert isinstance(ph_doc, PhononBSDOSDoc)
+    # the band structure and DOS go to the data store, not the main document
+    output = memory_jobstore.query_one({"uuid": job.jobs[-1].uuid}, load=False)
+    for key in ("phonon_bandstructure", "phonon_dos"):
+        assert output["output"][key]["store"] == "data"
 
     assert isinstance(
         ph_doc.phonon_bandstructure,

@@ -19,7 +19,9 @@ from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 
-def test_hiphive_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir):
+def test_hiphive_wf_vasp(
+    mock_vasp, clean_dir, si_structure: Structure, test_dir, memory_jobstore
+):
     # The hiPhive flow generates the same displaced supercells as the pheasy
     # flow, so the reference VASP data is shared rather than duplicated.
     # mapping from job name to directory containing test files
@@ -80,6 +82,10 @@ def test_hiphive_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir
 
     # validate the outputs
     assert isinstance(ph_doc, PhononBSDOSDoc)
+    # the band structure and DOS go to the data store, not the main document
+    output = memory_jobstore.query_one({"uuid": job.jobs[-1].uuid}, load=False)
+    for key in ("phonon_bandstructure", "phonon_dos"):
+        assert output["output"][key]["store"] == "data"
 
     assert isinstance(
         ph_doc.phonon_bandstructure,

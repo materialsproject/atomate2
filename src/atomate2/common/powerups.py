@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -34,7 +35,7 @@ def add_metadata_to_flow(
     Returns
     -------
     Flow
-        The modified flow with added metadata in the task documents.
+        A deepcopy of the flow with added metadata in the task documents.
 
     Examples
     --------
@@ -43,7 +44,8 @@ def add_metadata_to_flow(
     >>> metadata = {"project": "battery_materials", "version": "2.0"}
     >>> flow = add_metadata_to_flow(flow, metadata, RelaxBandStructureMaker)
     """
-    flow.update_maker_kwargs(
+    updated_flow = deepcopy(flow)
+    updated_flow.update_maker_kwargs(
         {
             "_set": {
                 f"task_document_kwargs->additional_fields->{field}": value
@@ -54,7 +56,7 @@ def add_metadata_to_flow(
         class_filter=class_filter,
     )
 
-    return flow
+    return updated_flow
 
 
 def update_custodian_handlers(
@@ -80,7 +82,7 @@ def update_custodian_handlers(
     Returns
     -------
     Flow
-        The modified flow with updated custodian handlers.
+        A deepcopy of the flow with updated custodian handlers.
 
     Examples
     --------
@@ -90,12 +92,13 @@ def update_custodian_handlers(
     >>> handlers = (VaspErrorHandler(), MeshSymmetryErrorHandler())
     >>> flow = update_custodian_handlers(flow, handlers, RelaxBandStructureMaker)
     """
+    updated_flow = deepcopy(flow)
     code = class_filter.name.split(" ")[1]
 
-    flow.update_maker_kwargs(
+    updated_flow.update_maker_kwargs(
         {"_set": {f"run_{code}_kwargs->handlers": custom_handlers}},
         dict_mod=True,
         class_filter=class_filter,
     )
 
-    return flow
+    return updated_flow
