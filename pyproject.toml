@@ -53,7 +53,7 @@ sqs = ["icet>=3.0"]
 # ("Force constants shape disagrees with crystal structure setting").
 phonons = ["phonopy>=4.7.1,<5", "seekpath>=2.0.0"]
 # pheasy itself is in the pheasy dependency group
-pheasy = ["atomate2[phonons]", "hiphive==1.5", "numpy<=2.2"]
+pheasy = ["atomate2[phonons]", "numpy<=2.2"]
 # phono3py computes the mode Grueneisen tensors in the thermal expansion workflow
 phono3py = ["atomate2[phonons]", "phono3py>=4.7"]
 hiphive = ["hiphive==1.5", "trainstation>=1.0", "atomate2[phonons]"]

@@ -18,13 +18,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
-from ase.io import read as ase_read
 from emmet.core import __version__ as _emmet_core_version
 from emmet.core.phonon import PhononBSDOSDoc
-from hiphive import ClusterSpace, ForceConstantPotential, enforce_rotational_sum_rules
-from hiphive import ForceConstants as HiPhiveForceConstants
-from hiphive.cutoffs import estimate_maximum_cutoff
-from hiphive.utilities import extract_parameters
 from jobflow import job
 from packaging.version import parse as parse_version
 from phonopy.file_IO import parse_FORCE_CONSTANTS
@@ -79,7 +74,6 @@ _DEFAULT_FILE_PATHS = {
     "anharmonic_force_matrix": "force_matrix_anhar.npy",
     "website": "phonon_website.json",
     "one_shot_dir": "one_shot",
-    "refit_dir": "short_cutoff_refit",
     "anharmonic_fit_log": "pheasy_anharmonic_fit.log",
 }
 
@@ -365,7 +359,6 @@ def _run_harmonic_fit(
     use_lasso: bool,
     random_seed: int | None,
     work_dir: Path | None = None,
-    cutoff: float | None = None,
     rasr: str | None = "BHH",
 ) -> None:
     """
@@ -390,16 +383,11 @@ def _run_harmonic_fit(
         Seed of the LASSO fit.
     work_dir: Path or None
         Folder of the fit. None is the current folder.
-    cutoff: float or None
-        Cutoff of the second-order force constants in Å. None fits them
-        without a cutoff.
     rasr: str or None
         Rotational sum rule passed to pheasy via --rasr in -c and -f
         ("BHH", "BH", or None for translational invariance only).
     """
     base = _get_pheasy_command(supercell_matrix, symprec, 2)
-    if cutoff is not None:
-        base += f" --c2 {float(cutoff)}"
     fit = f"{base} -f --full_ifc"
     if use_lasso:
         # with pheasy's default --tol of 1e-4 the fit does not converge, and the
@@ -1037,9 +1025,6 @@ def generate_frequencies_eigenvectors(
         is_symmetry=kwargs.get("symmetrize_born", True),
     )
 
-    prim = ase_read("POSCAR")
-    supercell = ase_read("SPOSCAR")
-
     # LASSO for the random displacements, least squares otherwise
     use_lasso = len(phonon.displacements) > 3
     if use_lasso:
@@ -1050,7 +1035,7 @@ def generate_frequencies_eigenvectors(
             stacklevel=2,
         )
     logger.info("Start running pheasy in cluster")
-    kept_rasr = _fit_harmonic_force_constants(
+    _fit_harmonic_force_constants(
         phonon=phonon,
         supercell_matrix=supercell_matrix,
         symprec=symprec,
@@ -1147,108 +1132,6 @@ def generate_frequencies_eigenvectors(
         units=kwargs.get("units", "THz"),
         tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
     )
-
-    # If imaginary modes are present, we first use the hiphive code to enforce
-    # some symmetry constraints to eliminate the imaginary modes (generally work
-    # for small imaginary modes near Gamma point). If the imaginary modes are
-    # still present, a pheasy refit with a shorter cutoff (10 A) follows.
-
-    if imaginary_modes:
-        # Define a cluster space using the largest cutoff you can
-        max_cutoff = estimate_maximum_cutoff(supercell) - 0.01
-        cutoffs = [max_cutoff]  # only second order needed
-        cs = ClusterSpace(prim, cutoffs)
-
-        # import the phonopy force constants using the correct supercell also
-        # provided by phonopy
-        fcs = HiPhiveForceConstants.read_phonopy(supercell, "FORCE_CONSTANTS")
-
-        # Find the parameters that best fits the force constants given you
-        # cluster space
-        parameters = extract_parameters(fcs, cs)
-
-        # Enforce the rotational sum rules
-        parameters_rot = enforce_rotational_sum_rules(
-            cs, parameters, ["Huang", "Born-Huang"], alpha=1e-6
-        )
-
-        # use the new parameters to make a fcp and then create the force
-        # constants and write to a phonopy file
-        fcp = ForceConstantPotential(cs, parameters_rot)
-        fcs = fcp.get_force_constants(supercell)
-        new_fc_file = f"{_DEFAULT_FILE_PATHS['force_constants']}_short_cutoff"
-        fcs.write_to_phonopy(new_fc_file, format="text")
-
-        force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
-        phonon.force_constants = force_constants
-
-        bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
-            phonon,
-            kpath_dict,
-            kpath_concrete,
-            _DEFAULT_FILE_PATHS["band_structure"],
-            has_nac=born is not None,
-            npoints_band=kwargs.get("npoints_band", 101),
-            with_eigenvectors=True,
-            filename_bs=bs_plot_file,
-            units=kwargs.get("units", "THz"),
-            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
-        )
-
-    # Using a shorter cutoff (10 A) to generate the force constants to
-    # eliminate the imaginary modes near Gamma point in pheasy code. The refit
-    # runs in its own folder, so FORCE_CONSTANTS of the harmonic fit, which the
-    # cocktail fit kept fixed, stays unchanged.
-    if imaginary_modes:
-        refit_dir = Path(_DEFAULT_FILE_PATHS["refit_dir"]).resolve()
-        refit_dir.mkdir(exist_ok=True)
-        for filename in (
-            "POSCAR",
-            "SPOSCAR",
-            _DEFAULT_FILE_PATHS["harmonic_displacements"],
-            _DEFAULT_FILE_PATHS["harmonic_force_matrix"],
-        ):
-            shutil.copy(filename, refit_dir / filename)
-
-        phonon.generate_displacements(distance=displacement)
-        _run_harmonic_fit(
-            supercell_matrix,
-            symprec,
-            num_har,
-            len(phonon.displacements) > 3,
-            random_seed,
-            work_dir=refit_dir,
-            cutoff=10.0,
-            rasr=kept_rasr,
-        )
-
-        force_constants = parse_FORCE_CONSTANTS(
-            filename=refit_dir / _DEFAULT_FILE_PATHS["force_constants"]
-        )
-        phonon.force_constants = force_constants
-
-        phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
-
-        # get phonon band structure
-        kpath_dict, kpath_concrete = _get_kpath(
-            structure=get_pmg_structure(phonon.primitive),
-            kpath_scheme=kpath_scheme,
-            symprec=symprec,
-        )
-
-        # phonon band structures will always be computed
-        bs_symm_line, imaginary_modes = _run_band_structure_and_plot(
-            phonon,
-            kpath_dict,
-            kpath_concrete,
-            _DEFAULT_FILE_PATHS["band_structure"],
-            has_nac=born is not None,
-            npoints_band=kwargs.get("npoints_band", 101),
-            with_eigenvectors=True,
-            filename_bs=bs_plot_file,
-            units=kwargs.get("units", "THz"),
-            tol_imaginary_modes=kwargs.get("tol_imaginary_modes", 1e-5),
-        )
 
     # gets data for visualization on website - yaml is also enough
     if kwargs.get("band_structure_eigenvectors"):

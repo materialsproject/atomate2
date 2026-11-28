@@ -31,10 +31,7 @@ from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
 )
-from atomate2.common.jobs.phonons import (
-    _generate_phonon_object,
-    _run_band_structure_and_plot,
-)
+from atomate2.common.jobs.phonons import _generate_phonon_object
 
 # fcs_cutoff_radius in Bohr. 8 Bohr (4.2 A) covers the first two neighbour
 # shells of fcc Cu (2.55 and 3.61 A) and stays inside the 10.8 A supercell.
@@ -140,45 +137,6 @@ def test_harmonic_and_anharmonic_split(tmp_dir, num_displaced_supercells):
     assert not np.allclose(harmonic[0] / 0.01, anharmonic[0] / 0.03)
 
 
-def test_imaginary_mode_refit(tmp_dir, monkeypatch):
-    """The short-cutoff refit reads the matrix files and runs in its own folder."""
-
-    def _report_imaginary_modes(*args, **kwargs):
-        bs_symm_line, _ = _run_band_structure_and_plot(*args, **kwargs)
-        return bs_symm_line, True
-
-    monkeypatch.setattr(
-        pheasy_jobs, "_run_band_structure_and_plot", _report_imaginary_modes
-    )
-    structure = _cu_structure()
-    kwargs = {
-        **COMMON_KWARGS,
-        "supercell_matrix": [[2, 0, 0], [0, 2, 0], [0, 0, 2]],
-        "cal_anhar_fcs": False,
-        "fcs_cutoff_radius": FCS_CUTOFF_RADIUS,
-    }
-
-    job = generate_phonon_displacements(
-        structure=structure,
-        num_displaced_supercells=0,
-        displacement_anhar=0.03,
-        num_disp_anhar=0,
-        **kwargs,
-    )
-    responses = run_locally(job, create_folders=True, ensure_success=True)
-    job = generate_frequencies_eigenvectors(
-        structure=structure,
-        displacement_data=_emt_displacement_data(responses[job.uuid][1].output),
-        **FIT_KWARGS,
-        **kwargs,
-    )
-    run_locally(job, create_folders=True, ensure_success=True)
-
-    (fit_dir,) = (path.parent for path in Path.cwd().glob("job_*/disp_matrix.npy"))
-    refit = fit_dir / "short_cutoff_refit" / "FORCE_CONSTANTS"
-    assert parse_FORCE_CONSTANTS(str(refit)).shape == (32, 32, 3, 3)
-
-
 def test_atom_on_cell_face(tmp_dir):
     """An atom on a cell face must not spoil the harmonic fit.
 
@@ -271,7 +229,7 @@ def test_get_num_anharmonic_supercells(monkeypatch):
 
 
 def test_run_harmonic_fit(monkeypatch):
-    """The pheasy commands of the harmonic fit and of the short-cutoff refit."""
+    """The pheasy commands of the harmonic fit."""
     calls = []
 
     def fake_run(args, cwd, check):
@@ -293,12 +251,11 @@ def test_run_harmonic_fit(monkeypatch):
     assert "--rasr" not in " ".join(calls[-1][0])
 
     calls.clear()
-    refit_dir = Path("short_cutoff_refit")
+    work_dir = Path("fit_dir")
     _run_harmonic_fit(
-        matrix, 1e-3, 3, use_lasso=False, random_seed=103, work_dir=refit_dir, cutoff=10
+        matrix, 1e-3, 3, use_lasso=False, random_seed=103, work_dir=work_dir
     )
-    assert all(cwd == refit_dir for _, cwd, _ in calls)
-    assert all("--c2 10.0" in " ".join(args) for args, _, _ in calls)
+    assert all(cwd == work_dir for _, cwd, _ in calls)
     fit = " ".join(calls[-1][0])
     assert "-f --full_ifc --rasr BHH --ndata 3" in fit
     assert "LASSO" not in fit
